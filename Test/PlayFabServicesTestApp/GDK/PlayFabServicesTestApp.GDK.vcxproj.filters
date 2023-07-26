@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{cf4b7bcf-0c10-497a-b738-8dfc44d68b44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{46be01a2-d737-4285-9561-14b10fc9a895}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\ATGConsoleBlack.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\ATGSampleBackground.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Logo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Mounted.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Owned.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SmallLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Unmounted.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceResourcesPC.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceResourcesXbox.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePC.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="GameXbox.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="GDKPch.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="StepTimer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DeviceResourcesPC.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceResourcesXbox.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePC.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameXbox.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="MainPC.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="MainXbox.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Platform\Windows\PlatfromUtilsWindows.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Platform\GDK\PlayFabGDK.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\testTitleData.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <MGCCompile Include="MicrosoftGame.Config" />
+  </ItemGroup>
+</Project>

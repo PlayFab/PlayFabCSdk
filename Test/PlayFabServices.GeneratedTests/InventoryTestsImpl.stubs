@@ -1,0 +1,128 @@
+#include "TestAppPch.h"
+#include "InventoryTests.h"
+#include "InventoryOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> InventoryTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> InventoryTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void InventoryTests::TestAddInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void InventoryTests::TestDeleteInventoryCollection(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void InventoryTests::TestDeleteInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void InventoryTests::TestExecuteInventoryOperations(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void InventoryTests::TestGetInventoryCollectionIds(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void InventoryTests::TestGetInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+void InventoryTests::TestGetMicrosoftStoreAccessTokens(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void InventoryTests::TestGetTransactionHistory(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void InventoryTests::TestPurchaseInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void InventoryTests::TestRedeemAppleAppStoreInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void InventoryTests::TestRedeemGooglePlayInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+void InventoryTests::TestRedeemMicrosoftStoreInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+void InventoryTests::TestRedeemNintendoEShopInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+void InventoryTests::TestRedeemPlayStationStoreInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+void InventoryTests::TestRedeemSteamInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void InventoryTests::TestSubtractInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void InventoryTests::TestTransferInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void InventoryTests::TestUpdateInventoryItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+
+}
+}

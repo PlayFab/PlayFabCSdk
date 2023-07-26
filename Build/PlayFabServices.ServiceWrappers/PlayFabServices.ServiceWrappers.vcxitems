@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{358C20A7-2D82-440B-AF94-8F419D3B0E75}</ItemsProjectGuid>
+  </PropertyGroup>
+  <Import Condition="'$(PlayFabPathsImported)' != 'true'" Project="$([MSBuild]::GetPathOfFileAbove(PlayFab.C.paths.props))" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabServices\Include\Generated;</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CoreTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CoreTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\TypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Types.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Types.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFFriendsTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\FriendsTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\FriendsTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\FriendsTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Friends.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Friends.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFFriends.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFFriends.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFAccountManagementTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\AccountManagementTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\AccountManagementTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\AccountManagementTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\AccountManagement.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\AccountManagement.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFAccountManagement.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFAccountManagement.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPlatformSpecificTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\PlatformSpecificTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlatformSpecificTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlatformSpecificTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlatformSpecific.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlatformSpecific.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPlatformSpecific.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFPlatformSpecific.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFCharacterTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\CharacterTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CharacterTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CharacterTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Character.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Character.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFCharacter.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFCharacter.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFSegmentsTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\SegmentsTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\SegmentsTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\SegmentsTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Segments.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Segments.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFSegments.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFSegments.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFTitleDataManagementTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\TitleDataManagementTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\TitleDataManagementTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\TitleDataManagementTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\TitleDataManagement.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\TitleDataManagement.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFTitleDataManagement.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFTitleDataManagement.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPlayerDataManagementTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\PlayerDataManagementTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayerDataManagementTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayerDataManagementTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayerDataManagement.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayerDataManagement.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPlayerDataManagement.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFPlayerDataManagement.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPushNotificationsTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\PushNotificationsTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PushNotificationsTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PushNotificationsTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PushNotifications.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PushNotifications.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPushNotifications.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFPushNotifications.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFCloudScriptTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\CloudScriptTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CloudScriptTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CloudScriptTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CloudScript.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CloudScript.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFCloudScript.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFCloudScript.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFDataTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\DataTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\DataTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\DataTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Data.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Data.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFData.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFData.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFInventoryTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\InventoryTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\InventoryTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\InventoryTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Inventory.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Inventory.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFInventory.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFInventory.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFCatalogTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\CatalogTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CatalogTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CatalogTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Catalog.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Catalog.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFCatalog.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFCatalog.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFExperimentationTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\ExperimentationTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\ExperimentationTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\ExperimentationTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Experimentation.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Experimentation.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFExperimentation.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFExperimentation.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFGroupsTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\GroupsTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\GroupsTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\GroupsTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Groups.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Groups.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFGroups.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFGroups.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFLocalizationTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\LocalizationTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\LocalizationTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\LocalizationTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Localization.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Localization.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFLocalization.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFLocalization.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFMultiplayerServerTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\MultiplayerServerTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\MultiplayerServerTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\MultiplayerServerTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\MultiplayerServer.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\MultiplayerServer.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFMultiplayerServer.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFMultiplayerServer.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFProfilesTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\ProfilesTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\ProfilesTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\ProfilesTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Profiles.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Profiles.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFProfiles.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFProfiles.cpp" />
+  </ItemGroup>
+</Project>

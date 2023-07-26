@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{22a6cb8e-6e14-42ca-b08d-39f471d92bea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Generated">
+      <UniqueIdentifier>{879164c4-7718-473a-8d53-053a0f9df315}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Operations">
+      <UniqueIdentifier>{a0f35dfe-b0a6-4a65-9601-9ffe6d39c0b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\TestFramework">
+      <UniqueIdentifier>{2b47b374-9508-4ac6-8f35-9a9860bd9d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tests">
+      <UniqueIdentifier>{625892a9-d1e9-4078-98b4-acf0ff6dda53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tests\Core">
+      <UniqueIdentifier>{15f9c822-cee8-4ae9-81b4-301054fec8f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tests\Services">
+      <UniqueIdentifier>{80478cd3-22e6-4437-b40f-fe0ddf99bea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Operations\Core">
+      <UniqueIdentifier>{ba50c026-99c5-4208-9ab6-12facd8d6fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Operations\Services">
+      <UniqueIdentifier>{99548c0b-7382-44d1-8b8c-058893d10b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{d6b6498f-6213-4e12-802c-419629e525b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform\Generic">
+      <UniqueIdentifier>{9611a56c-76d2-4d34-bbbb-590b576982d6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestAppPch.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Core\AuthenticationTests.cpp">
+      <Filter>Source\Tests\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Core\EventPipelineTests.cpp">
+      <Filter>Source\Tests\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\AccountManagementTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CatalogTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CharacterTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CloudScriptTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\DataTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\ExperimentationTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\FriendsTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\GroupsTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\InventoryTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\LocalizationTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\MultiplayerServerTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlatformSpecificTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlayerDataManagementTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\ProfilesTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PushNotificationsTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\SegmentsTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\TitleDataManagementTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\CoreTestClass.cpp">
+      <Filter>Source\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\ServicesTestClass.cpp">
+      <Filter>Source\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\TestClass.cpp">
+      <Filter>Source\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\TestContext.cpp">
+      <Filter>Source\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\TestReport.cpp">
+      <Filter>Source\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\TestRunner.cpp">
+      <Filter>Source\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Operations\Core\AuthenticationOperations.cpp">
+      <Filter>Source\Operations\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Operations\Core\CoreOperations.cpp">
+      <Filter>Source\Operations\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Operations\Services\ServicesOperations.cpp">
+      <Filter>Source\Operations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\Generic\MemoryManager.cpp">
+      <Filter>Source\Platform\Generic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestAppPch.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Generated\GeneratedTestsBootstrapper.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Tests\Core\AuthenticationTests.h">
+      <Filter>Source\Tests\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Tests\Core\EventPipelineTests.h">
+      <Filter>Source\Tests\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\CoreTestClass.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\ServicesTestClass.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestClass.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestContext.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestException.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestReport.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestRunner.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestTypes.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Operations\Core\AuthenticationOperations.h">
+      <Filter>Source\Operations\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Operations\Core\CoreOperations.h">
+      <Filter>Source\Operations\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Operations\Services\ServicesOperations.h">
+      <Filter>Source\Operations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\PlatformUtils.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\PlayFabPal.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\Generic\MemoryManager.h">
+      <Filter>Source\Platform\Generic</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

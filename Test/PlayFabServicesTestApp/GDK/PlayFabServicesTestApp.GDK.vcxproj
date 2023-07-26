@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2298c785-c226-4ed7-8bd6-305c4d73bd1c}</ProjectGuid>
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="..\..\..\Build\PlayFab.C.GDK.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabServices.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
+  <Import Project="..\PlayFabServicesTestApp.Common.vcxitems" Label="Shared" />
+  <Import Project="..\..\PlayFabServices.GeneratedApiWrappers\PlayFabServices.GeneratedApiWrappers.vcxitems" Label="Shared" />
+  <Import Project="..\..\PlayFabServices.GeneratedTests\PlayFabServices.GeneratedTests.vcxitems" Label="Shared" />
+  <ItemGroup>
+    <Image Include="Assets\ATGConsoleBlack.DDS" />
+    <Image Include="Assets\ATGSampleBackground.DDS" />
+    <Image Include="Assets\Logo.png" />
+    <Image Include="Assets\Mounted.png" />
+    <Image Include="Assets\Owned.png" />
+    <Image Include="Assets\SmallLogo.png" />
+    <Image Include="Assets\SplashScreen.png" />
+    <Image Include="Assets\StoreLogo.png" />
+    <Image Include="Assets\Unmounted.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="DeviceResourcesPC.h" />
+    <ClInclude Include="DeviceResourcesXbox.h" />
+    <ClInclude Include="GamePC.h" />
+    <ClInclude Include="GameXbox.h" />
+    <ClInclude Include="GDKPch.h" />
+    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="StepTimer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Platform\GDK\PlayFabGDK.cpp" />
+    <ClCompile Include="..\Platform\Windows\PlatfromUtilsWindows.cpp" />
+    <ClCompile Include="DeviceResourcesPC.cpp" />
+    <ClCompile Include="DeviceResourcesXbox.cpp" />
+    <ClCompile Include="GamePC.cpp" />
+    <ClCompile Include="GameXbox.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="MainPC.cpp" />
+    <ClCompile Include="MainXbox.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <MGCCompile Include="MicrosoftGame.Config" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\testTitleData.json">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

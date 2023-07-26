@@ -1,0 +1,27 @@
+#include "TestAppPch.h"
+#include "CloudScriptTests.h"
+#include "CloudScriptOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> CloudScriptTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> CloudScriptTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void CloudScriptTests::TestExecuteFunction(TestContext& tc)
+{
+    tc.Skip();
+}
+
+
+}
+}

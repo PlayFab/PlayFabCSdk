@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{96e92b5b-7172-4a6b-9982-19f7c0c48632}</ProjectGuid>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove(PlayFab.C.Win32.props))" />
+  <Import Project="$(PlayFabBuildRoot)\libHttpClient.import.props"/>
+  <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal\PlayFabSharedInternal.vcxitems" Label="Shared" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

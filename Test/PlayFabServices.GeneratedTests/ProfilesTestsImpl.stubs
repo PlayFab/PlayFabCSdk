@@ -1,0 +1,47 @@
+#include "TestAppPch.h"
+#include "ProfilesTests.h"
+#include "ProfilesOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> ProfilesTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> ProfilesTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void ProfilesTests::TestGetProfile(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void ProfilesTests::TestGetProfiles(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void ProfilesTests::TestGetTitlePlayersFromMasterPlayerAccountIds(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void ProfilesTests::TestSetProfileLanguage(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void ProfilesTests::TestSetProfilePolicy(TestContext& tc)
+{
+    tc.Skip();
+}
+
+
+}
+}

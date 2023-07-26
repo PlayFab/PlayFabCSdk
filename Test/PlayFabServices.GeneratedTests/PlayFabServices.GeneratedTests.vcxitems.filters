@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include" />
+    <Filter Include="Source" />
+    <Filter Include="Include" />
+    <Filter Include="Source" />
+    <Filter Include="Source\Stubs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)FriendsTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)FriendsTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)FriendsTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)AccountManagementTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)AccountManagementTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)AccountManagementTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlatformSpecificTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlatformSpecificTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)PlatformSpecificTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CharacterTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CharacterTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)CharacterTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)SegmentsTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)SegmentsTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)SegmentsTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TitleDataManagementTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TitleDataManagementTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)TitleDataManagementTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)PlayerDataManagementTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PushNotificationsTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)PushNotificationsTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)CloudScriptTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)DataTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)DataTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)DataTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)InventoryTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)InventoryTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)InventoryTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CatalogTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CatalogTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)CatalogTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ExperimentationTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ExperimentationTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)ExperimentationTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GroupsTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GroupsTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)GroupsTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)LocalizationTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)LocalizationTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)LocalizationTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MultiplayerServerTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MultiplayerServerTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)MultiplayerServerTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProfilesTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ProfilesTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)ProfilesTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+  </ItemGroup>
+</Project>

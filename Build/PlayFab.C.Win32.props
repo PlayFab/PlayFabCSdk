@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This file is a replacement for Microsoft.Cpp.Default.Props and Microsoft.Cpp.props for Cpp projects targeting Win32 -->
+
+  <Import Condition="'$(PlayFabPathsImported)' != 'true'" Project="PlayFab.C.paths.props" />
+
+  <!--Use same build config as LHC-->
+  <Import Project="$(HCBuildRoot)\libHttpClient.Win32.props" />
+
+  <!--Override build output directories-->
+  <PropertyGroup>
+    <OutDir>$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <IntDir>$(PlayFabIntRoot)\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+
+</Project>

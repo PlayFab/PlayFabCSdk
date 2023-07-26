@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{ffeb2d48-1e6a-46c6-b4fb-1564b845d6df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Mocks">
+      <UniqueIdentifier>{1ffb37bc-9f19-48f8-a8f4-65cbc73a37ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Support">
+      <UniqueIdentifier>{6689def8-75f2-4b82-b659-6e0ab3740d22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tests">
+      <UniqueIdentifier>{171fc3ea-251f-4d72-b36b-898b96634fad}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Tests\AsyncOpTests.cpp">
+      <Filter>Source\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\CancellationTokenTests.cpp">
+      <Filter>Source\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\EventPipelineTests.cpp">
+      <Filter>Source\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\GlobalStateTests.cpp">
+      <Filter>Source\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\RunContextTests.cpp">
+      <Filter>Source\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\TokenRefreshTests.cpp">
+      <Filter>Source\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Support\AsyncTestContext.cpp">
+      <Filter>Source\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="Support\Event.cpp">
+      <Filter>Source\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="Support\TaskQueue.cpp">
+      <Filter>Source\Support</Filter>
+    </ClCompile>
+    <ClCompile Include="Mocks\HttpMock.cpp">
+      <Filter>Source\Mocks</Filter>
+    </ClCompile>
+    <ClCompile Include="Mocks\PlayFabServiceMock.cpp">
+      <Filter>Source\Mocks</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mocks\PlayFabServiceMock.h">
+      <Filter>Source\Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="Mocks\HttpMock.h">
+      <Filter>Source\Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="Support\AsyncTestContext.h">
+      <Filter>Source\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Support\Event.h">
+      <Filter>Source\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Support\TaskQueue.h">
+      <Filter>Source\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Support\TestIncludes.h">
+      <Filter>Source\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Support\TestMacros.h">
+      <Filter>Source\Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Support\TestSession.h">
+      <Filter>Source\Support</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Mocks\MockResponses.json">
+      <Filter>Source\Mocks</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,70 @@
+#include "TestAppPch.h"
+#include "FriendsTests.h"
+#include "FriendsOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> FriendsTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> FriendsTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void FriendsTests::TestClientAddFriend(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void FriendsTests::TestClientGetFriendsList(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void FriendsTests::TestClientRemoveFriend(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void FriendsTests::TestClientSetFriendTags(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void FriendsTests::TestServerAddFriend(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void FriendsTests::TestServerGetFriendsList(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void FriendsTests::TestServerRemoveFriend(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void FriendsTests::TestServerSetFriendTags(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+
+}
+}

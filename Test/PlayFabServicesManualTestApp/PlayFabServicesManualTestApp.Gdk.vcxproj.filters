@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source" />
+    <Filter Include="source\GDK" />
+    <Filter Include="assets" />
+    <Filter Include="source\TestFramework">
+      <UniqueIdentifier>{e1cede1c-80c0-4234-ae6c-499f10b1c3b0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GDK\GamePC.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\GameXbox.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\MainPC.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\MainXbox.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClInclude Include="GDK\GDKPch.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\GamePC.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\GameXbox.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\StepTimer.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\d3dx12.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClCompile Include="GDK\DeviceResourcesPC.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\DeviceResourcesXbox.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClInclude Include="GDK\DeviceResourcesPC.h">
+      <Filter>source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\DeviceResourcesXbox.h">
+      <Filter>source\GDK</Filter>
+    </ClInclude>
+    <MGCCompile Include="MicrosoftGame.Config">
+      <Filter>source\GDK</Filter>
+    </MGCCompile>
+    <ClCompile Include="TestFramework\TestRunner.cpp">
+      <Filter>source\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\Keyboard.cpp">
+      <Filter>source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAppPch.cpp" />
+    <ClCompile Include="TestFramework\HttpMock.cpp">
+      <Filter>source\TestFramework</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="GDK\Assets\ATGConsoleBlack.DDS">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\ATGSampleBackground.DDS">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\Logo.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\Mounted.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\Owned.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\SmallLogo.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\SplashScreen.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\Unmounted.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="$(PlayFabServicesRoot)\testTitleData.json">
+      <Filter>source\GDK</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TestFramework\TestRunner.h">
+      <Filter>source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\Keyboard.h">
+      <Filter>source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="TestAppPch.h" />
+    <ClInclude Include="TestFramework\HttpMock.h">
+      <Filter>source\TestFramework</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

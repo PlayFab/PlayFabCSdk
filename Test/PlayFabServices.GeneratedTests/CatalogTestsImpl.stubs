@@ -1,0 +1,164 @@
+#include "TestAppPch.h"
+#include "CatalogTests.h"
+#include "CatalogOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> CatalogTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> CatalogTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void CatalogTests::TestCreateDraftItem(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestCreateUploadUrls(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void CatalogTests::TestDeleteEntityItemReviews(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void CatalogTests::TestDeleteItem(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void CatalogTests::TestGetCatalogConfig(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void CatalogTests::TestGetDraftItem(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestGetDraftItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestGetEntityDraftItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestGetEntityItemReview(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestGetItem(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestGetItemContainers(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void CatalogTests::TestGetItemModerationState(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void CatalogTests::TestGetItemPublishStatus(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestGetItemReviews(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestGetItemReviewSummary(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestGetItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestPublishDraftItem(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestReportItem(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestReportItemReview(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestReviewItem(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void CatalogTests::TestSearchItems(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void CatalogTests::TestSetItemModerationState(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void CatalogTests::TestSubmitItemReviewVote(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void CatalogTests::TestTakedownItemReviews(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void CatalogTests::TestUpdateCatalogConfig(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void CatalogTests::TestUpdateDraftItem(TestContext& tc)
+{
+    tc.Skip();
+}
+
+
+}
+}

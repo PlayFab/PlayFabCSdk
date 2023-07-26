@@ -1,0 +1,136 @@
+#include "TestAppPch.h"
+#include "PlayerDataManagementTests.h"
+#include "PlayerDataManagementOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> PlayerDataManagementTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> PlayerDataManagementTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void PlayerDataManagementTests::TestClientGetUserData(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void PlayerDataManagementTests::TestClientGetUserPublisherData(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void PlayerDataManagementTests::TestClientGetUserPublisherReadOnlyData(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void PlayerDataManagementTests::TestClientGetUserReadOnlyData(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void PlayerDataManagementTests::TestClientUpdateUserData(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void PlayerDataManagementTests::TestClientUpdateUserPublisherData(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void PlayerDataManagementTests::TestServerGetUserData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerGetUserInternalData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerGetUserPublisherData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerGetUserPublisherInternalData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerGetUserPublisherReadOnlyData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerGetUserReadOnlyData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerUpdateUserData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerUpdateUserInternalData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerUpdateUserPublisherData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerUpdateUserPublisherInternalData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerUpdateUserPublisherReadOnlyData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerUpdateUserReadOnlyData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+
+}
+}

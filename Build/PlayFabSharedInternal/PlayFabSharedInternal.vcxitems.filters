@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{774f3afa-0234-4527-8082-3b3534c640c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{974957ee-ecd0-43f5-893f-8e6b1f3ca02c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Generated">
+      <UniqueIdentifier>{bbec3a0e-e473-44f9-861b-34761ced2683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Generated">
+      <UniqueIdentifier>{75860d5f-8bd1-48f3-ba46-ded1a66bbe0f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Generated\Error.h">
+      <Filter>Include\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\ApiXAsyncProvider.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\AsyncOp.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\BaseModel.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\CancellationToken.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\EnumTraits.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\HttpRequest.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\JsonUtils.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Memory.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\ModelBuffer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\PlatformUser.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\PlatformUtils.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\RapidJson.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Result.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\ResultMacros.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\RunContext.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Trace.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Types.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\XAsyncOperation.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\XAsyncProviderBase.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\pch.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\SdkVersion.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Generated\Error.cpp">
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\CancellationToken.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\HttpRequest.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\JsonUtils.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Memory.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\ModelBuffer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\RunContext.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Trace.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\XAsyncOperation.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\XAsyncProviderBase.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\pch.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\External\rapidjson.natvis" />
+  </ItemGroup>
+</Project>

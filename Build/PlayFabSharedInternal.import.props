@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PlayFabSharedInternalImported>true</PlayFabSharedInternalImported>
+  </PropertyGroup>
+
+  <Import Condition="'$(PlayFabPathsImported)' != 'true'" Project="PlayFab.C.paths.props" />
+  <Import Condition="'$(HCPlatform)' == ''" Project="$(HCRoot)\platform_select.props" />
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabCore\Include;$(PlayFabSourceDir)\PlayFabCore\Include\Generated;$(PlayFabSourceDir)\PlayFabSharedInternal\Include;$(PlayFabSourceDir)\PlayFabSharedInternal\Include\Generated</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <PropertyGroup>
+    <PlayFabSharedInternalToolset>$(PlatformToolsetVersion)</PlayFabSharedInternalToolset>
+    <PlayFabSharedInternalToolset Condition="'$(PlatformToolset)'=='v141'">141</PlayFabSharedInternalToolset>
+    <PlayFabSharedInternalToolset Condition="'$(PlatformToolset)'=='v142'">142</PlayFabSharedInternalToolset>
+    <PlayFabSharedInternalToolset Condition="'$(PlatformToolset)'=='v143'">143</PlayFabSharedInternalToolset>
+    <PlayFabSharedInternalProjectName>PlayFabSharedInternal.$(HCPlatform).$(PlayFabSharedInternalToolset)</PlayFabSharedInternalProjectName>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(HCPlatform)' == 'Win32' Or '$(HCPlatform)' == 'GDK'" Label="PlayFabSharedInternal reference">
+    <ProjectReference Include="$(PlayFabBuildRoot)\$(PlayFabSharedInternalProjectName)\$(PlayFabSharedInternalProjectName).vcxproj">
+      <Project Condition="'$(HCPlatform)' == 'Win32' and '$(PlayFabSharedInternalToolset)' == '143'">{96e92b5b-7172-4a6b-9982-19f7c0c48632}</Project>
+      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(PlayFabSharedInternalToolset)' == '142'">{6741104b-b479-4d1d-8b5c-588f13f4d51a}</Project>
+      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(PlayFabSharedInternalToolset)' == '143'">{91e7010a-a099-41a7-914c-1c19a3539a79}</Project>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--RapidJSON dependency-->
+  <PropertyGroup Label="RapidJson">
+    <RapidJsonSdkRoot>$(PlayFabExternalDir)\rapidjson\</RapidJsonSdkRoot>
+    <RapidJsonSdkInclude>$(RapidJsonSdkRoot)include\</RapidJsonSdkInclude>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(RapidJsonSdkInclude)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!--LibHttpClient (XAsync) dependency-->
+  <Import Condition="'$(LibHttpClientImported)' != 'true' and '$(HCPlatform)' != 'GDK'" Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
+
+</Project>

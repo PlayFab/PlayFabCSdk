@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{7efaab05-6336-49b3-9262-13fd023bede5}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeaderFile>TestAppPch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)\TestFramework</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Operations\Core\AuthenticationOperations.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Operations\Core\CoreOperations.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Operations\Services\ServicesOperations.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Platform\Generic\MemoryManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestAppPch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\CoreTestClass.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\ServicesTestClass.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\TestClass.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\TestContext.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\TestReport.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\TestRunner.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Core\AuthenticationTests.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Core\EventPipelineTests.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\AccountManagementTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CatalogTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CharacterTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CloudScriptTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\DataTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\ExperimentationTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\FriendsTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\GroupsTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\InventoryTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\LocalizationTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\MultiplayerServerTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlatformSpecificTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlayerDataManagementTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\ProfilesTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PushNotificationsTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\SegmentsTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\TitleDataManagementTestsImpl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Generated\GeneratedTestsBootstrapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Operations\Core\AuthenticationOperations.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Operations\Core\CoreOperations.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Operations\Services\ServicesOperations.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\Generic\MemoryManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\PlatformUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\PlayFabPal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestAppPch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\CoreTestClass.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\ServicesTestClass.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestClass.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestContext.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestException.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestReport.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestRunner.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Tests\Core\AuthenticationTests.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Tests\Core\EventPipelineTests.h" />
+  </ItemGroup>
+</Project>

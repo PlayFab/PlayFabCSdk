@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2800a769-2da4-42cc-ac27-6ad411bc4349}</ProjectGuid>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ProjectSubType>NativeUnitTestProject</ProjectSubType>
+  </PropertyGroup>
+  <Import Project="..\..\Build\PlayFab.C.Win32.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabCore.Common\PlayFabCore.Common.vcxitems" Label="Shared" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabCore.ServiceWrappers\PlayFabCore.ServiceWrappers.vcxitems" Label="Shared" />
+  <Import Project="..\..\Build\PlayFabCore.Win32\PlayFabCore.Win32.vcxitems" Label="Shared" />
+  <ImportGroup Label="Shared" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(PlayFabRoot)\Test\PlayFabCore.UnitTests\;$(PlayFabRoot)\Test\PlayFabCore.UnitTests\Support;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Mocks\HttpMock.cpp" />
+    <ClCompile Include="Mocks\PlayFabServiceMock.cpp" />
+    <ClCompile Include="Support\AsyncTestContext.cpp" />
+    <ClCompile Include="Support\Event.cpp" />
+    <ClCompile Include="Support\TaskQueue.cpp" />
+    <ClCompile Include="Tests\AsyncOpTests.cpp" />
+    <ClCompile Include="Tests\CancellationTokenTests.cpp" />
+    <ClCompile Include="Tests\EventPipelineTests.cpp" />
+    <ClCompile Include="Tests\GlobalStateTests.cpp" />
+    <ClCompile Include="Tests\RunContextTests.cpp" />
+    <ClCompile Include="Tests\TokenRefreshTests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mocks\HttpMock.h" />
+    <ClInclude Include="Mocks\PlayFabServiceMock.h" />
+    <ClInclude Include="Support\AsyncTestContext.h" />
+    <ClInclude Include="Support\Event.h" />
+    <ClInclude Include="Support\TaskQueue.h" />
+    <ClInclude Include="Support\TestIncludes.h" />
+    <ClInclude Include="Support\TestMacros.h" />
+    <ClInclude Include="Support\TestSession.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Mocks\MockResponses.json">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

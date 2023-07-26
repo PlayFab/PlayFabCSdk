@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{59076205-1bc8-46af-831f-b15c74776933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Trace">
+      <UniqueIdentifier>{b6ef33f1-8362-4eda-80e1-7c03a26dd328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Trace\Windows">
+      <UniqueIdentifier>{fef92e28-e924-4a90-91cc-465909e84027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Authentication">
+      <UniqueIdentifier>{746ec713-ddaf-4066-87eb-750221d19814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Authentication\GDK">
+      <UniqueIdentifier>{6f2eb228-c40c-4c79-a60e-8a5fc2aadad5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\Windows\ETWTraceOutput.cpp">
+      <Filter>Source\Trace\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\GDK\Authentication_GDK.cpp">
+      <Filter>Source\Authentication\GDK</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\Windows\ETWTraceOutput.h">
+      <Filter>Source\Trace\Windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

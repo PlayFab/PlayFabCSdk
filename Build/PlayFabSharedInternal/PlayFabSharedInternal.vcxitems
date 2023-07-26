@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{c069ffad-7e86-4569-852a-be773dac9a6f}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabCore\Include;$(PlayFabSourceDir)\PlayFabCore\Include\Generated;$(PlayFabSourceDir)\PlayFabSharedInternal\Include;$(PlayFabSourceDir)\PlayFabSharedInternal\Include\Generated;$(PlayFabSourceDir)\PlayFabSharedInternal\Source;$(RapidJsonIncludeDir)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\ApiXAsyncProvider.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\AsyncOp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\BaseModel.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\CancellationToken.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\EnumTraits.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Generated\Error.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\HttpRequest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\JsonUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Memory.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\ModelBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\PlatformUser.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\PlatformUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\RapidJson.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Result.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\ResultMacros.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\RunContext.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\SdkVersion.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Trace.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Types.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\XAsyncOperation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\XAsyncProviderBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\CancellationToken.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Generated\Error.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\HttpRequest.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\JsonUtils.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Memory.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\ModelBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\RunContext.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Trace.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\XAsyncOperation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\XAsyncProviderBase.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\External\rapidjson.natvis" />
+  </ItemGroup>
+</Project>

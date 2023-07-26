@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PlayFabPathsImported>true</PlayFabPathsImported>
+  </PropertyGroup>
+
+  <!-- Pull in PlayFab.C.external.props. It will define $(HCRoot) which defines the root directory of the LHC repo. -->
+  <!-- If the external props file can't be found, assume libHttpClient repo is cloned alongside PlayFab.C repo.-->
+  <PropertyGroup>
+    <ExternalPropsFile>$([MSBuild]::GetPathOfFileAbove(PlayFab.C.external.props))</ExternalPropsFile>
+  </PropertyGroup>
+  <Import Condition="Exists($(ExternalPropsFile))" Project="$(ExternalPropsFile)"/>
+
+  <PropertyGroup>
+    <PlayFabRoot>$(MSBuildThisFileDirectory)..</PlayFabRoot>
+    <PlayFabBuildRoot>$(PlayFabRoot)\Build</PlayFabBuildRoot>
+    <PlayFabExternalDir>$(PlayFabRoot)\External</PlayFabExternalDir>
+    <PlayFabSourceDir>$(PlayFabRoot)\Source</PlayFabSourceDir>
+    <PlayFabOutRoot>$(PlayFabRoot)\Out</PlayFabOutRoot>
+    <PlayFabIntRoot>$(PlayFabRoot)\Int</PlayFabIntRoot>
+  </PropertyGroup>
+
+  <!-- LHC paths -->
+  <PropertyGroup>
+    <HCRoot Condition="'$(HCRoot)' == '' And Exists('$(MSBuildThisFileDirectory)..\External\libHttpClient')">$(MSBuildThisFileDirectory)..\External\libHttpClient</HCRoot>
+    <HCRoot Condition="'$(HCRoot)' == ''">$(MSBuildThisFileDirectory)..\..\libHttpClient</HCRoot>
+  </PropertyGroup>
+  <Import Condition="'$(HCPathsImported)' != 'true'" Project="$(HCRoot)\Build\libHttpClient.paths.props" />
+
+  <!--RapidJSON paths-->
+  <PropertyGroup Label="RapidJson">
+    <RapidJsonRoot>$(PlayFabExternalDir)\rapidjson</RapidJsonRoot>
+    <RapidJsonIncludeDir>$(RapidJsonRoot)\include</RapidJsonIncludeDir>
+  </PropertyGroup>
+</Project>

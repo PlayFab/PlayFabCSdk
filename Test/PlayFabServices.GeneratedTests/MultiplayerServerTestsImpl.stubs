@@ -1,0 +1,42 @@
+#include "TestAppPch.h"
+#include "MultiplayerServerTests.h"
+#include "MultiplayerServerOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> MultiplayerServerTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> MultiplayerServerTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void MultiplayerServerTests::TestListBuildAliases(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void MultiplayerServerTests::TestListBuildSummariesV2(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void MultiplayerServerTests::TestListQosServersForTitle(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void MultiplayerServerTests::TestRequestMultiplayerServer(TestContext& tc)
+{
+    tc.Skip();
+}
+
+
+}
+}

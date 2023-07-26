@@ -1,0 +1,641 @@
+#include "TestAppPch.h"
+#include "AccountManagementTests.h"
+#include "AccountManagementOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> AccountManagementTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> AccountManagementTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+#if 0
+void AccountManagementTests::TestClientAddOrUpdateContactEmail(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientAddUsernamePassword(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void AccountManagementTests::TestClientGetAccountInfo(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void AccountManagementTests::TestClientGetPlayerCombinedInfo(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void AccountManagementTests::TestClientGetPlayerProfile(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void AccountManagementTests::TestClientGetPlayFabIDsFromFacebookIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientGetPlayFabIDsFromFacebookInstantGamesIds(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientGetPlayFabIDsFromGameCenterIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientGetPlayFabIDsFromGoogleIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientGetPlayFabIDsFromGooglePlayGamesPlayerIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientGetPlayFabIDsFromKongregateIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+void AccountManagementTests::TestClientGetPlayFabIDsFromNintendoServiceAccountIds(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientGetPlayFabIDsFromNintendoSwitchDeviceIds(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+void AccountManagementTests::TestClientGetPlayFabIDsFromPSNAccountIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+void AccountManagementTests::TestClientGetPlayFabIDsFromSteamIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientGetPlayFabIDsFromTwitchIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestClientGetPlayFabIDsFromXboxLiveIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkAndroidDeviceID(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkApple(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void AccountManagementTests::TestClientLinkCustomID(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void AccountManagementTests::TestClientLinkFacebookAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkFacebookInstantGamesId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkGameCenterAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkGoogleAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkGooglePlayGamesServicesAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkIOSDeviceID(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkKongregate(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+void AccountManagementTests::TestClientLinkNintendoServiceAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkNintendoSwitchDeviceId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void AccountManagementTests::TestClientLinkOpenIdConnect(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+void AccountManagementTests::TestClientLinkPSNAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+void AccountManagementTests::TestClientLinkSteamAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientLinkTwitch(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestClientLinkXboxAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientRemoveContactEmail(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void AccountManagementTests::TestClientReportPlayer(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void AccountManagementTests::TestClientSendAccountRecoveryEmail(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkAndroidDeviceID(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkApple(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void AccountManagementTests::TestClientUnlinkCustomID(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void AccountManagementTests::TestClientUnlinkFacebookAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkFacebookInstantGamesId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkGameCenterAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkGoogleAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkGooglePlayGamesServicesAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkIOSDeviceID(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkKongregate(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+void AccountManagementTests::TestClientUnlinkNintendoServiceAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkNintendoSwitchDeviceId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void AccountManagementTests::TestClientUnlinkOpenIdConnect(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+void AccountManagementTests::TestClientUnlinkPSNAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+void AccountManagementTests::TestClientUnlinkSteamAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestClientUnlinkTwitch(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestClientUnlinkXboxAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void AccountManagementTests::TestClientUpdateAvatarUrl(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void AccountManagementTests::TestClientUpdateUserTitleDisplayName(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerBanUsers(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerDeletePlayer(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayerCombinedInfo(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayerProfile(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromFacebookIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromFacebookInstantGamesIds(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromNintendoServiceAccountIds(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromNintendoSwitchDeviceIds(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromPSNAccountIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromSteamIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromTwitchIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromXboxLiveIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetServerCustomIDsFromPlayFabIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetUserAccountInfo(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetUserBans(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerLinkNintendoServiceAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerLinkNintendoSwitchDeviceId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerLinkPSNAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerLinkPSNId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerLinkServerCustomId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerLinkSteamId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerLinkXboxAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerRevokeAllBansForUser(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerRevokeBans(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerSendCustomAccountRecoveryEmail(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerSendEmailFromTemplate(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerUnlinkNintendoServiceAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerUnlinkNintendoSwitchDeviceId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerUnlinkPSNAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerUnlinkServerCustomId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerUnlinkSteamId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerUnlinkXboxAccount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerUpdateAvatarUrl(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerUpdateBans(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestGetTitlePlayersFromXboxLiveIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+
+}
+}

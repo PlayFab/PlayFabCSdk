@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{893D9F15-D625-483B-969F-0E54DED9960D}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)FriendsOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)FriendsOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)AccountManagementOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)AccountManagementOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlatformSpecificOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlatformSpecificOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CharacterOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CharacterOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SegmentsOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SegmentsOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TitleDataManagementOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TitleDataManagementOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DataOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)DataOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)InventoryOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)InventoryOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CatalogOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CatalogOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ExperimentationOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ExperimentationOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GroupsOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GroupsOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)LocalizationOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)LocalizationOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MultiplayerServerOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)MultiplayerServerOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProfilesOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ProfilesOperations.cpp" />
+  </ItemGroup>
+</Project>

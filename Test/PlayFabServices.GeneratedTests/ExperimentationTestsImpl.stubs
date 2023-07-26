@@ -1,0 +1,27 @@
+#include "TestAppPch.h"
+#include "ExperimentationTests.h"
+#include "ExperimentationOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> ExperimentationTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> ExperimentationTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void ExperimentationTests::TestGetTreatmentAssignment(TestContext& tc)
+{
+    tc.Skip();
+}
+
+
+}
+}

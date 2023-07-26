@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{56671826-2060-4e28-b815-e30ef7f88535}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\GDK\AccountManagementXTokenAPIs.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\GDK\FriendsXTokenAPIs.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\GDK\InventoryXTokenAPIs.cpp" />
+  </ItemGroup>
+</Project>

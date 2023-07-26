@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PlayFabServicesImported>true</PlayFabServicesImported>
+  </PropertyGroup>
+
+  <Import Condition="'$(PlayFabCoreImported)' != 'true'" Project="PlayFabCore.import.props" />
+
+  <!--Add PlayFab include directory to client include path-->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabServices\Include;$(PlayFabSourceDir)\PlayFabServices\Include\Generated</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <PropertyGroup>
+    <PlayFabServicesProjectName>PlayFabServices.$(HCPlatform).$(PlayFabCoreToolset)</PlayFabServicesProjectName>
+    <PlayFabServicesOutDir>$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabServicesProjectName)\</PlayFabServicesOutDir>
+  </PropertyGroup>
+
+  <!--Add reference to appropriate PlayFabServices project-->
+  <ItemGroup Condition="'$(HCPlatform)' == 'Win32' Or '$(HCPlatform)' == 'GDK'" Label="PlayFabServices project reference">
+    <ProjectReference Include="$(PlayFabBuildRoot)\$(PlayFabServicesProjectName)\$(PlayFabServicesProjectName).vcxproj">
+      <Project Condition="'$(HCPlatform)' == 'Win32' and '$(PlayFabCoreToolset)' == '143'">{9740c935-821c-498c-a942-817eea7fdcd7}</Project>
+      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(PlayFabCoreToolset)' == '142'">{7cf96aad-a922-47b4-9da2-fa30f7e47d72}</Project>
+      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(PlayFabCoreToolset)' == '143'">{fb3a4738-544d-4a89-ba69-31d7c86e7af7}</Project>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--Copy PlayFabCore and dependencies to OutDir-->
+  <ItemGroup Label="CopyDependencies">
+    <ReferenceCopyLocalPaths Include="$(PlayFabServicesOutDir)\*" />
+  </ItemGroup>
+
+</Project>

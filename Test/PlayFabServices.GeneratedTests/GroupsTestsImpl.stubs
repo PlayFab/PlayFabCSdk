@@ -1,0 +1,147 @@
+#include "TestAppPch.h"
+#include "GroupsTests.h"
+#include "GroupsOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> GroupsTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> GroupsTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void GroupsTests::TestAcceptGroupApplication(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestAcceptGroupInvitation(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestAddMembers(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestApplyToGroup(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestBlockEntity(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestChangeMemberRole(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestCreateGroup(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestCreateRole(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestDeleteGroup(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestDeleteRole(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestGetGroup(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestInviteToGroup(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestIsMember(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestListGroupApplications(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestListGroupBlocks(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestListGroupInvitations(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestListGroupMembers(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestListMembership(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestListMembershipOpportunities(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestRemoveGroupApplication(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestRemoveGroupInvitation(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestRemoveMembers(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestUnblockEntity(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestUpdateGroup(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void GroupsTests::TestUpdateRole(TestContext& tc)
+{
+    tc.Skip();
+}
+
+
+}
+}

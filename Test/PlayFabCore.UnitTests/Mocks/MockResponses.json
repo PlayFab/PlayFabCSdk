@@ -1,0 +1,69 @@
+{
+  "calls": {
+    "LoginWithCustomID": {
+      "url": "/Client/LoginWithCustomID",
+      "result": "LoginResult"
+    },
+    "GetEntityToken": {
+      "url": "/Authentication/GetEntityToken",
+      "result": "GetEntityTokenResponse"
+    },
+    "WriteEvents": {
+      "url": "/Event/WriteEvent",
+      "result": "WriteEventsResponse"
+    }
+  },
+  "datatypes": {
+    "GetEntityTokenResponse": {
+      "default": {
+        "code": 200,
+        "status": "OK",
+        "data": {
+          "EntityToken": "TitlePlayerMockEntityToken",
+          "Entity": {
+            "Id": "TitlePlayerId",
+            "Type": "title_player_account",
+            "TypeString": "title_player_account",
+            "IsTitle": false,
+            "IsNamespace": false,
+            "IsService": false,
+            "IsMasterPlayer": false,
+            "IsTitlePlayer": true
+          }
+        }
+      }
+    },
+    "LoginResult": {
+      "default": {
+        "code": 200,
+        "status": "OK",
+        "data": {
+          "EntityToken": {
+            "Entity": {
+              "Id": "TitlePlayerId",
+              "Type": "title_player_account"
+            },
+            "EntityToken": "TitlePlayerMockEntityToken"
+          },
+          "NewlyCreated": false
+        }
+      }
+    },
+    "WriteEventsResponse": {
+      "default": {
+        "code": 200,
+        "status": "OK",
+        "data": {
+          "AssignedEventIds": []
+        }
+      }
+    }
+  },
+  "errors": {
+    "ExpiredAuthToken": {
+      "code": 400,
+      "errorCode": 1153,
+      "error": "ExpiredAuthToken"
+    }
+  }
+}

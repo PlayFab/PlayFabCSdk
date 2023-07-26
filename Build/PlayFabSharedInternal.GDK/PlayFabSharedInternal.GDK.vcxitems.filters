@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{7ac90edc-f827-4635-8622-fe1a66e05193}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{ca7777ee-d83e-4329-84f5-df2f708f9962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\GDK">
+      <UniqueIdentifier>{611ed5b5-f8d7-466a-8e00-e2411ff5c944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GDK">
+      <UniqueIdentifier>{4614d1af-4ab0-46f1-a87c-015afc88f21d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\GDK\PlatformUser_GDK.h">
+      <Filter>Include\GDK</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\GDK\PlatformUser_GDK.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

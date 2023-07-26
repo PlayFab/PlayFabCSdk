@@ -1,0 +1,57 @@
+#include "TestAppPch.h"
+#include "DataTests.h"
+#include "DataOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> DataTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> DataTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void DataTests::TestAbortFileUploads(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void DataTests::TestDeleteFiles(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void DataTests::TestFinalizeFileUploads(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void DataTests::TestGetFiles(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void DataTests::TestGetObjects(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void DataTests::TestInitiateFileUploads(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void DataTests::TestSetObjects(TestContext& tc)
+{
+    tc.Skip();
+}
+
+
+}
+}

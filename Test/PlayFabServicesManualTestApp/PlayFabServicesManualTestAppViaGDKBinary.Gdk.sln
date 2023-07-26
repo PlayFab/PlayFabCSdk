@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlayFabServicesManualTestAppViaGDKBinary.Gdk", "PlayFabServicesManualTestAppViaGDKBinary.Gdk.vcxproj", "{65D3FC89-73DE-4902-B232-A9DB945CCD1D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Gaming.Desktop.x64 = Debug|Gaming.Desktop.x64
+		Debug|Gaming.Xbox.Scarlett.x64 = Debug|Gaming.Xbox.Scarlett.x64
+		Debug|Gaming.Xbox.XboxOne.x64 = Debug|Gaming.Xbox.XboxOne.x64
+		Profile|Gaming.Desktop.x64 = Profile|Gaming.Desktop.x64
+		Profile|Gaming.Xbox.Scarlett.x64 = Profile|Gaming.Xbox.Scarlett.x64
+		Profile|Gaming.Xbox.XboxOne.x64 = Profile|Gaming.Xbox.XboxOne.x64
+		Release|Gaming.Desktop.x64 = Release|Gaming.Desktop.x64
+		Release|Gaming.Xbox.Scarlett.x64 = Release|Gaming.Xbox.Scarlett.x64
+		Release|Gaming.Xbox.XboxOne.x64 = Release|Gaming.Xbox.XboxOne.x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Debug|Gaming.Desktop.x64.ActiveCfg = Debug|Gaming.Desktop.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Debug|Gaming.Desktop.x64.Build.0 = Debug|Gaming.Desktop.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Debug|Gaming.Xbox.Scarlett.x64.ActiveCfg = Debug|Gaming.Xbox.Scarlett.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Debug|Gaming.Xbox.Scarlett.x64.Build.0 = Debug|Gaming.Xbox.Scarlett.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Debug|Gaming.Xbox.Scarlett.x64.Deploy.0 = Debug|Gaming.Xbox.Scarlett.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Debug|Gaming.Xbox.XboxOne.x64.ActiveCfg = Debug|Gaming.Xbox.XboxOne.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Debug|Gaming.Xbox.XboxOne.x64.Build.0 = Debug|Gaming.Xbox.XboxOne.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Debug|Gaming.Xbox.XboxOne.x64.Deploy.0 = Debug|Gaming.Xbox.XboxOne.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Profile|Gaming.Desktop.x64.ActiveCfg = Profile|Gaming.Desktop.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Profile|Gaming.Desktop.x64.Build.0 = Profile|Gaming.Desktop.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Profile|Gaming.Xbox.Scarlett.x64.ActiveCfg = Profile|Gaming.Xbox.Scarlett.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Profile|Gaming.Xbox.Scarlett.x64.Build.0 = Profile|Gaming.Xbox.Scarlett.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Profile|Gaming.Xbox.Scarlett.x64.Deploy.0 = Profile|Gaming.Xbox.Scarlett.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Profile|Gaming.Xbox.XboxOne.x64.ActiveCfg = Profile|Gaming.Xbox.XboxOne.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Profile|Gaming.Xbox.XboxOne.x64.Build.0 = Profile|Gaming.Xbox.XboxOne.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Profile|Gaming.Xbox.XboxOne.x64.Deploy.0 = Profile|Gaming.Xbox.XboxOne.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Release|Gaming.Desktop.x64.ActiveCfg = Release|Gaming.Desktop.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Release|Gaming.Desktop.x64.Build.0 = Release|Gaming.Desktop.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Release|Gaming.Xbox.Scarlett.x64.ActiveCfg = Release|Gaming.Xbox.Scarlett.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Release|Gaming.Xbox.Scarlett.x64.Build.0 = Release|Gaming.Xbox.Scarlett.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Release|Gaming.Xbox.Scarlett.x64.Deploy.0 = Release|Gaming.Xbox.Scarlett.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Release|Gaming.Xbox.XboxOne.x64.ActiveCfg = Release|Gaming.Xbox.XboxOne.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Release|Gaming.Xbox.XboxOne.x64.Build.0 = Release|Gaming.Xbox.XboxOne.x64
+		{65D3FC89-73DE-4902-B232-A9DB945CCD1D}.Release|Gaming.Xbox.XboxOne.x64.Deploy.0 = Release|Gaming.Xbox.XboxOne.x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FAB8C355-C949-4206-8A2A-B52DA5251CE9}
+	EndGlobalSection
+EndGlobal

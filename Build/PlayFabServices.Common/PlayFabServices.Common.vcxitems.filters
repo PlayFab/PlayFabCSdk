@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{3e794b0d-a722-463c-909e-080d0130f2c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{5de2a984-6a2d-4e8c-afb5-f26dbbd0ae84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Api">
+      <UniqueIdentifier>{86f10500-7bbf-41f6-9360-0579bf511929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common">
+      <UniqueIdentifier>{cf44a0dc-3f6e-45d6-bfbc-8b687dadd7c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Generated">
+      <UniqueIdentifier>{aaaeaf10-7245-4031-a9c8-c9a087f24283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Generated\playfab">
+      <UniqueIdentifier>{3883be85-6cec-4adf-9816-40a0f7a3f126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Generated\playfab\services">
+      <UniqueIdentifier>{ca042ba8-8b25-4125-ac46-7da831a12ef0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\stdafx.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Api\PFServices.cpp">
+      <Filter>Source\Api</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\GlobalState.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\HttpClient.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\Platform.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\stdafx.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\GlobalState.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\HttpClient.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\Platform.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Include\Generated\playfab\services\PFServices.h">
+      <Filter>Include\Generated\playfab\services</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

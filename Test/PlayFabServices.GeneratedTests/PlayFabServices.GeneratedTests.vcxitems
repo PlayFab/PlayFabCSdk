@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{ED91BB24-B033-4DEE-984F-1B4609C0811A}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)FriendsTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)FriendsTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)FriendsTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)AccountManagementTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)AccountManagementTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)AccountManagementTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlatformSpecificTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlatformSpecificTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)PlatformSpecificTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CharacterTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CharacterTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)CharacterTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SegmentsTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SegmentsTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)SegmentsTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TitleDataManagementTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TitleDataManagementTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)TitleDataManagementTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)PlayerDataManagementTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PushNotificationsTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)PushNotificationsTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)CloudScriptTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DataTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)DataTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)DataTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)InventoryTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)InventoryTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)InventoryTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CatalogTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CatalogTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)CatalogTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ExperimentationTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ExperimentationTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)ExperimentationTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GroupsTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GroupsTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)GroupsTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)LocalizationTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)LocalizationTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)LocalizationTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MultiplayerServerTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)MultiplayerServerTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)MultiplayerServerTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProfilesTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ProfilesTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)ProfilesTestsImpl.stubs" />
+  </ItemGroup>
+</Project>

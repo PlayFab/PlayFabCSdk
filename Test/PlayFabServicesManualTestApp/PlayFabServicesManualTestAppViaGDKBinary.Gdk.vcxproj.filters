@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{f27882b2-beb4-4e85-93f0-8f33f21a64b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{fb2beb22-1d16-494a-b5cf-608258bab169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GDK">
+      <UniqueIdentifier>{1e98814f-a9cf-4fbf-af7a-a3c2506663dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\TestFramework">
+      <UniqueIdentifier>{62c4f8c7-0505-4471-a10c-974a1301c3c5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GDK\DeviceResourcesPC.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\DeviceResourcesXbox.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\GamePC.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\GameXbox.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\Keyboard.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\MainPC.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="GDK\MainXbox.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="TestFramework\TestRunner.cpp">
+      <Filter>Source\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAppPch.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="TestFramework\HttpMock.cpp">
+      <Filter>Source\TestFramework</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GDK\d3dx12.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\DeviceResourcesPC.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\DeviceResourcesXbox.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\GamePC.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\GameXbox.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\GDKPch.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\Keyboard.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="TestFramework\TestRunner.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="GDK\StepTimer.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="TestAppPch.h">
+      <Filter>Source\GDK</Filter>
+    </ClInclude>
+    <ClInclude Include="TestFramework\HttpMock.h">
+      <Filter>Source\TestFramework</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="GDK\Assets\ATGConsoleBlack.DDS">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\ATGSampleBackground.DDS">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\Unmounted.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\SplashScreen.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\SmallLogo.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\Logo.png">
+      <Filter>Source\GDK</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\Mounted.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="GDK\Assets\Owned.png">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\..\testTitleData.json">
+      <Filter>Source\GDK</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <MGCCompile Include="$(SolutionDir)MicrosoftGame.Config">
+      <Filter>Source\GDK</Filter>
+    </MGCCompile>
+  </ItemGroup>
+</Project>

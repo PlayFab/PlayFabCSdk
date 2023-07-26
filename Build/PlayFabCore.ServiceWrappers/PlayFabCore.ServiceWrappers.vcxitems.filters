@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include" />
+    <Filter Include="Include\Generated" />
+    <Filter Include="Include\Generated\playfab" />
+    <Filter Include="Source" />
+    <Filter Include="Include\Generated\playfab\core" />
+    <Filter Include="Include\Generated\playfab\core\cpp" />
+    <Filter Include="Source\Generated" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Include\Generated\playfab\core\PFTypes.h" >
+      <Filter>Include\Generated\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Include\Generated\playfab\core\cpp\TypeWrappers.h" >
+      <Filter>Include\Generated\playfab\core\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\Types.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\Types.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Include\Generated\playfab\core\PFAuthenticationTypes.h" >
+      <Filter>Include\Generated\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Include\Generated\playfab\core\cpp\AuthenticationTypeWrappers.h" >
+      <Filter>Include\Generated\playfab\core\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\AuthenticationTypes.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\AuthenticationTypes.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\Authentication.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\Authentication.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Include\Generated\playfab\core\PFAuthentication.h" >
+      <Filter>Include\Generated\playfab\core</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\PFAuthentication.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Include\Generated\playfab\core\PFEventsTypes.h" >
+      <Filter>Include\Generated\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Include\Generated\playfab\core\cpp\EventsTypeWrappers.h" >
+      <Filter>Include\Generated\playfab\core\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\EventsTypes.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\EventsTypes.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\Events.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\Events.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabCore\Include\Generated\playfab\core\PFEvents.h" >
+      <Filter>Include\Generated\playfab\core</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabCore\Source\Generated\PFEvents.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

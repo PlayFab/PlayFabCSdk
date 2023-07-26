@@ -1,0 +1,29 @@
+#include "TestAppPch.h"
+#include "LocalizationTests.h"
+#include "LocalizationOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> LocalizationTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> LocalizationTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+#if 0
+void LocalizationTests::TestGetLanguageList(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+
+}
+}

@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include" />
+    <Filter Include="Source" />
+    <Filter Include="Include" />
+    <Filter Include="Source" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)FriendsOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)FriendsOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)AccountManagementOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)AccountManagementOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlatformSpecificOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlatformSpecificOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CharacterOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CharacterOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)SegmentsOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)SegmentsOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TitleDataManagementOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TitleDataManagementOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)DataOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)DataOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)InventoryOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)InventoryOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CatalogOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CatalogOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ExperimentationOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ExperimentationOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GroupsOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GroupsOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)LocalizationOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)LocalizationOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MultiplayerServerOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MultiplayerServerOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProfilesOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ProfilesOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

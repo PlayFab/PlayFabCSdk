@@ -1,0 +1,36 @@
+#include "TestAppPch.h"
+#include "PushNotificationsTests.h"
+#include "PushNotificationsOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> PushNotificationsTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> PushNotificationsTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+#if 0
+void PushNotificationsTests::TestServerSendPushNotification(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PushNotificationsTests::TestServerSendPushNotificationFromTemplate(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+
+}
+}

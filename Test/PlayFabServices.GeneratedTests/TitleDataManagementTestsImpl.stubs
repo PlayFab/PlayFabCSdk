@@ -1,0 +1,98 @@
+#include "TestAppPch.h"
+#include "TitleDataManagementTests.h"
+#include "TitleDataManagementOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> TitleDataManagementTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> TitleDataManagementTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void TitleDataManagementTests::TestClientGetPublisherData(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void TitleDataManagementTests::TestClientGetTime(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void TitleDataManagementTests::TestClientGetTitleData(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void TitleDataManagementTests::TestClientGetTitleNews(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void TitleDataManagementTests::TestServerGetPublisherData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void TitleDataManagementTests::TestServerGetTime(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void TitleDataManagementTests::TestServerGetTitleData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void TitleDataManagementTests::TestServerGetTitleInternalData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void TitleDataManagementTests::TestServerGetTitleNews(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void TitleDataManagementTests::TestServerSetPublisherData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void TitleDataManagementTests::TestServerSetTitleData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void TitleDataManagementTests::TestServerSetTitleInternalData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+
+}
+}

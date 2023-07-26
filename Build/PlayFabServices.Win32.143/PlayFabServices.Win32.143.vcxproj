@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9740c935-821c-498c-a942-817eea7fdcd7}</ProjectGuid>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove(PlayFab.C.Win32.props))" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabCore.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabServices.Common\PlayFabServices.Common.vcxitems" Label="Shared" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabServices.ServiceWrappers\PlayFabServices.ServiceWrappers.vcxitems" Label="Shared" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

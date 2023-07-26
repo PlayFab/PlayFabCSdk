@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{e4b17803-2bcd-4118-85d7-7655c95227db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{e4a0006e-436a-4e33-a7ea-f1546acf734f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\playfab">
+      <UniqueIdentifier>{c8504e25-bb68-4e5f-927e-04d81c4e223e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\playfab\core">
+      <UniqueIdentifier>{42572e9f-4d2c-4d16-ac4d-4e37fadbdbf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\playfab\httpClient">
+      <UniqueIdentifier>{d7e28968-8122-4056-90c0-ff691b3c2f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\playfab\core\cpp">
+      <UniqueIdentifier>{71d703ab-5fdb-4993-bd3f-8b989d5ed99b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Api">
+      <UniqueIdentifier>{17f92066-ebe8-4276-a0d9-155dd7b58f69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Authentication">
+      <UniqueIdentifier>{94338be3-4964-473c-836f-36d12df22a5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common">
+      <UniqueIdentifier>{c9ae7e2d-19ca-4078-9a09-759af69d6dfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\EventPipeline">
+      <UniqueIdentifier>{a5af1477-a68f-4cb8-bf16-b600bcdc65f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\HttpClient">
+      <UniqueIdentifier>{0627690e-c3d1-47dc-b822-ac02029ffc6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{222582ac-1dd1-42cd-bbeb-3d30871660e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Trace">
+      <UniqueIdentifier>{bff3fd0e-dc7f-4d5e-8b5f-58e3dff5cdc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Generated">
+      <UniqueIdentifier>{5ee99b90-07df-4ca2-a27b-4a0c7de7cee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Generated\playfab">
+      <UniqueIdentifier>{58bdf30d-1e6c-4b3b-9dd3-c78a6fa40d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Generated\playfab\core">
+      <UniqueIdentifier>{feb784b4-fc75-4295-b57c-228195c0c4bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Generated">
+      <UniqueIdentifier>{6d8f523e-476a-4f22-84d4-b8e6fae3be39}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\PFCore.h">
+      <Filter>Include\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\PFEventPipeline.h">
+      <Filter>Include\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\PFHttpConfig.h">
+      <Filter>Include\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\PFPal.h">
+      <Filter>Include\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\PFPlatform.h">
+      <Filter>Include\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\PFServiceConfig.h">
+      <Filter>Include\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\PFTrace.h">
+      <Filter>Include\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\cpp\Entity.h">
+      <Filter>Include\playfab\core\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\cpp\EventPipeline.h">
+      <Filter>Include\playfab\core\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\cpp\PlayFabException.h">
+      <Filter>Include\playfab\core\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\cpp\ServiceConfig.h">
+      <Filter>Include\playfab\core\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\cpp\StdOptional.h">
+      <Filter>Include\playfab\core\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\cpp\TypeWrapperHelpers.h">
+      <Filter>Include\playfab\core\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHCConfig.h">
+      <Filter>Include\playfab\httpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHCPal.h">
+      <Filter>Include\playfab\httpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHCTrace.h">
+      <Filter>Include\playfab\httpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHttpClient.h">
+      <Filter>Include\playfab\httpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHttpProvider.h">
+      <Filter>Include\playfab\httpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFMock.h">
+      <Filter>Include\playfab\httpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\CombinedLoginResult.h">
+      <Filter>Source\Authentication</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\GetEntityAsyncProvider.h">
+      <Filter>Source\Authentication</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\LoginContext.h">
+      <Filter>Source\Authentication</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\EventPipeline\EventPipeline.h">
+      <Filter>Source\EventPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\EventPipeline\EventPipelineTypes.h">
+      <Filter>Source\EventPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\ApiHelpers.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\Entity.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\EntityToken.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\GlobalState.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\HandleTable.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\HttpClient.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\ServiceConfig.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\TokenExpiredHandler.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\TokenRefreshedHandler.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\DebugTraceOutput.h">
+      <Filter>Source\Trace</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\LocalStorageTraceOutput.h">
+      <Filter>Source\Trace</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\TraceState.h">
+      <Filter>Source\Trace</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorage.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorageHandlers.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Platform.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\stdafx.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\Generated\playfab\core\PFEntity.h">
+      <Filter>Include\Generated\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\Generated\playfab\core\PFErrors.h">
+      <Filter>Include\Generated\playfab\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Generated\CacheId.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Api\PFCore.cpp">
+      <Filter>Source\Api</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Api\PFEntity.cpp">
+      <Filter>Source\Api</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Api\PFEventPipeline.cpp">
+      <Filter>Source\Api</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Api\PFHttpConfig.cpp">
+      <Filter>Source\Api</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Api\PFPlatform.cpp">
+      <Filter>Source\Api</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Api\PFServiceConfig.cpp">
+      <Filter>Source\Api</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Api\PFTrace.cpp">
+      <Filter>Source\Api</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\CombinedLoginResult.cpp">
+      <Filter>Source\Authentication</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\LoginContext.cpp">
+      <Filter>Source\Authentication</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\EventPipeline\EventPipeline.cpp">
+      <Filter>Source\EventPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\EventPipeline\EventPipelineTypes.cpp">
+      <Filter>Source\EventPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\ApiHelpers.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\Entity.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\EntityToken.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\GlobalState.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\HttpClient.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\ServiceConfig.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\TokenExpiredHandler.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\TokenRefreshedHandler.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFHCTrace.cpp">
+      <Filter>Source\HttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFHttpClient.cpp">
+      <Filter>Source\HttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFHttpProvider.cpp">
+      <Filter>Source\HttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFMock.cpp">
+      <Filter>Source\HttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\DebugTraceOutput.cpp">
+      <Filter>Source\Trace</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\LocalStorageTraceOutput.cpp">
+      <Filter>Source\Trace</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\TraceState.cpp">
+      <Filter>Source\Trace</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorage.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorageHandlers.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Platform.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\stdafx.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\LHCExport.def">
+      <Filter>Source\HttpClient</Filter>
+    </None>
+  </ItemGroup>
+</Project>

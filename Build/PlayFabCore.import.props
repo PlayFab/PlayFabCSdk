@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PlayFabCoreImported>true</PlayFabCoreImported>
+  </PropertyGroup>
+
+  <Import Condition="'$(PlayFabPathsImported)' != 'true'" Project="PlayFab.C.paths.props" />
+  <Import Condition="'$(HCPlatform)' == ''" Project="$(HCRoot)\platform_select.props" />
+
+  <!--Add PlayFabCore include directory to client include path-->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabCore\Include;$(PlayFabSourceDir)\PlayFabCore\Include\Generated</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <PropertyGroup>
+    <PlayFabCoreToolset>$(PlatformToolsetVersion)</PlayFabCoreToolset>
+    <PlayFabCoreToolset Condition="'$(PlatformToolset)'=='v141'">141</PlayFabCoreToolset>
+    <PlayFabCoreToolset Condition="'$(PlatformToolset)'=='v142'">142</PlayFabCoreToolset>
+    <PlayFabCoreToolset Condition="'$(PlatformToolset)'=='v143'">143</PlayFabCoreToolset>
+    <PlayFabCoreProjectName>PlayFabCore.$(HCPlatform).$(PlayFabCoreToolset)</PlayFabCoreProjectName>
+    <PlayFabCoreOutDir>$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
+  </PropertyGroup>
+
+  <!--Add reference to appropriate PlayFabCore project-->
+  <ItemGroup Condition="'$(HCPlatform)' == 'Win32' Or '$(HCPlatform)' == 'GDK'" Label="PlayFabCore project reference">
+    <ProjectReference Include="$(PlayFabBuildRoot)\$(PlayFabCoreProjectName)\$(PlayFabCoreProjectName).vcxproj">
+      <Project Condition="'$(HCPlatform)' == 'Win32' and '$(PlayFabCoreToolset)' == '143'">{e39e44ee-0f50-4a99-a5d5-04633b19128f}</Project>
+      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(PlayFabCoreToolset)' == '142'">{073240eb-8e44-4e40-b5a9-3d2dc09b0d0b}</Project>
+      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(PlayFabCoreToolset)' == '143'">{d5c6a9a7-da63-4032-8ab2-3350f89162fc}</Project>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--Except on GDK, LHC is needed for XAsync-->
+  <Import Condition="'$(LibHttpClientImported)' != 'true' AND '$(HCPlatform)' != 'GDK'" Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
+
+  <!--Copy PlayFabCore to OutDir-->
+  <ItemGroup Label="CopyDependencies">
+    <ReferenceCopyLocalPaths Include="$(PlayFabCoreOutDir)\*" />
+  </ItemGroup>
+
+</Project>

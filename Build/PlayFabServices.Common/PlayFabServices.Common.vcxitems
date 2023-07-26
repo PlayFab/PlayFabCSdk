@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{c0fc43fe-b741-4214-8278-04285ba33859}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabServices\Include;$(PlayFabSourceDir)\PlayFabServices\Include\Generated;$(PlayFabSourceDir)\PlayFabServices\Source;$(PlayFabSourceDir)\PlayFabServices\Source\Common</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Api\PFServices.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\GlobalState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\HttpClient.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\Platform.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\stdafx.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Include\Generated\playfab\services\PFServices.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\GlobalState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\HttpClient.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\Platform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\stdafx.h" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,74 @@
+#include "TestAppPch.h"
+#include "SegmentsTests.h"
+#include "SegmentsOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> SegmentsTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> SegmentsTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+void SegmentsTests::TestClientGetPlayerSegments(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void SegmentsTests::TestClientGetPlayerTags(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if 0
+void SegmentsTests::TestServerAddPlayerTag(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void SegmentsTests::TestServerGetAllSegments(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void SegmentsTests::TestServerGetPlayerSegments(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void SegmentsTests::TestServerGetPlayersInSegment(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void SegmentsTests::TestServerGetPlayerTags(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void SegmentsTests::TestServerRemovePlayerTag(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+
+}
+}
