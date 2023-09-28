@@ -116,6 +116,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\pch.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\PlatformUtils.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="$(MSBuildThisFileDirectory)..\..\External\rapidjson.natvis" />

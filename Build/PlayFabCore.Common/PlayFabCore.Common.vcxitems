@@ -52,7 +52,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\EventPipeline\EventPipelineTypes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Generated\CacheId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorage.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorageHandlers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Platform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\stdafx.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\DebugTraceOutput.h" />
@@ -84,7 +83,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFHttpProvider.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFMock.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorage.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorageHandlers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Platform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

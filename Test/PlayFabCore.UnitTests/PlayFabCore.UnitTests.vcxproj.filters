@@ -48,6 +48,9 @@
     <ClCompile Include="Mocks\PlayFabServiceMock.cpp">
       <Filter>Source\Mocks</Filter>
     </ClCompile>
+    <ClCompile Include="Mocks\PlatformMocks.cpp">
+      <Filter>Source\Mocks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mocks\PlayFabServiceMock.h">

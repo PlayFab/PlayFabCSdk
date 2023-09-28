@@ -32,67 +32,6 @@ enum class PFAuthenticationIdentifiedDeviceType : uint32_t
 };
 
 /// <summary>
-/// PFAuthenticationGetPhotonAuthenticationTokenRequest data model.
-/// </summary>
-typedef struct PFAuthenticationGetPhotonAuthenticationTokenRequest
-{
-    /// <summary>
-    /// The Photon applicationId for the game you wish to log into.
-    /// </summary>
-    _Null_terminated_ const char* photonApplicationId;
-
-} PFAuthenticationGetPhotonAuthenticationTokenRequest;
-
-/// <summary>
-/// PFAuthenticationGetPhotonAuthenticationTokenResult data model.
-/// </summary>
-typedef struct PFAuthenticationGetPhotonAuthenticationTokenResult
-{
-    /// <summary>
-    /// (Optional) The Photon authentication token for this game-session.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* photonCustomAuthenticationToken;
-
-} PFAuthenticationGetPhotonAuthenticationTokenResult;
-
-/// <summary>
-/// PFAuthenticationGetTitlePublicKeyRequest data model. An RSA CSP blob to be used to encrypt the payload
-/// of account creation requests when that API requires a signature header. For example if Client/LoginWithCustomId
-/// requires signature headers but the player does not have an account yet follow these steps: 1) Call
-/// Client/GetTitlePublicKey with one of the title's shared secrets. 2) Convert the Base64 encoded CSP
-/// blob to a byte array and create an RSA signing object. 3) Encrypt the UTF8 encoded JSON body of the
-/// registration request and place the Base64 encoded result into the EncryptedRequest and with the TitleId
-/// field, all other fields can be left empty when performing the API request. 4) Client receives authentication
-/// token as normal. Future requests to LoginWithCustomId will require the X-PlayFab-Signature header.
-/// </summary>
-typedef struct PFAuthenticationGetTitlePublicKeyRequest
-{
-    /// <summary>
-    /// Unique identifier for the title, found in the Settings > Game Properties section of the PlayFab
-    /// developer site when a title has been selected.
-    /// </summary>
-    _Null_terminated_ const char* titleId;
-
-    /// <summary>
-    /// The shared secret key for this title.
-    /// </summary>
-    _Null_terminated_ const char* titleSharedSecret;
-
-} PFAuthenticationGetTitlePublicKeyRequest;
-
-/// <summary>
-/// PFAuthenticationGetTitlePublicKeyResult data model.
-/// </summary>
-typedef struct PFAuthenticationGetTitlePublicKeyResult
-{
-    /// <summary>
-    /// (Optional) Base64 encoded RSA CSP byte array blob containing the title's public RSA key.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* RSAPublicKey;
-
-} PFAuthenticationGetTitlePublicKeyResult;
-
-/// <summary>
 /// PFAuthenticationLoginWithAndroidDeviceIDRequest data model. On Android devices, the recommendation
 /// is to use the Settings.Secure.ANDROID_ID as the AndroidDeviceId, as described in this blog post (http://android-developers.blogspot.com/2011/03/identifying-app-installations.html).
 /// More information on this identifier can be found in the Android documentation (http://developer.android.com/reference/android/provider/Settings.Secure.html).
@@ -1193,30 +1132,6 @@ typedef struct PFAuthenticationRegisterPlayFabUserResult
     _Maybenull_ _Null_terminated_ const char* username;
 
 } PFAuthenticationRegisterPlayFabUserResult;
-
-/// <summary>
-/// PFAuthenticationSetPlayerSecretRequest data model. APIs that require signatures require that the
-/// player have a configured Player Secret Key that is used to sign all requests. Players that don't have
-/// a secret will be blocked from making API calls until it is configured. To create a signature header
-/// add a SHA256 hashed string containing UTF8 encoded JSON body as it will be sent to the server, the
-/// current time in UTC formatted to ISO 8601, and the players secret formatted as 'body.date.secret'.
-/// Place the resulting hash into the header X-PlayFab-Signature, along with a header X-PlayFab-Timestamp
-/// of the same UTC timestamp used in the signature.
-/// </summary>
-typedef struct PFAuthenticationSetPlayerSecretRequest
-{
-    /// <summary>
-    /// (Optional) Base64 encoded body that is encrypted with the Title's public RSA key (Enterprise
-    /// Only).
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* encryptedRequest;
-
-    /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* playerSecret;
-
-} PFAuthenticationSetPlayerSecretRequest;
 
 /// <summary>
 /// PFAuthenticationLoginWithServerCustomIdRequest data model.

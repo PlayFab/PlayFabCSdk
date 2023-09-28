@@ -31,7 +31,7 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
     void TestGetMicrosoftStoreAccessTokens(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestGetTransactionHistory(TestContext& testContext);
 #endif
     void TestPurchaseInventoryItems(TestContext& testContext);

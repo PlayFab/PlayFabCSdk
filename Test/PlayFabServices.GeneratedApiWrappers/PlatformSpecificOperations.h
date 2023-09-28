@@ -62,7 +62,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerAwardSteamAchievementOperation : public XAsyncOperation<Wrappers::PFPlatformSpecificAwardSteamAchievementResultWrapper<Allocator>>
 {
 public:

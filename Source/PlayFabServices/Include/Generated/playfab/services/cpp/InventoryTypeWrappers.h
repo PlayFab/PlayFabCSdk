@@ -4840,6 +4840,7 @@ public:
         m_givingETag{ SafeString(model.givingETag) },
         m_givingTransactionIds{ model.givingTransactionIds, model.givingTransactionIds + model.givingTransactionIdsCount },
         m_idempotencyId{ SafeString(model.idempotencyId) },
+        m_operationStatus{ SafeString(model.operationStatus) },
         m_receivingTransactionIds{ model.receivingTransactionIds, model.receivingTransactionIds + model.receivingTransactionIdsCount }
     {
         SetModelPointers();
@@ -4871,6 +4872,7 @@ public:
         swap(lhs.m_givingETag, rhs.m_givingETag);
         swap(lhs.m_givingTransactionIds, rhs.m_givingTransactionIds);
         swap(lhs.m_idempotencyId, rhs.m_idempotencyId);
+        swap(lhs.m_operationStatus, rhs.m_operationStatus);
         swap(lhs.m_receivingTransactionIds, rhs.m_receivingTransactionIds);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
@@ -4895,6 +4897,12 @@ public:
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
     }
 
+    void SetOperationStatus(String value)
+    {
+        m_operationStatus = std::move(value);
+        this->m_model.operationStatus =  m_operationStatus.empty() ? nullptr : m_operationStatus.data();
+    }
+
     void SetReceivingTransactionIds(CStringVector<Alloc> value)
     {
         m_receivingTransactionIds = std::move(value);
@@ -4908,12 +4916,14 @@ private:
         this->m_model.givingETag = m_givingETag.empty() ? nullptr : m_givingETag.data();
         this->m_model.givingTransactionIds = m_givingTransactionIds.empty() ? nullptr : m_givingTransactionIds.data();
         this->m_model.idempotencyId = m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+        this->m_model.operationStatus = m_operationStatus.empty() ? nullptr : m_operationStatus.data();
         this->m_model.receivingTransactionIds = m_receivingTransactionIds.empty() ? nullptr : m_receivingTransactionIds.data();
     }
 
     String m_givingETag;
     CStringVector<Alloc> m_givingTransactionIds;
     String m_idempotencyId;
+    String m_operationStatus;
     CStringVector<Alloc> m_receivingTransactionIds;
 };
 

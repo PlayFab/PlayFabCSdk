@@ -9,6 +9,7 @@
 
 #include <playfab/core/PFPal.h>
 #include <playfab/core/PFEntity.h>
+#include <playfab/httpClient/PFHttpClient.h>
 
 extern "C"
 {
@@ -128,6 +129,11 @@ struct PFEventPipelineConfig
     /// How long the pipeline will wait to read from the event buffer again after emptying it. If sent null, default value will be used (10 for Telemetry / 10 for PlayStream).
     /// </summary>
     _Maybenull_ uint32_t* pollDelayInMs;
+
+    /// <summary>
+    /// The event pipeline will send events using GZIP compression with the level specified. If sent null, no compression will be made.
+    /// </summary>
+    _Maybenull_ PFHCCompressionLevel* compressionLevel;
 };
 
 /// <summary>

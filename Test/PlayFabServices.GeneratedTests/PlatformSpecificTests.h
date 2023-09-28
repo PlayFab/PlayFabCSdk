@@ -31,7 +31,7 @@ private:
 #if 0
     void TestClientRegisterForIOSPushNotification(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerAwardSteamAchievement(TestContext& testContext);
 #endif
 

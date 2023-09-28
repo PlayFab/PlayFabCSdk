@@ -42,9 +42,9 @@ void FriendsTests::TestClientGetFriendsList(TestContext& tc)
     {
         RETURN_IF_FAILED_PLAYFAB(result);
     
-        *friendId = result.ExtractPayload();
+        *friendId = result.ExtractPayload(); 
         ClientAddFriendOperation::RequestType request;
-        request.SetFriendPlayFabId(*friendId);
+        request.SetFriendPlayFabId(*friendId); 
         
         return ClientAddFriendOperation::Run(DefaultTitlePlayer(), request, RunContext());
     })
@@ -66,7 +66,7 @@ void FriendsTests::TestClientGetFriendsList(TestContext& tc)
 
         return S_OK;
     })
-    .Then([&, friendId](Result<void> result) -> AsyncOp<void>
+    .Then([&, friendId](Result<void> result) -> AsyncOp<void> 
     {
         tc.RecordResult(std::move(result));
     
@@ -105,7 +105,7 @@ void FriendsTests::TestClientRemoveFriend(TestContext& tc)
 void FriendsTests::TestClientSetFriendTags(TestContext& tc)
 {
 #if HC_PLATFORM != HC_PLATFORM_GDK
-    SharedPtr<String> friendId = MakeShared<String>();
+    SharedPtr<String> friendId = MakeShared<String>(); 
 
     ServicesTestClass::GetPlayFabIdFromCustomId(kFriendCustomId).Then([&, friendId](Result<String> result) -> AsyncOp<ClientAddFriendOperation::ResultType>
     {
@@ -141,34 +141,111 @@ void FriendsTests::TestClientSetFriendTags(TestContext& tc)
 #endif
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 
 void FriendsTests::TestServerAddFriend(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered by TestServerGetFriendsList
+    tc.EndTest(S_OK);
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void FriendsTests::TestServerGetFriendsList(TestContext& tc)
 {
-    tc.Skip();
+    SharedPtr<String> friendId = MakeShared<String>();
+
+    ServicesTestClass::GetPlayFabIdFromCustomId(kFriendCustomId).Then([&, friendId](Result<String> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        *friendId = result.ExtractPayload();
+
+        ServerAddFriendOperation::RequestType request;
+        request.SetFriendPlayFabId(*friendId);
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerAddFriendOperation::Run(TitleEntity(), request, RunContext());
+    }).Then([&, friendId](Result<void> result) -> AsyncOp<ServerGetFriendsListOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        ServerGetFriendsListOperation::RequestType request;
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerGetFriendsListOperation::Run(TitleEntity(), request, RunContext());
+    }).Then([&, friendId](Result<ServerGetFriendsListOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        auto& model = result.Payload().Model();
+        tc.AssertEqual(1u, model.friendsCount, "friendsCount");
+        tc.AssertEqual<String>(*friendId, model.friends[0]->friendPlayFabId, "friendPlayFabId");
+
+        return S_OK;
+    }).Then([&,friendId](Result<void> result) -> AsyncOp<void>
+    {
+        // Record result
+        tc.RecordResult(std::move(result));
+
+        // Cleanup
+        ServerRemoveFriendOperation::RequestType request;
+        request.SetFriendPlayFabId(*friendId);
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerRemoveFriendOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void FriendsTests::TestServerRemoveFriend(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered by TestServerSetFriendTags
+    tc.EndTest(S_OK);
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void FriendsTests::TestServerSetFriendTags(TestContext& tc)
 {
-    tc.Skip();
+    SharedPtr<String> friendId = MakeShared<String>();
+
+    ServicesTestClass::GetPlayFabIdFromCustomId(kFriendCustomId).Then([&, friendId](Result<String> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        *friendId = result.ExtractPayload();
+        ServerAddFriendOperation::RequestType request;
+        request.SetPlayFabId(DefaultTitlePlayerId());
+        request.SetFriendPlayFabId(*friendId);
+        return ServerAddFriendOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&, friendId](Result<void> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        ServerSetFriendTagsOperation::RequestType request;
+        request.SetPlayFabId(DefaultTitlePlayerId());
+        request.SetFriendPlayFabId(*friendId);
+        request.SetTags({ "tag1", "tag2" });
+
+        return ServerSetFriendTagsOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&, friendId](Result<void> result) -> AsyncOp<void>
+    {
+        tc.RecordResult(std::move(result));
+        // Cleanup
+        ServerRemoveFriendOperation::RequestType request;
+        request.SetFriendPlayFabId(*friendId);
+        request.SetPlayFabId(DefaultTitlePlayerId());
+        return ServerRemoveFriendOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
-
 
 }
 }

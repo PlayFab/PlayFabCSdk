@@ -17,7 +17,7 @@ void PlatformSpecificTests::AddTests()
 #if 0
     AddTest("TestClientRegisterForIOSPushNotification", &PlatformSpecificTests::TestClientRegisterForIOSPushNotification);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerAwardSteamAchievement", &PlatformSpecificTests::TestServerAwardSteamAchievement);
 #endif
 

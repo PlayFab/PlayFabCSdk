@@ -180,5 +180,13 @@ public:
 };
 
 } // namespace Friends
+
 // EnumRange definitions used for Enum (de)serialization
+template<typename T> struct EnumRange;
+
+template<> struct EnumRange<PFFriendsExternalFriendSources>
+{
+    static constexpr PFFriendsExternalFriendSources maxValue = PFFriendsExternalFriendSources::All;
+};
+
 } // namespace PlayFab

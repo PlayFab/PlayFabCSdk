@@ -47,84 +47,84 @@ void PlayerDataManagementTests::TestClientUpdateUserPublisherData(TestContext& t
     tc.Skip();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserInternalData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserPublisherData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserPublisherInternalData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserPublisherReadOnlyData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserReadOnlyData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserInternalData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserPublisherData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserPublisherInternalData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserPublisherReadOnlyData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserReadOnlyData(TestContext& tc)
 {
     tc.Skip();

@@ -42,8 +42,6 @@ private:
 private:
     std::mutex m_mutex;
 
-    bool m_bCleanup{ false };
-
     TestReport m_testReport{ "PlayFabServicesTestReport" };
 
     List<SharedPtr<TestClass>> m_testClasses;

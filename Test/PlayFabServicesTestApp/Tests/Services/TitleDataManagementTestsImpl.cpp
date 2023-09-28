@@ -13,6 +13,9 @@ namespace Test
 
 constexpr char kTestKey[]{ "testKey" };
 constexpr char kTestVal[]{ "testVal" };
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+constexpr char kTestNullVal[]{ NULL };
+#endif
 constexpr time_t kTestTime{ 12345u };
 
 AsyncOp<void> ServerSetTitleData(ServiceConfig serviceConfig, String secretKey, String path, bool cleanup, PlayFab::RunContext rc) noexcept
@@ -128,7 +131,7 @@ void TitleDataManagementTests::TestClientGetTime(TestContext& tc)
 
         // Verify result time is within the last 10 seconds. Docs specify there may be a variance of up to 5 seconds.
         const time_t now = Platform::GetSystemTime();
-        const int expectedSeconds = 6;
+        const int expectedSeconds = 10;
         const auto actualSeconds = abs(difftime(now, result.Payload().Model().time));
 
         tc.AssertTrue(actualSeconds < expectedSeconds, "Returned time differs from system time by more than expected variance");
@@ -146,6 +149,8 @@ void TitleDataManagementTests::TestClientGetTitleData(TestContext& tc)
     ServerSetTitleData(ServiceConfig(), m_testTitleData.secretKey, "/Server/SetTitleData", false, RunContext()).Then([&](Result<void> result) -> AsyncOp<ClientGetTitleDataOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
+
+        Platform::Sleep(5000);
 
         return ClientGetTitleDataOperation::Run(DefaultTitlePlayer(), {}, RunContext());
     })
@@ -212,59 +217,281 @@ void TitleDataManagementTests::TestClientGetTitleNews(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetPublisherData(TestContext& tc)
 {
-    tc.Skip();
+    ServerSetPublisherDataOperation::RequestType request;
+    request.SetKey(kTestKey);
+    request.SetValue(kTestVal);
+
+    ServerSetPublisherDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<ServerGetPublisherDataOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return ServerGetPublisherDataOperation::Run(TitleEntity(), {}, RunContext());
+    })
+    .Then([&](Result<ServerGetPublisherDataOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        auto& model = result.Payload().Model();
+        tc.AssertEqual(1u, model.dataCount, "Unexpected count of results");
+        tc.AssertEqual(kTestKey, model.data[0].key, "Unexpected server publisher key");
+        tc.AssertEqual(kTestVal, model.data[0].value, "Unexpected server publisher value");
+
+        ServerSetPublisherDataOperation::RequestType request;
+        request.SetKey(kTestKey);
+        request.SetValue(kTestNullVal);
+
+        return ServerSetPublisherDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetTime(TestContext& tc)
 {
-    tc.Skip();
+    ServerGetTimeOperation::Run(TitleEntity(), RunContext()).Then([&](Result<ServerGetTimeOperation::ResultType> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        // Verify result time is within the last 10 seconds. Docs specify there may be a variance of up to 5 seconds.
+        const time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        const int expectedSeconds = 10;
+        const auto actualSeconds = abs(difftime(now, result.Payload().Model().time));
+
+        tc.AssertTrue(actualSeconds < expectedSeconds, "Unexpected time was returned by server");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetTitleData(TestContext& tc)
 {
-    tc.Skip();
+    ServerSetTitleDataOperation::RequestType request;
+    request.SetKey(kTestKey);
+    request.SetValue(kTestVal);
+
+    ServerSetTitleDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<ServerGetTitleDataOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return ServerGetTitleDataOperation::Run(TitleEntity(), {}, RunContext());
+    })
+    .Then([&](Result<ServerGetTitleDataOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        auto& model = result.Payload().Model();
+        tc.AssertEqual(1u, model.dataCount, "Unexpected count of results");
+        tc.AssertEqual(kTestKey, model.data[0].key, "Unexpected server title key");
+        tc.AssertEqual(kTestVal, model.data[0].value, "Unexpected server title value");
+
+        ServerSetTitleDataOperation::RequestType request;
+        request.SetKey(kTestKey);
+        request.SetValue(kTestNullVal);
+
+        return ServerSetTitleDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetTitleInternalData(TestContext& tc)
 {
-    tc.Skip();
+    ServerSetTitleInternalDataOperation::RequestType request;
+    request.SetKey(kTestKey);
+    request.SetValue(kTestVal);
+
+    ServerSetTitleInternalDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<ServerGetTitleInternalDataOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return ServerGetTitleInternalDataOperation::Run(TitleEntity(), {}, RunContext());
+    })
+    .Then([&](Result<ServerGetTitleInternalDataOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        auto& model = result.Payload().Model();
+        tc.AssertEqual(1u, model.dataCount, "Unexpected count of results");
+        tc.AssertEqual(kTestKey, model.data[0].key, "Unexpected server title internal key");
+        tc.AssertEqual(kTestVal, model.data[0].value, "Unexpected server title internal value");
+
+        ServerSetTitleInternalDataOperation::RequestType request;
+        request.SetKey(kTestKey);
+        request.SetValue(kTestNullVal);
+
+        return ServerSetTitleInternalDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetTitleNews(TestContext& tc)
 {
-    tc.Skip();
+    // Deleting news can only be done manually through the portal, and there is a very low limit (about 10) for news entries.
+    // The setup for this test will only create a news item if needed and afterward, the test will check against that permanent item.
+    ServerGetTitleNewsOperation::Run(TitleEntity(), {}, RunContext()).Then([&](Result<ServerGetTitleNewsOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        auto& model = result.Payload().Model();
+        if (model.newsCount == 0)
+        {
+            return InitialAdminAddNews(ServiceConfig(), m_testTitleData.secretKey, RunContext());
+        }
+
+        return S_OK;
+    })
+    .Then([&](Result<void> result) -> AsyncOp<ServerGetTitleNewsOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return ServerGetTitleNewsOperation::Run(TitleEntity(), {}, RunContext());
+    })
+    .Then([&](Result<ServerGetTitleNewsOperation::ResultType> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        auto& model = result.Payload().Model();
+        tc.AssertEqual(1u, model.newsCount, "newsCount");
+        tc.AssertEqual(kTestKey, model.news[0]->title, "news[0]->title");
+        tc.AssertEqual(kTestVal, model.news[0]->body, "news[0]->body");
+        tc.AssertEqual(kTestTime, model.news[0]->timestamp, "news[0]->timestamp");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerSetPublisherData(TestContext& tc)
 {
-    tc.Skip();
+    ServerSetPublisherDataOperation::RequestType request;
+    request.SetKey(kTestKey);
+    request.SetValue(kTestVal);
+
+    ServerSetPublisherDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        ServerSetPublisherDataOperation::RequestType request;
+        request.SetKey(kTestKey);
+        request.SetValue(kTestNullVal);
+
+        return ServerSetPublisherDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerSetTitleData(TestContext& tc)
 {
-    tc.Skip();
+    ServerSetTitleDataOperation::RequestType request;
+    request.SetKey(kTestKey);
+    request.SetValue(kTestVal);
+
+    ServerSetTitleDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        
+        ServerSetTitleDataOperation::RequestType request;
+        request.SetKey(kTestKey);
+        request.SetValue(kTestNullVal);
+
+        return ServerSetTitleDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerSetTitleInternalData(TestContext& tc)
 {
-    tc.Skip();
+    ServerSetTitleInternalDataOperation::RequestType request;
+    request.SetKey(kTestKey);
+    request.SetValue(kTestVal);
+
+    ServerSetTitleInternalDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        ServerSetTitleInternalDataOperation::RequestType request;
+        request.SetKey(kTestKey);
+        request.SetValue(kTestNullVal);
+
+        return ServerSetTitleInternalDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 

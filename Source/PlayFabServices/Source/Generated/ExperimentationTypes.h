@@ -44,5 +44,6 @@ public:
 };
 
 } // namespace Experimentation
+
 // EnumRange definitions used for Enum (de)serialization
 } // namespace PlayFab

@@ -2157,6 +2157,10 @@ HRESULT TransferInventoryItemsResponse::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "IdempotencyId", idempotencyId));
     this->SetIdempotencyId(std::move(idempotencyId));
 
+    String operationStatus{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OperationStatus", operationStatus));
+    this->SetOperationStatus(std::move(operationStatus));
+
     CStringVector receivingTransactionIds{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ReceivingTransactionIds", receivingTransactionIds));
     this->SetReceivingTransactionIds(std::move(receivingTransactionIds));
@@ -2190,6 +2194,10 @@ size_t TransferInventoryItemsResponse::RequiredBufferSize(const PFInventoryTrans
     {
         requiredSize += (std::strlen(model.idempotencyId) + 1);
     }
+    if (model.operationStatus)
+    {
+        requiredSize += (std::strlen(model.operationStatus) + 1);
+    }
     requiredSize += (alignof(char*) + sizeof(char*) * model.receivingTransactionIdsCount);
     for (size_t i = 0; i < model.receivingTransactionIdsCount; ++i)
     {
@@ -2215,6 +2223,11 @@ HRESULT TransferInventoryItemsResponse::Copy(const PFInventoryTransferInventoryI
         auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.idempotencyId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.operationStatus); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.operationStatus = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyToArray(input.receivingTransactionIds, input.receivingTransactionIdsCount);

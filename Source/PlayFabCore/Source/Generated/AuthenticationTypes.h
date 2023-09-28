@@ -9,72 +9,6 @@ namespace Authentication
 {
 
 // Authentication Classes
-class GetPhotonAuthenticationTokenRequest : public Wrappers::PFAuthenticationGetPhotonAuthenticationTokenRequestWrapper<Allocator>, public InputModel
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFAuthenticationGetPhotonAuthenticationTokenRequestWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // InputModel
-    JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFAuthenticationGetPhotonAuthenticationTokenRequest& input);
-};
-
-class GetPhotonAuthenticationTokenResult : public Wrappers::PFAuthenticationGetPhotonAuthenticationTokenResultWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAuthenticationGetPhotonAuthenticationTokenResult>
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFAuthenticationGetPhotonAuthenticationTokenResultWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // ServiceOutputModel
-    HRESULT FromJson(const JsonValue& input) override;
-    // ClientOutputModel
-    size_t RequiredBufferSize() const override;
-    Result<PFAuthenticationGetPhotonAuthenticationTokenResult const*> Copy(ModelBuffer& buffer) const override;
-
-    static size_t RequiredBufferSize(const PFAuthenticationGetPhotonAuthenticationTokenResult& model);
-    static HRESULT Copy(const PFAuthenticationGetPhotonAuthenticationTokenResult& input, PFAuthenticationGetPhotonAuthenticationTokenResult& output, ModelBuffer& buffer);
-};
-
-class GetTitlePublicKeyRequest : public Wrappers::PFAuthenticationGetTitlePublicKeyRequestWrapper<Allocator>, public InputModel
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFAuthenticationGetTitlePublicKeyRequestWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // InputModel
-    JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFAuthenticationGetTitlePublicKeyRequest& input);
-};
-
-class GetTitlePublicKeyResult : public Wrappers::PFAuthenticationGetTitlePublicKeyResultWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAuthenticationGetTitlePublicKeyResult>
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFAuthenticationGetTitlePublicKeyResultWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // ServiceOutputModel
-    HRESULT FromJson(const JsonValue& input) override;
-    // ClientOutputModel
-    size_t RequiredBufferSize() const override;
-    Result<PFAuthenticationGetTitlePublicKeyResult const*> Copy(ModelBuffer& buffer) const override;
-
-    static size_t RequiredBufferSize(const PFAuthenticationGetTitlePublicKeyResult& model);
-    static HRESULT Copy(const PFAuthenticationGetTitlePublicKeyResult& input, PFAuthenticationGetTitlePublicKeyResult& output, ModelBuffer& buffer);
-};
-
 class LoginWithAndroidDeviceIDRequest : public Wrappers::PFAuthenticationLoginWithAndroidDeviceIDRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -428,20 +362,6 @@ public:
     static HRESULT Copy(const PFAuthenticationRegisterPlayFabUserResult& input, PFAuthenticationRegisterPlayFabUserResult& output, ModelBuffer& buffer);
 };
 
-class SetPlayerSecretRequest : public Wrappers::PFAuthenticationSetPlayerSecretRequestWrapper<Allocator>, public InputModel
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFAuthenticationSetPlayerSecretRequestWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // InputModel
-    JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFAuthenticationSetPlayerSecretRequest& input);
-};
-
 class LoginWithServerCustomIdRequest : public Wrappers::PFAuthenticationLoginWithServerCustomIdRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -626,5 +546,13 @@ public:
 };
 
 } // namespace Authentication
+
 // EnumRange definitions used for Enum (de)serialization
+template<typename T> struct EnumRange;
+
+template<> struct EnumRange<PFAuthenticationIdentifiedDeviceType>
+{
+    static constexpr PFAuthenticationIdentifiedDeviceType maxValue = PFAuthenticationIdentifiedDeviceType::Scarlett;
+};
+
 } // namespace PlayFab

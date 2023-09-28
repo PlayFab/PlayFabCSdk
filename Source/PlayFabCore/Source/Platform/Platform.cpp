@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "Platform.h"
-#include "LocalStorageHandlers.h"
 
 #ifdef _DEBUG
 // The SDK should never rely on the new or delete operators - all allocations should be hooked and
 // route through the configured memory hooks (or the default memory functions, which use std::malloc and std::free).
 // If these operators are ever used, it indicates we have an allocation that is unhooked and needs to be.
 
+#if !HC_PLATFORM_IS_PLAYSTATION
 void* operator new(size_t size)
 {
 #if HC_PLATFORM == HC_PLATFORM_GDK
@@ -27,16 +27,15 @@ void operator delete(void* p)
         free(p);
     }
 }
+#endif //!HC_PLATFORM_IS_PLAYSTATION
 #endif
 
 namespace PlayFab
 {
-namespace Detail
-{
 
 PFLocalStorageHooks& GetLocalStorageHandlers()
 {
-    static PFLocalStorageHooks s_handlers{ nullptr, DefaultLocalStorageReadAsync, DefaultLocalStorageWriteAsync, DefaultLocalStorageClearAsync, nullptr };
+    static PFLocalStorageHooks s_handlers{ nullptr, nullptr, nullptr, nullptr, nullptr };
     return s_handlers;
 }
 
@@ -55,5 +54,4 @@ HRESULT SetLocalStorageHandlers(PFLocalStorageHooks& newHandlers)
     return S_OK;
 }
 
-}
 }

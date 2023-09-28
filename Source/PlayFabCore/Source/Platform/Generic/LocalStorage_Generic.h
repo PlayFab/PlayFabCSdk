@@ -5,7 +5,7 @@ namespace PlayFab
 namespace Detail
 {
 
-HRESULT STDAPIVCALLTYPE DefaultLocalStorageWriteAsync(
+HRESULT STDAPIVCALLTYPE GenericLocalStorageWriteAsync(
     _In_opt_ void* /*context*/,
     _In_z_ const char* key,
     _In_ size_t dataSize,
@@ -13,17 +13,17 @@ HRESULT STDAPIVCALLTYPE DefaultLocalStorageWriteAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-HRESULT STDAPIVCALLTYPE DefaultLocalStorageReadAsync(
+HRESULT STDAPIVCALLTYPE GenericLocalStorageReadAsync(
     _In_opt_ void* /*context*/,
     _In_z_ const char* key,
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-HRESULT STDAPIVCALLTYPE DefaultLocalStorageClearAsync(
+HRESULT STDAPIVCALLTYPE GenericLocalStorageClearAsync(
     _In_opt_ void* /*context*/,
     _In_z_ const char* key,
     _Inout_ XAsyncBlock* async
-);
+) noexcept;
 
 }
 }

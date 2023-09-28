@@ -11,11 +11,5 @@
   <Import Project="$(PlayFabBuildRoot)\PlayFabServices.Common\PlayFabServices.Common.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabServices.ServiceWrappers\PlayFabServices.ServiceWrappers.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabServices.GDK\PlayFabServices.GDK.vcxitems" Label="Shared" />
-  <ImportGroup Label="Shared" />
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">
-    <ClCompile>
-      <PreprocessToFile>false</PreprocessToFile>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

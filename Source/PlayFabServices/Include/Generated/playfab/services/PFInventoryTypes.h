@@ -1824,6 +1824,12 @@ typedef struct PFInventoryTransferInventoryItemsResponse
     _Maybenull_ _Null_terminated_ const char* idempotencyId;
 
     /// <summary>
+    /// (Optional) The transfer operation status. Possible values are 'InProgress' or 'Completed'. If
+    /// the operation has completed, the response code will be 200. Otherwise, it will be 202.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* operationStatus;
+
+    /// <summary>
     /// (Optional) The ids of transactions that occurred as a result of the request's receiving action.
     /// </summary>
     _Maybenull_ _Field_size_(receivingTransactionIdsCount) const char* const* receivingTransactionIds;

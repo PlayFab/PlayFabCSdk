@@ -7,111 +7,6 @@ namespace PlayFab
 namespace Authentication
 {
 
-JsonValue GetPhotonAuthenticationTokenRequest::ToJson() const
-{
-    return GetPhotonAuthenticationTokenRequest::ToJson(this->Model());
-}
-
-JsonValue GetPhotonAuthenticationTokenRequest::ToJson(const PFAuthenticationGetPhotonAuthenticationTokenRequest& input)
-{
-    JsonValue output{ rapidjson::kObjectType };
-    JsonUtils::ObjectAddMember(output, "PhotonApplicationId", input.photonApplicationId);
-    return output;
-}
-
-HRESULT GetPhotonAuthenticationTokenResult::FromJson(const JsonValue& input)
-{
-    String photonCustomAuthenticationToken{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PhotonCustomAuthenticationToken", photonCustomAuthenticationToken));
-    this->SetPhotonCustomAuthenticationToken(std::move(photonCustomAuthenticationToken));
-
-    return S_OK;
-}
-
-size_t GetPhotonAuthenticationTokenResult::RequiredBufferSize() const
-{
-    return RequiredBufferSize(this->Model());
-}
-
-Result<PFAuthenticationGetPhotonAuthenticationTokenResult const*> GetPhotonAuthenticationTokenResult::Copy(ModelBuffer& buffer) const
-{
-    return buffer.CopyTo<GetPhotonAuthenticationTokenResult>(&this->Model());
-}
-
-size_t GetPhotonAuthenticationTokenResult::RequiredBufferSize(const PFAuthenticationGetPhotonAuthenticationTokenResult& model)
-{
-    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
-    if (model.photonCustomAuthenticationToken)
-    {
-        requiredSize += (std::strlen(model.photonCustomAuthenticationToken) + 1);
-    }
-    return requiredSize;
-}
-
-HRESULT GetPhotonAuthenticationTokenResult::Copy(const PFAuthenticationGetPhotonAuthenticationTokenResult& input, PFAuthenticationGetPhotonAuthenticationTokenResult& output, ModelBuffer& buffer)
-{
-    output = input;
-    {
-        auto propCopyResult = buffer.CopyTo(input.photonCustomAuthenticationToken); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.photonCustomAuthenticationToken = propCopyResult.ExtractPayload();
-    }
-    return S_OK;
-}
-
-JsonValue GetTitlePublicKeyRequest::ToJson() const
-{
-    return GetTitlePublicKeyRequest::ToJson(this->Model());
-}
-
-JsonValue GetTitlePublicKeyRequest::ToJson(const PFAuthenticationGetTitlePublicKeyRequest& input)
-{
-    JsonValue output{ rapidjson::kObjectType };
-    JsonUtils::ObjectAddMember(output, "TitleId", input.titleId);
-    JsonUtils::ObjectAddMember(output, "TitleSharedSecret", input.titleSharedSecret);
-    return output;
-}
-
-HRESULT GetTitlePublicKeyResult::FromJson(const JsonValue& input)
-{
-    String RSAPublicKey{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "RSAPublicKey", RSAPublicKey));
-    this->SetRSAPublicKey(std::move(RSAPublicKey));
-
-    return S_OK;
-}
-
-size_t GetTitlePublicKeyResult::RequiredBufferSize() const
-{
-    return RequiredBufferSize(this->Model());
-}
-
-Result<PFAuthenticationGetTitlePublicKeyResult const*> GetTitlePublicKeyResult::Copy(ModelBuffer& buffer) const
-{
-    return buffer.CopyTo<GetTitlePublicKeyResult>(&this->Model());
-}
-
-size_t GetTitlePublicKeyResult::RequiredBufferSize(const PFAuthenticationGetTitlePublicKeyResult& model)
-{
-    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
-    if (model.RSAPublicKey)
-    {
-        requiredSize += (std::strlen(model.RSAPublicKey) + 1);
-    }
-    return requiredSize;
-}
-
-HRESULT GetTitlePublicKeyResult::Copy(const PFAuthenticationGetTitlePublicKeyResult& input, PFAuthenticationGetTitlePublicKeyResult& output, ModelBuffer& buffer)
-{
-    output = input;
-    {
-        auto propCopyResult = buffer.CopyTo(input.RSAPublicKey); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.RSAPublicKey = propCopyResult.ExtractPayload();
-    }
-    return S_OK;
-}
-
 JsonValue LoginWithAndroidDeviceIDRequest::ToJson() const
 {
     return LoginWithAndroidDeviceIDRequest::ToJson(this->Model());
@@ -670,19 +565,6 @@ HRESULT RegisterPlayFabUserResult::Copy(const PFAuthenticationRegisterPlayFabUse
         output.username = propCopyResult.ExtractPayload();
     }
     return S_OK;
-}
-
-JsonValue SetPlayerSecretRequest::ToJson() const
-{
-    return SetPlayerSecretRequest::ToJson(this->Model());
-}
-
-JsonValue SetPlayerSecretRequest::ToJson(const PFAuthenticationSetPlayerSecretRequest& input)
-{
-    JsonValue output{ rapidjson::kObjectType };
-    JsonUtils::ObjectAddMember(output, "EncryptedRequest", input.encryptedRequest);
-    JsonUtils::ObjectAddMember(output, "PlayerSecret", input.playerSecret);
-    return output;
 }
 
 JsonValue LoginWithServerCustomIdRequest::ToJson() const

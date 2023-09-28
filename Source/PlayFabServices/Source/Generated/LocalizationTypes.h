@@ -44,5 +44,6 @@ public:
 };
 
 } // namespace Localization
+
 // EnumRange definitions used for Enum (de)serialization
 } // namespace PlayFab

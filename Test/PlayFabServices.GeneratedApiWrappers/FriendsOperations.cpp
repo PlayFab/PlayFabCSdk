@@ -98,7 +98,7 @@ HRESULT ClientSetFriendTagsOperation::OnStarted(XAsyncBlock* async) noexcept
 }
 
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerAddFriendOperation::ServerAddFriendOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -119,7 +119,7 @@ HRESULT ServerAddFriendOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetFriendsListOperation::ServerGetFriendsListOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -149,7 +149,7 @@ Result<ServerGetFriendsListOperation::ResultType> ServerGetFriendsListOperation:
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerRemoveFriendOperation::ServerRemoveFriendOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -170,7 +170,7 @@ HRESULT ServerRemoveFriendOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerSetFriendTagsOperation::ServerSetFriendTagsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

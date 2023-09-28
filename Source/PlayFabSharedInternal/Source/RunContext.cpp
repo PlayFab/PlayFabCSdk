@@ -392,14 +392,14 @@ void RunContextState::Terminate(ITerminationListener& listener, void* listenerCo
     }
 
     m_pendingTerminations = m_terminables.size() + children.size();
+    // Add an additional dummy pending termination representing the completion of this method. This addresses a race condition
+    // where all terminations asynchronously complete before this method returns, potentially cause 'this' to be destroyed unexpectedly
+    m_pendingTerminations++;
+    
     TRACE_VERBOSE("RunContextState[id=%u] terminating with %u terminables", m_id, m_pendingTerminations);
 
-    // context will ensure our lifetime until Termination completes
-    TerminationContext* context = nullptr;
-    if (m_pendingTerminations)
-    {
-        context = MakeUnique<TerminationContext>(shared_from_this()).release(); // reclaimed in OnTerminated
-    }
+    // context will ensure our lifetime until Termination completes.
+    TerminationContext* context = MakeUnique<TerminationContext>(shared_from_this()).release(); // reclaimed in OnTerminated;
 
     // Release state lock but intentionally hold terminationLock while notifying terminables to avoid races with unregister
     lock.unlock();
@@ -417,10 +417,8 @@ void RunContextState::Terminate(ITerminationListener& listener, void* listenerCo
         child->Terminate(*this, context);
     }
 
-    lock.lock();
-
-    // Check if termination is trivially complete - TaskQueue was already terminated, we had no terminables, and no children.
-    CheckTerminationAndNotifyListener(shared_from_this(), std::move(lock));
+    // Dummy termination task added above complete
+    OnTerminated(context);
 }
 
 void RunContextState::OnTerminated(void* c) noexcept

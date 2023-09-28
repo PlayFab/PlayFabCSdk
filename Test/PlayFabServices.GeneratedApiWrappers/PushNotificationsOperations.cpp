@@ -7,7 +7,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerSendPushNotificationOperation::ServerSendPushNotificationOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -28,7 +28,7 @@ HRESULT ServerSendPushNotificationOperation::OnStarted(XAsyncBlock* async) noexc
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerSendPushNotificationFromTemplateOperation::ServerSendPushNotificationFromTemplateOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

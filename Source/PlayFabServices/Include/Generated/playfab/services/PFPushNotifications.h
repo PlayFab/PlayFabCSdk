@@ -13,7 +13,7 @@
 extern "C"
 {
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Sends an iOS/Android Push Notification to a specific user, if that user's device has been configured
 /// for Push Notifications in PlayFab. If a user has linked both Android and iOS devices, both will be
@@ -24,6 +24,7 @@ extern "C"
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_PUSH_NOT_ENABLED_FOR_ACCOUNT, E_PF_PUSH_SERVICE_ERROR or any of the
 /// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
@@ -35,7 +36,7 @@ PF_API PFPushNotificationsServerSendPushNotificationAsync(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Sends an iOS/Android Push Notification template to a specific user, if that user's device has been
 /// configured for Push Notifications in PlayFab. If a user has linked both Android and iOS devices, both
@@ -46,6 +47,7 @@ PF_API PFPushNotificationsServerSendPushNotificationAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_PUSH_NOT_ENABLED_FOR_ACCOUNT, E_PF_PUSH_NOTIFICATION_TEMPLATE_NOT_FOUND,
 /// E_PF_PUSH_SERVICE_ERROR or any of the global PlayFab Service errors. See doc page "Handling PlayFab

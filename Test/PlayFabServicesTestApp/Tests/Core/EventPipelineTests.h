@@ -41,6 +41,7 @@ private:
     void TestEmitTelemetryEventsUpdateBatchSize(TestContext& testContext);
     void TestRemoveEntityFromPlayStreamPipeline(TestContext& testContext);
     void TestRemoveEntityNoFallbackAuth(TestContext& testContext);
+    void TestEmitCompressedTelemetryEvents(TestContext& testContext);
 
 
 private:

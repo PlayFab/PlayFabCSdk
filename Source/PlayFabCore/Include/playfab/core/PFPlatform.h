@@ -98,7 +98,7 @@ PF_API PFMemGetFunctions(
 ) noexcept;
 
 //-----------------------------------------------------------------------------
-// Storage (optional on all platforms)
+// Storage. Required on some platforms, see online documentation for more details.
 //-----------------------------------------------------------------------------
 
 /// <summary>

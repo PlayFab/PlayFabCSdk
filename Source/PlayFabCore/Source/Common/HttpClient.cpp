@@ -32,7 +32,8 @@ AsyncOp<ServiceResponse> HttpClient::MakePostRequest(
     UnorderedMap<String, String> headers,
     const JsonValue& requestBody,
     CacheId retryCacheId,
-    RunContext&& runContext
+    RunContext&& runContext,
+    PFHCCompressionLevel compressionLevel
 ) const
 {
     auto httpCallOp = MakeUnique<HCHttpCall>(
@@ -42,7 +43,8 @@ AsyncOp<ServiceResponse> HttpClient::MakePostRequest(
         JsonUtils::WriteToString(requestBody),
         static_cast<uint32_t>(retryCacheId),
         *m_retrySettings,
-        std::move(runContext)
+        std::move(runContext),
+        compressionLevel
     );
 
     return RunOperation(std::move(httpCallOp));
@@ -53,7 +55,8 @@ AsyncOp<ServiceResponse> HttpClient::MakeEntityRequest(
     const char* path,
     const JsonValue& requestBody,
     CacheId retryCacheId,
-    RunContext&& runContext
+    RunContext&& runContext,
+    PFHCCompressionLevel compressionLevel
 ) const
 {
     auto entityTokenResult = entity->GetEntityToken();
@@ -62,7 +65,7 @@ AsyncOp<ServiceResponse> HttpClient::MakeEntityRequest(
     UnorderedMap<String, String> headers{};
     headers[kEntityTokenHeaderName] = entityTokenResult.Payload().token;
 
-    return MakePostRequest(path, std::move(headers), requestBody, retryCacheId, std::move(runContext));
+    return MakePostRequest(path, std::move(headers), requestBody, retryCacheId, std::move(runContext), compressionLevel);
 }
 
 AsyncOp<ServiceResponse> HttpClient::MakeSecretKeyRequest(
@@ -71,13 +74,14 @@ AsyncOp<ServiceResponse> HttpClient::MakeSecretKeyRequest(
     const char* path,
     const JsonValue& requestBody,
     CacheId retryCacheId,
-    RunContext&& runContext
+    RunContext&& runContext,
+    PFHCCompressionLevel compressionLevel
 ) const
 {
     UnorderedMap<String, String> headers{};
     headers[kSecretKeyHeaderName] = secretKey;
 
-    return MakePostRequest(path, std::move(headers), requestBody, retryCacheId, std::move(runContext));
+    return MakePostRequest(path, std::move(headers), requestBody, retryCacheId, std::move(runContext), compressionLevel);
 }
 
 AsyncOp<ServiceResponse> HttpClient::MakeSecretKeyRequest(
@@ -85,13 +89,14 @@ AsyncOp<ServiceResponse> HttpClient::MakeSecretKeyRequest(
     const char* path,
     const JsonValue& requestBody,
     CacheId retryCacheID,
-    RunContext&& runContext
+    RunContext&& runContext,
+    PFHCCompressionLevel compressionLevel
 ) const
 {
     auto secretKeyResult = entity->GetSecretKey();
     RETURN_IF_FAILED(secretKeyResult.hr);
 
-    return MakeSecretKeyRequest(entity->ServiceConfig(), secretKeyResult.Payload(), path, requestBody, retryCacheID, std::move(runContext));
+    return MakeSecretKeyRequest(entity->ServiceConfig(), secretKeyResult.Payload(), path, requestBody, retryCacheID, std::move(runContext), compressionLevel);
 }
 
 AsyncOp<ServiceResponse> HttpClient::MakeTelemetryKeyRequest(
@@ -99,13 +104,14 @@ AsyncOp<ServiceResponse> HttpClient::MakeTelemetryKeyRequest(
     const char* path,
     const JsonValue& requestBody,
     CacheId retryCacheId,
-    RunContext&& runContext
+    RunContext&& runContext,
+    PFHCCompressionLevel compressionLevel
 ) const
 {
     UnorderedMap<String, String> headers{};
     headers[kTelemetryKeyHeaderName] = telemetryKey;
 
-    return MakePostRequest(path, std::move(headers), requestBody, retryCacheId, std::move(runContext));
+    return MakePostRequest(path, std::move(headers), requestBody, retryCacheId, std::move(runContext), compressionLevel);
 }
 
 String const& HttpClient::APIEndpoint() const noexcept

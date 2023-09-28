@@ -1291,5 +1291,33 @@ public:
 };
 
 } // namespace Catalog
+
 // EnumRange definitions used for Enum (de)serialization
+template<typename T> struct EnumRange;
+
+template<> struct EnumRange<PFCatalogModerationStatus>
+{
+    static constexpr PFCatalogModerationStatus maxValue = PFCatalogModerationStatus::Rejected;
+};
+
+template<> struct EnumRange<PFCatalogDisplayPropertyType>
+{
+    static constexpr PFCatalogDisplayPropertyType maxValue = PFCatalogDisplayPropertyType::SearchString;
+};
+
+template<> struct EnumRange<PFCatalogPublishResult>
+{
+    static constexpr PFCatalogPublishResult maxValue = PFCatalogPublishResult::Canceled;
+};
+
+template<> struct EnumRange<PFCatalogConcernCategory>
+{
+    static constexpr PFCatalogConcernCategory maxValue = PFCatalogConcernCategory::Profanity;
+};
+
+template<> struct EnumRange<PFCatalogHelpfulnessVote>
+{
+    static constexpr PFCatalogHelpfulnessVote maxValue = PFCatalogHelpfulnessVote::Helpful;
+};
+
 } // namespace PlayFab

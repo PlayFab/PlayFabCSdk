@@ -14,40 +14,40 @@ void PlayerDataManagementTests::AddTests()
     AddTest("TestClientGetUserReadOnlyData", &PlayerDataManagementTests::TestClientGetUserReadOnlyData);
     AddTest("TestClientUpdateUserData", &PlayerDataManagementTests::TestClientUpdateUserData);
     AddTest("TestClientUpdateUserPublisherData", &PlayerDataManagementTests::TestClientUpdateUserPublisherData);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetUserData", &PlayerDataManagementTests::TestServerGetUserData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetUserInternalData", &PlayerDataManagementTests::TestServerGetUserInternalData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetUserPublisherData", &PlayerDataManagementTests::TestServerGetUserPublisherData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetUserPublisherInternalData", &PlayerDataManagementTests::TestServerGetUserPublisherInternalData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetUserPublisherReadOnlyData", &PlayerDataManagementTests::TestServerGetUserPublisherReadOnlyData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetUserReadOnlyData", &PlayerDataManagementTests::TestServerGetUserReadOnlyData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerUpdateUserData", &PlayerDataManagementTests::TestServerUpdateUserData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerUpdateUserInternalData", &PlayerDataManagementTests::TestServerUpdateUserInternalData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerUpdateUserPublisherData", &PlayerDataManagementTests::TestServerUpdateUserPublisherData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerUpdateUserPublisherInternalData", &PlayerDataManagementTests::TestServerUpdateUserPublisherInternalData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerUpdateUserPublisherReadOnlyData", &PlayerDataManagementTests::TestServerUpdateUserPublisherReadOnlyData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerUpdateUserReadOnlyData", &PlayerDataManagementTests::TestServerUpdateUserReadOnlyData);
 #endif
 

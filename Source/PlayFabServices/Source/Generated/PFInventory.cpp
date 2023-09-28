@@ -294,7 +294,7 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFInventoryGetTransactionHistoryAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryGetTransactionHistoryRequest* request,

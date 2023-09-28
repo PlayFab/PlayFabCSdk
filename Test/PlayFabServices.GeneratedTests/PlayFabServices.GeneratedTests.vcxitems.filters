@@ -35,13 +35,13 @@
     <None Include="$(MSBuildThisFileDirectory)PlatformSpecificTestsImpl.stubs" >
       <Filter>Source\Stubs</Filter>
     </None>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CharacterTests.h" >
+    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptTests.h" >
       <Filter>Include</Filter>
     </ClInclude>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CharacterTests.cpp" >
+    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptTests.cpp" >
       <Filter>Source</Filter>
     </ClCompile>
-    <None Include="$(MSBuildThisFileDirectory)CharacterTestsImpl.stubs" >
+    <None Include="$(MSBuildThisFileDirectory)CloudScriptTestsImpl.stubs" >
       <Filter>Source\Stubs</Filter>
     </None>
     <ClInclude Include="$(MSBuildThisFileDirectory)SegmentsTests.h" >
@@ -78,15 +78,6 @@
       <Filter>Source</Filter>
     </ClCompile>
     <None Include="$(MSBuildThisFileDirectory)PushNotificationsTestsImpl.stubs" >
-      <Filter>Source\Stubs</Filter>
-    </None>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptTests.h" >
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptTests.cpp" >
-      <Filter>Source</Filter>
-    </ClCompile>
-    <None Include="$(MSBuildThisFileDirectory)CloudScriptTestsImpl.stubs" >
       <Filter>Source\Stubs</Filter>
     </None>
     <ClInclude Include="$(MSBuildThisFileDirectory)DataTests.h" >

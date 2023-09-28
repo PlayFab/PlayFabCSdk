@@ -1,6 +1,10 @@
 #include "TestAppPch.h"
 #include "PushNotificationsTests.h"
 #include "PushNotificationsOperations.h"
+#include "SdkVersion.h"
+#include "HttpRequest.h"
+#include "JsonUtils.h"
+#include "Error.h"
 
 namespace PlayFab
 {
@@ -17,17 +21,43 @@ AsyncOp<void> PushNotificationsTests::Uninitialize()
     return ServicesTestClass::Uninitialize();
 }
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PushNotificationsTests::TestServerSendPushNotification(TestContext& tc)
 {
-    tc.Skip();
+    ServerSendPushNotificationOperation::RequestType request;
+    request.SetRecipient(DefaultTitlePlayerId());
+    request.SetMessage("Test message");
+
+    ServerSendPushNotificationOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<void>
+    {
+        tc.AssertEqual(E_PF_PUSH_NOT_ENABLED_FOR_ACCOUNT, result.hr, "Unexpected error received");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PushNotificationsTests::TestServerSendPushNotificationFromTemplate(TestContext& tc)
 {
-    tc.Skip();
+    ServerSendPushNotificationFromTemplateOperation::RequestType request;
+    request.SetRecipient(DefaultTitlePlayerId());
+    request.SetPushNotificationTemplateId("4402ef11-de66-4c2b-89bb-e0c8df157aeb");
+
+    ServerSendPushNotificationFromTemplateOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<void>
+    {
+        tc.AssertEqual(E_PF_PUSH_NOT_ENABLED_FOR_ACCOUNT, result.hr, "Unexpected error received");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 

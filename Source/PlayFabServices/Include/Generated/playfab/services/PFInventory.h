@@ -121,8 +121,9 @@ PF_API PFInventoryDeleteInventoryItemsAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
+/// E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors"
+/// for more details on error handling.
 /// </returns>
 PF_API PFInventoryDeleteInventoryItemsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -138,8 +139,9 @@ PF_API PFInventoryDeleteInventoryItemsGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
+/// E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors"
+/// for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -396,7 +398,7 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Get transaction history for a player. Up to 50 Events can be returned at once. You can use continuation
 /// tokens to paginate through results that return greater than the limit. Getting transaction history
@@ -408,6 +410,7 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// Get transaction history for specified entity and collection.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryGetTransactionHistoryGetResultSize"/>
@@ -939,8 +942,10 @@ PF_API PFInventorySubtractInventoryItemsGetResult(
 
 /// <summary>
 /// Transfer inventory items. When transferring across collections, a 202 response indicates that the
-/// transfer is in progress and will complete soon. More information about item transfer scenarios can
-/// be found here: https://learn.microsoft.com/en-us/gaming/playfab/features/economy-v2/inventory/?tabs=inventory-game-manager#transfer-inventory-items
+/// transfer did not complete within the timeframe of the request. You can identify the pending operations
+/// by looking for OperationStatus = 'InProgress'. You can check on the operation status at anytime within
+/// 30 days of the request by passing the TransactionToken to the GetInventoryOperationStatus API. More
+/// information about item transfer scenarios can be found here: https://learn.microsoft.com/en-us/gaming/playfab/features/economy-v2/inventory/?tabs=inventory-game-manager#transfer-inventory-items
 /// </summary>
 /// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
 /// <param name="request">Populated request object.</param>

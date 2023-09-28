@@ -869,6 +869,46 @@ HRESULT UserPsnInfo::Copy(const PFUserPsnInfo& input, PFUserPsnInfo& output, Mod
     return S_OK;
 }
 
+HRESULT UserServerCustomIdInfo::FromJson(const JsonValue& input)
+{
+    String customId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CustomId", customId));
+    this->SetCustomId(std::move(customId));
+
+    return S_OK;
+}
+
+size_t UserServerCustomIdInfo::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFUserServerCustomIdInfo const*> UserServerCustomIdInfo::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<UserServerCustomIdInfo>(&this->Model());
+}
+
+size_t UserServerCustomIdInfo::RequiredBufferSize(const PFUserServerCustomIdInfo& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.customId)
+    {
+        requiredSize += (std::strlen(model.customId) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT UserServerCustomIdInfo::Copy(const PFUserServerCustomIdInfo& input, PFUserServerCustomIdInfo& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.customId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.customId = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 HRESULT UserSteamInfo::FromJson(const JsonValue& input)
 {
     std::optional<PFTitleActivationStatus> steamActivationStatus{};
@@ -1300,6 +1340,13 @@ HRESULT UserAccountInfo::FromJson(const JsonValue& input)
         this->SetPsnInfo(std::move(*psnInfo));
     }
 
+    std::optional<UserServerCustomIdInfo> serverCustomIdInfo{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ServerCustomIdInfo", serverCustomIdInfo));
+    if (serverCustomIdInfo)
+    {
+        this->SetServerCustomIdInfo(std::move(*serverCustomIdInfo));
+    }
+
     std::optional<UserSteamInfo> steamInfo{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SteamInfo", steamInfo));
     if (steamInfo)
@@ -1413,6 +1460,10 @@ size_t UserAccountInfo::RequiredBufferSize(const PFUserAccountInfo& model)
     {
         requiredSize += UserPsnInfo::RequiredBufferSize(*model.psnInfo);
     }
+    if (model.serverCustomIdInfo)
+    {
+        requiredSize += UserServerCustomIdInfo::RequiredBufferSize(*model.serverCustomIdInfo);
+    }
     if (model.steamInfo)
     {
         requiredSize += UserSteamInfo::RequiredBufferSize(*model.steamInfo);
@@ -1518,6 +1569,11 @@ HRESULT UserAccountInfo::Copy(const PFUserAccountInfo& input, PFUserAccountInfo&
         auto propCopyResult = buffer.CopyTo<UserPsnInfo>(input.psnInfo); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.psnInfo = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<UserServerCustomIdInfo>(input.serverCustomIdInfo); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.serverCustomIdInfo = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo<UserSteamInfo>(input.steamInfo); 

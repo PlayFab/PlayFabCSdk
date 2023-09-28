@@ -88,7 +88,7 @@ PF_API PFEntityGetEntityTokenResult(
     return hr;
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFEntityGetSecretKeySize(
     _In_  PFEntityHandle handle,
     _Out_ size_t* secretKeySize

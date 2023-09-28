@@ -68,7 +68,7 @@ void TestClass::AddTest(const char* testName, void(T::* testCaseFunc)(TestContex
 {
     T* testClass = static_cast<T*>(this);
     const auto& testFunc = std::bind(testCaseFunc, testClass, std::placeholders::_1);
-    SharedPtr<TestContext> testContext = MakeShared<TestContext>(*testClass, testName, testFunc);
+    SharedPtr<TestContext> testContext = MakeShared<TestContext>(testName, testFunc);
 
     m_testList.push_back(testContext);
 }

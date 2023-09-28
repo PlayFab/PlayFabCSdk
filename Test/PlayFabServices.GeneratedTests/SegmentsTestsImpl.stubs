@@ -27,42 +27,42 @@ void SegmentsTests::TestClientGetPlayerTags(TestContext& tc)
     tc.Skip();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerAddPlayerTag(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerGetAllSegments(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerGetPlayerSegments(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerGetPlayersInSegment(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerGetPlayerTags(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerRemovePlayerTag(TestContext& tc)
 {
     tc.Skip();

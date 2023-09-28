@@ -19,8 +19,6 @@ public:
     ~AuthenticationAPI() = default;
 
     // ------------ Generated API calls
-    static AsyncOp<GetPhotonAuthenticationTokenResult> GetPhotonAuthenticationToken(SharedPtr<Entity> entity, const GetPhotonAuthenticationTokenRequest& request, RunContext rc);
-    static AsyncOp<GetTitlePublicKeyResult> GetTitlePublicKey(SharedPtr<ServiceConfig const> config, const GetTitlePublicKeyRequest& request, RunContext rc);
     static AsyncOp<CombinedLoginResult> LoginWithAndroidDeviceID(SharedPtr<GlobalState> state, SharedPtr<ServiceConfig const> config, const LoginWithAndroidDeviceIDRequest& request, RunContext rc);
     static AsyncOp<void> ReLoginWithAndroidDeviceID(SharedPtr<Entity> entity, const LoginWithAndroidDeviceIDRequest& request, RunContext rc);
     static AsyncOp<CombinedLoginResult> LoginWithApple(SharedPtr<GlobalState> state, SharedPtr<ServiceConfig const> config, const LoginWithAppleRequest& request, RunContext rc);
@@ -64,7 +62,6 @@ public:
     static AsyncOp<void> ReLoginWithXUser(SharedPtr<Entity> entity, const LoginWithXUserRequest& request, RunContext rc);
 #endif
     static AsyncOp<RegisterPlayFabUserResult> RegisterPlayFabUser(SharedPtr<ServiceConfig const> config, const RegisterPlayFabUserRequest& request, RunContext rc);
-    static AsyncOp<void> SetPlayerSecret(SharedPtr<Entity> entity, const SetPlayerSecretRequest& request, RunContext rc);
     static AsyncOp<ServerCombinedLoginResult> ServerLoginWithServerCustomId(SharedPtr<GlobalState> state, SharedPtr<ServiceConfig const> config, String&& secretKey, const LoginWithServerCustomIdRequest& request, RunContext rc);
     static AsyncOp<ServerCombinedLoginResult> ServerLoginWithSteamId(SharedPtr<GlobalState> state, SharedPtr<ServiceConfig const> config, String&& secretKey, const LoginWithSteamIdRequest& request, RunContext rc);
     static AsyncOp<ServerCombinedLoginResult> ServerLoginWithXbox(SharedPtr<GlobalState> state, SharedPtr<ServiceConfig const> config, String&& secretKey, const ServerLoginWithXboxRequest& request, RunContext rc);

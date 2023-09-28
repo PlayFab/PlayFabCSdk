@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "LocalStorageHandlers.h"
+#include "LocalStorage_Generic.h"
 
 namespace PlayFab
 {
@@ -7,7 +7,7 @@ namespace Detail
 {
 
 // Synchronous LocalStorage handlers based on cstdio and std::fstream objects
-Result<Vector<uint8_t>> DefaultLocalStorageRead(String const& path)
+Result<Vector<uint8_t>> GenericLocalStorageRead(String const& path)
 {
     std::ifstream file{ path.c_str(), std::ios::binary | std::ios::ate };
     if (!file.is_open())
@@ -36,7 +36,7 @@ Result<Vector<uint8_t>> DefaultLocalStorageRead(String const& path)
     return data;
 }
 
-HRESULT DefaultLocalStorageWrite(String const& path, Vector<uint8_t> const& data)
+HRESULT GenericLocalStorageWrite(String const& path, Vector<uint8_t> const& data)
 {
     std::ofstream file{ path.data(), std::ios::binary | std::ios::app };
     if (!file.is_open())
@@ -53,7 +53,7 @@ HRESULT DefaultLocalStorageWrite(String const& path, Vector<uint8_t> const& data
     return S_OK;
 }
 
-HRESULT DefaultLocalStorageClear(String const& path)
+HRESULT GenericLocalStorageClear(String const& path)
 {
     int res = std::remove(path.data());
     if (res != 0)
@@ -100,7 +100,7 @@ HRESULT CALLBACK LocalStorageOperationAsyncProvider(_In_ XAsyncOp op, _Inout_ co
         case LocalStorageOperationType::Read:
         {
             size_t resultSize = 0;
-            auto result = DefaultLocalStorageRead(context->path);
+            auto result = GenericLocalStorageRead(context->path);
             if (SUCCEEDED(result.hr))
             {
                 context->data = result.ExtractPayload();
@@ -111,12 +111,12 @@ HRESULT CALLBACK LocalStorageOperationAsyncProvider(_In_ XAsyncOp op, _Inout_ co
         }
         case LocalStorageOperationType::Write:
         {
-            XAsyncComplete(data->async, DefaultLocalStorageWrite(context->path, context->data), 0);
+            XAsyncComplete(data->async, GenericLocalStorageWrite(context->path, context->data), 0);
             break;
         }
         case LocalStorageOperationType::Clear:
         {
-            XAsyncComplete(data->async, DefaultLocalStorageClear(context->path), 0);
+            XAsyncComplete(data->async, GenericLocalStorageClear(context->path), 0);
             break;
         }
         default:
@@ -151,7 +151,7 @@ HRESULT CALLBACK LocalStorageOperationAsyncProvider(_In_ XAsyncOp op, _Inout_ co
     }
 }
 
-HRESULT STDAPIVCALLTYPE DefaultLocalStorageWriteAsync(
+HRESULT STDAPIVCALLTYPE GenericLocalStorageWriteAsync(
     _In_opt_ void* /*context*/,
     _In_z_ const char* key,
     _In_ size_t dataSize,
@@ -174,7 +174,7 @@ HRESULT STDAPIVCALLTYPE DefaultLocalStorageWriteAsync(
     return S_OK;
 }
 
-HRESULT STDAPIVCALLTYPE DefaultLocalStorageReadAsync(
+HRESULT STDAPIVCALLTYPE GenericLocalStorageReadAsync(
     _In_opt_ void* /*context*/,
     _In_z_ const char* key,
     _Inout_ XAsyncBlock* async
@@ -194,11 +194,11 @@ HRESULT STDAPIVCALLTYPE DefaultLocalStorageReadAsync(
     return S_OK;
 }
 
-HRESULT STDAPIVCALLTYPE DefaultLocalStorageClearAsync(
+HRESULT STDAPIVCALLTYPE GenericLocalStorageClearAsync(
     _In_opt_ void* /*context*/,
     _In_z_ const char* key,
     _Inout_ XAsyncBlock* async
-)
+) noexcept
 {
     assert(key);
 

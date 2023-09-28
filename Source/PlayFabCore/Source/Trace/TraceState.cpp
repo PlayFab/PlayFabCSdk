@@ -4,9 +4,6 @@
 #include "Platform/LocalStorage.h"
 #include "LocalStorageTraceOutput.h"
 #include "DebugTraceOutput.h"
-#if HC_PLATFORM_IS_MICROSOFT
-#include "Windows/ETWTraceOutput.h"
-#endif
 
 namespace PlayFab
 {
@@ -90,6 +87,9 @@ TraceState::TraceState(RunContext&& runContext, LocalStorage localStorage) noexc
 #ifdef _DEBUG
     HCSettingsSetTraceLevel(HCTraceLevel::Verbose);
 #endif
+#if HC_PLATFORM_IS_MICROSOFT
+    HCTraceSetEtwEnabled(true);
+#endif
     HCTraceSetClientCallback(TraceCallback);
 
     // Synchronously load trace settings. TraceSettings loaded from file override those configured via API
@@ -133,9 +133,6 @@ TraceState::TraceState(RunContext&& runContext, LocalStorage localStorage) noexc
     {
         m_outputs.emplace_back(MakeShared<DebugTraceOutput>());
     }
-#if HC_PLATFORM_IS_MICROSOFT
-    m_outputs.emplace_back(MakeShared<ETWTraceOutput>());
-#endif
 }
 
 TraceState::~TraceState() noexcept
@@ -334,7 +331,7 @@ void CALLBACK TraceState::TraceCallback(
         message
         );
     
-    auto outputs = state->m_outputs;
+    auto& outputs = state->m_outputs;
     for (auto& output : outputs)
     {
         output->TraceMessage(formattedMessage.c_str());

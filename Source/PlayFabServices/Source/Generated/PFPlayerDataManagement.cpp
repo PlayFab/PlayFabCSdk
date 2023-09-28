@@ -240,7 +240,7 @@ PF_API PFPlayerDataManagementClientUpdateUserPublisherDataGetResult(
     return XAsyncGetResult(async, nullptr, sizeof(PFPlayerDataManagementUpdateUserDataResult), result, nullptr);
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerGetUserDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementGetUserDataRequest* request,
@@ -286,7 +286,7 @@ PF_API PFPlayerDataManagementServerGetUserDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerGetUserInternalDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementGetUserDataRequest* request,
@@ -332,7 +332,7 @@ PF_API PFPlayerDataManagementServerGetUserInternalDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerGetUserPublisherDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementGetUserDataRequest* request,
@@ -378,7 +378,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerGetUserPublisherInternalDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementGetUserDataRequest* request,
@@ -424,7 +424,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherInternalDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerGetUserPublisherReadOnlyDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementGetUserDataRequest* request,
@@ -470,7 +470,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherReadOnlyDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerGetUserReadOnlyDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementGetUserDataRequest* request,
@@ -516,7 +516,7 @@ PF_API PFPlayerDataManagementServerGetUserReadOnlyDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerUpdateUserDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementServerUpdateUserDataRequest* request,
@@ -546,7 +546,7 @@ PF_API PFPlayerDataManagementServerUpdateUserDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerUpdateUserInternalDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementUpdateUserInternalDataRequest* request,
@@ -576,7 +576,7 @@ PF_API PFPlayerDataManagementServerUpdateUserInternalDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerUpdateUserPublisherDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementServerUpdateUserDataRequest* request,
@@ -606,7 +606,7 @@ PF_API PFPlayerDataManagementServerUpdateUserPublisherDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerUpdateUserPublisherInternalDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementUpdateUserInternalDataRequest* request,
@@ -636,7 +636,7 @@ PF_API PFPlayerDataManagementServerUpdateUserPublisherInternalDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerUpdateUserPublisherReadOnlyDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementServerUpdateUserDataRequest* request,
@@ -666,7 +666,7 @@ PF_API PFPlayerDataManagementServerUpdateUserPublisherReadOnlyDataGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlayerDataManagementServerUpdateUserReadOnlyDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementServerUpdateUserDataRequest* request,

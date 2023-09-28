@@ -25,10 +25,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)PlatformSpecificOperations.cpp" >
       <Filter>Source</Filter>
     </ClCompile>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CharacterOperations.h" >
+    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptOperations.h" >
       <Filter>Include</Filter>
     </ClInclude>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CharacterOperations.cpp" >
+    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptOperations.cpp" >
       <Filter>Source</Filter>
     </ClCompile>
     <ClInclude Include="$(MSBuildThisFileDirectory)SegmentsOperations.h" >
@@ -53,12 +53,6 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClCompile Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.cpp" >
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptOperations.h" >
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptOperations.cpp" >
       <Filter>Source</Filter>
     </ClCompile>
     <ClInclude Include="$(MSBuildThisFileDirectory)DataOperations.h" >

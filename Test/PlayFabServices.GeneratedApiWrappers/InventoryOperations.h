@@ -134,7 +134,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class GetTransactionHistoryOperation : public XAsyncOperation<Wrappers::PFInventoryGetTransactionHistoryResponseWrapper<Allocator>>
 {
 public:

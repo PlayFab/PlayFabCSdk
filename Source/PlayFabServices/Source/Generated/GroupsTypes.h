@@ -760,5 +760,6 @@ public:
 };
 
 } // namespace Groups
+
 // EnumRange definitions used for Enum (de)serialization
 } // namespace PlayFab

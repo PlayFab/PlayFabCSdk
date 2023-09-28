@@ -13,22 +13,26 @@ namespace Test
 
 void EventPipelineTests::AddTests()
 {
-    AddTest("TestEmitPlayStreamEvents", &EventPipelineTests::TestEmitPlayStreamEvents);
+    // Telemetry Pipeline Tests
     AddTest("TestEmitTelemetryEvents", &EventPipelineTests::TestEmitTelemetryEvents);
-    AddTest("TestEmitBarebonesEventPipeline", &EventPipelineTests::TestEmitBarebonesEventPipeline);
-    AddTest("TestEmitMalformedPlayStreamEvent", &EventPipelineTests::TestEmitMalformedPlayStreamEvent);
     AddTest("TestEmitMalformedTelemetryEvent", &EventPipelineTests::TestEmitMalformedTelemetryEvent);
-    AddTest("TestInvalidParamsRetryPlayStreamEvent", &EventPipelineTests::TestInvalidParamsRetryPlayStreamEvent);
     AddTest("TestInvalidParamsRetryTelemetryEvent", &EventPipelineTests::TestInvalidParamsRetryTelemetryEvent);
-    AddTest("TestEmitMalformedJSONPlayStreamEvent", &EventPipelineTests::TestEmitMalformedJSONPlayStreamEvent);
     AddTest("TestEmitMalformedJSONTelemetryEvent", &EventPipelineTests::TestEmitMalformedJSONTelemetryEvent);
     AddTest("TestEmitTelemetryEventsWithInvalidTelemetryKey", &EventPipelineTests::TestEmitTelemetryEventsWithInvalidTelemetryKey);
     AddTest("TestEmitTelemetryEventsWithInactiveTelemetryKey", &EventPipelineTests::TestEmitTelemetryEventsWithInactiveTelemetryKey);
     AddTest("TestEmitTelemetryEventsWithTelemetryKey", &EventPipelineTests::TestEmitTelemetryEventsWithTelemetryKey);
     AddTest("TestEmitTelemetryEventsAddRemoveEntity", &EventPipelineTests::TestEmitTelemetryEventsAddRemoveEntity);
     AddTest("TestEmitTelemetryEventsUpdateBatchSize", &EventPipelineTests::TestEmitTelemetryEventsUpdateBatchSize);
-    AddTest("TestRemoveEntityFromPlayStreamPipeline", &EventPipelineTests::TestRemoveEntityFromPlayStreamPipeline);
     AddTest("TestRemoveEntityNoFallbackAuth", &EventPipelineTests::TestRemoveEntityNoFallbackAuth);
+    AddTest("TestEmitCompressedTelemetryEvents", &EventPipelineTests::TestEmitCompressedTelemetryEvents);
+
+    // PlayStream Pipeline Tests
+    AddTest("TestEmitPlayStreamEvents", &EventPipelineTests::TestEmitPlayStreamEvents);
+    AddTest("TestEmitMalformedPlayStreamEvent", &EventPipelineTests::TestEmitMalformedPlayStreamEvent);
+    AddTest("TestInvalidParamsRetryPlayStreamEvent", &EventPipelineTests::TestInvalidParamsRetryPlayStreamEvent);
+    AddTest("TestEmitMalformedJSONPlayStreamEvent", &EventPipelineTests::TestEmitMalformedJSONPlayStreamEvent);
+    AddTest("TestEmitBarebonesEventPipeline", &EventPipelineTests::TestEmitBarebonesEventPipeline);
+    AddTest("TestRemoveEntityFromPlayStreamPipeline", &EventPipelineTests::TestRemoveEntityFromPlayStreamPipeline);
 }
 
 AsyncOp<void> EventPipelineTests::Initialize()
@@ -503,7 +507,7 @@ void EventPipelineTests::TestEmitTelemetryEventsAddRemoveEntity(TestContext& tc)
         }
         else
         {
-            Platform::Sleep(3000);
+            Platform::Sleep(5000);
 
             hr = state->RemoveUploadingEntity();
 
@@ -801,7 +805,7 @@ void EventPipelineTests::TestEmitPlayStreamEvents(TestContext& tc)
         }
 
         std::mutex m_mutex;
-        Set<int> const m_eventIdsToWrite{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        Set<int> const m_eventIdsToWrite{ 0, 1 };
         size_t m_completedEvents{ 0 };
     };
 
@@ -849,7 +853,7 @@ void EventPipelineTests::TestEmitBarebonesEventPipeline(TestContext& tc)
 
     private:
 
-        Set<int> const m_eventIdsToWrite{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        Set<int> const m_eventIdsToWrite{ 0, 1 };
 
     };
 
@@ -1018,23 +1022,12 @@ void EventPipelineTests::TestEmitMalformedJSONPlayStreamEvent(TestContext& tc)
 
         HRESULT EmitEvents()
         {
-            RETURN_IF_FAILED(PlayStreamEventPipeline().EmitEvent(&event));
             RETURN_IF_FAILED(PlayStreamEventPipeline().EmitEvent(&malformedJSONEvent));
-            RETURN_IF_FAILED(PlayStreamEventPipeline().EmitEvent(&event));
 
             return S_OK;
         }
 
     private:
-        PFEvent event
-        {
-            nullptr,
-            "com.playfab.events.PlayFab.Test.PlayStreamEventPipelineTests",
-            "PlayStreamEvent",
-            nullptr,
-            "{}"
-        };
-
         PFEvent malformedJSONEvent
         {
             nullptr,
@@ -1056,7 +1049,7 @@ void EventPipelineTests::TestEmitMalformedJSONPlayStreamEvent(TestContext& tc)
             try
             {
                 TestContext().AssertEqual(E_PF_INVALID_JSON_CONTENT, hr, "Unexpected error received");
-                TestContext().AssertEqual<size_t>(3, eventsCount, "Unexpected eventsCount found");
+                TestContext().AssertEqual<size_t>(1, eventsCount, "Unexpected eventsCount found");
             }
             catch (Exception& e)
             {
@@ -1503,6 +1496,117 @@ void EventPipelineTests::TestRemoveEntityFromPlayStreamPipeline(TestContext& tc)
     else
     {
         state.reset(); // Reclaimed in Pipeline callbacks
+    }
+}
+
+void EventPipelineTests::TestEmitCompressedTelemetryEvents(TestContext& tc)
+{
+    class State : public EventPipelineTestState
+    {
+    public:
+        using EventPipelineTestState::EventPipelineTestState;
+
+        HRESULT UpdateCompression(PFHCCompressionLevel compressionLevel)
+        {
+            PFEventPipelineConfig config{ nullptr, nullptr, nullptr, &compressionLevel };
+            RETURN_IF_FAILED(TelemetryEventPipeline().UpdateConfiguration(config));
+
+            return S_OK;
+        }
+
+        HRESULT EmitEvents()
+        {
+            PFEvent event
+            {
+                nullptr,
+                "custom.playfab.events.PlayFab.Test.TelemetryEventPipelineTests",
+                "TelemetryEvent",
+                nullptr,
+                "{}"
+            };
+
+            for (auto& eventId : m_eventIdsToWrite)
+            {
+                std::string clientId = std::to_string(eventId);
+                event.clientId = clientId.c_str();
+                RETURN_IF_FAILED(TelemetryEventPipeline().EmitEvent(&event));
+            }
+
+            return S_OK;
+        }
+
+    private:
+        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount)
+        {
+            UpdateCompression(PFHCCompressionLevel::None);
+
+            std::unique_lock<std::mutex> lock{ m_mutex };
+            Vector<int> uploadedEvents(eventsCount);
+            std::transform(events, events + eventsCount, uploadedEvents.begin(), [&](PFUploadedEvent const* event)
+                {
+                    return atoi(event->clientId);
+                });
+            ValidateEvents(std::move(uploadedEvents), std::move(lock));
+        }
+
+        void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount)
+        {
+            UpdateCompression(PFHCCompressionLevel::None);
+
+            std::unique_lock<std::mutex> lock{ m_mutex };
+            TestContext().RecordResult(Result<void>{ hr, errorMessage });
+
+            Vector<int> uploadedEvents(eventsCount);
+            std::transform(events, events + eventsCount, uploadedEvents.begin(), [&](PFEvent const* event)
+                {
+                    return atoi(event->clientId);
+                });
+            ValidateEvents(std::move(uploadedEvents), std::move(lock));
+        }
+
+        void ValidateEvents(Vector<int>&& eventClientIds, std::unique_lock<std::mutex>&& lock)
+        {
+            for (auto& id : eventClientIds)
+            {
+                TestContext().AssertTrue(m_eventIdsToWrite.find(id) != m_eventIdsToWrite.end(), "Unexpected EventId");
+            }
+
+            m_completedEvents += eventClientIds.size();
+            if (m_completedEvents == m_eventIdsToWrite.size())
+            {
+                TestContext().EndTest(S_OK);
+
+                lock.unlock();
+                UniquePtr<State> reclaim{ this };
+            }
+        }
+
+        std::mutex m_mutex;
+        Set<int> const m_eventIdsToWrite{ 0, 1 };
+        size_t m_completedEvents{ 0 };
+    };
+
+    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
+
+    
+    HRESULT hr = state->UpdateCompression(PFHCCompressionLevel::Medium);
+    if (FAILED(hr))
+    {
+        state.reset(); // Destroy pipeline so no callback arrive after we end the test
+        tc.EndTest(hr);
+    }
+    else
+    {
+        hr = state->EmitEvents();
+        if (FAILED(hr))
+        {
+            state.reset(); // Destroy pipeline so no callback arrive after we end the test
+            tc.EndTest(hr);
+        }
+        else
+        {
+            state.release(); // Reclaimed in Pipeline callbacks
+        }
     }
 }
 

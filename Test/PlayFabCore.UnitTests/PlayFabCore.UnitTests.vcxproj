@@ -9,7 +9,6 @@
   <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.Common\PlayFabCore.Common.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.ServiceWrappers\PlayFabCore.ServiceWrappers.vcxitems" Label="Shared" />
-  <Import Project="..\..\Build\PlayFabCore.Win32\PlayFabCore.Win32.vcxitems" Label="Shared" />
   <ImportGroup Label="Shared" />
   <ItemDefinitionGroup>
     <ClCompile>
@@ -22,6 +21,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Mocks\HttpMock.cpp" />
+    <ClCompile Include="Mocks\PlatformMocks.cpp" />
     <ClCompile Include="Mocks\PlayFabServiceMock.cpp" />
     <ClCompile Include="Support\AsyncTestContext.cpp" />
     <ClCompile Include="Support\Event.cpp" />

@@ -12,16 +12,16 @@ void FriendsTests::AddTests()
     AddTest("TestClientGetFriendsList", &FriendsTests::TestClientGetFriendsList);
     AddTest("TestClientRemoveFriend", &FriendsTests::TestClientRemoveFriend);
     AddTest("TestClientSetFriendTags", &FriendsTests::TestClientSetFriendTags);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerAddFriend", &FriendsTests::TestServerAddFriend);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetFriendsList", &FriendsTests::TestServerGetFriendsList);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerRemoveFriend", &FriendsTests::TestServerRemoveFriend);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerSetFriendTags", &FriendsTests::TestServerSetFriendTags);
 #endif
 

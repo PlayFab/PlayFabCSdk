@@ -101,6 +101,7 @@ public:
         uint32_t maxEventsPerBatch,
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
+        PFHCCompressionLevel compressionLevel,
         EventPipelineEventHandlers eventHandlers
     );
 
@@ -113,6 +114,7 @@ public:
         uint32_t maxEventsPerBatch,
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
+        PFHCCompressionLevel compressionLevel,
         EventPipelineEventHandlers eventHandlers
     );
 
@@ -143,6 +145,7 @@ private:
     uint32_t m_maxEventsPerBatch;
     uint32_t m_maxWaitTimeInSeconds;
     uint32_t m_pollDelayInMs;
+    PFHCCompressionLevel m_compressionLevel;
     EventPipelineEventHandlers const m_eventHandlers;
     Vector<Event> m_pendingPayload;
     SharedPtr<Queue<Vector<Event>>> m_retryPayloads;
@@ -181,12 +184,13 @@ EventPipeline::EventPipeline(
     uint32_t maxEventsPerBatch,
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
+    PFHCCompressionLevel compressionLevel,
     PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
     PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
     void* handlerContext
 ) noexcept :
     m_buffer{ MakeShared<EventBuffer>() },
-    m_uploader{ MakeShared<EventUploader>(rc.Derive(), uploadingEntity, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, m_eventHandlers)}
+    m_uploader{ MakeShared<EventUploader>(rc.Derive(), uploadingEntity, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, compressionLevel, m_eventHandlers)}
 {
     Initialize(rc, batchUploadedEventHandler, batchFailedEventHandler, handlerContext);
 }
@@ -199,12 +203,13 @@ EventPipeline::EventPipeline(
     uint32_t maxEventsPerBatch,
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
+    PFHCCompressionLevel compressionLevel,
     PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
     PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
     void* handlerContext
 ) noexcept :
     m_buffer{ MakeShared<EventBuffer>() },
-    m_uploader{ MakeShared<EventUploader>(rc.Derive(), serviceConfig, telemetryKey, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, m_eventHandlers) }
+    m_uploader{ MakeShared<EventUploader>(rc.Derive(), serviceConfig, telemetryKey, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, compressionLevel, m_eventHandlers) }
 {
     Initialize(rc, batchUploadedEventHandler, batchFailedEventHandler, handlerContext);
 }
@@ -310,6 +315,7 @@ EventUploader::EventUploader(
     uint32_t maxEventsPerBatch,
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
+    PFHCCompressionLevel compressionLevel,
     EventPipelineEventHandlers eventHandlers
 ) :
     m_rc{ std::move(rc) },
@@ -319,8 +325,9 @@ EventUploader::EventUploader(
     m_maxEventsPerBatch{ maxEventsPerBatch },
     m_maxWaitTimeInSeconds{ maxWaitTimeInSeconds },
     m_pollDelayInMs{ pollDelayInMs },
+    m_compressionLevel{ compressionLevel },
     m_eventHandlers{ std::move(eventHandlers) },
-    m_retryPayloads{ MakeShared<Queue<Vector<Event>>>() }
+    m_retryPayloads{ MakeShared<Queue<Vector<Event>>>() } 
 {
 }
 
@@ -333,6 +340,7 @@ EventUploader::EventUploader(
     uint32_t maxEventsPerBatch,
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
+    PFHCCompressionLevel compressionLevel,
     EventPipelineEventHandlers eventHandlers
 ) :
     m_rc{ std::move(rc) },
@@ -343,6 +351,7 @@ EventUploader::EventUploader(
     m_maxEventsPerBatch{ maxEventsPerBatch },
     m_maxWaitTimeInSeconds{ maxWaitTimeInSeconds },
     m_pollDelayInMs{ pollDelayInMs },
+    m_compressionLevel{ compressionLevel },
     m_eventHandlers{ std::move(eventHandlers) },
     m_retryPayloads{ MakeShared<Queue<Vector<Event>>>() }
 {
@@ -385,6 +394,8 @@ void EventUploader::SetConfiguration(PFEventPipelineConfig eventPipelineConfig)
         m_maxWaitTimeInSeconds = !eventPipelineConfig.maxWaitTimeInSeconds ? PFTelemetryEventPipelineMaxWaitTimeInSecondsDefault : *eventPipelineConfig.maxWaitTimeInSeconds;
         m_pollDelayInMs = !eventPipelineConfig.pollDelayInMs ? PFTelemetryEventPipelinePollDelayInMsDefault : *eventPipelineConfig.pollDelayInMs;
     }
+
+    m_compressionLevel = !eventPipelineConfig.compressionLevel ? PFHCCompressionLevel::None : *eventPipelineConfig.compressionLevel;
 }
 
 JsonValue EventUploader::BuildRequestBody(Vector<Event> events)
@@ -416,7 +427,8 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
             path,
             requestBody,
             retryCacheId,
-            rc.Derive()
+            rc.Derive(),
+            m_compressionLevel
         );
 
         // Release lock after making entity request to avoid crashes if entity is removed.
@@ -436,7 +448,8 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
             path,
             requestBody,
             retryCacheId,
-            rc.Derive()
+            rc.Derive(),
+            m_compressionLevel
         );
 
         return requestOp.Then([](Result<ServiceResponse> result) -> Result<WriteEventsResponse>

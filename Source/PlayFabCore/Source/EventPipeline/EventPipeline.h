@@ -17,6 +17,7 @@ public:
         uint32_t maxEventsPerBatch,
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
+        PFHCCompressionLevel compressionLevel,
         PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
         PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
         void* handlerContext
@@ -30,6 +31,7 @@ public:
         uint32_t maxEventsPerBatch,
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
+        PFHCCompressionLevel compressionLevel,
         PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
         PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
         void* handlerContext

@@ -74,7 +74,7 @@ PF_API PFPlatformSpecificClientRegisterForIOSPushNotificationAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFPlatformSpecificServerAwardSteamAchievementAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlatformSpecificAwardSteamAchievementRequest* request,

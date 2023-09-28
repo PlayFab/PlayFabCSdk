@@ -15,9 +15,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\GDK\Authentication_GDK.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\Windows\ETWTraceOutput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Generic\Platform_Generic.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\Windows\ETWTraceOutput.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.h" />
   </ItemGroup>
 </Project>

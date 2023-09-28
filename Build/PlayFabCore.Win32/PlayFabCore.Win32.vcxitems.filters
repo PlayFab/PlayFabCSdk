@@ -2,23 +2,26 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source">
-      <UniqueIdentifier>{f3a3099f-1e30-4203-9d49-b41e14c15e9c}</UniqueIdentifier>
+      <UniqueIdentifier>{d934f6f1-9d83-4396-b900-6d82d947a49f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Trace">
-      <UniqueIdentifier>{9f5627e1-b842-4aab-ad7f-a64a587ad9c3}</UniqueIdentifier>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{0a2494c5-4c1d-4aad-92ed-be37e84a751d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Trace\Windows">
-      <UniqueIdentifier>{1437d09b-9d72-47de-9b73-7d8f81c2c642}</UniqueIdentifier>
+    <Filter Include="Source\Platform\Generic">
+      <UniqueIdentifier>{0c23a7e6-aa6d-48a0-867d-70b5f51e16e8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\Windows\ETWTraceOutput.cpp">
-      <Filter>Source\Trace\Windows</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Generic\Platform_Generic.cpp">
+      <Filter>Source\Platform\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.cpp">
+      <Filter>Source\Platform\Generic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\Windows\ETWTraceOutput.h">
-      <Filter>Source\Trace\Windows</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.h">
+      <Filter>Source\Platform\Generic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

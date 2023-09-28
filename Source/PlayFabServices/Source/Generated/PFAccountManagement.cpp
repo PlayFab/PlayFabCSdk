@@ -8,7 +8,7 @@
 using namespace PlayFab;
 using namespace PlayFab::AccountManagement;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientAddOrUpdateContactEmailAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementAddOrUpdateContactEmailRequest* request,
@@ -30,7 +30,7 @@ PF_API PFAccountManagementClientAddOrUpdateContactEmailAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientAddUsernamePasswordAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementAddUsernamePasswordRequest* request,
@@ -208,7 +208,7 @@ PF_API PFAccountManagementClientGetPlayerProfileGetResult(
     return S_OK;
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromFacebookIDsRequest* request,
@@ -254,7 +254,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookInstantGamesIdsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromFacebookInstantGamesIdsRequest* request,
@@ -300,7 +300,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookInstantGamesIdsGetResul
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientGetPlayFabIDsFromGameCenterIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromGameCenterIDsRequest* request,
@@ -346,7 +346,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGameCenterIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientGetPlayFabIDsFromGoogleIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromGoogleIDsRequest* request,
@@ -392,7 +392,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGoogleIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromGooglePlayGamesPlayerIDsRequest* request,
@@ -438,7 +438,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsGetResu
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientGetPlayFabIDsFromKongregateIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromKongregateIDsRequest* request,
@@ -484,7 +484,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromKongregateIDsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
 PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoServiceAccountIdsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromNintendoServiceAccountIdsRequest* request,
@@ -530,7 +530,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoServiceAccountIdsGetRes
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoSwitchDeviceIdsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsRequest* request,
@@ -576,7 +576,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResul
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
 PF_API PFAccountManagementClientGetPlayFabIDsFromPSNAccountIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromPSNAccountIDsRequest* request,
@@ -668,7 +668,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromSteamIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientGetPlayFabIDsFromTwitchIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromTwitchIDsRequest* request,
@@ -760,7 +760,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkAndroidDeviceIDAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkAndroidDeviceIDRequest* request,
@@ -782,7 +782,7 @@ PF_API PFAccountManagementClientLinkAndroidDeviceIDAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkAppleAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkAppleRequest* request,
@@ -824,7 +824,7 @@ PF_API PFAccountManagementClientLinkCustomIDAsync(
     return XAsyncProviderBase::Run(std::move(provider));
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkFacebookAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkFacebookAccountRequest* request,
@@ -846,7 +846,7 @@ PF_API PFAccountManagementClientLinkFacebookAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkFacebookInstantGamesIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkFacebookInstantGamesIdRequest* request,
@@ -868,7 +868,7 @@ PF_API PFAccountManagementClientLinkFacebookInstantGamesIdAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkGameCenterAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkGameCenterAccountRequest* request,
@@ -890,7 +890,7 @@ PF_API PFAccountManagementClientLinkGameCenterAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkGoogleAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkGoogleAccountRequest* request,
@@ -912,7 +912,7 @@ PF_API PFAccountManagementClientLinkGoogleAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkGooglePlayGamesServicesAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkGooglePlayGamesServicesAccountRequest* request,
@@ -934,7 +934,7 @@ PF_API PFAccountManagementClientLinkGooglePlayGamesServicesAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkIOSDeviceIDAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkIOSDeviceIDRequest* request,
@@ -956,7 +956,7 @@ PF_API PFAccountManagementClientLinkIOSDeviceIDAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkKongregateAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkKongregateAccountRequest* request,
@@ -978,7 +978,7 @@ PF_API PFAccountManagementClientLinkKongregateAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
 PF_API PFAccountManagementClientLinkNintendoServiceAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementClientLinkNintendoServiceAccountRequest* request,
@@ -1000,7 +1000,7 @@ PF_API PFAccountManagementClientLinkNintendoServiceAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkNintendoSwitchDeviceIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementClientLinkNintendoSwitchDeviceIdRequest* request,
@@ -1042,7 +1042,7 @@ PF_API PFAccountManagementClientLinkOpenIdConnectAsync(
     return XAsyncProviderBase::Run(std::move(provider));
 }
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
 PF_API PFAccountManagementClientLinkPSNAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementClientLinkPSNAccountRequest* request,
@@ -1086,7 +1086,7 @@ PF_API PFAccountManagementClientLinkSteamAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientLinkTwitchAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkTwitchAccountRequest* request,
@@ -1130,7 +1130,7 @@ PF_API PFAccountManagementClientLinkXboxAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientRemoveContactEmailAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementRemoveContactEmailRequest* request,
@@ -1180,7 +1180,7 @@ PF_API PFAccountManagementClientReportPlayerGetResult(
     return XAsyncGetResult(async, nullptr, sizeof(PFAccountManagementReportPlayerClientResult), result, nullptr);
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientSendAccountRecoveryEmailAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAccountManagementSendAccountRecoveryEmailRequest* request,
@@ -1202,7 +1202,7 @@ PF_API PFAccountManagementClientSendAccountRecoveryEmailAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkAndroidDeviceIDAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkAndroidDeviceIDRequest* request,
@@ -1224,7 +1224,7 @@ PF_API PFAccountManagementClientUnlinkAndroidDeviceIDAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkAppleAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkAppleRequest* request,
@@ -1266,7 +1266,7 @@ PF_API PFAccountManagementClientUnlinkCustomIDAsync(
     return XAsyncProviderBase::Run(std::move(provider));
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkFacebookAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkFacebookAccountRequest* request,
@@ -1288,7 +1288,7 @@ PF_API PFAccountManagementClientUnlinkFacebookAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkFacebookInstantGamesIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkFacebookInstantGamesIdRequest* request,
@@ -1310,7 +1310,7 @@ PF_API PFAccountManagementClientUnlinkFacebookInstantGamesIdAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkGameCenterAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkGameCenterAccountRequest* request,
@@ -1332,7 +1332,7 @@ PF_API PFAccountManagementClientUnlinkGameCenterAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkGoogleAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkGoogleAccountRequest* request,
@@ -1354,7 +1354,7 @@ PF_API PFAccountManagementClientUnlinkGoogleAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkGooglePlayGamesServicesAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkGooglePlayGamesServicesAccountRequest* request,
@@ -1376,7 +1376,7 @@ PF_API PFAccountManagementClientUnlinkGooglePlayGamesServicesAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkIOSDeviceIDAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkIOSDeviceIDRequest* request,
@@ -1398,7 +1398,7 @@ PF_API PFAccountManagementClientUnlinkIOSDeviceIDAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkKongregateAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkKongregateAccountRequest* request,
@@ -1420,7 +1420,7 @@ PF_API PFAccountManagementClientUnlinkKongregateAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
 PF_API PFAccountManagementClientUnlinkNintendoServiceAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementClientUnlinkNintendoServiceAccountRequest* request,
@@ -1442,7 +1442,7 @@ PF_API PFAccountManagementClientUnlinkNintendoServiceAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkNintendoSwitchDeviceIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementClientUnlinkNintendoSwitchDeviceIdRequest* request,
@@ -1484,7 +1484,7 @@ PF_API PFAccountManagementClientUnlinkOpenIdConnectAsync(
     return XAsyncProviderBase::Run(std::move(provider));
 }
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
 PF_API PFAccountManagementClientUnlinkPSNAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementClientUnlinkPSNAccountRequest* request,
@@ -1528,7 +1528,7 @@ PF_API PFAccountManagementClientUnlinkSteamAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUnlinkTwitchAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkTwitchAccountRequest* request,
@@ -1592,7 +1592,7 @@ PF_API PFAccountManagementClientUpdateAvatarUrlAsync(
     return XAsyncProviderBase::Run(std::move(provider));
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementClientUpdateUserTitleDisplayNameAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUpdateUserTitleDisplayNameRequest* request,
@@ -1638,7 +1638,7 @@ PF_API PFAccountManagementClientUpdateUserTitleDisplayNameGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerBanUsersAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementBanUsersRequest* request,
@@ -1684,7 +1684,7 @@ PF_API PFAccountManagementServerBanUsersGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerDeletePlayerAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementDeletePlayerRequest* request,
@@ -1706,7 +1706,7 @@ PF_API PFAccountManagementServerDeletePlayerAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayerCombinedInfoAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayerCombinedInfoRequest* request,
@@ -1752,7 +1752,7 @@ PF_API PFAccountManagementServerGetPlayerCombinedInfoGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayerProfileAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayerProfileRequest* request,
@@ -1798,7 +1798,7 @@ PF_API PFAccountManagementServerGetPlayerProfileGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromFacebookIDsRequest* request,
@@ -1844,7 +1844,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookInstantGamesIdsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromFacebookInstantGamesIdsRequest* request,
@@ -1890,7 +1890,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookInstantGamesIdsGetResul
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoServiceAccountIdsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromNintendoServiceAccountIdsRequest* request,
@@ -1936,7 +1936,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoServiceAccountIdsGetRes
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoSwitchDeviceIdsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsRequest* request,
@@ -1982,7 +1982,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResul
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayFabIDsFromPSNAccountIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromPSNAccountIDsRequest* request,
@@ -2028,7 +2028,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromPSNAccountIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayFabIDsFromSteamIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromSteamIDsRequest* request,
@@ -2074,7 +2074,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromSteamIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayFabIDsFromTwitchIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromTwitchIDsRequest* request,
@@ -2120,7 +2120,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromTwitchIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetPlayFabIDsFromXboxLiveIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromXboxLiveIDsRequest* request,
@@ -2166,7 +2166,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromXboxLiveIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetServerCustomIDsFromPlayFabIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetServerCustomIDsFromPlayFabIDsRequest* request,
@@ -2212,7 +2212,7 @@ PF_API PFAccountManagementServerGetServerCustomIDsFromPlayFabIDsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetUserAccountInfoAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetUserAccountInfoRequest* request,
@@ -2258,7 +2258,7 @@ PF_API PFAccountManagementServerGetUserAccountInfoGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerGetUserBansAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetUserBansRequest* request,
@@ -2304,7 +2304,7 @@ PF_API PFAccountManagementServerGetUserBansGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerLinkNintendoServiceAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerLinkNintendoServiceAccountRequest* request,
@@ -2326,7 +2326,7 @@ PF_API PFAccountManagementServerLinkNintendoServiceAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerLinkNintendoSwitchDeviceIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerLinkNintendoSwitchDeviceIdRequest* request,
@@ -2348,7 +2348,7 @@ PF_API PFAccountManagementServerLinkNintendoSwitchDeviceIdAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerLinkPSNAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerLinkPSNAccountRequest* request,
@@ -2392,7 +2392,7 @@ PF_API PFAccountManagementServerLinkPSNIdAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerLinkServerCustomIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkServerCustomIdRequest* request,
@@ -2414,7 +2414,7 @@ PF_API PFAccountManagementServerLinkServerCustomIdAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerLinkSteamIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkSteamIdRequest* request,
@@ -2436,7 +2436,7 @@ PF_API PFAccountManagementServerLinkSteamIdAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerLinkXboxAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerLinkXboxAccountRequest* request,
@@ -2458,7 +2458,7 @@ PF_API PFAccountManagementServerLinkXboxAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerRevokeAllBansForUserAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementRevokeAllBansForUserRequest* request,
@@ -2504,7 +2504,7 @@ PF_API PFAccountManagementServerRevokeAllBansForUserGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerRevokeBansAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementRevokeBansRequest* request,
@@ -2550,7 +2550,7 @@ PF_API PFAccountManagementServerRevokeBansGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerSendCustomAccountRecoveryEmailAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementSendCustomAccountRecoveryEmailRequest* request,
@@ -2572,7 +2572,7 @@ PF_API PFAccountManagementServerSendCustomAccountRecoveryEmailAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerSendEmailFromTemplateAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementSendEmailFromTemplateRequest* request,
@@ -2594,7 +2594,7 @@ PF_API PFAccountManagementServerSendEmailFromTemplateAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerUnlinkNintendoServiceAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerUnlinkNintendoServiceAccountRequest* request,
@@ -2616,7 +2616,7 @@ PF_API PFAccountManagementServerUnlinkNintendoServiceAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerUnlinkNintendoSwitchDeviceIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerUnlinkNintendoSwitchDeviceIdRequest* request,
@@ -2638,7 +2638,7 @@ PF_API PFAccountManagementServerUnlinkNintendoSwitchDeviceIdAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerUnlinkPSNAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerUnlinkPSNAccountRequest* request,
@@ -2660,7 +2660,7 @@ PF_API PFAccountManagementServerUnlinkPSNAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerUnlinkServerCustomIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkServerCustomIdRequest* request,
@@ -2682,7 +2682,7 @@ PF_API PFAccountManagementServerUnlinkServerCustomIdAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerUnlinkSteamIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkSteamIdRequest* request,
@@ -2704,7 +2704,7 @@ PF_API PFAccountManagementServerUnlinkSteamIdAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerUnlinkXboxAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerUnlinkXboxAccountRequest* request,
@@ -2726,7 +2726,7 @@ PF_API PFAccountManagementServerUnlinkXboxAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerUpdateAvatarUrlAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerUpdateAvatarUrlRequest* request,
@@ -2748,7 +2748,7 @@ PF_API PFAccountManagementServerUpdateAvatarUrlAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerUpdateBansAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUpdateBansRequest* request,
@@ -2794,7 +2794,7 @@ PF_API PFAccountManagementServerUpdateBansGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementGetTitlePlayersFromXboxLiveIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetTitlePlayersFromXboxLiveIDsRequest* request,

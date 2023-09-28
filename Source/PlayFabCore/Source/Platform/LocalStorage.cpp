@@ -66,7 +66,7 @@ class ReadOperation : public XAsyncOperation<Vector<uint8_t>>
 {
 public:
     ReadOperation(String&& path, PlayFab::RunContext&& rc) :
-        XAsyncOperation<Vector<uint8_t>>{ Detail::GetLocalStorageHandlers().queueHandle ? rc.DeriveOnQueue(Detail::GetLocalStorageHandlers().queueHandle) : std::move(rc) },
+        XAsyncOperation<Vector<uint8_t>>{ GetLocalStorageHandlers().queueHandle ? rc.DeriveOnQueue(GetLocalStorageHandlers().queueHandle) : std::move(rc) },
         m_path{ std::move(path) }
     {
     }
@@ -74,7 +74,7 @@ public:
 private:
     HRESULT OnStarted(XAsyncBlock* asyncBlock) noexcept override
     {
-        auto& handlers = Detail::GetLocalStorageHandlers();
+        auto& handlers = GetLocalStorageHandlers();
         return handlers.read(handlers.context, m_path.data(), asyncBlock);
     }
 
@@ -94,7 +94,7 @@ class WriteOperation : public XAsyncOperation<void>
 {
 public:
     WriteOperation(String&& path, Vector<uint8_t>&& data, PlayFab::RunContext&& rc) :
-        XAsyncOperation<void>{ Detail::GetLocalStorageHandlers().queueHandle ? rc.DeriveOnQueue(Detail::GetLocalStorageHandlers().queueHandle) : std::move(rc) },
+        XAsyncOperation<void>{ GetLocalStorageHandlers().queueHandle ? rc.DeriveOnQueue(GetLocalStorageHandlers().queueHandle) : std::move(rc) },
         m_path{ std::move(path) },
         m_data{ std::move(data) }
     {
@@ -103,7 +103,7 @@ public:
 private:
     HRESULT OnStarted(XAsyncBlock* asyncBlock) noexcept override
     {
-        auto& handlers = Detail::GetLocalStorageHandlers();
+        auto& handlers = GetLocalStorageHandlers();
         return handlers.write(handlers.context, m_path.data(), m_data.size(), m_data.data(), asyncBlock);
     }
 
@@ -115,7 +115,7 @@ class ClearOperation : public XAsyncOperation<void>
 {
 public:
     ClearOperation(String&& path, PlayFab::RunContext&& rc) : 
-        XAsyncOperation<void>{ Detail::GetLocalStorageHandlers().queueHandle ? rc.DeriveOnQueue(Detail::GetLocalStorageHandlers().queueHandle) : std::move(rc) },
+        XAsyncOperation<void>{ GetLocalStorageHandlers().queueHandle ? rc.DeriveOnQueue(GetLocalStorageHandlers().queueHandle) : std::move(rc) },
         m_path{ std::move(path) }
     {
     }
@@ -123,7 +123,7 @@ public:
 private:
     HRESULT OnStarted(XAsyncBlock* asyncBlock) noexcept override
     {
-        auto& handlers = Detail::GetLocalStorageHandlers();
+        auto& handlers = GetLocalStorageHandlers();
         return handlers.clear(handlers.context, m_path.data(), asyncBlock);
     }
 

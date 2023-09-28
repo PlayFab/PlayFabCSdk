@@ -56,5 +56,5 @@ PF_API PFPlatformLocalStorageSetHandlers(
     GlobalState::Get(state);
     RETURN_HR_IF(E_PF_CORE_ALREADY_INITIALIZED, state);
 
-    return PlayFab::Detail::SetLocalStorageHandlers(*hooks);
+    return PlayFab::SetLocalStorageHandlers(*hooks);
 }

@@ -8,7 +8,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class GetLanguageListOperation : public XAsyncOperation<Wrappers::PFLocalizationGetLanguageListResponseWrapper<Allocator>>
 {
 public:

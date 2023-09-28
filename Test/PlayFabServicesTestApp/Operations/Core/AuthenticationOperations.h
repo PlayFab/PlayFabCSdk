@@ -29,6 +29,50 @@ struct ServerLoginResult
     Wrappers::PFAuthenticationLoginResultWrapper<Allocator> loginResult;
 };
 
+class AuthenticateGameServerWithCustomIdOperation : public XAsyncOperation<Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFAuthenticationAuthenticateCustomIdRequestWrapper<Allocator>;
+
+    AuthenticateGameServerWithCustomIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+private: // XAsyncOperation
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+
+class DeleteOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFAuthenticationDeleteRequestWrapper<Allocator>;
+
+    DeleteOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+private: // XAsyncOperation
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+
+class GetEntityOperation : public XAsyncOperation<Entity>
+{
+public:
+    using RequestType = Wrappers::PFAuthenticationGetEntityRequestWrapper<Allocator>;
+
+    GetEntityOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+private: // XAsyncOperation
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<Entity> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+
 class GetEntityWithSecretKeyOperation : public XAsyncOperation<Entity>
 {
 public:
@@ -45,7 +89,6 @@ private: // XAsyncOperation
     RequestType m_request;
 };
 
-#if 0 // removed for now
 class ServerLoginWithServerCustomIdOperation : public XAsyncOperation<ServerLoginResult>
 {
 public:
@@ -109,7 +152,21 @@ private: // XAsyncOperation
     String m_secretKey;
     RequestType m_request;
 };
-#endif // 0
+
+class ValidateEntityTokenOperation : public XAsyncOperation<Wrappers::PFAuthenticationValidateEntityTokenResponseWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFAuthenticationValidateEntityTokenRequestWrapper<Allocator>;
+
+    ValidateEntityTokenOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+private: // XAsyncOperation
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<Wrappers::PFAuthenticationValidateEntityTokenResponseWrapper<Allocator>> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
 #endif // HC_PLATFORM == HC_PLATFORM_WIN32
 
 }

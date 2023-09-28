@@ -9,78 +9,6 @@ namespace Authentication
 {
 
 
-AsyncOp<GetPhotonAuthenticationTokenResult> AuthenticationAPI::GetPhotonAuthenticationToken(
-    SharedPtr<Entity> entity,
-    const GetPhotonAuthenticationTokenRequest& request,
-    RunContext rc
-)
-{
-    const char* path{ "/Client/GetPhotonAuthenticationToken" };
-    JsonValue requestBody{ request.ToJson() };
-    CacheId retryCacheId = CacheId::AuthenticationGetPhotonAuthenticationToken;
-
-    auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
-        entity,
-        path,
-        requestBody,
-        retryCacheId,
-        rc.Derive()
-    );
-
-    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPhotonAuthenticationTokenResult>
-    {
-        RETURN_IF_FAILED(result.hr);
-
-        auto serviceResponse = result.ExtractPayload();
-        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
-        {
-            GetPhotonAuthenticationTokenResult resultModel;
-            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
-            return resultModel;
-        }
-        else
-        {
-            return Result<GetPhotonAuthenticationTokenResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
-        }
-    });
-}
-
-AsyncOp<GetTitlePublicKeyResult> AuthenticationAPI::GetTitlePublicKey(
-    SharedPtr<ServiceConfig const> serviceConfig,
-    const GetTitlePublicKeyRequest& request,
-    RunContext rc
-)
-{
-    const char* path{ "/Client/GetTitlePublicKey" };
-    JsonValue requestBody{ request.ToJson() };
-    CacheId retryCacheId = CacheId::AuthenticationGetTitlePublicKey;
-
-    auto requestOp = serviceConfig->HttpClient()->MakePostRequest(
-        path,
-        UnorderedMap<String, String>{},
-        requestBody,
-        retryCacheId,
-        rc.Derive()
-    );
-
-    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetTitlePublicKeyResult>
-    {
-        RETURN_IF_FAILED(result.hr);
-
-        auto serviceResponse = result.ExtractPayload();
-        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
-        {
-            GetTitlePublicKeyResult resultModel;
-            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
-            return resultModel;
-        }
-        else
-        {
-            return Result<GetTitlePublicKeyResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
-        }
-    });
-}
-
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithAndroidDeviceID(
     SharedPtr<GlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
@@ -1576,40 +1504,6 @@ AsyncOp<RegisterPlayFabUserResult> AuthenticationAPI::RegisterPlayFabUser(
         else
         {
             return Result<RegisterPlayFabUserResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
-        }
-    });
-}
-
-AsyncOp<void> AuthenticationAPI::SetPlayerSecret(
-    SharedPtr<Entity> entity,
-    const SetPlayerSecretRequest& request,
-    RunContext rc
-)
-{
-    const char* path{ "/Client/SetPlayerSecret" };
-    JsonValue requestBody{ request.ToJson() };
-    CacheId retryCacheId = CacheId::AuthenticationSetPlayerSecret;
-
-    auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
-        entity,
-        path,
-        requestBody,
-        retryCacheId,
-        rc.Derive()
-    );
-
-    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
-    {
-        RETURN_IF_FAILED(result.hr);
-
-        auto serviceResponse = result.ExtractPayload();
-        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
-        {
-            return S_OK;
-        }
-        else
-        {
-            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }

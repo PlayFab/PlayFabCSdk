@@ -40,7 +40,7 @@ HandleTable<HandleT, ObjectT>::~HandleTable()
 {
     if (!m_handles.empty())
     {
-        TRACE_WARNING("Warning: Unclosed handles remain during cleanup (%s)", typeid(HandleT).name());
+        TRACE_WARNING("Warning: Unclosed handles remain during cleanup (%s)", __FUNCTION__);
     }
 }
 

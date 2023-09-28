@@ -76,7 +76,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerAddFriendOperation : public XAsyncOperation<void>
 {
 public:
@@ -94,7 +94,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetFriendsListOperation : public XAsyncOperation<Wrappers::PFFriendsGetFriendsListResultWrapper<Allocator>>
 {
 public:
@@ -114,7 +114,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerRemoveFriendOperation : public XAsyncOperation<void>
 {
 public:
@@ -132,7 +132,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerSetFriendTagsOperation : public XAsyncOperation<void>
 {
 public:

@@ -7,6 +7,10 @@ namespace PlayFab
 namespace Test
 {
 
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+constexpr char testTag[] = { "testTag" };
+#endif
+
 AsyncOp<void> SegmentsTests::Initialize()
 {
     return ServicesTestClass::Initialize();
@@ -67,45 +71,165 @@ void SegmentsTests::TestClientGetPlayerTags(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerAddPlayerTag(TestContext& tc)
 {
+    // Skipping test since it's not stable at this point. ADO Bug: 46466089
     tc.Skip();
+#if 0
+    ServerAddPlayerTagOperation::RequestType request;
+    request.SetPlayFabId(DefaultTitlePlayerId());
+    request.SetTagName(testTag);
+
+    ServerAddPlayerTagOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<ServerGetPlayerTagsOperation::ResultType>
+    {
+        ServerGetPlayerTagsOperation::RequestType request;
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerGetPlayerTagsOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<ServerGetPlayerTagsOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        auto& model = result.Payload().Model();
+        tc.AssertEqual<String>(DefaultTitlePlayerId(), model.playFabId, "playFabId");
+        tc.AssertEqual(1u, model.tagsCount, "tagsCount");
+        // Tag should be title.titleId.testTag
+        tc.AssertEqual<String>("title." + m_testTitleData.titleId + "." + testTag, model.tags[0], "tags");
+
+        return S_OK;
+    })
+    .Then([&](Result<void> result) -> AsyncOp<void>
+    {
+        tc.RecordResult(std::move(result));
+
+        ServerRemovePlayerTagOperation::RequestType request;
+        request.SetPlayFabId(DefaultTitlePlayerId());
+        request.SetTagName(testTag);
+
+        return ServerRemovePlayerTagOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+#endif
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerGetAllSegments(TestContext& tc)
 {
-    tc.Skip();
+    ServerGetAllSegmentsOperation::Run(TitleEntity(), RunContext()).Then([&](Result<ServerGetAllSegmentsOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        auto& model = result.Payload().Model();
+
+        // The "All Players" segment must exist at least.
+        tc.AssertTrue(model.segmentsCount >= 1u, "No segments returned");
+        bool allPlayersFound = false;
+        for (uint32_t i = 0; i < model.segmentsCount; ++i)
+        {
+            if (!std::strcmp("All Players", model.segments[i]->name))
+            {
+                allPlayersFound = true;
+                break;
+            }
+        }
+        tc.AssertTrue(allPlayersFound, "\"All Players\" segment not found");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerGetPlayerSegments(TestContext& tc)
 {
-    tc.Skip();
+    ServerGetPlayerSegmentsOperation::RequestType request;
+    request.SetPlayFabId(DefaultTitlePlayerId());
+
+    ServerGetPlayerSegmentsOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerGetPlayerSegmentsOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        auto& model = result.Payload().Model();
+
+        // We expect every player to be at least part of the "All Players" segment. Depending on the player, they may be part of other segments
+        // as well.
+        tc.AssertTrue(model.segmentsCount >= 1u, "No segments returned");
+        bool allPlayersFound = false;
+        for (uint32_t i = 0; i < model.segmentsCount; ++i)
+        {
+            if (!std::strcmp("All Players", model.segments[i]->name))
+            {
+                allPlayersFound = true;
+                break;
+            }
+        }
+        tc.AssertTrue(allPlayersFound, "\"All Players\" segment not found");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerGetPlayersInSegment(TestContext& tc)
 {
-    tc.Skip();
+    ServerGetPlayersInSegmentOperation::RequestType request;
+    request.SetSegmentId("DC1731C7F6F3D1E4");
+
+    ServerGetPlayersInSegmentOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerGetPlayersInSegmentOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        auto& model = result.Payload().Model();
+        tc.AssertTrue(model.profilesInSegment > 0, "No players in segment");
+        bool defaultTitlePlayerFound = false;
+        const char* defaultPlayerId = "D1522C6BB456B845";
+        std::vector<const char*> ids;
+        for (uint32_t i = 0; i < model.playerProfilesCount; ++i)
+        {
+            ids.push_back(model.playerProfiles[i]->playerId);
+            if (std::strcmp(model.playerProfiles[i]->playerId, defaultPlayerId) == 0)
+            {
+                defaultTitlePlayerFound = true;
+                break;
+            }
+        }
+        tc.AssertTrue(defaultTitlePlayerFound, "DefaultTitlePlayer not found in \"All Players\"");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerGetPlayerTags(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered in TestServerAddPlayerTag
+    tc.EndTest(S_OK);
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerRemovePlayerTag(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered in TestServerAddPlayerTag
+    tc.EndTest(S_OK);
 }
 #endif
 

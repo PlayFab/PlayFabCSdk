@@ -62,7 +62,8 @@ public:
         String url,
         UnorderedMap<String, String> headers,
         String requestBody,
-        PlayFab::RunContext runContext
+        PlayFab::RunContext runContext,
+        PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
     ) noexcept;
 
     HCHttpCall(
@@ -72,7 +73,8 @@ public:
         String requestBody,
         uint32_t retryCacheId,
         PFHttpRetrySettings const& retrySettings,
-        PlayFab::RunContext runContext
+        PlayFab::RunContext runContext,
+        PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
     ) noexcept;
 
     HCHttpCall(HCHttpCall const&) = delete;
@@ -112,6 +114,7 @@ private:
     uint32_t m_retryDelay{ kDefaultHttpRetryDelay };
     uint32_t m_timeoutWindow{ kDefaultHttpTimeoutWindow };
     PFHCCallHandle m_callHandle{ nullptr };
+    PFHCCompressionLevel m_compressionLevel;
 };
 
 }

@@ -342,6 +342,25 @@ public:
     static HRESULT Copy(const PFUserPsnInfo& input, PFUserPsnInfo& output, ModelBuffer& buffer);
 };
 
+class UserServerCustomIdInfo : public Wrappers::PFUserServerCustomIdInfoWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFUserServerCustomIdInfo>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFUserServerCustomIdInfoWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFUserServerCustomIdInfo const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFUserServerCustomIdInfo& model);
+    static HRESULT Copy(const PFUserServerCustomIdInfo& input, PFUserServerCustomIdInfo& output, ModelBuffer& buffer);
+};
+
 class UserSteamInfo : public Wrappers::PFUserSteamInfoWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFUserSteamInfo>
 {
 public:
@@ -838,5 +857,58 @@ public:
     static HRESULT Copy(const PFEntityLineage& input, PFEntityLineage& output, ModelBuffer& buffer);
 };
 
+
 // EnumRange definitions used for Enum (de)serialization
+template<typename T> struct EnumRange;
+
+template<> struct EnumRange<PFTitleActivationStatus>
+{
+    static constexpr PFTitleActivationStatus maxValue = PFTitleActivationStatus::RevokedSteam;
+};
+
+template<> struct EnumRange<PFCurrency>
+{
+    static constexpr PFCurrency maxValue = PFCurrency::ZWD;
+};
+
+template<> struct EnumRange<PFUserOrigination>
+{
+    static constexpr PFUserOrigination maxValue = PFUserOrigination::GooglePlayGames;
+};
+
+template<> struct EnumRange<PFEmailVerificationStatus>
+{
+    static constexpr PFEmailVerificationStatus maxValue = PFEmailVerificationStatus::Confirmed;
+};
+
+template<> struct EnumRange<PFLoginIdentityProvider>
+{
+    static constexpr PFLoginIdentityProvider maxValue = PFLoginIdentityProvider::GooglePlayGames;
+};
+
+template<> struct EnumRange<PFContinentCode>
+{
+    static constexpr PFContinentCode maxValue = PFContinentCode::Unknown;
+};
+
+template<> struct EnumRange<PFCountryCode>
+{
+    static constexpr PFCountryCode maxValue = PFCountryCode::Unknown;
+};
+
+template<> struct EnumRange<PFSubscriptionProviderStatus>
+{
+    static constexpr PFSubscriptionProviderStatus maxValue = PFSubscriptionProviderStatus::PaymentPending;
+};
+
+template<> struct EnumRange<PFPushNotificationPlatform>
+{
+    static constexpr PFPushNotificationPlatform maxValue = PFPushNotificationPlatform::GoogleCloudMessaging;
+};
+
+template<> struct EnumRange<PFUserDataPermission>
+{
+    static constexpr PFUserDataPermission maxValue = PFUserDataPermission::Public;
+};
+
 } // namespace PlayFab

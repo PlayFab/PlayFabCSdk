@@ -34,6 +34,71 @@ Result<LoginResult> LoginWithCustomIDOperation::GetResult(XAsyncBlock* async) no
 }
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32
+AuthenticateGameServerWithCustomIdOperation::AuthenticateGameServerWithCustomIdOperation(
+    Entity entity,
+    RequestType request,
+    PlayFab::RunContext rc
+) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+HRESULT AuthenticateGameServerWithCustomIdOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAuthenticationAuthenticateGameServerWithCustomIdAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>> AuthenticateGameServerWithCustomIdOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t bufferSize;
+    RETURN_IF_FAILED(PFAuthenticationAuthenticateGameServerWithCustomIdGetResultSize(async, &bufferSize));
+    Vector<char> buffer(bufferSize);
+    PFAuthenticationAuthenticateCustomIdResult* result;
+    RETURN_IF_FAILED(PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(async, buffer.size(), buffer.data(), &result, nullptr));
+    return *result;
+}
+
+DeleteOperation::DeleteOperation(
+    Entity entity,
+    RequestType request,
+    PlayFab::RunContext rc
+) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+HRESULT DeleteOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAuthenticationDeleteAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+GetEntityOperation::GetEntityOperation(
+    Entity entity,
+    RequestType request,
+    PlayFab::RunContext rc
+) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+HRESULT GetEntityOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAuthenticationGetEntityAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<Entity> GetEntityOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    PFEntityHandle entityHandle;
+    RETURN_IF_FAILED(PFAuthenticationGetEntityGetResult(async, &entityHandle));
+    return Entity::Wrap(entityHandle);
+}
+
 GetEntityWithSecretKeyOperation::GetEntityWithSecretKeyOperation(
     ServiceConfig serviceConfig,
     String secretKey,
@@ -59,7 +124,6 @@ Result<Entity> GetEntityWithSecretKeyOperation::GetResult(XAsyncBlock* async) no
     return Entity::Wrap(entityHandle);
 }
 
-#if 0 // removed for now
 ServerLoginWithServerCustomIdOperation::ServerLoginWithServerCustomIdOperation(
     ServiceConfig serviceConfig,
     String secretKey,
@@ -175,7 +239,32 @@ Result<ServerLoginResult> ServerLoginWithXboxIdOperation::GetResult(XAsyncBlock*
     RETURN_IF_FAILED(PFAuthenticationServerLoginWithXboxIdGetResult(async, &entityTokenResponse, buffer.size(), buffer.data(), &loginResult, nullptr));
     return ServerLoginResult{ *entityTokenResponse, *loginResult };
 }
-#endif // 0
+
+ValidateEntityTokenOperation::ValidateEntityTokenOperation(
+    Entity entity,
+    RequestType request,
+    PlayFab::RunContext rc
+) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+HRESULT ValidateEntityTokenOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAuthenticationValidateEntityTokenAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<Wrappers::PFAuthenticationValidateEntityTokenResponseWrapper<Allocator>> ValidateEntityTokenOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t bufferSize;
+    RETURN_IF_FAILED(PFAuthenticationValidateEntityTokenGetResultSize(async, &bufferSize));
+    Vector<char> buffer(bufferSize);
+    PFAuthenticationValidateEntityTokenResponse* result;
+    RETURN_IF_FAILED(PFAuthenticationValidateEntityTokenGetResult(async, buffer.size(), buffer.data(), &result, nullptr));
+    return *result;
+}
 #endif // HC_PLATFORM == HC_PLATFORM_WIN32
 
 }

@@ -16,127 +16,6 @@ extern "C"
 
 #if 0
 /// <summary>
-/// Gets a Photon custom authentication token that can be used to securely join the player into a Photon
-/// room. See https://docs.microsoft.com/gaming/playfab/features/multiplayer/photon/quickstart for more
-/// details.
-/// </summary>
-/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
-/// <param name="request">Populated request object.</param>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <returns>Result code for this API operation.</returns>
-/// <remarks>
-/// When the asynchronous task is complete, call <see cref="PFAuthenticationGetPhotonAuthenticationTokenGetResultSize"/>
-/// and <see cref="PFAuthenticationGetPhotonAuthenticationTokenGetResult"/> to get the result.
-/// </remarks>
-PF_API PFAuthenticationGetPhotonAuthenticationTokenAsync(
-    _In_ PFEntityHandle entityHandle,
-    _In_ const PFAuthenticationGetPhotonAuthenticationTokenRequest* request,
-    _Inout_ XAsyncBlock* async
-) noexcept;
-
-/// <summary>
-/// Get the size in bytes needed to store the result of a GetPhotonAuthenticationToken call.
-/// </summary>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
-/// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PHOTON_APPLICATION_NOT_ASSOCIATED_WITH_TITLE,
-/// E_PF_PHOTON_APPLICATION_NOT_FOUND, E_PF_PHOTON_NOT_ENABLED_FOR_TITLE or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
-/// </returns>
-PF_API PFAuthenticationGetPhotonAuthenticationTokenGetResultSize(
-    _Inout_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept;
-
-/// <summary>
-/// Gets the result of a successful PFAuthenticationGetPhotonAuthenticationTokenAsync call.
-/// </summary>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <param name="bufferSize">The size of the buffer for the result object.</param>
-/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
-/// <param name="result">Pointer to the result object.</param>
-/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
-/// <returns>Result code for this API operation.</returns>
-/// <remarks>
-/// result is a pointer within buffer and does not need to be freed separately.
-/// </remarks>
-PF_API PFAuthenticationGetPhotonAuthenticationTokenGetResult(
-    _Inout_ XAsyncBlock* async,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_ PFAuthenticationGetPhotonAuthenticationTokenResult** result,
-    _Out_opt_ size_t* bufferUsed
-) noexcept;
-
-#endif
-
-#if 0
-/// <summary>
-/// Returns the title's base 64 encoded RSA CSP blob.
-/// </summary>
-/// <param name="serviceConfigHandle">PFServiceConfigHandle returned from PFServiceConfigCreateHandle call.</param>
-/// <param name="request">Populated request object.</param>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <returns>Result code for this API operation.</returns>
-/// <remarks>
-/// An RSA CSP blob to be used to encrypt the payload of account creation requests when that API requires
-/// a signature header. For example if Client/LoginWithCustomId requires signature headers but the player
-/// does not have an account yet follow these steps: 1) Call Client/GetTitlePublicKey with one of the
-/// title's shared secrets. 2) Convert the Base64 encoded CSP blob to a byte array and create an RSA signing
-/// object. 3) Encrypt the UTF8 encoded JSON body of the registration request and place the Base64 encoded
-/// result into the EncryptedRequest and with the TitleId field, all other fields can be left empty when
-/// performing the API request. 4) Client receives authentication token as normal. Future requests to
-/// LoginWithCustomId will require the X-PlayFab-Signature header.
-///
-/// When the asynchronous task is complete, call <see cref="PFAuthenticationGetTitlePublicKeyGetResultSize"/>
-/// and <see cref="PFAuthenticationGetTitlePublicKeyGetResult"/> to get the result.
-/// </remarks>
-PF_API PFAuthenticationGetTitlePublicKeyAsync(
-    _In_ PFServiceConfigHandle serviceConfigHandle,
-    _In_ const PFAuthenticationGetTitlePublicKeyRequest* request,
-    _Inout_ XAsyncBlock* async
-) noexcept;
-
-/// <summary>
-/// Get the size in bytes needed to store the result of a GetTitlePublicKey call.
-/// </summary>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
-/// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENCRYPTION_KEY_BROKEN,
-/// E_PF_INVALID_SHARED_SECRET_KEY, E_PF_NO_SHARED_SECRET_KEY_CONFIGURED or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
-/// </returns>
-PF_API PFAuthenticationGetTitlePublicKeyGetResultSize(
-    _Inout_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept;
-
-/// <summary>
-/// Gets the result of a successful PFAuthenticationGetTitlePublicKeyAsync call.
-/// </summary>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <param name="bufferSize">The size of the buffer for the result object.</param>
-/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
-/// <param name="result">Pointer to the result object.</param>
-/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
-/// <returns>Result code for this API operation.</returns>
-/// <remarks>
-/// result is a pointer within buffer and does not need to be freed separately.
-/// </remarks>
-PF_API PFAuthenticationGetTitlePublicKeyGetResult(
-    _Inout_ XAsyncBlock* async,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_ PFAuthenticationGetTitlePublicKeyResult** result,
-    _Out_opt_ size_t* bufferUsed
-) noexcept;
-
-#endif
-
-#if 0
-/// <summary>
 /// Signs the user in using the Android device identifier, returning a session identifier that can subsequently
 /// be used for API calls which require an authenticated user
 /// </summary>
@@ -1993,7 +1872,7 @@ PF_API PFAuthenticationReLoginWithXUserAsync(
 #if 0
 /// <summary>
 /// Registers a new Playfab user account, returning a session identifier that can subsequently be used
-/// for API calls which require an authenticated user. You must supply either a username or an email address.
+/// for API calls which require an authenticated user. You must supply a username and an email address.
 /// </summary>
 /// <param name="serviceConfigHandle">PFServiceConfigHandle returned from PFServiceConfigCreateHandle call.</param>
 /// <param name="request">Populated request object.</param>
@@ -2051,37 +1930,7 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResult(
 
 #endif
 
-#if 0
-/// <summary>
-/// Sets the player's secret if it is not already set. Player secrets are used to sign API requests.
-/// To reset a player's secret use the Admin or Server API method SetPlayerSecret.
-/// </summary>
-/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
-/// <param name="request">Populated request object.</param>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <returns>Result code for this API operation.</returns>
-/// <remarks>
-/// APIs that require signatures require that the player have a configured Player Secret Key that is
-/// used to sign all requests. Players that don't have a secret will be blocked from making API calls
-/// until it is configured. To create a signature header add a SHA256 hashed string containing UTF8 encoded
-/// JSON body as it will be sent to the server, the current time in UTC formatted to ISO 8601, and the
-/// players secret formatted as 'body.date.secret'. Place the resulting hash into the header X-PlayFab-Signature,
-/// along with a header X-PlayFab-Timestamp of the same UTC timestamp used in the signature.
-///
-/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ENCRYPTION_KEY_MISSING, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
-/// </remarks>
-PF_API PFAuthenticationSetPlayerSecretAsync(
-    _In_ PFEntityHandle entityHandle,
-    _In_ const PFAuthenticationSetPlayerSecretRequest* request,
-    _Inout_ XAsyncBlock* async
-) noexcept;
-
-#endif
-
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Securely login a game client from an external server backend using a custom identifier for that player.
 /// Server Custom ID and Client Custom ID are mutually exclusive and cannot be used to retrieve the same
@@ -2093,6 +1942,7 @@ PF_API PFAuthenticationSetPlayerSecretAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationServerLoginWithServerCustomIdGetResult"/>
 /// to get the result.
 /// </remarks>
@@ -2148,7 +1998,7 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdGetResult(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Signs the user in using an Steam ID, returning a session identifier that can subsequently be used
 /// for API calls which require an authenticated user
@@ -2159,6 +2009,7 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// If this is the first time a user has signed in with the Steam ID and CreateAccount is set to true,
 /// a new PlayFab account will be created and linked to the Steam account. In this case, no email or username
 /// will be associated with the PlayFab account. Otherwise, if no PlayFab account is linked to the Steam
@@ -2224,7 +2075,7 @@ PF_API PFAuthenticationServerLoginWithSteamIdGetResult(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Signs the user in using a Xbox Live Token from an external server backend, returning a session identifier
 /// that can subsequently be used for API calls which require an authenticated user
@@ -2235,6 +2086,7 @@ PF_API PFAuthenticationServerLoginWithSteamIdGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// If this is the first time a user has signed in with the Xbox Live account and CreateAccount is set
 /// to true, a new PlayFab account will be created and linked to the Xbox Live account. In this case,
 /// no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab account
@@ -2300,7 +2152,7 @@ PF_API PFAuthenticationServerLoginWithXboxGetResult(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Signs the user in using an Xbox ID and Sandbox ID, returning a session identifier that can subsequently
 /// be used for API calls which require an authenticated user
@@ -2311,6 +2163,7 @@ PF_API PFAuthenticationServerLoginWithXboxGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// If this is the first time a user has signed in with the Xbox ID and CreateAccount is set to true,
 /// a new PlayFab account will be created and linked to the Xbox Live account. In this case, no email
 /// or username will be associated with the PlayFab account. Otherwise, if no PlayFab account is linked
@@ -2374,7 +2227,7 @@ PF_API PFAuthenticationServerLoginWithXboxIdGetResult(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Create a game_server entity token and return a new or existing game_server entity.
 /// </summary>
@@ -2383,6 +2236,7 @@ PF_API PFAuthenticationServerLoginWithXboxIdGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// Create or return a game_server entity token. Caller must be a title entity.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationAuthenticateGameServerWithCustomIdGetResultSize"/>
@@ -2430,7 +2284,7 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Delete a game_server entity.
 /// </summary>
@@ -2439,6 +2293,7 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// Delete a game_server entity. The caller can be the game_server entity attempting to delete itself.
 /// Or a title entity attempting to delete game_server entities for this title.
 ///
@@ -2454,7 +2309,7 @@ PF_API PFAuthenticationDeleteAsync(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Method to exchange a legacy AuthenticationTicket or title SecretKey for an Entity Token or to refresh
 /// a still valid Entity Token.
@@ -2464,6 +2319,7 @@ PF_API PFAuthenticationDeleteAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// This API must be called with X-SecretKey, X-Authentication or X-EntityToken headers. An optional
 /// EntityKey may be included to attempt to set the resulting EntityToken to a specific entity, however
 /// the entity must be a relation of the caller, such as the master_player_account of a character. If
@@ -2551,7 +2407,7 @@ PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Method for a server to validate a client provided EntityToken. Only callable by the title entity.
 /// </summary>
@@ -2560,6 +2416,7 @@ PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// Given an entity token, validates that it hasn't expired or been revoked and will return details of
 /// the owner.
 ///

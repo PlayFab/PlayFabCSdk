@@ -120,7 +120,7 @@ PF_API PFFriendsClientSetFriendTagsAsync(
     return XAsyncProviderBase::Run(std::move(provider));
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFFriendsServerAddFriendAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFFriendsServerAddFriendRequest* request,
@@ -142,7 +142,7 @@ PF_API PFFriendsServerAddFriendAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFFriendsServerGetFriendsListAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFFriendsServerGetFriendsListRequest* request,
@@ -188,7 +188,7 @@ PF_API PFFriendsServerGetFriendsListGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFFriendsServerRemoveFriendAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFFriendsServerRemoveFriendRequest* request,
@@ -210,7 +210,7 @@ PF_API PFFriendsServerRemoveFriendAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFFriendsServerSetFriendTagsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFFriendsServerSetFriendTagsRequest* request,

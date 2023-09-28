@@ -49,7 +49,6 @@
     <WindowsTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(SolutionDir), PlayFab.base.props))\PlayFab.base.props" />
-  <Import Project="$(PlayFabCorePropsDir)PlayFab.gdk.bwoi.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

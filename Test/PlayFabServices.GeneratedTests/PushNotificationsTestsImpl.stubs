@@ -17,14 +17,14 @@ AsyncOp<void> PushNotificationsTests::Uninitialize()
     return ServicesTestClass::Uninitialize();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PushNotificationsTests::TestServerSendPushNotification(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PushNotificationsTests::TestServerSendPushNotificationFromTemplate(TestContext& tc)
 {
     tc.Skip();

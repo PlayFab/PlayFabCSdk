@@ -228,7 +228,7 @@ PF_API PFTitleDataManagementClientGetTitleNewsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Retrieves the key-value store of custom publisher settings
 /// </summary>
@@ -237,6 +237,7 @@ PF_API PFTitleDataManagementClientGetTitleNewsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// This API is designed to return publisher-specific values which can be read, but not written to, by
 /// the client. This data is shared across all titles assigned to a particular publisher, and can be used
 /// for cross-game coordination. Only titles assigned to a publisher can use this API. For more information
@@ -292,7 +293,7 @@ PF_API PFTitleDataManagementServerGetPublisherDataGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Retrieves the current server time
 /// </summary>
@@ -300,6 +301,7 @@ PF_API PFTitleDataManagementServerGetPublisherDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// This query retrieves the current time from one of the servers in PlayFab. Please note that due to
 /// clock drift between servers, there is a potential variance of up to 5 seconds.
 ///
@@ -327,7 +329,7 @@ PF_API PFTitleDataManagementServerGetTimeGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Retrieves the key-value store of custom title settings
 /// </summary>
@@ -336,6 +338,7 @@ PF_API PFTitleDataManagementServerGetTimeGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// This API is designed to return title specific values which can be read, but not written to, by the
 /// client. For example, a developer could choose to store values which modify the user experience, such
 /// as enemy spawn rates, weapon strengths, movement speeds, etc. This allows a developer to update the
@@ -391,7 +394,7 @@ PF_API PFTitleDataManagementServerGetTitleDataGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Retrieves the key-value store of custom internal title settings
 /// </summary>
@@ -400,6 +403,7 @@ PF_API PFTitleDataManagementServerGetTitleDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// This API is designed to return title specific values which are accessible only to the server. This
 /// can be used to tweak settings on game servers and Cloud Scripts without needed to update and re-deploy
 /// them. Note that there may up to a minute delay in between updating title data and this API call returning
@@ -452,7 +456,7 @@ PF_API PFTitleDataManagementServerGetTitleInternalDataGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Retrieves the title news feed, as configured in the developer portal
 /// </summary>
@@ -461,6 +465,7 @@ PF_API PFTitleDataManagementServerGetTitleInternalDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// When the asynchronous task is complete, call <see cref="PFTitleDataManagementServerGetTitleNewsGetResultSize"/>
 /// and <see cref="PFTitleDataManagementServerGetTitleNewsGetResult"/> to get the result.
 /// </remarks>
@@ -508,7 +513,7 @@ PF_API PFTitleDataManagementServerGetTitleNewsGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Updates the key-value store of custom publisher settings
 /// </summary>
@@ -517,6 +522,7 @@ PF_API PFTitleDataManagementServerGetTitleNewsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// This API is designed to store publisher-specific values which can be read, but not written to, by
 /// the client. This data is shared across all titles assigned to a particular publisher, and can be used
 /// for cross-game coordination. Only titles assigned to a publisher can use this API. This operation
@@ -535,7 +541,7 @@ PF_API PFTitleDataManagementServerSetPublisherDataAsync(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Updates the key-value store of custom title settings
 /// </summary>
@@ -544,6 +550,7 @@ PF_API PFTitleDataManagementServerSetPublisherDataAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// This API is designed to store title specific values which can be read, but not written to, by the
 /// client. For example, a developer could choose to store values which modify the user experience, such
 /// as enemy spawn rates, weapon strengths, movement speeds, etc. This allows a developer to update the
@@ -562,7 +569,7 @@ PF_API PFTitleDataManagementServerSetTitleDataAsync(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 /// <summary>
 /// Updates the key-value store of custom title settings
 /// </summary>
@@ -571,6 +578,7 @@ PF_API PFTitleDataManagementServerSetTitleDataAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Win32.
 /// This API is designed to store title specific values which are accessible only to the server. This
 /// can be used to tweak settings on game servers and Cloud Scripts without needed to update and re-deploy
 /// them. This operation is additive. If a Key does not exist in the current dataset, it will be added

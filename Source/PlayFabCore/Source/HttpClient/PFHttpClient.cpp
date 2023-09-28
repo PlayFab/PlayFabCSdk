@@ -411,6 +411,21 @@ PF_API PFHCHttpCallResponseGetHeaderAtIndex(
     );
 }
 
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+
+PF_API PFHCHttpCallRequestEnableGzipCompression(
+    _In_ PFHCCallHandle call,
+    _In_ PFHCCompressionLevel level
+) noexcept
+{
+    return HCHttpCallRequestEnableGzipCompression(
+        call,
+        (HCCompressionLevel)level
+    );
+}
+
+#endif
+
 #if !HC_NOWEBSOCKETS
 
 // WebSocket APIs

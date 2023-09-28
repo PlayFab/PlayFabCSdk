@@ -17,6 +17,23 @@ AsyncOp<void> CloudScriptTests::Uninitialize()
     return ServicesTestClass::Uninitialize();
 }
 
+void CloudScriptTests::TestClientExecuteCloudScript(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+void CloudScriptTests::TestServerExecuteCloudScript(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void CloudScriptTests::TestExecuteEntityCloudScript(TestContext& tc)
+{
+    tc.Skip();
+}
+
 void CloudScriptTests::TestExecuteFunction(TestContext& tc)
 {
     tc.Skip();

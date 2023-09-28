@@ -10,6 +10,6 @@
   <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.Common\PlayFabCore.Common.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.ServiceWrappers\PlayFabCore.ServiceWrappers.vcxitems" Label="Shared" />
-  <Import Project="..\PlayFabCore.Win32\PlayFabCore.Win32.vcxitems" Label="Shared" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabCore.Win32\PlayFabCore.Win32.vcxitems" Label="Shared" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

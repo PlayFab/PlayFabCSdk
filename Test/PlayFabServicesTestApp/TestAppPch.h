@@ -21,6 +21,7 @@
 #include <unordered_map>
 #include <array>
 #include <assert.h>
+#include <atomic>
 
 // PlayFab Services include
 #include <playfab/services/PFServices.h>

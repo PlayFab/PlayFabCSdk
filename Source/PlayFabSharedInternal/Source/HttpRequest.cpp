@@ -58,13 +58,15 @@ HCHttpCall::HCHttpCall(
     String url,
     UnorderedMap<String, String> headers,
     String requestBody,
-    PlayFab::RunContext runContext
+    PlayFab::RunContext runContext,
+    PFHCCompressionLevel compressionLevel
 ) noexcept :
     XAsyncOperation<ServiceResponse>{ std::move(runContext) },
     m_method{ std::move(method) },
     m_url{ std::move(url) },
     m_headers{ std::move(headers) },
-    m_requestBody{ std::move(requestBody) }
+    m_requestBody{ std::move(requestBody) },
+    m_compressionLevel { compressionLevel }
 {
 }
 
@@ -75,7 +77,8 @@ HCHttpCall::HCHttpCall(
     String requestBody,
     uint32_t retryCacheId,
     PFHttpRetrySettings const& retrySettings,
-    PlayFab::RunContext runContext
+    PlayFab::RunContext runContext,
+    PFHCCompressionLevel compressionLevel
 ) noexcept :
     XAsyncOperation<ServiceResponse>{ std::move(runContext) },
     m_method{ std::move(method) },
@@ -85,7 +88,8 @@ HCHttpCall::HCHttpCall(
     m_retryCacheId{ retryCacheId },
     m_retryAllowed{ retrySettings.allowRetry },
     m_retryDelay{ retrySettings.minimumRetryDelayInSeconds },
-    m_timeoutWindow{ retrySettings.timeoutWindowInSeconds }
+    m_timeoutWindow{ retrySettings.timeoutWindowInSeconds },
+    m_compressionLevel{ compressionLevel }
 {
 }
 
@@ -108,6 +112,15 @@ HRESULT HCHttpCall::OnStarted(XAsyncBlock* async) noexcept
     RETURN_IF_FAILED(PFHCHttpCallCreate(&m_callHandle));
     RETURN_IF_FAILED(PFHCHttpCallRequestSetUrl(m_callHandle, m_method.data(), m_url.data()));
     RETURN_IF_FAILED(PFHCHttpCallResponseSetResponseBodyWriteFunction(m_callHandle, HCHttpCall::HCResponseBodyWrite, this));
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+    // Setup Compression level
+    RETURN_IF_FAILED(PFHCHttpCallRequestEnableGzipCompression(m_callHandle, m_compressionLevel));
+#else
+    // Doing this assignment to avoid guarding the variable and having to add several guards on the header file.
+    // This is due to a PlayStation build warning about private field not being used
+    m_compressionLevel = PFHCCompressionLevel::None;
+#endif
 
     // Add default PlayFab headers
     RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, "Accept", "application/json", true));

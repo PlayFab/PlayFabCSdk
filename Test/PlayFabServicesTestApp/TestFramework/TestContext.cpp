@@ -11,10 +11,9 @@ namespace PlayFab
 namespace Test
 {
 
-TestContext::TestContext(Test::TestClass& testClass, const char* name, TestFunc func) :
+TestContext::TestContext(const char* name, TestFunc func) :
     m_testName{ name },
-    m_testFunc{ std::move(func) },
-    m_testClass{ testClass }
+    m_testFunc{ std::move(func) }
 {
 }
 

@@ -17,10 +17,23 @@ AsyncOp<void> LocalizationTests::Uninitialize()
     return ServicesTestClass::Uninitialize();
 }
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void LocalizationTests::TestGetLanguageList(TestContext& tc)
 {
-    tc.Skip();
+    GetLanguageListOperation::RequestType request;
+    GetLanguageListOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<GetLanguageListOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        auto& model = result.Payload().Model();
+        tc.AssertEqual(384u, model.languageListCount, "languageCount");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 

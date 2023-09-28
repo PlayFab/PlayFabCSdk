@@ -37,56 +37,56 @@ void TitleDataManagementTests::TestClientGetTitleNews(TestContext& tc)
     tc.Skip();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetPublisherData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetTime(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetTitleData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetTitleInternalData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerGetTitleNews(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerSetPublisherData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerSetTitleData(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void TitleDataManagementTests::TestServerSetTitleInternalData(TestContext& tc)
 {
     tc.Skip();

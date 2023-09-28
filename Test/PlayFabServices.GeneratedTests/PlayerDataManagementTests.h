@@ -28,40 +28,40 @@ private:
     void TestClientGetUserReadOnlyData(TestContext& testContext);
     void TestClientUpdateUserData(TestContext& testContext);
     void TestClientUpdateUserPublisherData(TestContext& testContext);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetUserData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetUserInternalData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetUserPublisherData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetUserPublisherInternalData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetUserPublisherReadOnlyData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetUserReadOnlyData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerUpdateUserData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerUpdateUserInternalData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerUpdateUserPublisherData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerUpdateUserPublisherInternalData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerUpdateUserPublisherReadOnlyData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerUpdateUserReadOnlyData(TestContext& testContext);
 #endif
 

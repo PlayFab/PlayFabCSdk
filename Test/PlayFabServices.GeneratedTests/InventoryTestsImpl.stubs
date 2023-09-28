@@ -54,7 +54,7 @@ void InventoryTests::TestGetMicrosoftStoreAccessTokens(TestContext& tc)
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void InventoryTests::TestGetTransactionHistory(TestContext& tc)
 {
     tc.Skip();

@@ -277,5 +277,13 @@ public:
 };
 
 } // namespace Profiles
+
 // EnumRange definitions used for Enum (de)serialization
+template<typename T> struct EnumRange;
+
+template<> struct EnumRange<PFProfilesEffectType>
+{
+    static constexpr PFProfilesEffectType maxValue = PFProfilesEffectType::Deny;
+};
+
 } // namespace PlayFab

@@ -8,6 +8,7 @@
 // route through the configured memory hooks (or the default memory functions, which use std::malloc and std::free).
 // If these operators are ever used, it indicates we have an allocation that is unhooked and needs to be.
 
+#if !HC_PLATFORM_IS_PLAYSTATION
 void* operator new(size_t size)
 {
 #if HC_PLATFORM == HC_PLATFORM_GDK
@@ -28,6 +29,7 @@ void operator delete(void* p)
         free(p);
     }
 }
+#endif //!HC_PLATFORM_IS_PLAYSTATION
 #endif
 
 namespace PlayFab

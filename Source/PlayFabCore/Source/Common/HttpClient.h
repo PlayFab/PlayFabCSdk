@@ -24,7 +24,8 @@ public:
         UnorderedMap<String, String> headers,
         const JsonValue& requestBody,
         CacheId retryCacheId,
-        RunContext&& runContext
+        RunContext&& runContext,
+        PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
     ) const;
 
     AsyncOp<ServiceResponse> MakeEntityRequest(
@@ -32,7 +33,8 @@ public:
         const char* path,
         const JsonValue& requestBody,
         CacheId retryCacheId,
-        RunContext&& runContext
+        RunContext&& runContext,
+        PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
     ) const;
 
     AsyncOp<ServiceResponse> MakeSecretKeyRequest(
@@ -41,7 +43,8 @@ public:
         const char* path,
         const JsonValue& requestBody,
         CacheId retryCacheId,
-        RunContext&& runContext
+        RunContext&& runContext,
+        PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
     ) const;
 
     AsyncOp<ServiceResponse> MakeSecretKeyRequest(
@@ -49,7 +52,8 @@ public:
         const char* path,
         const JsonValue& requestBody,
         CacheId retryCacheID,
-        RunContext&& runContext
+        RunContext&& runContext,
+        PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
     ) const;
 
     AsyncOp<ServiceResponse> MakeTelemetryKeyRequest(
@@ -57,7 +61,8 @@ public:
         const char* path,
         const JsonValue& requestBody,
         CacheId retryCacheId,
-        RunContext&& runContext
+        RunContext&& runContext,
+        PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
     ) const;
 
     String const& APIEndpoint() const noexcept;

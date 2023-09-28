@@ -8,7 +8,7 @@ namespace Test
 
 void LocalizationTests::AddTests()
 {
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestGetLanguageList", &LocalizationTests::TestGetLanguageList);
 #endif
 

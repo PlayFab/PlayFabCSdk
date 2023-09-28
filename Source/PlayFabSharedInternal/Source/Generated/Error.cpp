@@ -558,6 +558,7 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::NamespaceMismatch: return E_PF_NAMESPACE_MISMATCH;
     case ServiceErrorCode::InvalidServiceConfiguration: return E_PF_INVALID_SERVICE_CONFIGURATION;
     case ServiceErrorCode::InvalidNamespaceMismatch: return E_PF_INVALID_NAMESPACE_MISMATCH;
+    case ServiceErrorCode::LeaderboardColumnLengthMismatch: return E_PF_LEADERBOARD_COLUMN_LENGTH_MISMATCH;
     case ServiceErrorCode::MatchmakingEntityInvalid: return E_PF_MATCHMAKING_ENTITY_INVALID;
     case ServiceErrorCode::MatchmakingPlayerAttributesInvalid: return E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID;
     case ServiceErrorCode::MatchmakingQueueNotFound: return E_PF_MATCHMAKING_QUEUE_NOT_FOUND;
@@ -730,6 +731,11 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::AllowNonUniquePlayerDisplayNamesDisableNotAllowed: return E_PF_ALLOW_NON_UNIQUE_PLAYER_DISPLAY_NAMES_DISABLE_NOT_ALLOWED;
     case ServiceErrorCode::PartitionedEventInvalid: return E_PF_PARTITIONED_EVENT_INVALID;
     case ServiceErrorCode::PartitionedEventCountOverLimit: return E_PF_PARTITIONED_EVENT_COUNT_OVER_LIMIT;
+    case ServiceErrorCode::ManageEventNamespaceInvalid: return E_PF_MANAGE_EVENT_NAMESPACE_INVALID;
+    case ServiceErrorCode::ManageEventNameInvalid: return E_PF_MANAGE_EVENT_NAME_INVALID;
+    case ServiceErrorCode::ManagedEventNotFound: return E_PF_MANAGED_EVENT_NOT_FOUND;
+    case ServiceErrorCode::ManageEventsInvalidRatio: return E_PF_MANAGE_EVENTS_INVALID_RATIO;
+    case ServiceErrorCode::ManagedEventInvalid: return E_PF_MANAGED_EVENT_INVALID;
     case ServiceErrorCode::PlayerCustomPropertiesPropertyNameTooLong: return E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_TOO_LONG;
     case ServiceErrorCode::PlayerCustomPropertiesPropertyNameIsInvalid: return E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_IS_INVALID;
     case ServiceErrorCode::PlayerCustomPropertiesStringPropertyValueTooLong: return E_PF_PLAYER_CUSTOM_PROPERTIES_STRING_PROPERTY_VALUE_TOO_LONG;

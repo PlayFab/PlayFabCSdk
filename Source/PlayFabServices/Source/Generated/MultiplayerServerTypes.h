@@ -404,5 +404,18 @@ public:
 };
 
 } // namespace MultiplayerServer
+
 // EnumRange definitions used for Enum (de)serialization
+template<typename T> struct EnumRange;
+
+template<> struct EnumRange<PFMultiplayerServerAzureVmSize>
+{
+    static constexpr PFMultiplayerServerAzureVmSize maxValue = PFMultiplayerServerAzureVmSize::Standard_HB120rs_v3;
+};
+
+template<> struct EnumRange<PFMultiplayerServerProtocolType>
+{
+    static constexpr PFMultiplayerServerProtocolType maxValue = PFMultiplayerServerProtocolType::UDP;
+};
+
 } // namespace PlayFab

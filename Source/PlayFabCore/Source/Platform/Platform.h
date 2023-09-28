@@ -4,12 +4,10 @@
 
 namespace PlayFab
 {
-namespace Detail
-{
+
+HRESULT PlatformInitialize() noexcept;
 
 PFLocalStorageHooks& GetLocalStorageHandlers();
 HRESULT SetLocalStorageHandlers(PFLocalStorageHooks& hooks);
-
-}
 
 }

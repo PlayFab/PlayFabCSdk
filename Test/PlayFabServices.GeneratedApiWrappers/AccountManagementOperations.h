@@ -8,7 +8,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientAddOrUpdateContactEmailOperation : public XAsyncOperation<void>
 {
 public:
@@ -26,7 +26,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientAddUsernamePasswordOperation : public XAsyncOperation<Wrappers::PFAccountManagementAddUsernamePasswordResultWrapper<Allocator>>
 {
 public:
@@ -100,7 +100,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientGetPlayFabIDsFromFacebookIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromFacebookIDsResultWrapper<Allocator>>
 {
 public:
@@ -120,7 +120,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientGetPlayFabIDsFromFacebookInstantGamesIdsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromFacebookInstantGamesIdsResultWrapper<Allocator>>
 {
 public:
@@ -140,7 +140,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientGetPlayFabIDsFromGameCenterIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromGameCenterIDsResultWrapper<Allocator>>
 {
 public:
@@ -160,7 +160,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientGetPlayFabIDsFromGoogleIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromGoogleIDsResultWrapper<Allocator>>
 {
 public:
@@ -180,7 +180,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromGooglePlayGamesPlayerIDsResultWrapper<Allocator>>
 {
 public:
@@ -200,7 +200,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientGetPlayFabIDsFromKongregateIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromKongregateIDsResultWrapper<Allocator>>
 {
 public:
@@ -220,7 +220,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
 class ClientGetPlayFabIDsFromNintendoServiceAccountIdsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromNintendoServiceAccountIdsResultWrapper<Allocator>>
 {
 public:
@@ -240,7 +240,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsResultWrapper<Allocator>>
 {
 public:
@@ -260,7 +260,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
 class ClientGetPlayFabIDsFromPSNAccountIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromPSNAccountIDsResultWrapper<Allocator>>
 {
 public:
@@ -300,7 +300,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientGetPlayFabIDsFromTwitchIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromTwitchIDsResultWrapper<Allocator>>
 {
 public:
@@ -340,7 +340,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkAndroidDeviceIDOperation : public XAsyncOperation<void>
 {
 public:
@@ -358,7 +358,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkAppleOperation : public XAsyncOperation<void>
 {
 public:
@@ -392,7 +392,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkFacebookAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -410,7 +410,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkFacebookInstantGamesIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -428,7 +428,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkGameCenterAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -446,7 +446,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkGoogleAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -464,7 +464,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkGooglePlayGamesServicesAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -482,7 +482,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkIOSDeviceIDOperation : public XAsyncOperation<void>
 {
 public:
@@ -500,7 +500,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkKongregateOperation : public XAsyncOperation<void>
 {
 public:
@@ -518,7 +518,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
 class ClientLinkNintendoServiceAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -536,7 +536,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkNintendoSwitchDeviceIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -570,7 +570,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
 class ClientLinkPSNAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -606,7 +606,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientLinkTwitchOperation : public XAsyncOperation<void>
 {
 public:
@@ -642,7 +642,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientRemoveContactEmailOperation : public XAsyncOperation<void>
 {
 public:
@@ -678,7 +678,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientSendAccountRecoveryEmailOperation : public XAsyncOperation<void>
 {
 public:
@@ -696,7 +696,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkAndroidDeviceIDOperation : public XAsyncOperation<void>
 {
 public:
@@ -714,7 +714,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkAppleOperation : public XAsyncOperation<void>
 {
 public:
@@ -748,7 +748,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkFacebookAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -766,7 +766,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkFacebookInstantGamesIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -784,7 +784,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkGameCenterAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -802,7 +802,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkGoogleAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -820,7 +820,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkGooglePlayGamesServicesAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -838,7 +838,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkIOSDeviceIDOperation : public XAsyncOperation<void>
 {
 public:
@@ -856,7 +856,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkKongregateOperation : public XAsyncOperation<void>
 {
 public:
@@ -874,7 +874,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
 class ClientUnlinkNintendoServiceAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -892,7 +892,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkNintendoSwitchDeviceIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -926,7 +926,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
 class ClientUnlinkPSNAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -962,7 +962,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUnlinkTwitchOperation : public XAsyncOperation<void>
 {
 public:
@@ -1014,7 +1014,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ClientUpdateUserTitleDisplayNameOperation : public XAsyncOperation<Wrappers::PFAccountManagementUpdateUserTitleDisplayNameResultWrapper<Allocator>>
 {
 public:
@@ -1034,7 +1034,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerBanUsersOperation : public XAsyncOperation<Wrappers::PFAccountManagementBanUsersResultWrapper<Allocator>>
 {
 public:
@@ -1054,7 +1054,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerDeletePlayerOperation : public XAsyncOperation<void>
 {
 public:
@@ -1072,7 +1072,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayerCombinedInfoOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayerCombinedInfoResultWrapper<Allocator>>
 {
 public:
@@ -1092,7 +1092,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayerProfileOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayerProfileResultWrapper<Allocator>>
 {
 public:
@@ -1112,7 +1112,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayFabIDsFromFacebookIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromFacebookIDsResultWrapper<Allocator>>
 {
 public:
@@ -1132,7 +1132,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayFabIDsFromFacebookInstantGamesIdsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromFacebookInstantGamesIdsResultWrapper<Allocator>>
 {
 public:
@@ -1152,7 +1152,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayFabIDsFromNintendoServiceAccountIdsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromNintendoServiceAccountIdsResultWrapper<Allocator>>
 {
 public:
@@ -1172,7 +1172,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsResultWrapper<Allocator>>
 {
 public:
@@ -1192,7 +1192,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayFabIDsFromPSNAccountIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromPSNAccountIDsResultWrapper<Allocator>>
 {
 public:
@@ -1212,7 +1212,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayFabIDsFromSteamIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromSteamIDsResultWrapper<Allocator>>
 {
 public:
@@ -1232,7 +1232,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayFabIDsFromTwitchIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromTwitchIDsResultWrapper<Allocator>>
 {
 public:
@@ -1252,7 +1252,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetPlayFabIDsFromXboxLiveIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromXboxLiveIDsResultWrapper<Allocator>>
 {
 public:
@@ -1272,7 +1272,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetServerCustomIDsFromPlayFabIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetServerCustomIDsFromPlayFabIDsResultWrapper<Allocator>>
 {
 public:
@@ -1292,7 +1292,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetUserAccountInfoOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetUserAccountInfoResultWrapper<Allocator>>
 {
 public:
@@ -1312,7 +1312,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetUserBansOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetUserBansResultWrapper<Allocator>>
 {
 public:
@@ -1332,7 +1332,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerLinkNintendoServiceAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -1350,7 +1350,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerLinkNintendoSwitchDeviceIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -1368,7 +1368,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerLinkPSNAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -1404,7 +1404,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerLinkServerCustomIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -1422,7 +1422,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerLinkSteamIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -1440,7 +1440,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerLinkXboxAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -1458,7 +1458,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerRevokeAllBansForUserOperation : public XAsyncOperation<Wrappers::PFAccountManagementRevokeAllBansForUserResultWrapper<Allocator>>
 {
 public:
@@ -1478,7 +1478,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerRevokeBansOperation : public XAsyncOperation<Wrappers::PFAccountManagementRevokeBansResultWrapper<Allocator>>
 {
 public:
@@ -1498,7 +1498,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerSendCustomAccountRecoveryEmailOperation : public XAsyncOperation<void>
 {
 public:
@@ -1516,7 +1516,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerSendEmailFromTemplateOperation : public XAsyncOperation<void>
 {
 public:
@@ -1534,7 +1534,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUnlinkNintendoServiceAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -1552,7 +1552,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUnlinkNintendoSwitchDeviceIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -1570,7 +1570,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUnlinkPSNAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -1588,7 +1588,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUnlinkServerCustomIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -1606,7 +1606,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUnlinkSteamIdOperation : public XAsyncOperation<void>
 {
 public:
@@ -1624,7 +1624,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUnlinkXboxAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -1642,7 +1642,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUpdateAvatarUrlOperation : public XAsyncOperation<void>
 {
 public:
@@ -1660,7 +1660,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUpdateBansOperation : public XAsyncOperation<Wrappers::PFAccountManagementUpdateBansResultWrapper<Allocator>>
 {
 public:
@@ -1680,7 +1680,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class GetTitlePlayersFromXboxLiveIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetTitlePlayersFromProviderIDsResponseWrapper<Allocator>>
 {
 public:

@@ -44,6 +44,7 @@ HRESULT EventPipelineCreationHelper(
     }
 
     uint32_t maxEvents, maxWaitTime, pollDelay;
+    PFHCCompressionLevel compressionLevel;
 
     if (eventPipelineType == PFEventPipelineType::PlayStream)
     {
@@ -58,6 +59,8 @@ HRESULT EventPipelineCreationHelper(
         pollDelay = !eventPipelineConfig || !eventPipelineConfig->pollDelayInMs ? PFTelemetryEventPipelinePollDelayInMsDefault : *eventPipelineConfig->pollDelayInMs;
     }
 
+    compressionLevel = !eventPipelineConfig || !eventPipelineConfig->compressionLevel ? PFHCCompressionLevel::None : *eventPipelineConfig->compressionLevel;
+
     SharedPtr<EventPipeline> pipeline;
 
     if (entityHandle)
@@ -69,6 +72,7 @@ HRESULT EventPipelineCreationHelper(
             maxEvents,
             maxWaitTime,
             pollDelay,
+            compressionLevel,
             batchUploadedEventHandler,
             batchFailedEventHandler,
             handlerContext
@@ -84,6 +88,7 @@ HRESULT EventPipelineCreationHelper(
             maxEvents,
             maxWaitTime,
             pollDelay,
+            compressionLevel,
             batchUploadedEventHandler,
             batchFailedEventHandler,
             handlerContext

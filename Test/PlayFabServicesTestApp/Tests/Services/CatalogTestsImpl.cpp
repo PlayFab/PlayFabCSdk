@@ -2,6 +2,7 @@
 #include "CatalogTests.h"
 #include "CatalogOperations.h"
 #include "JsonUtils.h"
+#include "Platform/PlatformUtils.h"
 #include <HttpRequest.h>
 
 namespace PlayFab
@@ -138,6 +139,9 @@ AsyncOp<void> CatalogTests::Initialize()
     })
     .Then([&, initResult](Result<CreateDraftItemOperation::ResultType> result) -> Result<void>
     {
+        // Waiting a few seconds before continuing to ensure that item will be ready for other operations.
+        Platform::Sleep(5000);
+
         // We don't care if Creating/Publishing the permanent item and bundle fails since it should already exist most times
         return *initResult;
     });
@@ -184,7 +188,7 @@ void CatalogTests::TestCreateUploadUrls(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
 void CatalogTests::TestDeleteEntityItemReviews(TestContext& tc)
 {
     tc.Skip();
@@ -197,7 +201,7 @@ void CatalogTests::TestDeleteItem(TestContext& tc)
     tc.EndTest(S_OK);
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
 void CatalogTests::TestGetCatalogConfig(TestContext& tc)
 {
     tc.Skip();
@@ -392,7 +396,7 @@ void CatalogTests::TestGetItemContainers(TestContext& tc)
 #endif
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
 void CatalogTests::TestGetItemModerationState(TestContext& tc)
 {
     tc.Skip();
@@ -571,7 +575,7 @@ void CatalogTests::TestSearchItems(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
 void CatalogTests::TestSetItemModerationState(TestContext& tc)
 {
     tc.Skip();
@@ -584,14 +588,14 @@ void CatalogTests::TestSubmitItemReviewVote(TestContext& tc)
     tc.EndTest(S_OK);
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
 void CatalogTests::TestTakedownItemReviews(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
 void CatalogTests::TestUpdateCatalogConfig(TestContext& tc)
 {
     tc.Skip();

@@ -26,28 +26,28 @@ private:
     void TestClientGetTime(TestContext& testContext);
     void TestClientGetTitleData(TestContext& testContext);
     void TestClientGetTitleNews(TestContext& testContext);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetPublisherData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetTime(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetTitleData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetTitleInternalData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerGetTitleNews(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerSetPublisherData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerSetTitleData(TestContext& testContext);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerSetTitleInternalData(TestContext& testContext);
 #endif
 

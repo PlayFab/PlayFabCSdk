@@ -37,7 +37,7 @@ class TestContext
 public:
     using TestFunc = std::function<void(TestContext&)>;
 
-    TestContext(TestClass& testClass, const char* name, TestFunc func);
+    TestContext(const char* name, TestFunc func);
 
     // Test metadata
     String const& TestName() const;
@@ -93,7 +93,6 @@ private:
     TestFinishState m_finishState{ TestFinishState::PENDING };
     String m_testResultMsg;
     TestFunc m_testFunc;
-    Test::TestClass& m_testClass;
     int64_t m_startTime;
     int64_t m_endTime;
     Vector<Result<void>> m_intermediateResults;

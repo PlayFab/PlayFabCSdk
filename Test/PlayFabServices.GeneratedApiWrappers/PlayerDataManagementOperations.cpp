@@ -169,7 +169,7 @@ Result<ClientUpdateUserPublisherDataOperation::ResultType> ClientUpdateUserPubli
     return ResultType{ result };
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetUserDataOperation::ServerGetUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -199,7 +199,7 @@ Result<ServerGetUserDataOperation::ResultType> ServerGetUserDataOperation::GetRe
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetUserInternalDataOperation::ServerGetUserInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -229,7 +229,7 @@ Result<ServerGetUserInternalDataOperation::ResultType> ServerGetUserInternalData
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetUserPublisherDataOperation::ServerGetUserPublisherDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -259,7 +259,7 @@ Result<ServerGetUserPublisherDataOperation::ResultType> ServerGetUserPublisherDa
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetUserPublisherInternalDataOperation::ServerGetUserPublisherInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -289,7 +289,7 @@ Result<ServerGetUserPublisherInternalDataOperation::ResultType> ServerGetUserPub
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetUserPublisherReadOnlyDataOperation::ServerGetUserPublisherReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -319,7 +319,7 @@ Result<ServerGetUserPublisherReadOnlyDataOperation::ResultType> ServerGetUserPub
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetUserReadOnlyDataOperation::ServerGetUserReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -349,7 +349,7 @@ Result<ServerGetUserReadOnlyDataOperation::ResultType> ServerGetUserReadOnlyData
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerUpdateUserDataOperation::ServerUpdateUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -376,7 +376,7 @@ Result<ServerUpdateUserDataOperation::ResultType> ServerUpdateUserDataOperation:
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerUpdateUserInternalDataOperation::ServerUpdateUserInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -403,7 +403,7 @@ Result<ServerUpdateUserInternalDataOperation::ResultType> ServerUpdateUserIntern
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerUpdateUserPublisherDataOperation::ServerUpdateUserPublisherDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -430,7 +430,7 @@ Result<ServerUpdateUserPublisherDataOperation::ResultType> ServerUpdateUserPubli
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerUpdateUserPublisherInternalDataOperation::ServerUpdateUserPublisherInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -457,7 +457,7 @@ Result<ServerUpdateUserPublisherInternalDataOperation::ResultType> ServerUpdateU
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerUpdateUserPublisherReadOnlyDataOperation::ServerUpdateUserPublisherReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -484,7 +484,7 @@ Result<ServerUpdateUserPublisherReadOnlyDataOperation::ResultType> ServerUpdateU
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerUpdateUserReadOnlyDataOperation::ServerUpdateUserReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

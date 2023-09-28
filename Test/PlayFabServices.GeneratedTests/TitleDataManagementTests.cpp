@@ -12,28 +12,28 @@ void TitleDataManagementTests::AddTests()
     AddTest("TestClientGetTime", &TitleDataManagementTests::TestClientGetTime);
     AddTest("TestClientGetTitleData", &TitleDataManagementTests::TestClientGetTitleData);
     AddTest("TestClientGetTitleNews", &TitleDataManagementTests::TestClientGetTitleNews);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetPublisherData", &TitleDataManagementTests::TestServerGetPublisherData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetTime", &TitleDataManagementTests::TestServerGetTime);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetTitleData", &TitleDataManagementTests::TestServerGetTitleData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetTitleInternalData", &TitleDataManagementTests::TestServerGetTitleInternalData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerGetTitleNews", &TitleDataManagementTests::TestServerGetTitleNews);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerSetPublisherData", &TitleDataManagementTests::TestServerSetPublisherData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerSetTitleData", &TitleDataManagementTests::TestServerSetTitleData);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerSetTitleInternalData", &TitleDataManagementTests::TestServerSetTitleInternalData);
 #endif
 

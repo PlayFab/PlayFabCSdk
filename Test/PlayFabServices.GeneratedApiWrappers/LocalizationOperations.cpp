@@ -7,7 +7,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 GetLanguageListOperation::GetLanguageListOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

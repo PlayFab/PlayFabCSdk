@@ -223,87 +223,331 @@ void PlayerDataManagementTests::TestClientUpdateUserPublisherData(TestContext& t
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserData(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered in TestServerUpdateUserData
+    tc.EndTest(S_OK);
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserInternalData(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered in TestServerUpdateUserInternalData
+    tc.EndTest(S_OK);
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserPublisherData(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered in TestServerUpdateUserPublisherData
+    tc.EndTest(S_OK);
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserPublisherInternalData(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered in TestServerUpdateUserPublisherInternalData
+    tc.EndTest(S_OK);
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserPublisherReadOnlyData(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered in TestServerUpdateUserPublisherReadOnlyData
+    tc.EndTest(S_OK);
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerGetUserReadOnlyData(TestContext& tc)
 {
-    tc.Skip();
+    // Already covered in TestServerUpdateUserReadOnlyData
+    tc.EndTest(S_OK);
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserData(TestContext& tc)
 {
-    tc.Skip();
+    ServerUpdateUserDataOperation::RequestType request;
+    StringDictionaryEntryVector data{};
+    data.insert_or_assign(kTestKey, kTestVal);
+    request.SetData(data);
+    request.SetPlayFabId(DefaultTitlePlayerId());
+
+    ServerUpdateUserDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerUpdateUserDataOperation::ResultType> result) -> AsyncOp<ServerGetUserDataOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        ServerGetUserDataOperation::RequestType request;
+        request.SetKeys({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerGetUserDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<ServerGetUserDataOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        tc.AssertEqual(1u, result.Payload().Model().dataCount, "dataCount");
+        tc.AssertEqual(kTestKey, result.Payload().Model().data[0].key, "dataKey");
+        tc.AssertEqual(kTestVal, result.Payload().Model().data[0].value->value, "dataValue");
+
+        return S_OK;
+    })
+    .Then([&](Result<void> result) -> AsyncOp<ServerUpdateUserDataOperation::ResultType>
+    {
+        tc.RecordResult(std::move(result));
+
+        // Cleanup
+        ServerUpdateUserDataOperation::RequestType request;
+        request.SetKeysToRemove({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerUpdateUserDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<ServerUpdateUserDataOperation::ResultType> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserInternalData(TestContext& tc)
 {
-    tc.Skip();
+    ServerUpdateUserInternalDataOperation::RequestType request;
+    StringDictionaryEntryVector data{};
+    data.insert_or_assign(kTestKey, kTestVal);
+    request.SetData(data);
+    request.SetPlayFabId(DefaultTitlePlayerId());
+    
+    ServerUpdateUserInternalDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerUpdateUserInternalDataOperation::ResultType> result) -> AsyncOp<ServerGetUserInternalDataOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        ServerGetUserInternalDataOperation::RequestType request;
+        request.SetKeys({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerGetUserInternalDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<ServerGetUserInternalDataOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        tc.AssertEqual(1u, result.Payload().Model().dataCount, "dataCount");
+        tc.AssertEqual(kTestKey, result.Payload().Model().data[0].key, "dataKey");
+        tc.AssertEqual(kTestVal, result.Payload().Model().data[0].value->value, "dataValue");
+
+        return S_OK;
+    })
+    .Then([&](Result<void> result) -> AsyncOp<ServerUpdateUserInternalDataOperation::ResultType>
+    {
+        tc.RecordResult(std::move(result));
+
+        // Cleanup
+        ServerUpdateUserInternalDataOperation::RequestType request;
+        request.SetKeysToRemove({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerUpdateUserInternalDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<ServerUpdateUserInternalDataOperation::ResultType> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserPublisherData(TestContext& tc)
 {
-    tc.Skip();
+    ServerUpdateUserPublisherDataOperation::RequestType request;
+    StringDictionaryEntryVector data{};
+    data.insert_or_assign(kTestKey, kTestVal);
+    request.SetData(data);
+    request.SetPlayFabId(DefaultTitlePlayerId());
+
+    ServerUpdateUserPublisherDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerUpdateUserPublisherDataOperation::ResultType> result) -> AsyncOp<ServerGetUserPublisherDataOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        ServerGetUserPublisherDataOperation::RequestType request;
+        request.SetKeys({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerGetUserPublisherDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<ServerGetUserPublisherDataOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        tc.AssertEqual(1u, result.Payload().Model().dataCount, "dataCount");
+        tc.AssertEqual(kTestKey, result.Payload().Model().data[0].key, "dataKey");
+        tc.AssertEqual(kTestVal, result.Payload().Model().data[0].value->value, "dataValue");
+
+        return S_OK;
+    })
+    .Then([&](Result<void> result) -> AsyncOp<ServerUpdateUserPublisherDataOperation::ResultType>
+    {
+        tc.RecordResult(std::move(result));
+
+        // Cleanup
+        ServerUpdateUserPublisherDataOperation::RequestType request;
+        request.SetKeysToRemove({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerUpdateUserPublisherDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<ServerUpdateUserPublisherDataOperation::ResultType> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserPublisherInternalData(TestContext& tc)
 {
-    tc.Skip();
+    ServerUpdateUserPublisherInternalDataOperation::RequestType request;
+    StringDictionaryEntryVector data{};
+    data.insert_or_assign(kTestKey, kTestVal);
+    request.SetData(data);
+    request.SetPlayFabId(DefaultTitlePlayerId());
+
+    ServerUpdateUserPublisherInternalDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerUpdateUserPublisherInternalDataOperation::ResultType> result) -> AsyncOp<ServerGetUserPublisherInternalDataOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        ServerGetUserPublisherInternalDataOperation::RequestType request;
+        request.SetKeys({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerGetUserPublisherInternalDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<ServerGetUserPublisherInternalDataOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        tc.AssertEqual(1u, result.Payload().Model().dataCount, "dataCount");
+        tc.AssertEqual(kTestKey, result.Payload().Model().data[0].key, "dataKey");
+        tc.AssertEqual(kTestVal, result.Payload().Model().data[0].value->value, "dataValue");
+
+        return S_OK;
+    })
+    .Then([&](Result<void> result) -> AsyncOp<ServerUpdateUserPublisherInternalDataOperation::ResultType>
+    {
+        tc.RecordResult(std::move(result));
+
+        // Cleanup
+        ServerUpdateUserPublisherInternalDataOperation::RequestType request;
+        request.SetKeysToRemove({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerUpdateUserPublisherInternalDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<ServerUpdateUserPublisherInternalDataOperation::ResultType> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserPublisherReadOnlyData(TestContext& tc)
 {
-    tc.Skip();
+    ServerUpdateUserPublisherReadOnlyDataOperation::RequestType request;
+    StringDictionaryEntryVector data{};
+    data.insert_or_assign(kTestKey, kTestVal);
+    request.SetData(data);
+    request.SetPlayFabId(DefaultTitlePlayerId());
+
+    ServerUpdateUserPublisherReadOnlyDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerUpdateUserPublisherReadOnlyDataOperation::ResultType> result) -> AsyncOp<ServerGetUserPublisherReadOnlyDataOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        ServerGetUserPublisherReadOnlyDataOperation::RequestType request;
+        request.SetKeys({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerGetUserPublisherReadOnlyDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<ServerGetUserPublisherReadOnlyDataOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        tc.AssertEqual(1u, result.Payload().Model().dataCount, "dataCount");
+        tc.AssertEqual(kTestKey, result.Payload().Model().data[0].key, "dataKey");
+        tc.AssertEqual(kTestVal, result.Payload().Model().data[0].value->value, "dataKey");
+
+        return S_OK;
+    })
+    .Then([&](Result<void> result) -> AsyncOp<ServerUpdateUserPublisherReadOnlyDataOperation::ResultType>
+    {
+        tc.RecordResult(std::move(result));
+
+        ServerUpdateUserPublisherReadOnlyDataOperation::RequestType request;
+        request.SetKeysToRemove({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerUpdateUserPublisherReadOnlyDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<ServerUpdateUserPublisherReadOnlyDataOperation::ResultType> result)
+    {
+        return tc.EndTest(std::move(result));
+    });
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlayerDataManagementTests::TestServerUpdateUserReadOnlyData(TestContext& tc)
 {
-    tc.Skip();
+    ServerUpdateUserReadOnlyDataOperation::RequestType request;
+    StringDictionaryEntryVector data{};
+    data.insert_or_assign(kTestKey, kTestVal);
+    request.SetData(data);
+    request.SetPlayFabId(DefaultTitlePlayerId());
+
+    ServerUpdateUserReadOnlyDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerUpdateUserReadOnlyDataOperation::ResultType> result) -> AsyncOp<ServerGetUserReadOnlyDataOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        ServerGetUserReadOnlyDataOperation::RequestType request;
+        request.SetKeys({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerGetUserReadOnlyDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Then([&](Result<ServerGetUserReadOnlyDataOperation::ResultType> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        tc.AssertEqual(1u, result.Payload().Model().dataCount, "dataCount");
+        tc.AssertEqual(kTestKey, result.Payload().Model().data[0].key, "dataKey");
+        tc.AssertEqual(kTestVal, result.Payload().Model().data[0].value->value, "dataKey");
+
+        return S_OK;
+    })
+    .Then([&](Result<void> result) -> AsyncOp<ServerUpdateUserReadOnlyDataOperation::ResultType>
+    {
+        tc.RecordResult(std::move(result));
+
+        ServerUpdateUserReadOnlyDataOperation::RequestType request;
+        request.SetKeysToRemove({ kTestKey });
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerUpdateUserReadOnlyDataOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<ServerUpdateUserReadOnlyDataOperation::ResultType> result)
+    {
+        return tc.EndTest(std::move(result));
+    });
 }
 #endif
 

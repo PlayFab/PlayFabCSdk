@@ -20,8 +20,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)AccountManagementOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)PlatformSpecificOperations.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)PlatformSpecificOperations.cpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CharacterOperations.h" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)CharacterOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SegmentsOperations.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)SegmentsOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)TitleDataManagementOperations.h" />
@@ -30,8 +30,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.cpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptOperations.h" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DataOperations.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)DataOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)InventoryOperations.h" />

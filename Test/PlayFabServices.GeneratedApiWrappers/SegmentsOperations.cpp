@@ -62,7 +62,7 @@ Result<ClientGetPlayerTagsOperation::ResultType> ClientGetPlayerTagsOperation::G
     return ResultType{ *result };
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerAddPlayerTagOperation::ServerAddPlayerTagOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -83,7 +83,7 @@ HRESULT ServerAddPlayerTagOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetAllSegmentsOperation::ServerGetAllSegmentsOperation(Entity entity, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -112,7 +112,7 @@ Result<ServerGetAllSegmentsOperation::ResultType> ServerGetAllSegmentsOperation:
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetPlayerSegmentsOperation::ServerGetPlayerSegmentsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -142,7 +142,7 @@ Result<ServerGetPlayerSegmentsOperation::ResultType> ServerGetPlayerSegmentsOper
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetPlayersInSegmentOperation::ServerGetPlayersInSegmentOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -172,7 +172,7 @@ Result<ServerGetPlayersInSegmentOperation::ResultType> ServerGetPlayersInSegment
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerGetPlayerTagsOperation::ServerGetPlayerTagsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -202,7 +202,7 @@ Result<ServerGetPlayerTagsOperation::ResultType> ServerGetPlayerTagsOperation::G
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 ServerRemovePlayerTagOperation::ServerRemovePlayerTagOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

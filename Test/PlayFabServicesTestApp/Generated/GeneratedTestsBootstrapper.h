@@ -4,12 +4,11 @@
 #include "FriendsTests.h"
 #include "AccountManagementTests.h"
 #include "PlatformSpecificTests.h"
-#include "CharacterTests.h"
+#include "CloudScriptTests.h"
 #include "SegmentsTests.h"
 #include "TitleDataManagementTests.h"
 #include "PlayerDataManagementTests.h"
 #include "PushNotificationsTests.h"
-#include "CloudScriptTests.h"
 #include "DataTests.h"
 #include "InventoryTests.h"
 #include "CatalogTests.h"
@@ -35,12 +34,11 @@ List<SharedPtr<TestClass>> GetGeneratedTestClasses(TestTitleData& testTitleData)
         MakeShared<FriendsTests>(testTitleData),
         MakeShared<AccountManagementTests>(testTitleData),
         MakeShared<PlatformSpecificTests>(testTitleData),
-        MakeShared<CharacterTests>(testTitleData),
+        MakeShared<CloudScriptTests>(testTitleData),
         MakeShared<SegmentsTests>(testTitleData),
         MakeShared<TitleDataManagementTests>(testTitleData),
         MakeShared<PlayerDataManagementTests>(testTitleData),
         MakeShared<PushNotificationsTests>(testTitleData),
-        MakeShared<CloudScriptTests>(testTitleData),
         MakeShared<DataTests>(testTitleData),
         MakeShared<InventoryTests>(testTitleData),
         MakeShared<CatalogTests>(testTitleData),

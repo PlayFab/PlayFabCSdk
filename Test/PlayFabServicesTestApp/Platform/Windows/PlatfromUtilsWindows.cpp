@@ -28,7 +28,7 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
     std::ios_base::iostate exceptionMask = titleDataFile.exceptions() | std::ios::failbit;
     titleDataFile.exceptions(exceptionMask);
 
-    titleDataFile.open("testTitleData.json", std::ios::in | std::ios::ate);
+    titleDataFile.open("testTitleData.json", std::ios::in | std::ios::ate | std::ios::binary);
     if (!titleDataFile.is_open())
     {
         return E_FAIL;
@@ -65,6 +65,11 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
     testTitleData.secretKey = titleDataJson["secretKey"].GetString();
     testTitleData.connectionString = titleDataJson["connectionString"].GetString();
 
+    #if HC_PLATFORM == HC_PLATFORM_WIN32
+    testTitleData.steamAppId = titleDataJson["steamAppId"].GetString();
+    testTitleData.steamPublisherKey = titleDataJson["steamPublisherKey"].GetString();
+    #endif
+
     return S_OK;
 }
 
@@ -90,11 +95,11 @@ void WriteLogToFile(const char* strIn, const char* strFileName)
     DWORD dwBytesWritten = 0;
     BOOL bErrorFlag = FALSE;
 
-    static bool firstLogLine = true;
+    static std::vector<std::string> firstLogLinePerFile{};
     DWORD dwCreationDisposition = OPEN_ALWAYS;
-    if (firstLogLine)
+    if (std::find(firstLogLinePerFile.begin(), firstLogLinePerFile.end(), strFileName) == firstLogLinePerFile.end())
     {
-        firstLogLine = false;
+        firstLogLinePerFile.push_back(strFileName);
         dwCreationDisposition = CREATE_ALWAYS; // recreate log upon start
     }
 
@@ -103,7 +108,7 @@ void WriteLogToFile(const char* strIn, const char* strFileName)
     SHGetSpecialFolderPathA(HWND_DESKTOP, szPath, CSIDL_DESKTOP, FALSE);
     std::string strFullPath = szPath;
 #else
-    std::string strFullPath = "D:";
+    std::string strFullPath = ".";
 #endif
     strFullPath += "\\";
     strFullPath += strFileName;
@@ -145,7 +150,10 @@ void TraceMessage(PFHCTraceLevel level, String const& message) noexcept
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32
     // On Win32 also redirect to STDOUT
-    std::cout << message;
+    if (level <= PFHCTraceLevel::Important)
+    {
+        std::cout << message;
+    }
 #endif
 }
 

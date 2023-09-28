@@ -68,106 +68,6 @@ HRESULT PFAuthenticationServerLoginGetResult(
 }
 
 #if 0
-PF_API PFAuthenticationGetPhotonAuthenticationTokenAsync(
-    _In_ PFEntityHandle contextHandle,
-    _In_ const PFAuthenticationGetPhotonAuthenticationTokenRequest* request,
-    _Inout_ XAsyncBlock* async
-) noexcept
-{
-    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
-    RETURN_HR_INVALIDARG_IF_NULL(request);
-
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    SharedPtr<Entity> context;
-    RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationGetPhotonAuthenticationTokenAsync),
-        std::bind(&AuthenticationAPI::GetPhotonAuthenticationToken, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
-}
-
-PF_API PFAuthenticationGetPhotonAuthenticationTokenGetResultSize(
-    _Inout_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept
-{
-    return XAsyncGetResultSize(async, bufferSize);
-}
-
-PF_API PFAuthenticationGetPhotonAuthenticationTokenGetResult(
-    _Inout_ XAsyncBlock* async,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_ PFAuthenticationGetPhotonAuthenticationTokenResult** result,
-    _Out_opt_ size_t* bufferUsed
-) noexcept
-{
-    RETURN_HR_INVALIDARG_IF_NULL(result);
-
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFAuthenticationGetPhotonAuthenticationTokenResult*>(buffer);
-
-    return S_OK;
-}
-#endif
-
-#if 0
-PF_API PFAuthenticationGetTitlePublicKeyAsync(
-    _In_ PFServiceConfigHandle contextHandle,
-    _In_ const PFAuthenticationGetTitlePublicKeyRequest* request,
-    _Inout_ XAsyncBlock* async
-) noexcept
-{
-    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
-    RETURN_HR_INVALIDARG_IF_NULL(request);
-
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationGetTitlePublicKeyAsync),
-        std::bind(&AuthenticationAPI::GetTitlePublicKey, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
-}
-
-PF_API PFAuthenticationGetTitlePublicKeyGetResultSize(
-    _Inout_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept
-{
-    return XAsyncGetResultSize(async, bufferSize);
-}
-
-PF_API PFAuthenticationGetTitlePublicKeyGetResult(
-    _Inout_ XAsyncBlock* async,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_ PFAuthenticationGetTitlePublicKeyResult** result,
-    _Out_opt_ size_t* bufferUsed
-) noexcept
-{
-    RETURN_HR_INVALIDARG_IF_NULL(result);
-
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFAuthenticationGetTitlePublicKeyResult*>(buffer);
-
-    return S_OK;
-}
-#endif
-
-#if 0
 PF_API PFAuthenticationLoginWithAndroidDeviceIDAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithAndroidDeviceIDRequest* request,
@@ -1513,33 +1413,7 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResult(
 }
 #endif
 
-#if 0
-PF_API PFAuthenticationSetPlayerSecretAsync(
-    _In_ PFEntityHandle contextHandle,
-    _In_ const PFAuthenticationSetPlayerSecretRequest* request,
-    _Inout_ XAsyncBlock* async
-) noexcept
-{
-    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
-    RETURN_HR_INVALIDARG_IF_NULL(request);
-
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    SharedPtr<Entity> context;
-    RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationSetPlayerSecretAsync),
-        std::bind(&AuthenticationAPI::SetPlayerSecret, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
-}
-#endif
-
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAuthenticationServerLoginWithServerCustomIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1586,7 +1460,7 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAuthenticationServerLoginWithSteamIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1633,7 +1507,7 @@ PF_API PFAuthenticationServerLoginWithSteamIdGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAuthenticationServerLoginWithXboxAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1680,7 +1554,7 @@ PF_API PFAuthenticationServerLoginWithXboxGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAuthenticationServerLoginWithXboxIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1727,7 +1601,7 @@ PF_API PFAuthenticationServerLoginWithXboxIdGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAuthenticationAuthenticateGameServerWithCustomIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationAuthenticateCustomIdRequest* request,
@@ -1777,7 +1651,7 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAuthenticationDeleteAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationDeleteRequest* request,
@@ -1803,7 +1677,7 @@ PF_API PFAuthenticationDeleteAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAuthenticationGetEntityAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationGetEntityRequest* request,
@@ -1874,7 +1748,7 @@ PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAuthenticationValidateEntityTokenAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationValidateEntityTokenRequest* request,

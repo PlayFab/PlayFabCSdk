@@ -17,7 +17,7 @@ void InventoryTests::AddTests()
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestGetMicrosoftStoreAccessTokens", &InventoryTests::TestGetMicrosoftStoreAccessTokens);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestGetTransactionHistory", &InventoryTests::TestGetTransactionHistory);
 #endif
     AddTest("TestPurchaseInventoryItems", &InventoryTests::TestPurchaseInventoryItems);

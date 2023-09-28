@@ -165,9 +165,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorage.h">
       <Filter>Source\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorageHandlers.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Platform.h">
       <Filter>Source\Platform</Filter>
     </ClInclude>
@@ -264,9 +261,6 @@
       <Filter>Source\Trace</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorage.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\LocalStorageHandlers.cpp">
       <Filter>Source\Platform</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Platform.cpp">

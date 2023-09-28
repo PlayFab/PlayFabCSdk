@@ -67,5 +67,6 @@ public:
 };
 
 } // namespace PushNotifications
+
 // EnumRange definitions used for Enum (de)serialization
 } // namespace PlayFab

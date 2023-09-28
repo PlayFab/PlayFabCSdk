@@ -8,7 +8,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerSendPushNotificationOperation : public XAsyncOperation<void>
 {
 public:
@@ -26,7 +26,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerSendPushNotificationFromTemplateOperation : public XAsyncOperation<void>
 {
 public:

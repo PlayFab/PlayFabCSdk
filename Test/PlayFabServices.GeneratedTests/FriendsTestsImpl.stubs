@@ -37,28 +37,28 @@ void FriendsTests::TestClientSetFriendTags(TestContext& tc)
     tc.Skip();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void FriendsTests::TestServerAddFriend(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void FriendsTests::TestServerGetFriendsList(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void FriendsTests::TestServerRemoveFriend(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void FriendsTests::TestServerSetFriendTags(TestContext& tc)
 {
     tc.Skip();

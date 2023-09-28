@@ -1279,6 +1279,66 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFUserServerCustomIdInfoWrapper : public ModelWrapper<PFUserServerCustomIdInfo, Alloc>
+{
+public:
+    using ModelType = PFUserServerCustomIdInfo;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFUserServerCustomIdInfoWrapper() = default;
+
+    PFUserServerCustomIdInfoWrapper(const PFUserServerCustomIdInfo& model) :
+        ModelWrapper<PFUserServerCustomIdInfo, Alloc>{ model },
+        m_customId{ SafeString(model.customId) }
+    {
+        SetModelPointers();
+    }
+
+    PFUserServerCustomIdInfoWrapper(const PFUserServerCustomIdInfoWrapper& src) :
+        PFUserServerCustomIdInfoWrapper{ src.Model() }
+    {
+    }
+
+    PFUserServerCustomIdInfoWrapper(PFUserServerCustomIdInfoWrapper&& src) :
+        PFUserServerCustomIdInfoWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFUserServerCustomIdInfoWrapper& operator=(PFUserServerCustomIdInfoWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFUserServerCustomIdInfoWrapper() = default;
+
+    friend void swap(PFUserServerCustomIdInfoWrapper& lhs, PFUserServerCustomIdInfoWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customId, rhs.m_customId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomId(String value)
+    {
+        m_customId = std::move(value);
+        this->m_model.customId =  m_customId.empty() ? nullptr : m_customId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customId = m_customId.empty() ? nullptr : m_customId.data();
+    }
+
+    String m_customId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFUserSteamInfoWrapper : public ModelWrapper<PFUserSteamInfo, Alloc>
 {
 public:
@@ -1742,6 +1802,7 @@ public:
         m_playFabId{ SafeString(model.playFabId) },
         m_privateInfo{ model.privateInfo ? std::optional<PFUserPrivateAccountInfoWrapper<Alloc>>{ *model.privateInfo } : std::nullopt },
         m_psnInfo{ model.psnInfo ? std::optional<PFUserPsnInfoWrapper<Alloc>>{ *model.psnInfo } : std::nullopt },
+        m_serverCustomIdInfo{ model.serverCustomIdInfo ? std::optional<PFUserServerCustomIdInfoWrapper<Alloc>>{ *model.serverCustomIdInfo } : std::nullopt },
         m_steamInfo{ model.steamInfo ? std::optional<PFUserSteamInfoWrapper<Alloc>>{ *model.steamInfo } : std::nullopt },
         m_titleInfo{ model.titleInfo ? std::optional<PFUserTitleInfoWrapper<Alloc>>{ *model.titleInfo } : std::nullopt },
         m_twitchInfo{ model.twitchInfo ? std::optional<PFUserTwitchInfoWrapper<Alloc>>{ *model.twitchInfo } : std::nullopt },
@@ -1790,6 +1851,7 @@ public:
         swap(lhs.m_playFabId, rhs.m_playFabId);
         swap(lhs.m_privateInfo, rhs.m_privateInfo);
         swap(lhs.m_psnInfo, rhs.m_psnInfo);
+        swap(lhs.m_serverCustomIdInfo, rhs.m_serverCustomIdInfo);
         swap(lhs.m_steamInfo, rhs.m_steamInfo);
         swap(lhs.m_titleInfo, rhs.m_titleInfo);
         swap(lhs.m_twitchInfo, rhs.m_twitchInfo);
@@ -1901,6 +1963,12 @@ public:
         this->m_model.psnInfo = m_psnInfo ? &m_psnInfo->Model() : nullptr;
     }
 
+    void SetServerCustomIdInfo(std::optional<PFUserServerCustomIdInfoWrapper<Alloc>> value)
+    {
+        m_serverCustomIdInfo = std::move(value);
+        this->m_model.serverCustomIdInfo = m_serverCustomIdInfo ? &m_serverCustomIdInfo->Model() : nullptr;
+    }
+
     void SetSteamInfo(std::optional<PFUserSteamInfoWrapper<Alloc>> value)
     {
         m_steamInfo = std::move(value);
@@ -1950,6 +2018,7 @@ private:
         this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
         this->m_model.privateInfo = m_privateInfo ?  &m_privateInfo->Model() : nullptr;
         this->m_model.psnInfo = m_psnInfo ?  &m_psnInfo->Model() : nullptr;
+        this->m_model.serverCustomIdInfo = m_serverCustomIdInfo ?  &m_serverCustomIdInfo->Model() : nullptr;
         this->m_model.steamInfo = m_steamInfo ?  &m_steamInfo->Model() : nullptr;
         this->m_model.titleInfo = m_titleInfo ?  &m_titleInfo->Model() : nullptr;
         this->m_model.twitchInfo = m_twitchInfo ?  &m_twitchInfo->Model() : nullptr;
@@ -1973,6 +2042,7 @@ private:
     String m_playFabId;
     std::optional<PFUserPrivateAccountInfoWrapper<Alloc>> m_privateInfo;
     std::optional<PFUserPsnInfoWrapper<Alloc>> m_psnInfo;
+    std::optional<PFUserServerCustomIdInfoWrapper<Alloc>> m_serverCustomIdInfo;
     std::optional<PFUserSteamInfoWrapper<Alloc>> m_steamInfo;
     std::optional<PFUserTitleInfoWrapper<Alloc>> m_titleInfo;
     std::optional<PFUserTwitchInfoWrapper<Alloc>> m_twitchInfo;

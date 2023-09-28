@@ -38,7 +38,7 @@ void PlatformSpecificTests::TestClientRegisterForIOSPushNotification(TestContext
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void PlatformSpecificTests::TestServerAwardSteamAchievement(TestContext& tc)
 {
     tc.Skip();

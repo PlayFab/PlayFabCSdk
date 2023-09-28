@@ -29,7 +29,7 @@ inline tm TimeTToUtcTm(time_t input)
 {
     tm timeInfo{ 0 };
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM_IS_PLAYSTATION
     gmtime_s(&input, &timeInfo);
 #elif _WIN32
     gmtime_s(&timeInfo, &input);
@@ -39,16 +39,7 @@ inline tm TimeTToUtcTm(time_t input)
     return timeInfo;
 }
 
-inline time_t UtcTmToTimeT(tm input)
-{
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
-    return mktime(&input);
-#elif _WIN32
-    return _mkgmtime(&input);
-#else
-    return timegm(&input);
-#endif
-}
+time_t UtcTmToTimeT(tm input);
 
 inline tm TimePointToUtcTm(const TimePoint& input)
 {

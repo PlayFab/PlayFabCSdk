@@ -27,6 +27,10 @@ enum class PFTitleActivationStatus : uint32_t
     RevokedSteam
 };
 
+#ifdef HC_PLATFORM_IS_PLAYSTATION
+#pragma push_macro("BSD")
+#endif
+#undef BSD 
 /// <summary>
 /// Currency enum.
 /// </summary>
@@ -195,6 +199,9 @@ enum class PFCurrency : uint32_t
     ZMW,
     ZWD
 };
+#ifdef HC_PLATFORM_IS_PLAYSTATION
+#pragma pop_macro("BSD")
+#endif
 
 /// <summary>
 /// UserOrigination enum.
@@ -277,7 +284,8 @@ enum class PFContinentCode : uint32_t
     EU,
     NA,
     OC,
-    SA
+    SA,
+    Unknown
 };
 
 /// <summary>
@@ -533,7 +541,8 @@ enum class PFCountryCode : uint32_t
     EH,
     YE,
     ZM,
-    ZW
+    ZW,
+    Unknown
 };
 
 /// <summary>
@@ -1018,6 +1027,18 @@ typedef struct PFUserPsnInfo
 } PFUserPsnInfo;
 
 /// <summary>
+/// PFUserServerCustomIdInfo data model.
+/// </summary>
+typedef struct PFUserServerCustomIdInfo
+{
+    /// <summary>
+    /// (Optional) Custom ID.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* customId;
+
+} PFUserServerCustomIdInfo;
+
+/// <summary>
 /// PFUserSteamInfo data model.
 /// </summary>
 typedef struct PFUserSteamInfo
@@ -1251,6 +1272,11 @@ typedef struct PFUserAccountInfo
     /// has been linked.
     /// </summary>
     _Maybenull_ PFUserPsnInfo const* psnInfo;
+
+    /// <summary>
+    /// (Optional) Server Custom ID information, if a server custom ID has been assigned.
+    /// </summary>
+    _Maybenull_ PFUserServerCustomIdInfo const* serverCustomIdInfo;
 
     /// <summary>
     /// (Optional) User Steam information, if a Steam account has been linked.

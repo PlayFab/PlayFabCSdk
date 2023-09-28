@@ -116,7 +116,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetUserDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerGetUserDataResultWrapper<Allocator>>
 {
 public:
@@ -136,7 +136,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetUserInternalDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerGetUserDataResultWrapper<Allocator>>
 {
 public:
@@ -156,7 +156,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetUserPublisherDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerGetUserDataResultWrapper<Allocator>>
 {
 public:
@@ -176,7 +176,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetUserPublisherInternalDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerGetUserDataResultWrapper<Allocator>>
 {
 public:
@@ -196,7 +196,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetUserPublisherReadOnlyDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerGetUserDataResultWrapper<Allocator>>
 {
 public:
@@ -216,7 +216,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerGetUserReadOnlyDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerGetUserDataResultWrapper<Allocator>>
 {
 public:
@@ -236,7 +236,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUpdateUserDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementUpdateUserDataResultWrapper<Allocator>>
 {
 public:
@@ -256,7 +256,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUpdateUserInternalDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementUpdateUserDataResultWrapper<Allocator>>
 {
 public:
@@ -276,7 +276,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUpdateUserPublisherDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementUpdateUserDataResultWrapper<Allocator>>
 {
 public:
@@ -296,7 +296,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUpdateUserPublisherInternalDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementUpdateUserDataResultWrapper<Allocator>>
 {
 public:
@@ -316,7 +316,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUpdateUserPublisherReadOnlyDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementUpdateUserDataResultWrapper<Allocator>>
 {
 public:
@@ -336,7 +336,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerUpdateUserReadOnlyDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementUpdateUserDataResultWrapper<Allocator>>
 {
 public:

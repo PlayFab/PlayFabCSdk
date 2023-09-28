@@ -310,5 +310,13 @@ public:
 };
 
 } // namespace Segments
+
 // EnumRange definitions used for Enum (de)serialization
+template<typename T> struct EnumRange;
+
+template<> struct EnumRange<PFSegmentsChurnRiskLevel>
+{
+    static constexpr PFSegmentsChurnRiskLevel maxValue = PFSegmentsChurnRiskLevel::HighRisk;
+};
+
 } // namespace PlayFab

@@ -17,12 +17,17 @@ private:
     void AddTests() override;
 
     // Test Methods
-#if 0 // removed until GetEntity is enabled
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+    void TestAuthenticateGameServerWithCustomId(TestContext& testContext);
+    void TestDelete(TestContext& testContext);
     void TestGetEntity(TestContext& testContext);
     void TestGetEntityMasterPlayerAccount(TestContext& testContext);
-#endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestGetEntityWithSecretKey(TestContext& testContext);
+    void TestServerLoginWithServerCustomId(TestContext& testContext);
+    void TestServerLoginWithSteamId(TestContext& testContext);
+    void TestServerLoginWithXbox(TestContext& testContext);
+    void TestServerLoginWithXboxId(TestContext& testContext);
+    void TestValidateEntityToken(TestContext& testContext);
 #endif
 
     AsyncOp<LoginResult> LoginDefaultTitlePlayer();

@@ -1063,7 +1063,7 @@ typedef struct PFCatalogCatalogConfig
 
     /// <summary>
     /// (Optional) A set of player entity keys that are allowed to review content. There is a maximum
-    /// of 64 entities that can be added.
+    /// of 128 entities that can be added.
     /// </summary>
     _Maybenull_ _Field_size_(reviewerEntitiesCount) PFEntityKey const* const* reviewerEntities;
 

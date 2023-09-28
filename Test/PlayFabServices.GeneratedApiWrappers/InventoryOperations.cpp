@@ -196,7 +196,7 @@ Result<GetMicrosoftStoreAccessTokensOperation::ResultType> GetMicrosoftStoreAcce
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 
 GetTransactionHistoryOperation::GetTransactionHistoryOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GlobalState.h"
+#include "Platform/Platform.h"
 #include "Trace/TraceState.h"
 #include <httpClient/httpClient.h>
 
@@ -110,7 +111,10 @@ GlobalState::~GlobalState() noexcept
 
 HRESULT GlobalState::Create(XTaskQueueHandle backgroundQueue, HCInitArgs* args) noexcept
 {
-    // Set up tracing before doing anything else
+    // Initialize any platform hooks. This happens first because these hooks may be used after this point
+    RETURN_IF_FAILED(PlatformInitialize());
+
+    // Next set up tracing so that we can trace as much of initialization as possible.
     // LocalStorage not needed anywhere else currently so create an instance just for TraceState. If
     // it is needed elsewhere, there should be a single shared instance hanging off of GlobalState
     RETURN_IF_FAILED(TraceState::Create(RunContext::Root(backgroundQueue), LocalStorage()));

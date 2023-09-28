@@ -223,5 +223,6 @@ public:
 };
 
 } // namespace Character
+
 // EnumRange definitions used for Enum (de)serialization
 } // namespace PlayFab

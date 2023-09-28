@@ -909,5 +909,6 @@ public:
 };
 
 } // namespace Inventory
+
 // EnumRange definitions used for Enum (de)serialization
 } // namespace PlayFab

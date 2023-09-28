@@ -4,30 +4,33 @@
     <Filter Include="Source">
       <UniqueIdentifier>{59076205-1bc8-46af-831f-b15c74776933}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Trace">
-      <UniqueIdentifier>{b6ef33f1-8362-4eda-80e1-7c03a26dd328}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Trace\Windows">
-      <UniqueIdentifier>{fef92e28-e924-4a90-91cc-465909e84027}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Authentication">
       <UniqueIdentifier>{746ec713-ddaf-4066-87eb-750221d19814}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Authentication\GDK">
       <UniqueIdentifier>{6f2eb228-c40c-4c79-a60e-8a5fc2aadad5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{381f6ee9-8116-46d4-ab1b-efb6a7425809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform\Generic">
+      <UniqueIdentifier>{59370d4a-ded2-444b-9948-f90aa452f2ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\Windows\ETWTraceOutput.cpp">
-      <Filter>Source\Trace\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\GDK\Authentication_GDK.cpp">
       <Filter>Source\Authentication\GDK</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Generic\Platform_Generic.cpp">
+      <Filter>Source\Platform\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.cpp">
+      <Filter>Source\Platform\Generic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\Windows\ETWTraceOutput.h">
-      <Filter>Source\Trace\Windows</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.h">
+      <Filter>Source\Platform\Generic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

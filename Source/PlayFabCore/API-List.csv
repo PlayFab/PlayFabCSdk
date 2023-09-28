@@ -1,6 +1,4 @@
 Library,Feature Group,API Name,Auth,Subgroup,Call Name,Trimmed?,GDK?,Win32?,Switch?,PlayStation?
-PF Core,Authentication,PFAuthenticationGetPhotonAuthenticationTokenAsync,SessionTicket,Authentication,GetPhotonAuthenticationToken,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationGetTitlePublicKeyAsync,None,Authentication,GetTitlePublicKey,false,No,No,No,No
 PF Core,Authentication,PFAuthenticationLoginWithAndroidDeviceIDAsync,None,Authentication,LoginWithAndroidDeviceID,false,No,No,No,No
 PF Core,Authentication,PFAuthenticationLoginWithAppleAsync,None,Authentication,LoginWithApple,false,No,No,No,No
 PF Core,Authentication,PFAuthenticationLoginWithCustomIDAsync,None,Authentication,LoginWithCustomID,false,Yes,Yes,Yes,Yes
@@ -21,21 +19,15 @@ PF Core,Authentication,PFAuthenticationLoginWithSteamAsync,None,Authentication,L
 PF Core,Authentication,PFAuthenticationLoginWithTwitchAsync,None,Authentication,LoginWithTwitch,false,No,No,No,No
 PF Core,Authentication,PFAuthenticationLoginWithXboxAsync,None,Authentication,LoginWithXbox,false,No,Yes,No,No
 PF Core,Authentication,PFAuthenticationRegisterPlayFabUserAsync,None,Authentication,RegisterPlayFabUser,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationSetPlayerSecretAsync,SessionTicket,Authentication,SetPlayerSecret,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationServerLoginWithServerCustomIdAsync,SecretKey,Authentication,ServerLoginWithServerCustomId,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationServerLoginWithSteamIdAsync,SecretKey,Authentication,ServerLoginWithSteamId,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationServerLoginWithXboxAsync,SecretKey,Authentication,ServerLoginWithXbox,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationServerLoginWithXboxIdAsync,SecretKey,Authentication,ServerLoginWithXboxId,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationAuthenticateGameServerWithCustomIdAsync,EntityToken,Authentication,AuthenticateGameServerWithCustomId,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationDeleteAsync,EntityToken,Authentication,Delete,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationGetEntityAsync,None,Authentication,GetEntity,false,No,No,No,No
+PF Core,Authentication,PFAuthenticationServerLoginWithServerCustomIdAsync,SecretKey,Authentication,ServerLoginWithServerCustomId,false,No,Yes,No,No
+PF Core,Authentication,PFAuthenticationServerLoginWithSteamIdAsync,SecretKey,Authentication,ServerLoginWithSteamId,false,No,Yes,No,No
+PF Core,Authentication,PFAuthenticationServerLoginWithXboxAsync,SecretKey,Authentication,ServerLoginWithXbox,false,No,Yes,No,No
+PF Core,Authentication,PFAuthenticationServerLoginWithXboxIdAsync,SecretKey,Authentication,ServerLoginWithXboxId,false,No,Yes,No,No
+PF Core,Authentication,PFAuthenticationAuthenticateGameServerWithCustomIdAsync,EntityToken,Authentication,AuthenticateGameServerWithCustomId,false,No,Yes,No,No
+PF Core,Authentication,PFAuthenticationDeleteAsync,EntityToken,Authentication,Delete,false,No,Yes,No,No
+PF Core,Authentication,PFAuthenticationGetEntityAsync,None,Authentication,GetEntity,false,No,Yes,No,No
 PF Core,Authentication,PFAuthenticationGetEntityWithSecretKeyAsync,SecretKey,Authentication,GetEntityWithSecretKey,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationValidateEntityTokenAsync,EntityToken,Authentication,ValidateEntityToken,false,No,No,No,No
-PF Core,Events,PFEventsCreateTelemetryKeyAsync,EntityToken,PlayStream Events,CreateTelemetryKey,false,No,Yes,Yes,Yes
-PF Core,Events,PFEventsDeleteTelemetryKeyAsync,EntityToken,PlayStream Events,DeleteTelemetryKey,false,No,Yes,Yes,Yes
-PF Core,Events,PFEventsGetTelemetryKeyAsync,EntityToken,PlayStream Events,GetTelemetryKey,false,No,Yes,Yes,Yes
-PF Core,Events,PFEventsListTelemetryKeysAsync,EntityToken,PlayStream Events,ListTelemetryKeys,false,No,Yes,Yes,Yes
-PF Core,Events,PFEventsSetTelemetryKeyActiveAsync,EntityToken,PlayStream Events,SetTelemetryKeyActive,false,No,Yes,Yes,Yes
+PF Core,Authentication,PFAuthenticationValidateEntityTokenAsync,EntityToken,Authentication,ValidateEntityToken,false,No,Yes,No,No
 PF Core,Events,PFEventsWriteEventsAsync,EntityToken,PlayStream Events,WriteEvents,false,Yes,Yes,Yes,Yes
 PF Core,Events,PFEventsWriteTelemetryEventsAsync,EntityToken,PlayStream Events,WriteTelemetryEvents,false,Yes,Yes,Yes,Yes
 

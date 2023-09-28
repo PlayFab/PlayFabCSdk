@@ -20,6 +20,9 @@ public:
     ~CloudScriptAPI() = default;
 
     // ------------ Generated API calls
+    static AsyncOp<ExecuteCloudScriptResult> ClientExecuteCloudScript(Entity const& entity, const ExecuteCloudScriptRequest& request, RunContext rc);
+    static AsyncOp<ExecuteCloudScriptResult> ServerExecuteCloudScript(Entity const& entity, const ExecuteCloudScriptServerRequest& request, RunContext rc);
+    static AsyncOp<ExecuteCloudScriptResult> ExecuteEntityCloudScript(Entity const& entity, const ExecuteEntityCloudScriptRequest& request, RunContext rc);
     static AsyncOp<ExecuteFunctionResult> ExecuteFunction(Entity const& entity, const ExecuteFunctionRequest& request, RunContext rc);
 };
 
