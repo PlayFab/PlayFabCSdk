@@ -2262,6 +2262,40 @@ typedef struct PFAccountManagementServerLinkNintendoServiceAccountRequest
 } PFAccountManagementServerLinkNintendoServiceAccountRequest;
 
 /// <summary>
+/// PFAccountManagementLinkNintendoServiceAccountSubjectRequest data model.
+/// </summary>
+typedef struct PFAccountManagementLinkNintendoServiceAccountSubjectRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) If another user is already linked to a specific Nintendo Service Account, unlink the
+    /// other user and re-link.
+    /// </summary>
+    _Maybenull_ bool const* forceLink;
+
+    /// <summary>
+    /// Unique PlayFab assigned ID of the user on whom the operation will be performed.
+    /// </summary>
+    _Null_terminated_ const char* playFabId;
+
+    /// <summary>
+    /// The Nintendo Service Account subject or id to link to the PlayFab user.
+    /// </summary>
+    _Null_terminated_ const char* subject;
+
+} PFAccountManagementLinkNintendoServiceAccountSubjectRequest;
+
+/// <summary>
 /// PFAccountManagementServerLinkNintendoSwitchDeviceIdRequest data model.
 /// </summary>
 typedef struct PFAccountManagementServerLinkNintendoSwitchDeviceIdRequest

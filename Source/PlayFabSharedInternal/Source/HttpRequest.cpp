@@ -113,7 +113,7 @@ HRESULT HCHttpCall::OnStarted(XAsyncBlock* async) noexcept
     RETURN_IF_FAILED(PFHCHttpCallRequestSetUrl(m_callHandle, m_method.data(), m_url.data()));
     RETURN_IF_FAILED(PFHCHttpCallResponseSetResponseBodyWriteFunction(m_callHandle, HCHttpCall::HCResponseBodyWrite, this));
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
     // Setup Compression level
     RETURN_IF_FAILED(PFHCHttpCallRequestEnableGzipCompression(m_callHandle, m_compressionLevel));
 #else

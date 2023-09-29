@@ -559,6 +559,7 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::InvalidServiceConfiguration: return E_PF_INVALID_SERVICE_CONFIGURATION;
     case ServiceErrorCode::InvalidNamespaceMismatch: return E_PF_INVALID_NAMESPACE_MISMATCH;
     case ServiceErrorCode::LeaderboardColumnLengthMismatch: return E_PF_LEADERBOARD_COLUMN_LENGTH_MISMATCH;
+    case ServiceErrorCode::InvalidStatisticScore: return E_PF_INVALID_STATISTIC_SCORE;
     case ServiceErrorCode::MatchmakingEntityInvalid: return E_PF_MATCHMAKING_ENTITY_INVALID;
     case ServiceErrorCode::MatchmakingPlayerAttributesInvalid: return E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID;
     case ServiceErrorCode::MatchmakingQueueNotFound: return E_PF_MATCHMAKING_QUEUE_NOT_FOUND;

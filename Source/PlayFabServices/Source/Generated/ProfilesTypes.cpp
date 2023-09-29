@@ -256,7 +256,7 @@ HRESULT EntityPermissionStatement::Copy(const PFProfilesEntityPermissionStatemen
     return S_OK;
 }
 
-HRESULT EntityStatisticValue::FromJson(const JsonValue& input)
+HRESULT EntityStatisticAttributeValue::FromJson(const JsonValue& input)
 {
     String metadata{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Metadata", metadata));
@@ -265,6 +265,81 @@ HRESULT EntityStatisticValue::FromJson(const JsonValue& input)
     String name{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Name", name));
     this->SetName(std::move(name));
+
+    CStringVector scores{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Scores", scores));
+    this->SetScores(std::move(scores));
+
+    return S_OK;
+}
+
+size_t EntityStatisticAttributeValue::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFProfilesEntityStatisticAttributeValue const*> EntityStatisticAttributeValue::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<EntityStatisticAttributeValue>(&this->Model());
+}
+
+size_t EntityStatisticAttributeValue::RequiredBufferSize(const PFProfilesEntityStatisticAttributeValue& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.metadata)
+    {
+        requiredSize += (std::strlen(model.metadata) + 1);
+    }
+    if (model.name)
+    {
+        requiredSize += (std::strlen(model.name) + 1);
+    }
+    requiredSize += (alignof(char*) + sizeof(char*) * model.scoresCount);
+    for (size_t i = 0; i < model.scoresCount; ++i)
+    {
+        requiredSize += (std::strlen(model.scores[i]) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT EntityStatisticAttributeValue::Copy(const PFProfilesEntityStatisticAttributeValue& input, PFProfilesEntityStatisticAttributeValue& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.metadata); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.metadata = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.name); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.name = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToArray(input.scores, input.scoresCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.scores = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+HRESULT EntityStatisticValue::FromJson(const JsonValue& input)
+{
+    ModelDictionaryEntryVector<EntityStatisticAttributeValue> attributeStatistics{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<EntityStatisticAttributeValue>(input, "AttributeStatistics", attributeStatistics));
+    this->SetAttributeStatistics(std::move(attributeStatistics));
+
+    String metadata{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Metadata", metadata));
+    this->SetMetadata(std::move(metadata));
+
+    String name{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Name", name));
+    this->SetName(std::move(name));
+
+    CStringVector scores{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Scores", scores));
+    this->SetScores(std::move(scores));
 
     std::optional<int32_t> value{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Value", value));
@@ -288,6 +363,12 @@ Result<PFProfilesEntityStatisticValue const*> EntityStatisticValue::Copy(ModelBu
 size_t EntityStatisticValue::RequiredBufferSize(const PFProfilesEntityStatisticValue& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFProfilesEntityStatisticAttributeValueDictionaryEntry) + sizeof(PFProfilesEntityStatisticAttributeValueDictionaryEntry) * model.attributeStatisticsCount);
+    for (size_t i = 0; i < model.attributeStatisticsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.attributeStatistics[i].key) + 1);
+        requiredSize += EntityStatisticAttributeValue::RequiredBufferSize(*model.attributeStatistics[i].value);
+    }
     if (model.metadata)
     {
         requiredSize += (std::strlen(model.metadata) + 1);
@@ -295,6 +376,11 @@ size_t EntityStatisticValue::RequiredBufferSize(const PFProfilesEntityStatisticV
     if (model.name)
     {
         requiredSize += (std::strlen(model.name) + 1);
+    }
+    requiredSize += (alignof(char*) + sizeof(char*) * model.scoresCount);
+    for (size_t i = 0; i < model.scoresCount; ++i)
+    {
+        requiredSize += (std::strlen(model.scores[i]) + 1);
     }
     if (model.value)
     {
@@ -307,6 +393,11 @@ HRESULT EntityStatisticValue::Copy(const PFProfilesEntityStatisticValue& input, 
 {
     output = input;
     {
+        auto propCopyResult = buffer.CopyToDictionary<EntityStatisticAttributeValue>(input.attributeStatistics, input.attributeStatisticsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.attributeStatistics = propCopyResult.ExtractPayload();
+    }
+    {
         auto propCopyResult = buffer.CopyTo(input.metadata); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.metadata = propCopyResult.ExtractPayload();
@@ -315,6 +406,11 @@ HRESULT EntityStatisticValue::Copy(const PFProfilesEntityStatisticValue& input, 
         auto propCopyResult = buffer.CopyTo(input.name); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToArray(input.scores, input.scoresCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.scores = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.value); 

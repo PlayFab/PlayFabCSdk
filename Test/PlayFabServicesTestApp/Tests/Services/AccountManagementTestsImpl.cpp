@@ -1403,6 +1403,30 @@ void AccountManagementTests::TestServerLinkNintendoServiceAccount(TestContext& t
 #endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32
+void AccountManagementTests::TestServerLinkNintendoServiceAccountSubject(TestContext& tc)
+{
+    ServerLinkNintendoServiceAccountSubjectOperation::RequestType request;
+    request.SetSubject("testSubject");
+    request.SetPlayFabId(DefaultTitlePlayerId());
+    request.SetForceLink(true);
+
+    ServerLinkNintendoServiceAccountSubjectOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        ServerUnlinkNintendoServiceAccountOperation::RequestType request;
+        request.SetPlayFabId(DefaultTitlePlayerId());
+
+        return ServerUnlinkNintendoServiceAccountOperation::Run(TitleEntity(), request, RunContext());
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void AccountManagementTests::TestServerLinkNintendoSwitchDeviceId(TestContext& tc)
 {
     ServerLinkNintendoSwitchDeviceIdOperation::RequestType request;
@@ -1628,19 +1652,8 @@ void AccountManagementTests::TestServerSendEmailFromTemplate(TestContext& tc)
 #if HC_PLATFORM == HC_PLATFORM_WIN32
 void AccountManagementTests::TestServerUnlinkNintendoServiceAccount(TestContext& tc)
 {
-    ServerUnlinkNintendoServiceAccountOperation::RequestType request;
-    request.SetPlayFabId(DefaultTitlePlayerId());
-
-    ServerUnlinkNintendoServiceAccountOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
-    {
-        tc.AssertEqual(E_PF_ACCOUNT_NOT_LINKED, result.hr, "errorName");
-
-        return S_OK;
-    })
-    .Finally([&](Result<void> result)
-    {
-        tc.EndTest(std::move(result));
-    });
+    // Covered by TestServerLinkNintendoServiceAccountSubject
+    tc.EndTest(S_OK);
 }
 #endif
 

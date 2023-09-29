@@ -2826,7 +2826,7 @@ PF_API PFAccountManagementServerGetUserBansGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32.
-/// See also ServerUnlinkNintendoServiceAccountAsync.
+/// See also ServerLinkNintendoServiceAccountSubjectAsync, ServerUnlinkNintendoServiceAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED,
@@ -2836,6 +2836,31 @@ PF_API PFAccountManagementServerGetUserBansGetResult(
 PF_API PFAccountManagementServerLinkNintendoServiceAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
     _In_ const PFAccountManagementServerLinkNintendoServiceAccountRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+/// <summary>
+/// Links the Nintendo account associated with the Nintendo Service Account subject or id to the user's
+/// PlayFab account
+/// </summary>
+/// <param name="titleEntityHandle">PFEntityHandle for a title Entity obtained using PFAuthenticationGetEntityWithSecretKeyAsync.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// This API is available on Win32.
+/// See also ServerLinkNintendoServiceAccountAsync, ServerUnlinkNintendoServiceAccountAsync.
+///
+/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
+/// the async result will be E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED,
+/// E_PF_NINTENDO_SWITCH_NOT_ENABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page
+/// "Handling PlayFab Errors" for more details on error handling.
+/// </remarks>
+PF_API PFAccountManagementServerLinkNintendoServiceAccountSubjectAsync(
+    _In_ PFEntityHandle titleEntityHandle,
+    _In_ const PFAccountManagementLinkNintendoServiceAccountSubjectRequest* request,
     _Inout_ XAsyncBlock* async
 ) noexcept;
 #endif
@@ -3169,7 +3194,7 @@ PF_API PFAccountManagementServerSendEmailFromTemplateAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32.
-/// See also ServerLinkNintendoServiceAccountAsync.
+/// See also ServerLinkNintendoServiceAccountAsync, ServerLinkNintendoServiceAccountSubjectAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_NINTENDO_SWITCH_NOT_ENABLED_FOR_TITLE or any

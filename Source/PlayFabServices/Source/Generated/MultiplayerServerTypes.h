@@ -403,6 +403,67 @@ public:
     static HRESULT Copy(const PFMultiplayerServerRequestMultiplayerServerResponse& input, PFMultiplayerServerRequestMultiplayerServerResponse& output, ModelBuffer& buffer);
 };
 
+class PartyInvitationConfiguration : public Wrappers::PFMultiplayerServerPartyInvitationConfigurationWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerPartyInvitationConfigurationWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFMultiplayerServerPartyInvitationConfiguration& input);
+};
+
+class PartyNetworkConfiguration : public Wrappers::PFMultiplayerServerPartyNetworkConfigurationWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerPartyNetworkConfigurationWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFMultiplayerServerPartyNetworkConfiguration& input);
+};
+
+class RequestPartyServiceRequest : public Wrappers::PFMultiplayerServerRequestPartyServiceRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerRequestPartyServiceRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFMultiplayerServerRequestPartyServiceRequest& input);
+};
+
+class RequestPartyServiceResponse : public Wrappers::PFMultiplayerServerRequestPartyServiceResponseWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFMultiplayerServerRequestPartyServiceResponse>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerRequestPartyServiceResponseWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFMultiplayerServerRequestPartyServiceResponse const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFMultiplayerServerRequestPartyServiceResponse& model);
+    static HRESULT Copy(const PFMultiplayerServerRequestPartyServiceResponse& input, PFMultiplayerServerRequestPartyServiceResponse& output, ModelBuffer& buffer);
+};
+
 } // namespace MultiplayerServer
 
 // EnumRange definitions used for Enum (de)serialization

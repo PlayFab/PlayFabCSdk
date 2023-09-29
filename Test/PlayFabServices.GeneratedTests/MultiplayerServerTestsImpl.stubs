@@ -37,6 +37,13 @@ void MultiplayerServerTests::TestRequestMultiplayerServer(TestContext& tc)
     tc.Skip();
 }
 
+#if 0
+void MultiplayerServerTests::TestRequestPartyService(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 
 }
 }

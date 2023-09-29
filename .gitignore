@@ -334,3 +334,8 @@ ASALocalRun/
 coveragetool
 reports/
 *.cobertura.xml
+
+# Ignore files used to store 'git diff' and 'pf-gensdk' output
+# Used in template-update-check.yml
+git_diff_output.txt
+gen.txt

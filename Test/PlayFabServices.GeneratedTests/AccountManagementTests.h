@@ -221,6 +221,9 @@ private:
     void TestServerLinkNintendoServiceAccount(TestContext& testContext);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32
+    void TestServerLinkNintendoServiceAccountSubject(TestContext& testContext);
+#endif
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     void TestServerLinkNintendoSwitchDeviceId(TestContext& testContext);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32

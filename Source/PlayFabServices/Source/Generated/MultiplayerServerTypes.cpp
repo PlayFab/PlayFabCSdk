@@ -1189,5 +1189,118 @@ HRESULT RequestMultiplayerServerResponse::Copy(const PFMultiplayerServerRequestM
     return S_OK;
 }
 
+JsonValue PartyInvitationConfiguration::ToJson() const
+{
+    return PartyInvitationConfiguration::ToJson(this->Model());
+}
+
+JsonValue PartyInvitationConfiguration::ToJson(const PFMultiplayerServerPartyInvitationConfiguration& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberArray<EntityKey>(output, "EntityKeys", input.entityKeys, input.entityKeysCount);
+    JsonUtils::ObjectAddMember(output, "Identifier", input.identifier);
+    JsonUtils::ObjectAddMember(output, "Revocability", input.revocability);
+    return output;
+}
+
+JsonValue PartyNetworkConfiguration::ToJson() const
+{
+    return PartyNetworkConfiguration::ToJson(this->Model());
+}
+
+JsonValue PartyNetworkConfiguration::ToJson(const PFMultiplayerServerPartyNetworkConfiguration& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMember(output, "DirectPeerConnectivityOptions", input.directPeerConnectivityOptions);
+    JsonUtils::ObjectAddMember(output, "MaxDevices", input.maxDevices);
+    JsonUtils::ObjectAddMember(output, "MaxDevicesPerUser", input.maxDevicesPerUser);
+    JsonUtils::ObjectAddMember(output, "MaxEndpointsPerDevice", input.maxEndpointsPerDevice);
+    JsonUtils::ObjectAddMember(output, "MaxUsers", input.maxUsers);
+    JsonUtils::ObjectAddMember(output, "MaxUsersPerDevice", input.maxUsersPerDevice);
+    JsonUtils::ObjectAddMember<PartyInvitationConfiguration>(output, "PartyInvitationConfiguration", input.partyInvitationConfiguration);
+    return output;
+}
+
+JsonValue RequestPartyServiceRequest::ToJson() const
+{
+    return RequestPartyServiceRequest::ToJson(this->Model());
+}
+
+JsonValue RequestPartyServiceRequest::ToJson(const PFMultiplayerServerRequestPartyServiceRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<PartyNetworkConfiguration>(output, "NetworkConfiguration", input.networkConfiguration);
+    JsonUtils::ObjectAddMember(output, "PartyId", input.partyId);
+    JsonUtils::ObjectAddMemberArray(output, "PreferredRegions", input.preferredRegions, input.preferredRegionsCount);
+    return output;
+}
+
+HRESULT RequestPartyServiceResponse::FromJson(const JsonValue& input)
+{
+    String invitationId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "InvitationId", invitationId));
+    this->SetInvitationId(std::move(invitationId));
+
+    String partyId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PartyId", partyId));
+    this->SetPartyId(std::move(partyId));
+
+    String serializedNetworkDescriptor{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SerializedNetworkDescriptor", serializedNetworkDescriptor));
+    this->SetSerializedNetworkDescriptor(std::move(serializedNetworkDescriptor));
+
+    return S_OK;
+}
+
+size_t RequestPartyServiceResponse::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFMultiplayerServerRequestPartyServiceResponse const*> RequestPartyServiceResponse::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<RequestPartyServiceResponse>(&this->Model());
+}
+
+size_t RequestPartyServiceResponse::RequiredBufferSize(const PFMultiplayerServerRequestPartyServiceResponse& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.invitationId)
+    {
+        requiredSize += (std::strlen(model.invitationId) + 1);
+    }
+    if (model.partyId)
+    {
+        requiredSize += (std::strlen(model.partyId) + 1);
+    }
+    if (model.serializedNetworkDescriptor)
+    {
+        requiredSize += (std::strlen(model.serializedNetworkDescriptor) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT RequestPartyServiceResponse::Copy(const PFMultiplayerServerRequestPartyServiceResponse& input, PFMultiplayerServerRequestPartyServiceResponse& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.invitationId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.invitationId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.partyId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.partyId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.serializedNetworkDescriptor); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.serializedNetworkDescriptor = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 } // namespace MultiplayerServer
 } // namespace PlayFab

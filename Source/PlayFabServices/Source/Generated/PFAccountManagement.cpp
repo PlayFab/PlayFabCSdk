@@ -2327,6 +2327,28 @@ PF_API PFAccountManagementServerLinkNintendoServiceAccountAsync(
 #endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32
+PF_API PFAccountManagementServerLinkNintendoServiceAccountSubjectAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFAccountManagementLinkNintendoServiceAccountSubjectRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFAccountManagementServerLinkNintendoServiceAccountSubjectAsync),
+        std::bind(&AccountManagementAPI::ServerLinkNintendoServiceAccountSubject, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 PF_API PFAccountManagementServerLinkNintendoSwitchDeviceIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementServerLinkNintendoSwitchDeviceIdRequest* request,

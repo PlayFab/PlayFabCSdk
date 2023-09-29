@@ -1788,6 +1788,27 @@ HRESULT ServerLinkNintendoServiceAccountOperation::OnStarted(XAsyncBlock* async)
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32
 
+ServerLinkNintendoServiceAccountSubjectOperation::ServerLinkNintendoServiceAccountSubjectOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<void> ServerLinkNintendoServiceAccountSubjectOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerLinkNintendoServiceAccountSubjectOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerLinkNintendoServiceAccountSubjectOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAccountManagementServerLinkNintendoServiceAccountSubjectAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+
 ServerLinkNintendoSwitchDeviceIdOperation::ServerLinkNintendoSwitchDeviceIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
     m_entity{ std::move(entity) },

@@ -207,6 +207,9 @@ void AccountManagementTests::AddTests()
     AddTest("TestServerLinkNintendoServiceAccount", &AccountManagementTests::TestServerLinkNintendoServiceAccount);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32
+    AddTest("TestServerLinkNintendoServiceAccountSubject", &AccountManagementTests::TestServerLinkNintendoServiceAccountSubject);
+#endif
+#if HC_PLATFORM == HC_PLATFORM_WIN32
     AddTest("TestServerLinkNintendoSwitchDeviceId", &AccountManagementTests::TestServerLinkNintendoSwitchDeviceId);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32

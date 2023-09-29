@@ -504,6 +504,13 @@ void AccountManagementTests::TestServerLinkNintendoServiceAccount(TestContext& t
 #endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32
+void AccountManagementTests::TestServerLinkNintendoServiceAccountSubject(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 void AccountManagementTests::TestServerLinkNintendoSwitchDeviceId(TestContext& tc)
 {
     tc.Skip();

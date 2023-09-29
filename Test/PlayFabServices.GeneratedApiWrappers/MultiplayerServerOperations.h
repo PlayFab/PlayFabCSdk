@@ -80,5 +80,25 @@ private:
     RequestType m_request;
 };
 
+#if 0
+class RequestPartyServiceOperation : public XAsyncOperation<Wrappers::PFMultiplayerServerRequestPartyServiceResponseWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFMultiplayerServerRequestPartyServiceRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFMultiplayerServerRequestPartyServiceResponseWrapper<Allocator>;
+
+    RequestPartyServiceOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFMultiplayerServerRequestPartyServiceResponseWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 }
 }

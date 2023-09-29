@@ -779,6 +779,144 @@ typedef struct PFMultiplayerServerRequestMultiplayerServerResponse
 
 } PFMultiplayerServerRequestMultiplayerServerResponse;
 
+/// <summary>
+/// PFMultiplayerServerPartyInvitationConfiguration data model.
+/// </summary>
+typedef struct PFMultiplayerServerPartyInvitationConfiguration
+{
+    /// <summary>
+    /// (Optional) The list of PlayFab EntityKeys that the invitation allows to authenticate into the
+    /// network. If this list is empty, all users are allowed to authenticate using the invitation's identifier.
+    /// This list may contain no more than 1024 items.
+    /// </summary>
+    _Maybenull_ _Field_size_(entityKeysCount) PFEntityKey const* const* entityKeys;
+
+    /// <summary>
+    /// Count of entityKeys
+    /// </summary>
+    uint32_t entityKeysCount;
+
+    /// <summary>
+    /// (Optional) The invite identifier for this party. If this value is specified, it must be no longer
+    /// than 127 characters.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* identifier;
+
+    /// <summary>
+    /// (Optional) Controls which participants can revoke this invite.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* revocability;
+
+} PFMultiplayerServerPartyInvitationConfiguration;
+
+/// <summary>
+/// PFMultiplayerServerPartyNetworkConfiguration data model.
+/// </summary>
+typedef struct PFMultiplayerServerPartyNetworkConfiguration
+{
+    /// <summary>
+    /// (Optional) Controls whether and how to support direct peer-to-peer connection attempts among
+    /// devices in the network.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* directPeerConnectivityOptions;
+
+    /// <summary>
+    /// The maximum number of devices allowed to connect to the network. Must be between 1 and 32, inclusive.
+    /// </summary>
+    uint32_t maxDevices;
+
+    /// <summary>
+    /// The maximum number of devices allowed per user. Must be greater than 0.
+    /// </summary>
+    uint32_t maxDevicesPerUser;
+
+    /// <summary>
+    /// The maximum number of endpoints allowed per device. Must be between 0 and 32, inclusive.
+    /// </summary>
+    uint32_t maxEndpointsPerDevice;
+
+    /// <summary>
+    /// The maximum number of unique users allowed in the network. Must be greater than 0.
+    /// </summary>
+    uint32_t maxUsers;
+
+    /// <summary>
+    /// The maximum number of users allowed per device. Must be between 1 and 8, inclusive.
+    /// </summary>
+    uint32_t maxUsersPerDevice;
+
+    /// <summary>
+    /// (Optional) An optionally-specified configuration for the initial invitation for this party. If
+    /// not provided, default configuration values will be used: a title-unique invitation identifier
+    /// will be generated, the revocability will be Anyone, and the EntityID list will be empty.
+    /// </summary>
+    _Maybenull_ PFMultiplayerServerPartyInvitationConfiguration const* partyInvitationConfiguration;
+
+} PFMultiplayerServerPartyNetworkConfiguration;
+
+/// <summary>
+/// PFMultiplayerServerRequestPartyServiceRequest data model. Requests a party session from a particular
+/// set of builds if build alias params is provided, in any of the given preferred regions.
+/// </summary>
+typedef struct PFMultiplayerServerRequestPartyServiceRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// The network configuration for this request.
+    /// </summary>
+    PFMultiplayerServerPartyNetworkConfiguration const* networkConfiguration;
+
+    /// <summary>
+    /// (Optional) A guid string party ID created track the party session over its life.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* partyId;
+
+    /// <summary>
+    /// The preferred regions to request a party session from. The party service will iterate through
+    /// the regions in the specified order and allocate a party session from the first one that is available.
+    /// </summary>
+    _Field_size_(preferredRegionsCount) const char* const* preferredRegions;
+
+    /// <summary>
+    /// Count of preferredRegions
+    /// </summary>
+    uint32_t preferredRegionsCount;
+
+} PFMultiplayerServerRequestPartyServiceRequest;
+
+/// <summary>
+/// PFMultiplayerServerRequestPartyServiceResponse data model.
+/// </summary>
+typedef struct PFMultiplayerServerRequestPartyServiceResponse
+{
+    /// <summary>
+    /// (Optional) The invitation identifier supplied in the PartyInvitationConfiguration, or the PlayFab-generated
+    /// guid if none was supplied.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* invitationId;
+
+    /// <summary>
+    /// (Optional) The guid string party ID of the party session.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* partyId;
+
+    /// <summary>
+    /// (Optional) A base-64 encoded string containing the serialized network descriptor for this party.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* serializedNetworkDescriptor;
+
+} PFMultiplayerServerRequestPartyServiceResponse;
+
 #pragma pop_macro("IN")
 
 }

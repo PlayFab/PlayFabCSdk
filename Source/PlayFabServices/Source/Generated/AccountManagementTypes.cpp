@@ -2552,6 +2552,21 @@ JsonValue ServerLinkNintendoServiceAccountRequest::ToJson(const PFAccountManagem
     return output;
 }
 
+JsonValue LinkNintendoServiceAccountSubjectRequest::ToJson() const
+{
+    return LinkNintendoServiceAccountSubjectRequest::ToJson(this->Model());
+}
+
+JsonValue LinkNintendoServiceAccountSubjectRequest::ToJson(const PFAccountManagementLinkNintendoServiceAccountSubjectRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "ForceLink", input.forceLink);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
+    JsonUtils::ObjectAddMember(output, "Subject", input.subject);
+    return output;
+}
+
 JsonValue ServerLinkNintendoSwitchDeviceIdRequest::ToJson() const
 {
     return ServerLinkNintendoSwitchDeviceIdRequest::ToJson(this->Model());
