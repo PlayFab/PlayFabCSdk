@@ -1774,5 +1774,353 @@ private:
     String m_vmId;
 };
 
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerPartyInvitationConfigurationWrapper : public ModelWrapper<PFMultiplayerServerPartyInvitationConfiguration, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerPartyInvitationConfiguration;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerPartyInvitationConfigurationWrapper() = default;
+
+    PFMultiplayerServerPartyInvitationConfigurationWrapper(const PFMultiplayerServerPartyInvitationConfiguration& model) :
+        ModelWrapper<PFMultiplayerServerPartyInvitationConfiguration, Alloc>{ model },
+        m_entityKeys{ model.entityKeys, model.entityKeys + model.entityKeysCount },
+        m_identifier{ SafeString(model.identifier) },
+        m_revocability{ SafeString(model.revocability) }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerPartyInvitationConfigurationWrapper(const PFMultiplayerServerPartyInvitationConfigurationWrapper& src) :
+        PFMultiplayerServerPartyInvitationConfigurationWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerPartyInvitationConfigurationWrapper(PFMultiplayerServerPartyInvitationConfigurationWrapper&& src) :
+        PFMultiplayerServerPartyInvitationConfigurationWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerPartyInvitationConfigurationWrapper& operator=(PFMultiplayerServerPartyInvitationConfigurationWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerPartyInvitationConfigurationWrapper() = default;
+
+    friend void swap(PFMultiplayerServerPartyInvitationConfigurationWrapper& lhs, PFMultiplayerServerPartyInvitationConfigurationWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_entityKeys, rhs.m_entityKeys);
+        swap(lhs.m_identifier, rhs.m_identifier);
+        swap(lhs.m_revocability, rhs.m_revocability);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetEntityKeys(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
+    {
+        m_entityKeys = std::move(value);
+        this->m_model.entityKeys =  m_entityKeys.empty() ? nullptr : m_entityKeys.data();
+        this->m_model.entityKeysCount =  static_cast<uint32_t>(m_entityKeys.size());
+    }
+
+    void SetIdentifier(String value)
+    {
+        m_identifier = std::move(value);
+        this->m_model.identifier =  m_identifier.empty() ? nullptr : m_identifier.data();
+    }
+
+    void SetRevocability(String value)
+    {
+        m_revocability = std::move(value);
+        this->m_model.revocability =  m_revocability.empty() ? nullptr : m_revocability.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.entityKeys = m_entityKeys.empty() ? nullptr : m_entityKeys.data();
+        this->m_model.identifier = m_identifier.empty() ? nullptr : m_identifier.data();
+        this->m_model.revocability = m_revocability.empty() ? nullptr : m_revocability.data();
+    }
+
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> m_entityKeys;
+    String m_identifier;
+    String m_revocability;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerPartyNetworkConfigurationWrapper : public ModelWrapper<PFMultiplayerServerPartyNetworkConfiguration, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerPartyNetworkConfiguration;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerPartyNetworkConfigurationWrapper() = default;
+
+    PFMultiplayerServerPartyNetworkConfigurationWrapper(const PFMultiplayerServerPartyNetworkConfiguration& model) :
+        ModelWrapper<PFMultiplayerServerPartyNetworkConfiguration, Alloc>{ model },
+        m_directPeerConnectivityOptions{ SafeString(model.directPeerConnectivityOptions) },
+        m_partyInvitationConfiguration{ model.partyInvitationConfiguration ? std::optional<PFMultiplayerServerPartyInvitationConfigurationWrapper<Alloc>>{ *model.partyInvitationConfiguration } : std::nullopt }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerPartyNetworkConfigurationWrapper(const PFMultiplayerServerPartyNetworkConfigurationWrapper& src) :
+        PFMultiplayerServerPartyNetworkConfigurationWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerPartyNetworkConfigurationWrapper(PFMultiplayerServerPartyNetworkConfigurationWrapper&& src) :
+        PFMultiplayerServerPartyNetworkConfigurationWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerPartyNetworkConfigurationWrapper& operator=(PFMultiplayerServerPartyNetworkConfigurationWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerPartyNetworkConfigurationWrapper() = default;
+
+    friend void swap(PFMultiplayerServerPartyNetworkConfigurationWrapper& lhs, PFMultiplayerServerPartyNetworkConfigurationWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_directPeerConnectivityOptions, rhs.m_directPeerConnectivityOptions);
+        swap(lhs.m_partyInvitationConfiguration, rhs.m_partyInvitationConfiguration);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetDirectPeerConnectivityOptions(String value)
+    {
+        m_directPeerConnectivityOptions = std::move(value);
+        this->m_model.directPeerConnectivityOptions =  m_directPeerConnectivityOptions.empty() ? nullptr : m_directPeerConnectivityOptions.data();
+    }
+
+    void SetMaxDevices(uint32_t value)
+    {
+        this->m_model.maxDevices = value;
+    }
+
+    void SetMaxDevicesPerUser(uint32_t value)
+    {
+        this->m_model.maxDevicesPerUser = value;
+    }
+
+    void SetMaxEndpointsPerDevice(uint32_t value)
+    {
+        this->m_model.maxEndpointsPerDevice = value;
+    }
+
+    void SetMaxUsers(uint32_t value)
+    {
+        this->m_model.maxUsers = value;
+    }
+
+    void SetMaxUsersPerDevice(uint32_t value)
+    {
+        this->m_model.maxUsersPerDevice = value;
+    }
+
+    void SetPartyInvitationConfiguration(std::optional<PFMultiplayerServerPartyInvitationConfigurationWrapper<Alloc>> value)
+    {
+        m_partyInvitationConfiguration = std::move(value);
+        this->m_model.partyInvitationConfiguration = m_partyInvitationConfiguration ? &m_partyInvitationConfiguration->Model() : nullptr;
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.directPeerConnectivityOptions = m_directPeerConnectivityOptions.empty() ? nullptr : m_directPeerConnectivityOptions.data();
+        this->m_model.partyInvitationConfiguration = m_partyInvitationConfiguration ?  &m_partyInvitationConfiguration->Model() : nullptr;
+    }
+
+    String m_directPeerConnectivityOptions;
+    std::optional<PFMultiplayerServerPartyInvitationConfigurationWrapper<Alloc>> m_partyInvitationConfiguration;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerRequestPartyServiceRequestWrapper : public ModelWrapper<PFMultiplayerServerRequestPartyServiceRequest, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerRequestPartyServiceRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerRequestPartyServiceRequestWrapper() = default;
+
+    PFMultiplayerServerRequestPartyServiceRequestWrapper(const PFMultiplayerServerRequestPartyServiceRequest& model) :
+        ModelWrapper<PFMultiplayerServerRequestPartyServiceRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_networkConfiguration{ model.networkConfiguration ? *model.networkConfiguration : decltype(*model.networkConfiguration){} },
+        m_partyId{ SafeString(model.partyId) },
+        m_preferredRegions{ model.preferredRegions, model.preferredRegions + model.preferredRegionsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerRequestPartyServiceRequestWrapper(const PFMultiplayerServerRequestPartyServiceRequestWrapper& src) :
+        PFMultiplayerServerRequestPartyServiceRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerRequestPartyServiceRequestWrapper(PFMultiplayerServerRequestPartyServiceRequestWrapper&& src) :
+        PFMultiplayerServerRequestPartyServiceRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerRequestPartyServiceRequestWrapper& operator=(PFMultiplayerServerRequestPartyServiceRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerRequestPartyServiceRequestWrapper() = default;
+
+    friend void swap(PFMultiplayerServerRequestPartyServiceRequestWrapper& lhs, PFMultiplayerServerRequestPartyServiceRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_networkConfiguration, rhs.m_networkConfiguration);
+        swap(lhs.m_partyId, rhs.m_partyId);
+        swap(lhs.m_preferredRegions, rhs.m_preferredRegions);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetNetworkConfiguration(PFMultiplayerServerPartyNetworkConfigurationWrapper<Alloc> value)
+    {
+        m_networkConfiguration = std::move(value);
+        this->m_model.networkConfiguration = &m_networkConfiguration.Model();
+    }
+
+    void SetPartyId(String value)
+    {
+        m_partyId = std::move(value);
+        this->m_model.partyId =  m_partyId.empty() ? nullptr : m_partyId.data();
+    }
+
+    void SetPreferredRegions(CStringVector<Alloc> value)
+    {
+        m_preferredRegions = std::move(value);
+        this->m_model.preferredRegions =  m_preferredRegions.empty() ? nullptr : m_preferredRegions.data();
+        this->m_model.preferredRegionsCount =  static_cast<uint32_t>(m_preferredRegions.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.networkConfiguration = &m_networkConfiguration.Model();
+        this->m_model.partyId = m_partyId.empty() ? nullptr : m_partyId.data();
+        this->m_model.preferredRegions = m_preferredRegions.empty() ? nullptr : m_preferredRegions.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    PFMultiplayerServerPartyNetworkConfigurationWrapper<Alloc> m_networkConfiguration;
+    String m_partyId;
+    CStringVector<Alloc> m_preferredRegions;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerRequestPartyServiceResponseWrapper : public ModelWrapper<PFMultiplayerServerRequestPartyServiceResponse, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerRequestPartyServiceResponse;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerRequestPartyServiceResponseWrapper() = default;
+
+    PFMultiplayerServerRequestPartyServiceResponseWrapper(const PFMultiplayerServerRequestPartyServiceResponse& model) :
+        ModelWrapper<PFMultiplayerServerRequestPartyServiceResponse, Alloc>{ model },
+        m_invitationId{ SafeString(model.invitationId) },
+        m_partyId{ SafeString(model.partyId) },
+        m_serializedNetworkDescriptor{ SafeString(model.serializedNetworkDescriptor) }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerRequestPartyServiceResponseWrapper(const PFMultiplayerServerRequestPartyServiceResponseWrapper& src) :
+        PFMultiplayerServerRequestPartyServiceResponseWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerRequestPartyServiceResponseWrapper(PFMultiplayerServerRequestPartyServiceResponseWrapper&& src) :
+        PFMultiplayerServerRequestPartyServiceResponseWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerRequestPartyServiceResponseWrapper& operator=(PFMultiplayerServerRequestPartyServiceResponseWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerRequestPartyServiceResponseWrapper() = default;
+
+    friend void swap(PFMultiplayerServerRequestPartyServiceResponseWrapper& lhs, PFMultiplayerServerRequestPartyServiceResponseWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_invitationId, rhs.m_invitationId);
+        swap(lhs.m_partyId, rhs.m_partyId);
+        swap(lhs.m_serializedNetworkDescriptor, rhs.m_serializedNetworkDescriptor);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetInvitationId(String value)
+    {
+        m_invitationId = std::move(value);
+        this->m_model.invitationId =  m_invitationId.empty() ? nullptr : m_invitationId.data();
+    }
+
+    void SetPartyId(String value)
+    {
+        m_partyId = std::move(value);
+        this->m_model.partyId =  m_partyId.empty() ? nullptr : m_partyId.data();
+    }
+
+    void SetSerializedNetworkDescriptor(String value)
+    {
+        m_serializedNetworkDescriptor = std::move(value);
+        this->m_model.serializedNetworkDescriptor =  m_serializedNetworkDescriptor.empty() ? nullptr : m_serializedNetworkDescriptor.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.invitationId = m_invitationId.empty() ? nullptr : m_invitationId.data();
+        this->m_model.partyId = m_partyId.empty() ? nullptr : m_partyId.data();
+        this->m_model.serializedNetworkDescriptor = m_serializedNetworkDescriptor.empty() ? nullptr : m_serializedNetworkDescriptor.data();
+    }
+
+    String m_invitationId;
+    String m_partyId;
+    String m_serializedNetworkDescriptor;
+};
+
 } // namespace Wrappers
 } // namespace PlayFab

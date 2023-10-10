@@ -755,7 +755,7 @@ enum class PFHCCompressionLevel : uint32_t
     High = 9
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
 /// <summary>
 /// Enable GZIP compression on the provided body payload.
 /// </summary>

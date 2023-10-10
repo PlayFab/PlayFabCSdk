@@ -2450,6 +2450,39 @@ AsyncOp<void> AccountManagementAPI::ServerLinkNintendoServiceAccount(
     });
 }
 
+AsyncOp<void> AccountManagementAPI::ServerLinkNintendoServiceAccountSubject(
+    Entity const& entity,
+    const LinkNintendoServiceAccountSubjectRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/LinkNintendoServiceAccountSubject" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerLinkNintendoServiceAccountSubject,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<void> AccountManagementAPI::ServerLinkNintendoSwitchDeviceId(
     Entity const& entity,
     const ServerLinkNintendoSwitchDeviceIdRequest& request,

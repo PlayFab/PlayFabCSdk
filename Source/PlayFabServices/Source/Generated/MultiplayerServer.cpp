@@ -148,5 +148,40 @@ AsyncOp<RequestMultiplayerServerResponse> MultiplayerServerAPI::RequestMultiplay
     });
 }
 
+AsyncOp<RequestPartyServiceResponse> MultiplayerServerAPI::RequestPartyService(
+    Entity const& entity,
+    const RequestPartyServiceRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Party/RequestPartyService" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::MultiplayerServerRequestPartyService,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<RequestPartyServiceResponse>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            RequestPartyServiceResponse resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<RequestPartyServiceResponse>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 } // namespace MultiplayerServer
 } // namespace PlayFab

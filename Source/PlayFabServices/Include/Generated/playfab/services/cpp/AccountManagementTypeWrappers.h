@@ -7019,6 +7019,97 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper : public ModelWrapper<PFAccountManagementLinkNintendoServiceAccountSubjectRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementLinkNintendoServiceAccountSubjectRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper() = default;
+
+    PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper(const PFAccountManagementLinkNintendoServiceAccountSubjectRequest& model) :
+        ModelWrapper<PFAccountManagementLinkNintendoServiceAccountSubjectRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_forceLink{ model.forceLink ? std::optional<bool>{ *model.forceLink } : std::nullopt },
+        m_playFabId{ SafeString(model.playFabId) },
+        m_subject{ SafeString(model.subject) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper(const PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper& src) :
+        PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper(PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper&& src) :
+        PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper& operator=(PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper& lhs, PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_forceLink, rhs.m_forceLink);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        swap(lhs.m_subject, rhs.m_subject);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetForceLink(std::optional<bool> value)
+    {
+        m_forceLink = std::move(value);
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    void SetSubject(String value)
+    {
+        m_subject = std::move(value);
+        this->m_model.subject =  m_subject.empty() ? nullptr : m_subject.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+        this->m_model.subject = m_subject.empty() ? nullptr : m_subject.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<bool> m_forceLink;
+    String m_playFabId;
+    String m_subject;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFAccountManagementServerLinkNintendoSwitchDeviceIdRequestWrapper : public ModelWrapper<PFAccountManagementServerLinkNintendoSwitchDeviceIdRequest, Alloc>
 {
 public:

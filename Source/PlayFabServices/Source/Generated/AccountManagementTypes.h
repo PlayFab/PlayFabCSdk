@@ -1576,6 +1576,20 @@ public:
     static JsonValue ToJson(const PFAccountManagementServerLinkNintendoServiceAccountRequest& input);
 };
 
+class LinkNintendoServiceAccountSubjectRequest : public Wrappers::PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementLinkNintendoServiceAccountSubjectRequest& input);
+};
+
 class ServerLinkNintendoSwitchDeviceIdRequest : public Wrappers::PFAccountManagementServerLinkNintendoSwitchDeviceIdRequestWrapper<Allocator>, public InputModel
 {
 public:

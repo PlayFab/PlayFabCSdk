@@ -74,7 +74,8 @@ PF_API PFGroupsAcceptGroupInvitationAsync(
 /// Adds members to a group or role. Existing members of the group will added to roles within the group,
 /// but if the user is not already a member of the group, only title claimants may add them to the group,
 /// and others must use the group application or invite system to add new members to a group. Returns
-/// nothing if successful.
+/// nothing if successful. See also GroupApplyToGroupAsync, GroupInviteToGroupAsync, GroupListGroupMembersAsync,
+/// GroupRemoveMembersAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ROLE_DOES_NOT_EXIST or any of the global PlayFab Service errors. See
@@ -100,7 +101,8 @@ PF_API PFGroupsAddMembersAsync(
 /// expires. By default, if the entity has an invitation to join the group outstanding, this will accept
 /// the invitation to join the group instead and return an error indicating such, rather than creating
 /// a duplicate application to join that will need to be cleaned up later. Returns information about the
-/// application or an error indicating an invitation was accepted instead.
+/// application or an error indicating an invitation was accepted instead. See also GroupAcceptGroupApplicationAsync,
+/// GroupListGroupApplicationsAsync, GroupRemoveGroupApplicationAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFGroupsApplyToGroupGetResultSize"/> and
 /// <see cref="PFGroupsApplyToGroupGetResult"/> to get the result.
@@ -185,7 +187,8 @@ PF_API PFGroupsBlockEntityAsync(
 /// This API is available on all platforms.
 /// Changes the role membership of a list of entities from one role to another in in a single operation.
 /// The destination role must already exist. This is equivalent to adding the entities to the destination
-/// role and removing from the origin role. Returns nothing if successful.
+/// role and removing from the origin role. Returns nothing if successful. See also GroupAddMembersAsync,
+/// GroupCreateRoleAsync, GroupRemoveMembersAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ROLE_DOES_NOT_EXIST or any of the global PlayFab Service errors. See
@@ -207,7 +210,8 @@ PF_API PFGroupsChangeMemberRoleAsync(
 /// <remarks>
 /// This API is available on all platforms.
 /// Creates a new group, as well as administration and member roles, based off of a title's group template.
-/// Returns information about the group that was created.
+/// Returns information about the group that was created. See also GroupAddMembersAsync, GroupApplyToGroupAsync,
+/// GroupDeleteGroupAsync, GroupInviteToGroupAsync, GroupListGroupMembersAsync, GroupRemoveMembersAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFGroupsCreateGroupGetResultSize"/> and <see
 /// cref="PFGroupsCreateGroupGetResult"/> to get the result.
@@ -268,7 +272,7 @@ PF_API PFGroupsCreateGroupGetResult(
 /// This API is available on all platforms.
 /// Creates a new role within an existing group, with no members. Both the role ID and role name must
 /// be unique within the group, but the name can be the same as the ID. The role ID is set at creation
-/// and cannot be changed. Returns information about the role that was created.
+/// and cannot be changed. Returns information about the role that was created. See also GroupDeleteRoleAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFGroupsCreateRoleGetResultSize"/> and <see
 /// cref="PFGroupsCreateRoleGetResult"/> to get the result.
@@ -330,7 +334,7 @@ PF_API PFGroupsCreateRoleGetResult(
 /// Deletes a group and all roles, invitations, join requests, and blocks associated with it. Permission
 /// to delete is only required the group itself to execute this action. The group and data cannot be cannot
 /// be recovered once removed, but any abuse reports about the group will remain. No data is returned
-/// in the case of success.
+/// in the case of success. See also GroupCreateGroupAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be one of global PlayFab Service errors. See doc page "Handling PlayFab Errors"
@@ -351,7 +355,7 @@ PF_API PFGroupsDeleteGroupAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// Returns information about the role.
+/// Returns information about the role See also GroupCreateRoleAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ROLE_DOES_NOT_EXIST, E_PF_ROLE_IS_GROUP_ADMIN, E_PF_ROLE_IS_GROUP_DEFAULT_MEMBER
@@ -373,7 +377,8 @@ PF_API PFGroupsDeleteRoleAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// Returns the ID, name, role list and other non-membership related information about a group.
+/// Returns the ID, name, role list and other non-membership related information about a group. See also
+/// GroupUpdateGroupAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFGroupsGetGroupGetResultSize"/> and <see
 /// cref="PFGroupsGetGroupGetResult"/> to get the result.
@@ -435,7 +440,8 @@ PF_API PFGroupsGetGroupGetResult(
 /// has an application to the group outstanding, this will accept the application instead and return an
 /// error indicating such, rather than creating a duplicate invitation to join that will need to be cleaned
 /// up later. Returns information about the new invitation or an error indicating an existing application
-/// to join was accepted.
+/// to join was accepted. See also GroupAcceptGroupInvitationAsync, GroupListGroupInvitationsAsync, GroupListMembershipOpportunitiesAsync,
+/// GroupRemoveGroupInvitationAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFGroupsInviteToGroupGetResultSize"/> and
 /// <see cref="PFGroupsInviteToGroupGetResult"/> to get the result.
@@ -534,6 +540,7 @@ PF_API PFGroupsIsMemberGetResult(
 /// This API is available on all platforms.
 /// Lists all outstanding requests to join a group. Returns a list of all requests to join, as well as
 /// when the request will expire. To get the group applications for a specific entity, use ListMembershipOpportunities.
+/// See also GroupAcceptGroupApplicationAsync, GroupApplyToGroupAsync, GroupRemoveGroupApplicationAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFGroupsListGroupApplicationsGetResultSize"/>
 /// and <see cref="PFGroupsListGroupApplicationsGetResult"/> to get the result.
@@ -590,7 +597,8 @@ PF_API PFGroupsListGroupApplicationsGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// Lists all entities blocked from joining a group. A list of blocked entities is returned.
+/// Lists all entities blocked from joining a group. A list of blocked entities is returned See also
+/// GroupBlockEntityAsync, GroupUnblockEntityAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFGroupsListGroupBlocksGetResultSize"/> and
 /// <see cref="PFGroupsListGroupBlocksGetResult"/> to get the result.
@@ -829,6 +837,7 @@ PF_API PFGroupsListMembershipGetResult(
 /// Lists all outstanding group applications and invitations for an entity. Anyone may call this for
 /// any entity, but data will only be returned for the entity or a parent of that entity. To list invitations
 /// or applications for a group to check if a player is trying to join, use ListGroupInvitations and ListGroupApplications.
+/// See also GroupListGroupApplicationsAsync, GroupListGroupInvitationsAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFGroupsListMembershipOpportunitiesGetResultSize"/>
 /// and <see cref="PFGroupsListMembershipOpportunitiesGetResult"/> to get the result.
@@ -888,7 +897,8 @@ PF_API PFGroupsListMembershipOpportunitiesGetResult(
 /// Removes an existing application to join the group. This is used for both rejection of an application
 /// as well as withdrawing an application. The applying entity or a parent in its chain (e.g. title) may
 /// withdraw the application, and any caller with appropriate access in the group may reject an application.
-/// No data is returned in the case of success.
+/// No data is returned in the case of success. See also GroupAcceptGroupApplicationAsync, GroupApplyToGroupAsync,
+/// GroupListGroupApplicationsAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_GROUP_APPLICATION_NOT_FOUND or any of the global PlayFab Service errors.
@@ -956,7 +966,8 @@ PF_API PFGroupsRemoveMembersAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// Unblocks a list of entities from joining a group. No data is returned in the case of success.
+/// Unblocks a list of entities from joining a group. No data is returned in the case of success. See
+/// also GroupBlockEntityAsync, GroupListGroupBlocksAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be one of global PlayFab Service errors. See doc page "Handling PlayFab Errors"
@@ -978,7 +989,8 @@ PF_API PFGroupsUnblockEntityAsync(
 /// <remarks>
 /// This API is available on all platforms.
 /// Updates data about a group, such as the name or default member role. Returns information about whether
-/// the update was successful. Only title claimants may modify the administration role for a group.
+/// the update was successful. Only title claimants may modify the administration role for a group. See
+/// also GroupCreateGroupAsync, GroupDeleteGroupAsync, GroupGetGroupAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFGroupsUpdateGroupGetResultSize"/> and <see
 /// cref="PFGroupsUpdateGroupGetResult"/> to get the result.

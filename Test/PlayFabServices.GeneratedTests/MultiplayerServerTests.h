@@ -26,6 +26,9 @@ private:
     void TestListBuildSummariesV2(TestContext& testContext);
     void TestListQosServersForTitle(TestContext& testContext);
     void TestRequestMultiplayerServer(TestContext& testContext);
+#if 0
+    void TestRequestPartyService(TestContext& testContext);
+#endif
 
 };
 

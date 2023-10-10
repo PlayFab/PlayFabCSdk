@@ -273,5 +273,68 @@ PF_API PFMultiplayerServerRequestMultiplayerServerGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
+#if 0
+/// <summary>
+/// Request a party session.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// Requests a party session from a particular set of builds if build alias params is provided, in any
+/// of the given preferred regions.
+///
+/// When the asynchronous task is complete, call <see cref="PFMultiplayerServerRequestPartyServiceGetResultSize"/>
+/// and <see cref="PFMultiplayerServerRequestPartyServiceGetResult"/> to get the result.
+/// </remarks>
+PF_API PFMultiplayerServerRequestPartyServiceAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFMultiplayerServerRequestPartyServiceRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+
+/// <summary>
+/// Get the size in bytes needed to store the result of a RequestPartyService call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PARTY_BAD_REQUEST,
+/// E_PF_PARTY_INTERNAL_SERVER_ERROR, E_PF_PARTY_NOT_FOUND, E_PF_PARTY_REQUESTS_THROTTLED_FROM_RATE_LIMITER,
+/// E_PF_PARTY_TOO_MANY_REQUESTS, E_PF_PARTY_UNAUTHORIZED, E_PF_PARTY_UNAVAILABLE or any of the global
+/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+PF_API PFMultiplayerServerRequestPartyServiceGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept;
+
+/// <summary>
+/// Gets the result of a successful PFMultiplayerServerRequestPartyServiceAsync call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The size of the buffer for the result object.</param>
+/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
+/// <param name="result">Pointer to the result object.</param>
+/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PARTY_BAD_REQUEST,
+/// E_PF_PARTY_INTERNAL_SERVER_ERROR, E_PF_PARTY_NOT_FOUND, E_PF_PARTY_REQUESTS_THROTTLED_FROM_RATE_LIMITER,
+/// E_PF_PARTY_TOO_MANY_REQUESTS, E_PF_PARTY_UNAUTHORIZED, E_PF_PARTY_UNAVAILABLE or any of the global
+/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+/// <remarks>
+/// result is a pointer within buffer and does not need to be freed separately.
+/// </remarks>
+PF_API PFMultiplayerServerRequestPartyServiceGetResult(
+    _Inout_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFMultiplayerServerRequestPartyServiceResponse** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept;
+#endif
+
 
 }

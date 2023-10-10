@@ -1,6 +1,7 @@
 #include "TestAppPch.h"
 #include "SegmentsTests.h"
 #include "SegmentsOperations.h"
+#include "Platform/PlatformUtils.h"
 
 namespace PlayFab
 {
@@ -74,9 +75,6 @@ void SegmentsTests::TestClientGetPlayerTags(TestContext& tc)
 #if HC_PLATFORM == HC_PLATFORM_WIN32
 void SegmentsTests::TestServerAddPlayerTag(TestContext& tc)
 {
-    // Skipping test since it's not stable at this point. ADO Bug: 46466089
-    tc.Skip();
-#if 0
     ServerAddPlayerTagOperation::RequestType request;
     request.SetPlayFabId(DefaultTitlePlayerId());
     request.SetTagName(testTag);
@@ -85,6 +83,9 @@ void SegmentsTests::TestServerAddPlayerTag(TestContext& tc)
     {
         ServerGetPlayerTagsOperation::RequestType request;
         request.SetPlayFabId(DefaultTitlePlayerId());
+
+        // Delay before getting player tags to let them load in fully, otherwise it may return no tags.
+        Platform::Sleep(5000);
 
         return ServerGetPlayerTagsOperation::Run(TitleEntity(), request, RunContext());
     })
@@ -114,7 +115,6 @@ void SegmentsTests::TestServerAddPlayerTag(TestContext& tc)
     {
         tc.EndTest(std::move(result));
     });
-#endif
 }
 #endif
 

@@ -92,6 +92,7 @@ public:
     static AsyncOp<GetUserAccountInfoResult> ServerGetUserAccountInfo(Entity const& entity, const GetUserAccountInfoRequest& request, RunContext rc);
     static AsyncOp<GetUserBansResult> ServerGetUserBans(Entity const& entity, const GetUserBansRequest& request, RunContext rc);
     static AsyncOp<void> ServerLinkNintendoServiceAccount(Entity const& entity, const ServerLinkNintendoServiceAccountRequest& request, RunContext rc);
+    static AsyncOp<void> ServerLinkNintendoServiceAccountSubject(Entity const& entity, const LinkNintendoServiceAccountSubjectRequest& request, RunContext rc);
     static AsyncOp<void> ServerLinkNintendoSwitchDeviceId(Entity const& entity, const ServerLinkNintendoSwitchDeviceIdRequest& request, RunContext rc);
     static AsyncOp<void> ServerLinkPSNAccount(Entity const& entity, const ServerLinkPSNAccountRequest& request, RunContext rc);
     static AsyncOp<void> ServerLinkPSNId(Entity const& entity, const LinkPSNIdRequest& request, RunContext rc);

@@ -24,6 +24,7 @@ public:
     static AsyncOp<ListBuildSummariesResponse> ListBuildSummariesV2(Entity const& entity, const ListBuildSummariesRequest& request, RunContext rc);
     static AsyncOp<ListQosServersForTitleResponse> ListQosServersForTitle(Entity const& entity, const ListQosServersForTitleRequest& request, RunContext rc);
     static AsyncOp<RequestMultiplayerServerResponse> RequestMultiplayerServer(Entity const& entity, const RequestMultiplayerServerRequest& request, RunContext rc);
+    static AsyncOp<RequestPartyServiceResponse> RequestPartyService(Entity const& entity, const RequestPartyServiceRequest& request, RunContext rc);
 };
 
 } // namespace MultiplayerServer

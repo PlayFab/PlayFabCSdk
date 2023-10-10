@@ -86,6 +86,26 @@ public:
     static HRESULT Copy(const PFProfilesEntityPermissionStatement& input, PFProfilesEntityPermissionStatement& output, ModelBuffer& buffer);
 };
 
+class EntityStatisticAttributeValue : public Wrappers::PFProfilesEntityStatisticAttributeValueWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFProfilesEntityStatisticAttributeValue>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFProfilesEntityStatisticAttributeValueWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+    using DictionaryEntryType = ModelWrapperType::DictionaryEntryType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFProfilesEntityStatisticAttributeValue const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFProfilesEntityStatisticAttributeValue& model);
+    static HRESULT Copy(const PFProfilesEntityStatisticAttributeValue& input, PFProfilesEntityStatisticAttributeValue& output, ModelBuffer& buffer);
+};
+
 class EntityStatisticValue : public Wrappers::PFProfilesEntityStatisticValueWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFProfilesEntityStatisticValue>
 {
 public:

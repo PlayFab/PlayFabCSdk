@@ -119,5 +119,35 @@ Result<RequestMultiplayerServerOperation::ResultType> RequestMultiplayerServerOp
     return ResultType{ *result };
 }
 
+#if 0
+
+RequestPartyServiceOperation::RequestPartyServiceOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<RequestPartyServiceOperation::ResultType> RequestPartyServiceOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<RequestPartyServiceOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT RequestPartyServiceOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFMultiplayerServerRequestPartyServiceAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<RequestPartyServiceOperation::ResultType> RequestPartyServiceOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFMultiplayerServerRequestPartyServiceGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFMultiplayerServerRequestPartyServiceResponse* result;
+    RETURN_IF_FAILED(PFMultiplayerServerRequestPartyServiceGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
 }
 }

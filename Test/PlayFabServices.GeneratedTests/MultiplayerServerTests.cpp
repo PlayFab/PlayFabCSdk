@@ -12,6 +12,9 @@ void MultiplayerServerTests::AddTests()
     AddTest("TestListBuildSummariesV2", &MultiplayerServerTests::TestListBuildSummariesV2);
     AddTest("TestListQosServersForTitle", &MultiplayerServerTests::TestListQosServersForTitle);
     AddTest("TestRequestMultiplayerServer", &MultiplayerServerTests::TestRequestMultiplayerServer);
+#if 0
+    AddTest("TestRequestPartyService", &MultiplayerServerTests::TestRequestPartyService);
+#endif
 
 }
 

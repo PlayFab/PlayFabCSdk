@@ -1351,6 +1351,24 @@ private:
 #endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32
+class ServerLinkNintendoServiceAccountSubjectOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFAccountManagementLinkNintendoServiceAccountSubjectRequestWrapper<Allocator>;
+
+    ServerLinkNintendoServiceAccountSubjectOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32
 class ServerLinkNintendoSwitchDeviceIdOperation : public XAsyncOperation<void>
 {
 public:
