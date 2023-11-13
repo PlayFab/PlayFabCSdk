@@ -8,7 +8,7 @@
 using namespace PlayFab;
 using namespace PlayFab::PlatformSpecific;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 PF_API PFPlatformSpecificClientAndroidDevicePushNotificationRegistrationAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlatformSpecificAndroidDevicePushNotificationRegistrationRequest* request,
@@ -74,7 +74,7 @@ PF_API PFPlatformSpecificClientRegisterForIOSPushNotificationAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFPlatformSpecificServerAwardSteamAchievementAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlatformSpecificAwardSteamAchievementRequest* request,

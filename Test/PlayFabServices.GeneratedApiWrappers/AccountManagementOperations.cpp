@@ -7,7 +7,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientAddOrUpdateContactEmailOperation::ClientAddOrUpdateContactEmailOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -28,7 +28,7 @@ HRESULT ClientAddOrUpdateContactEmailOperation::OnStarted(XAsyncBlock* async) no
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientAddUsernamePasswordOperation::ClientAddUsernamePasswordOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -142,7 +142,7 @@ Result<ClientGetPlayerProfileOperation::ResultType> ClientGetPlayerProfileOperat
     return ResultType{ *result };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientGetPlayFabIDsFromFacebookIDsOperation::ClientGetPlayFabIDsFromFacebookIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -172,7 +172,7 @@ Result<ClientGetPlayFabIDsFromFacebookIDsOperation::ResultType> ClientGetPlayFab
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientGetPlayFabIDsFromFacebookInstantGamesIdsOperation::ClientGetPlayFabIDsFromFacebookInstantGamesIdsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -202,7 +202,7 @@ Result<ClientGetPlayFabIDsFromFacebookInstantGamesIdsOperation::ResultType> Clie
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientGetPlayFabIDsFromGameCenterIDsOperation::ClientGetPlayFabIDsFromGameCenterIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -232,7 +232,7 @@ Result<ClientGetPlayFabIDsFromGameCenterIDsOperation::ResultType> ClientGetPlayF
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientGetPlayFabIDsFromGoogleIDsOperation::ClientGetPlayFabIDsFromGoogleIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -262,7 +262,7 @@ Result<ClientGetPlayFabIDsFromGoogleIDsOperation::ResultType> ClientGetPlayFabID
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsOperation::ClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -292,7 +292,7 @@ Result<ClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsOperation::ResultType> Cli
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientGetPlayFabIDsFromKongregateIDsOperation::ClientGetPlayFabIDsFromKongregateIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -322,7 +322,7 @@ Result<ClientGetPlayFabIDsFromKongregateIDsOperation::ResultType> ClientGetPlayF
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientGetPlayFabIDsFromNintendoServiceAccountIdsOperation::ClientGetPlayFabIDsFromNintendoServiceAccountIdsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -352,7 +352,7 @@ Result<ClientGetPlayFabIDsFromNintendoServiceAccountIdsOperation::ResultType> Cl
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation::ClientGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -382,7 +382,7 @@ Result<ClientGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation::ResultType> Clie
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientGetPlayFabIDsFromPSNAccountIDsOperation::ClientGetPlayFabIDsFromPSNAccountIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -412,7 +412,7 @@ Result<ClientGetPlayFabIDsFromPSNAccountIDsOperation::ResultType> ClientGetPlayF
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientGetPlayFabIDsFromSteamIDsOperation::ClientGetPlayFabIDsFromSteamIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -442,7 +442,7 @@ Result<ClientGetPlayFabIDsFromSteamIDsOperation::ResultType> ClientGetPlayFabIDs
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientGetPlayFabIDsFromTwitchIDsOperation::ClientGetPlayFabIDsFromTwitchIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -472,7 +472,7 @@ Result<ClientGetPlayFabIDsFromTwitchIDsOperation::ResultType> ClientGetPlayFabID
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientGetPlayFabIDsFromXboxLiveIDsOperation::ClientGetPlayFabIDsFromXboxLiveIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -502,7 +502,7 @@ Result<ClientGetPlayFabIDsFromXboxLiveIDsOperation::ResultType> ClientGetPlayFab
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientLinkAndroidDeviceIDOperation::ClientLinkAndroidDeviceIDOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -523,7 +523,7 @@ HRESULT ClientLinkAndroidDeviceIDOperation::OnStarted(XAsyncBlock* async) noexce
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkAppleOperation::ClientLinkAppleOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -563,7 +563,7 @@ HRESULT ClientLinkCustomIDOperation::OnStarted(XAsyncBlock* async) noexcept
 }
 
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientLinkFacebookAccountOperation::ClientLinkFacebookAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -584,7 +584,7 @@ HRESULT ClientLinkFacebookAccountOperation::OnStarted(XAsyncBlock* async) noexce
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkFacebookInstantGamesIdOperation::ClientLinkFacebookInstantGamesIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -605,7 +605,7 @@ HRESULT ClientLinkFacebookInstantGamesIdOperation::OnStarted(XAsyncBlock* async)
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkGameCenterAccountOperation::ClientLinkGameCenterAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -626,7 +626,7 @@ HRESULT ClientLinkGameCenterAccountOperation::OnStarted(XAsyncBlock* async) noex
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientLinkGoogleAccountOperation::ClientLinkGoogleAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -647,7 +647,7 @@ HRESULT ClientLinkGoogleAccountOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientLinkGooglePlayGamesServicesAccountOperation::ClientLinkGooglePlayGamesServicesAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -668,7 +668,7 @@ HRESULT ClientLinkGooglePlayGamesServicesAccountOperation::OnStarted(XAsyncBlock
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkIOSDeviceIDOperation::ClientLinkIOSDeviceIDOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -689,7 +689,7 @@ HRESULT ClientLinkIOSDeviceIDOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkKongregateOperation::ClientLinkKongregateOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -710,7 +710,7 @@ HRESULT ClientLinkKongregateOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkNintendoServiceAccountOperation::ClientLinkNintendoServiceAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -731,7 +731,7 @@ HRESULT ClientLinkNintendoServiceAccountOperation::OnStarted(XAsyncBlock* async)
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkNintendoSwitchDeviceIdOperation::ClientLinkNintendoSwitchDeviceIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -792,7 +792,7 @@ HRESULT ClientLinkPSNAccountOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkSteamAccountOperation::ClientLinkSteamAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -813,7 +813,7 @@ HRESULT ClientLinkSteamAccountOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkTwitchOperation::ClientLinkTwitchOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -834,7 +834,7 @@ HRESULT ClientLinkTwitchOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientLinkXboxAccountOperation::ClientLinkXboxAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -855,7 +855,7 @@ HRESULT ClientLinkXboxAccountOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientRemoveContactEmailOperation::ClientRemoveContactEmailOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -901,7 +901,7 @@ Result<ClientReportPlayerOperation::ResultType> ClientReportPlayerOperation::Get
     return ResultType{ result };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientSendAccountRecoveryEmailOperation::ClientSendAccountRecoveryEmailOperation(ServiceConfig serviceConfig, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -922,7 +922,7 @@ HRESULT ClientSendAccountRecoveryEmailOperation::OnStarted(XAsyncBlock* async) n
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientUnlinkAndroidDeviceIDOperation::ClientUnlinkAndroidDeviceIDOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -943,7 +943,7 @@ HRESULT ClientUnlinkAndroidDeviceIDOperation::OnStarted(XAsyncBlock* async) noex
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkAppleOperation::ClientUnlinkAppleOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -983,7 +983,7 @@ HRESULT ClientUnlinkCustomIDOperation::OnStarted(XAsyncBlock* async) noexcept
 }
 
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientUnlinkFacebookAccountOperation::ClientUnlinkFacebookAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1004,7 +1004,7 @@ HRESULT ClientUnlinkFacebookAccountOperation::OnStarted(XAsyncBlock* async) noex
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkFacebookInstantGamesIdOperation::ClientUnlinkFacebookInstantGamesIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1025,7 +1025,7 @@ HRESULT ClientUnlinkFacebookInstantGamesIdOperation::OnStarted(XAsyncBlock* asyn
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkGameCenterAccountOperation::ClientUnlinkGameCenterAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1046,7 +1046,7 @@ HRESULT ClientUnlinkGameCenterAccountOperation::OnStarted(XAsyncBlock* async) no
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientUnlinkGoogleAccountOperation::ClientUnlinkGoogleAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1067,7 +1067,7 @@ HRESULT ClientUnlinkGoogleAccountOperation::OnStarted(XAsyncBlock* async) noexce
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientUnlinkGooglePlayGamesServicesAccountOperation::ClientUnlinkGooglePlayGamesServicesAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1088,7 +1088,7 @@ HRESULT ClientUnlinkGooglePlayGamesServicesAccountOperation::OnStarted(XAsyncBlo
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkIOSDeviceIDOperation::ClientUnlinkIOSDeviceIDOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1109,7 +1109,7 @@ HRESULT ClientUnlinkIOSDeviceIDOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkKongregateOperation::ClientUnlinkKongregateOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1130,7 +1130,7 @@ HRESULT ClientUnlinkKongregateOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkNintendoServiceAccountOperation::ClientUnlinkNintendoServiceAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1151,7 +1151,7 @@ HRESULT ClientUnlinkNintendoServiceAccountOperation::OnStarted(XAsyncBlock* asyn
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkNintendoSwitchDeviceIdOperation::ClientUnlinkNintendoSwitchDeviceIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1191,7 +1191,7 @@ HRESULT ClientUnlinkOpenIdConnectOperation::OnStarted(XAsyncBlock* async) noexce
 }
 
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkPSNAccountOperation::ClientUnlinkPSNAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1212,7 +1212,7 @@ HRESULT ClientUnlinkPSNAccountOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkSteamAccountOperation::ClientUnlinkSteamAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1233,7 +1233,7 @@ HRESULT ClientUnlinkSteamAccountOperation::OnStarted(XAsyncBlock* async) noexcep
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkTwitchOperation::ClientUnlinkTwitchOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1254,7 +1254,7 @@ HRESULT ClientUnlinkTwitchOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUnlinkXboxAccountOperation::ClientUnlinkXboxAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1294,7 +1294,7 @@ HRESULT ClientUpdateAvatarUrlOperation::OnStarted(XAsyncBlock* async) noexcept
 }
 
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ClientUpdateUserTitleDisplayNameOperation::ClientUpdateUserTitleDisplayNameOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1324,7 +1324,7 @@ Result<ClientUpdateUserTitleDisplayNameOperation::ResultType> ClientUpdateUserTi
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerBanUsersOperation::ServerBanUsersOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1354,7 +1354,7 @@ Result<ServerBanUsersOperation::ResultType> ServerBanUsersOperation::GetResult(X
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerDeletePlayerOperation::ServerDeletePlayerOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1375,7 +1375,7 @@ HRESULT ServerDeletePlayerOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPlayerCombinedInfoOperation::ServerGetPlayerCombinedInfoOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1405,7 +1405,7 @@ Result<ServerGetPlayerCombinedInfoOperation::ResultType> ServerGetPlayerCombined
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPlayerProfileOperation::ServerGetPlayerProfileOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1435,7 +1435,7 @@ Result<ServerGetPlayerProfileOperation::ResultType> ServerGetPlayerProfileOperat
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ServerGetPlayFabIDsFromFacebookIDsOperation::ServerGetPlayFabIDsFromFacebookIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1465,7 +1465,7 @@ Result<ServerGetPlayFabIDsFromFacebookIDsOperation::ResultType> ServerGetPlayFab
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPlayFabIDsFromFacebookInstantGamesIdsOperation::ServerGetPlayFabIDsFromFacebookInstantGamesIdsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1495,7 +1495,7 @@ Result<ServerGetPlayFabIDsFromFacebookInstantGamesIdsOperation::ResultType> Serv
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPlayFabIDsFromNintendoServiceAccountIdsOperation::ServerGetPlayFabIDsFromNintendoServiceAccountIdsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1525,7 +1525,7 @@ Result<ServerGetPlayFabIDsFromNintendoServiceAccountIdsOperation::ResultType> Se
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation::ServerGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1555,7 +1555,7 @@ Result<ServerGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation::ResultType> Serv
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPlayFabIDsFromPSNAccountIDsOperation::ServerGetPlayFabIDsFromPSNAccountIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1585,7 +1585,7 @@ Result<ServerGetPlayFabIDsFromPSNAccountIDsOperation::ResultType> ServerGetPlayF
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPlayFabIDsFromSteamIDsOperation::ServerGetPlayFabIDsFromSteamIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1615,7 +1615,7 @@ Result<ServerGetPlayFabIDsFromSteamIDsOperation::ResultType> ServerGetPlayFabIDs
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPlayFabIDsFromTwitchIDsOperation::ServerGetPlayFabIDsFromTwitchIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1645,7 +1645,7 @@ Result<ServerGetPlayFabIDsFromTwitchIDsOperation::ResultType> ServerGetPlayFabID
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPlayFabIDsFromXboxLiveIDsOperation::ServerGetPlayFabIDsFromXboxLiveIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1675,7 +1675,7 @@ Result<ServerGetPlayFabIDsFromXboxLiveIDsOperation::ResultType> ServerGetPlayFab
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetServerCustomIDsFromPlayFabIDsOperation::ServerGetServerCustomIDsFromPlayFabIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1705,7 +1705,7 @@ Result<ServerGetServerCustomIDsFromPlayFabIDsOperation::ResultType> ServerGetSer
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetUserAccountInfoOperation::ServerGetUserAccountInfoOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1735,7 +1735,7 @@ Result<ServerGetUserAccountInfoOperation::ResultType> ServerGetUserAccountInfoOp
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetUserBansOperation::ServerGetUserBansOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1765,7 +1765,7 @@ Result<ServerGetUserBansOperation::ResultType> ServerGetUserBansOperation::GetRe
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerLinkNintendoServiceAccountOperation::ServerLinkNintendoServiceAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1786,7 +1786,7 @@ HRESULT ServerLinkNintendoServiceAccountOperation::OnStarted(XAsyncBlock* async)
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerLinkNintendoServiceAccountSubjectOperation::ServerLinkNintendoServiceAccountSubjectOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1807,7 +1807,7 @@ HRESULT ServerLinkNintendoServiceAccountSubjectOperation::OnStarted(XAsyncBlock*
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerLinkNintendoSwitchDeviceIdOperation::ServerLinkNintendoSwitchDeviceIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1828,7 +1828,7 @@ HRESULT ServerLinkNintendoSwitchDeviceIdOperation::OnStarted(XAsyncBlock* async)
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerLinkPSNAccountOperation::ServerLinkPSNAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1870,7 +1870,7 @@ HRESULT ServerLinkPSNIdOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerLinkServerCustomIdOperation::ServerLinkServerCustomIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1891,7 +1891,7 @@ HRESULT ServerLinkServerCustomIdOperation::OnStarted(XAsyncBlock* async) noexcep
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerLinkSteamIdOperation::ServerLinkSteamIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1912,7 +1912,7 @@ HRESULT ServerLinkSteamIdOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerLinkXboxAccountOperation::ServerLinkXboxAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1933,7 +1933,7 @@ HRESULT ServerLinkXboxAccountOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerRevokeAllBansForUserOperation::ServerRevokeAllBansForUserOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1963,7 +1963,7 @@ Result<ServerRevokeAllBansForUserOperation::ResultType> ServerRevokeAllBansForUs
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerRevokeBansOperation::ServerRevokeBansOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1993,7 +1993,7 @@ Result<ServerRevokeBansOperation::ResultType> ServerRevokeBansOperation::GetResu
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerSendCustomAccountRecoveryEmailOperation::ServerSendCustomAccountRecoveryEmailOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2014,7 +2014,7 @@ HRESULT ServerSendCustomAccountRecoveryEmailOperation::OnStarted(XAsyncBlock* as
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerSendEmailFromTemplateOperation::ServerSendEmailFromTemplateOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2035,7 +2035,7 @@ HRESULT ServerSendEmailFromTemplateOperation::OnStarted(XAsyncBlock* async) noex
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUnlinkNintendoServiceAccountOperation::ServerUnlinkNintendoServiceAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2056,7 +2056,7 @@ HRESULT ServerUnlinkNintendoServiceAccountOperation::OnStarted(XAsyncBlock* asyn
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUnlinkNintendoSwitchDeviceIdOperation::ServerUnlinkNintendoSwitchDeviceIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2077,7 +2077,7 @@ HRESULT ServerUnlinkNintendoSwitchDeviceIdOperation::OnStarted(XAsyncBlock* asyn
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUnlinkPSNAccountOperation::ServerUnlinkPSNAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2098,7 +2098,7 @@ HRESULT ServerUnlinkPSNAccountOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUnlinkServerCustomIdOperation::ServerUnlinkServerCustomIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2119,7 +2119,7 @@ HRESULT ServerUnlinkServerCustomIdOperation::OnStarted(XAsyncBlock* async) noexc
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUnlinkSteamIdOperation::ServerUnlinkSteamIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2140,7 +2140,7 @@ HRESULT ServerUnlinkSteamIdOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUnlinkXboxAccountOperation::ServerUnlinkXboxAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2161,7 +2161,7 @@ HRESULT ServerUnlinkXboxAccountOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUpdateAvatarUrlOperation::ServerUpdateAvatarUrlOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2182,7 +2182,7 @@ HRESULT ServerUpdateAvatarUrlOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUpdateBansOperation::ServerUpdateBansOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2212,7 +2212,7 @@ Result<ServerUpdateBansOperation::ResultType> ServerUpdateBansOperation::GetResu
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 GetTitlePlayersFromXboxLiveIDsOperation::GetTitlePlayersFromXboxLiveIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

@@ -13,7 +13,7 @@
 extern "C"
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 /// <summary>
 /// Retrieves the list of allowed languages, only accessible by title entities
 /// </summary>
@@ -22,7 +22,7 @@ extern "C"
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32 and Linux.
 /// When the asynchronous task is complete, call <see cref="PFLocalizationGetLanguageListGetResultSize"/>
 /// and <see cref="PFLocalizationGetLanguageListGetResult"/> to get the result.
 /// </remarks>

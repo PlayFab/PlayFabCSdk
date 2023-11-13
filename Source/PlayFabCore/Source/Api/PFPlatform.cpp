@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <playfab/core/PFPlatform.h>
 #include "Platform/Platform.h"
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 
 using namespace PlayFab;
 
@@ -11,8 +11,8 @@ PF_API PFMemSetFunctions(
 {
     RETURN_HR_INVALIDARG_IF_NULL(hooks);
 
-    SharedPtr<GlobalState> state;
-    GlobalState::Get(state);
+    SharedPtr<PFCoreGlobalState> state;
+    PFCoreGlobalState::Get(state);
     RETURN_HR_IF(E_PF_CORE_ALREADY_INITIALIZED, state);
 
     RETURN_IF_FAILED(PlayFab::SetMemoryHooks(*hooks));
@@ -52,8 +52,8 @@ PF_API PFPlatformLocalStorageSetHandlers(
 {
     RETURN_HR_INVALIDARG_IF_NULL(hooks);
 
-    SharedPtr<GlobalState> state;
-    GlobalState::Get(state);
+    SharedPtr<PFCoreGlobalState> state;
+    PFCoreGlobalState::Get(state);
     RETURN_HR_IF(E_PF_CORE_ALREADY_INITIALIZED, state);
 
     return PlayFab::SetLocalStorageHandlers(*hooks);

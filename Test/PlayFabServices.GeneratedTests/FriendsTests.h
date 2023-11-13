@@ -26,16 +26,16 @@ private:
     void TestClientGetFriendsList(TestContext& testContext);
     void TestClientRemoveFriend(TestContext& testContext);
     void TestClientSetFriendTags(TestContext& testContext);
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
     void TestServerAddFriend(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
     void TestServerGetFriendsList(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
     void TestServerRemoveFriend(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
     void TestServerSetFriendTags(TestContext& testContext);
 #endif
 

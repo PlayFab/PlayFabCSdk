@@ -52,7 +52,7 @@ AsyncOp<JsonValue> XUserLoginContext::GetRequestBody(RunContext runContext) cons
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithXUser(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithXUserRequest& request,
     RunContext rc

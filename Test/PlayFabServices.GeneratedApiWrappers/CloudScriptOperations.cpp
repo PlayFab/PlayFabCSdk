@@ -35,7 +35,7 @@ Result<ClientExecuteCloudScriptOperation::ResultType> ClientExecuteCloudScriptOp
     return ResultType{ *result };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerExecuteCloudScriptOperation::ServerExecuteCloudScriptOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

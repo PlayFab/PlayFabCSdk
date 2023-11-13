@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 #include "Platform/Platform.h"
 #include "Trace/TraceState.h"
 #include <httpClient/httpClient.h>
@@ -26,15 +26,15 @@ enum class AccessMode
     Cleanup
 };
 
-HRESULT AccessGlobalState(AccessMode mode, SharedPtr<GlobalState>& state)
+HRESULT AccessPFCoreGlobalState(AccessMode mode, SharedPtr<PFCoreGlobalState>& state)
 {
-    struct GlobalStateHolder
+    struct PFCoreGlobalStateHolder
     {
-        SharedPtr<GlobalState> const state;
+        SharedPtr<PFCoreGlobalState> const state;
     };
 
-    static std::atomic<GlobalStateHolder*> s_globalStateHolder{ nullptr }; // intentional non-owning pointer
-    assert(s_globalStateHolder.is_lock_free());
+    static std::atomic<PFCoreGlobalStateHolder*> s_PFCoreGlobalStateHolder{ nullptr }; // intentional non-owning pointer
+    assert(s_PFCoreGlobalStateHolder.is_lock_free());
 
     try
     {
@@ -45,10 +45,10 @@ HRESULT AccessGlobalState(AccessMode mode, SharedPtr<GlobalState>& state)
         {
             RETURN_HR_INVALIDARG_IF_NULL(state);
 
-            UniquePtr<GlobalStateHolder> stateHolder{ new (Allocator<GlobalStateHolder>{}.allocate(1)) GlobalStateHolder{ state } };
+            UniquePtr<PFCoreGlobalStateHolder> stateHolder{ new (Allocator<PFCoreGlobalStateHolder>{}.allocate(1)) PFCoreGlobalStateHolder{ state } };
 
-            GlobalStateHolder* expected{ nullptr };
-            if (!s_globalStateHolder.compare_exchange_strong(expected, stateHolder.get()))
+            PFCoreGlobalStateHolder* expected{ nullptr };
+            if (!s_PFCoreGlobalStateHolder.compare_exchange_strong(expected, stateHolder.get()))
             {
                 return E_PF_CORE_ALREADY_INITIALIZED;
             }
@@ -59,7 +59,7 @@ HRESULT AccessGlobalState(AccessMode mode, SharedPtr<GlobalState>& state)
         }
         case AccessMode::Get:
         {
-            GlobalStateHolder* stateHolder = s_globalStateHolder.load();
+            PFCoreGlobalStateHolder* stateHolder = s_PFCoreGlobalStateHolder.load();
 
             RETURN_HR_IF(E_PF_CORE_NOT_INITIALIZED, !stateHolder);
             assert(stateHolder->state);
@@ -69,7 +69,7 @@ HRESULT AccessGlobalState(AccessMode mode, SharedPtr<GlobalState>& state)
         }
         case AccessMode::Cleanup:
         {
-            UniquePtr<GlobalStateHolder> stateHolder{ s_globalStateHolder.exchange(nullptr) };
+            UniquePtr<PFCoreGlobalStateHolder> stateHolder{ s_PFCoreGlobalStateHolder.exchange(nullptr) };
 
             RETURN_HR_IF(E_PF_CORE_NOT_INITIALIZED, !stateHolder);
             state = stateHolder->state;
@@ -90,60 +90,60 @@ HRESULT AccessGlobalState(AccessMode mode, SharedPtr<GlobalState>& state)
 }
 
 
-GlobalState::GlobalState(XTaskQueueHandle backgroundQueue) noexcept :
+PFCoreGlobalState::PFCoreGlobalState(XTaskQueueHandle backgroundQueue) noexcept :
     m_runContext{ RunContext::Root(backgroundQueue) },
     m_serviceConfigs{ Detail::kFirstServiceConfigHandle },
     m_entities{ Detail::kFirstEntityHandle },
     m_clientEventPipelines{ Detail::kFirstEventPipelineHandle },
     m_httpRetrySettings{ MakeShared<PFHttpRetrySettings>() }
 {
-    TRACE_VERBOSE("PlayFabCore::GlobalState::GlobalState");
+    TRACE_VERBOSE("PlayFabCore::PFCoreGlobalState::PFCoreGlobalState");
 
     m_httpRetrySettings->allowRetry = kDefaultHttpRetryAllowed;
     m_httpRetrySettings->minimumRetryDelayInSeconds = kDefaultHttpRetryDelay;
     m_httpRetrySettings->timeoutWindowInSeconds = kDefaultHttpTimeoutWindow;
 }
 
-GlobalState::~GlobalState() noexcept
+PFCoreGlobalState::~PFCoreGlobalState() noexcept
 {
-    TRACE_VERBOSE("PlayFabCore::GlobalState::~GlobalState");
+    TRACE_VERBOSE("PlayFabCore::PFCoreGlobalState::~PFCoreGlobalState");
 }
 
-HRESULT GlobalState::Create(XTaskQueueHandle backgroundQueue, HCInitArgs* args) noexcept
+HRESULT PFCoreGlobalState::Create(XTaskQueueHandle backgroundQueue, HCInitArgs* args) noexcept
 {
     // Initialize any platform hooks. This happens first because these hooks may be used after this point
     RETURN_IF_FAILED(PlatformInitialize());
 
     // Next set up tracing so that we can trace as much of initialization as possible.
     // LocalStorage not needed anywhere else currently so create an instance just for TraceState. If
-    // it is needed elsewhere, there should be a single shared instance hanging off of GlobalState
+    // it is needed elsewhere, there should be a single shared instance hanging off of PFCoreGlobalState
     RETURN_IF_FAILED(TraceState::Create(RunContext::Root(backgroundQueue), LocalStorage()));
 
     RETURN_IF_FAILED(HCInitialize(args));
 
-    Allocator<GlobalState> a{};
-    SharedPtr<GlobalState> state = SharedPtr<GlobalState>{ new (a.allocate(1)) GlobalState{ backgroundQueue }, Deleter<GlobalState>(), a };
-    return AccessGlobalState(AccessMode::Initialize, state);
+    Allocator<PFCoreGlobalState> a{};
+    SharedPtr<PFCoreGlobalState> state = SharedPtr<PFCoreGlobalState>{ new (a.allocate(1)) PFCoreGlobalState{ backgroundQueue }, Deleter<PFCoreGlobalState>(), a };
+    return AccessPFCoreGlobalState(AccessMode::Initialize, state);
 }
 
-HRESULT GlobalState::Get(SharedPtr<GlobalState>& state) noexcept
+HRESULT PFCoreGlobalState::Get(SharedPtr<PFCoreGlobalState>& state) noexcept
 {
-    return AccessGlobalState(AccessMode::Get, state);
+    return AccessPFCoreGlobalState(AccessMode::Get, state);
 }
 
 struct CleanupContext 
 {
-    SharedPtr<GlobalState> state;
+    SharedPtr<PFCoreGlobalState> state;
     XAsyncBlock lhcCleanupAsyncBlock{};
     XAsyncBlock traceStateCleanupAsyncBlock{};
     XAsyncBlock* clientAsyncBlock{};
 };
 
-HRESULT GlobalState::CleanupAsync(XAsyncBlock* async) noexcept
+HRESULT PFCoreGlobalState::CleanupAsync(XAsyncBlock* async) noexcept
 {
     try
     {
-        TRACE_VERBOSE("PlayFabCore::GlobalState::CleanupAsync");
+        TRACE_VERBOSE("PlayFabCore::PFCoreGlobalState::CleanupAsync");
 
         UniquePtr<CleanupContext> context = MakeUnique<CleanupContext>();
         RETURN_IF_FAILED(XAsyncBegin(async, context.get(), __FUNCTION__, __FUNCTION__, CleanupAsyncProvider));
@@ -156,7 +156,7 @@ HRESULT GlobalState::CleanupAsync(XAsyncBlock* async) noexcept
     }
 }
 
-HRESULT CALLBACK GlobalState::CleanupAsyncProvider(XAsyncOp op, XAsyncProviderData const* data)
+HRESULT CALLBACK PFCoreGlobalState::CleanupAsyncProvider(XAsyncOp op, XAsyncProviderData const* data)
 {
     CleanupContext* context{ static_cast<CleanupContext*>(data->context) };
 
@@ -165,9 +165,9 @@ HRESULT CALLBACK GlobalState::CleanupAsyncProvider(XAsyncOp op, XAsyncProviderDa
     case XAsyncOp::Begin:
     try
     {
-        TRACE_VERBOSE("PlayFabCore::GlobalState::CleanupAsyncProvider::Begin");
+        TRACE_VERBOSE("PlayFabCore::PFCoreGlobalState::CleanupAsyncProvider::Begin");
 
-        RETURN_IF_FAILED(AccessGlobalState(AccessMode::Cleanup, context->state));
+        RETURN_IF_FAILED(AccessPFCoreGlobalState(AccessMode::Cleanup, context->state));
         context->clientAsyncBlock = data->async;
 
         context->state->m_runContext.Terminate(*context->state, context);
@@ -195,7 +195,7 @@ void CALLBACK TraceStateCleanupComplete(XAsyncBlock* async)
     // Free CleanupContext
     context.reset();
 
-    // GlobalState::Cleanup complete!
+    // PFCoreGlobalState::Cleanup complete!
     XAsyncComplete(asyncBlock, hr, 0);
 }
 
@@ -220,7 +220,7 @@ void CALLBACK HCCleanupComplete(XAsyncBlock* async)
         // Free CleanupContext 
         context.reset();
 
-        // Complete GlobalState::Cleanup with failure
+        // Complete PFCoreGlobalState::Cleanup with failure
         XAsyncComplete(asyncBlock, hr, 0);
 
         return;
@@ -238,7 +238,7 @@ void CALLBACK HCCleanupComplete(XAsyncBlock* async)
         // Free CleanupContext 
         context.reset();
 
-        // Complete GlobalState::Cleanup with failure
+        // Complete PFCoreGlobalState::Cleanup with failure
         XAsyncComplete(asyncBlock, hr, 0);
 
         return;
@@ -247,14 +247,14 @@ void CALLBACK HCCleanupComplete(XAsyncBlock* async)
     context.release();
 }
 
-void GlobalState::OnTerminated(void* c) noexcept
+void PFCoreGlobalState::OnTerminated(void* c) noexcept
 {
     TRACE_VERBOSE(__FUNCTION__);
 
     UniquePtr<CleanupContext> context{ static_cast<CleanupContext*>(c) };
     XAsyncBlock* asyncBlock{ context->clientAsyncBlock }; // Keep copy of asyncBlock pointer to complete after cleaning up context
 
-    // Free GlobalState before calling HCCleanup - 'this' will be destroyed here
+    // Free PFCoreGlobalState before calling HCCleanup - 'this' will be destroyed here
     context->state.reset();
 
     context->lhcCleanupAsyncBlock.callback = HCCleanupComplete;
@@ -269,7 +269,7 @@ void GlobalState::OnTerminated(void* c) noexcept
         // Free CleanupContext 
         context.reset();
 
-        // Complete GlobalState::Cleanup with failure
+        // Complete PFCoreGlobalState::Cleanup with failure
         XAsyncComplete(asyncBlock, hr, 0);
 
         return;
@@ -278,37 +278,37 @@ void GlobalState::OnTerminated(void* c) noexcept
     context.release();
 }
 
-RunContext GlobalState::RunContext() const noexcept
+RunContext PFCoreGlobalState::RunContext() const noexcept
 {
     return m_runContext;
 }
 
-ServiceConfigHandleTable& GlobalState::ServiceConfigs() noexcept
+ServiceConfigHandleTable& PFCoreGlobalState::ServiceConfigs() noexcept
 {
     return m_serviceConfigs;
 }
 
-EntityHandleTable& GlobalState::Entities() noexcept
+EntityHandleTable& PFCoreGlobalState::Entities() noexcept
 {
     return m_entities;
 }
 
-EventPipelineHandleTable& GlobalState::ClientEventPipelines() noexcept
+EventPipelineHandleTable& PFCoreGlobalState::ClientEventPipelines() noexcept
 {
     return m_clientEventPipelines;
 }
 
-TokenExpiredHandler GlobalState::TokenExpiredHandler() const noexcept
+TokenExpiredHandler PFCoreGlobalState::TokenExpiredHandler() const noexcept
 {
     return m_tokenExpiredHandler;
 }
 
-TokenRefreshedHandler GlobalState::TokenRefreshedHandler() const noexcept
+TokenRefreshedHandler PFCoreGlobalState::TokenRefreshedHandler() const noexcept
 {
     return m_tokenRefreshedHandler;
 }
 
-SharedPtr<PFHttpRetrySettings> GlobalState::HttpRetrySettings() const noexcept
+SharedPtr<PFHttpRetrySettings> PFCoreGlobalState::HttpRetrySettings() const noexcept
 {
     return m_httpRetrySettings;
 }

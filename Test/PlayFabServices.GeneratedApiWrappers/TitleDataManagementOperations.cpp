@@ -115,7 +115,7 @@ Result<ClientGetTitleNewsOperation::ResultType> ClientGetTitleNewsOperation::Get
     return ResultType{ *result };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetPublisherDataOperation::ServerGetPublisherDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -145,7 +145,7 @@ Result<ServerGetPublisherDataOperation::ResultType> ServerGetPublisherDataOperat
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetTimeOperation::ServerGetTimeOperation(Entity entity, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -171,7 +171,7 @@ Result<ServerGetTimeOperation::ResultType> ServerGetTimeOperation::GetResult(XAs
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetTitleDataOperation::ServerGetTitleDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -201,7 +201,7 @@ Result<ServerGetTitleDataOperation::ResultType> ServerGetTitleDataOperation::Get
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetTitleInternalDataOperation::ServerGetTitleInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -231,7 +231,7 @@ Result<ServerGetTitleInternalDataOperation::ResultType> ServerGetTitleInternalDa
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetTitleNewsOperation::ServerGetTitleNewsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -261,7 +261,7 @@ Result<ServerGetTitleNewsOperation::ResultType> ServerGetTitleNewsOperation::Get
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerSetPublisherDataOperation::ServerSetPublisherDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -282,7 +282,7 @@ HRESULT ServerSetPublisherDataOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerSetTitleDataOperation::ServerSetTitleDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -303,7 +303,7 @@ HRESULT ServerSetTitleDataOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerSetTitleInternalDataOperation::ServerSetTitleInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

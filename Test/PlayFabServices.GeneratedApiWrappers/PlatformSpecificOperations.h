@@ -8,7 +8,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 class ClientAndroidDevicePushNotificationRegistrationOperation : public XAsyncOperation<void>
 {
 public:
@@ -62,7 +62,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerAwardSteamAchievementOperation : public XAsyncOperation<Wrappers::PFPlatformSpecificAwardSteamAchievementResultWrapper<Allocator>>
 {
 public:

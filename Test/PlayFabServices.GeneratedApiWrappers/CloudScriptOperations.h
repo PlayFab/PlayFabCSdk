@@ -26,7 +26,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerExecuteCloudScriptOperation : public XAsyncOperation<Wrappers::PFCloudScriptExecuteCloudScriptResultWrapper<Allocator>>
 {
 public:

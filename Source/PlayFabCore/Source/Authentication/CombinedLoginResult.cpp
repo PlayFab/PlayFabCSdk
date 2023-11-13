@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CombinedLoginResult.h"
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 #include "JsonUtils.h"
 
 namespace PlayFab
@@ -8,19 +8,19 @@ namespace PlayFab
 namespace Authentication
 {
 
-CombinedLoginResult::CombinedLoginResult(SharedPtr<GlobalState> globalState) noexcept
-    : m_globalState{ std::move(globalState) }
+CombinedLoginResult::CombinedLoginResult(SharedPtr<PFCoreGlobalState> PFCoreGlobalState) noexcept
+    : m_PFCoreGlobalState{ std::move(PFCoreGlobalState) }
 {
 }
 
 Result<CombinedLoginResult> CombinedLoginResult::FromJson(
     const JsonValue& loginResponse,
-    SharedPtr<GlobalState> globalState,
+    SharedPtr<PFCoreGlobalState> PFCoreGlobalState,
     SharedPtr<ServiceConfig const> serviceConfig,
     SharedPtr<LoginContext> loginContext
 ) noexcept
 {
-    CombinedLoginResult result{ std::move(globalState) };
+    CombinedLoginResult result{ std::move(PFCoreGlobalState) };
 
     RETURN_IF_FAILED(result.loginResult.FromJson(loginResponse));
 
@@ -30,10 +30,10 @@ Result<CombinedLoginResult> CombinedLoginResult::FromJson(
     auto makeEntityResult = Entity::Make(
         std::move(entityToken),
         std::move(serviceConfig),
-        result.m_globalState->RunContext().Derive(),
+        result.m_PFCoreGlobalState->RunContext().Derive(),
         std::move(loginContext),
-        result.m_globalState->TokenExpiredHandler(),
-        result.m_globalState->TokenRefreshedHandler()
+        result.m_PFCoreGlobalState->TokenExpiredHandler(),
+        result.m_PFCoreGlobalState->TokenRefreshedHandler()
     );
 
     RETURN_IF_FAILED(makeEntityResult.hr);
@@ -57,14 +57,14 @@ Result<PFCombinedLoginResult const*> CombinedLoginResult::Copy(ModelBuffer& buff
     auto output = allocResult.ExtractPayload();
 
     // Create PFEntityHandle for entity
-    RETURN_IF_FAILED(m_globalState->Entities().MakeHandle(entity, output->entityHandle));
+    RETURN_IF_FAILED(m_PFCoreGlobalState->Entities().MakeHandle(entity, output->entityHandle));
 
     // Copy LoginResult
     auto propCopyResult = buffer.CopyTo<LoginResult>(&loginResult.Model());
     RETURN_IF_FAILED(propCopyResult.hr);
     output->loginResult = propCopyResult.ExtractPayload();
 
-    return output;
+    return std::move(output);
 }
 
 Result<ServerCombinedLoginResult> ServerCombinedLoginResult::FromJson(
@@ -105,7 +105,7 @@ Result<PFServerCombinedLoginResult const*> ServerCombinedLoginResult::Copy(Model
     RETURN_IF_FAILED(entityTokenCopyResult.hr);
     output->entityTokenResponse = entityTokenCopyResult.ExtractPayload();
 
-    return output;
+    return std::move(output);
 }
 
 } // namespace Authentication

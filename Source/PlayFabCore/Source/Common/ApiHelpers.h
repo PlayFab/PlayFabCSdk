@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Error.h"
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 
 namespace PlayFab
 {
@@ -15,8 +15,8 @@ inline HRESULT ApiImpl(const char* apiIdentity, TWork&& work) noexcept
 {
     try
     {
-        SharedPtr<GlobalState> state;
-        RETURN_IF_FAILED(GlobalState::Get(state));
+        SharedPtr<PFCoreGlobalState> state;
+        RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
         return work(*state);
     }
@@ -32,8 +32,8 @@ inline HRESULT AsyncApiImpl(XAsyncBlock* async, const char* apiIdentity, TWork&&
 {
     try
     {
-        SharedPtr<GlobalState> state;
-        HRESULT hr = GlobalState::Get(state);
+        SharedPtr<PFCoreGlobalState> state;
+        HRESULT hr = PFCoreGlobalState::Get(state);
         if (FAILED(hr))
         {
             return Detail::CompleteAsyncWithError(async, apiIdentity, hr);
@@ -53,8 +53,8 @@ inline HRESULT ServiceConfigApiImpl(const char* apiIdentity, PFServiceConfigHand
 {
     try
     {
-        SharedPtr<GlobalState> state;
-        RETURN_IF_FAILED(GlobalState::Get(state));
+        SharedPtr<PFCoreGlobalState> state;
+        RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
         SharedPtr<ServiceConfig> serviceConfig;
         RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(serviceConfigHandle, serviceConfig));
@@ -73,8 +73,8 @@ inline HRESULT EntityApiImpl(const char* apiIdentity, PFEntityHandle entityHandl
 {
     try
     {
-        SharedPtr<GlobalState> state;
-        RETURN_IF_FAILED(GlobalState::Get(state));
+        SharedPtr<PFCoreGlobalState> state;
+        RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
         SharedPtr<Entity> entity;
         RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -93,8 +93,8 @@ inline HRESULT EntityAsyncApiImpl(XAsyncBlock* async, const char* apiIdentity, P
 {
     try
     {
-        SharedPtr<GlobalState> state;
-        HRESULT hr = GlobalState::Get(state);
+        SharedPtr<PFCoreGlobalState> state;
+        HRESULT hr = PFCoreGlobalState::Get(state);
         if (FAILED(hr))
         {
             return Detail::CompleteAsyncWithError(async, apiIdentity, hr);

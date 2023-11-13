@@ -8,7 +8,7 @@ namespace Test
 
 void PlatformSpecificTests::AddTests()
 {
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
     AddTest("TestClientAndroidDevicePushNotificationRegistration", &PlatformSpecificTests::TestClientAndroidDevicePushNotificationRegistration);
 #endif
 #if 0
@@ -17,7 +17,7 @@ void PlatformSpecificTests::AddTests()
 #if 0
     AddTest("TestClientRegisterForIOSPushNotification", &PlatformSpecificTests::TestClientRegisterForIOSPushNotification);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
     AddTest("TestServerAwardSteamAchievement", &PlatformSpecificTests::TestServerAwardSteamAchievement);
 #endif
 

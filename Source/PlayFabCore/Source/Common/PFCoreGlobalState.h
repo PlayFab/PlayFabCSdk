@@ -16,14 +16,14 @@ using ServiceConfigHandleTable = HandleTable<PFServiceConfigHandle, ServiceConfi
 using EntityHandleTable = HandleTable<PFEntityHandle, Entity>;
 using EventPipelineHandleTable = HandleTable<PFEventPipelineHandle, EventPipeline>;
 
-// GlobalState singleton
-class GlobalState : public ITerminationListener
+// PFCoreGlobalState singleton
+class PFCoreGlobalState : public ITerminationListener
 {
 public:
-    ~GlobalState() noexcept;
+    ~PFCoreGlobalState() noexcept;
 
     static HRESULT Create(XTaskQueueHandle backgroundQueue, HCInitArgs* args) noexcept;
-    static HRESULT Get(SharedPtr<GlobalState>& state) noexcept;
+    static HRESULT Get(SharedPtr<PFCoreGlobalState>& state) noexcept;
     static HRESULT CleanupAsync(XAsyncBlock* async) noexcept;
 
     RunContext RunContext() const noexcept;
@@ -35,7 +35,7 @@ public:
     SharedPtr<PFHttpRetrySettings> HttpRetrySettings() const noexcept;
 
 private:
-    GlobalState(XTaskQueueHandle backgroundQueue) noexcept;
+    PFCoreGlobalState(XTaskQueueHandle backgroundQueue) noexcept;
 
     void OnTerminated(void* context) noexcept override;
     static HRESULT CALLBACK CleanupAsyncProvider(XAsyncOp op, XAsyncProviderData const* data);
@@ -48,7 +48,7 @@ private:
     PlayFab::TokenRefreshedHandler m_tokenRefreshedHandler;
     SharedPtr<PFHttpRetrySettings> m_httpRetrySettings;
 
-    friend struct GlobalStateBootstrapper;
+    friend struct PFCoreGlobalStateBootstrapper;
 };
 
 }

@@ -73,7 +73,7 @@ PF_API PFCloudScriptClientExecuteCloudScriptGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 /// <summary>
 /// Executes a CloudScript function, with the 'currentPlayerId' set to the PlayFab ID of the authenticated
 /// player. The PlayFab ID is the entity ID of the player's master_player_account entity.
@@ -83,7 +83,7 @@ PF_API PFCloudScriptClientExecuteCloudScriptGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32 and Linux.
 /// When the asynchronous task is complete, call <see cref="PFCloudScriptServerExecuteCloudScriptGetResultSize"/>
 /// and <see cref="PFCloudScriptServerExecuteCloudScriptGetResult"/> to get the result.
 /// </remarks>

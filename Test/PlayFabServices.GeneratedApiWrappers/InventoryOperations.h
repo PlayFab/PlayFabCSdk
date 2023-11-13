@@ -114,7 +114,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX
 class GetMicrosoftStoreAccessTokensOperation : public XAsyncOperation<Wrappers::PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper<Allocator>>
 {
 public:
@@ -134,7 +134,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class GetTransactionHistoryOperation : public XAsyncOperation<Wrappers::PFInventoryGetTransactionHistoryResponseWrapper<Allocator>>
 {
 public:
@@ -192,7 +192,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 class RedeemGooglePlayInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemGooglePlayInventoryItemsResponseWrapper<Allocator>>
 {
 public:
@@ -212,7 +212,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX
 class RedeemMicrosoftStoreInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemMicrosoftStoreInventoryItemsResponseWrapper<Allocator>>
 {
 public:
@@ -232,7 +232,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX
 class RedeemNintendoEShopInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemNintendoEShopInventoryItemsResponseWrapper<Allocator>>
 {
 public:
@@ -252,7 +252,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX
 class RedeemPlayStationStoreInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemPlayStationStoreInventoryItemsResponseWrapper<Allocator>>
 {
 public:
@@ -272,7 +272,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class RedeemSteamInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemSteamInventoryItemsResponseWrapper<Allocator>>
 {
 public:

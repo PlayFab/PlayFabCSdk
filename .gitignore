@@ -8,7 +8,9 @@
 *.user
 *.userosscache
 *.sln.docstates
+.vscode
 target/
+Int/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -339,3 +341,7 @@ reports/
 # Used in template-update-check.yml
 git_diff_output.txt
 gen.txt
+/Build/PlayFabServices.Android.Workspace/.gradle
+/Build/PlayFabServices.Android.Workspace/build
+/Out/
+/Build/PlayFabServices.Android.Workspace/local.properties

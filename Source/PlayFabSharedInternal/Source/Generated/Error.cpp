@@ -704,6 +704,12 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::LobbyNewOwnerMustBeConnected: return E_PF_LOBBY_NEW_OWNER_MUST_BE_CONNECTED;
     case ServiceErrorCode::LobbyCurrentOwnerStillConnected: return E_PF_LOBBY_CURRENT_OWNER_STILL_CONNECTED;
     case ServiceErrorCode::LobbyMemberIsNotOwner: return E_PF_LOBBY_MEMBER_IS_NOT_OWNER;
+    case ServiceErrorCode::LobbyAssociatedServerMismatch: return E_PF_LOBBY_ASSOCIATED_SERVER_MISMATCH;
+    case ServiceErrorCode::LobbyAssociatedServerNotFound: return E_PF_LOBBY_ASSOCIATED_SERVER_NOT_FOUND;
+    case ServiceErrorCode::LobbyAssociatedToDifferentServer: return E_PF_LOBBY_ASSOCIATED_TO_DIFFERENT_SERVER;
+    case ServiceErrorCode::LobbyServerAlreadyAssociated: return E_PF_LOBBY_SERVER_ALREADY_ASSOCIATED;
+    case ServiceErrorCode::LobbyIsNotClientOwned: return E_PF_LOBBY_IS_NOT_CLIENT_OWNED;
+    case ServiceErrorCode::LobbyDoesNotUseConnections: return E_PF_LOBBY_DOES_NOT_USE_CONNECTIONS;
     case ServiceErrorCode::EventSamplingInvalidRatio: return E_PF_EVENT_SAMPLING_INVALID_RATIO;
     case ServiceErrorCode::EventSamplingInvalidEventNamespace: return E_PF_EVENT_SAMPLING_INVALID_EVENT_NAMESPACE;
     case ServiceErrorCode::EventSamplingInvalidEventName: return E_PF_EVENT_SAMPLING_INVALID_EVENT_NAME;
@@ -727,6 +733,7 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::EventSinkTenantNotFound: return E_PF_EVENT_SINK_TENANT_NOT_FOUND;
     case ServiceErrorCode::EventSinkAadNotFound: return E_PF_EVENT_SINK_AAD_NOT_FOUND;
     case ServiceErrorCode::EventSinkDatabaseNotFound: return E_PF_EVENT_SINK_DATABASE_NOT_FOUND;
+    case ServiceErrorCode::EventSinkTitleUnauthorized: return E_PF_EVENT_SINK_TITLE_UNAUTHORIZED;
     case ServiceErrorCode::OperationCanceled: return E_PF_OPERATION_CANCELED;
     case ServiceErrorCode::InvalidDisplayNameRandomSuffixLength: return E_PF_INVALID_DISPLAY_NAME_RANDOM_SUFFIX_LENGTH;
     case ServiceErrorCode::AllowNonUniquePlayerDisplayNamesDisableNotAllowed: return E_PF_ALLOW_NON_UNIQUE_PLAYER_DISPLAY_NAMES_DISABLE_NOT_ALLOWED;
@@ -747,6 +754,8 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::PlayerCustomPropertiesPropertyDoesNotExist: return E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_DOES_NOT_EXIST;
     case ServiceErrorCode::AddonAlreadyExists: return E_PF_ADDON_ALREADY_EXISTS;
     case ServiceErrorCode::AddonDoesntExist: return E_PF_ADDON_DOESNT_EXIST;
+    case ServiceErrorCode::CopilotDisabled: return E_PF_COPILOT_DISABLED;
+    case ServiceErrorCode::CopilotInvalidRequest: return E_PF_COPILOT_INVALID_REQUEST;
     default: return E_PF_UNKNOWN_ERROR;
     }
 }

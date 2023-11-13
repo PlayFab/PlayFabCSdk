@@ -87,7 +87,7 @@ Result<T const*> ModelBuffer::CopyTo(const T* input)
         // Copy
         auto outputPtr = allocResult.ExtractPayload();
         *outputPtr = *input;
-        return outputPtr;
+        return std::move(outputPtr);
     }
     else
     {
@@ -108,7 +108,7 @@ Result<typename T::ModelType const*> ModelBuffer::CopyTo(const typename T::Model
         auto outputPtr = allocResult.ExtractPayload();
         RETURN_IF_FAILED(T::Copy(*input, *outputPtr, *this));
 
-        return outputPtr;
+        return std::move(outputPtr);
     }
     else
     {
@@ -129,7 +129,7 @@ Result<T const*> ModelBuffer::CopyToArray(const T* input, size_t inputCount)
         auto outputPtr = allocResult.ExtractPayload();
         std::memcpy(outputPtr, input, sizeof(T) * inputCount);
 
-        return outputPtr;
+        return std::move(outputPtr);
     }
     else
     {
@@ -154,7 +154,7 @@ Result<typename T::ModelType const* const*> ModelBuffer::CopyToArray(typename T:
             RETURN_IF_FAILED(copyResult.hr);
             outputPtr[i] = copyResult.ExtractPayload();
         }
-        return outputPtr;
+        return std::move(outputPtr);
     }
     else
     {
@@ -180,7 +180,7 @@ Result<T const*> ModelBuffer::CopyToDictionary(const T* input, size_t inputCount
             outputPtr[i].key = copyKeyResult.ExtractPayload();
             outputPtr[i].value = input[i].value;
         }
-        return outputPtr;
+        return std::move(outputPtr);
     }
     else
     {
@@ -209,7 +209,7 @@ Result<typename InternalModelWrapperT::DictionaryEntryType const*> ModelBuffer::
             RETURN_IF_FAILED(copyValueResult.hr);
             outputPtr[i].value = copyValueResult.ExtractPayload();
         }
-        return outputPtr;
+        return std::move(outputPtr);
     }
     else
     {

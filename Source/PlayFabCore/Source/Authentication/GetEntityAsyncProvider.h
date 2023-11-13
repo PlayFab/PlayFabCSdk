@@ -1,13 +1,13 @@
 #pragma once
 
 #include <XAsyncProviderBase.h>
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 
 namespace PlayFab
 {
 
 // XAsyncProvider for PlayFab GetEntity API calls. This provider wraps an internal call which returns a SharedPtr<Entity> rather than a ClientOutputModel.
-// It holds a referece to the GlobalState so that it has access to the EntityTable and can create and provide a PFEntityHandle to the title in GetResult.
+// It holds a referece to the PFCoreGlobalState so that it has access to the EntityTable and can create and provide a PFEntityHandle to the title in GetResult.
 template<typename CallT>
 class GetEntityAsyncProvider : public XAsyncProviderBase
 {
@@ -15,7 +15,7 @@ public:
     static_assert(std::is_same_v<SharedPtr<Entity>, typename Detail::UnwrapAsyncT<typename std::invoke_result_t<CallT, RunContext>>>, "CallT must return an Entity");
 
     template<size_t n>
-    GetEntityAsyncProvider(RunContext&& runContext, XAsyncBlock* async, const char(&identityName)[n], CallT authCall, SharedPtr<GlobalState> state)
+    GetEntityAsyncProvider(RunContext&& runContext, XAsyncBlock* async, const char(&identityName)[n], CallT authCall, SharedPtr<PFCoreGlobalState> state)
         : XAsyncProviderBase{ std::move(runContext), async, identityName },
         m_call{ authCall },
         m_state{ std::move(state) }
@@ -53,12 +53,12 @@ protected:
 
 private:
     CallT m_call;
-    SharedPtr<GlobalState> m_state;
+    SharedPtr<PFCoreGlobalState> m_state;
     SharedPtr<Entity> m_result;
 };
 
 template<typename CallT, size_t n>
-UniquePtr<GetEntityAsyncProvider<CallT>> MakeGetEntityProvider(RunContext&& runContext, XAsyncBlock* async, const char(&identityName)[n], CallT authCall, SharedPtr<GlobalState> state)
+UniquePtr<GetEntityAsyncProvider<CallT>> MakeGetEntityProvider(RunContext&& runContext, XAsyncBlock* async, const char(&identityName)[n], CallT authCall, SharedPtr<PFCoreGlobalState> state)
 {
     return MakeUnique<GetEntityAsyncProvider<CallT>>(std::move(runContext), async, identityName, std::move(authCall), std::move(state));
 }

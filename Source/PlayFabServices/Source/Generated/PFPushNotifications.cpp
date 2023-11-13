@@ -8,7 +8,7 @@
 using namespace PlayFab;
 using namespace PlayFab::PushNotifications;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFPushNotificationsServerSendPushNotificationAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPushNotificationsSendPushNotificationRequest* request,
@@ -30,7 +30,7 @@ PF_API PFPushNotificationsServerSendPushNotificationAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFPushNotificationsServerSendPushNotificationFromTemplateAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPushNotificationsSendPushNotificationFromTemplateRequest* request,

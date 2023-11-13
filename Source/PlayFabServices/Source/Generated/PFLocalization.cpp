@@ -8,7 +8,7 @@
 using namespace PlayFab;
 using namespace PlayFab::Localization;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFLocalizationGetLanguageListAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLocalizationGetLanguageListRequest* request,

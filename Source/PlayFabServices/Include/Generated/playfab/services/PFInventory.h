@@ -337,7 +337,7 @@ PF_API PFInventoryGetInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX
 /// <summary>
 /// Gets the access tokens.
 /// </summary>
@@ -346,7 +346,7 @@ PF_API PFInventoryGetInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and GDK.
+/// This API is available on Win32, GDK, and Linux.
 /// Gets the access tokens for Microsoft Store authentication.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryGetMicrosoftStoreAccessTokensGetResultSize"/>
@@ -398,7 +398,7 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 /// <summary>
 /// Get transaction history for a player. Up to 50 Events can be returned at once. You can use continuation
 /// tokens to paginate through results that return greater than the limit. Getting transaction history
@@ -410,7 +410,7 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32 and Linux.
 /// Get transaction history for specified entity and collection.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryGetTransactionHistoryGetResultSize"/>
@@ -578,7 +578,7 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -587,6 +587,7 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Android.
 /// Redeem items from the Google Play Store.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemGooglePlayInventoryItemsGetResultSize"/>
@@ -636,7 +637,7 @@ PF_API PFInventoryRedeemGooglePlayInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -645,7 +646,7 @@ PF_API PFInventoryRedeemGooglePlayInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and GDK.
+/// This API is available on Win32, GDK, and Linux.
 /// Redeem items from the Microsoft Store.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemMicrosoftStoreInventoryItemsGetResultSize"/>
@@ -697,7 +698,7 @@ PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -706,7 +707,7 @@ PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Nintendo Switch.
+/// This API is available on Win32, Nintendo Switch, and Linux.
 /// Redeem items from the Nintendo EShop.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemNintendoEShopInventoryItemsGetResultSize"/>
@@ -758,7 +759,7 @@ PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -767,7 +768,7 @@ PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Sony PlayStation®.
+/// This API is available on Win32, Sony PlayStation®, and Linux.
 /// Redeem items from the PlayStation Store.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemPlayStationStoreInventoryItemsGetResultSize"/>
@@ -819,7 +820,7 @@ PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -828,7 +829,7 @@ PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32 and Linux.
 /// Redeem inventory items from Steam.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemSteamInventoryItemsGetResultSize"/>

@@ -67,7 +67,7 @@ HRESULT PFAuthenticationServerLoginGetResult(
     return S_OK;
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 PF_API PFAuthenticationLoginWithAndroidDeviceIDAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithAndroidDeviceIDRequest* request,
@@ -77,8 +77,8 @@ PF_API PFAuthenticationLoginWithAndroidDeviceIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -121,8 +121,8 @@ PF_API PFAuthenticationReLoginWithAndroidDeviceIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -142,8 +142,8 @@ PF_API PFAuthenticationLoginWithAppleAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -186,8 +186,8 @@ PF_API PFAuthenticationReLoginWithAppleAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -206,8 +206,8 @@ PF_API PFAuthenticationLoginWithCustomIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -250,8 +250,8 @@ PF_API PFAuthenticationReLoginWithCustomIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -270,8 +270,8 @@ PF_API PFAuthenticationLoginWithEmailAddressAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -314,8 +314,8 @@ PF_API PFAuthenticationReLoginWithEmailAddressAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -325,7 +325,7 @@ PF_API PFAuthenticationReLoginWithEmailAddressAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 PF_API PFAuthenticationLoginWithFacebookAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithFacebookRequest* request,
@@ -335,8 +335,8 @@ PF_API PFAuthenticationLoginWithFacebookAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -379,8 +379,8 @@ PF_API PFAuthenticationReLoginWithFacebookAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -400,8 +400,8 @@ PF_API PFAuthenticationLoginWithFacebookInstantGamesIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -444,8 +444,8 @@ PF_API PFAuthenticationReLoginWithFacebookInstantGamesIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -465,8 +465,8 @@ PF_API PFAuthenticationLoginWithGameCenterAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -509,8 +509,8 @@ PF_API PFAuthenticationReLoginWithGameCenterAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -520,7 +520,7 @@ PF_API PFAuthenticationReLoginWithGameCenterAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 PF_API PFAuthenticationLoginWithGoogleAccountAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithGoogleAccountRequest* request,
@@ -530,8 +530,8 @@ PF_API PFAuthenticationLoginWithGoogleAccountAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -574,8 +574,8 @@ PF_API PFAuthenticationReLoginWithGoogleAccountAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -585,7 +585,7 @@ PF_API PFAuthenticationReLoginWithGoogleAccountAsync(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 PF_API PFAuthenticationLoginWithGooglePlayGamesServicesAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithGooglePlayGamesServicesRequest* request,
@@ -595,8 +595,8 @@ PF_API PFAuthenticationLoginWithGooglePlayGamesServicesAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -639,8 +639,8 @@ PF_API PFAuthenticationReLoginWithGooglePlayGamesServicesAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -660,8 +660,8 @@ PF_API PFAuthenticationLoginWithIOSDeviceIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -704,8 +704,8 @@ PF_API PFAuthenticationReLoginWithIOSDeviceIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -725,8 +725,8 @@ PF_API PFAuthenticationLoginWithKongregateAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -769,8 +769,8 @@ PF_API PFAuthenticationReLoginWithKongregateAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -790,8 +790,8 @@ PF_API PFAuthenticationLoginWithNintendoServiceAccountAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -834,8 +834,8 @@ PF_API PFAuthenticationReLoginWithNintendoServiceAccountAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -855,8 +855,8 @@ PF_API PFAuthenticationLoginWithNintendoSwitchDeviceIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -899,8 +899,8 @@ PF_API PFAuthenticationReLoginWithNintendoSwitchDeviceIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -919,8 +919,8 @@ PF_API PFAuthenticationLoginWithOpenIdConnectAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -963,8 +963,8 @@ PF_API PFAuthenticationReLoginWithOpenIdConnectAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -983,8 +983,8 @@ PF_API PFAuthenticationLoginWithPlayFabAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1027,8 +1027,8 @@ PF_API PFAuthenticationReLoginWithPlayFabAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -1048,8 +1048,8 @@ PF_API PFAuthenticationLoginWithPSNAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1092,8 +1092,8 @@ PF_API PFAuthenticationReLoginWithPSNAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -1103,7 +1103,7 @@ PF_API PFAuthenticationReLoginWithPSNAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationLoginWithSteamAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithSteamRequest* request,
@@ -1113,8 +1113,8 @@ PF_API PFAuthenticationLoginWithSteamAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1157,8 +1157,8 @@ PF_API PFAuthenticationReLoginWithSteamAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -1178,8 +1178,8 @@ PF_API PFAuthenticationLoginWithTwitchAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1222,8 +1222,8 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -1233,7 +1233,7 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationLoginWithXboxAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithXboxRequest* request,
@@ -1243,8 +1243,8 @@ PF_API PFAuthenticationLoginWithXboxAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1287,8 +1287,8 @@ PF_API PFAuthenticationReLoginWithXboxAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -1308,8 +1308,8 @@ PF_API PFAuthenticationLoginWithXUserAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1352,8 +1352,8 @@ PF_API PFAuthenticationReLoginWithXUserAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> entity;
     RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
@@ -1373,8 +1373,8 @@ PF_API PFAuthenticationRegisterPlayFabUserAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1413,7 +1413,7 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationServerLoginWithServerCustomIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1424,8 +1424,8 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1460,7 +1460,7 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationServerLoginWithSteamIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1471,8 +1471,8 @@ PF_API PFAuthenticationServerLoginWithSteamIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1507,7 +1507,7 @@ PF_API PFAuthenticationServerLoginWithSteamIdGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationServerLoginWithXboxAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1518,8 +1518,8 @@ PF_API PFAuthenticationServerLoginWithXboxAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1554,7 +1554,7 @@ PF_API PFAuthenticationServerLoginWithXboxGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationServerLoginWithXboxIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1565,8 +1565,8 @@ PF_API PFAuthenticationServerLoginWithXboxIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1601,7 +1601,7 @@ PF_API PFAuthenticationServerLoginWithXboxIdGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationAuthenticateGameServerWithCustomIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationAuthenticateCustomIdRequest* request,
@@ -1611,8 +1611,8 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> context;
     RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
@@ -1651,7 +1651,7 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationDeleteAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationDeleteRequest* request,
@@ -1661,8 +1661,8 @@ PF_API PFAuthenticationDeleteAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> context;
     RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
@@ -1677,7 +1677,7 @@ PF_API PFAuthenticationDeleteAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationGetEntityAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationGetEntityRequest* request,
@@ -1687,8 +1687,8 @@ PF_API PFAuthenticationGetEntityAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> context;
     RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
@@ -1712,7 +1712,7 @@ PF_API PFAuthenticationGetEntityGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationGetEntityWithSecretKeyAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1723,8 +1723,8 @@ PF_API PFAuthenticationGetEntityWithSecretKeyAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<ServiceConfig> context;
     RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
@@ -1748,7 +1748,7 @@ PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFAuthenticationValidateEntityTokenAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationValidateEntityTokenRequest* request,
@@ -1758,8 +1758,8 @@ PF_API PFAuthenticationValidateEntityTokenAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> context;
     RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));

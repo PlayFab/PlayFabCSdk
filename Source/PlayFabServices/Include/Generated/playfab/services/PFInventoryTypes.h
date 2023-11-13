@@ -1370,7 +1370,8 @@ typedef struct PFInventoryRedeemMicrosoftStoreInventoryItemsRequest
     XUserHandle user;
 #else
     /// <summary>
-    /// (Optional) Xbox Token used for delegated business partner authentication.
+    /// (Optional) Xbox Token used for delegated business partner authentication. Token provided by the
+    /// Xbox Live SDK method GetTokenAndSignatureAsync("POST", "https://playfabapi.com/", "").
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* xboxToken;
 #endif

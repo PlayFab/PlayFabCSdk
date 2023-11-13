@@ -1,0 +1,10 @@
+rootProject.name = "PlayFabServices.Android.Workspace"
+
+include ":PlayFabServices.Android", ":PlayFabCore.Android", ":PlayFabSharedInternal.Android"
+
+project(":PlayFabServices.Android").projectDir = new File("../PlayFabServices.Android")
+
+project(":PlayFabCore.Android").projectDir = new File("../PlayFabCore.Android")
+
+project(":PlayFabSharedInternal.Android").projectDir = new File("../PlayFabSharedInternal.Android")
+include ':libHttpClient.Android'

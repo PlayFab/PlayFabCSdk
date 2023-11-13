@@ -16,8 +16,8 @@ PF_API PFEventsWriteEventsAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> context;
     RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
@@ -64,8 +64,8 @@ PF_API PFEventsWriteTelemetryEventsAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     SharedPtr<Entity> context;
     RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));

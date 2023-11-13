@@ -78,7 +78,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerGetPublisherDataOperation : public XAsyncOperation<Wrappers::PFTitleDataManagementGetPublisherDataResultWrapper<Allocator>>
 {
 public:
@@ -98,7 +98,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerGetTimeOperation : public XAsyncOperation<Wrappers::PFTitleDataManagementGetTimeResultWrapper<Allocator>>
 {
 public:
@@ -116,7 +116,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerGetTitleDataOperation : public XAsyncOperation<Wrappers::PFTitleDataManagementGetTitleDataResultWrapper<Allocator>>
 {
 public:
@@ -136,7 +136,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerGetTitleInternalDataOperation : public XAsyncOperation<Wrappers::PFTitleDataManagementGetTitleDataResultWrapper<Allocator>>
 {
 public:
@@ -156,7 +156,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerGetTitleNewsOperation : public XAsyncOperation<Wrappers::PFTitleDataManagementGetTitleNewsResultWrapper<Allocator>>
 {
 public:
@@ -176,7 +176,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerSetPublisherDataOperation : public XAsyncOperation<void>
 {
 public:
@@ -194,7 +194,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerSetTitleDataOperation : public XAsyncOperation<void>
 {
 public:
@@ -212,7 +212,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 class ServerSetTitleInternalDataOperation : public XAsyncOperation<void>
 {
 public:

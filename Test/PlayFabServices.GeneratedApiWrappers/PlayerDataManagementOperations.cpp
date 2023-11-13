@@ -169,7 +169,7 @@ Result<ClientUpdateUserPublisherDataOperation::ResultType> ClientUpdateUserPubli
     return ResultType{ result };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetUserDataOperation::ServerGetUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -199,7 +199,7 @@ Result<ServerGetUserDataOperation::ResultType> ServerGetUserDataOperation::GetRe
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetUserInternalDataOperation::ServerGetUserInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -229,7 +229,7 @@ Result<ServerGetUserInternalDataOperation::ResultType> ServerGetUserInternalData
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetUserPublisherDataOperation::ServerGetUserPublisherDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -259,7 +259,7 @@ Result<ServerGetUserPublisherDataOperation::ResultType> ServerGetUserPublisherDa
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetUserPublisherInternalDataOperation::ServerGetUserPublisherInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -289,7 +289,7 @@ Result<ServerGetUserPublisherInternalDataOperation::ResultType> ServerGetUserPub
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetUserPublisherReadOnlyDataOperation::ServerGetUserPublisherReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -319,7 +319,7 @@ Result<ServerGetUserPublisherReadOnlyDataOperation::ResultType> ServerGetUserPub
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerGetUserReadOnlyDataOperation::ServerGetUserReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -349,7 +349,7 @@ Result<ServerGetUserReadOnlyDataOperation::ResultType> ServerGetUserReadOnlyData
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUpdateUserDataOperation::ServerUpdateUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -376,7 +376,7 @@ Result<ServerUpdateUserDataOperation::ResultType> ServerUpdateUserDataOperation:
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUpdateUserInternalDataOperation::ServerUpdateUserInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -403,7 +403,7 @@ Result<ServerUpdateUserInternalDataOperation::ResultType> ServerUpdateUserIntern
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUpdateUserPublisherDataOperation::ServerUpdateUserPublisherDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -430,7 +430,7 @@ Result<ServerUpdateUserPublisherDataOperation::ResultType> ServerUpdateUserPubli
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUpdateUserPublisherInternalDataOperation::ServerUpdateUserPublisherInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -457,7 +457,7 @@ Result<ServerUpdateUserPublisherInternalDataOperation::ResultType> ServerUpdateU
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUpdateUserPublisherReadOnlyDataOperation::ServerUpdateUserPublisherReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -484,7 +484,7 @@ Result<ServerUpdateUserPublisherReadOnlyDataOperation::ResultType> ServerUpdateU
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerUpdateUserReadOnlyDataOperation::ServerUpdateUserReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

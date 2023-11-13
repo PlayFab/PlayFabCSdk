@@ -7,7 +7,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 
 ClientAndroidDevicePushNotificationRegistrationOperation::ClientAndroidDevicePushNotificationRegistrationOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -70,7 +70,7 @@ HRESULT ClientRegisterForIOSPushNotificationOperation::OnStarted(XAsyncBlock* as
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
 
 ServerAwardSteamAchievementOperation::ServerAwardSteamAchievementOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
