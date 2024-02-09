@@ -52,7 +52,7 @@ PF_API PFCloudScriptClientExecuteCloudScriptGetResult(
     return S_OK;
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFCloudScriptServerExecuteCloudScriptAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFCloudScriptExecuteCloudScriptServerRequest* request,

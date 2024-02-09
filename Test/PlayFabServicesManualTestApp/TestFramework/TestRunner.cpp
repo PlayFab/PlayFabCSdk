@@ -31,8 +31,8 @@ void SetClearColor(float r, float g, float b)
 
 // private debug functions.  only defined with _DEBUG
 #if _DEBUG
-//extern "C" __declspec(dllimport) void PFDebugSetTokenRefreshDebugState(bool expireToken);
-//extern "C" __declspec(dllimport) void PFDebugSetSetInterval(uint32_t interval);
+//extern "C" PF_API_ATTRIBUTES void PFDebugSetTokenRefreshDebugState(bool expireToken);
+//extern "C" PF_API_ATTRIBUTES void PFDebugSetSetInterval(uint32_t interval);
 #endif
 
 namespace PlayFab

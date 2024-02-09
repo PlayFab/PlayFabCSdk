@@ -10,21 +10,17 @@
   <Import Condition="'$(HCPlatform)' == ''" Project="$(HCRoot)\platform_select.props" />
 
   <PropertyGroup>
-    <HCLibToolset>$(PlatformToolsetVersion)</HCLibToolset>
-    <HCLibToolset Condition="'$(PlatformToolset)'=='v141'">141</HCLibToolset>
-    <HCLibToolset Condition="'$(PlatformToolset)'=='v142'">142</HCLibToolset>
-    <HCLibToolset Condition="'$(PlatformToolset)'=='v143'">143</HCLibToolset>
-    <HCProjectName>libHttpClient.$(HCLibToolset).$(HCPlatform).C</HCProjectName>
+    <HCProjectName>libHttpClient.$(HCPlatform)</HCProjectName>
+    <HCOutDir>$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(HCProjectName)\</HCOutDir>
   </PropertyGroup>
 
   <!--Bring in LHC project files from PlayFab repo. We are maintaining duplicates of LHC vcxproj files for the build configurations that we need so that we-->
   <!--can include them in the PlayFab.C sln. The project files in the LHC repo aren't at a fixed location, and Visual Studio doesn't support including-->
-  <!--projects with variable paths in a sln.-->
+  <!--projects with variable paths in an sln.-->
   <ItemGroup Condition="'$(HCPlatform)' == 'Win32' Or '$(HCPlatform)' == 'GDK'">
     <ProjectReference Include="$(PlayFabBuildRoot)\$(HCProjectName)\$(HCProjectName).vcxproj">
-      <Project Condition="'$(HCPlatform)' == 'Win32' and '$(HCLibToolset)' == '143'">{9164C6C9-3872-4922-A3E3-3822622D3E71}</Project>
-      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(HCLibToolset)' == '142'">{66365E18-7B53-44BF-A348-6735058E359E}</Project>
-      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(HCLibToolset)' == '143'">{0A6D51A3-0D86-4D0E-9DAA-54BA75E1DA1C}</Project>
+      <Project Condition="'$(HCPlatform)' == 'Win32'">{E35BA8A1-AE7B-4FB5-8200-469B98BC1CA8}</Project>
+      <Project Condition="'$(HCPlatform)' == 'GDK'">{A5A6E02A-21BA-4D55-9FB9-7B24DEDD3743}</Project>
     </ProjectReference>
   </ItemGroup>
 
@@ -32,9 +28,6 @@
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(HCIncludeDir)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies Condition="'$(HCPlatform)'=='Win32' OR '$(HCPlatform)'=='GDK'">%(AdditionalDependencies);Appnotify.lib;winhttp.lib;crypt32.lib</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
 
   <!--Bring in XCurl on GDK-->
@@ -46,5 +39,10 @@
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(Console_SdkLibPath)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+
+  <!--Copy PlayFabCore to OutDir-->
+  <ItemGroup Label="CopyDependencies">
+    <ReferenceCopyLocalPaths Include="$(HCOutDir)\*" />
+  </ItemGroup>
 
 </Project>

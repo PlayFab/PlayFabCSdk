@@ -2,7 +2,7 @@
 #include <playfab/httpClient/PFHCTrace.h>
 #include <playfab/core/PFTrace.h>
 #include <httpClient/trace.h>
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 #include "Trace/TraceState.h"
 
 using namespace PlayFab;

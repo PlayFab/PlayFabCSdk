@@ -89,7 +89,7 @@ Result<PFEntityToken const*> EntityToken::Copy(ModelBuffer& buffer) const
     {
         outputPtr->expiration = this->expiration;
     }
-    return outputPtr;
+    return std::move(outputPtr);
 }
 
 }

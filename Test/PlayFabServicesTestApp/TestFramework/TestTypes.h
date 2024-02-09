@@ -25,7 +25,7 @@ struct TestTitleData
     String titleId;
     String secretKey;
     String connectionString;
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC
     String steamAppId;
     String steamPublisherKey;
 #endif

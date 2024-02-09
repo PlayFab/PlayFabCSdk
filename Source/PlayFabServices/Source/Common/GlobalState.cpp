@@ -5,7 +5,7 @@
 /// <summary>
 /// Internal PFCore function to enable PFServices's init to also init'd PFCore with HCInitArgs on demand as needed
 /// </summary>
-PF_API PFInitializeWithLHC(
+extern "C" PF_API PFInitializeWithLHC(
     _In_opt_ XTaskQueueHandle backgroundQueue,
     _In_ HCInitArgs* args
 ) noexcept;

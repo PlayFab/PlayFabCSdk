@@ -33,7 +33,7 @@ Result<const char*> ModelBuffer::CopyTo(const char* input)
         auto error = strcpy_s(outputPtr, bytesNeeded, input);
         RETURN_HR_IF(E_FAIL, error);
 
-        return outputPtr;
+        return std::move(outputPtr);
 #else
         return std::strcpy(outputPtr, input);
 #endif
@@ -60,7 +60,7 @@ Result<const char* const*> ModelBuffer::CopyToArray(const char* const* input, si
             RETURN_IF_FAILED(copyResult.hr);
             outputPtr[i] = copyResult.ExtractPayload();
         }
-        return outputPtr;
+        return std::move(outputPtr);
     }
     else
     {
@@ -88,7 +88,7 @@ Result<PFStringDictionaryEntry const*> ModelBuffer::CopyToDictionary(PFStringDic
             RETURN_IF_FAILED(copyValueResult.hr);
             outputPtr[i].value = copyValueResult.ExtractPayload();
         }
-        return outputPtr;
+        return std::move(outputPtr);
     }
     else
     {

@@ -21,6 +21,10 @@
 #define PF_API_ATTRIBUTES
 #endif
 
+#if HC_PLATFORM_IS_APPLE
+#include <time.h>
+#endif // HC_PLATFORM_IS_APPLE
+
 #ifndef STDAPICALLTYPE
 #define STDAPICALLTYPE
 #endif

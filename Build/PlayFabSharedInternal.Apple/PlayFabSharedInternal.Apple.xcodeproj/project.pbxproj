@@ -1,0 +1,879 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		820245182AF0812000390A86 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 820245172AF0812000390A86 /* Error.cpp */; };
+		8236DDA22B5AE91900FFA328 /* RunContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FD92AEAF76A00D8B93D /* RunContext.h */; };
+		8236DDA32B5AE91900FFA328 /* XAsyncOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDA2AEAF76A00D8B93D /* XAsyncOperation.h */; };
+		8236DDA42B5AE91900FFA328 /* EnumTraits.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDB2AEAF76A00D8B93D /* EnumTraits.h */; };
+		8236DDA52B5AE91900FFA328 /* RapidJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDC2AEAF76A00D8B93D /* RapidJson.h */; };
+		8236DDA62B5AE91900FFA328 /* SdkVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDD2AEAF76A00D8B93D /* SdkVersion.h */; };
+		8236DDA72B5AE91900FFA328 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDE2AEAF76A00D8B93D /* Types.h */; };
+		8236DDA82B5AE91900FFA328 /* Trace.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDF2AEAF76A00D8B93D /* Trace.h */; };
+		8236DDA92B5AE91900FFA328 /* Result.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE02AEAF76A00D8B93D /* Result.h */; };
+		8236DDAA2B5AE91900FFA328 /* XAsyncProviderBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE12AEAF76A00D8B93D /* XAsyncProviderBase.h */; };
+		8236DDAB2B5AE91900FFA328 /* PlatformUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE22AEAF76A00D8B93D /* PlatformUtils.h */; };
+		8236DDAC2B5AE91900FFA328 /* ApiXAsyncProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE32AEAF76A00D8B93D /* ApiXAsyncProvider.h */; };
+		8236DDAD2B5AE91900FFA328 /* ModelBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE42AEAF76A00D8B93D /* ModelBuffer.h */; };
+		8236DDAE2B5AE91900FFA328 /* ResultMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE52AEAF76A00D8B93D /* ResultMacros.h */; };
+		8236DDAF2B5AE91900FFA328 /* Memory.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE62AEAF76A00D8B93D /* Memory.h */; };
+		8236DDB02B5AE91900FFA328 /* HttpRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE72AEAF76A00D8B93D /* HttpRequest.h */; };
+		8236DDB12B5AE91900FFA328 /* PlatformUser_Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 82AB6DB52B4DE4EE0082EDED /* PlatformUser_Apple.h */; };
+		8236DDB22B5AE91900FFA328 /* PlatformUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE82AEAF76A00D8B93D /* PlatformUser.h */; };
+		8236DDB32B5AE91900FFA328 /* CancellationToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE92AEAF76A00D8B93D /* CancellationToken.h */; };
+		8236DDB42B5AE91900FFA328 /* BaseModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FEA2AEAF76A00D8B93D /* BaseModel.h */; };
+		8236DDB52B5AE91900FFA328 /* JsonUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FEB2AEAF76A00D8B93D /* JsonUtils.h */; };
+		8236DDB62B5AE91900FFA328 /* AsyncOp.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FEC2AEAF76A00D8B93D /* AsyncOp.h */; };
+		8236DDB82B5AE91900FFA328 /* pch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080052AEAF7A500D8B93D /* pch.cpp */; };
+		8236DDB92B5AE91900FFA328 /* CancellationToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE2A22AF16F3F00DF9129 /* CancellationToken.cpp */; };
+		8236DDBA2B5AE91900FFA328 /* PlatformUser_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82AB6DB32B4DE4CE0082EDED /* PlatformUser_Apple.cpp */; };
+		8236DDBB2B5AE91900FFA328 /* ModelBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080062AEAF7A500D8B93D /* ModelBuffer.cpp */; };
+		8236DDBC2B5AE91900FFA328 /* RunContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080092AEAF7A500D8B93D /* RunContext.cpp */; };
+		8236DDBD2B5AE91900FFA328 /* XAsyncOperation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800A2AEAF7A500D8B93D /* XAsyncOperation.cpp */; };
+		8236DDBE2B5AE91900FFA328 /* Trace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800B2AEAF7A500D8B93D /* Trace.cpp */; };
+		8236DDBF2B5AE91900FFA328 /* XAsyncProviderBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800C2AEAF7A500D8B93D /* XAsyncProviderBase.cpp */; };
+		8236DDC02B5AE91900FFA328 /* JsonUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800D2AEAF7A500D8B93D /* JsonUtils.cpp */; };
+		8236DDC12B5AE91900FFA328 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 820245172AF0812000390A86 /* Error.cpp */; };
+		8236DDC22B5AE91900FFA328 /* pch.h in Sources */ = {isa = PBXBuildFile; fileRef = 8260800E2AEAF7A500D8B93D /* pch.h */; };
+		8236DDC32B5AE91900FFA328 /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800F2AEAF7A500D8B93D /* HttpRequest.cpp */; };
+		8236DDC42B5AE91900FFA328 /* PlatformUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080102AEAF7A500D8B93D /* PlatformUtils.cpp */; };
+		8236DDC52B5AE91900FFA328 /* Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080112AEAF7A500D8B93D /* Memory.cpp */; };
+		82607FED2AEAF76A00D8B93D /* RunContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FD92AEAF76A00D8B93D /* RunContext.h */; };
+		82607FEE2AEAF76A00D8B93D /* XAsyncOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDA2AEAF76A00D8B93D /* XAsyncOperation.h */; };
+		82607FEF2AEAF76A00D8B93D /* EnumTraits.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDB2AEAF76A00D8B93D /* EnumTraits.h */; };
+		82607FF02AEAF76A00D8B93D /* RapidJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDC2AEAF76A00D8B93D /* RapidJson.h */; };
+		82607FF12AEAF76A00D8B93D /* SdkVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDD2AEAF76A00D8B93D /* SdkVersion.h */; };
+		82607FF22AEAF76A00D8B93D /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDE2AEAF76A00D8B93D /* Types.h */; };
+		82607FF32AEAF76A00D8B93D /* Trace.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDF2AEAF76A00D8B93D /* Trace.h */; };
+		82607FF42AEAF76A00D8B93D /* Result.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE02AEAF76A00D8B93D /* Result.h */; };
+		82607FF52AEAF76A00D8B93D /* XAsyncProviderBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE12AEAF76A00D8B93D /* XAsyncProviderBase.h */; };
+		82607FF62AEAF76A00D8B93D /* PlatformUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE22AEAF76A00D8B93D /* PlatformUtils.h */; };
+		82607FF72AEAF76A00D8B93D /* ApiXAsyncProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE32AEAF76A00D8B93D /* ApiXAsyncProvider.h */; };
+		82607FF82AEAF76A00D8B93D /* ModelBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE42AEAF76A00D8B93D /* ModelBuffer.h */; };
+		82607FF92AEAF76A00D8B93D /* ResultMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE52AEAF76A00D8B93D /* ResultMacros.h */; };
+		82607FFA2AEAF76A00D8B93D /* Memory.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE62AEAF76A00D8B93D /* Memory.h */; };
+		82607FFB2AEAF76A00D8B93D /* HttpRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE72AEAF76A00D8B93D /* HttpRequest.h */; };
+		82607FFC2AEAF76A00D8B93D /* PlatformUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE82AEAF76A00D8B93D /* PlatformUser.h */; };
+		82607FFD2AEAF76A00D8B93D /* CancellationToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FE92AEAF76A00D8B93D /* CancellationToken.h */; };
+		82607FFE2AEAF76A00D8B93D /* BaseModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FEA2AEAF76A00D8B93D /* BaseModel.h */; };
+		82607FFF2AEAF76A00D8B93D /* JsonUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FEB2AEAF76A00D8B93D /* JsonUtils.h */; };
+		826080002AEAF76A00D8B93D /* AsyncOp.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FEC2AEAF76A00D8B93D /* AsyncOp.h */; };
+		826080122AEAF7A500D8B93D /* pch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080052AEAF7A500D8B93D /* pch.cpp */; };
+		826080132AEAF7A500D8B93D /* ModelBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080062AEAF7A500D8B93D /* ModelBuffer.cpp */; };
+		826080162AEAF7A500D8B93D /* RunContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080092AEAF7A500D8B93D /* RunContext.cpp */; };
+		826080172AEAF7A500D8B93D /* XAsyncOperation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800A2AEAF7A500D8B93D /* XAsyncOperation.cpp */; };
+		826080182AEAF7A500D8B93D /* Trace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800B2AEAF7A500D8B93D /* Trace.cpp */; };
+		826080192AEAF7A500D8B93D /* XAsyncProviderBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800C2AEAF7A500D8B93D /* XAsyncProviderBase.cpp */; };
+		8260801A2AEAF7A500D8B93D /* JsonUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800D2AEAF7A500D8B93D /* JsonUtils.cpp */; };
+		8260801B2AEAF7A500D8B93D /* pch.h in Sources */ = {isa = PBXBuildFile; fileRef = 8260800E2AEAF7A500D8B93D /* pch.h */; };
+		8260801C2AEAF7A500D8B93D /* HttpRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260800F2AEAF7A500D8B93D /* HttpRequest.cpp */; };
+		8260801D2AEAF7A500D8B93D /* PlatformUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080102AEAF7A500D8B93D /* PlatformUtils.cpp */; };
+		8260801E2AEAF7A500D8B93D /* Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826080112AEAF7A500D8B93D /* Memory.cpp */; };
+		826AE2A32AF16F3F00DF9129 /* CancellationToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE2A22AF16F3F00DF9129 /* CancellationToken.cpp */; };
+		82AB6DB42B4DE4CE0082EDED /* PlatformUser_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82AB6DB32B4DE4CE0082EDED /* PlatformUser_Apple.cpp */; };
+		82AB6DB62B4DE4EE0082EDED /* PlatformUser_Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 82AB6DB52B4DE4EE0082EDED /* PlatformUser_Apple.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8206F0482B740BC000451339 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 58BD256122123EF9008942EB;
+			remoteInfo = libHttpClientFramework_iOS;
+		};
+		8286B1DD2B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 67EE817E2362599C00A5F3DE;
+			remoteInfo = SSL_iOS;
+		};
+		8286B1DF2B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF87AD25A3F0F9005C4BDF;
+			remoteInfo = SSL_macOS;
+		};
+		8286B1E12B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58722D0E209AD61900B071F7;
+			remoteInfo = libHttpClient_iOS;
+		};
+		8286B1E32B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7DB100A72119206B00AE22F5;
+			remoteInfo = libHttpClient_macOS;
+		};
+		8286B1E52B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF884125A522BC005C4BDF;
+			remoteInfo = libHttpClient_NOWEBSOCKETS_iOS;
+		};
+		8286B1E72B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9FF0A7725A5366A0061B717;
+			remoteInfo = libHttpClient_NOWEBSOCKETS_macOS;
+		};
+		8286B1E92B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58BD256222123EF9008942EB;
+			remoteInfo = libHttpClientFramework_iOS;
+		};
+		8286B1EB2B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2C872C65221C91BD0054F791;
+			remoteInfo = libHttpClientFramework_macOS;
+		};
+		8286B1ED2B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF888425A52685005C4BDF;
+			remoteInfo = libHttpClientFramework_NOWEBSOCKETS_iOS;
+		};
+		8286B1EF2B73FE9D009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9FF0AA225A536A20061B717;
+			remoteInfo = libHttpClientFramework_NOWEBSOCKETS_macOS;
+		};
+		8286B1F12B73FEB2009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C872C64221C91BD0054F791;
+			remoteInfo = libHttpClientFramework_macOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8236DDC82B5AE91900FFA328 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829F6FE72AEADC8D00208ADE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		820245172AF0812000390A86 /* Error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Error.cpp; sourceTree = "<group>"; };
+		8236DDCC2B5AE91900FFA328 /* libPlayFabSharedInternal_macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPlayFabSharedInternal_macOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		82607FD92AEAF76A00D8B93D /* RunContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RunContext.h; path = ../../Source/PlayFabSharedInternal/Include/RunContext.h; sourceTree = "<group>"; };
+		82607FDA2AEAF76A00D8B93D /* XAsyncOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XAsyncOperation.h; path = ../../Source/PlayFabSharedInternal/Include/XAsyncOperation.h; sourceTree = "<group>"; };
+		82607FDB2AEAF76A00D8B93D /* EnumTraits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EnumTraits.h; path = ../../Source/PlayFabSharedInternal/Include/EnumTraits.h; sourceTree = "<group>"; };
+		82607FDC2AEAF76A00D8B93D /* RapidJson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RapidJson.h; path = ../../Source/PlayFabSharedInternal/Include/RapidJson.h; sourceTree = "<group>"; };
+		82607FDD2AEAF76A00D8B93D /* SdkVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SdkVersion.h; path = ../../Source/PlayFabSharedInternal/Include/SdkVersion.h; sourceTree = "<group>"; };
+		82607FDE2AEAF76A00D8B93D /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Types.h; path = ../../Source/PlayFabSharedInternal/Include/Types.h; sourceTree = "<group>"; };
+		82607FDF2AEAF76A00D8B93D /* Trace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Trace.h; path = ../../Source/PlayFabSharedInternal/Include/Trace.h; sourceTree = "<group>"; };
+		82607FE02AEAF76A00D8B93D /* Result.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Result.h; path = ../../Source/PlayFabSharedInternal/Include/Result.h; sourceTree = "<group>"; };
+		82607FE12AEAF76A00D8B93D /* XAsyncProviderBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XAsyncProviderBase.h; path = ../../Source/PlayFabSharedInternal/Include/XAsyncProviderBase.h; sourceTree = "<group>"; };
+		82607FE22AEAF76A00D8B93D /* PlatformUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlatformUtils.h; path = ../../Source/PlayFabSharedInternal/Include/PlatformUtils.h; sourceTree = "<group>"; };
+		82607FE32AEAF76A00D8B93D /* ApiXAsyncProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ApiXAsyncProvider.h; path = ../../Source/PlayFabSharedInternal/Include/ApiXAsyncProvider.h; sourceTree = "<group>"; };
+		82607FE42AEAF76A00D8B93D /* ModelBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ModelBuffer.h; path = ../../Source/PlayFabSharedInternal/Include/ModelBuffer.h; sourceTree = "<group>"; };
+		82607FE52AEAF76A00D8B93D /* ResultMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ResultMacros.h; path = ../../Source/PlayFabSharedInternal/Include/ResultMacros.h; sourceTree = "<group>"; };
+		82607FE62AEAF76A00D8B93D /* Memory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Memory.h; path = ../../Source/PlayFabSharedInternal/Include/Memory.h; sourceTree = "<group>"; };
+		82607FE72AEAF76A00D8B93D /* HttpRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HttpRequest.h; path = ../../Source/PlayFabSharedInternal/Include/HttpRequest.h; sourceTree = "<group>"; };
+		82607FE82AEAF76A00D8B93D /* PlatformUser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlatformUser.h; path = ../../Source/PlayFabSharedInternal/Include/PlatformUser.h; sourceTree = "<group>"; };
+		82607FE92AEAF76A00D8B93D /* CancellationToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CancellationToken.h; path = ../../Source/PlayFabSharedInternal/Include/CancellationToken.h; sourceTree = "<group>"; };
+		82607FEA2AEAF76A00D8B93D /* BaseModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BaseModel.h; path = ../../Source/PlayFabSharedInternal/Include/BaseModel.h; sourceTree = "<group>"; };
+		82607FEB2AEAF76A00D8B93D /* JsonUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JsonUtils.h; path = ../../Source/PlayFabSharedInternal/Include/JsonUtils.h; sourceTree = "<group>"; };
+		82607FEC2AEAF76A00D8B93D /* AsyncOp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AsyncOp.h; path = ../../Source/PlayFabSharedInternal/Include/AsyncOp.h; sourceTree = "<group>"; };
+		826080052AEAF7A500D8B93D /* pch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = pch.cpp; path = ../../Source/PlayFabSharedInternal/Source/pch.cpp; sourceTree = "<group>"; };
+		826080062AEAF7A500D8B93D /* ModelBuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ModelBuffer.cpp; path = ../../Source/PlayFabSharedInternal/Source/ModelBuffer.cpp; sourceTree = "<group>"; };
+		826080092AEAF7A500D8B93D /* RunContext.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RunContext.cpp; path = ../../Source/PlayFabSharedInternal/Source/RunContext.cpp; sourceTree = "<group>"; };
+		8260800A2AEAF7A500D8B93D /* XAsyncOperation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = XAsyncOperation.cpp; path = ../../Source/PlayFabSharedInternal/Source/XAsyncOperation.cpp; sourceTree = "<group>"; };
+		8260800B2AEAF7A500D8B93D /* Trace.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Trace.cpp; path = ../../Source/PlayFabSharedInternal/Source/Trace.cpp; sourceTree = "<group>"; };
+		8260800C2AEAF7A500D8B93D /* XAsyncProviderBase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = XAsyncProviderBase.cpp; path = ../../Source/PlayFabSharedInternal/Source/XAsyncProviderBase.cpp; sourceTree = "<group>"; };
+		8260800D2AEAF7A500D8B93D /* JsonUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = JsonUtils.cpp; path = ../../Source/PlayFabSharedInternal/Source/JsonUtils.cpp; sourceTree = "<group>"; };
+		8260800E2AEAF7A500D8B93D /* pch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pch.h; path = ../../Source/PlayFabSharedInternal/Source/pch.h; sourceTree = "<group>"; };
+		8260800F2AEAF7A500D8B93D /* HttpRequest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = HttpRequest.cpp; path = ../../Source/PlayFabSharedInternal/Source/HttpRequest.cpp; sourceTree = "<group>"; };
+		826080102AEAF7A500D8B93D /* PlatformUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PlatformUtils.cpp; path = ../../Source/PlayFabSharedInternal/Source/PlatformUtils.cpp; sourceTree = "<group>"; };
+		826080112AEAF7A500D8B93D /* Memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Memory.cpp; path = ../../Source/PlayFabSharedInternal/Source/Memory.cpp; sourceTree = "<group>"; };
+		826082A52AF0406B00D8B93D /* Generated */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Generated; path = ../../Source/PlayFabSharedInternal/Include/Generated; sourceTree = "<group>"; };
+		82628C782B73124D00ED8BF8 /* HttpClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HttpClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		826AE2A22AF16F3F00DF9129 /* CancellationToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CancellationToken.cpp; path = ../../Source/PlayFabSharedInternal/Source/CancellationToken.cpp; sourceTree = "<group>"; };
+		8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
+		829F704E2AEAE11000208ADE /* libPlayFabSharedInternal_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPlayFabSharedInternal_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		829F70562AEAE74100208ADE /* HttpClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HttpClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		82AB6DB32B4DE4CE0082EDED /* PlatformUser_Apple.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PlatformUser_Apple.cpp; path = ../../Source/PlayFabSharedInternal/Source/Apple/PlatformUser_Apple.cpp; sourceTree = "<group>"; };
+		82AB6DB52B4DE4EE0082EDED /* PlatformUser_Apple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlatformUser_Apple.h; path = ../../Source/PlayFabSharedInternal/Include/Apple/PlatformUser_Apple.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8236DDC62B5AE91900FFA328 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829F6FE62AEADC8D00208ADE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		820245162AF0812000390A86 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				820245172AF0812000390A86 /* Error.cpp */,
+			);
+			name = Generated;
+			path = ../../Source/PlayFabSharedInternal/Source/Generated;
+			sourceTree = "<group>";
+		};
+		826082A12AF03BBF00D8B93D /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				826082A52AF0406B00D8B93D /* Generated */,
+				82607FE32AEAF76A00D8B93D /* ApiXAsyncProvider.h */,
+				82607FEC2AEAF76A00D8B93D /* AsyncOp.h */,
+				82607FEA2AEAF76A00D8B93D /* BaseModel.h */,
+				82607FE92AEAF76A00D8B93D /* CancellationToken.h */,
+				82607FDB2AEAF76A00D8B93D /* EnumTraits.h */,
+				82607FE72AEAF76A00D8B93D /* HttpRequest.h */,
+				82607FEB2AEAF76A00D8B93D /* JsonUtils.h */,
+				82607FE62AEAF76A00D8B93D /* Memory.h */,
+				82607FE42AEAF76A00D8B93D /* ModelBuffer.h */,
+				82607FE82AEAF76A00D8B93D /* PlatformUser.h */,
+				82607FE22AEAF76A00D8B93D /* PlatformUtils.h */,
+				82607FDC2AEAF76A00D8B93D /* RapidJson.h */,
+				82607FE02AEAF76A00D8B93D /* Result.h */,
+				82607FE52AEAF76A00D8B93D /* ResultMacros.h */,
+				82607FD92AEAF76A00D8B93D /* RunContext.h */,
+				82607FDD2AEAF76A00D8B93D /* SdkVersion.h */,
+				82607FDF2AEAF76A00D8B93D /* Trace.h */,
+				82607FDE2AEAF76A00D8B93D /* Types.h */,
+				82607FDA2AEAF76A00D8B93D /* XAsyncOperation.h */,
+				82607FE12AEAF76A00D8B93D /* XAsyncProviderBase.h */,
+				82AB6DB52B4DE4EE0082EDED /* PlatformUser_Apple.h */,
+			);
+			name = Include;
+			sourceTree = "<group>";
+		};
+		826082A22AF03BD000D8B93D /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				820245162AF0812000390A86 /* Generated */,
+				826AE2A22AF16F3F00DF9129 /* CancellationToken.cpp */,
+				8260800F2AEAF7A500D8B93D /* HttpRequest.cpp */,
+				8260800D2AEAF7A500D8B93D /* JsonUtils.cpp */,
+				826080112AEAF7A500D8B93D /* Memory.cpp */,
+				826080062AEAF7A500D8B93D /* ModelBuffer.cpp */,
+				826080052AEAF7A500D8B93D /* pch.cpp */,
+				8260800E2AEAF7A500D8B93D /* pch.h */,
+				826080102AEAF7A500D8B93D /* PlatformUtils.cpp */,
+				826080092AEAF7A500D8B93D /* RunContext.cpp */,
+				8260800B2AEAF7A500D8B93D /* Trace.cpp */,
+				8260800A2AEAF7A500D8B93D /* XAsyncOperation.cpp */,
+				8260800C2AEAF7A500D8B93D /* XAsyncProviderBase.cpp */,
+				82AB6DB32B4DE4CE0082EDED /* PlatformUser_Apple.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		8286B1D12B73FE9D009A4677 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8286B1DE2B73FE9D009A4677 /* libSSL.a */,
+				8286B1E02B73FE9D009A4677 /* libSSL.a */,
+				8286B1E22B73FE9D009A4677 /* libHttpClient.a */,
+				8286B1E42B73FE9D009A4677 /* libHttpClient.a */,
+				8286B1E62B73FE9D009A4677 /* libHttpClient_NOWEBSOCKETS.a */,
+				8286B1E82B73FE9D009A4677 /* libHttpClient_NOWEBSOCKETS.a */,
+				8286B1EA2B73FE9D009A4677 /* HttpClient.framework */,
+				8286B1EC2B73FE9D009A4677 /* HttpClient.framework */,
+				8286B1EE2B73FE9D009A4677 /* NOWEBSOCKETS/HttpClient.framework */,
+				8286B1F02B73FE9D009A4677 /* NOWEBSOCKETS/HttpClient.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		829F6FE02AEADC8D00208ADE = {
+			isa = PBXGroup;
+			children = (
+				8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */,
+				826082A12AF03BBF00D8B93D /* Include */,
+				826082A22AF03BD000D8B93D /* Source */,
+				829F70062AEAE04200208ADE /* Frameworks */,
+				829F704E2AEAE11000208ADE /* libPlayFabSharedInternal_iOS.a */,
+				8236DDCC2B5AE91900FFA328 /* libPlayFabSharedInternal_macOS.a */,
+			);
+			sourceTree = "<group>";
+		};
+		829F70062AEAE04200208ADE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				82628C782B73124D00ED8BF8 /* HttpClient.framework */,
+				829F70562AEAE74100208ADE /* HttpClient.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8236DDA12B5AE91900FFA328 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8236DDA22B5AE91900FFA328 /* RunContext.h in Headers */,
+				8236DDA32B5AE91900FFA328 /* XAsyncOperation.h in Headers */,
+				8236DDA42B5AE91900FFA328 /* EnumTraits.h in Headers */,
+				8236DDA52B5AE91900FFA328 /* RapidJson.h in Headers */,
+				8236DDA62B5AE91900FFA328 /* SdkVersion.h in Headers */,
+				8236DDA72B5AE91900FFA328 /* Types.h in Headers */,
+				8236DDA82B5AE91900FFA328 /* Trace.h in Headers */,
+				8236DDA92B5AE91900FFA328 /* Result.h in Headers */,
+				8236DDAA2B5AE91900FFA328 /* XAsyncProviderBase.h in Headers */,
+				8236DDAB2B5AE91900FFA328 /* PlatformUtils.h in Headers */,
+				8236DDAC2B5AE91900FFA328 /* ApiXAsyncProvider.h in Headers */,
+				8236DDAD2B5AE91900FFA328 /* ModelBuffer.h in Headers */,
+				8236DDAE2B5AE91900FFA328 /* ResultMacros.h in Headers */,
+				8236DDAF2B5AE91900FFA328 /* Memory.h in Headers */,
+				8236DDB02B5AE91900FFA328 /* HttpRequest.h in Headers */,
+				8236DDB12B5AE91900FFA328 /* PlatformUser_Apple.h in Headers */,
+				8236DDB22B5AE91900FFA328 /* PlatformUser.h in Headers */,
+				8236DDB32B5AE91900FFA328 /* CancellationToken.h in Headers */,
+				8236DDB42B5AE91900FFA328 /* BaseModel.h in Headers */,
+				8236DDB52B5AE91900FFA328 /* JsonUtils.h in Headers */,
+				8236DDB62B5AE91900FFA328 /* AsyncOp.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829F70232AEAE0E900208ADE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82607FED2AEAF76A00D8B93D /* RunContext.h in Headers */,
+				82607FEE2AEAF76A00D8B93D /* XAsyncOperation.h in Headers */,
+				82607FEF2AEAF76A00D8B93D /* EnumTraits.h in Headers */,
+				82607FF02AEAF76A00D8B93D /* RapidJson.h in Headers */,
+				82607FF12AEAF76A00D8B93D /* SdkVersion.h in Headers */,
+				82607FF22AEAF76A00D8B93D /* Types.h in Headers */,
+				82607FF32AEAF76A00D8B93D /* Trace.h in Headers */,
+				82607FF42AEAF76A00D8B93D /* Result.h in Headers */,
+				82607FF52AEAF76A00D8B93D /* XAsyncProviderBase.h in Headers */,
+				82607FF62AEAF76A00D8B93D /* PlatformUtils.h in Headers */,
+				82607FF72AEAF76A00D8B93D /* ApiXAsyncProvider.h in Headers */,
+				82607FF82AEAF76A00D8B93D /* ModelBuffer.h in Headers */,
+				82607FF92AEAF76A00D8B93D /* ResultMacros.h in Headers */,
+				82607FFA2AEAF76A00D8B93D /* Memory.h in Headers */,
+				82607FFB2AEAF76A00D8B93D /* HttpRequest.h in Headers */,
+				82AB6DB62B4DE4EE0082EDED /* PlatformUser_Apple.h in Headers */,
+				82607FFC2AEAF76A00D8B93D /* PlatformUser.h in Headers */,
+				82607FFD2AEAF76A00D8B93D /* CancellationToken.h in Headers */,
+				82607FFE2AEAF76A00D8B93D /* BaseModel.h in Headers */,
+				82607FFF2AEAF76A00D8B93D /* JsonUtils.h in Headers */,
+				826080002AEAF76A00D8B93D /* AsyncOp.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8236DDA02B5AE91900FFA328 /* PlayFabSharedInternal_macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8236DDC92B5AE91900FFA328 /* Build configuration list for PBXNativeTarget "PlayFabSharedInternal_macOS" */;
+			buildPhases = (
+				8236DDA12B5AE91900FFA328 /* Headers */,
+				8236DDB72B5AE91900FFA328 /* Sources */,
+				8236DDC62B5AE91900FFA328 /* Frameworks */,
+				8236DDC82B5AE91900FFA328 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8286B1F22B73FEB2009A4677 /* PBXTargetDependency */,
+			);
+			name = PlayFabSharedInternal_macOS;
+			productName = PlayFabSharedInternal.iOS;
+			productReference = 8236DDCC2B5AE91900FFA328 /* libPlayFabSharedInternal_macOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		829F6FE82AEADC8D00208ADE /* PlayFabSharedInternal_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 829F6FF22AEADC8D00208ADE /* Build configuration list for PBXNativeTarget "PlayFabSharedInternal_iOS" */;
+			buildPhases = (
+				829F70232AEAE0E900208ADE /* Headers */,
+				829F6FE52AEADC8D00208ADE /* Sources */,
+				829F6FE62AEADC8D00208ADE /* Frameworks */,
+				829F6FE72AEADC8D00208ADE /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8206F0492B740BC000451339 /* PBXTargetDependency */,
+			);
+			name = PlayFabSharedInternal_iOS;
+			productName = PlayFabSharedInternal.iOS;
+			productReference = 829F704E2AEAE11000208ADE /* libPlayFabSharedInternal_iOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		829F6FE12AEADC8D00208ADE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					829F6FE82AEADC8D00208ADE = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 829F6FE42AEADC8D00208ADE /* Build configuration list for PBXProject "PlayFabSharedInternal.Apple" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 829F6FE02AEADC8D00208ADE;
+			productRefGroup = 829F6FE02AEADC8D00208ADE;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 8286B1D12B73FE9D009A4677 /* Products */;
+					ProjectRef = 8286B1D02B73FE9D009A4677 /* libHttpClient.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				829F6FE82AEADC8D00208ADE /* PlayFabSharedInternal_iOS */,
+				8236DDA02B5AE91900FFA328 /* PlayFabSharedInternal_macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8286B1DE2B73FE9D009A4677 /* libSSL.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSL.a;
+			remoteRef = 8286B1DD2B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1E02B73FE9D009A4677 /* libSSL.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSL.a;
+			remoteRef = 8286B1DF2B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1E22B73FE9D009A4677 /* libHttpClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient.a;
+			remoteRef = 8286B1E12B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1E42B73FE9D009A4677 /* libHttpClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient.a;
+			remoteRef = 8286B1E32B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1E62B73FE9D009A4677 /* libHttpClient_NOWEBSOCKETS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient_NOWEBSOCKETS.a;
+			remoteRef = 8286B1E52B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1E82B73FE9D009A4677 /* libHttpClient_NOWEBSOCKETS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient_NOWEBSOCKETS.a;
+			remoteRef = 8286B1E72B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1EA2B73FE9D009A4677 /* HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HttpClient.framework;
+			remoteRef = 8286B1E92B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1EC2B73FE9D009A4677 /* HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HttpClient.framework;
+			remoteRef = 8286B1EB2B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1EE2B73FE9D009A4677 /* NOWEBSOCKETS/HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = NOWEBSOCKETS/HttpClient.framework;
+			remoteRef = 8286B1ED2B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1F02B73FE9D009A4677 /* NOWEBSOCKETS/HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = NOWEBSOCKETS/HttpClient.framework;
+			remoteRef = 8286B1EF2B73FE9D009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8236DDB72B5AE91900FFA328 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8236DDB82B5AE91900FFA328 /* pch.cpp in Sources */,
+				8236DDB92B5AE91900FFA328 /* CancellationToken.cpp in Sources */,
+				8236DDBA2B5AE91900FFA328 /* PlatformUser_Apple.cpp in Sources */,
+				8236DDBB2B5AE91900FFA328 /* ModelBuffer.cpp in Sources */,
+				8236DDBC2B5AE91900FFA328 /* RunContext.cpp in Sources */,
+				8236DDBD2B5AE91900FFA328 /* XAsyncOperation.cpp in Sources */,
+				8236DDBE2B5AE91900FFA328 /* Trace.cpp in Sources */,
+				8236DDBF2B5AE91900FFA328 /* XAsyncProviderBase.cpp in Sources */,
+				8236DDC02B5AE91900FFA328 /* JsonUtils.cpp in Sources */,
+				8236DDC12B5AE91900FFA328 /* Error.cpp in Sources */,
+				8236DDC22B5AE91900FFA328 /* pch.h in Sources */,
+				8236DDC32B5AE91900FFA328 /* HttpRequest.cpp in Sources */,
+				8236DDC42B5AE91900FFA328 /* PlatformUtils.cpp in Sources */,
+				8236DDC52B5AE91900FFA328 /* Memory.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		829F6FE52AEADC8D00208ADE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				826080122AEAF7A500D8B93D /* pch.cpp in Sources */,
+				826AE2A32AF16F3F00DF9129 /* CancellationToken.cpp in Sources */,
+				82AB6DB42B4DE4CE0082EDED /* PlatformUser_Apple.cpp in Sources */,
+				826080132AEAF7A500D8B93D /* ModelBuffer.cpp in Sources */,
+				826080162AEAF7A500D8B93D /* RunContext.cpp in Sources */,
+				826080172AEAF7A500D8B93D /* XAsyncOperation.cpp in Sources */,
+				826080182AEAF7A500D8B93D /* Trace.cpp in Sources */,
+				826080192AEAF7A500D8B93D /* XAsyncProviderBase.cpp in Sources */,
+				8260801A2AEAF7A500D8B93D /* JsonUtils.cpp in Sources */,
+				820245182AF0812000390A86 /* Error.cpp in Sources */,
+				8260801B2AEAF7A500D8B93D /* pch.h in Sources */,
+				8260801C2AEAF7A500D8B93D /* HttpRequest.cpp in Sources */,
+				8260801D2AEAF7A500D8B93D /* PlatformUtils.cpp in Sources */,
+				8260801E2AEAF7A500D8B93D /* Memory.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8206F0492B740BC000451339 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libHttpClientFramework_iOS;
+			targetProxy = 8206F0482B740BC000451339 /* PBXContainerItemProxy */;
+		};
+		8286B1F22B73FEB2009A4677 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libHttpClientFramework_macOS;
+			targetProxy = 8286B1F12B73FEB2009A4677 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8236DDCA2B5AE91900FFA328 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../../Source/PlayFabSharedInternal/Source/pch.h;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALIDATE_PRODUCT = NO;
+			};
+			name = Debug;
+		};
+		8236DDCB2B5AE91900FFA328 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../../Source/PlayFabSharedInternal/Source/pch.h;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALIDATE_PRODUCT = NO;
+			};
+			name = Release;
+		};
+		829F6FF02AEADC8D00208ADE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"HC_LINK_STATIC=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fstack-protector-strong",
+					"-fPIC",
+					"-Wformat",
+					"-Wformat-security",
+					"-Werror=format-security",
+				);
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		829F6FF12AEADC8D00208ADE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "HC_LINK_STATIC=1";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fstack-protector-strong",
+					"-fPIC",
+					"-Wformat",
+					"-Wformat-security",
+					"-Werror=format-security",
+				);
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		829F6FF32AEADC8D00208ADE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../../Source/PlayFabSharedInternal/Source/pch.h;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALIDATE_PRODUCT = NO;
+			};
+			name = Debug;
+		};
+		829F6FF42AEADC8D00208ADE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../../Source/PlayFabSharedInternal/Source/pch.h;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALIDATE_PRODUCT = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8236DDC92B5AE91900FFA328 /* Build configuration list for PBXNativeTarget "PlayFabSharedInternal_macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8236DDCA2B5AE91900FFA328 /* Debug */,
+				8236DDCB2B5AE91900FFA328 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		829F6FE42AEADC8D00208ADE /* Build configuration list for PBXProject "PlayFabSharedInternal.Apple" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				829F6FF02AEADC8D00208ADE /* Debug */,
+				829F6FF12AEADC8D00208ADE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		829F6FF22AEADC8D00208ADE /* Build configuration list for PBXNativeTarget "PlayFabSharedInternal_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				829F6FF32AEADC8D00208ADE /* Debug */,
+				829F6FF42AEADC8D00208ADE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 829F6FE12AEADC8D00208ADE /* Project object */;
+}

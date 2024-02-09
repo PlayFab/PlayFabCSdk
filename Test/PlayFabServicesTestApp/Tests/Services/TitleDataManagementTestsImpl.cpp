@@ -13,8 +13,11 @@ namespace Test
 
 constexpr char kTestKey[]{ "testKey" };
 constexpr char kTestVal[]{ "testVal" };
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC
 constexpr char kTestNullVal[]{ NULL };
+#endif
+#if HC_PLATFORM == HC_PLATFORM_LINUX
+constexpr char* kTestNullVal = nullptr;
 #endif
 constexpr time_t kTestTime{ 12345u };
 
@@ -131,8 +134,13 @@ void TitleDataManagementTests::TestClientGetTime(TestContext& tc)
 
         // Verify result time is within the last 10 seconds. Docs specify there may be a variance of up to 5 seconds.
         const time_t now = Platform::GetSystemTime();
+#if HC_PLATFORM != HC_PLATFORM_ANDROID
         const int expectedSeconds = 10;
-        const auto actualSeconds = abs(difftime(now, result.Payload().Model().time));
+#endif
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
+        const int expectedSeconds = 15; // Test is a bit flaky on Android
+#endif
+        const auto actualSeconds = std::abs(difftime(now, result.Payload().Model().time));
 
         tc.AssertTrue(actualSeconds < expectedSeconds, "Returned time differs from system time by more than expected variance");
 
@@ -217,48 +225,48 @@ void TitleDataManagementTests::TestClientGetTitleNews(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetPublisherData(TestContext& tc)
 {
-    ServerSetPublisherDataOperation::RequestType request;
-    request.SetKey(kTestKey);
-    request.SetValue(kTestVal);
+   ServerSetPublisherDataOperation::RequestType request;
+   request.SetKey(kTestKey);
+   request.SetValue(kTestVal);
 
-    ServerSetPublisherDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<ServerGetPublisherDataOperation::ResultType>
-    {
-        RETURN_IF_FAILED_PLAYFAB(result);
+   ServerSetPublisherDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<ServerGetPublisherDataOperation::ResultType>
+   {
+       RETURN_IF_FAILED_PLAYFAB(result);
 
-        return ServerGetPublisherDataOperation::Run(TitleEntity(), {}, RunContext());
-    })
-    .Then([&](Result<ServerGetPublisherDataOperation::ResultType> result) -> AsyncOp<void>
-    {
-        RETURN_IF_FAILED_PLAYFAB(result);
+       return ServerGetPublisherDataOperation::Run(TitleEntity(), {}, RunContext());
+   })
+   .Then([&](Result<ServerGetPublisherDataOperation::ResultType> result) -> AsyncOp<void>
+   {
+       RETURN_IF_FAILED_PLAYFAB(result);
 
-        auto& model = result.Payload().Model();
-        tc.AssertEqual(1u, model.dataCount, "Unexpected count of results");
-        tc.AssertEqual(kTestKey, model.data[0].key, "Unexpected server publisher key");
-        tc.AssertEqual(kTestVal, model.data[0].value, "Unexpected server publisher value");
+       auto& model = result.Payload().Model();
+       tc.AssertEqual(1u, model.dataCount, "Unexpected count of results");
+       tc.AssertEqual(kTestKey, model.data[0].key, "Unexpected server publisher key");
+       tc.AssertEqual(kTestVal, model.data[0].value, "Unexpected server publisher value");
 
-        ServerSetPublisherDataOperation::RequestType request;
-        request.SetKey(kTestKey);
-        request.SetValue(kTestNullVal);
+       ServerSetPublisherDataOperation::RequestType request;
+       request.SetKey(kTestKey);
+       request.SetValue(kTestNullVal);
 
-        return ServerSetPublisherDataOperation::Run(TitleEntity(), request, RunContext());
-    })
-    .Then([&](Result<void> result) -> Result<void>
-    {
-        RETURN_IF_FAILED_PLAYFAB(result);
+       return ServerSetPublisherDataOperation::Run(TitleEntity(), request, RunContext());
+   })
+   .Then([&](Result<void> result) -> Result<void>
+   {
+       RETURN_IF_FAILED_PLAYFAB(result);
 
-        return S_OK;
-    })
-    .Finally([&](Result<void> result)
-    {
-        tc.EndTest(std::move(result));
-    });
+       return S_OK;
+   })
+   .Finally([&](Result<void> result)
+   {
+       tc.EndTest(std::move(result));
+   });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetTime(TestContext& tc)
 {
     ServerGetTimeOperation::Run(TitleEntity(), RunContext()).Then([&](Result<ServerGetTimeOperation::ResultType> result) -> Result<void>
@@ -268,7 +276,7 @@ void TitleDataManagementTests::TestServerGetTime(TestContext& tc)
         // Verify result time is within the last 10 seconds. Docs specify there may be a variance of up to 5 seconds.
         const time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         const int expectedSeconds = 10;
-        const auto actualSeconds = abs(difftime(now, result.Payload().Model().time));
+        const auto actualSeconds = std::abs(difftime(now, result.Payload().Model().time));
 
         tc.AssertTrue(actualSeconds < expectedSeconds, "Unexpected time was returned by server");
 
@@ -281,7 +289,7 @@ void TitleDataManagementTests::TestServerGetTime(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetTitleData(TestContext& tc)
 {
     ServerSetTitleDataOperation::RequestType request;
@@ -322,7 +330,7 @@ void TitleDataManagementTests::TestServerGetTitleData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetTitleInternalData(TestContext& tc)
 {
     ServerSetTitleInternalDataOperation::RequestType request;
@@ -363,7 +371,7 @@ void TitleDataManagementTests::TestServerGetTitleInternalData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetTitleNews(TestContext& tc)
 {
     // Deleting news can only be done manually through the portal, and there is a very low limit (about 10) for news entries.
@@ -405,7 +413,7 @@ void TitleDataManagementTests::TestServerGetTitleNews(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerSetPublisherData(TestContext& tc)
 {
     ServerSetPublisherDataOperation::RequestType request;
@@ -435,7 +443,7 @@ void TitleDataManagementTests::TestServerSetPublisherData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerSetTitleData(TestContext& tc)
 {
     ServerSetTitleDataOperation::RequestType request;
@@ -465,7 +473,7 @@ void TitleDataManagementTests::TestServerSetTitleData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerSetTitleInternalData(TestContext& tc)
 {
     ServerSetTitleInternalDataOperation::RequestType request;

@@ -6,7 +6,7 @@
 
   <!--We have to explicitly exclude GDK extension libraries because XSAPI and LHC will be pulled in by default, conflicting -->
   <!--with the LHC lib built from source.-->
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(GDKExtLibNames)' == 'Xbox.Services.API'">
     <GDKExtLibNames>;</GDKExtLibNames>
   </PropertyGroup>
 

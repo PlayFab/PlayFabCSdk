@@ -17,7 +17,7 @@ AsyncOp<void> LocalizationTests::Uninitialize()
     return ServicesTestClass::Uninitialize();
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LocalizationTests::TestGetLanguageList(TestContext& tc)
 {
     tc.Skip();

@@ -24,11 +24,12 @@
 #include <playfab/services/PFLocalization.h>
 #include <playfab/services/PFMultiplayerServer.h>
 #include <playfab/services/PFProfiles.h>
+#include <httpClient/httpClient.h>
 
 extern "C"
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Initializes PlayFab Services global state
 /// </summary>
@@ -41,6 +42,24 @@ extern "C"
 /// <returns>Result code for this API operation.</returns>
 PF_API PFServicesInitialize(
     _In_opt_ XTaskQueueHandle reserved
+) noexcept;
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
+/// <summary>
+/// Initializes PlayFab Services global state
+/// </summary>
+/// <param name="backgroundQueue">An XTaskQueue that should be used for background work. If no queue is provided then a default (threadpool) queue will be used.</param>
+/// <param name="args">Args for initializing libHttpClient.</param>
+/// <remarks>
+/// This will internally call PFInitialize(nullptr) if it hasn't been called already by the
+/// title. If control of PFCore background work is needed, the title should explicitly call
+/// PFInitialize and PFUninitialize.
+/// </remarks>
+/// <returns>Result code for this API operation.</returns>
+PF_API PFServicesInitialize(
+    _In_opt_ XTaskQueueHandle backgroundQueue,
+    _In_ HCInitArgs* initArgs
 ) noexcept;
 #endif
 

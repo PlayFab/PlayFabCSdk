@@ -15,11 +15,11 @@ extern "C"
 #pragma push_macro("IN")
 #undef IN
 
-// PlayFab HRESULT error codes (FACILITY_XBOX + 0x5400 + offset)
+// PlayFab Services HRESULT error codes (FACILITY_XBOX + 0x5A00 + offset)
 
 // Service errors
-#define E_PF_SERVICES_NOT_INITIALIZED           MAKE_E_HC(0x54A0L) // 0x892354A0
-#define E_PF_SERVICES_ALREADY_INITIALIZED       MAKE_E_HC(0x54A1L) // 0x892354A1
+#define E_PF_SERVICES_NOT_INITIALIZED           MAKE_E_HC(0x5A00L) // 0x89235A00
+#define E_PF_SERVICES_ALREADY_INITIALIZED       MAKE_E_HC(0x5A01L) // 0x89235A01
 
 /// <summary>
 /// OperationTypes enum.

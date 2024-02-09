@@ -624,6 +624,58 @@ public:
     static HRESULT Copy(const PFAccountManagementGetPlayFabIDsFromPSNAccountIDsResult& input, PFAccountManagementGetPlayFabIDsFromPSNAccountIDsResult& output, ModelBuffer& buffer);
 };
 
+class GetPlayFabIDsFromPSNOnlineIDsRequest : public Wrappers::PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest& input);
+};
+
+class PSNOnlinePlayFabIdPair : public Wrappers::PFAccountManagementPSNOnlinePlayFabIdPairWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementPSNOnlinePlayFabIdPair>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementPSNOnlinePlayFabIdPairWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementPSNOnlinePlayFabIdPair const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementPSNOnlinePlayFabIdPair& model);
+    static HRESULT Copy(const PFAccountManagementPSNOnlinePlayFabIdPair& input, PFAccountManagementPSNOnlinePlayFabIdPair& output, ModelBuffer& buffer);
+};
+
+class GetPlayFabIDsFromPSNOnlineIDsResult : public Wrappers::PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult& model);
+    static HRESULT Copy(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult& input, PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult& output, ModelBuffer& buffer);
+};
+
 class GetPlayFabIDsFromSteamIDsRequest : public Wrappers::PFAccountManagementGetPlayFabIDsFromSteamIDsRequestWrapper<Allocator>, public InputModel
 {
 public:

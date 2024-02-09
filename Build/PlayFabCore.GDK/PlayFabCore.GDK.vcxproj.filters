@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{e6a04b99-5bbe-4e5f-bff7-09356bfc4d59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Authentication">
+      <UniqueIdentifier>{1579de8f-71d6-41e1-b788-c50a0c15d398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Authentication\GDK">
+      <UniqueIdentifier>{6ef53e04-50cb-4e91-9160-1e3ccf542f32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platfrom">
+      <UniqueIdentifier>{855a687c-2105-446c-96db-76cda930f834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platfrom\Generic">
+      <UniqueIdentifier>{5bdd09e3-9aab-4ac3-b8ea-82eb0b90d93e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\PlayFabCore\Source\Authentication\GDK\Authentication_GDK.cpp">
+      <Filter>Source\Authentication\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.cpp">
+      <Filter>Source\Platfrom\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayFabCore\Source\Platform\Generic\Platform_Generic.cpp">
+      <Filter>Source\Platfrom\Generic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.h">
+      <Filter>Source\Platfrom\Generic</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

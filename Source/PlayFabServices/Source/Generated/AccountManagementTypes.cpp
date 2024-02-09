@@ -1216,6 +1216,113 @@ HRESULT GetPlayFabIDsFromPSNAccountIDsResult::Copy(const PFAccountManagementGetP
     return S_OK;
 }
 
+JsonValue GetPlayFabIDsFromPSNOnlineIDsRequest::ToJson() const
+{
+    return GetPlayFabIDsFromPSNOnlineIDsRequest::ToJson(this->Model());
+}
+
+JsonValue GetPlayFabIDsFromPSNOnlineIDsRequest::ToJson(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMember(output, "IssuerId", input.issuerId);
+    JsonUtils::ObjectAddMemberArray(output, "PSNOnlineIDs", input.PSNOnlineIDs, input.PSNOnlineIDsCount);
+    return output;
+}
+
+HRESULT PSNOnlinePlayFabIdPair::FromJson(const JsonValue& input)
+{
+    String playFabId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PlayFabId", playFabId));
+    this->SetPlayFabId(std::move(playFabId));
+
+    String PSNOnlineId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PSNOnlineId", PSNOnlineId));
+    this->SetPSNOnlineId(std::move(PSNOnlineId));
+
+    return S_OK;
+}
+
+size_t PSNOnlinePlayFabIdPair::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFAccountManagementPSNOnlinePlayFabIdPair const*> PSNOnlinePlayFabIdPair::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<PSNOnlinePlayFabIdPair>(&this->Model());
+}
+
+size_t PSNOnlinePlayFabIdPair::RequiredBufferSize(const PFAccountManagementPSNOnlinePlayFabIdPair& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.playFabId)
+    {
+        requiredSize += (std::strlen(model.playFabId) + 1);
+    }
+    if (model.PSNOnlineId)
+    {
+        requiredSize += (std::strlen(model.PSNOnlineId) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT PSNOnlinePlayFabIdPair::Copy(const PFAccountManagementPSNOnlinePlayFabIdPair& input, PFAccountManagementPSNOnlinePlayFabIdPair& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.playFabId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.playFabId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.PSNOnlineId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.PSNOnlineId = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+HRESULT GetPlayFabIDsFromPSNOnlineIDsResult::FromJson(const JsonValue& input)
+{
+    ModelVector<PSNOnlinePlayFabIdPair> data{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<PSNOnlinePlayFabIdPair>(input, "Data", data));
+    this->SetData(std::move(data));
+
+    return S_OK;
+}
+
+size_t GetPlayFabIDsFromPSNOnlineIDsResult::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult const*> GetPlayFabIDsFromPSNOnlineIDsResult::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<GetPlayFabIDsFromPSNOnlineIDsResult>(&this->Model());
+}
+
+size_t GetPlayFabIDsFromPSNOnlineIDsResult::RequiredBufferSize(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFAccountManagementPSNOnlinePlayFabIdPair*) + sizeof(PFAccountManagementPSNOnlinePlayFabIdPair*) * model.dataCount);
+    for (size_t i = 0; i < model.dataCount; ++i)
+    {
+        requiredSize += PSNOnlinePlayFabIdPair::RequiredBufferSize(*model.data[i]);
+    }
+    return requiredSize;
+}
+
+HRESULT GetPlayFabIDsFromPSNOnlineIDsResult::Copy(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult& input, PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyToArray<PSNOnlinePlayFabIdPair>(input.data, input.dataCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.data = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue GetPlayFabIDsFromSteamIDsRequest::ToJson() const
 {
     return GetPlayFabIDsFromSteamIDsRequest::ToJson(this->Model());

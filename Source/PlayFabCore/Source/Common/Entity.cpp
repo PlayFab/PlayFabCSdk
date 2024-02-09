@@ -70,13 +70,13 @@ uint32_t TokenRefreshWorker::s_interval = 1000 * 60 * 30; // 30 Minutes
 bool TokenRefreshWorker::s_debugForceExpireToken = false;
 #endif
 
-#if _DEBUG
-extern "C" __declspec(dllexport) void PFDebugSetTokenRefreshDebugState(bool expireToken)
+#if _DEBUG 
+extern "C" PF_API_ATTRIBUTES void PFDebugSetTokenRefreshDebugState(bool expireToken)
 {
     TokenRefreshWorker::SetDebugForceExpireToken(expireToken);
 }
 
-extern "C" __declspec(dllexport) void PFDebugSetSetInterval(uint32_t interval)
+extern "C" PF_API_ATTRIBUTES void PFDebugSetSetInterval(uint32_t interval)
 {
     TokenRefreshWorker::SetInterval(interval);
 }

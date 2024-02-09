@@ -141,7 +141,7 @@ void FriendsTests::TestClientSetFriendTags(TestContext& tc)
 #endif
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC 
 void FriendsTests::TestServerAddFriend(TestContext& tc)
 {
     // Already covered by TestServerGetFriendsList
@@ -149,7 +149,7 @@ void FriendsTests::TestServerAddFriend(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void FriendsTests::TestServerGetFriendsList(TestContext& tc)
 {
     SharedPtr<String> friendId = MakeShared<String>();
@@ -199,7 +199,7 @@ void FriendsTests::TestServerGetFriendsList(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void FriendsTests::TestServerRemoveFriend(TestContext& tc)
 {
     // Already covered by TestServerSetFriendTags
@@ -207,7 +207,7 @@ void FriendsTests::TestServerRemoveFriend(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void FriendsTests::TestServerSetFriendTags(TestContext& tc)
 {
     SharedPtr<String> friendId = MakeShared<String>();

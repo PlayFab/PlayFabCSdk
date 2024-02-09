@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Authentication.h"
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 #include "JsonUtils.h"
 
 namespace PlayFab
@@ -10,7 +10,7 @@ namespace Authentication
 
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithAndroidDeviceID(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithAndroidDeviceIDRequest& request,
     RunContext rc
@@ -87,7 +87,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithAndroidDeviceID(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithApple(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithAppleRequest& request,
     RunContext rc
@@ -164,7 +164,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithApple(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithCustomID(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithCustomIDRequest& request,
     RunContext rc
@@ -241,7 +241,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithCustomID(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithEmailAddress(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithEmailAddressRequest& request,
     RunContext rc
@@ -318,7 +318,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithEmailAddress(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithFacebook(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithFacebookRequest& request,
     RunContext rc
@@ -395,7 +395,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithFacebook(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithFacebookInstantGamesId(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithFacebookInstantGamesIdRequest& request,
     RunContext rc
@@ -472,7 +472,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithFacebookInstantGamesId(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithGameCenter(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithGameCenterRequest& request,
     RunContext rc
@@ -549,7 +549,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithGameCenter(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithGoogleAccount(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithGoogleAccountRequest& request,
     RunContext rc
@@ -626,7 +626,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithGoogleAccount(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithGooglePlayGamesServices(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithGooglePlayGamesServicesRequest& request,
     RunContext rc
@@ -703,7 +703,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithGooglePlayGamesServices(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithIOSDeviceID(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithIOSDeviceIDRequest& request,
     RunContext rc
@@ -780,7 +780,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithIOSDeviceID(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithKongregate(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithKongregateRequest& request,
     RunContext rc
@@ -857,7 +857,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithKongregate(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithNintendoServiceAccount(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithNintendoServiceAccountRequest& request,
     RunContext rc
@@ -934,7 +934,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithNintendoServiceAccount(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithNintendoSwitchDeviceId(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithNintendoSwitchDeviceIdRequest& request,
     RunContext rc
@@ -1011,7 +1011,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithNintendoSwitchDeviceId(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithOpenIdConnect(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithOpenIdConnectRequest& request,
     RunContext rc
@@ -1088,7 +1088,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithOpenIdConnect(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithPlayFab(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithPlayFabRequest& request,
     RunContext rc
@@ -1165,7 +1165,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithPlayFab(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithPSN(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithPSNRequest& request,
     RunContext rc
@@ -1242,7 +1242,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithPSN(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithSteam(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithSteamRequest& request,
     RunContext rc
@@ -1319,7 +1319,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithSteam(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithTwitch(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithTwitchRequest& request,
     RunContext rc
@@ -1396,7 +1396,7 @@ AsyncOp<void> AuthenticationAPI::ReLoginWithTwitch(
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithXbox(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithXboxRequest& request,
     RunContext rc
@@ -1509,7 +1509,7 @@ AsyncOp<RegisterPlayFabUserResult> AuthenticationAPI::RegisterPlayFabUser(
 }
 
 AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithServerCustomId(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     String&& secretKey,
     const LoginWithServerCustomIdRequest& request,
@@ -1548,7 +1548,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithServerCusto
 }
 
 AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithSteamId(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     String&& secretKey,
     const LoginWithSteamIdRequest& request,
@@ -1587,7 +1587,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithSteamId(
 }
 
 AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithXbox(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     String&& secretKey,
     const ServerLoginWithXboxRequest& request,
@@ -1626,7 +1626,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithXbox(
 }
 
 AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithXboxId(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     String&& secretKey,
     const LoginWithXboxIdRequest& request,
@@ -1737,7 +1737,7 @@ AsyncOp<void> AuthenticationAPI::Delete(
 }
 
 AsyncOp<SharedPtr<Entity>> AuthenticationAPI::GetEntity(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<Entity> entity,
     const GetEntityRequest& request,
     RunContext rc
@@ -1774,7 +1774,7 @@ AsyncOp<SharedPtr<Entity>> AuthenticationAPI::GetEntity(
 }
 
 AsyncOp<SharedPtr<Entity>> AuthenticationAPI::GetEntityWithSecretKey(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     String&& secretKey,
     const GetEntityRequest& request,

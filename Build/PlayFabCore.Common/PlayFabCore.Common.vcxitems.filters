@@ -135,7 +135,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\EntityToken.h">
       <Filter>Source\Common</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\GlobalState.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\PFCoreGlobalState.h">
       <Filter>Source\Common</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\HandleTable.h">
@@ -224,7 +224,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\EntityToken.cpp">
       <Filter>Source\Common</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\GlobalState.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\PFCoreGlobalState.cpp">
       <Filter>Source\Common</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\HttpClient.cpp">
@@ -269,10 +269,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\LHCExport.def">
-      <Filter>Source\HttpClient</Filter>
-    </None>
   </ItemGroup>
 </Project>

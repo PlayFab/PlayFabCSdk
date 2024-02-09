@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include <playfab/core/PFServiceConfig.h>
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 #include "ServiceConfig.h"
 #include "ApiHelpers.h"
 
@@ -12,7 +12,7 @@ PF_API PFServiceConfigCreateHandle(
     _Out_ PFServiceConfigHandle* serviceConfigHandle
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFServiceConfigCreateHandle), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFServiceConfigCreateHandle), [&](PFCoreGlobalState& state)
     {
         RETURN_HR_INVALIDARG_IF_NULL(apiEndpoint);
         RETURN_HR_INVALIDARG_IF_NULL(titleId);
@@ -28,7 +28,7 @@ PF_API PFServiceConfigDuplicateHandle(
     PFServiceConfigHandle* duplicatedHandle
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFServiceConfigDuplicateHandle), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFServiceConfigDuplicateHandle), [&](PFCoreGlobalState& state)
     {
         RETURN_HR_INVALIDARG_IF_NULL(duplicatedHandle);
 
@@ -42,7 +42,7 @@ PF_API_(void) PFServiceConfigCloseHandle(
     PFServiceConfigHandle handle
 ) noexcept
 {
-    ApiImpl(XASYNC_IDENTITY(PFServiceConfigCloseHandle), [&](GlobalState& state)
+    ApiImpl(XASYNC_IDENTITY(PFServiceConfigCloseHandle), [&](PFCoreGlobalState& state)
     {
         state.ServiceConfigs().CloseHandle(handle);
         return S_OK;

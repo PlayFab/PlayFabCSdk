@@ -125,7 +125,7 @@ PF_API PFSegmentsClientGetPlayerTagsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Adds a given tag to a player profile. The tag's namespace is automatically generated based on the
 /// source of the tag.
@@ -135,7 +135,7 @@ PF_API PFSegmentsClientGetPlayerTagsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This API will trigger a player_tag_added event and add a tag with the given TagName and PlayFabID
 /// to the corresponding player profile. TagName can be used for segmentation and it is limited to 256
 /// characters. Also there is a limit on the number of tags a title can have. See also ServerGetPlayerTagsAsync,
@@ -152,7 +152,7 @@ PF_API PFSegmentsServerAddPlayerTagAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves an array of player segment definitions. Results from this can be used in subsequent API
 /// calls such as GetPlayersInSegment which requires a Segment ID. While segment names can change the
@@ -162,7 +162,7 @@ PF_API PFSegmentsServerAddPlayerTagAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Request has no paramaters. See also ServerGetPlayersInSegmentAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFSegmentsServerGetAllSegmentsGetResultSize"/>
@@ -211,7 +211,7 @@ PF_API PFSegmentsServerGetAllSegmentsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// List all segments that a player currently belongs to at this moment in time.
 /// </summary>
@@ -220,7 +220,7 @@ PF_API PFSegmentsServerGetAllSegmentsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerGetAllSegmentsAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFSegmentsServerGetPlayerSegmentsGetResultSize"/>
@@ -270,7 +270,7 @@ PF_API PFSegmentsServerGetPlayerSegmentsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Allows for paging through all players in a given segment. This API creates a snapshot of all player
 /// profiles that match the segment definition at the time of its creation and lives through the Total
@@ -284,7 +284,7 @@ PF_API PFSegmentsServerGetPlayerSegmentsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Initial request must contain at least a Segment ID. Subsequent requests must contain the Segment
 /// ID as well as the Continuation Token. Failure to send the Continuation Token will result in a new
 /// player segment list being generated. Each time the Continuation Token is passed in the length of the
@@ -345,7 +345,7 @@ PF_API PFSegmentsServerGetPlayersInSegmentGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Get all tags with a given Namespace (optional) from a player profile.
 /// </summary>
@@ -354,7 +354,7 @@ PF_API PFSegmentsServerGetPlayersInSegmentGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This API will return a list of canonical tags which includes both namespace and tag's name. If namespace
 /// is not provided, the result is a list of all canonical tags. TagName can be used for segmentation
 /// and Namespace is limited to 128 characters. See also ServerAddPlayerTagAsync, ServerRemovePlayerTagAsync.
@@ -406,7 +406,7 @@ PF_API PFSegmentsServerGetPlayerTagsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Remove a given tag from a player profile. The tag's namespace is automatically generated based on
 /// the source of the tag.
@@ -416,7 +416,7 @@ PF_API PFSegmentsServerGetPlayerTagsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This API will trigger a player_tag_removed event and remove a tag with the given TagName and PlayFabID
 /// from the corresponding player profile. TagName can be used for segmentation and it is limited to 256
 /// characters See also ServerAddPlayerTagAsync, ServerGetPlayerTagsAsync.

@@ -166,7 +166,7 @@ PF_API PFTitleDataManagementClientGetTitleNewsGetResult(
     return S_OK;
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetPublisherDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementGetPublisherDataRequest* request,
@@ -212,7 +212,7 @@ PF_API PFTitleDataManagementServerGetPublisherDataGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetTimeAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ XAsyncBlock* async
@@ -240,7 +240,7 @@ PF_API PFTitleDataManagementServerGetTimeGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetTitleDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementGetTitleDataRequest* request,
@@ -286,7 +286,7 @@ PF_API PFTitleDataManagementServerGetTitleDataGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetTitleInternalDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementGetTitleDataRequest* request,
@@ -332,7 +332,7 @@ PF_API PFTitleDataManagementServerGetTitleInternalDataGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetTitleNewsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementGetTitleNewsRequest* request,
@@ -378,7 +378,7 @@ PF_API PFTitleDataManagementServerGetTitleNewsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerSetPublisherDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementSetPublisherDataRequest* request,
@@ -400,7 +400,7 @@ PF_API PFTitleDataManagementServerSetPublisherDataAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerSetTitleDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementSetTitleDataRequest* request,
@@ -422,7 +422,7 @@ PF_API PFTitleDataManagementServerSetTitleDataAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerSetTitleInternalDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementSetTitleDataRequest* request,

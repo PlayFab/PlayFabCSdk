@@ -223,7 +223,7 @@ void PlayerDataManagementTests::TestClientUpdateUserPublisherData(TestContext& t
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerGetUserData(TestContext& tc)
 {
     // Already covered in TestServerUpdateUserData
@@ -231,7 +231,7 @@ void PlayerDataManagementTests::TestServerGetUserData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerGetUserInternalData(TestContext& tc)
 {
     // Already covered in TestServerUpdateUserInternalData
@@ -239,7 +239,7 @@ void PlayerDataManagementTests::TestServerGetUserInternalData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerGetUserPublisherData(TestContext& tc)
 {
     // Already covered in TestServerUpdateUserPublisherData
@@ -247,7 +247,7 @@ void PlayerDataManagementTests::TestServerGetUserPublisherData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerGetUserPublisherInternalData(TestContext& tc)
 {
     // Already covered in TestServerUpdateUserPublisherInternalData
@@ -255,7 +255,7 @@ void PlayerDataManagementTests::TestServerGetUserPublisherInternalData(TestConte
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerGetUserPublisherReadOnlyData(TestContext& tc)
 {
     // Already covered in TestServerUpdateUserPublisherReadOnlyData
@@ -263,7 +263,7 @@ void PlayerDataManagementTests::TestServerGetUserPublisherReadOnlyData(TestConte
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerGetUserReadOnlyData(TestContext& tc)
 {
     // Already covered in TestServerUpdateUserReadOnlyData
@@ -271,7 +271,7 @@ void PlayerDataManagementTests::TestServerGetUserReadOnlyData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerUpdateUserData(TestContext& tc)
 {
     ServerUpdateUserDataOperation::RequestType request;
@@ -318,7 +318,7 @@ void PlayerDataManagementTests::TestServerUpdateUserData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerUpdateUserInternalData(TestContext& tc)
 {
     ServerUpdateUserInternalDataOperation::RequestType request;
@@ -365,7 +365,7 @@ void PlayerDataManagementTests::TestServerUpdateUserInternalData(TestContext& tc
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerUpdateUserPublisherData(TestContext& tc)
 {
     ServerUpdateUserPublisherDataOperation::RequestType request;
@@ -412,7 +412,7 @@ void PlayerDataManagementTests::TestServerUpdateUserPublisherData(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerUpdateUserPublisherInternalData(TestContext& tc)
 {
     ServerUpdateUserPublisherInternalDataOperation::RequestType request;
@@ -459,7 +459,7 @@ void PlayerDataManagementTests::TestServerUpdateUserPublisherInternalData(TestCo
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerUpdateUserPublisherReadOnlyData(TestContext& tc)
 {
     ServerUpdateUserPublisherReadOnlyDataOperation::RequestType request;
@@ -505,7 +505,7 @@ void PlayerDataManagementTests::TestServerUpdateUserPublisherReadOnlyData(TestCo
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerUpdateUserReadOnlyData(TestContext& tc)
 {
     ServerUpdateUserReadOnlyDataOperation::RequestType request;

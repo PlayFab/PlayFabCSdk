@@ -76,7 +76,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerAddFriendOperation : public XAsyncOperation<void>
 {
 public:
@@ -94,7 +94,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerGetFriendsListOperation : public XAsyncOperation<Wrappers::PFFriendsGetFriendsListResultWrapper<Allocator>>
 {
 public:
@@ -114,7 +114,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerRemoveFriendOperation : public XAsyncOperation<void>
 {
 public:
@@ -132,7 +132,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerSetFriendTagsOperation : public XAsyncOperation<void>
 {
 public:

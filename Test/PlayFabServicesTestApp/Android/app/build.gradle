@@ -1,0 +1,114 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdk 34
+    ndkVersion "26.1.10909125"
+
+    defaultConfig {
+        applicationId "com.microsoft.playfab.sdk.AndroidTestClient"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        externalNativeBuild {
+            cmake {
+                // externalNativeBuild normally skips static
+                // lib targets. This forces it to build.
+                targets "PlayFabSDKTestApp.Android"
+            }
+        }
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    if (project.hasProperty("testRelease")) {
+        testBuildType "release"
+    }
+
+    externalNativeBuild {
+        cmake {
+            version "3.18.1"
+            path "CMakeLists.txt"
+            buildStagingDirectory "${project.buildDir.getParentFile().getAbsolutePath()}/.cxx/${project.name}"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            jniDebuggable true
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    packagingOptions {
+        doNotStrip "**/*.so"
+        pickFirst '**/*.so'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    flavorDimensions "ABI"
+
+    productFlavors {
+        arm8 {
+            dimension "ABI"
+            ndk.abiFilters "arm64-v8a"
+        }
+        x86_64 {
+            dimension "ABI"
+            ndk.abiFilters "x86_64"
+        }
+    }
+
+    // Custom task to copy test json file for test app
+    task copyTestFiles(type: Copy) {
+        from '../../..'
+        into 'src/main/assets'
+        include '*.json'
+    }
+
+    // Custom task to copy aar files for test app
+    task copyAars(type: Copy) {
+        println("Copying aars...")
+        into 'libs'
+
+        into("") {
+            from '../../../../Out/Android/PlayFabServices.Android/outputs/aar'
+            include '*.aar'
+        }
+
+        into("") {
+            from '../../../../../libHttpClient/Binaries/Android/libHttpClient.Android/outputs/aar'
+            include '*.aar'
+        }
+    }
+}
+
+// Put all the Gradle build files under the /Out directory
+def binariesDir = project.file("../../../../Out/Android/${project.name}").getAbsolutePath()
+project.buildDir(new File(binariesDir))
+
+dependencies {
+    // Uncomment these if you want to build these along with the test app
+    // implementation project(":libHttpClient.Android")
+    // implementation project(":PlayFabServices.Android")
+
+    debugImplementation files('libs/libHttpClient.Android-debug.aar')
+    releaseImplementation files('libs/libHttpClient.Android-release.aar')
+    debugImplementation files('libs/PlayFabServices.Android-full-debug.aar')
+    releaseImplementation files('libs/PlayFabServices.Android-full-release.aar')
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+
+    implementation "com.google.android.material:material:1.6.0"
+    
+    androidTestImplementation "androidx.test:core:1.4.0"
+    androidTestImplementation "androidx.test:rules:1.4.0"
+    androidTestImplementation "androidx.test.ext:junit:1.1.3"
+}

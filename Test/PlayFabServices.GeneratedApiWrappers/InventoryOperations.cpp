@@ -166,7 +166,7 @@ Result<GetInventoryItemsOperation::ResultType> GetInventoryItemsOperation::GetRe
     return ResultType{ *result };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 GetMicrosoftStoreAccessTokensOperation::GetMicrosoftStoreAccessTokensOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -196,7 +196,7 @@ Result<GetMicrosoftStoreAccessTokensOperation::ResultType> GetMicrosoftStoreAcce
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 GetTransactionHistoryOperation::GetTransactionHistoryOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -254,7 +254,7 @@ Result<PurchaseInventoryItemsOperation::ResultType> PurchaseInventoryItemsOperat
     return ResultType{ *result };
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_IOS
 
 RedeemAppleAppStoreInventoryItemsOperation::RedeemAppleAppStoreInventoryItemsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -284,7 +284,7 @@ Result<RedeemAppleAppStoreInventoryItemsOperation::ResultType> RedeemAppleAppSto
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 
 RedeemGooglePlayInventoryItemsOperation::RedeemGooglePlayInventoryItemsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -314,7 +314,7 @@ Result<RedeemGooglePlayInventoryItemsOperation::ResultType> RedeemGooglePlayInve
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 RedeemMicrosoftStoreInventoryItemsOperation::RedeemMicrosoftStoreInventoryItemsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -344,7 +344,7 @@ Result<RedeemMicrosoftStoreInventoryItemsOperation::ResultType> RedeemMicrosoftS
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 RedeemNintendoEShopInventoryItemsOperation::RedeemNintendoEShopInventoryItemsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -374,7 +374,7 @@ Result<RedeemNintendoEShopInventoryItemsOperation::ResultType> RedeemNintendoESh
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 RedeemPlayStationStoreInventoryItemsOperation::RedeemPlayStationStoreInventoryItemsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -404,7 +404,7 @@ Result<RedeemPlayStationStoreInventoryItemsOperation::ResultType> RedeemPlayStat
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC
 
 RedeemSteamInventoryItemsOperation::RedeemSteamInventoryItemsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

@@ -1,33 +1,33 @@
-Library,Feature Group,API Name,Auth,Subgroup,Call Name,Trimmed?,GDK?,Win32?,Switch?,PlayStation?
-PF Core,Authentication,PFAuthenticationLoginWithAndroidDeviceIDAsync,None,Authentication,LoginWithAndroidDeviceID,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithAppleAsync,None,Authentication,LoginWithApple,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithCustomIDAsync,None,Authentication,LoginWithCustomID,false,Yes,Yes,Yes,Yes
-PF Core,Authentication,PFAuthenticationLoginWithEmailAddressAsync,None,Authentication,LoginWithEmailAddress,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithFacebookAsync,None,Authentication,LoginWithFacebook,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithFacebookInstantGamesIdAsync,None,Authentication,LoginWithFacebookInstantGamesId,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithGameCenterAsync,None,Authentication,LoginWithGameCenter,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithGoogleAccountAsync,None,Authentication,LoginWithGoogleAccount,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithGooglePlayGamesServicesAsync,None,Authentication,LoginWithGooglePlayGamesServices,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithIOSDeviceIDAsync,None,Authentication,LoginWithIOSDeviceID,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithKongregateAsync,None,Authentication,LoginWithKongregate,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithNintendoServiceAccountAsync,None,Authentication,LoginWithNintendoServiceAccount,false,No,No,Yes,No
-PF Core,Authentication,PFAuthenticationLoginWithNintendoSwitchDeviceIdAsync,None,Authentication,LoginWithNintendoSwitchDeviceId,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithOpenIdConnectAsync,None,Authentication,LoginWithOpenIdConnect,false,Yes,Yes,Yes,Yes
-PF Core,Authentication,PFAuthenticationLoginWithPlayFabAsync,None,Authentication,LoginWithPlayFab,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithPSNAsync,None,Authentication,LoginWithPSN,false,No,No,No,Yes
-PF Core,Authentication,PFAuthenticationLoginWithSteamAsync,None,Authentication,LoginWithSteam,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationLoginWithTwitchAsync,None,Authentication,LoginWithTwitch,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithXboxAsync,None,Authentication,LoginWithXbox,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationRegisterPlayFabUserAsync,None,Authentication,RegisterPlayFabUser,false,No,No,No,No
-PF Core,Authentication,PFAuthenticationServerLoginWithServerCustomIdAsync,SecretKey,Authentication,ServerLoginWithServerCustomId,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationServerLoginWithSteamIdAsync,SecretKey,Authentication,ServerLoginWithSteamId,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationServerLoginWithXboxAsync,SecretKey,Authentication,ServerLoginWithXbox,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationServerLoginWithXboxIdAsync,SecretKey,Authentication,ServerLoginWithXboxId,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationAuthenticateGameServerWithCustomIdAsync,EntityToken,Authentication,AuthenticateGameServerWithCustomId,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationDeleteAsync,EntityToken,Authentication,Delete,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationGetEntityAsync,None,Authentication,GetEntity,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationGetEntityWithSecretKeyAsync,SecretKey,Authentication,GetEntityWithSecretKey,false,No,Yes,No,No
-PF Core,Authentication,PFAuthenticationValidateEntityTokenAsync,EntityToken,Authentication,ValidateEntityToken,false,No,Yes,No,No
-PF Core,Events,PFEventsWriteEventsAsync,EntityToken,PlayStream Events,WriteEvents,false,Yes,Yes,Yes,Yes
-PF Core,Events,PFEventsWriteTelemetryEventsAsync,EntityToken,PlayStream Events,WriteTelemetryEvents,false,Yes,Yes,Yes,Yes
+Library,Feature Group,API Name,Auth,Subgroup,Call Name,Trimmed?,GDK?,Win32?,Switch?,PlayStation?,Linux?,Android?,iOS?,Macos?
+PF Core,Authentication,PFAuthenticationLoginWithAndroidDeviceIDAsync,None,Authentication,LoginWithAndroidDeviceID,false,No,No,No,No,No,Yes,No,No
+PF Core,Authentication,PFAuthenticationLoginWithAppleAsync,None,Authentication,LoginWithApple,false,No,No,No,No,No,No,Yes,Yes
+PF Core,Authentication,PFAuthenticationLoginWithCustomIDAsync,None,Authentication,LoginWithCustomID,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Core,Authentication,PFAuthenticationLoginWithEmailAddressAsync,None,Authentication,LoginWithEmailAddress,false,No,No,No,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationLoginWithFacebookAsync,None,Authentication,LoginWithFacebook,false,No,No,No,No,No,Yes,Yes,No
+PF Core,Authentication,PFAuthenticationLoginWithFacebookInstantGamesIdAsync,None,Authentication,LoginWithFacebookInstantGamesId,false,No,No,No,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationLoginWithGameCenterAsync,None,Authentication,LoginWithGameCenter,false,No,No,No,No,No,No,Yes,No
+PF Core,Authentication,PFAuthenticationLoginWithGoogleAccountAsync,None,Authentication,LoginWithGoogleAccount,false,No,No,No,No,No,Yes,No,No
+PF Core,Authentication,PFAuthenticationLoginWithGooglePlayGamesServicesAsync,None,Authentication,LoginWithGooglePlayGamesServices,false,No,No,No,No,No,Yes,No,No
+PF Core,Authentication,PFAuthenticationLoginWithIOSDeviceIDAsync,None,Authentication,LoginWithIOSDeviceID,false,No,No,No,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationLoginWithKongregateAsync,None,Authentication,LoginWithKongregate,false,No,No,No,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationLoginWithNintendoServiceAccountAsync,None,Authentication,LoginWithNintendoServiceAccount,false,No,No,Yes,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationLoginWithNintendoSwitchDeviceIdAsync,None,Authentication,LoginWithNintendoSwitchDeviceId,false,No,No,No,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationLoginWithOpenIdConnectAsync,None,Authentication,LoginWithOpenIdConnect,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Core,Authentication,PFAuthenticationLoginWithPlayFabAsync,None,Authentication,LoginWithPlayFab,false,No,No,No,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationLoginWithPSNAsync,None,Authentication,LoginWithPSN,false,No,No,No,Yes,No,No,No,No
+PF Core,Authentication,PFAuthenticationLoginWithSteamAsync,None,Authentication,LoginWithSteam,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationLoginWithTwitchAsync,None,Authentication,LoginWithTwitch,false,No,No,No,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationLoginWithXboxAsync,None,Authentication,LoginWithXbox,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationRegisterPlayFabUserAsync,None,Authentication,RegisterPlayFabUser,false,No,No,No,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationServerLoginWithServerCustomIdAsync,SecretKey,Authentication,ServerLoginWithServerCustomId,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationServerLoginWithSteamIdAsync,SecretKey,Authentication,ServerLoginWithSteamId,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationServerLoginWithXboxAsync,SecretKey,Authentication,ServerLoginWithXbox,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationServerLoginWithXboxIdAsync,SecretKey,Authentication,ServerLoginWithXboxId,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationAuthenticateGameServerWithCustomIdAsync,EntityToken,Authentication,AuthenticateGameServerWithCustomId,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationDeleteAsync,EntityToken,Authentication,Delete,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationGetEntityAsync,None,Authentication,GetEntity,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationGetEntityWithSecretKeyAsync,SecretKey,Authentication,GetEntityWithSecretKey,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationValidateEntityTokenAsync,EntityToken,Authentication,ValidateEntityToken,false,No,Yes,No,No,Yes,No,No,Yes
+PF Core,Events,PFEventsWriteEventsAsync,EntityToken,PlayStream Events,WriteEvents,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Core,Events,PFEventsWriteTelemetryEventsAsync,EntityToken,PlayStream Events,WriteTelemetryEvents,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 

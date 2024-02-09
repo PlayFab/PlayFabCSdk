@@ -13,7 +13,7 @@
 extern "C"
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Adds or updates a contact email to the player's profile.
 /// </summary>
@@ -22,7 +22,7 @@ extern "C"
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This API adds a contact email to the player's profile. If the player's profile already contains a
 /// contact email, it will update the contact email to the email address specified.
 ///
@@ -37,7 +37,7 @@ PF_API PFAccountManagementClientAddOrUpdateContactEmailAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Adds playfab username/password auth to an existing account created via an anonymous auth method,
 /// e.g. automatic device ID login.
@@ -47,7 +47,7 @@ PF_API PFAccountManagementClientAddOrUpdateContactEmailAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLoginWithEmailAddressAsync, ClientLoginWithPlayFabAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientAddUsernamePasswordGetResultSize"/>
@@ -276,7 +276,7 @@ PF_API PFAccountManagementClientGetPlayerProfileGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Facebook identifiers.
 /// </summary>
@@ -285,7 +285,7 @@ PF_API PFAccountManagementClientGetPlayerProfileGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, iOS, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromFacebookIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromFacebookIDsGetResult"/> to get the result.
 /// </remarks>
@@ -333,7 +333,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Facebook Instant Game identifiers.
 /// </summary>
@@ -342,7 +342,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromFacebookInstantGamesIdsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromFacebookInstantGamesIdsGetResult"/> to get
 /// the result.
@@ -391,7 +391,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookInstantGamesIdsGetResul
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Game Center identifiers (referenced
 /// in the Game Center Programming Guide as the Player Identifier).
@@ -401,7 +401,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookInstantGamesIdsGetResul
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, iOS, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromGameCenterIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromGameCenterIDsGetResult"/> to get the result.
 /// </remarks>
@@ -449,7 +449,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGameCenterIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Google identifiers. The Google identifiers
 /// are the IDs for the user accounts, available as 'id' in the Google+ People API calls.
@@ -459,7 +459,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGameCenterIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromGoogleIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromGoogleIDsGetResult"/> to get the result.
 /// </remarks>
@@ -507,7 +507,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGoogleIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Google Play Games identifiers. The
 /// Google Play Games identifiers are the IDs for the user accounts, available as 'playerId' in the Google
@@ -518,7 +518,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGoogleIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsGetResult"/> to get
 /// the result.
@@ -567,7 +567,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsGetResu
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Kongregate identifiers. The Kongregate
 /// identifiers are the IDs for the user accounts, available as 'user_id' from the Kongregate API methods(ex:
@@ -578,7 +578,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsGetResu
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromKongregateIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromKongregateIDsGetResult"/> to get the result.
 /// </remarks>
@@ -626,7 +626,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromKongregateIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Nintendo Service Account identifiers.
 /// </summary>
@@ -635,7 +635,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromKongregateIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and Nintendo Switch.
+/// This API is available on Win32, Nintendo Switch, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromNintendoServiceAccountIdsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromNintendoServiceAccountIdsGetResult"/> to
 /// get the result.
@@ -684,7 +684,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoServiceAccountIdsGetRes
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Nintendo Switch Device identifiers.
 /// </summary>
@@ -693,7 +693,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoServiceAccountIdsGetRes
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResult"/> to get
 /// the result.
@@ -742,7 +742,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResul
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of PlayStation :tm: Network identifiers.
 /// </summary>
@@ -751,7 +751,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResul
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and Sony PlayStation®.
+/// This API is available on Win32, Sony PlayStation®, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromPSNAccountIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromPSNAccountIDsGetResult"/> to get the result.
 /// </remarks>
@@ -801,7 +801,65 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromPSNAccountIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if 0
+/// <summary>
+/// Retrieves the unique PlayFab identifiers for the given set of PlayStation :tm: Network identifiers.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromPSNOnlineIDsGetResultSize"/>
+/// and <see cref="PFAccountManagementClientGetPlayFabIDsFromPSNOnlineIDsGetResult"/> to get the result.
+/// </remarks>
+PF_API PFAccountManagementClientGetPlayFabIDsFromPSNOnlineIDsAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+
+/// <summary>
+/// Get the size in bytes needed to store the result of a ClientGetPlayFabIDsFromPSNOnlineIDs call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_INVALID_PSN_AUTH_CODE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
+/// </returns>
+PF_API PFAccountManagementClientGetPlayFabIDsFromPSNOnlineIDsGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept;
+
+/// <summary>
+/// Gets the result of a successful PFAccountManagementClientGetPlayFabIDsFromPSNOnlineIDsAsync call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The size of the buffer for the result object.</param>
+/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
+/// <param name="result">Pointer to the result object.</param>
+/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_INVALID_PSN_AUTH_CODE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
+/// </returns>
+/// <remarks>
+/// result is a pointer within buffer and does not need to be freed separately.
+/// </remarks>
+PF_API PFAccountManagementClientGetPlayFabIDsFromPSNOnlineIDsGetResult(
+    _Inout_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept;
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Steam identifiers. The Steam identifiers
 /// are the profile IDs for the user accounts, available as SteamId in the Steamworks Community API calls.
@@ -811,7 +869,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromPSNAccountIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromSteamIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromSteamIDsGetResult"/> to get the result.
 /// </remarks>
@@ -859,7 +917,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromSteamIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Twitch identifiers. The Twitch identifiers
 /// are the IDs for the user accounts, available as '_id' from the Twitch API methods (ex: https://github.com/justintv/Twitch-API/blob/master/v3_resources/users.md#get-usersuser).
@@ -869,7 +927,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromSteamIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromTwitchIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromTwitchIDsGetResult"/> to get the result.
 /// </remarks>
@@ -917,7 +975,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromTwitchIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of XboxLive identifiers.
 /// </summary>
@@ -926,7 +984,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromTwitchIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and GDK.
+/// This API is available on Win32, GDK, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult"/> to get the result.
 /// </remarks>
@@ -974,7 +1032,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Android device identifier to the user's PlayFab account
 /// </summary>
@@ -983,7 +1041,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, and macOS.
 /// See also ClientLoginWithAndroidDeviceIDAsync, ClientUnlinkAndroidDeviceIDAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -997,7 +1055,7 @@ PF_API PFAccountManagementClientLinkAndroidDeviceIDAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Apple account associated with the token to the user's PlayFab account.
 /// </summary>
@@ -1006,13 +1064,13 @@ PF_API PFAccountManagementClientLinkAndroidDeviceIDAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, iOS, and macOS.
 /// See also ClientLoginWithAppleAsync, ClientUnlinkAppleAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_APPLE_NOT_ENABLED_FOR_TITLE, E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// the async result will be E_PF_APPLE_NOT_ENABLED_FOR_TITLE, E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED,
+/// E_PF_TOKEN_SIGNING_KEY_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementClientLinkAppleAsync(
     _In_ PFEntityHandle entityHandle,
@@ -1042,7 +1100,7 @@ PF_API PFAccountManagementClientLinkCustomIDAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Facebook account associated with the provided Facebook access token to the user's PlayFab
 /// account
@@ -1052,7 +1110,7 @@ PF_API PFAccountManagementClientLinkCustomIDAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, iOS, and macOS.
 /// Facebook sign-in is accomplished using the Facebook User Access Token. More information on the Token
 /// can be found in the Facebook developer documentation (https://developers.facebook.com/docs/facebook-login/access-tokens/).
 /// In Unity, for example, the Token is available as AccessToken in the Facebook SDK ScriptableObject
@@ -1074,7 +1132,7 @@ PF_API PFAccountManagementClientLinkFacebookAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Facebook Instant Games Id to the user's PlayFab account
 /// </summary>
@@ -1083,7 +1141,7 @@ PF_API PFAccountManagementClientLinkFacebookAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLoginWithFacebookInstantGamesIdAsync, ClientUnlinkFacebookInstantGamesIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1098,7 +1156,7 @@ PF_API PFAccountManagementClientLinkFacebookInstantGamesIdAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Game Center account associated with the provided Game Center ID to the user's PlayFab account.
 /// Logging in with a Game Center ID is insecure if you do not include the optional PublicKeyUrl, Salt,
@@ -1111,7 +1169,7 @@ PF_API PFAccountManagementClientLinkFacebookInstantGamesIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, iOS, and macOS.
 /// See also ClientUnlinkGameCenterAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1126,7 +1184,7 @@ PF_API PFAccountManagementClientLinkGameCenterAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the currently signed-in user account to their Google account, using their Google account credentials
 /// </summary>
@@ -1135,7 +1193,7 @@ PF_API PFAccountManagementClientLinkGameCenterAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, and macOS.
 /// Google sign-in is accomplished by obtaining a Google OAuth 2.0 credential using the Google sign-in
 /// for Android APIs on the device and passing it to this API. See also ClientLoginWithGoogleAccountAsync,
 /// ClientUnlinkGoogleAccountAsync.
@@ -1153,7 +1211,7 @@ PF_API PFAccountManagementClientLinkGoogleAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the currently signed-in user account to their Google Play Games account, using their Google
 /// Play Games account credentials
@@ -1163,7 +1221,7 @@ PF_API PFAccountManagementClientLinkGoogleAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, and macOS.
 /// Google Play Games sign-in is accomplished by obtaining a Google OAuth 2.0 credential using the Google
 /// Play Games sign-in for Android APIs on the device and passing it to this API. See also ClientLoginWithGooglePlayGamesServicesAsync,
 /// ClientUnlinkGooglePlayGamesServicesAccountAsync.
@@ -1181,7 +1239,7 @@ PF_API PFAccountManagementClientLinkGooglePlayGamesServicesAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the vendor-specific iOS device identifier to the user's PlayFab account
 /// </summary>
@@ -1190,7 +1248,7 @@ PF_API PFAccountManagementClientLinkGooglePlayGamesServicesAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLoginWithIOSDeviceIDAsync, ClientUnlinkIOSDeviceIDAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1204,7 +1262,7 @@ PF_API PFAccountManagementClientLinkIOSDeviceIDAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Kongregate identifier to the user's PlayFab account
 /// </summary>
@@ -1213,7 +1271,7 @@ PF_API PFAccountManagementClientLinkIOSDeviceIDAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLoginWithKongregateAsync, ClientUnlinkKongregateAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1228,7 +1286,7 @@ PF_API PFAccountManagementClientLinkKongregateAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Nintendo account associated with the token to the user's PlayFab account.
 /// </summary>
@@ -1237,7 +1295,7 @@ PF_API PFAccountManagementClientLinkKongregateAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and Nintendo Switch.
+/// This API is available on Win32, Nintendo Switch, Linux, and macOS.
 /// See also ClientLoginWithNintendoServiceAccountAsync, ClientUnlinkNintendoServiceAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1252,7 +1310,7 @@ PF_API PFAccountManagementClientLinkNintendoServiceAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the NintendoSwitchDeviceId to the user's PlayFab account
 /// </summary>
@@ -1261,7 +1319,7 @@ PF_API PFAccountManagementClientLinkNintendoServiceAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLoginWithNintendoSwitchDeviceIdAsync, ClientUnlinkNintendoSwitchDeviceIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1298,7 +1356,7 @@ PF_API PFAccountManagementClientLinkOpenIdConnectAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the PlayStation :tm: Network account associated with the provided access code to the user's
 /// PlayFab account
@@ -1308,7 +1366,7 @@ PF_API PFAccountManagementClientLinkOpenIdConnectAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and Sony PlayStation®.
+/// This API is available on Win32, Sony PlayStation®, and macOS.
 /// See also ClientLoginWithPSNAsync, ClientUnlinkPSNAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1323,7 +1381,7 @@ PF_API PFAccountManagementClientLinkPSNAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Steam account associated with the provided Steam authentication ticket to the user's PlayFab
 /// account
@@ -1333,7 +1391,7 @@ PF_API PFAccountManagementClientLinkPSNAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Steam authentication is accomplished with the Steam Session Ticket. More information on the Ticket
 /// can be found in the Steamworks SDK, here: https://partner.steamgames.com/documentation/auth (requires
 /// sign-in). NOTE: For Steam authentication to work, the title must be configured with the Steam Application
@@ -1353,7 +1411,7 @@ PF_API PFAccountManagementClientLinkSteamAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Twitch account associated with the token to the user's PlayFab account.
 /// </summary>
@@ -1362,7 +1420,7 @@ PF_API PFAccountManagementClientLinkSteamAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLoginWithTwitchAsync, ClientUnlinkTwitchAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1377,7 +1435,7 @@ PF_API PFAccountManagementClientLinkTwitchAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Xbox Live account associated with the provided access code to the user's PlayFab account
 /// </summary>
@@ -1386,7 +1444,7 @@ PF_API PFAccountManagementClientLinkTwitchAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and GDK.
+/// This API is available on Win32, GDK, Linux, and macOS.
 /// See also ClientLoginWithXboxAsync, ClientUnlinkXboxAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1401,7 +1459,7 @@ PF_API PFAccountManagementClientLinkXboxAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Removes a contact email from the player's profile.
 /// </summary>
@@ -1410,7 +1468,7 @@ PF_API PFAccountManagementClientLinkXboxAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This API removes an existing contact email from the player's profile.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1457,7 +1515,7 @@ PF_API PFAccountManagementClientReportPlayerGetResult(
     _Out_ PFAccountManagementReportPlayerClientResult* result
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Forces an email to be sent to the registered email address for the user's account, with a link allowing
 /// the user to change the password.If an account recovery email template ID is provided, an email using
@@ -1468,7 +1526,7 @@ PF_API PFAccountManagementClientReportPlayerGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// If the account in question is a 'temporary' account (for example, one that was created via a call
 /// to LoginFromIOSDeviceID), thisfunction will have no effect. Only PlayFab accounts which have valid
 /// email addresses will be able to receive a password reset email using this API.
@@ -1485,7 +1543,7 @@ PF_API PFAccountManagementClientSendAccountRecoveryEmailAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Android device identifier from the user's PlayFab account
 /// </summary>
@@ -1494,7 +1552,7 @@ PF_API PFAccountManagementClientSendAccountRecoveryEmailAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, and macOS.
 /// See also ClientLinkAndroidDeviceIDAsync, ClientLoginWithAndroidDeviceIDAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1508,7 +1566,7 @@ PF_API PFAccountManagementClientUnlinkAndroidDeviceIDAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Apple account from the user's PlayFab account.
 /// </summary>
@@ -1517,7 +1575,7 @@ PF_API PFAccountManagementClientUnlinkAndroidDeviceIDAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, iOS, and macOS.
 /// See also ClientLinkAppleAsync, ClientLoginWithAppleAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1552,7 +1610,7 @@ PF_API PFAccountManagementClientUnlinkCustomIDAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Facebook account from the user's PlayFab account
 /// </summary>
@@ -1561,7 +1619,7 @@ PF_API PFAccountManagementClientUnlinkCustomIDAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, iOS, and macOS.
 /// See also ClientLinkFacebookAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1575,7 +1633,7 @@ PF_API PFAccountManagementClientUnlinkFacebookAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Facebook Instant Game Ids from the user's PlayFab account
 /// </summary>
@@ -1584,7 +1642,7 @@ PF_API PFAccountManagementClientUnlinkFacebookAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLinkFacebookInstantGamesIdAsync, ClientLoginWithFacebookInstantGamesIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1599,7 +1657,7 @@ PF_API PFAccountManagementClientUnlinkFacebookInstantGamesIdAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Game Center account from the user's PlayFab account
 /// </summary>
@@ -1608,7 +1666,7 @@ PF_API PFAccountManagementClientUnlinkFacebookInstantGamesIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, iOS, and macOS.
 /// See also ClientLinkGameCenterAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1622,7 +1680,7 @@ PF_API PFAccountManagementClientUnlinkGameCenterAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Google account from the user's PlayFab account (https://developers.google.com/android/reference/com/google/android/gms/auth/GoogleAuthUtil#public-methods).
 /// </summary>
@@ -1631,7 +1689,7 @@ PF_API PFAccountManagementClientUnlinkGameCenterAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, and macOS.
 /// See also ClientLinkGoogleAccountAsync, ClientLoginWithGoogleAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1645,7 +1703,7 @@ PF_API PFAccountManagementClientUnlinkGoogleAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Google Play Games account from the user's PlayFab account.
 /// </summary>
@@ -1654,7 +1712,7 @@ PF_API PFAccountManagementClientUnlinkGoogleAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, Android, and macOS.
 /// See also ClientLinkGooglePlayGamesServicesAccountAsync, ClientLoginWithGooglePlayGamesServicesAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1668,7 +1726,7 @@ PF_API PFAccountManagementClientUnlinkGooglePlayGamesServicesAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related iOS device identifier from the user's PlayFab account
 /// </summary>
@@ -1677,7 +1735,7 @@ PF_API PFAccountManagementClientUnlinkGooglePlayGamesServicesAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLinkIOSDeviceIDAsync, ClientLoginWithIOSDeviceIDAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1691,7 +1749,7 @@ PF_API PFAccountManagementClientUnlinkIOSDeviceIDAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Kongregate identifier from the user's PlayFab account
 /// </summary>
@@ -1700,7 +1758,7 @@ PF_API PFAccountManagementClientUnlinkIOSDeviceIDAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLinkKongregateAsync, ClientLoginWithKongregateAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1714,7 +1772,7 @@ PF_API PFAccountManagementClientUnlinkKongregateAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Nintendo account from the user's PlayFab account.
 /// </summary>
@@ -1723,7 +1781,7 @@ PF_API PFAccountManagementClientUnlinkKongregateAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and Nintendo Switch.
+/// This API is available on Win32, Nintendo Switch, Linux, and macOS.
 /// See also ClientLinkNintendoServiceAccountAsync, ClientLoginWithNintendoServiceAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1738,7 +1796,7 @@ PF_API PFAccountManagementClientUnlinkNintendoServiceAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related NintendoSwitchDeviceId from the user's PlayFab account
 /// </summary>
@@ -1747,7 +1805,7 @@ PF_API PFAccountManagementClientUnlinkNintendoServiceAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLinkNintendoSwitchDeviceIdAsync, ClientLoginWithNintendoSwitchDeviceIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1784,7 +1842,7 @@ PF_API PFAccountManagementClientUnlinkOpenIdConnectAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related PlayStation :tm: Network account from the user's PlayFab account
 /// </summary>
@@ -1793,7 +1851,7 @@ PF_API PFAccountManagementClientUnlinkOpenIdConnectAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and Sony PlayStation®.
+/// This API is available on Win32, Sony PlayStation®, Linux, and macOS.
 /// See also ClientLinkPSNAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1807,7 +1865,7 @@ PF_API PFAccountManagementClientUnlinkPSNAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Steam account from the user's PlayFab account
 /// </summary>
@@ -1816,7 +1874,7 @@ PF_API PFAccountManagementClientUnlinkPSNAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLinkSteamAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1830,7 +1888,7 @@ PF_API PFAccountManagementClientUnlinkSteamAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Twitch account from the user's PlayFab account.
 /// </summary>
@@ -1839,7 +1897,7 @@ PF_API PFAccountManagementClientUnlinkSteamAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLinkTwitchAsync, ClientLoginWithTwitchAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1853,7 +1911,7 @@ PF_API PFAccountManagementClientUnlinkTwitchAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Xbox Live account from the user's PlayFab account
 /// </summary>
@@ -1862,7 +1920,7 @@ PF_API PFAccountManagementClientUnlinkTwitchAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32 and GDK.
+/// This API is available on Win32, GDK, Linux, and macOS.
 /// See also ClientLinkXboxAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1895,7 +1953,7 @@ PF_API PFAccountManagementClientUpdateAvatarUrlAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Updates the title specific display name for the user
 /// </summary>
@@ -1904,7 +1962,7 @@ PF_API PFAccountManagementClientUpdateAvatarUrlAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// In addition to the PlayFab username, titles can make use of a DisplayName which is also a unique
 /// identifier, but specific to the title. This allows for unique names which more closely match the theme
 /// or genre of a title, for example.
@@ -1958,7 +2016,7 @@ PF_API PFAccountManagementClientUpdateUserTitleDisplayNameGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Bans users by PlayFab ID with optional IP address, or MAC address for the provided game.
 /// </summary>
@@ -1967,7 +2025,7 @@ PF_API PFAccountManagementClientUpdateUserTitleDisplayNameGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// The existence of each user will not be verified. When banning by IP or MAC address, multiple players
 /// may be affected, so use this feature with caution. Returns information about the new bans. See also
 /// ServerGetUserBansAsync, ServerRevokeAllBansForUserAsync, ServerRevokeBansAsync, ServerUpdateBansAsync.
@@ -2019,7 +2077,7 @@ PF_API PFAccountManagementServerBanUsersGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Removes a user's player account from a title and deletes all associated data
 /// </summary>
@@ -2028,7 +2086,7 @@ PF_API PFAccountManagementServerBanUsersGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Deletes all data associated with the player, including statistics, custom data, inventory, purchases,
 /// virtual currency balances, characters and shared group memberships. Removes the player from all leaderboards
 /// and player search indexes. Does not delete PlayStream event history associated with the player. Does
@@ -2050,7 +2108,7 @@ PF_API PFAccountManagementServerDeletePlayerAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Returns whatever info is requested in the response for the user. Note that PII (like email address,
 /// facebook id) may be returned. All parameters default to false.
@@ -2060,7 +2118,7 @@ PF_API PFAccountManagementServerDeletePlayerAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayerCombinedInfoGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetPlayerCombinedInfoGetResult"/> to get the result.
 /// </remarks>
@@ -2108,7 +2166,7 @@ PF_API PFAccountManagementServerGetPlayerCombinedInfoGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the player's profile
 /// </summary>
@@ -2117,7 +2175,7 @@ PF_API PFAccountManagementServerGetPlayerCombinedInfoGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This API allows for access to details regarding a user in the PlayFab service, usually for purposes
 /// of customer support. Note that data returned may be Personally Identifying Information (PII), such
 /// as email address, and so care should be taken in how this data is stored and managed. Since this call
@@ -2173,7 +2231,7 @@ PF_API PFAccountManagementServerGetPlayerProfileGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Facebook identifiers.
 /// </summary>
@@ -2182,7 +2240,7 @@ PF_API PFAccountManagementServerGetPlayerProfileGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromFacebookIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetPlayFabIDsFromFacebookIDsGetResult"/> to get the result.
 /// </remarks>
@@ -2230,7 +2288,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Facebook Instant Games identifiers.
 /// </summary>
@@ -2239,7 +2297,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromFacebookInstantGamesIdsGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetPlayFabIDsFromFacebookInstantGamesIdsGetResult"/> to get
 /// the result.
@@ -2288,7 +2346,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookInstantGamesIdsGetResul
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Nintendo Service Account identifiers.
 /// </summary>
@@ -2297,7 +2355,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookInstantGamesIdsGetResul
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromNintendoServiceAccountIdsGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetPlayFabIDsFromNintendoServiceAccountIdsGetResult"/> to
 /// get the result.
@@ -2346,7 +2404,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoServiceAccountIdsGetRes
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Nintendo Switch Device identifiers.
 /// </summary>
@@ -2355,7 +2413,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoServiceAccountIdsGetRes
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResult"/> to get
 /// the result.
@@ -2404,7 +2462,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResul
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of PlayStation :tm: Network identifiers.
 /// </summary>
@@ -2413,7 +2471,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResul
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromPSNAccountIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetPlayFabIDsFromPSNAccountIDsGetResult"/> to get the result.
 /// </remarks>
@@ -2461,7 +2519,63 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromPSNAccountIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if 0
+/// <summary>
+/// Retrieves the unique PlayFab identifiers for the given set of PlayStation :tm: Network identifiers.
+/// </summary>
+/// <param name="titleEntityHandle">PFEntityHandle for a title Entity obtained using PFAuthenticationGetEntityWithSecretKeyAsync.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsGetResultSize"/>
+/// and <see cref="PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsGetResult"/> to get the result.
+/// </remarks>
+PF_API PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsAsync(
+    _In_ PFEntityHandle titleEntityHandle,
+    _In_ const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+
+/// <summary>
+/// Get the size in bytes needed to store the result of a ServerGetPlayFabIDsFromPSNOnlineIDs call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
+/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+PF_API PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept;
+
+/// <summary>
+/// Gets the result of a successful PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsAsync call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The size of the buffer for the result object.</param>
+/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
+/// <param name="result">Pointer to the result object.</param>
+/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
+/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+/// <remarks>
+/// result is a pointer within buffer and does not need to be freed separately.
+/// </remarks>
+PF_API PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsGetResult(
+    _Inout_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept;
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Steam identifiers. The Steam identifiers
 /// are the profile IDs for the user accounts, available as SteamId in the Steamworks Community API calls.
@@ -2471,7 +2585,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromPSNAccountIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromSteamIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetPlayFabIDsFromSteamIDsGetResult"/> to get the result.
 /// </remarks>
@@ -2519,7 +2633,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromSteamIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Twitch identifiers. The Twitch identifiers
 /// are the IDs for the user accounts, available as '_id' from the Twitch API methods (ex: https://github.com/justintv/Twitch-API/blob/master/v3_resources/users.md#get-usersuser).
@@ -2529,7 +2643,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromSteamIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromTwitchIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetPlayFabIDsFromTwitchIDsGetResult"/> to get the result.
 /// </remarks>
@@ -2577,7 +2691,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromTwitchIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of XboxLive identifiers.
 /// </summary>
@@ -2586,7 +2700,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromTwitchIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromXboxLiveIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetPlayFabIDsFromXboxLiveIDsGetResult"/> to get the result.
 /// </remarks>
@@ -2634,7 +2748,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromXboxLiveIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the associated PlayFab account identifiers for the given set of server custom identifiers.
 /// </summary>
@@ -2643,7 +2757,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromXboxLiveIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetServerCustomIDsFromPlayFabIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementServerGetServerCustomIDsFromPlayFabIDsGetResult"/> to get the result.
 /// </remarks>
@@ -2691,7 +2805,7 @@ PF_API PFAccountManagementServerGetServerCustomIDsFromPlayFabIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the relevant details for a specified user
 /// </summary>
@@ -2700,7 +2814,7 @@ PF_API PFAccountManagementServerGetServerCustomIDsFromPlayFabIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This API allows for access to details regarding a user in the PlayFab service, usually for purposes
 /// of customer support. Note that data returned may be Personally Identifying Information (PII), such
 /// as email address, and so care should be taken in how this data is stored and managed. Since this call
@@ -2754,7 +2868,7 @@ PF_API PFAccountManagementServerGetUserAccountInfoGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Gets all bans for a user.
 /// </summary>
@@ -2763,7 +2877,7 @@ PF_API PFAccountManagementServerGetUserAccountInfoGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Get all bans for a user, including inactive and expired bans.  See also ServerBanUsersAsync, ServerRevokeAllBansForUserAsync,
 /// ServerRevokeBansAsync, ServerUpdateBansAsync.
 ///
@@ -2816,7 +2930,7 @@ PF_API PFAccountManagementServerGetUserBansGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Nintendo account associated with the token to the user's PlayFab account
 /// </summary>
@@ -2825,7 +2939,7 @@ PF_API PFAccountManagementServerGetUserBansGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLinkNintendoServiceAccountSubjectAsync, ServerUnlinkNintendoServiceAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -2840,7 +2954,7 @@ PF_API PFAccountManagementServerLinkNintendoServiceAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Nintendo account associated with the Nintendo Service Account subject or id to the user's
 /// PlayFab account
@@ -2850,7 +2964,7 @@ PF_API PFAccountManagementServerLinkNintendoServiceAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLinkNintendoServiceAccountAsync, ServerUnlinkNintendoServiceAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -2865,7 +2979,7 @@ PF_API PFAccountManagementServerLinkNintendoServiceAccountSubjectAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the NintendoSwitchDeviceId to the user's PlayFab account
 /// </summary>
@@ -2874,7 +2988,7 @@ PF_API PFAccountManagementServerLinkNintendoServiceAccountSubjectAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerUnlinkNintendoSwitchDeviceIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -2888,7 +3002,7 @@ PF_API PFAccountManagementServerLinkNintendoSwitchDeviceIdAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the PlayStation :tm: Network account associated with the provided access code to the user's
 /// PlayFab account
@@ -2898,7 +3012,7 @@ PF_API PFAccountManagementServerLinkNintendoSwitchDeviceIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerUnlinkPSNAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -2937,7 +3051,7 @@ PF_API PFAccountManagementServerLinkPSNIdAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the custom server identifier, generated by the title, to the user's PlayFab account.
 /// </summary>
@@ -2946,7 +3060,7 @@ PF_API PFAccountManagementServerLinkPSNIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED or any of
 /// the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
@@ -2959,7 +3073,7 @@ PF_API PFAccountManagementServerLinkServerCustomIdAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Steam account associated with the provided Steam ID to the user's PlayFab account 
 /// </summary>
@@ -2968,7 +3082,7 @@ PF_API PFAccountManagementServerLinkServerCustomIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLoginWithSteamIdAsync, ServerUnlinkSteamIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -2983,7 +3097,7 @@ PF_API PFAccountManagementServerLinkSteamIdAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Xbox Live account associated with the provided access code to the user's PlayFab account
 /// </summary>
@@ -2992,7 +3106,7 @@ PF_API PFAccountManagementServerLinkSteamIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLoginWithXboxAsync, ServerUnlinkXboxAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -3007,7 +3121,7 @@ PF_API PFAccountManagementServerLinkXboxAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Revoke all active bans for a user.
 /// </summary>
@@ -3016,7 +3130,7 @@ PF_API PFAccountManagementServerLinkXboxAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Setting the active state of all non-expired bans for a user to Inactive. Expired bans with an Active
 /// state will be ignored, however. Returns information about applied updates only. See also ServerBanUsersAsync,
 /// ServerGetUserBansAsync, ServerRevokeBansAsync, ServerUpdateBansAsync.
@@ -3070,7 +3184,7 @@ PF_API PFAccountManagementServerRevokeAllBansForUserGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Revoke all active bans specified with BanId.
 /// </summary>
@@ -3079,7 +3193,7 @@ PF_API PFAccountManagementServerRevokeAllBansForUserGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Setting the active state of all bans requested to Inactive regardless of whether that ban has already
 /// expired. BanIds that do not exist will be skipped. Returns information about applied updates only.
 ///  See also ServerBanUsersAsync, ServerGetUserBansAsync, ServerRevokeAllBansForUserAsync, ServerUpdateBansAsync.
@@ -3131,7 +3245,7 @@ PF_API PFAccountManagementServerRevokeBansGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Forces an email to be sent to the registered contact email address for the user's account based on
 /// an account recovery email template
@@ -3141,7 +3255,7 @@ PF_API PFAccountManagementServerRevokeBansGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// PlayFab accounts which have valid email address or username will be able to receive a password reset
 /// email using this API.The email sent must be an account recovery email template. The username or email
 /// can be passed in to send the email.
@@ -3159,7 +3273,7 @@ PF_API PFAccountManagementServerSendCustomAccountRecoveryEmailAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Sends an email based on an email template to a player's contact email 
 /// </summary>
@@ -3168,7 +3282,7 @@ PF_API PFAccountManagementServerSendCustomAccountRecoveryEmailAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Sends an email for only players that have contact emails associated with them. Takes in an email
 /// template ID specifyingthe email template to send.
 ///
@@ -3184,7 +3298,7 @@ PF_API PFAccountManagementServerSendEmailFromTemplateAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Nintendo account from the user's PlayFab account
 /// </summary>
@@ -3193,7 +3307,7 @@ PF_API PFAccountManagementServerSendEmailFromTemplateAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLinkNintendoServiceAccountAsync, ServerLinkNintendoServiceAccountSubjectAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -3208,7 +3322,7 @@ PF_API PFAccountManagementServerUnlinkNintendoServiceAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related NintendoSwitchDeviceId from the user's PlayFab account
 /// </summary>
@@ -3217,7 +3331,7 @@ PF_API PFAccountManagementServerUnlinkNintendoServiceAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLinkNintendoSwitchDeviceIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -3232,7 +3346,7 @@ PF_API PFAccountManagementServerUnlinkNintendoSwitchDeviceIdAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related PlayStation :tm: Network account from the user's PlayFab account
 /// </summary>
@@ -3241,7 +3355,7 @@ PF_API PFAccountManagementServerUnlinkNintendoSwitchDeviceIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLinkPSNAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -3255,7 +3369,7 @@ PF_API PFAccountManagementServerUnlinkPSNAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the custom server identifier from the user's PlayFab account.
 /// </summary>
@@ -3264,7 +3378,7 @@ PF_API PFAccountManagementServerUnlinkPSNAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLinkServerCustomIdAsync, ServerLoginWithServerCustomIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -3278,7 +3392,7 @@ PF_API PFAccountManagementServerUnlinkServerCustomIdAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the Steam account associated with the provided Steam ID to the user's PlayFab account 
 /// </summary>
@@ -3287,7 +3401,7 @@ PF_API PFAccountManagementServerUnlinkServerCustomIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLinkSteamIdAsync, ServerLoginWithSteamIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -3301,7 +3415,7 @@ PF_API PFAccountManagementServerUnlinkSteamIdAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Xbox Live account from the user's PlayFab account
 /// </summary>
@@ -3310,7 +3424,7 @@ PF_API PFAccountManagementServerUnlinkSteamIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerLinkXboxAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -3324,7 +3438,7 @@ PF_API PFAccountManagementServerUnlinkXboxAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Update the avatar URL of the specified player
 /// </summary>
@@ -3333,7 +3447,7 @@ PF_API PFAccountManagementServerUnlinkXboxAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be one of global PlayFab Service errors. See doc page "Handling PlayFab Errors"
 /// for more details on error handling.
@@ -3345,7 +3459,7 @@ PF_API PFAccountManagementServerUpdateAvatarUrlAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Updates information of a list of existing bans specified with Ban Ids.
 /// </summary>
@@ -3354,7 +3468,7 @@ PF_API PFAccountManagementServerUpdateAvatarUrlAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// For each ban, only updates the values that are set. Leave any value to null for no change. If a ban
 /// could not be found, the rest are still applied. Returns information about applied updates only. See
 /// also ServerBanUsersAsync, ServerGetUserBansAsync, ServerRevokeAllBansForUserAsync, ServerRevokeBansAsync.
@@ -3406,7 +3520,7 @@ PF_API PFAccountManagementServerUpdateBansGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the title player accounts associated with the given XUIDs.
 /// </summary>
@@ -3415,7 +3529,7 @@ PF_API PFAccountManagementServerUpdateBansGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Given a collection of Xbox IDs (XUIDs), returns all title player accounts.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResultSize"/>

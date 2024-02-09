@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Events.h"
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 
 namespace PlayFab
 {

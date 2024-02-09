@@ -94,7 +94,7 @@ PF_API PFSegmentsClientGetPlayerTagsGetResult(
     return S_OK;
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFSegmentsServerAddPlayerTagAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFSegmentsAddPlayerTagRequest* request,
@@ -116,7 +116,7 @@ PF_API PFSegmentsServerAddPlayerTagAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFSegmentsServerGetAllSegmentsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ XAsyncBlock* async
@@ -160,7 +160,7 @@ PF_API PFSegmentsServerGetAllSegmentsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFSegmentsServerGetPlayerSegmentsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFSegmentsGetPlayersSegmentsRequest* request,
@@ -206,7 +206,7 @@ PF_API PFSegmentsServerGetPlayerSegmentsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFSegmentsServerGetPlayersInSegmentAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFSegmentsGetPlayersInSegmentRequest* request,
@@ -252,7 +252,7 @@ PF_API PFSegmentsServerGetPlayersInSegmentGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFSegmentsServerGetPlayerTagsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFSegmentsGetPlayerTagsRequest* request,
@@ -298,7 +298,7 @@ PF_API PFSegmentsServerGetPlayerTagsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFSegmentsServerRemovePlayerTagAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFSegmentsRemovePlayerTagRequest* request,

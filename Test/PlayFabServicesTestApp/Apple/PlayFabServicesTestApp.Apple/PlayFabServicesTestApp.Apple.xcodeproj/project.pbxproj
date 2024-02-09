@@ -1,0 +1,1669 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8206F0572B740D6D00451339 /* HttpClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8286B2302B7401C6009A4677 /* HttpClient.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8206F1892B755EA100451339 /* HttpClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8286B2322B7401C6009A4677 /* HttpClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8206F2192B758A1A00451339 /* libPlayFabSharedInternal_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F2182B758A1A00451339 /* libPlayFabSharedInternal_iOS.a */; };
+		8206F21D2B758A4100451339 /* PlayFabCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F21A2B758A4100451339 /* PlayFabCore_macOS.framework */; };
+		8206F21E2B758A4100451339 /* PlayFabCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F21A2B758A4100451339 /* PlayFabCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8206F21F2B758A4100451339 /* PlayFabServices_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F21B2B758A4100451339 /* PlayFabServices_macOS.framework */; };
+		8206F2202B758A4100451339 /* PlayFabServices_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F21B2B758A4100451339 /* PlayFabServices_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8206F2212B758A4100451339 /* libPlayFabSharedInternal_macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F21C2B758A4100451339 /* libPlayFabSharedInternal_macOS.a */; };
+		82AB6DA42B4DBB980082EDED /* AppleSignInCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB6DA32B4DBB980082EDED /* AppleSignInCoordinator.swift */; };
+		82B3CC6C2B5B04F000337232 /* EventPipelineTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB3F2B153920007BD4F5 /* EventPipelineTests.cpp */; };
+		82B3CC6D2B5B04F000337232 /* SegmentsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB452B153920007BD4F5 /* SegmentsTestsImpl.cpp */; };
+		82B3CC6E2B5B04F000337232 /* MultiplayerServerTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB522B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp */; };
+		82B3CC6F2B5B04F000337232 /* InventoryTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADB2B1537FB007BD4F5 /* InventoryTests.cpp */; };
+		82B3CC702B5B04F000337232 /* ProfilesTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADC2B1537FB007BD4F5 /* ProfilesTests.cpp */; };
+		82B3CC712B5B04F000337232 /* InventoryTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4E2B153920007BD4F5 /* InventoryTestsImpl.cpp */; };
+		82B3CC722B5B04F000337232 /* AccountManagementTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB482B153920007BD4F5 /* AccountManagementTestsImpl.cpp */; };
+		82B3CC732B5B04F000337232 /* ExperimentationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADD2B1537FB007BD4F5 /* ExperimentationTests.cpp */; };
+		82B3CC742B5B04F000337232 /* PushNotificationsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAC2B1536C9007BD4F5 /* PushNotificationsOperations.cpp */; };
+		82B3CC752B5B04F000337232 /* TitleDataManagementTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADA2B1537FB007BD4F5 /* TitleDataManagementTests.cpp */; };
+		82B3CC762B5B04F000337232 /* CoreOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB582B153920007BD4F5 /* CoreOperations.cpp */; };
+		82B3CC772B5B04F000337232 /* DataOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAF2B1536C9007BD4F5 /* DataOperations.cpp */; };
+		82B3CC782B5B04F000337232 /* FriendsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAD92B1537FB007BD4F5 /* FriendsTests.cpp */; };
+		82B3CC792B5B04F000337232 /* MultiplayerServerTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE22B1537FB007BD4F5 /* MultiplayerServerTests.cpp */; };
+		82B3CC7A2B5B04F000337232 /* FriendsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4B2B153920007BD4F5 /* FriendsTestsImpl.cpp */; };
+		82B3CC7B2B5B04F000337232 /* AccountManagementTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE42B1537FB007BD4F5 /* AccountManagementTests.cpp */; };
+		82B3CC7C2B5B04F000337232 /* AuthenticationOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB572B153920007BD4F5 /* AuthenticationOperations.cpp */; };
+		82B3CC7D2B5B04F000337232 /* TestAppPch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB392B153920007BD4F5 /* TestAppPch.cpp */; };
+		82B3CC7E2B5B04F000337232 /* LocalizationTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4D2B153920007BD4F5 /* LocalizationTestsImpl.cpp */; };
+		82B3CC7F2B5B04F000337232 /* CatalogOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA62B1536C9007BD4F5 /* CatalogOperations.cpp */; };
+		82B3CC802B5B04F000337232 /* TitleDataManagementTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB432B153920007BD4F5 /* TitleDataManagementTestsImpl.cpp */; };
+		82B3CC812B5B04F000337232 /* GroupsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAA2B1536C9007BD4F5 /* GroupsOperations.cpp */; };
+		82B3CC822B5B04F000337232 /* DataTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB512B153920007BD4F5 /* DataTestsImpl.cpp */; };
+		82B3CC832B5B04F000337232 /* AppleSignInCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB6DA32B4DBB980082EDED /* AppleSignInCoordinator.swift */; };
+		82B3CC842B5B04F000337232 /* InventoryOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAB02B1536C9007BD4F5 /* InventoryOperations.cpp */; };
+		82B3CC852B5B04F000337232 /* LocalizationOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA22B1536C9007BD4F5 /* LocalizationOperations.cpp */; };
+		82B3CC862B5B04F000337232 /* MainApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82B72C882B1FF441003802AA /* MainApple.cpp */; };
+		82B3CC872B5B04F000337232 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEA7E2B153284007BD4F5 /* ContentView.swift */; };
+		82B3CC882B5B04F000337232 /* TestContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB232B153920007BD4F5 /* TestContext.cpp */; };
+		82B3CC892B5B04F000337232 /* PlayerDataManagementOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAB12B1536C9007BD4F5 /* PlayerDataManagementOperations.cpp */; };
+		82B3CC8A2B5B04F000337232 /* PlayerDataManagementTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB422B153920007BD4F5 /* PlayerDataManagementTestsImpl.cpp */; };
+		82B3CC8B2B5B04F000337232 /* PlatformUtilsApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB8D2B1556D5007BD4F5 /* PlatformUtilsApple.cpp */; };
+		82B3CC8C2B5B04F000337232 /* CloudScriptTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAD82B1537FB007BD4F5 /* CloudScriptTests.cpp */; };
+		82B3CC8D2B5B04F000337232 /* CloudScriptOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA32B1536C9007BD4F5 /* CloudScriptOperations.cpp */; };
+		82B3CC8E2B5B04F000337232 /* CoreTestClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB1C2B153920007BD4F5 /* CoreTestClass.cpp */; };
+		82B3CC8F2B5B04F000337232 /* AuthenticationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB3D2B153920007BD4F5 /* AuthenticationTests.cpp */; };
+		82B3CC902B5B04F000337232 /* TestClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB1B2B153920007BD4F5 /* TestClass.cpp */; };
+		82B3CC912B5B04F000337232 /* TestRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB1F2B153920007BD4F5 /* TestRunner.cpp */; };
+		82B3CC922B5B04F000337232 /* MultiplayerServerOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA42B1536C9007BD4F5 /* MultiplayerServerOperations.cpp */; };
+		82B3CC932B5B04F000337232 /* FriendsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA72B1536C9007BD4F5 /* FriendsOperations.cpp */; };
+		82B3CC942B5B04F000337232 /* CatalogTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4A2B153920007BD4F5 /* CatalogTestsImpl.cpp */; };
+		82B3CC952B5B04F000337232 /* CatalogTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE52B1537FB007BD4F5 /* CatalogTests.cpp */; };
+		82B3CC962B5B04F000337232 /* AccountManagementOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAE2B1536C9007BD4F5 /* AccountManagementOperations.cpp */; };
+		82B3CC972B5B04F000337232 /* ExperimentationOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAD2B1536C9007BD4F5 /* ExperimentationOperations.cpp */; };
+		82B3CC982B5B04F000337232 /* CloudScriptTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB462B153920007BD4F5 /* CloudScriptTestsImpl.cpp */; };
+		82B3CC992B5B04F000337232 /* PlatformSpecificOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA52B1536C9007BD4F5 /* PlatformSpecificOperations.cpp */; };
+		82B3CC9A2B5B04F000337232 /* TestReport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB1E2B153920007BD4F5 /* TestReport.cpp */; };
+		82B3CC9B2B5B04F000337232 /* MemoryManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB342B153920007BD4F5 /* MemoryManager.cpp */; };
+		82B3CC9C2B5B04F000337232 /* PlayFabServicesTestApp_AppleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEA7C2B153284007BD4F5 /* PlayFabServicesTestApp_AppleApp.swift */; };
+		82B3CC9D2B5B04F000337232 /* PushNotificationsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4F2B153920007BD4F5 /* PushNotificationsTestsImpl.cpp */; };
+		82B3CC9E2B5B04F000337232 /* LocalizationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE32B1537FB007BD4F5 /* LocalizationTests.cpp */; };
+		82B3CC9F2B5B04F000337232 /* PlatformSpecificTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4C2B153920007BD4F5 /* PlatformSpecificTestsImpl.cpp */; };
+		82B3CCA02B5B04F000337232 /* ExperimentationTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB502B153920007BD4F5 /* ExperimentationTestsImpl.cpp */; };
+		82B3CCA12B5B04F000337232 /* GroupsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB472B153920007BD4F5 /* GroupsTestsImpl.cpp */; };
+		82B3CCA22B5B04F000337232 /* PlayFabApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB8B2B1551E8007BD4F5 /* PlayFabApple.cpp */; };
+		82B3CCA32B5B04F000337232 /* TitleDataManagementOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAB2B1536C9007BD4F5 /* TitleDataManagementOperations.cpp */; };
+		82B3CCA42B5B04F000337232 /* PlayerDataManagementTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAD72B1537FB007BD4F5 /* PlayerDataManagementTests.cpp */; };
+		82B3CCA52B5B04F000337232 /* ServicesOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB5A2B153920007BD4F5 /* ServicesOperations.cpp */; };
+		82B3CCA62B5B04F000337232 /* ServicesTestClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB242B153920007BD4F5 /* ServicesTestClass.cpp */; };
+		82B3CCA72B5B04F000337232 /* GroupsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE62B1537FB007BD4F5 /* GroupsTests.cpp */; };
+		82B3CCA82B5B04F000337232 /* SegmentsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA82B1536C9007BD4F5 /* SegmentsOperations.cpp */; };
+		82B3CCA92B5B04F000337232 /* ProfilesTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB442B153920007BD4F5 /* ProfilesTestsImpl.cpp */; };
+		82B3CCAA2B5B04F000337232 /* PushNotificationsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE02B1537FB007BD4F5 /* PushNotificationsTests.cpp */; };
+		82B3CCAB2B5B04F000337232 /* PlatformSpecificTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADE2B1537FB007BD4F5 /* PlatformSpecificTests.cpp */; };
+		82B3CCAC2B5B04F000337232 /* ProfilesOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA92B1536C9007BD4F5 /* ProfilesOperations.cpp */; };
+		82B3CCAD2B5B04F000337232 /* SegmentsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE12B1537FB007BD4F5 /* SegmentsTests.cpp */; };
+		82B3CCAE2B5B04F000337232 /* DataTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADF2B1537FB007BD4F5 /* DataTests.cpp */; };
+		82B3CCB42B5B04F000337232 /* AccountManagementTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAF82B153866007BD4F5 /* AccountManagementTestsImpl.stubs */; };
+		82B3CCB52B5B04F000337232 /* testTitleData.json in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB982B156891007BD4F5 /* testTitleData.json */; };
+		82B3CCB62B5B04F000337232 /* ExperimentationTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFE2B153866007BD4F5 /* ExperimentationTestsImpl.stubs */; };
+		82B3CCB72B5B04F000337232 /* PlatformSpecificTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB022B153866007BD4F5 /* PlatformSpecificTestsImpl.stubs */; };
+		82B3CCB82B5B04F000337232 /* GroupsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFC2B153866007BD4F5 /* GroupsTestsImpl.stubs */; };
+		82B3CCB92B5B04F000337232 /* TitleDataManagementTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB042B153866007BD4F5 /* TitleDataManagementTestsImpl.stubs */; };
+		82B3CCBA2B5B04F000337232 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEA842B153285007BD4F5 /* Preview Assets.xcassets */; };
+		82B3CCBB2B5B04F000337232 /* PlayerDataManagementTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFD2B153866007BD4F5 /* PlayerDataManagementTestsImpl.stubs */; };
+		82B3CCBC2B5B04F000337232 /* MultiplayerServerTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAF92B153866007BD4F5 /* MultiplayerServerTestsImpl.stubs */; };
+		82B3CCBD2B5B04F000337232 /* SegmentsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB032B153866007BD4F5 /* SegmentsTestsImpl.stubs */; };
+		82B3CCBE2B5B04F000337232 /* PushNotificationsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFF2B153866007BD4F5 /* PushNotificationsTestsImpl.stubs */; };
+		82B3CCBF2B5B04F000337232 /* InventoryTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB052B153866007BD4F5 /* InventoryTestsImpl.stubs */; };
+		82B3CCC02B5B04F000337232 /* DataTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFB2B153866007BD4F5 /* DataTestsImpl.stubs */; };
+		82B3CCC12B5B04F000337232 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEA802B153285007BD4F5 /* Assets.xcassets */; };
+		82B3CCC22B5B04F000337232 /* FriendsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB012B153866007BD4F5 /* FriendsTestsImpl.stubs */; };
+		82B3CCC32B5B04F000337232 /* CloudScriptTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB072B153866007BD4F5 /* CloudScriptTestsImpl.stubs */; };
+		82B3CCC42B5B04F000337232 /* CatalogTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB002B153866007BD4F5 /* CatalogTestsImpl.stubs */; };
+		82B3CCC52B5B04F000337232 /* ProfilesTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFA2B153866007BD4F5 /* ProfilesTestsImpl.stubs */; };
+		82B3CCC62B5B04F000337232 /* LocalizationTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB062B153866007BD4F5 /* LocalizationTestsImpl.stubs */; };
+		82B72C892B1FF441003802AA /* MainApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82B72C882B1FF441003802AA /* MainApple.cpp */; };
+		82CEEA7D2B153284007BD4F5 /* PlayFabServicesTestApp_AppleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEA7C2B153284007BD4F5 /* PlayFabServicesTestApp_AppleApp.swift */; };
+		82CEEA7F2B153284007BD4F5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEA7E2B153284007BD4F5 /* ContentView.swift */; };
+		82CEEA812B153285007BD4F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEA802B153285007BD4F5 /* Assets.xcassets */; };
+		82CEEA852B153285007BD4F5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEA842B153285007BD4F5 /* Preview Assets.xcassets */; };
+		82CEEAB22B1536C9007BD4F5 /* LocalizationOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA22B1536C9007BD4F5 /* LocalizationOperations.cpp */; };
+		82CEEAB32B1536C9007BD4F5 /* CloudScriptOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA32B1536C9007BD4F5 /* CloudScriptOperations.cpp */; };
+		82CEEAB42B1536C9007BD4F5 /* MultiplayerServerOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA42B1536C9007BD4F5 /* MultiplayerServerOperations.cpp */; };
+		82CEEAB52B1536C9007BD4F5 /* PlatformSpecificOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA52B1536C9007BD4F5 /* PlatformSpecificOperations.cpp */; };
+		82CEEAB62B1536C9007BD4F5 /* CatalogOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA62B1536C9007BD4F5 /* CatalogOperations.cpp */; };
+		82CEEAB72B1536C9007BD4F5 /* FriendsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA72B1536C9007BD4F5 /* FriendsOperations.cpp */; };
+		82CEEAB82B1536C9007BD4F5 /* SegmentsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA82B1536C9007BD4F5 /* SegmentsOperations.cpp */; };
+		82CEEAB92B1536C9007BD4F5 /* ProfilesOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAA92B1536C9007BD4F5 /* ProfilesOperations.cpp */; };
+		82CEEABA2B1536C9007BD4F5 /* GroupsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAA2B1536C9007BD4F5 /* GroupsOperations.cpp */; };
+		82CEEABB2B1536C9007BD4F5 /* TitleDataManagementOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAB2B1536C9007BD4F5 /* TitleDataManagementOperations.cpp */; };
+		82CEEABC2B1536C9007BD4F5 /* PushNotificationsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAC2B1536C9007BD4F5 /* PushNotificationsOperations.cpp */; };
+		82CEEABD2B1536C9007BD4F5 /* ExperimentationOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAD2B1536C9007BD4F5 /* ExperimentationOperations.cpp */; };
+		82CEEABE2B1536C9007BD4F5 /* AccountManagementOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAE2B1536C9007BD4F5 /* AccountManagementOperations.cpp */; };
+		82CEEABF2B1536C9007BD4F5 /* DataOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAAF2B1536C9007BD4F5 /* DataOperations.cpp */; };
+		82CEEAC02B1536C9007BD4F5 /* InventoryOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAB02B1536C9007BD4F5 /* InventoryOperations.cpp */; };
+		82CEEAC12B1536C9007BD4F5 /* PlayerDataManagementOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAB12B1536C9007BD4F5 /* PlayerDataManagementOperations.cpp */; };
+		82CEEAE72B1537FB007BD4F5 /* PlayerDataManagementTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAD72B1537FB007BD4F5 /* PlayerDataManagementTests.cpp */; };
+		82CEEAE82B1537FB007BD4F5 /* CloudScriptTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAD82B1537FB007BD4F5 /* CloudScriptTests.cpp */; };
+		82CEEAE92B1537FB007BD4F5 /* FriendsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAD92B1537FB007BD4F5 /* FriendsTests.cpp */; };
+		82CEEAEA2B1537FB007BD4F5 /* TitleDataManagementTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADA2B1537FB007BD4F5 /* TitleDataManagementTests.cpp */; };
+		82CEEAEB2B1537FB007BD4F5 /* InventoryTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADB2B1537FB007BD4F5 /* InventoryTests.cpp */; };
+		82CEEAEC2B1537FB007BD4F5 /* ProfilesTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADC2B1537FB007BD4F5 /* ProfilesTests.cpp */; };
+		82CEEAED2B1537FB007BD4F5 /* ExperimentationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADD2B1537FB007BD4F5 /* ExperimentationTests.cpp */; };
+		82CEEAEE2B1537FB007BD4F5 /* PlatformSpecificTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADE2B1537FB007BD4F5 /* PlatformSpecificTests.cpp */; };
+		82CEEAEF2B1537FB007BD4F5 /* DataTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADF2B1537FB007BD4F5 /* DataTests.cpp */; };
+		82CEEAF02B1537FB007BD4F5 /* PushNotificationsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE02B1537FB007BD4F5 /* PushNotificationsTests.cpp */; };
+		82CEEAF12B1537FB007BD4F5 /* SegmentsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE12B1537FB007BD4F5 /* SegmentsTests.cpp */; };
+		82CEEAF22B1537FB007BD4F5 /* MultiplayerServerTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE22B1537FB007BD4F5 /* MultiplayerServerTests.cpp */; };
+		82CEEAF32B1537FB007BD4F5 /* LocalizationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE32B1537FB007BD4F5 /* LocalizationTests.cpp */; };
+		82CEEAF42B1537FB007BD4F5 /* AccountManagementTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE42B1537FB007BD4F5 /* AccountManagementTests.cpp */; };
+		82CEEAF52B1537FB007BD4F5 /* CatalogTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE52B1537FB007BD4F5 /* CatalogTests.cpp */; };
+		82CEEAF62B1537FB007BD4F5 /* GroupsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEAE62B1537FB007BD4F5 /* GroupsTests.cpp */; };
+		82CEEB082B153866007BD4F5 /* AccountManagementTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAF82B153866007BD4F5 /* AccountManagementTestsImpl.stubs */; };
+		82CEEB092B153866007BD4F5 /* MultiplayerServerTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAF92B153866007BD4F5 /* MultiplayerServerTestsImpl.stubs */; };
+		82CEEB0A2B153866007BD4F5 /* ProfilesTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFA2B153866007BD4F5 /* ProfilesTestsImpl.stubs */; };
+		82CEEB0B2B153866007BD4F5 /* DataTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFB2B153866007BD4F5 /* DataTestsImpl.stubs */; };
+		82CEEB0C2B153866007BD4F5 /* GroupsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFC2B153866007BD4F5 /* GroupsTestsImpl.stubs */; };
+		82CEEB0D2B153866007BD4F5 /* PlayerDataManagementTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFD2B153866007BD4F5 /* PlayerDataManagementTestsImpl.stubs */; };
+		82CEEB0E2B153866007BD4F5 /* ExperimentationTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFE2B153866007BD4F5 /* ExperimentationTestsImpl.stubs */; };
+		82CEEB0F2B153866007BD4F5 /* PushNotificationsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEAFF2B153866007BD4F5 /* PushNotificationsTestsImpl.stubs */; };
+		82CEEB102B153866007BD4F5 /* CatalogTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB002B153866007BD4F5 /* CatalogTestsImpl.stubs */; };
+		82CEEB112B153866007BD4F5 /* FriendsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB012B153866007BD4F5 /* FriendsTestsImpl.stubs */; };
+		82CEEB122B153866007BD4F5 /* PlatformSpecificTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB022B153866007BD4F5 /* PlatformSpecificTestsImpl.stubs */; };
+		82CEEB132B153866007BD4F5 /* SegmentsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB032B153866007BD4F5 /* SegmentsTestsImpl.stubs */; };
+		82CEEB142B153866007BD4F5 /* TitleDataManagementTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB042B153866007BD4F5 /* TitleDataManagementTestsImpl.stubs */; };
+		82CEEB152B153866007BD4F5 /* InventoryTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB052B153866007BD4F5 /* InventoryTestsImpl.stubs */; };
+		82CEEB162B153866007BD4F5 /* LocalizationTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB062B153866007BD4F5 /* LocalizationTestsImpl.stubs */; };
+		82CEEB172B153866007BD4F5 /* CloudScriptTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB072B153866007BD4F5 /* CloudScriptTestsImpl.stubs */; };
+		82CEEB5C2B153920007BD4F5 /* TestClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB1B2B153920007BD4F5 /* TestClass.cpp */; };
+		82CEEB5D2B153920007BD4F5 /* CoreTestClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB1C2B153920007BD4F5 /* CoreTestClass.cpp */; };
+		82CEEB5E2B153920007BD4F5 /* TestReport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB1E2B153920007BD4F5 /* TestReport.cpp */; };
+		82CEEB5F2B153920007BD4F5 /* TestRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB1F2B153920007BD4F5 /* TestRunner.cpp */; };
+		82CEEB602B153920007BD4F5 /* TestContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB232B153920007BD4F5 /* TestContext.cpp */; };
+		82CEEB612B153920007BD4F5 /* ServicesTestClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB242B153920007BD4F5 /* ServicesTestClass.cpp */; };
+		82CEEB662B153920007BD4F5 /* MemoryManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB342B153920007BD4F5 /* MemoryManager.cpp */; };
+		82CEEB692B153920007BD4F5 /* TestAppPch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB392B153920007BD4F5 /* TestAppPch.cpp */; };
+		82CEEB6A2B153920007BD4F5 /* AuthenticationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB3D2B153920007BD4F5 /* AuthenticationTests.cpp */; };
+		82CEEB6B2B153920007BD4F5 /* EventPipelineTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB3F2B153920007BD4F5 /* EventPipelineTests.cpp */; };
+		82CEEB6C2B153920007BD4F5 /* PlayerDataManagementTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB422B153920007BD4F5 /* PlayerDataManagementTestsImpl.cpp */; };
+		82CEEB6D2B153920007BD4F5 /* TitleDataManagementTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB432B153920007BD4F5 /* TitleDataManagementTestsImpl.cpp */; };
+		82CEEB6E2B153920007BD4F5 /* ProfilesTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB442B153920007BD4F5 /* ProfilesTestsImpl.cpp */; };
+		82CEEB6F2B153920007BD4F5 /* SegmentsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB452B153920007BD4F5 /* SegmentsTestsImpl.cpp */; };
+		82CEEB702B153920007BD4F5 /* CloudScriptTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB462B153920007BD4F5 /* CloudScriptTestsImpl.cpp */; };
+		82CEEB712B153920007BD4F5 /* GroupsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB472B153920007BD4F5 /* GroupsTestsImpl.cpp */; };
+		82CEEB722B153920007BD4F5 /* AccountManagementTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB482B153920007BD4F5 /* AccountManagementTestsImpl.cpp */; };
+		82CEEB742B153920007BD4F5 /* CatalogTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4A2B153920007BD4F5 /* CatalogTestsImpl.cpp */; };
+		82CEEB752B153920007BD4F5 /* FriendsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4B2B153920007BD4F5 /* FriendsTestsImpl.cpp */; };
+		82CEEB762B153920007BD4F5 /* PlatformSpecificTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4C2B153920007BD4F5 /* PlatformSpecificTestsImpl.cpp */; };
+		82CEEB772B153920007BD4F5 /* LocalizationTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4D2B153920007BD4F5 /* LocalizationTestsImpl.cpp */; };
+		82CEEB782B153920007BD4F5 /* InventoryTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4E2B153920007BD4F5 /* InventoryTestsImpl.cpp */; };
+		82CEEB792B153920007BD4F5 /* PushNotificationsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4F2B153920007BD4F5 /* PushNotificationsTestsImpl.cpp */; };
+		82CEEB7A2B153920007BD4F5 /* ExperimentationTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB502B153920007BD4F5 /* ExperimentationTestsImpl.cpp */; };
+		82CEEB7B2B153920007BD4F5 /* DataTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB512B153920007BD4F5 /* DataTestsImpl.cpp */; };
+		82CEEB7C2B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB522B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp */; };
+		82CEEB7D2B153920007BD4F5 /* AuthenticationOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB572B153920007BD4F5 /* AuthenticationOperations.cpp */; };
+		82CEEB7E2B153920007BD4F5 /* CoreOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB582B153920007BD4F5 /* CoreOperations.cpp */; };
+		82CEEB7F2B153920007BD4F5 /* ServicesOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB5A2B153920007BD4F5 /* ServicesOperations.cpp */; };
+		82CEEB822B153A8B007BD4F5 /* PlayFabServices_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82CEEB812B153A8B007BD4F5 /* PlayFabServices_iOS.framework */; };
+		82CEEB832B153A8B007BD4F5 /* PlayFabServices_iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 82CEEB812B153A8B007BD4F5 /* PlayFabServices_iOS.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		82CEEB8C2B1551E8007BD4F5 /* PlayFabApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB8B2B1551E8007BD4F5 /* PlayFabApple.cpp */; };
+		82CEEB8E2B1556D5007BD4F5 /* PlatformUtilsApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB8D2B1556D5007BD4F5 /* PlatformUtilsApple.cpp */; };
+		82CEEB992B156891007BD4F5 /* testTitleData.json in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB982B156891007BD4F5 /* testTitleData.json */; };
+		82F666482B191A340044EE73 /* PlayFabCore_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82F666472B191A340044EE73 /* PlayFabCore_iOS.framework */; };
+		82F666492B191A340044EE73 /* PlayFabCore_iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 82F666472B191A340044EE73 /* PlayFabCore_iOS.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8206F1872B755E3400451339 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C872C64221C91BD0054F791;
+			remoteInfo = libHttpClientFramework_macOS;
+		};
+		8286B2232B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 67EE817E2362599C00A5F3DE;
+			remoteInfo = SSL_iOS;
+		};
+		8286B2252B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF87AD25A3F0F9005C4BDF;
+			remoteInfo = SSL_macOS;
+		};
+		8286B2272B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58722D0E209AD61900B071F7;
+			remoteInfo = libHttpClient_iOS;
+		};
+		8286B2292B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7DB100A72119206B00AE22F5;
+			remoteInfo = libHttpClient_macOS;
+		};
+		8286B22B2B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF884125A522BC005C4BDF;
+			remoteInfo = libHttpClient_NOWEBSOCKETS_iOS;
+		};
+		8286B22D2B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9FF0A7725A5366A0061B717;
+			remoteInfo = libHttpClient_NOWEBSOCKETS_macOS;
+		};
+		8286B22F2B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58BD256222123EF9008942EB;
+			remoteInfo = libHttpClientFramework_iOS;
+		};
+		8286B2312B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2C872C65221C91BD0054F791;
+			remoteInfo = libHttpClientFramework_macOS;
+		};
+		8286B2332B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF888425A52685005C4BDF;
+			remoteInfo = libHttpClientFramework_NOWEBSOCKETS_iOS;
+		};
+		8286B2352B7401C6009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9FF0AA225A536A20061B717;
+			remoteInfo = libHttpClientFramework_NOWEBSOCKETS_macOS;
+		};
+		8286B2482B740931009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 58BD256122123EF9008942EB;
+			remoteInfo = libHttpClientFramework_iOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		82B3CCD32B5B052C00337232 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8206F1892B755EA100451339 /* HttpClient.framework in Embed Frameworks */,
+				8206F21E2B758A4100451339 /* PlayFabCore_macOS.framework in Embed Frameworks */,
+				8206F2202B758A4100451339 /* PlayFabServices_macOS.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82CEEB842B153A8B007BD4F5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8206F0572B740D6D00451339 /* HttpClient.framework in Embed Frameworks */,
+				82CEEB832B153A8B007BD4F5 /* PlayFabServices_iOS.framework in Embed Frameworks */,
+				82F666492B191A340044EE73 /* PlayFabCore_iOS.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8206F2182B758A1A00451339 /* libPlayFabSharedInternal_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8206F21A2B758A4100451339 /* PlayFabCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8206F21B2B758A4100451339 /* PlayFabServices_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabServices_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8206F21C2B758A4100451339 /* libPlayFabSharedInternal_macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal_macOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
+		82AB6DA32B4DBB980082EDED /* AppleSignInCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInCoordinator.swift; sourceTree = "<group>"; };
+		82AB6DB72B4DE5B60082EDED /* libPlayFabSharedInternal.iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		82B3CC612B5B039800337232 /* libPlayFabSharedInternal.macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.macOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		82B3CC632B5B03A200337232 /* PlayFabCore.macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabCore.macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		82B3CC642B5B03A200337232 /* PlayFabServices.macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabServices.macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		82B3CCCD2B5B04F000337232 /* PlayFabServicesTestApp_macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayFabServicesTestApp_macOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		82B72C842B1FF00E003802AA /* PlayFabServicesTestApp.Apple-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlayFabServicesTestApp.Apple-Bridging-Header.h"; sourceTree = "<group>"; };
+		82B72C872B1FF19D003802AA /* MainApple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainApple.h; sourceTree = "<group>"; };
+		82B72C882B1FF441003802AA /* MainApple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainApple.cpp; sourceTree = "<group>"; };
+		82CEEA792B153284007BD4F5 /* PlayFabServicesTestApp_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayFabServicesTestApp_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		82CEEA7C2B153284007BD4F5 /* PlayFabServicesTestApp_AppleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayFabServicesTestApp_AppleApp.swift; sourceTree = "<group>"; };
+		82CEEA7E2B153284007BD4F5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		82CEEA802B153285007BD4F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		82CEEA822B153285007BD4F5 /* PlayFabServicesTestApp_Apple.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PlayFabServicesTestApp_Apple.entitlements; sourceTree = "<group>"; };
+		82CEEA842B153285007BD4F5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		82CEEA912B153672007BD4F5 /* PlayerDataManagementOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerDataManagementOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/PlayerDataManagementOperations.h; sourceTree = "<group>"; };
+		82CEEA922B153672007BD4F5 /* ProfilesOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfilesOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/ProfilesOperations.h; sourceTree = "<group>"; };
+		82CEEA932B153672007BD4F5 /* MultiplayerServerOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiplayerServerOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/MultiplayerServerOperations.h; sourceTree = "<group>"; };
+		82CEEA942B153672007BD4F5 /* FriendsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendsOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/FriendsOperations.h; sourceTree = "<group>"; };
+		82CEEA952B153672007BD4F5 /* ExperimentationOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentationOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/ExperimentationOperations.h; sourceTree = "<group>"; };
+		82CEEA962B153672007BD4F5 /* LocalizationOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalizationOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/LocalizationOperations.h; sourceTree = "<group>"; };
+		82CEEA972B153672007BD4F5 /* DataOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/DataOperations.h; sourceTree = "<group>"; };
+		82CEEA982B153672007BD4F5 /* GroupsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupsOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/GroupsOperations.h; sourceTree = "<group>"; };
+		82CEEA992B153672007BD4F5 /* PlatformSpecificOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformSpecificOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/PlatformSpecificOperations.h; sourceTree = "<group>"; };
+		82CEEA9A2B153672007BD4F5 /* AccountManagementOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountManagementOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/AccountManagementOperations.h; sourceTree = "<group>"; };
+		82CEEA9B2B153672007BD4F5 /* CloudScriptOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CloudScriptOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/CloudScriptOperations.h; sourceTree = "<group>"; };
+		82CEEA9C2B153672007BD4F5 /* CatalogOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CatalogOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/CatalogOperations.h; sourceTree = "<group>"; };
+		82CEEA9D2B153672007BD4F5 /* PushNotificationsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PushNotificationsOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/PushNotificationsOperations.h; sourceTree = "<group>"; };
+		82CEEA9E2B153672007BD4F5 /* TitleDataManagementOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TitleDataManagementOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/TitleDataManagementOperations.h; sourceTree = "<group>"; };
+		82CEEA9F2B153672007BD4F5 /* InventoryOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InventoryOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/InventoryOperations.h; sourceTree = "<group>"; };
+		82CEEAA02B153672007BD4F5 /* SegmentsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentsOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/SegmentsOperations.h; sourceTree = "<group>"; };
+		82CEEAA22B1536C9007BD4F5 /* LocalizationOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LocalizationOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/LocalizationOperations.cpp; sourceTree = "<group>"; };
+		82CEEAA32B1536C9007BD4F5 /* CloudScriptOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CloudScriptOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/CloudScriptOperations.cpp; sourceTree = "<group>"; };
+		82CEEAA42B1536C9007BD4F5 /* MultiplayerServerOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultiplayerServerOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/MultiplayerServerOperations.cpp; sourceTree = "<group>"; };
+		82CEEAA52B1536C9007BD4F5 /* PlatformSpecificOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlatformSpecificOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/PlatformSpecificOperations.cpp; sourceTree = "<group>"; };
+		82CEEAA62B1536C9007BD4F5 /* CatalogOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CatalogOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/CatalogOperations.cpp; sourceTree = "<group>"; };
+		82CEEAA72B1536C9007BD4F5 /* FriendsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FriendsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/FriendsOperations.cpp; sourceTree = "<group>"; };
+		82CEEAA82B1536C9007BD4F5 /* SegmentsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SegmentsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/SegmentsOperations.cpp; sourceTree = "<group>"; };
+		82CEEAA92B1536C9007BD4F5 /* ProfilesOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProfilesOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/ProfilesOperations.cpp; sourceTree = "<group>"; };
+		82CEEAAA2B1536C9007BD4F5 /* GroupsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GroupsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/GroupsOperations.cpp; sourceTree = "<group>"; };
+		82CEEAAB2B1536C9007BD4F5 /* TitleDataManagementOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TitleDataManagementOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/TitleDataManagementOperations.cpp; sourceTree = "<group>"; };
+		82CEEAAC2B1536C9007BD4F5 /* PushNotificationsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PushNotificationsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/PushNotificationsOperations.cpp; sourceTree = "<group>"; };
+		82CEEAAD2B1536C9007BD4F5 /* ExperimentationOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExperimentationOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/ExperimentationOperations.cpp; sourceTree = "<group>"; };
+		82CEEAAE2B1536C9007BD4F5 /* AccountManagementOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccountManagementOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/AccountManagementOperations.cpp; sourceTree = "<group>"; };
+		82CEEAAF2B1536C9007BD4F5 /* DataOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/DataOperations.cpp; sourceTree = "<group>"; };
+		82CEEAB02B1536C9007BD4F5 /* InventoryOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InventoryOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/InventoryOperations.cpp; sourceTree = "<group>"; };
+		82CEEAB12B1536C9007BD4F5 /* PlayerDataManagementOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayerDataManagementOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/PlayerDataManagementOperations.cpp; sourceTree = "<group>"; };
+		82CEEAC72B1537C9007BD4F5 /* DataTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataTests.h; path = ../../../PlayFabServices.GeneratedTests/DataTests.h; sourceTree = "<group>"; };
+		82CEEAC82B1537C9007BD4F5 /* MultiplayerServerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiplayerServerTests.h; path = ../../../PlayFabServices.GeneratedTests/MultiplayerServerTests.h; sourceTree = "<group>"; };
+		82CEEAC92B1537C9007BD4F5 /* CatalogTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CatalogTests.h; path = ../../../PlayFabServices.GeneratedTests/CatalogTests.h; sourceTree = "<group>"; };
+		82CEEACA2B1537C9007BD4F5 /* PlayerDataManagementTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerDataManagementTests.h; path = ../../../PlayFabServices.GeneratedTests/PlayerDataManagementTests.h; sourceTree = "<group>"; };
+		82CEEACB2B1537C9007BD4F5 /* AccountManagementTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountManagementTests.h; path = ../../../PlayFabServices.GeneratedTests/AccountManagementTests.h; sourceTree = "<group>"; };
+		82CEEACC2B1537C9007BD4F5 /* GroupsTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupsTests.h; path = ../../../PlayFabServices.GeneratedTests/GroupsTests.h; sourceTree = "<group>"; };
+		82CEEACD2B1537C9007BD4F5 /* ExperimentationTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentationTests.h; path = ../../../PlayFabServices.GeneratedTests/ExperimentationTests.h; sourceTree = "<group>"; };
+		82CEEACE2B1537C9007BD4F5 /* CloudScriptTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CloudScriptTests.h; path = ../../../PlayFabServices.GeneratedTests/CloudScriptTests.h; sourceTree = "<group>"; };
+		82CEEACF2B1537C9007BD4F5 /* PushNotificationsTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PushNotificationsTests.h; path = ../../../PlayFabServices.GeneratedTests/PushNotificationsTests.h; sourceTree = "<group>"; };
+		82CEEAD02B1537C9007BD4F5 /* ProfilesTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfilesTests.h; path = ../../../PlayFabServices.GeneratedTests/ProfilesTests.h; sourceTree = "<group>"; };
+		82CEEAD12B1537C9007BD4F5 /* InventoryTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InventoryTests.h; path = ../../../PlayFabServices.GeneratedTests/InventoryTests.h; sourceTree = "<group>"; };
+		82CEEAD22B1537C9007BD4F5 /* SegmentsTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentsTests.h; path = ../../../PlayFabServices.GeneratedTests/SegmentsTests.h; sourceTree = "<group>"; };
+		82CEEAD32B1537C9007BD4F5 /* LocalizationTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalizationTests.h; path = ../../../PlayFabServices.GeneratedTests/LocalizationTests.h; sourceTree = "<group>"; };
+		82CEEAD42B1537C9007BD4F5 /* TitleDataManagementTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TitleDataManagementTests.h; path = ../../../PlayFabServices.GeneratedTests/TitleDataManagementTests.h; sourceTree = "<group>"; };
+		82CEEAD52B1537C9007BD4F5 /* FriendsTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendsTests.h; path = ../../../PlayFabServices.GeneratedTests/FriendsTests.h; sourceTree = "<group>"; };
+		82CEEAD62B1537C9007BD4F5 /* PlatformSpecificTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformSpecificTests.h; path = ../../../PlayFabServices.GeneratedTests/PlatformSpecificTests.h; sourceTree = "<group>"; };
+		82CEEAD72B1537FB007BD4F5 /* PlayerDataManagementTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayerDataManagementTests.cpp; path = ../../../PlayFabServices.GeneratedTests/PlayerDataManagementTests.cpp; sourceTree = "<group>"; };
+		82CEEAD82B1537FB007BD4F5 /* CloudScriptTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CloudScriptTests.cpp; path = ../../../PlayFabServices.GeneratedTests/CloudScriptTests.cpp; sourceTree = "<group>"; };
+		82CEEAD92B1537FB007BD4F5 /* FriendsTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FriendsTests.cpp; path = ../../../PlayFabServices.GeneratedTests/FriendsTests.cpp; sourceTree = "<group>"; };
+		82CEEADA2B1537FB007BD4F5 /* TitleDataManagementTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TitleDataManagementTests.cpp; path = ../../../PlayFabServices.GeneratedTests/TitleDataManagementTests.cpp; sourceTree = "<group>"; };
+		82CEEADB2B1537FB007BD4F5 /* InventoryTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InventoryTests.cpp; path = ../../../PlayFabServices.GeneratedTests/InventoryTests.cpp; sourceTree = "<group>"; };
+		82CEEADC2B1537FB007BD4F5 /* ProfilesTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProfilesTests.cpp; path = ../../../PlayFabServices.GeneratedTests/ProfilesTests.cpp; sourceTree = "<group>"; };
+		82CEEADD2B1537FB007BD4F5 /* ExperimentationTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExperimentationTests.cpp; path = ../../../PlayFabServices.GeneratedTests/ExperimentationTests.cpp; sourceTree = "<group>"; };
+		82CEEADE2B1537FB007BD4F5 /* PlatformSpecificTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlatformSpecificTests.cpp; path = ../../../PlayFabServices.GeneratedTests/PlatformSpecificTests.cpp; sourceTree = "<group>"; };
+		82CEEADF2B1537FB007BD4F5 /* DataTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataTests.cpp; path = ../../../PlayFabServices.GeneratedTests/DataTests.cpp; sourceTree = "<group>"; };
+		82CEEAE02B1537FB007BD4F5 /* PushNotificationsTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PushNotificationsTests.cpp; path = ../../../PlayFabServices.GeneratedTests/PushNotificationsTests.cpp; sourceTree = "<group>"; };
+		82CEEAE12B1537FB007BD4F5 /* SegmentsTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SegmentsTests.cpp; path = ../../../PlayFabServices.GeneratedTests/SegmentsTests.cpp; sourceTree = "<group>"; };
+		82CEEAE22B1537FB007BD4F5 /* MultiplayerServerTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultiplayerServerTests.cpp; path = ../../../PlayFabServices.GeneratedTests/MultiplayerServerTests.cpp; sourceTree = "<group>"; };
+		82CEEAE32B1537FB007BD4F5 /* LocalizationTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LocalizationTests.cpp; path = ../../../PlayFabServices.GeneratedTests/LocalizationTests.cpp; sourceTree = "<group>"; };
+		82CEEAE42B1537FB007BD4F5 /* AccountManagementTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccountManagementTests.cpp; path = ../../../PlayFabServices.GeneratedTests/AccountManagementTests.cpp; sourceTree = "<group>"; };
+		82CEEAE52B1537FB007BD4F5 /* CatalogTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CatalogTests.cpp; path = ../../../PlayFabServices.GeneratedTests/CatalogTests.cpp; sourceTree = "<group>"; };
+		82CEEAE62B1537FB007BD4F5 /* GroupsTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GroupsTests.cpp; path = ../../../PlayFabServices.GeneratedTests/GroupsTests.cpp; sourceTree = "<group>"; };
+		82CEEAF82B153866007BD4F5 /* AccountManagementTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AccountManagementTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/AccountManagementTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEAF92B153866007BD4F5 /* MultiplayerServerTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MultiplayerServerTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/MultiplayerServerTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEAFA2B153866007BD4F5 /* ProfilesTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ProfilesTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/ProfilesTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEAFB2B153866007BD4F5 /* DataTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DataTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/DataTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEAFC2B153866007BD4F5 /* GroupsTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GroupsTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/GroupsTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEAFD2B153866007BD4F5 /* PlayerDataManagementTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = PlayerDataManagementTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/PlayerDataManagementTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEAFE2B153866007BD4F5 /* ExperimentationTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ExperimentationTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/ExperimentationTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEAFF2B153866007BD4F5 /* PushNotificationsTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = PushNotificationsTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/PushNotificationsTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEB002B153866007BD4F5 /* CatalogTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CatalogTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/CatalogTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEB012B153866007BD4F5 /* FriendsTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FriendsTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/FriendsTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEB022B153866007BD4F5 /* PlatformSpecificTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = PlatformSpecificTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/PlatformSpecificTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEB032B153866007BD4F5 /* SegmentsTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SegmentsTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/SegmentsTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEB042B153866007BD4F5 /* TitleDataManagementTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TitleDataManagementTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/TitleDataManagementTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEB052B153866007BD4F5 /* InventoryTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = InventoryTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/InventoryTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEB062B153866007BD4F5 /* LocalizationTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LocalizationTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/LocalizationTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEB072B153866007BD4F5 /* CloudScriptTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CloudScriptTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/CloudScriptTestsImpl.stubs; sourceTree = "<group>"; };
+		82CEEB192B153920007BD4F5 /* GeneratedTestsBootstrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneratedTestsBootstrapper.h; sourceTree = "<group>"; };
+		82CEEB1B2B153920007BD4F5 /* TestClass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestClass.cpp; sourceTree = "<group>"; };
+		82CEEB1C2B153920007BD4F5 /* CoreTestClass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CoreTestClass.cpp; sourceTree = "<group>"; };
+		82CEEB1D2B153920007BD4F5 /* TestClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestClass.h; sourceTree = "<group>"; };
+		82CEEB1E2B153920007BD4F5 /* TestReport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestReport.cpp; sourceTree = "<group>"; };
+		82CEEB1F2B153920007BD4F5 /* TestRunner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestRunner.cpp; sourceTree = "<group>"; };
+		82CEEB202B153920007BD4F5 /* CoreTestClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTestClass.h; sourceTree = "<group>"; };
+		82CEEB212B153920007BD4F5 /* TestReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestReport.h; sourceTree = "<group>"; };
+		82CEEB222B153920007BD4F5 /* TestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestRunner.h; sourceTree = "<group>"; };
+		82CEEB232B153920007BD4F5 /* TestContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestContext.cpp; sourceTree = "<group>"; };
+		82CEEB242B153920007BD4F5 /* ServicesTestClass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServicesTestClass.cpp; sourceTree = "<group>"; };
+		82CEEB252B153920007BD4F5 /* TestTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTypes.h; sourceTree = "<group>"; };
+		82CEEB262B153920007BD4F5 /* TestContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestContext.h; sourceTree = "<group>"; };
+		82CEEB272B153920007BD4F5 /* TestException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestException.h; sourceTree = "<group>"; };
+		82CEEB282B153920007BD4F5 /* ServicesTestClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServicesTestClass.h; sourceTree = "<group>"; };
+		82CEEB2A2B153920007BD4F5 /* PlayFabPal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayFabPal.h; sourceTree = "<group>"; };
+		82CEEB2D2B153920007BD4F5 /* PlatformUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformUtils.h; sourceTree = "<group>"; };
+		82CEEB332B153920007BD4F5 /* MemoryManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryManager.h; sourceTree = "<group>"; };
+		82CEEB342B153920007BD4F5 /* MemoryManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryManager.cpp; sourceTree = "<group>"; };
+		82CEEB392B153920007BD4F5 /* TestAppPch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAppPch.cpp; path = ../../TestAppPch.cpp; sourceTree = "<group>"; };
+		82CEEB3A2B153920007BD4F5 /* TestAppPch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAppPch.h; path = ../../TestAppPch.h; sourceTree = "<group>"; };
+		82CEEB3D2B153920007BD4F5 /* AuthenticationTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AuthenticationTests.cpp; sourceTree = "<group>"; };
+		82CEEB3E2B153920007BD4F5 /* AuthenticationTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationTests.h; sourceTree = "<group>"; };
+		82CEEB3F2B153920007BD4F5 /* EventPipelineTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventPipelineTests.cpp; sourceTree = "<group>"; };
+		82CEEB402B153920007BD4F5 /* EventPipelineTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventPipelineTests.h; sourceTree = "<group>"; };
+		82CEEB422B153920007BD4F5 /* PlayerDataManagementTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerDataManagementTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB432B153920007BD4F5 /* TitleDataManagementTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TitleDataManagementTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB442B153920007BD4F5 /* ProfilesTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProfilesTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB452B153920007BD4F5 /* SegmentsTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SegmentsTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB462B153920007BD4F5 /* CloudScriptTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CloudScriptTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB472B153920007BD4F5 /* GroupsTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GroupsTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB482B153920007BD4F5 /* AccountManagementTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AccountManagementTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB4A2B153920007BD4F5 /* CatalogTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatalogTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB4B2B153920007BD4F5 /* FriendsTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FriendsTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB4C2B153920007BD4F5 /* PlatformSpecificTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlatformSpecificTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB4D2B153920007BD4F5 /* LocalizationTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalizationTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB4E2B153920007BD4F5 /* InventoryTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InventoryTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB4F2B153920007BD4F5 /* PushNotificationsTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PushNotificationsTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB502B153920007BD4F5 /* ExperimentationTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExperimentationTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB512B153920007BD4F5 /* DataTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB522B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultiplayerServerTestsImpl.cpp; sourceTree = "<group>"; };
+		82CEEB552B153920007BD4F5 /* CoreOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreOperations.h; sourceTree = "<group>"; };
+		82CEEB562B153920007BD4F5 /* AuthenticationOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationOperations.h; sourceTree = "<group>"; };
+		82CEEB572B153920007BD4F5 /* AuthenticationOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AuthenticationOperations.cpp; sourceTree = "<group>"; };
+		82CEEB582B153920007BD4F5 /* CoreOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CoreOperations.cpp; sourceTree = "<group>"; };
+		82CEEB5A2B153920007BD4F5 /* ServicesOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServicesOperations.cpp; sourceTree = "<group>"; };
+		82CEEB5B2B153920007BD4F5 /* ServicesOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServicesOperations.h; sourceTree = "<group>"; };
+		82CEEB812B153A8B007BD4F5 /* PlayFabServices_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabServices_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		82CEEB8B2B1551E8007BD4F5 /* PlayFabApple.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PlayFabApple.cpp; sourceTree = "<group>"; };
+		82CEEB8D2B1556D5007BD4F5 /* PlatformUtilsApple.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PlatformUtilsApple.cpp; sourceTree = "<group>"; };
+		82CEEB982B156891007BD4F5 /* testTitleData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = testTitleData.json; path = ../../../testTitleData.json; sourceTree = "<group>"; };
+		82F666472B191A340044EE73 /* PlayFabCore_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabCore_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		82B3CCAF2B5B04F000337232 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8206F21F2B758A4100451339 /* PlayFabServices_macOS.framework in Frameworks */,
+				8206F2212B758A4100451339 /* libPlayFabSharedInternal_macOS.a in Frameworks */,
+				8206F21D2B758A4100451339 /* PlayFabCore_macOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82CEEA762B153284007BD4F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82CEEB822B153A8B007BD4F5 /* PlayFabServices_iOS.framework in Frameworks */,
+				8206F2192B758A1A00451339 /* libPlayFabSharedInternal_iOS.a in Frameworks */,
+				82F666482B191A340044EE73 /* PlayFabCore_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8286B2172B7401C6009A4677 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8286B2242B7401C6009A4677 /* libSSL.a */,
+				8286B2262B7401C6009A4677 /* libSSL.a */,
+				8286B2282B7401C6009A4677 /* libHttpClient.a */,
+				8286B22A2B7401C6009A4677 /* libHttpClient.a */,
+				8286B22C2B7401C6009A4677 /* libHttpClient_NOWEBSOCKETS.a */,
+				8286B22E2B7401C6009A4677 /* libHttpClient_NOWEBSOCKETS.a */,
+				8286B2302B7401C6009A4677 /* HttpClient.framework */,
+				8286B2322B7401C6009A4677 /* HttpClient.framework */,
+				8286B2342B7401C6009A4677 /* NOWEBSOCKETS/HttpClient.framework */,
+				8286B2362B7401C6009A4677 /* NOWEBSOCKETS/HttpClient.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		82CEEA702B153284007BD4F5 = {
+			isa = PBXGroup;
+			children = (
+				8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */,
+				82CEEA8D2B1533B2007BD4F5 /* PlayFabServices.GeneratedApiWrappers */,
+				82CEEA8C2B15339C007BD4F5 /* PlayFabServices.GeneratedTests */,
+				82CEEA8B2B153382007BD4F5 /* PlayFabServicesTestApp.Common */,
+				82CEEA7B2B153284007BD4F5 /* PlayFabServicesTestApp.Apple */,
+				82CEEA7A2B153284007BD4F5 /* Products */,
+				82CEEB802B153A8B007BD4F5 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		82CEEA7A2B153284007BD4F5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEA792B153284007BD4F5 /* PlayFabServicesTestApp_iOS.app */,
+				82B3CCCD2B5B04F000337232 /* PlayFabServicesTestApp_macOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		82CEEA7B2B153284007BD4F5 /* PlayFabServicesTestApp.Apple */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEA7C2B153284007BD4F5 /* PlayFabServicesTestApp_AppleApp.swift */,
+				82CEEA7E2B153284007BD4F5 /* ContentView.swift */,
+				82CEEA802B153285007BD4F5 /* Assets.xcassets */,
+				82CEEA822B153285007BD4F5 /* PlayFabServicesTestApp_Apple.entitlements */,
+				82CEEA832B153285007BD4F5 /* Preview Content */,
+				82AB6DA32B4DBB980082EDED /* AppleSignInCoordinator.swift */,
+			);
+			path = PlayFabServicesTestApp.Apple;
+			sourceTree = "<group>";
+		};
+		82CEEA832B153285007BD4F5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEA842B153285007BD4F5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		82CEEA8B2B153382007BD4F5 /* PlayFabServicesTestApp.Common */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB182B153920007BD4F5 /* Generated */,
+				82CEEB532B153920007BD4F5 /* Operations */,
+				82CEEB292B153920007BD4F5 /* Platform */,
+				82CEEB392B153920007BD4F5 /* TestAppPch.cpp */,
+				82CEEB3A2B153920007BD4F5 /* TestAppPch.h */,
+				82CEEB1A2B153920007BD4F5 /* TestFramework */,
+				82CEEB3B2B153920007BD4F5 /* Tests */,
+			);
+			name = PlayFabServicesTestApp.Common;
+			sourceTree = "<group>";
+		};
+		82CEEA8C2B15339C007BD4F5 /* PlayFabServices.GeneratedTests */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEAC62B15377A007BD4F5 /* Include */,
+				82CEEAC52B153773007BD4F5 /* Source */,
+			);
+			name = PlayFabServices.GeneratedTests;
+			sourceTree = "<group>";
+		};
+		82CEEA8D2B1533B2007BD4F5 /* PlayFabServices.GeneratedApiWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEA8E2B153482007BD4F5 /* Include */,
+				82CEEA902B153497007BD4F5 /* Source */,
+			);
+			name = PlayFabServices.GeneratedApiWrappers;
+			sourceTree = "<group>";
+		};
+		82CEEA8E2B153482007BD4F5 /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEA9A2B153672007BD4F5 /* AccountManagementOperations.h */,
+				82CEEA9C2B153672007BD4F5 /* CatalogOperations.h */,
+				82CEEA9B2B153672007BD4F5 /* CloudScriptOperations.h */,
+				82CEEA972B153672007BD4F5 /* DataOperations.h */,
+				82CEEA952B153672007BD4F5 /* ExperimentationOperations.h */,
+				82CEEA942B153672007BD4F5 /* FriendsOperations.h */,
+				82CEEA982B153672007BD4F5 /* GroupsOperations.h */,
+				82CEEA9F2B153672007BD4F5 /* InventoryOperations.h */,
+				82CEEA962B153672007BD4F5 /* LocalizationOperations.h */,
+				82CEEA932B153672007BD4F5 /* MultiplayerServerOperations.h */,
+				82CEEA992B153672007BD4F5 /* PlatformSpecificOperations.h */,
+				82CEEA912B153672007BD4F5 /* PlayerDataManagementOperations.h */,
+				82CEEA922B153672007BD4F5 /* ProfilesOperations.h */,
+				82CEEA9D2B153672007BD4F5 /* PushNotificationsOperations.h */,
+				82CEEAA02B153672007BD4F5 /* SegmentsOperations.h */,
+				82CEEA9E2B153672007BD4F5 /* TitleDataManagementOperations.h */,
+			);
+			path = Include;
+			sourceTree = "<group>";
+		};
+		82CEEA902B153497007BD4F5 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEAAE2B1536C9007BD4F5 /* AccountManagementOperations.cpp */,
+				82CEEAA62B1536C9007BD4F5 /* CatalogOperations.cpp */,
+				82CEEAA32B1536C9007BD4F5 /* CloudScriptOperations.cpp */,
+				82CEEAAF2B1536C9007BD4F5 /* DataOperations.cpp */,
+				82CEEAAD2B1536C9007BD4F5 /* ExperimentationOperations.cpp */,
+				82CEEAA72B1536C9007BD4F5 /* FriendsOperations.cpp */,
+				82CEEAAA2B1536C9007BD4F5 /* GroupsOperations.cpp */,
+				82CEEAB02B1536C9007BD4F5 /* InventoryOperations.cpp */,
+				82CEEAA22B1536C9007BD4F5 /* LocalizationOperations.cpp */,
+				82CEEAA42B1536C9007BD4F5 /* MultiplayerServerOperations.cpp */,
+				82CEEAA52B1536C9007BD4F5 /* PlatformSpecificOperations.cpp */,
+				82CEEAB12B1536C9007BD4F5 /* PlayerDataManagementOperations.cpp */,
+				82CEEAA92B1536C9007BD4F5 /* ProfilesOperations.cpp */,
+				82CEEAAC2B1536C9007BD4F5 /* PushNotificationsOperations.cpp */,
+				82CEEAA82B1536C9007BD4F5 /* SegmentsOperations.cpp */,
+				82CEEAAB2B1536C9007BD4F5 /* TitleDataManagementOperations.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		82CEEAC52B153773007BD4F5 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEAF72B15382B007BD4F5 /* Stubs */,
+				82CEEAE42B1537FB007BD4F5 /* AccountManagementTests.cpp */,
+				82CEEAE52B1537FB007BD4F5 /* CatalogTests.cpp */,
+				82CEEAD82B1537FB007BD4F5 /* CloudScriptTests.cpp */,
+				82CEEADF2B1537FB007BD4F5 /* DataTests.cpp */,
+				82CEEADD2B1537FB007BD4F5 /* ExperimentationTests.cpp */,
+				82CEEAD92B1537FB007BD4F5 /* FriendsTests.cpp */,
+				82CEEAE62B1537FB007BD4F5 /* GroupsTests.cpp */,
+				82CEEADB2B1537FB007BD4F5 /* InventoryTests.cpp */,
+				82CEEAE32B1537FB007BD4F5 /* LocalizationTests.cpp */,
+				82CEEAE22B1537FB007BD4F5 /* MultiplayerServerTests.cpp */,
+				82CEEADE2B1537FB007BD4F5 /* PlatformSpecificTests.cpp */,
+				82CEEAD72B1537FB007BD4F5 /* PlayerDataManagementTests.cpp */,
+				82CEEADC2B1537FB007BD4F5 /* ProfilesTests.cpp */,
+				82CEEAE02B1537FB007BD4F5 /* PushNotificationsTests.cpp */,
+				82CEEAE12B1537FB007BD4F5 /* SegmentsTests.cpp */,
+				82CEEADA2B1537FB007BD4F5 /* TitleDataManagementTests.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		82CEEAC62B15377A007BD4F5 /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEACB2B1537C9007BD4F5 /* AccountManagementTests.h */,
+				82CEEAC92B1537C9007BD4F5 /* CatalogTests.h */,
+				82CEEACE2B1537C9007BD4F5 /* CloudScriptTests.h */,
+				82CEEAC72B1537C9007BD4F5 /* DataTests.h */,
+				82CEEACD2B1537C9007BD4F5 /* ExperimentationTests.h */,
+				82CEEAD52B1537C9007BD4F5 /* FriendsTests.h */,
+				82CEEACC2B1537C9007BD4F5 /* GroupsTests.h */,
+				82CEEAD12B1537C9007BD4F5 /* InventoryTests.h */,
+				82CEEAD32B1537C9007BD4F5 /* LocalizationTests.h */,
+				82CEEAC82B1537C9007BD4F5 /* MultiplayerServerTests.h */,
+				82CEEAD62B1537C9007BD4F5 /* PlatformSpecificTests.h */,
+				82CEEACA2B1537C9007BD4F5 /* PlayerDataManagementTests.h */,
+				82CEEAD02B1537C9007BD4F5 /* ProfilesTests.h */,
+				82CEEACF2B1537C9007BD4F5 /* PushNotificationsTests.h */,
+				82CEEAD22B1537C9007BD4F5 /* SegmentsTests.h */,
+				82CEEAD42B1537C9007BD4F5 /* TitleDataManagementTests.h */,
+			);
+			name = Include;
+			sourceTree = "<group>";
+		};
+		82CEEAF72B15382B007BD4F5 /* Stubs */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEAF82B153866007BD4F5 /* AccountManagementTestsImpl.stubs */,
+				82CEEB002B153866007BD4F5 /* CatalogTestsImpl.stubs */,
+				82CEEB072B153866007BD4F5 /* CloudScriptTestsImpl.stubs */,
+				82CEEAFB2B153866007BD4F5 /* DataTestsImpl.stubs */,
+				82CEEAFE2B153866007BD4F5 /* ExperimentationTestsImpl.stubs */,
+				82CEEB012B153866007BD4F5 /* FriendsTestsImpl.stubs */,
+				82CEEAFC2B153866007BD4F5 /* GroupsTestsImpl.stubs */,
+				82CEEB052B153866007BD4F5 /* InventoryTestsImpl.stubs */,
+				82CEEB062B153866007BD4F5 /* LocalizationTestsImpl.stubs */,
+				82CEEAF92B153866007BD4F5 /* MultiplayerServerTestsImpl.stubs */,
+				82CEEB022B153866007BD4F5 /* PlatformSpecificTestsImpl.stubs */,
+				82CEEAFD2B153866007BD4F5 /* PlayerDataManagementTestsImpl.stubs */,
+				82CEEAFA2B153866007BD4F5 /* ProfilesTestsImpl.stubs */,
+				82CEEAFF2B153866007BD4F5 /* PushNotificationsTestsImpl.stubs */,
+				82CEEB032B153866007BD4F5 /* SegmentsTestsImpl.stubs */,
+				82CEEB042B153866007BD4F5 /* TitleDataManagementTestsImpl.stubs */,
+			);
+			name = Stubs;
+			sourceTree = "<group>";
+		};
+		82CEEB182B153920007BD4F5 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB192B153920007BD4F5 /* GeneratedTestsBootstrapper.h */,
+			);
+			name = Generated;
+			path = ../../Generated;
+			sourceTree = "<group>";
+		};
+		82CEEB1A2B153920007BD4F5 /* TestFramework */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB1B2B153920007BD4F5 /* TestClass.cpp */,
+				82CEEB1C2B153920007BD4F5 /* CoreTestClass.cpp */,
+				82CEEB1D2B153920007BD4F5 /* TestClass.h */,
+				82CEEB1E2B153920007BD4F5 /* TestReport.cpp */,
+				82CEEB1F2B153920007BD4F5 /* TestRunner.cpp */,
+				82CEEB202B153920007BD4F5 /* CoreTestClass.h */,
+				82CEEB212B153920007BD4F5 /* TestReport.h */,
+				82CEEB222B153920007BD4F5 /* TestRunner.h */,
+				82CEEB232B153920007BD4F5 /* TestContext.cpp */,
+				82CEEB242B153920007BD4F5 /* ServicesTestClass.cpp */,
+				82CEEB252B153920007BD4F5 /* TestTypes.h */,
+				82CEEB262B153920007BD4F5 /* TestContext.h */,
+				82CEEB272B153920007BD4F5 /* TestException.h */,
+				82CEEB282B153920007BD4F5 /* ServicesTestClass.h */,
+			);
+			name = TestFramework;
+			path = ../../TestFramework;
+			sourceTree = "<group>";
+		};
+		82CEEB292B153920007BD4F5 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB8A2B1551C8007BD4F5 /* Apple */,
+				82CEEB2A2B153920007BD4F5 /* PlayFabPal.h */,
+				82CEEB2D2B153920007BD4F5 /* PlatformUtils.h */,
+				82CEEB322B153920007BD4F5 /* Generic */,
+			);
+			name = Platform;
+			path = ../../Platform;
+			sourceTree = "<group>";
+		};
+		82CEEB322B153920007BD4F5 /* Generic */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB332B153920007BD4F5 /* MemoryManager.h */,
+				82CEEB342B153920007BD4F5 /* MemoryManager.cpp */,
+			);
+			path = Generic;
+			sourceTree = "<group>";
+		};
+		82CEEB3B2B153920007BD4F5 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB3C2B153920007BD4F5 /* Core */,
+				82CEEB412B153920007BD4F5 /* Services */,
+			);
+			name = Tests;
+			path = ../../Tests;
+			sourceTree = "<group>";
+		};
+		82CEEB3C2B153920007BD4F5 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB3D2B153920007BD4F5 /* AuthenticationTests.cpp */,
+				82CEEB3E2B153920007BD4F5 /* AuthenticationTests.h */,
+				82CEEB3F2B153920007BD4F5 /* EventPipelineTests.cpp */,
+				82CEEB402B153920007BD4F5 /* EventPipelineTests.h */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		82CEEB412B153920007BD4F5 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB422B153920007BD4F5 /* PlayerDataManagementTestsImpl.cpp */,
+				82CEEB432B153920007BD4F5 /* TitleDataManagementTestsImpl.cpp */,
+				82CEEB442B153920007BD4F5 /* ProfilesTestsImpl.cpp */,
+				82CEEB452B153920007BD4F5 /* SegmentsTestsImpl.cpp */,
+				82CEEB462B153920007BD4F5 /* CloudScriptTestsImpl.cpp */,
+				82CEEB472B153920007BD4F5 /* GroupsTestsImpl.cpp */,
+				82CEEB482B153920007BD4F5 /* AccountManagementTestsImpl.cpp */,
+				82CEEB4A2B153920007BD4F5 /* CatalogTestsImpl.cpp */,
+				82CEEB4B2B153920007BD4F5 /* FriendsTestsImpl.cpp */,
+				82CEEB4C2B153920007BD4F5 /* PlatformSpecificTestsImpl.cpp */,
+				82CEEB4D2B153920007BD4F5 /* LocalizationTestsImpl.cpp */,
+				82CEEB4E2B153920007BD4F5 /* InventoryTestsImpl.cpp */,
+				82CEEB4F2B153920007BD4F5 /* PushNotificationsTestsImpl.cpp */,
+				82CEEB502B153920007BD4F5 /* ExperimentationTestsImpl.cpp */,
+				82CEEB512B153920007BD4F5 /* DataTestsImpl.cpp */,
+				82CEEB522B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		82CEEB532B153920007BD4F5 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB542B153920007BD4F5 /* Core */,
+				82CEEB592B153920007BD4F5 /* Services */,
+			);
+			name = Operations;
+			path = ../../Operations;
+			sourceTree = "<group>";
+		};
+		82CEEB542B153920007BD4F5 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB552B153920007BD4F5 /* CoreOperations.h */,
+				82CEEB562B153920007BD4F5 /* AuthenticationOperations.h */,
+				82CEEB572B153920007BD4F5 /* AuthenticationOperations.cpp */,
+				82CEEB582B153920007BD4F5 /* CoreOperations.cpp */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		82CEEB592B153920007BD4F5 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				82CEEB5A2B153920007BD4F5 /* ServicesOperations.cpp */,
+				82CEEB5B2B153920007BD4F5 /* ServicesOperations.h */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		82CEEB802B153A8B007BD4F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8206F21A2B758A4100451339 /* PlayFabCore_macOS.framework */,
+				8206F21B2B758A4100451339 /* PlayFabServices_macOS.framework */,
+				8206F21C2B758A4100451339 /* libPlayFabSharedInternal_macOS.a */,
+				8206F2182B758A1A00451339 /* libPlayFabSharedInternal_iOS.a */,
+				82B3CC632B5B03A200337232 /* PlayFabCore.macOS.framework */,
+				82B3CC642B5B03A200337232 /* PlayFabServices.macOS.framework */,
+				82B3CC612B5B039800337232 /* libPlayFabSharedInternal.macOS.a */,
+				82AB6DB72B4DE5B60082EDED /* libPlayFabSharedInternal.iOS.a */,
+				82F666472B191A340044EE73 /* PlayFabCore_iOS.framework */,
+				82CEEB812B153A8B007BD4F5 /* PlayFabServices_iOS.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		82CEEB8A2B1551C8007BD4F5 /* Apple */ = {
+			isa = PBXGroup;
+			children = (
+				82B72C882B1FF441003802AA /* MainApple.cpp */,
+				82CEEB982B156891007BD4F5 /* testTitleData.json */,
+				82CEEB8B2B1551E8007BD4F5 /* PlayFabApple.cpp */,
+				82CEEB8D2B1556D5007BD4F5 /* PlatformUtilsApple.cpp */,
+				82B72C842B1FF00E003802AA /* PlayFabServicesTestApp.Apple-Bridging-Header.h */,
+				82B72C872B1FF19D003802AA /* MainApple.h */,
+			);
+			path = Apple;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		82B3CC6A2B5B04F000337232 /* PlayFabServicesTestApp_macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82B3CCCA2B5B04F000337232 /* Build configuration list for PBXNativeTarget "PlayFabServicesTestApp_macOS" */;
+			buildPhases = (
+				82B3CC6B2B5B04F000337232 /* Sources */,
+				82B3CCAF2B5B04F000337232 /* Frameworks */,
+				82B3CCB32B5B04F000337232 /* Resources */,
+				82B3CCD32B5B052C00337232 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8206F1882B755E3400451339 /* PBXTargetDependency */,
+			);
+			name = PlayFabServicesTestApp_macOS;
+			productName = PlayFabServicesTestApp.Apple;
+			productReference = 82B3CCCD2B5B04F000337232 /* PlayFabServicesTestApp_macOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		82CEEA782B153284007BD4F5 /* PlayFabServicesTestApp_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82CEEA882B153285007BD4F5 /* Build configuration list for PBXNativeTarget "PlayFabServicesTestApp_iOS" */;
+			buildPhases = (
+				82CEEA752B153284007BD4F5 /* Sources */,
+				82CEEA762B153284007BD4F5 /* Frameworks */,
+				82CEEA772B153284007BD4F5 /* Resources */,
+				82CEEB842B153A8B007BD4F5 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8286B2492B740931009A4677 /* PBXTargetDependency */,
+			);
+			name = PlayFabServicesTestApp_iOS;
+			productName = PlayFabServicesTestApp.Apple;
+			productReference = 82CEEA792B153284007BD4F5 /* PlayFabServicesTestApp_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		82CEEA712B153284007BD4F5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					82CEEA782B153284007BD4F5 = {
+						CreatedOnToolsVersion = 15.0;
+						LastSwiftMigration = 1500;
+					};
+				};
+			};
+			buildConfigurationList = 82CEEA742B153284007BD4F5 /* Build configuration list for PBXProject "PlayFabServicesTestApp.Apple" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 82CEEA702B153284007BD4F5;
+			productRefGroup = 82CEEA7A2B153284007BD4F5 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 8286B2172B7401C6009A4677 /* Products */;
+					ProjectRef = 8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				82CEEA782B153284007BD4F5 /* PlayFabServicesTestApp_iOS */,
+				82B3CC6A2B5B04F000337232 /* PlayFabServicesTestApp_macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8286B2242B7401C6009A4677 /* libSSL.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSL.a;
+			remoteRef = 8286B2232B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2262B7401C6009A4677 /* libSSL.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSL.a;
+			remoteRef = 8286B2252B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2282B7401C6009A4677 /* libHttpClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient.a;
+			remoteRef = 8286B2272B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B22A2B7401C6009A4677 /* libHttpClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient.a;
+			remoteRef = 8286B2292B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B22C2B7401C6009A4677 /* libHttpClient_NOWEBSOCKETS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient_NOWEBSOCKETS.a;
+			remoteRef = 8286B22B2B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B22E2B7401C6009A4677 /* libHttpClient_NOWEBSOCKETS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient_NOWEBSOCKETS.a;
+			remoteRef = 8286B22D2B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2302B7401C6009A4677 /* HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HttpClient.framework;
+			remoteRef = 8286B22F2B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2322B7401C6009A4677 /* HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HttpClient.framework;
+			remoteRef = 8286B2312B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2342B7401C6009A4677 /* NOWEBSOCKETS/HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = NOWEBSOCKETS/HttpClient.framework;
+			remoteRef = 8286B2332B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2362B7401C6009A4677 /* NOWEBSOCKETS/HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = NOWEBSOCKETS/HttpClient.framework;
+			remoteRef = 8286B2352B7401C6009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		82B3CCB32B5B04F000337232 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82B3CCB42B5B04F000337232 /* AccountManagementTestsImpl.stubs in Resources */,
+				82B3CCB52B5B04F000337232 /* testTitleData.json in Resources */,
+				82B3CCB62B5B04F000337232 /* ExperimentationTestsImpl.stubs in Resources */,
+				82B3CCB72B5B04F000337232 /* PlatformSpecificTestsImpl.stubs in Resources */,
+				82B3CCB82B5B04F000337232 /* GroupsTestsImpl.stubs in Resources */,
+				82B3CCB92B5B04F000337232 /* TitleDataManagementTestsImpl.stubs in Resources */,
+				82B3CCBA2B5B04F000337232 /* Preview Assets.xcassets in Resources */,
+				82B3CCBB2B5B04F000337232 /* PlayerDataManagementTestsImpl.stubs in Resources */,
+				82B3CCBC2B5B04F000337232 /* MultiplayerServerTestsImpl.stubs in Resources */,
+				82B3CCBD2B5B04F000337232 /* SegmentsTestsImpl.stubs in Resources */,
+				82B3CCBE2B5B04F000337232 /* PushNotificationsTestsImpl.stubs in Resources */,
+				82B3CCBF2B5B04F000337232 /* InventoryTestsImpl.stubs in Resources */,
+				82B3CCC02B5B04F000337232 /* DataTestsImpl.stubs in Resources */,
+				82B3CCC12B5B04F000337232 /* Assets.xcassets in Resources */,
+				82B3CCC22B5B04F000337232 /* FriendsTestsImpl.stubs in Resources */,
+				82B3CCC32B5B04F000337232 /* CloudScriptTestsImpl.stubs in Resources */,
+				82B3CCC42B5B04F000337232 /* CatalogTestsImpl.stubs in Resources */,
+				82B3CCC52B5B04F000337232 /* ProfilesTestsImpl.stubs in Resources */,
+				82B3CCC62B5B04F000337232 /* LocalizationTestsImpl.stubs in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82CEEA772B153284007BD4F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82CEEB082B153866007BD4F5 /* AccountManagementTestsImpl.stubs in Resources */,
+				82CEEB992B156891007BD4F5 /* testTitleData.json in Resources */,
+				82CEEB0E2B153866007BD4F5 /* ExperimentationTestsImpl.stubs in Resources */,
+				82CEEB122B153866007BD4F5 /* PlatformSpecificTestsImpl.stubs in Resources */,
+				82CEEB0C2B153866007BD4F5 /* GroupsTestsImpl.stubs in Resources */,
+				82CEEB142B153866007BD4F5 /* TitleDataManagementTestsImpl.stubs in Resources */,
+				82CEEA852B153285007BD4F5 /* Preview Assets.xcassets in Resources */,
+				82CEEB0D2B153866007BD4F5 /* PlayerDataManagementTestsImpl.stubs in Resources */,
+				82CEEB092B153866007BD4F5 /* MultiplayerServerTestsImpl.stubs in Resources */,
+				82CEEB132B153866007BD4F5 /* SegmentsTestsImpl.stubs in Resources */,
+				82CEEB0F2B153866007BD4F5 /* PushNotificationsTestsImpl.stubs in Resources */,
+				82CEEB152B153866007BD4F5 /* InventoryTestsImpl.stubs in Resources */,
+				82CEEB0B2B153866007BD4F5 /* DataTestsImpl.stubs in Resources */,
+				82CEEA812B153285007BD4F5 /* Assets.xcassets in Resources */,
+				82CEEB112B153866007BD4F5 /* FriendsTestsImpl.stubs in Resources */,
+				82CEEB172B153866007BD4F5 /* CloudScriptTestsImpl.stubs in Resources */,
+				82CEEB102B153866007BD4F5 /* CatalogTestsImpl.stubs in Resources */,
+				82CEEB0A2B153866007BD4F5 /* ProfilesTestsImpl.stubs in Resources */,
+				82CEEB162B153866007BD4F5 /* LocalizationTestsImpl.stubs in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		82B3CC6B2B5B04F000337232 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82B3CC6C2B5B04F000337232 /* EventPipelineTests.cpp in Sources */,
+				82B3CC6D2B5B04F000337232 /* SegmentsTestsImpl.cpp in Sources */,
+				82B3CC6E2B5B04F000337232 /* MultiplayerServerTestsImpl.cpp in Sources */,
+				82B3CC6F2B5B04F000337232 /* InventoryTests.cpp in Sources */,
+				82B3CC702B5B04F000337232 /* ProfilesTests.cpp in Sources */,
+				82B3CC712B5B04F000337232 /* InventoryTestsImpl.cpp in Sources */,
+				82B3CC722B5B04F000337232 /* AccountManagementTestsImpl.cpp in Sources */,
+				82B3CC732B5B04F000337232 /* ExperimentationTests.cpp in Sources */,
+				82B3CC742B5B04F000337232 /* PushNotificationsOperations.cpp in Sources */,
+				82B3CC752B5B04F000337232 /* TitleDataManagementTests.cpp in Sources */,
+				82B3CC762B5B04F000337232 /* CoreOperations.cpp in Sources */,
+				82B3CC772B5B04F000337232 /* DataOperations.cpp in Sources */,
+				82B3CC782B5B04F000337232 /* FriendsTests.cpp in Sources */,
+				82B3CC792B5B04F000337232 /* MultiplayerServerTests.cpp in Sources */,
+				82B3CC7A2B5B04F000337232 /* FriendsTestsImpl.cpp in Sources */,
+				82B3CC7B2B5B04F000337232 /* AccountManagementTests.cpp in Sources */,
+				82B3CC7C2B5B04F000337232 /* AuthenticationOperations.cpp in Sources */,
+				82B3CC7D2B5B04F000337232 /* TestAppPch.cpp in Sources */,
+				82B3CC7E2B5B04F000337232 /* LocalizationTestsImpl.cpp in Sources */,
+				82B3CC7F2B5B04F000337232 /* CatalogOperations.cpp in Sources */,
+				82B3CC802B5B04F000337232 /* TitleDataManagementTestsImpl.cpp in Sources */,
+				82B3CC812B5B04F000337232 /* GroupsOperations.cpp in Sources */,
+				82B3CC822B5B04F000337232 /* DataTestsImpl.cpp in Sources */,
+				82B3CC832B5B04F000337232 /* AppleSignInCoordinator.swift in Sources */,
+				82B3CC842B5B04F000337232 /* InventoryOperations.cpp in Sources */,
+				82B3CC852B5B04F000337232 /* LocalizationOperations.cpp in Sources */,
+				82B3CC862B5B04F000337232 /* MainApple.cpp in Sources */,
+				82B3CC872B5B04F000337232 /* ContentView.swift in Sources */,
+				82B3CC882B5B04F000337232 /* TestContext.cpp in Sources */,
+				82B3CC892B5B04F000337232 /* PlayerDataManagementOperations.cpp in Sources */,
+				82B3CC8A2B5B04F000337232 /* PlayerDataManagementTestsImpl.cpp in Sources */,
+				82B3CC8B2B5B04F000337232 /* PlatformUtilsApple.cpp in Sources */,
+				82B3CC8C2B5B04F000337232 /* CloudScriptTests.cpp in Sources */,
+				82B3CC8D2B5B04F000337232 /* CloudScriptOperations.cpp in Sources */,
+				82B3CC8E2B5B04F000337232 /* CoreTestClass.cpp in Sources */,
+				82B3CC8F2B5B04F000337232 /* AuthenticationTests.cpp in Sources */,
+				82B3CC902B5B04F000337232 /* TestClass.cpp in Sources */,
+				82B3CC912B5B04F000337232 /* TestRunner.cpp in Sources */,
+				82B3CC922B5B04F000337232 /* MultiplayerServerOperations.cpp in Sources */,
+				82B3CC932B5B04F000337232 /* FriendsOperations.cpp in Sources */,
+				82B3CC942B5B04F000337232 /* CatalogTestsImpl.cpp in Sources */,
+				82B3CC952B5B04F000337232 /* CatalogTests.cpp in Sources */,
+				82B3CC962B5B04F000337232 /* AccountManagementOperations.cpp in Sources */,
+				82B3CC972B5B04F000337232 /* ExperimentationOperations.cpp in Sources */,
+				82B3CC982B5B04F000337232 /* CloudScriptTestsImpl.cpp in Sources */,
+				82B3CC992B5B04F000337232 /* PlatformSpecificOperations.cpp in Sources */,
+				82B3CC9A2B5B04F000337232 /* TestReport.cpp in Sources */,
+				82B3CC9B2B5B04F000337232 /* MemoryManager.cpp in Sources */,
+				82B3CC9C2B5B04F000337232 /* PlayFabServicesTestApp_AppleApp.swift in Sources */,
+				82B3CC9D2B5B04F000337232 /* PushNotificationsTestsImpl.cpp in Sources */,
+				82B3CC9E2B5B04F000337232 /* LocalizationTests.cpp in Sources */,
+				82B3CC9F2B5B04F000337232 /* PlatformSpecificTestsImpl.cpp in Sources */,
+				82B3CCA02B5B04F000337232 /* ExperimentationTestsImpl.cpp in Sources */,
+				82B3CCA12B5B04F000337232 /* GroupsTestsImpl.cpp in Sources */,
+				82B3CCA22B5B04F000337232 /* PlayFabApple.cpp in Sources */,
+				82B3CCA32B5B04F000337232 /* TitleDataManagementOperations.cpp in Sources */,
+				82B3CCA42B5B04F000337232 /* PlayerDataManagementTests.cpp in Sources */,
+				82B3CCA52B5B04F000337232 /* ServicesOperations.cpp in Sources */,
+				82B3CCA62B5B04F000337232 /* ServicesTestClass.cpp in Sources */,
+				82B3CCA72B5B04F000337232 /* GroupsTests.cpp in Sources */,
+				82B3CCA82B5B04F000337232 /* SegmentsOperations.cpp in Sources */,
+				82B3CCA92B5B04F000337232 /* ProfilesTestsImpl.cpp in Sources */,
+				82B3CCAA2B5B04F000337232 /* PushNotificationsTests.cpp in Sources */,
+				82B3CCAB2B5B04F000337232 /* PlatformSpecificTests.cpp in Sources */,
+				82B3CCAC2B5B04F000337232 /* ProfilesOperations.cpp in Sources */,
+				82B3CCAD2B5B04F000337232 /* SegmentsTests.cpp in Sources */,
+				82B3CCAE2B5B04F000337232 /* DataTests.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82CEEA752B153284007BD4F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82CEEB6B2B153920007BD4F5 /* EventPipelineTests.cpp in Sources */,
+				82CEEB6F2B153920007BD4F5 /* SegmentsTestsImpl.cpp in Sources */,
+				82CEEB7C2B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp in Sources */,
+				82CEEAEB2B1537FB007BD4F5 /* InventoryTests.cpp in Sources */,
+				82CEEAEC2B1537FB007BD4F5 /* ProfilesTests.cpp in Sources */,
+				82CEEB782B153920007BD4F5 /* InventoryTestsImpl.cpp in Sources */,
+				82CEEB722B153920007BD4F5 /* AccountManagementTestsImpl.cpp in Sources */,
+				82CEEAED2B1537FB007BD4F5 /* ExperimentationTests.cpp in Sources */,
+				82CEEABC2B1536C9007BD4F5 /* PushNotificationsOperations.cpp in Sources */,
+				82CEEAEA2B1537FB007BD4F5 /* TitleDataManagementTests.cpp in Sources */,
+				82CEEB7E2B153920007BD4F5 /* CoreOperations.cpp in Sources */,
+				82CEEABF2B1536C9007BD4F5 /* DataOperations.cpp in Sources */,
+				82CEEAE92B1537FB007BD4F5 /* FriendsTests.cpp in Sources */,
+				82CEEAF22B1537FB007BD4F5 /* MultiplayerServerTests.cpp in Sources */,
+				82CEEB752B153920007BD4F5 /* FriendsTestsImpl.cpp in Sources */,
+				82CEEAF42B1537FB007BD4F5 /* AccountManagementTests.cpp in Sources */,
+				82CEEB7D2B153920007BD4F5 /* AuthenticationOperations.cpp in Sources */,
+				82CEEB692B153920007BD4F5 /* TestAppPch.cpp in Sources */,
+				82CEEB772B153920007BD4F5 /* LocalizationTestsImpl.cpp in Sources */,
+				82CEEAB62B1536C9007BD4F5 /* CatalogOperations.cpp in Sources */,
+				82CEEB6D2B153920007BD4F5 /* TitleDataManagementTestsImpl.cpp in Sources */,
+				82CEEABA2B1536C9007BD4F5 /* GroupsOperations.cpp in Sources */,
+				82CEEB7B2B153920007BD4F5 /* DataTestsImpl.cpp in Sources */,
+				82AB6DA42B4DBB980082EDED /* AppleSignInCoordinator.swift in Sources */,
+				82CEEAC02B1536C9007BD4F5 /* InventoryOperations.cpp in Sources */,
+				82CEEAB22B1536C9007BD4F5 /* LocalizationOperations.cpp in Sources */,
+				82B72C892B1FF441003802AA /* MainApple.cpp in Sources */,
+				82CEEA7F2B153284007BD4F5 /* ContentView.swift in Sources */,
+				82CEEB602B153920007BD4F5 /* TestContext.cpp in Sources */,
+				82CEEAC12B1536C9007BD4F5 /* PlayerDataManagementOperations.cpp in Sources */,
+				82CEEB6C2B153920007BD4F5 /* PlayerDataManagementTestsImpl.cpp in Sources */,
+				82CEEB8E2B1556D5007BD4F5 /* PlatformUtilsApple.cpp in Sources */,
+				82CEEAE82B1537FB007BD4F5 /* CloudScriptTests.cpp in Sources */,
+				82CEEAB32B1536C9007BD4F5 /* CloudScriptOperations.cpp in Sources */,
+				82CEEB5D2B153920007BD4F5 /* CoreTestClass.cpp in Sources */,
+				82CEEB6A2B153920007BD4F5 /* AuthenticationTests.cpp in Sources */,
+				82CEEB5C2B153920007BD4F5 /* TestClass.cpp in Sources */,
+				82CEEB5F2B153920007BD4F5 /* TestRunner.cpp in Sources */,
+				82CEEAB42B1536C9007BD4F5 /* MultiplayerServerOperations.cpp in Sources */,
+				82CEEAB72B1536C9007BD4F5 /* FriendsOperations.cpp in Sources */,
+				82CEEB742B153920007BD4F5 /* CatalogTestsImpl.cpp in Sources */,
+				82CEEAF52B1537FB007BD4F5 /* CatalogTests.cpp in Sources */,
+				82CEEABE2B1536C9007BD4F5 /* AccountManagementOperations.cpp in Sources */,
+				82CEEABD2B1536C9007BD4F5 /* ExperimentationOperations.cpp in Sources */,
+				82CEEB702B153920007BD4F5 /* CloudScriptTestsImpl.cpp in Sources */,
+				82CEEAB52B1536C9007BD4F5 /* PlatformSpecificOperations.cpp in Sources */,
+				82CEEB5E2B153920007BD4F5 /* TestReport.cpp in Sources */,
+				82CEEB662B153920007BD4F5 /* MemoryManager.cpp in Sources */,
+				82CEEA7D2B153284007BD4F5 /* PlayFabServicesTestApp_AppleApp.swift in Sources */,
+				82CEEB792B153920007BD4F5 /* PushNotificationsTestsImpl.cpp in Sources */,
+				82CEEAF32B1537FB007BD4F5 /* LocalizationTests.cpp in Sources */,
+				82CEEB762B153920007BD4F5 /* PlatformSpecificTestsImpl.cpp in Sources */,
+				82CEEB7A2B153920007BD4F5 /* ExperimentationTestsImpl.cpp in Sources */,
+				82CEEB712B153920007BD4F5 /* GroupsTestsImpl.cpp in Sources */,
+				82CEEB8C2B1551E8007BD4F5 /* PlayFabApple.cpp in Sources */,
+				82CEEABB2B1536C9007BD4F5 /* TitleDataManagementOperations.cpp in Sources */,
+				82CEEAE72B1537FB007BD4F5 /* PlayerDataManagementTests.cpp in Sources */,
+				82CEEB7F2B153920007BD4F5 /* ServicesOperations.cpp in Sources */,
+				82CEEB612B153920007BD4F5 /* ServicesTestClass.cpp in Sources */,
+				82CEEAF62B1537FB007BD4F5 /* GroupsTests.cpp in Sources */,
+				82CEEAB82B1536C9007BD4F5 /* SegmentsOperations.cpp in Sources */,
+				82CEEB6E2B153920007BD4F5 /* ProfilesTestsImpl.cpp in Sources */,
+				82CEEAF02B1537FB007BD4F5 /* PushNotificationsTests.cpp in Sources */,
+				82CEEAEE2B1537FB007BD4F5 /* PlatformSpecificTests.cpp in Sources */,
+				82CEEAB92B1536C9007BD4F5 /* ProfilesOperations.cpp in Sources */,
+				82CEEAF12B1537FB007BD4F5 /* SegmentsTests.cpp in Sources */,
+				82CEEAEF2B1537FB007BD4F5 /* DataTests.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8206F1882B755E3400451339 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libHttpClientFramework_macOS;
+			targetProxy = 8206F1872B755E3400451339 /* PBXContainerItemProxy */;
+		};
+		8286B2492B740931009A4677 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libHttpClientFramework_iOS;
+			targetProxy = 8286B2482B740931009A4677 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		82B3CCCB2B5B04F000337232 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = PlayFabServicesTestApp.Apple/PlayFabServicesTestApp_Apple.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PlayFabServicesTestApp.Apple/Preview Content\"";
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Apple",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../../libHttpClient/Include",
+					"$(SRCROOT)/../../../../External/rapidjson/include",
+					"$(SRCROOT)/../../../../Test/PlayFabServicesTestApp",
+				);
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MARKETING_VERSION = 1.0;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fstack-protector-strong",
+					"-fPIE",
+					"-pie",
+					"-Wformat",
+					"-Wformat-security",
+					"-Werror=format-security",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.playfabcommerce.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../../../../Test/PlayFabServicesTestApp/Platform/Apple/PlayFabServicesTestApp.Apple-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		82B3CCCC2B5B04F000337232 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = PlayFabServicesTestApp.Apple/PlayFabServicesTestApp_Apple.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PlayFabServicesTestApp.Apple/Preview Content\"";
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Apple",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../../libHttpClient/Include",
+					"$(SRCROOT)/../../../../External/rapidjson/include",
+					"$(SRCROOT)/../../../../Test/PlayFabServicesTestApp",
+				);
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MARKETING_VERSION = 1.0;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fstack-protector-strong",
+					"-fPIE",
+					"-pie",
+					"-Wformat",
+					"-Wformat-security",
+					"-Werror=format-security",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.playfabcommerce.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../../../../Test/PlayFabServicesTestApp/Platform/Apple/PlayFabServicesTestApp.Apple-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		82CEEA862B153285007BD4F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"HC_LINK_STATIC=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Apple",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../../libHttpClient/Include",
+					"$(SRCROOT)/../../../../External/rapidjson/include",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../../../../Test/PlayFabServicesTestApp/Platform/Apple/PlayFabServicesTestApp.Apple-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		82CEEA872B153285007BD4F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "HC_LINK_STATIC=1";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Apple",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../../libHttpClient/Include",
+					"$(SRCROOT)/../../../../External/rapidjson/include",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../../../../Test/PlayFabServicesTestApp/Platform/Apple/PlayFabServicesTestApp.Apple-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		82CEEA892B153285007BD4F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = PlayFabServicesTestApp.Apple/PlayFabServicesTestApp_Apple.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PlayFabServicesTestApp.Apple/Preview Content\"";
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Apple",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../../libHttpClient/Include",
+					"$(SRCROOT)/../../../../External/rapidjson/include",
+					"$(SRCROOT)/../../../../Test/PlayFabServicesTestApp",
+				);
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.6;
+				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.playfabcommerce.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../../../../Test/PlayFabServicesTestApp/Platform/Apple/PlayFabServicesTestApp.Apple-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		82CEEA8A2B153285007BD4F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = PlayFabServicesTestApp.Apple/PlayFabServicesTestApp_Apple.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PlayFabServicesTestApp.Apple/Preview Content\"";
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../../../Source/PlayFabServices/Source/Generated",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Apple",
+					"$(SRCROOT)/../../../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../../../../libHttpClient/Include",
+					"$(SRCROOT)/../../../../External/rapidjson/include",
+					"$(SRCROOT)/../../../../Test/PlayFabServicesTestApp",
+				);
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.6;
+				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.playfabcommerce.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../../../../Test/PlayFabServicesTestApp/Platform/Apple/PlayFabServicesTestApp.Apple-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		82B3CCCA2B5B04F000337232 /* Build configuration list for PBXNativeTarget "PlayFabServicesTestApp_macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82B3CCCB2B5B04F000337232 /* Debug */,
+				82B3CCCC2B5B04F000337232 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		82CEEA742B153284007BD4F5 /* Build configuration list for PBXProject "PlayFabServicesTestApp.Apple" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82CEEA862B153285007BD4F5 /* Debug */,
+				82CEEA872B153285007BD4F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		82CEEA882B153285007BD4F5 /* Build configuration list for PBXNativeTarget "PlayFabServicesTestApp_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82CEEA892B153285007BD4F5 /* Debug */,
+				82CEEA8A2B153285007BD4F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 82CEEA712B153284007BD4F5 /* Project object */;
+}

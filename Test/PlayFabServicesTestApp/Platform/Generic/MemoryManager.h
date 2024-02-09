@@ -29,7 +29,7 @@ private:
 
     std::mutex m_mutex;
     uint64_t m_nextId{ 0 };
-    Map<void*, uint64_t> m_allocations;
+    std::map<void*, uint64_t> m_allocations;
 };
 
 } // namespace Platform

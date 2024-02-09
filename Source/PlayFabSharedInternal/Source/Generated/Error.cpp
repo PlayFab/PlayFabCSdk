@@ -560,6 +560,11 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::InvalidNamespaceMismatch: return E_PF_INVALID_NAMESPACE_MISMATCH;
     case ServiceErrorCode::LeaderboardColumnLengthMismatch: return E_PF_LEADERBOARD_COLUMN_LENGTH_MISMATCH;
     case ServiceErrorCode::InvalidStatisticScore: return E_PF_INVALID_STATISTIC_SCORE;
+    case ServiceErrorCode::LeaderboardColumnsNotSpecified: return E_PF_LEADERBOARD_COLUMNS_NOT_SPECIFIED;
+    case ServiceErrorCode::LeaderboardMaxSizeTooLarge: return E_PF_LEADERBOARD_MAX_SIZE_TOO_LARGE;
+    case ServiceErrorCode::InvalidAttributeStatisticsSpecified: return E_PF_INVALID_ATTRIBUTE_STATISTICS_SPECIFIED;
+    case ServiceErrorCode::LeaderboardNotFound: return E_PF_LEADERBOARD_NOT_FOUND;
+    case ServiceErrorCode::TokenSigningKeyNotFound: return E_PF_TOKEN_SIGNING_KEY_NOT_FOUND;
     case ServiceErrorCode::MatchmakingEntityInvalid: return E_PF_MATCHMAKING_ENTITY_INVALID;
     case ServiceErrorCode::MatchmakingPlayerAttributesInvalid: return E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID;
     case ServiceErrorCode::MatchmakingQueueNotFound: return E_PF_MATCHMAKING_QUEUE_NOT_FOUND;
@@ -603,6 +608,7 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::CatalogItemTypeInvalid: return E_PF_CATALOG_ITEM_TYPE_INVALID;
     case ServiceErrorCode::CatalogBadRequest: return E_PF_CATALOG_BAD_REQUEST;
     case ServiceErrorCode::CatalogTooManyRequests: return E_PF_CATALOG_TOO_MANY_REQUESTS;
+    case ServiceErrorCode::InvalidCatalogItemConfiguration: return E_PF_INVALID_CATALOG_ITEM_CONFIGURATION;
     case ServiceErrorCode::ExportInvalidStatusUpdate: return E_PF_EXPORT_INVALID_STATUS_UPDATE;
     case ServiceErrorCode::ExportInvalidPrefix: return E_PF_EXPORT_INVALID_PREFIX;
     case ServiceErrorCode::ExportBlobContainerDoesNotExist: return E_PF_EXPORT_BLOB_CONTAINER_DOES_NOT_EXIST;
@@ -704,6 +710,12 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::LobbyNewOwnerMustBeConnected: return E_PF_LOBBY_NEW_OWNER_MUST_BE_CONNECTED;
     case ServiceErrorCode::LobbyCurrentOwnerStillConnected: return E_PF_LOBBY_CURRENT_OWNER_STILL_CONNECTED;
     case ServiceErrorCode::LobbyMemberIsNotOwner: return E_PF_LOBBY_MEMBER_IS_NOT_OWNER;
+    case ServiceErrorCode::LobbyServerMismatch: return E_PF_LOBBY_SERVER_MISMATCH;
+    case ServiceErrorCode::LobbyServerNotFound: return E_PF_LOBBY_SERVER_NOT_FOUND;
+    case ServiceErrorCode::LobbyDifferentServerAlreadyJoined: return E_PF_LOBBY_DIFFERENT_SERVER_ALREADY_JOINED;
+    case ServiceErrorCode::LobbyServerAlreadyJoined: return E_PF_LOBBY_SERVER_ALREADY_JOINED;
+    case ServiceErrorCode::LobbyIsNotClientOwned: return E_PF_LOBBY_IS_NOT_CLIENT_OWNED;
+    case ServiceErrorCode::LobbyDoesNotUseConnections: return E_PF_LOBBY_DOES_NOT_USE_CONNECTIONS;
     case ServiceErrorCode::EventSamplingInvalidRatio: return E_PF_EVENT_SAMPLING_INVALID_RATIO;
     case ServiceErrorCode::EventSamplingInvalidEventNamespace: return E_PF_EVENT_SAMPLING_INVALID_EVENT_NAMESPACE;
     case ServiceErrorCode::EventSamplingInvalidEventName: return E_PF_EVENT_SAMPLING_INVALID_EVENT_NAME;
@@ -727,6 +739,9 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::EventSinkTenantNotFound: return E_PF_EVENT_SINK_TENANT_NOT_FOUND;
     case ServiceErrorCode::EventSinkAadNotFound: return E_PF_EVENT_SINK_AAD_NOT_FOUND;
     case ServiceErrorCode::EventSinkDatabaseNotFound: return E_PF_EVENT_SINK_DATABASE_NOT_FOUND;
+    case ServiceErrorCode::EventSinkTitleUnauthorized: return E_PF_EVENT_SINK_TITLE_UNAUTHORIZED;
+    case ServiceErrorCode::EventSinkInsufficientRoleAssignment: return E_PF_EVENT_SINK_INSUFFICIENT_ROLE_ASSIGNMENT;
+    case ServiceErrorCode::EventSinkContainerNotFound: return E_PF_EVENT_SINK_CONTAINER_NOT_FOUND;
     case ServiceErrorCode::OperationCanceled: return E_PF_OPERATION_CANCELED;
     case ServiceErrorCode::InvalidDisplayNameRandomSuffixLength: return E_PF_INVALID_DISPLAY_NAME_RANDOM_SUFFIX_LENGTH;
     case ServiceErrorCode::AllowNonUniquePlayerDisplayNamesDisableNotAllowed: return E_PF_ALLOW_NON_UNIQUE_PLAYER_DISPLAY_NAMES_DISABLE_NOT_ALLOWED;
@@ -747,6 +762,25 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::PlayerCustomPropertiesPropertyDoesNotExist: return E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_DOES_NOT_EXIST;
     case ServiceErrorCode::AddonAlreadyExists: return E_PF_ADDON_ALREADY_EXISTS;
     case ServiceErrorCode::AddonDoesntExist: return E_PF_ADDON_DOESNT_EXIST;
+    case ServiceErrorCode::CopilotDisabled: return E_PF_COPILOT_DISABLED;
+    case ServiceErrorCode::CopilotInvalidRequest: return E_PF_COPILOT_INVALID_REQUEST;
+    case ServiceErrorCode::TrueSkillUnauthorized: return E_PF_TRUE_SKILL_UNAUTHORIZED;
+    case ServiceErrorCode::TrueSkillBadRequest: return E_PF_TRUE_SKILL_BAD_REQUEST;
+    case ServiceErrorCode::TrueSkillMatchResultAlreadySubmitted: return E_PF_TRUE_SKILL_MATCH_RESULT_ALREADY_SUBMITTED;
+    case ServiceErrorCode::TrueSkillDuplicatePlayerInMatchResult: return E_PF_TRUE_SKILL_DUPLICATE_PLAYER_IN_MATCH_RESULT;
+    case ServiceErrorCode::TrueSkillInvalidRanksInMatchResult: return E_PF_TRUE_SKILL_INVALID_RANKS_IN_MATCH_RESULT;
+    case ServiceErrorCode::TrueSkillNoWinnerInMatchResult: return E_PF_TRUE_SKILL_NO_WINNER_IN_MATCH_RESULT;
+    case ServiceErrorCode::TrueSkillMissingRequiredConditionInMatchResult: return E_PF_TRUE_SKILL_MISSING_REQUIRED_CONDITION_IN_MATCH_RESULT;
+    case ServiceErrorCode::TrueSkillMissingRequiredEventInMatchResult: return E_PF_TRUE_SKILL_MISSING_REQUIRED_EVENT_IN_MATCH_RESULT;
+    case ServiceErrorCode::TrueSkillUnknownEventInMatchResult: return E_PF_TRUE_SKILL_UNKNOWN_EVENT_IN_MATCH_RESULT;
+    case ServiceErrorCode::TrueSkillUnknownConditionName: return E_PF_TRUE_SKILL_UNKNOWN_CONDITION_NAME;
+    case ServiceErrorCode::TrueSkillUnknownConditionValue: return E_PF_TRUE_SKILL_UNKNOWN_CONDITION_VALUE;
+    case ServiceErrorCode::TrueSkillUnknownScenarioId: return E_PF_TRUE_SKILL_UNKNOWN_SCENARIO_ID;
+    case ServiceErrorCode::TrueSkillUnknownModelId: return E_PF_TRUE_SKILL_UNKNOWN_MODEL_ID;
+    case ServiceErrorCode::TrueSkillNoActiveModelInScenario: return E_PF_TRUE_SKILL_NO_ACTIVE_MODEL_IN_SCENARIO;
+    case ServiceErrorCode::StateShareUnauthorized: return E_PF_STATE_SHARE_UNAUTHORIZED;
+    case ServiceErrorCode::StateShareStateNotFound: return E_PF_STATE_SHARE_STATE_NOT_FOUND;
+    case ServiceErrorCode::StateShareLinkNotFound: return E_PF_STATE_SHARE_LINK_NOT_FOUND;
     default: return E_PF_UNKNOWN_ERROR;
     }
 }

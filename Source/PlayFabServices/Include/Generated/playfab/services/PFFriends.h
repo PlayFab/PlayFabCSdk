@@ -158,7 +158,7 @@ PF_API PFFriendsClientSetFriendTagsAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Adds the Friend user to the friendlist of the user with PlayFabId. At least one of FriendPlayFabId,FriendUsername,FriendEmail,
 /// or FriendTitleDisplayName should be initialized.
@@ -168,7 +168,7 @@ PF_API PFFriendsClientSetFriendTagsAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerGetFriendsListAsync, ServerRemoveFriendAsync, ServerSetFriendTagsAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -182,7 +182,7 @@ PF_API PFFriendsServerAddFriendAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the current friends for the user with PlayFabId, constrained to users who have PlayFab
 /// accounts. Friends from linked accounts (Facebook, Steam) are also included. You may optionally exclude
@@ -193,7 +193,7 @@ PF_API PFFriendsServerAddFriendAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerAddFriendAsync, ServerGetPlayerProfileAsync, ServerRemoveFriendAsync, ServerSetFriendTagsAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFFriendsServerGetFriendsListGetResultSize"/>
@@ -247,7 +247,7 @@ PF_API PFFriendsServerGetFriendsListGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Removes the specified friend from the the user's friend list
 /// </summary>
@@ -256,7 +256,7 @@ PF_API PFFriendsServerGetFriendsListGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ServerAddFriendAsync, ServerSetFriendTagsAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -270,7 +270,7 @@ PF_API PFFriendsServerRemoveFriendAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Updates the tag list for a specified user in the friend list of another user
 /// </summary>
@@ -279,7 +279,7 @@ PF_API PFFriendsServerRemoveFriendAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This operation is not additive. It will completely replace the tag list for the specified user. Please
 /// note that only users in the PlayFab friends list can be assigned tags. Attempting to set a tag on
 /// a friend only included in the friends list from a social site integration (such as Facebook or Steam)

@@ -41,7 +41,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
 
-  <!--LibHttpClient (XAsync) dependency-->
-  <Import Condition="'$(LibHttpClientImported)' != 'true' and '$(HCPlatform)' != 'GDK'" Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
+  <!--LibHttpClient dependency-->
+  <Import Condition="'$(LibHttpClientImported)' != 'true'" Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
 
 </Project>

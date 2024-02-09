@@ -17,6 +17,7 @@
 
 // libHttpClient headers
 #include <httpClient/pal.h>
+#include <httpClient/httpClient.h>
 #include <httpClient/async.h>
 
 #include <playfab/core/PFErrors.h>

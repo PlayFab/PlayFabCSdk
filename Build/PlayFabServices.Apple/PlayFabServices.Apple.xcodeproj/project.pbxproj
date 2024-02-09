@@ -1,0 +1,2008 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8206F2092B75898900451339 /* PlayFabCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F2082B75898900451339 /* PlayFabCore_macOS.framework */; };
+		8206F2152B7589F300451339 /* libPlayFabSharedInternal_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F2142B7589F300451339 /* libPlayFabSharedInternal_iOS.a */; };
+		8206F2172B7589FB00451339 /* libPlayFabSharedInternal_macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F2162B7589FB00451339 /* libPlayFabSharedInternal_macOS.a */; };
+		826082852AEC346600D8B93D /* PlayFabCore_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826082842AEC346600D8B93D /* PlayFabCore_iOS.framework */; };
+		826082892AEC347E00D8B93D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826082882AEC347E00D8B93D /* Security.framework */; };
+		8260828B2AEC348500D8B93D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8260828A2AEC348500D8B93D /* Foundation.framework */; };
+		826AE41A2AF1841900DF9129 /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B22AF1841900DF9129 /* stdafx.h */; };
+		826AE41B2AF1841900DF9129 /* GlobalState.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B42AF1841900DF9129 /* GlobalState.h */; };
+		826AE41C2AF1841900DF9129 /* GlobalState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3B52AF1841900DF9129 /* GlobalState.cpp */; };
+		826AE41D2AF1841900DF9129 /* HttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B62AF1841900DF9129 /* HttpClient.h */; };
+		826AE41E2AF1841900DF9129 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3B72AF1841900DF9129 /* Platform.cpp */; };
+		826AE41F2AF1841900DF9129 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3B82AF1841900DF9129 /* HttpClient.cpp */; };
+		826AE4202AF1841900DF9129 /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B92AF1841900DF9129 /* Platform.h */; };
+		826AE4212AF1841900DF9129 /* PFServices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3BB2AF1841900DF9129 /* PFServices.cpp */; };
+		826AE4222AF1841900DF9129 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3BC2AF1841900DF9129 /* stdafx.cpp */; };
+		826AE51C2AF1867400DF9129 /* PFServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE4C72AF1867400DF9129 /* PFServices.h */; };
+		826AE5972AF186D500DF9129 /* PFTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5412AF186D500DF9129 /* PFTypes.h */; };
+		826AE5982AF186D500DF9129 /* PFSegmentsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5422AF186D500DF9129 /* PFSegmentsTypes.h */; };
+		826AE5992AF186D500DF9129 /* PFSegments.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5432AF186D500DF9129 /* PFSegments.h */; };
+		826AE59A2AF186D500DF9129 /* PFTitleDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5442AF186D500DF9129 /* PFTitleDataManagement.h */; };
+		826AE59B2AF186D500DF9129 /* PFPlatformSpecific.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5452AF186D500DF9129 /* PFPlatformSpecific.h */; };
+		826AE59C2AF186D500DF9129 /* PFInventory.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5462AF186D500DF9129 /* PFInventory.h */; };
+		826AE59D2AF186D500DF9129 /* PFDataTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5472AF186D500DF9129 /* PFDataTypes.h */; };
+		826AE59E2AF186D500DF9129 /* PFLocalizationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5482AF186D500DF9129 /* PFLocalizationTypes.h */; };
+		826AE59F2AF186D500DF9129 /* PFPushNotificationsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5492AF186D500DF9129 /* PFPushNotificationsTypes.h */; };
+		826AE5A02AF186D500DF9129 /* PFAccountManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54A2AF186D500DF9129 /* PFAccountManagement.h */; };
+		826AE5A12AF186D500DF9129 /* PFExperimentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54B2AF186D500DF9129 /* PFExperimentation.h */; };
+		826AE5A22AF186D500DF9129 /* PFMultiplayerServerTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54C2AF186D500DF9129 /* PFMultiplayerServerTypes.h */; };
+		826AE5A32AF186D500DF9129 /* PFPlatformSpecificTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54D2AF186D500DF9129 /* PFPlatformSpecificTypes.h */; };
+		826AE5A42AF186D500DF9129 /* PFFriends.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54E2AF186D500DF9129 /* PFFriends.h */; };
+		826AE5A52AF186D500DF9129 /* PFCatalogTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54F2AF186D500DF9129 /* PFCatalogTypes.h */; };
+		826AE5A62AF186D500DF9129 /* MultiplayerServerTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5512AF186D500DF9129 /* MultiplayerServerTypeWrappers.h */; };
+		826AE5A72AF186D500DF9129 /* DataTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5522AF186D500DF9129 /* DataTypeWrappers.h */; };
+		826AE5A82AF186D500DF9129 /* AccountManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5532AF186D500DF9129 /* AccountManagementTypeWrappers.h */; };
+		826AE5A92AF186D500DF9129 /* TypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5542AF186D500DF9129 /* TypeWrappers.h */; };
+		826AE5AA2AF186D500DF9129 /* GroupsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5552AF186D500DF9129 /* GroupsTypeWrappers.h */; };
+		826AE5AB2AF186D500DF9129 /* CatalogTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5562AF186D500DF9129 /* CatalogTypeWrappers.h */; };
+		826AE5AC2AF186D500DF9129 /* CloudScriptTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5572AF186D500DF9129 /* CloudScriptTypeWrappers.h */; };
+		826AE5AD2AF186D500DF9129 /* SegmentsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5582AF186D500DF9129 /* SegmentsTypeWrappers.h */; };
+		826AE5AE2AF186D500DF9129 /* ExperimentationTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5592AF186D500DF9129 /* ExperimentationTypeWrappers.h */; };
+		826AE5AF2AF186D500DF9129 /* CharacterTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55A2AF186D500DF9129 /* CharacterTypeWrappers.h */; };
+		826AE5B02AF186D500DF9129 /* LocalizationTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55B2AF186D500DF9129 /* LocalizationTypeWrappers.h */; };
+		826AE5B12AF186D500DF9129 /* TitleDataManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55C2AF186D500DF9129 /* TitleDataManagementTypeWrappers.h */; };
+		826AE5B22AF186D500DF9129 /* PlayerDataManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55D2AF186D500DF9129 /* PlayerDataManagementTypeWrappers.h */; };
+		826AE5B32AF186D500DF9129 /* InventoryTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55E2AF186D500DF9129 /* InventoryTypeWrappers.h */; };
+		826AE5B42AF186D500DF9129 /* PushNotificationsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55F2AF186D500DF9129 /* PushNotificationsTypeWrappers.h */; };
+		826AE5B52AF186D500DF9129 /* ProfilesTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5602AF186D500DF9129 /* ProfilesTypeWrappers.h */; };
+		826AE5B62AF186D500DF9129 /* PlatformSpecificTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5612AF186D500DF9129 /* PlatformSpecificTypeWrappers.h */; };
+		826AE5B72AF186D500DF9129 /* FriendsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5622AF186D500DF9129 /* FriendsTypeWrappers.h */; };
+		826AE5B82AF186D500DF9129 /* PFLocalization.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5632AF186D500DF9129 /* PFLocalization.h */; };
+		826AE5B92AF186D500DF9129 /* PFPushNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5642AF186D500DF9129 /* PFPushNotifications.h */; };
+		826AE5BA2AF186D500DF9129 /* PFProfiles.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5652AF186D500DF9129 /* PFProfiles.h */; };
+		826AE5BB2AF186D500DF9129 /* PFData.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5662AF186D500DF9129 /* PFData.h */; };
+		826AE5BC2AF186D500DF9129 /* PFTitleDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5672AF186D500DF9129 /* PFTitleDataManagementTypes.h */; };
+		826AE5BD2AF186D500DF9129 /* PFCloudScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5682AF186D500DF9129 /* PFCloudScript.h */; };
+		826AE5BE2AF186D500DF9129 /* PFCatalog.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5692AF186D500DF9129 /* PFCatalog.h */; };
+		826AE5BF2AF186D500DF9129 /* PFCloudScriptTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56A2AF186D500DF9129 /* PFCloudScriptTypes.h */; };
+		826AE5C02AF186D500DF9129 /* PFPlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56B2AF186D500DF9129 /* PFPlayerDataManagement.h */; };
+		826AE5C12AF186D500DF9129 /* PFCharacter.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56C2AF186D500DF9129 /* PFCharacter.h */; };
+		826AE5C22AF186D500DF9129 /* PFExperimentationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56D2AF186D500DF9129 /* PFExperimentationTypes.h */; };
+		826AE5C32AF186D500DF9129 /* PFFriendsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56E2AF186D500DF9129 /* PFFriendsTypes.h */; };
+		826AE5C42AF186D500DF9129 /* PFAccountManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56F2AF186D500DF9129 /* PFAccountManagementTypes.h */; };
+		826AE5C52AF186D500DF9129 /* PFMultiplayerServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5702AF186D500DF9129 /* PFMultiplayerServer.h */; };
+		826AE5C62AF186D500DF9129 /* PFProfilesTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5712AF186D500DF9129 /* PFProfilesTypes.h */; };
+		826AE5C72AF186D500DF9129 /* PFCharacterTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5722AF186D500DF9129 /* PFCharacterTypes.h */; };
+		826AE5C92AF186D500DF9129 /* PFGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5742AF186D500DF9129 /* PFGroups.h */; };
+		826AE5CA2AF186D500DF9129 /* PFPlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5752AF186D500DF9129 /* PFPlayerDataManagementTypes.h */; };
+		826AE5CB2AF186D500DF9129 /* PFInventoryTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5762AF186D500DF9129 /* PFInventoryTypes.h */; };
+		826AE5CC2AF186D500DF9129 /* PFGroupsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5772AF186D500DF9129 /* PFGroupsTypes.h */; };
+		826AE5CD2AF186D500DF9129 /* PFTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57B2AF186D500DF9129 /* PFTypes.h */; };
+		826AE5CE2AF186D500DF9129 /* PFSegmentsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57C2AF186D500DF9129 /* PFSegmentsTypes.h */; };
+		826AE5CF2AF186D500DF9129 /* PFSegments.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57D2AF186D500DF9129 /* PFSegments.h */; };
+		826AE5D02AF186D500DF9129 /* PFTitleDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57E2AF186D500DF9129 /* PFTitleDataManagement.h */; };
+		826AE5D12AF186D500DF9129 /* PFInventory.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57F2AF186D500DF9129 /* PFInventory.h */; };
+		826AE5D22AF186D500DF9129 /* PFDataTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5802AF186D500DF9129 /* PFDataTypes.h */; };
+		826AE5D32AF186D500DF9129 /* PFAccountManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5812AF186D500DF9129 /* PFAccountManagement.h */; };
+		826AE5D42AF186D500DF9129 /* PFExperimentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5822AF186D500DF9129 /* PFExperimentation.h */; };
+		826AE5D52AF186D500DF9129 /* PFMultiplayerServerTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5832AF186D500DF9129 /* PFMultiplayerServerTypes.h */; };
+		826AE5D62AF186D500DF9129 /* PFFriends.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5842AF186D500DF9129 /* PFFriends.h */; };
+		826AE5D72AF186D500DF9129 /* PFCatalogTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5852AF186D500DF9129 /* PFCatalogTypes.h */; };
+		826AE5D82AF186D500DF9129 /* PFProfiles.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5862AF186D500DF9129 /* PFProfiles.h */; };
+		826AE5D92AF186D500DF9129 /* PFData.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5872AF186D500DF9129 /* PFData.h */; };
+		826AE5DA2AF186D500DF9129 /* PFTitleDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5882AF186D500DF9129 /* PFTitleDataManagementTypes.h */; };
+		826AE5DB2AF186D500DF9129 /* PFCloudScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5892AF186D500DF9129 /* PFCloudScript.h */; };
+		826AE5DC2AF186D500DF9129 /* PFCatalog.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58A2AF186D500DF9129 /* PFCatalog.h */; };
+		826AE5DD2AF186D500DF9129 /* PFCloudScriptTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58B2AF186D500DF9129 /* PFCloudScriptTypes.h */; };
+		826AE5DE2AF186D500DF9129 /* PFPlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58C2AF186D500DF9129 /* PFPlayerDataManagement.h */; };
+		826AE5DF2AF186D500DF9129 /* PFExperimentationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58D2AF186D500DF9129 /* PFExperimentationTypes.h */; };
+		826AE5E02AF186D500DF9129 /* PFFriendsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58E2AF186D500DF9129 /* PFFriendsTypes.h */; };
+		826AE5E12AF186D500DF9129 /* PFAccountManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58F2AF186D500DF9129 /* PFAccountManagementTypes.h */; };
+		826AE5E22AF186D500DF9129 /* PFMultiplayerServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5902AF186D500DF9129 /* PFMultiplayerServer.h */; };
+		826AE5E32AF186D500DF9129 /* PFProfilesTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5912AF186D500DF9129 /* PFProfilesTypes.h */; };
+		826AE5E42AF186D500DF9129 /* PFServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5922AF186D500DF9129 /* PFServices.h */; };
+		826AE5E52AF186D500DF9129 /* PFGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5932AF186D500DF9129 /* PFGroups.h */; };
+		826AE5E62AF186D500DF9129 /* PFPlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5942AF186D500DF9129 /* PFPlayerDataManagementTypes.h */; };
+		826AE5E72AF186D500DF9129 /* PFInventoryTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5952AF186D500DF9129 /* PFInventoryTypes.h */; };
+		826AE5E82AF186D500DF9129 /* PFGroupsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5962AF186D500DF9129 /* PFGroupsTypes.h */; };
+		826AE6542AF1871C00DF9129 /* PlatformSpecificTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5EB2AF1871C00DF9129 /* PlatformSpecificTypes.h */; };
+		826AE6552AF1871C00DF9129 /* Groups.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5EC2AF1871C00DF9129 /* Groups.cpp */; };
+		826AE6562AF1871C00DF9129 /* ExperimentationTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5ED2AF1871C00DF9129 /* ExperimentationTypes.cpp */; };
+		826AE6572AF1871C00DF9129 /* ProfilesTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5EE2AF1871C00DF9129 /* ProfilesTypes.h */; };
+		826AE6582AF1871C00DF9129 /* CharacterTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5EF2AF1871C00DF9129 /* CharacterTypes.h */; };
+		826AE6592AF1871C00DF9129 /* Localization.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5F02AF1871C00DF9129 /* Localization.h */; };
+		826AE65A2AF1871C00DF9129 /* InventoryTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F12AF1871C00DF9129 /* InventoryTypes.cpp */; };
+		826AE65B2AF1871C00DF9129 /* CatalogTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F22AF1871C00DF9129 /* CatalogTypes.cpp */; };
+		826AE65C2AF1871C00DF9129 /* Segments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F32AF1871C00DF9129 /* Segments.cpp */; };
+		826AE65D2AF1871C00DF9129 /* InventoryTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5F42AF1871C00DF9129 /* InventoryTypes.h */; };
+		826AE65E2AF1871C00DF9129 /* AccountManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F52AF1871C00DF9129 /* AccountManagementTypes.cpp */; };
+		826AE6602AF1871C00DF9129 /* Profiles.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5F72AF1871C00DF9129 /* Profiles.h */; };
+		826AE6612AF1871C00DF9129 /* TitleDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5F82AF1871C00DF9129 /* TitleDataManagementTypes.h */; };
+		826AE6622AF1871C00DF9129 /* PFCloudScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F92AF1871C00DF9129 /* PFCloudScript.cpp */; };
+		826AE6632AF1871C00DF9129 /* Friends.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5FA2AF1871C00DF9129 /* Friends.h */; };
+		826AE6642AF1871C00DF9129 /* PFMultiplayerServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5FB2AF1871C00DF9129 /* PFMultiplayerServer.cpp */; };
+		826AE6652AF1871C00DF9129 /* GroupsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5FC2AF1871C00DF9129 /* GroupsTypes.cpp */; };
+		826AE6662AF1871C00DF9129 /* CatalogTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5FD2AF1871C00DF9129 /* CatalogTypes.h */; };
+		826AE6672AF1871C00DF9129 /* AccountManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5FE2AF1871C00DF9129 /* AccountManagementTypes.h */; };
+		826AE6682AF1871C00DF9129 /* PFPlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5FF2AF1871C00DF9129 /* PFPlayerDataManagement.cpp */; };
+		826AE6692AF1871C00DF9129 /* PushNotificationsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6002AF1871C00DF9129 /* PushNotificationsTypes.cpp */; };
+		826AE66B2AF1871C00DF9129 /* Profiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6022AF1871C00DF9129 /* Profiles.cpp */; };
+		826AE66C2AF1871C00DF9129 /* CloudScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6032AF1871C00DF9129 /* CloudScript.h */; };
+		826AE66E2AF1871C00DF9129 /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6052AF1871C00DF9129 /* Data.h */; };
+		826AE66F2AF1871C00DF9129 /* LocalizationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6062AF1871C00DF9129 /* LocalizationTypes.h */; };
+		826AE6702AF1871C00DF9129 /* PFTitleDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6072AF1871C00DF9129 /* PFTitleDataManagement.cpp */; };
+		826AE6712AF1871C00DF9129 /* Experimentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6082AF1871C00DF9129 /* Experimentation.h */; };
+		826AE6722AF1871C00DF9129 /* TitleDataManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6092AF1871C00DF9129 /* TitleDataManagementTypes.cpp */; };
+		826AE6732AF1871C00DF9129 /* PlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE60A2AF1871C00DF9129 /* PlayerDataManagementTypes.h */; };
+		826AE6742AF1871C00DF9129 /* Friends.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE60B2AF1871C00DF9129 /* Friends.cpp */; };
+		826AE6752AF1871C00DF9129 /* Localization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE60C2AF1871C00DF9129 /* Localization.cpp */; };
+		826AE6762AF1871C00DF9129 /* PFInventory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE60D2AF1871C00DF9129 /* PFInventory.cpp */; };
+		826AE6772AF1871C00DF9129 /* TitleDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE60E2AF1871C00DF9129 /* TitleDataManagement.h */; };
+		826AE6782AF1871C00DF9129 /* CloudScriptTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE60F2AF1871C00DF9129 /* CloudScriptTypes.h */; };
+		826AE6792AF1871C00DF9129 /* MultiplayerServerTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6102AF1871C00DF9129 /* MultiplayerServerTypes.h */; };
+		826AE67A2AF1871C00DF9129 /* Catalog.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6112AF1871C00DF9129 /* Catalog.h */; };
+		826AE67B2AF1871C00DF9129 /* PlatformSpecific.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6122AF1871C00DF9129 /* PlatformSpecific.cpp */; };
+		826AE67D2AF1871C00DF9129 /* FriendsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6142AF1871C00DF9129 /* FriendsTypes.h */; };
+		826AE67E2AF1871C00DF9129 /* CacheId.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6152AF1871C00DF9129 /* CacheId.h */; };
+		826AE67F2AF1871C00DF9129 /* PFCatalog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6162AF1871C00DF9129 /* PFCatalog.cpp */; };
+		826AE6802AF1871C00DF9129 /* GroupsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6172AF1871C00DF9129 /* GroupsTypes.h */; };
+		826AE6812AF1871C00DF9129 /* PFData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6182AF1871C00DF9129 /* PFData.cpp */; };
+		826AE6822AF1871C00DF9129 /* DataTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6192AF1871C00DF9129 /* DataTypes.cpp */; };
+		826AE6832AF1871C00DF9129 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE61A2AF1871C00DF9129 /* Data.cpp */; };
+		826AE6842AF1871C00DF9129 /* AccountManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE61B2AF1871C00DF9129 /* AccountManagement.h */; };
+		826AE6852AF1871C00DF9129 /* MultiplayerServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE61C2AF1871C00DF9129 /* MultiplayerServer.cpp */; };
+		826AE6862AF1871C00DF9129 /* LocalizationTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE61D2AF1871C00DF9129 /* LocalizationTypes.cpp */; };
+		826AE6872AF1871C00DF9129 /* Inventory.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE61E2AF1871C00DF9129 /* Inventory.h */; };
+		826AE6882AF1871C00DF9129 /* PlatformSpecificTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE61F2AF1871C00DF9129 /* PlatformSpecificTypes.cpp */; };
+		826AE6892AF1871C00DF9129 /* DataTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6202AF1871C00DF9129 /* DataTypes.h */; };
+		826AE68A2AF1871C00DF9129 /* FriendsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6212AF1871C00DF9129 /* FriendsTypes.cpp */; };
+		826AE68B2AF1871C00DF9129 /* CoreTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6222AF1871C00DF9129 /* CoreTypes.cpp */; };
+		826AE68C2AF1871C00DF9129 /* PushNotificationsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6232AF1871C00DF9129 /* PushNotificationsTypes.h */; };
+		826AE68D2AF1871C00DF9129 /* Segments.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6242AF1871C00DF9129 /* Segments.h */; };
+		826AE68E2AF1871C00DF9129 /* PlatformSpecific.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6252AF1871C00DF9129 /* PlatformSpecific.h */; };
+		826AE68F2AF1871C00DF9129 /* PushNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6262AF1871C00DF9129 /* PushNotifications.h */; };
+		826AE6902AF1871C00DF9129 /* PFPlatformSpecific.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6272AF1871C00DF9129 /* PFPlatformSpecific.cpp */; };
+		826AE6912AF1871C00DF9129 /* PFGroups.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6282AF1871C00DF9129 /* PFGroups.cpp */; };
+		826AE6922AF1871C00DF9129 /* CloudScriptTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6292AF1871C00DF9129 /* CloudScriptTypes.cpp */; };
+		826AE6932AF1871C00DF9129 /* PFPushNotifications.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62A2AF1871C00DF9129 /* PFPushNotifications.cpp */; };
+		826AE6942AF1871C00DF9129 /* PFLocalization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62B2AF1871C00DF9129 /* PFLocalization.cpp */; };
+		826AE6952AF1871C00DF9129 /* PFAccountManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62C2AF1871C00DF9129 /* PFAccountManagement.cpp */; };
+		826AE6962AF1871C00DF9129 /* MultiplayerServerTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62D2AF1871C00DF9129 /* MultiplayerServerTypes.cpp */; };
+		826AE6972AF1871C00DF9129 /* TitleDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62E2AF1871C00DF9129 /* TitleDataManagement.cpp */; };
+		826AE6982AF1871C00DF9129 /* SegmentsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62F2AF1871C00DF9129 /* SegmentsTypes.cpp */; };
+		826AE6992AF1871C00DF9129 /* PFCharacter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6302AF1871C00DF9129 /* PFCharacter.cpp */; };
+		826AE69A2AF1871C00DF9129 /* CloudScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6312AF1871C00DF9129 /* CloudScript.cpp */; };
+		826AE69B2AF1871C00DF9129 /* Catalog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6322AF1871C00DF9129 /* Catalog.cpp */; };
+		826AE69C2AF1871C00DF9129 /* PFProfiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6332AF1871C00DF9129 /* PFProfiles.cpp */; };
+		826AE69D2AF1871C00DF9129 /* PlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6342AF1871C00DF9129 /* PlayerDataManagement.cpp */; };
+		826AE69E2AF1871C00DF9129 /* ProfilesTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6352AF1871C00DF9129 /* ProfilesTypes.cpp */; };
+		826AE69F2AF1871C00DF9129 /* PFSegments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6362AF1871C00DF9129 /* PFSegments.cpp */; };
+		826AE6A02AF1871C00DF9129 /* PFFriends.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6372AF1871C00DF9129 /* PFFriends.cpp */; };
+		826AE6A12AF1871C00DF9129 /* CharacterTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6382AF1871C00DF9129 /* CharacterTypes.cpp */; };
+		826AE6A22AF1871C00DF9129 /* AccountManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6392AF1871C00DF9129 /* AccountManagement.cpp */; };
+		826AE6A32AF1871C00DF9129 /* Inventory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE63A2AF1871C00DF9129 /* Inventory.cpp */; };
+		826AE6A42AF1871C00DF9129 /* MultiplayerServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE63B2AF1871C00DF9129 /* MultiplayerServer.h */; };
+		826AE6A52AF1871C00DF9129 /* CoreTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE63C2AF1871C00DF9129 /* CoreTypes.h */; };
+		826AE6A62AF1871C00DF9129 /* PlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE63D2AF1871C00DF9129 /* PlayerDataManagement.h */; };
+		826AE6A72AF1871C00DF9129 /* Experimentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE63E2AF1871C00DF9129 /* Experimentation.cpp */; };
+		826AE6A82AF1871C00DF9129 /* SegmentsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE63F2AF1871C00DF9129 /* SegmentsTypes.h */; };
+		826AE6A92AF1871C00DF9129 /* Groups.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6402AF1871C00DF9129 /* Groups.h */; };
+		826AE6AA2AF1871C00DF9129 /* ExperimentationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6412AF1871C00DF9129 /* ExperimentationTypes.h */; };
+		826AE6AB2AF1871C00DF9129 /* PlayerDataManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6422AF1871C00DF9129 /* PlayerDataManagementTypes.cpp */; };
+		826AE6AC2AF1871C00DF9129 /* PFExperimentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6432AF1871C00DF9129 /* PFExperimentation.cpp */; };
+		826AE6AD2AF1871C00DF9129 /* PushNotifications.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6442AF1871C00DF9129 /* PushNotifications.cpp */; };
+		82B3CB292B5B016B00337232 /* FriendsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6142AF1871C00DF9129 /* FriendsTypes.h */; };
+		82B3CB2A2B5B016B00337232 /* TypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5542AF186D500DF9129 /* TypeWrappers.h */; };
+		82B3CB2B2B5B016B00337232 /* Inventory.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE61E2AF1871C00DF9129 /* Inventory.h */; };
+		82B3CB2C2B5B016B00337232 /* PFPlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5942AF186D500DF9129 /* PFPlayerDataManagementTypes.h */; };
+		82B3CB2D2B5B016B00337232 /* PFFriends.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54E2AF186D500DF9129 /* PFFriends.h */; };
+		82B3CB2E2B5B016B00337232 /* PFTitleDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5882AF186D500DF9129 /* PFTitleDataManagementTypes.h */; };
+		82B3CB2F2B5B016B00337232 /* CloudScriptTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5572AF186D500DF9129 /* CloudScriptTypeWrappers.h */; };
+		82B3CB302B5B016B00337232 /* PFServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE4C72AF1867400DF9129 /* PFServices.h */; };
+		82B3CB312B5B016B00337232 /* PlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE63D2AF1871C00DF9129 /* PlayerDataManagement.h */; };
+		82B3CB322B5B016B00337232 /* PlatformSpecificTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5EB2AF1871C00DF9129 /* PlatformSpecificTypes.h */; };
+		82B3CB332B5B016B00337232 /* PFCharacterTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5722AF186D500DF9129 /* PFCharacterTypes.h */; };
+		82B3CB342B5B016B00337232 /* PFPlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5752AF186D500DF9129 /* PFPlayerDataManagementTypes.h */; };
+		82B3CB352B5B016B00337232 /* PFInventory.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5462AF186D500DF9129 /* PFInventory.h */; };
+		82B3CB362B5B016B00337232 /* PFSegmentsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57C2AF186D500DF9129 /* PFSegmentsTypes.h */; };
+		82B3CB372B5B016B00337232 /* PFCatalogTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54F2AF186D500DF9129 /* PFCatalogTypes.h */; };
+		82B3CB382B5B016B00337232 /* PFSegments.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57D2AF186D500DF9129 /* PFSegments.h */; };
+		82B3CB392B5B016B00337232 /* PFGroupsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5772AF186D500DF9129 /* PFGroupsTypes.h */; };
+		82B3CB3A2B5B016B00337232 /* PFData.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5872AF186D500DF9129 /* PFData.h */; };
+		82B3CB3B2B5B016B00337232 /* PFDataTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5472AF186D500DF9129 /* PFDataTypes.h */; };
+		82B3CB3C2B5B016B00337232 /* PFExperimentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54B2AF186D500DF9129 /* PFExperimentation.h */; };
+		82B3CB3D2B5B016B00337232 /* PFCloudScriptTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56A2AF186D500DF9129 /* PFCloudScriptTypes.h */; };
+		82B3CB3E2B5B016B00337232 /* Groups.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6402AF1871C00DF9129 /* Groups.h */; };
+		82B3CB3F2B5B016B00337232 /* PlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE60A2AF1871C00DF9129 /* PlayerDataManagementTypes.h */; };
+		82B3CB402B5B016B00337232 /* PFMultiplayerServerTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5832AF186D500DF9129 /* PFMultiplayerServerTypes.h */; };
+		82B3CB412B5B016B00337232 /* PFCloudScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5892AF186D500DF9129 /* PFCloudScript.h */; };
+		82B3CB422B5B016B00337232 /* TitleDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE60E2AF1871C00DF9129 /* TitleDataManagement.h */; };
+		82B3CB432B5B016B00337232 /* ExperimentationTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5592AF186D500DF9129 /* ExperimentationTypeWrappers.h */; };
+		82B3CB442B5B016B00337232 /* PFPlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58C2AF186D500DF9129 /* PFPlayerDataManagement.h */; };
+		82B3CB452B5B016B00337232 /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B92AF1841900DF9129 /* Platform.h */; };
+		82B3CB462B5B016B00337232 /* DataTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6202AF1871C00DF9129 /* DataTypes.h */; };
+		82B3CB472B5B016B00337232 /* HttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B62AF1841900DF9129 /* HttpClient.h */; };
+		82B3CB482B5B016B00337232 /* PFAccountManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56F2AF186D500DF9129 /* PFAccountManagementTypes.h */; };
+		82B3CB492B5B016B00337232 /* PlatformSpecificTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5612AF186D500DF9129 /* PlatformSpecificTypeWrappers.h */; };
+		82B3CB4A2B5B016B00337232 /* PFGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5932AF186D500DF9129 /* PFGroups.h */; };
+		82B3CB4B2B5B016B00337232 /* PFFriendsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58E2AF186D500DF9129 /* PFFriendsTypes.h */; };
+		82B3CB4C2B5B016B00337232 /* PFExperimentationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56D2AF186D500DF9129 /* PFExperimentationTypes.h */; };
+		82B3CB4D2B5B016B00337232 /* PFGroupsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5962AF186D500DF9129 /* PFGroupsTypes.h */; };
+		82B3CB4E2B5B016B00337232 /* PFAccountManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5812AF186D500DF9129 /* PFAccountManagement.h */; };
+		82B3CB4F2B5B016B00337232 /* PFCatalog.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5692AF186D500DF9129 /* PFCatalog.h */; };
+		82B3CB502B5B016B00337232 /* PFLocalizationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5482AF186D500DF9129 /* PFLocalizationTypes.h */; };
+		82B3CB512B5B016B00337232 /* PFSegmentsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5422AF186D500DF9129 /* PFSegmentsTypes.h */; };
+		82B3CB522B5B016B00337232 /* PFProfilesTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5712AF186D500DF9129 /* PFProfilesTypes.h */; };
+		82B3CB532B5B016B00337232 /* PFCloudScriptTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58B2AF186D500DF9129 /* PFCloudScriptTypes.h */; };
+		82B3CB542B5B016B00337232 /* PFLocalization.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5632AF186D500DF9129 /* PFLocalization.h */; };
+		82B3CB552B5B016B00337232 /* ExperimentationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6412AF1871C00DF9129 /* ExperimentationTypes.h */; };
+		82B3CB562B5B016B00337232 /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B22AF1841900DF9129 /* stdafx.h */; };
+		82B3CB572B5B016B00337232 /* PFPushNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5642AF186D500DF9129 /* PFPushNotifications.h */; };
+		82B3CB582B5B016B00337232 /* PFGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5742AF186D500DF9129 /* PFGroups.h */; };
+		82B3CB592B5B016B00337232 /* Friends.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5FA2AF1871C00DF9129 /* Friends.h */; };
+		82B3CB5A2B5B016B00337232 /* ProfilesTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5602AF186D500DF9129 /* ProfilesTypeWrappers.h */; };
+		82B3CB5B2B5B016B00337232 /* PFInventory.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57F2AF186D500DF9129 /* PFInventory.h */; };
+		82B3CB5C2B5B016B00337232 /* GroupsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6172AF1871C00DF9129 /* GroupsTypes.h */; };
+		82B3CB5D2B5B016B00337232 /* PFTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5412AF186D500DF9129 /* PFTypes.h */; };
+		82B3CB5E2B5B016B00337232 /* PFPlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56B2AF186D500DF9129 /* PFPlayerDataManagement.h */; };
+		82B3CB5F2B5B016B00337232 /* PFAccountManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58F2AF186D500DF9129 /* PFAccountManagementTypes.h */; };
+		82B3CB602B5B016B00337232 /* PFPushNotificationsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5492AF186D500DF9129 /* PFPushNotificationsTypes.h */; };
+		82B3CB612B5B016B00337232 /* CatalogTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5FD2AF1871C00DF9129 /* CatalogTypes.h */; };
+		82B3CB622B5B016B00337232 /* PFData.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5662AF186D500DF9129 /* PFData.h */; };
+		82B3CB632B5B016B00337232 /* Segments.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6242AF1871C00DF9129 /* Segments.h */; };
+		82B3CB642B5B016B00337232 /* PFTitleDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5442AF186D500DF9129 /* PFTitleDataManagement.h */; };
+		82B3CB652B5B016B00337232 /* PlatformSpecific.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6252AF1871C00DF9129 /* PlatformSpecific.h */; };
+		82B3CB662B5B016B00337232 /* PFTitleDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57E2AF186D500DF9129 /* PFTitleDataManagement.h */; };
+		82B3CB672B5B016B00337232 /* CloudScriptTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE60F2AF1871C00DF9129 /* CloudScriptTypes.h */; };
+		82B3CB682B5B016B00337232 /* MultiplayerServerTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6102AF1871C00DF9129 /* MultiplayerServerTypes.h */; };
+		82B3CB692B5B016B00337232 /* Experimentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6082AF1871C00DF9129 /* Experimentation.h */; };
+		82B3CB6A2B5B016B00337232 /* PFInventoryTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5952AF186D500DF9129 /* PFInventoryTypes.h */; };
+		82B3CB6B2B5B016B00337232 /* CacheId.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6152AF1871C00DF9129 /* CacheId.h */; };
+		82B3CB6C2B5B016B00337232 /* PFDataTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5802AF186D500DF9129 /* PFDataTypes.h */; };
+		82B3CB6D2B5B016B00337232 /* LocalizationTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55B2AF186D500DF9129 /* LocalizationTypeWrappers.h */; };
+		82B3CB6E2B5B016B00337232 /* MultiplayerServerTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5512AF186D500DF9129 /* MultiplayerServerTypeWrappers.h */; };
+		82B3CB6F2B5B016B00337232 /* PFExperimentationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58D2AF186D500DF9129 /* PFExperimentationTypes.h */; };
+		82B3CB702B5B016B00337232 /* AccountManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE61B2AF1871C00DF9129 /* AccountManagement.h */; };
+		82B3CB712B5B016B00337232 /* PFPlatformSpecific.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5452AF186D500DF9129 /* PFPlatformSpecific.h */; };
+		82B3CB722B5B016B00337232 /* SegmentsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5582AF186D500DF9129 /* SegmentsTypeWrappers.h */; };
+		82B3CB732B5B016B00337232 /* PFCatalogTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5852AF186D500DF9129 /* PFCatalogTypes.h */; };
+		82B3CB742B5B016B00337232 /* AccountManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5532AF186D500DF9129 /* AccountManagementTypeWrappers.h */; };
+		82B3CB752B5B016B00337232 /* PushNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6262AF1871C00DF9129 /* PushNotifications.h */; };
+		82B3CB762B5B016B00337232 /* PFCatalog.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE58A2AF186D500DF9129 /* PFCatalog.h */; };
+		82B3CB772B5B016B00337232 /* PFServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5922AF186D500DF9129 /* PFServices.h */; };
+		82B3CB782B5B016B00337232 /* InventoryTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55E2AF186D500DF9129 /* InventoryTypeWrappers.h */; };
+		82B3CB792B5B016B00337232 /* PushNotificationsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6232AF1871C00DF9129 /* PushNotificationsTypes.h */; };
+		82B3CB7A2B5B016B00337232 /* PFPlatformSpecificTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54D2AF186D500DF9129 /* PFPlatformSpecificTypes.h */; };
+		82B3CB7B2B5B016B00337232 /* Catalog.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6112AF1871C00DF9129 /* Catalog.h */; };
+		82B3CB7C2B5B016B00337232 /* TitleDataManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55C2AF186D500DF9129 /* TitleDataManagementTypeWrappers.h */; };
+		82B3CB7D2B5B016B00337232 /* FriendsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5622AF186D500DF9129 /* FriendsTypeWrappers.h */; };
+		82B3CB7E2B5B016B00337232 /* PFAccountManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54A2AF186D500DF9129 /* PFAccountManagement.h */; };
+		82B3CB7F2B5B016B00337232 /* InventoryTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5F42AF1871C00DF9129 /* InventoryTypes.h */; };
+		82B3CB802B5B016B00337232 /* AccountManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5FE2AF1871C00DF9129 /* AccountManagementTypes.h */; };
+		82B3CB812B5B016B00337232 /* PFProfilesTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5912AF186D500DF9129 /* PFProfilesTypes.h */; };
+		82B3CB822B5B016B00337232 /* PFTitleDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5672AF186D500DF9129 /* PFTitleDataManagementTypes.h */; };
+		82B3CB832B5B016B00337232 /* CloudScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6032AF1871C00DF9129 /* CloudScript.h */; };
+		82B3CB842B5B016B00337232 /* Profiles.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5F72AF1871C00DF9129 /* Profiles.h */; };
+		82B3CB852B5B016B00337232 /* PushNotificationsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55F2AF186D500DF9129 /* PushNotificationsTypeWrappers.h */; };
+		82B3CB862B5B016B00337232 /* Localization.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5F02AF1871C00DF9129 /* Localization.h */; };
+		82B3CB872B5B016B00337232 /* CoreTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE63C2AF1871C00DF9129 /* CoreTypes.h */; };
+		82B3CB882B5B016B00337232 /* PFMultiplayerServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5702AF186D500DF9129 /* PFMultiplayerServer.h */; };
+		82B3CB892B5B016B00337232 /* PFTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE57B2AF186D500DF9129 /* PFTypes.h */; };
+		82B3CB8A2B5B016B00337232 /* PFSegments.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5432AF186D500DF9129 /* PFSegments.h */; };
+		82B3CB8B2B5B016B00337232 /* PlayerDataManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55D2AF186D500DF9129 /* PlayerDataManagementTypeWrappers.h */; };
+		82B3CB8C2B5B016B00337232 /* PFCharacter.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56C2AF186D500DF9129 /* PFCharacter.h */; };
+		82B3CB8D2B5B016B00337232 /* DataTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5522AF186D500DF9129 /* DataTypeWrappers.h */; };
+		82B3CB8E2B5B016B00337232 /* GlobalState.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B42AF1841900DF9129 /* GlobalState.h */; };
+		82B3CB8F2B5B016B00337232 /* PFFriendsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56E2AF186D500DF9129 /* PFFriendsTypes.h */; };
+		82B3CB902B5B016B00337232 /* CatalogTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5562AF186D500DF9129 /* CatalogTypeWrappers.h */; };
+		82B3CB912B5B016B00337232 /* PFInventoryTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5762AF186D500DF9129 /* PFInventoryTypes.h */; };
+		82B3CB922B5B016B00337232 /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6052AF1871C00DF9129 /* Data.h */; };
+		82B3CB932B5B016B00337232 /* PFMultiplayerServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5902AF186D500DF9129 /* PFMultiplayerServer.h */; };
+		82B3CB942B5B016B00337232 /* ProfilesTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5EE2AF1871C00DF9129 /* ProfilesTypes.h */; };
+		82B3CB952B5B016B00337232 /* LocalizationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6062AF1871C00DF9129 /* LocalizationTypes.h */; };
+		82B3CB962B5B016B00337232 /* SegmentsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE63F2AF1871C00DF9129 /* SegmentsTypes.h */; };
+		82B3CB972B5B016B00337232 /* PFProfiles.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5652AF186D500DF9129 /* PFProfiles.h */; };
+		82B3CB982B5B016B00337232 /* CharacterTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5EF2AF1871C00DF9129 /* CharacterTypes.h */; };
+		82B3CB992B5B016B00337232 /* GroupsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5552AF186D500DF9129 /* GroupsTypeWrappers.h */; };
+		82B3CB9A2B5B016B00337232 /* CharacterTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55A2AF186D500DF9129 /* CharacterTypeWrappers.h */; };
+		82B3CB9B2B5B016B00337232 /* PFFriends.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5842AF186D500DF9129 /* PFFriends.h */; };
+		82B3CB9C2B5B016B00337232 /* PFCloudScript.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5682AF186D500DF9129 /* PFCloudScript.h */; };
+		82B3CB9D2B5B016B00337232 /* TitleDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5F82AF1871C00DF9129 /* TitleDataManagementTypes.h */; };
+		82B3CB9E2B5B016B00337232 /* PFMultiplayerServerTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE54C2AF186D500DF9129 /* PFMultiplayerServerTypes.h */; };
+		82B3CB9F2B5B016B00337232 /* MultiplayerServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE63B2AF1871C00DF9129 /* MultiplayerServer.h */; };
+		82B3CBA02B5B016B00337232 /* PFProfiles.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5862AF186D500DF9129 /* PFProfiles.h */; };
+		82B3CBA12B5B016B00337232 /* PFExperimentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5822AF186D500DF9129 /* PFExperimentation.h */; };
+		82B3CBA32B5B016B00337232 /* Inventory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE63A2AF1871C00DF9129 /* Inventory.cpp */; };
+		82B3CBA42B5B016B00337232 /* AccountManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6392AF1871C00DF9129 /* AccountManagement.cpp */; };
+		82B3CBA52B5B016B00337232 /* PushNotificationsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6002AF1871C00DF9129 /* PushNotificationsTypes.cpp */; };
+		82B3CBA62B5B016B00337232 /* TitleDataManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6092AF1871C00DF9129 /* TitleDataManagementTypes.cpp */; };
+		82B3CBA72B5B016B00337232 /* PFCatalog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6162AF1871C00DF9129 /* PFCatalog.cpp */; };
+		82B3CBA82B5B016B00337232 /* PFExperimentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6432AF1871C00DF9129 /* PFExperimentation.cpp */; };
+		82B3CBA92B5B016B00337232 /* PlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6342AF1871C00DF9129 /* PlayerDataManagement.cpp */; };
+		82B3CBAA2B5B016B00337232 /* Groups.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5EC2AF1871C00DF9129 /* Groups.cpp */; };
+		82B3CBAB2B5B016B00337232 /* MultiplayerServerTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62D2AF1871C00DF9129 /* MultiplayerServerTypes.cpp */; };
+		82B3CBAC2B5B016B00337232 /* ProfilesTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6352AF1871C00DF9129 /* ProfilesTypes.cpp */; };
+		82B3CBAD2B5B016B00337232 /* PFCloudScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F92AF1871C00DF9129 /* PFCloudScript.cpp */; };
+		82B3CBAE2B5B016B00337232 /* PlayerDataManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6422AF1871C00DF9129 /* PlayerDataManagementTypes.cpp */; };
+		82B3CBAF2B5B016B00337232 /* CatalogTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F22AF1871C00DF9129 /* CatalogTypes.cpp */; };
+		82B3CBB02B5B016B00337232 /* Experimentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE63E2AF1871C00DF9129 /* Experimentation.cpp */; };
+		82B3CBB12B5B016B00337232 /* ExperimentationTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5ED2AF1871C00DF9129 /* ExperimentationTypes.cpp */; };
+		82B3CBB22B5B016B00337232 /* Friends.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE60B2AF1871C00DF9129 /* Friends.cpp */; };
+		82B3CBB32B5B016B00337232 /* CharacterTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6382AF1871C00DF9129 /* CharacterTypes.cpp */; };
+		82B3CBB42B5B016B00337232 /* CloudScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6312AF1871C00DF9129 /* CloudScript.cpp */; };
+		82B3CBB62B5B016B00337232 /* InventoryTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F12AF1871C00DF9129 /* InventoryTypes.cpp */; };
+		82B3CBB72B5B016B00337232 /* Segments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F32AF1871C00DF9129 /* Segments.cpp */; };
+		82B3CBB82B5B016B00337232 /* PFPlatformSpecific.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6272AF1871C00DF9129 /* PFPlatformSpecific.cpp */; };
+		82B3CBB92B5B016B00337232 /* PFMultiplayerServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5FB2AF1871C00DF9129 /* PFMultiplayerServer.cpp */; };
+		82B3CBBA2B5B016B00337232 /* CoreTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6222AF1871C00DF9129 /* CoreTypes.cpp */; };
+		82B3CBBB2B5B016B00337232 /* CloudScriptTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6292AF1871C00DF9129 /* CloudScriptTypes.cpp */; };
+		82B3CBBC2B5B016B00337232 /* Profiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6022AF1871C00DF9129 /* Profiles.cpp */; };
+		82B3CBBD2B5B016B00337232 /* PFPlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5FF2AF1871C00DF9129 /* PFPlayerDataManagement.cpp */; };
+		82B3CBBE2B5B016B00337232 /* PlatformSpecificTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE61F2AF1871C00DF9129 /* PlatformSpecificTypes.cpp */; };
+		82B3CBBF2B5B016B00337232 /* Localization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE60C2AF1871C00DF9129 /* Localization.cpp */; };
+		82B3CBC02B5B016B00337232 /* PFLocalization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62B2AF1871C00DF9129 /* PFLocalization.cpp */; };
+		82B3CBC12B5B016B00337232 /* PFProfiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6332AF1871C00DF9129 /* PFProfiles.cpp */; };
+		82B3CBC22B5B016B00337232 /* PFData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6182AF1871C00DF9129 /* PFData.cpp */; };
+		82B3CBC32B5B016B00337232 /* PFInventory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE60D2AF1871C00DF9129 /* PFInventory.cpp */; };
+		82B3CBC42B5B016B00337232 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3B82AF1841900DF9129 /* HttpClient.cpp */; };
+		82B3CBC52B5B016B00337232 /* PushNotifications.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6442AF1871C00DF9129 /* PushNotifications.cpp */; };
+		82B3CBC62B5B016B00337232 /* PFAccountManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62C2AF1871C00DF9129 /* PFAccountManagement.cpp */; };
+		82B3CBC72B5B016B00337232 /* LocalizationTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE61D2AF1871C00DF9129 /* LocalizationTypes.cpp */; };
+		82B3CBC82B5B016B00337232 /* GlobalState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3B52AF1841900DF9129 /* GlobalState.cpp */; };
+		82B3CBC92B5B016B00337232 /* PFCharacter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6302AF1871C00DF9129 /* PFCharacter.cpp */; };
+		82B3CBCA2B5B016B00337232 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE61A2AF1871C00DF9129 /* Data.cpp */; };
+		82B3CBCB2B5B016B00337232 /* PFFriends.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6372AF1871C00DF9129 /* PFFriends.cpp */; };
+		82B3CBCC2B5B016B00337232 /* AccountManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5F52AF1871C00DF9129 /* AccountManagementTypes.cpp */; };
+		82B3CBCD2B5B016B00337232 /* TitleDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62E2AF1871C00DF9129 /* TitleDataManagement.cpp */; };
+		82B3CBCE2B5B016B00337232 /* PFSegments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6362AF1871C00DF9129 /* PFSegments.cpp */; };
+		82B3CBCF2B5B016B00337232 /* PFServices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3BB2AF1841900DF9129 /* PFServices.cpp */; };
+		82B3CBD02B5B016B00337232 /* PFPushNotifications.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62A2AF1871C00DF9129 /* PFPushNotifications.cpp */; };
+		82B3CBD12B5B016B00337232 /* DataTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6192AF1871C00DF9129 /* DataTypes.cpp */; };
+		82B3CBD22B5B016B00337232 /* PlatformSpecific.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6122AF1871C00DF9129 /* PlatformSpecific.cpp */; };
+		82B3CBD32B5B016B00337232 /* SegmentsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE62F2AF1871C00DF9129 /* SegmentsTypes.cpp */; };
+		82B3CBD42B5B016B00337232 /* FriendsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6212AF1871C00DF9129 /* FriendsTypes.cpp */; };
+		82B3CBD52B5B016B00337232 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3BC2AF1841900DF9129 /* stdafx.cpp */; };
+		82B3CBD62B5B016B00337232 /* PFTitleDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6072AF1871C00DF9129 /* PFTitleDataManagement.cpp */; };
+		82B3CBD72B5B016B00337232 /* GroupsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE5FC2AF1871C00DF9129 /* GroupsTypes.cpp */; };
+		82B3CBD82B5B016B00337232 /* MultiplayerServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE61C2AF1871C00DF9129 /* MultiplayerServer.cpp */; };
+		82B3CBD92B5B016B00337232 /* Catalog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6322AF1871C00DF9129 /* Catalog.cpp */; };
+		82B3CBDA2B5B016B00337232 /* PFGroups.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6282AF1871C00DF9129 /* PFGroups.cpp */; };
+		82B3CBDB2B5B016B00337232 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3B72AF1841900DF9129 /* Platform.cpp */; };
+		82B3CBF22B5B023B00337232 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B3CBF12B5B023A00337232 /* Foundation.framework */; };
+		82B3CBF42B5B023E00337232 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B3CBF32B5B023E00337232 /* Security.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8206F0552B740CB500451339 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 58BD256122123EF9008942EB;
+			remoteInfo = libHttpClientFramework_iOS;
+		};
+		8286B2002B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 67EE817E2362599C00A5F3DE;
+			remoteInfo = SSL_iOS;
+		};
+		8286B2022B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF87AD25A3F0F9005C4BDF;
+			remoteInfo = SSL_macOS;
+		};
+		8286B2042B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58722D0E209AD61900B071F7;
+			remoteInfo = libHttpClient_iOS;
+		};
+		8286B2062B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7DB100A72119206B00AE22F5;
+			remoteInfo = libHttpClient_macOS;
+		};
+		8286B2082B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF884125A522BC005C4BDF;
+			remoteInfo = libHttpClient_NOWEBSOCKETS_iOS;
+		};
+		8286B20A2B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9FF0A7725A5366A0061B717;
+			remoteInfo = libHttpClient_NOWEBSOCKETS_macOS;
+		};
+		8286B20C2B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58BD256222123EF9008942EB;
+			remoteInfo = libHttpClientFramework_iOS;
+		};
+		8286B20E2B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2C872C65221C91BD0054F791;
+			remoteInfo = libHttpClientFramework_macOS;
+		};
+		8286B2102B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF888425A52685005C4BDF;
+			remoteInfo = libHttpClientFramework_NOWEBSOCKETS_iOS;
+		};
+		8286B2122B73FEFA009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9FF0AA225A536A20061B717;
+			remoteInfo = libHttpClientFramework_NOWEBSOCKETS_macOS;
+		};
+		8286B2142B73FF0C009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C872C64221C91BD0054F791;
+			remoteInfo = libHttpClientFramework_macOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8206F2082B75898900451339 /* PlayFabCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8206F2142B7589F300451339 /* libPlayFabSharedInternal_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8206F2162B7589FB00451339 /* libPlayFabSharedInternal_macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal_macOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		826081552AEC31CA00D8B93D /* PlayFabServices_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlayFabServices_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		826082822AEC346600D8B93D /* libHttpClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libHttpClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		826082842AEC346600D8B93D /* PlayFabCore_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabCore_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		826082862AEC346600D8B93D /* libPlayFabSharedInternal.iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		826082882AEC347E00D8B93D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		8260828A2AEC348500D8B93D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		826AE3B22AF1841900DF9129 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
+		826AE3B42AF1841900DF9129 /* GlobalState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalState.h; sourceTree = "<group>"; };
+		826AE3B52AF1841900DF9129 /* GlobalState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GlobalState.cpp; sourceTree = "<group>"; };
+		826AE3B62AF1841900DF9129 /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
+		826AE3B72AF1841900DF9129 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform.cpp; sourceTree = "<group>"; };
+		826AE3B82AF1841900DF9129 /* HttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpClient.cpp; sourceTree = "<group>"; };
+		826AE3B92AF1841900DF9129 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
+		826AE3BB2AF1841900DF9129 /* PFServices.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFServices.cpp; sourceTree = "<group>"; };
+		826AE3BC2AF1841900DF9129 /* stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stdafx.cpp; sourceTree = "<group>"; };
+		826AE4C72AF1867400DF9129 /* PFServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFServices.h; sourceTree = "<group>"; };
+		826AE5412AF186D500DF9129 /* PFTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTypes.h; sourceTree = "<group>"; };
+		826AE5422AF186D500DF9129 /* PFSegmentsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFSegmentsTypes.h; sourceTree = "<group>"; };
+		826AE5432AF186D500DF9129 /* PFSegments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFSegments.h; sourceTree = "<group>"; };
+		826AE5442AF186D500DF9129 /* PFTitleDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTitleDataManagement.h; sourceTree = "<group>"; };
+		826AE5452AF186D500DF9129 /* PFPlatformSpecific.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlatformSpecific.h; sourceTree = "<group>"; };
+		826AE5462AF186D500DF9129 /* PFInventory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFInventory.h; sourceTree = "<group>"; };
+		826AE5472AF186D500DF9129 /* PFDataTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFDataTypes.h; sourceTree = "<group>"; };
+		826AE5482AF186D500DF9129 /* PFLocalizationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFLocalizationTypes.h; sourceTree = "<group>"; };
+		826AE5492AF186D500DF9129 /* PFPushNotificationsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPushNotificationsTypes.h; sourceTree = "<group>"; };
+		826AE54A2AF186D500DF9129 /* PFAccountManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFAccountManagement.h; sourceTree = "<group>"; };
+		826AE54B2AF186D500DF9129 /* PFExperimentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFExperimentation.h; sourceTree = "<group>"; };
+		826AE54C2AF186D500DF9129 /* PFMultiplayerServerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMultiplayerServerTypes.h; sourceTree = "<group>"; };
+		826AE54D2AF186D500DF9129 /* PFPlatformSpecificTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlatformSpecificTypes.h; sourceTree = "<group>"; };
+		826AE54E2AF186D500DF9129 /* PFFriends.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFFriends.h; sourceTree = "<group>"; };
+		826AE54F2AF186D500DF9129 /* PFCatalogTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCatalogTypes.h; sourceTree = "<group>"; };
+		826AE5512AF186D500DF9129 /* MultiplayerServerTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerServerTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5522AF186D500DF9129 /* DataTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5532AF186D500DF9129 /* AccountManagementTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountManagementTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5542AF186D500DF9129 /* TypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeWrappers.h; sourceTree = "<group>"; };
+		826AE5552AF186D500DF9129 /* GroupsTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupsTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5562AF186D500DF9129 /* CatalogTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatalogTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5572AF186D500DF9129 /* CloudScriptTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudScriptTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5582AF186D500DF9129 /* SegmentsTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentsTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5592AF186D500DF9129 /* ExperimentationTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentationTypeWrappers.h; sourceTree = "<group>"; };
+		826AE55A2AF186D500DF9129 /* CharacterTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterTypeWrappers.h; sourceTree = "<group>"; };
+		826AE55B2AF186D500DF9129 /* LocalizationTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalizationTypeWrappers.h; sourceTree = "<group>"; };
+		826AE55C2AF186D500DF9129 /* TitleDataManagementTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TitleDataManagementTypeWrappers.h; sourceTree = "<group>"; };
+		826AE55D2AF186D500DF9129 /* PlayerDataManagementTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDataManagementTypeWrappers.h; sourceTree = "<group>"; };
+		826AE55E2AF186D500DF9129 /* InventoryTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InventoryTypeWrappers.h; sourceTree = "<group>"; };
+		826AE55F2AF186D500DF9129 /* PushNotificationsTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationsTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5602AF186D500DF9129 /* ProfilesTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilesTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5612AF186D500DF9129 /* PlatformSpecificTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformSpecificTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5622AF186D500DF9129 /* FriendsTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsTypeWrappers.h; sourceTree = "<group>"; };
+		826AE5632AF186D500DF9129 /* PFLocalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFLocalization.h; sourceTree = "<group>"; };
+		826AE5642AF186D500DF9129 /* PFPushNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPushNotifications.h; sourceTree = "<group>"; };
+		826AE5652AF186D500DF9129 /* PFProfiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFProfiles.h; sourceTree = "<group>"; };
+		826AE5662AF186D500DF9129 /* PFData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFData.h; sourceTree = "<group>"; };
+		826AE5672AF186D500DF9129 /* PFTitleDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTitleDataManagementTypes.h; sourceTree = "<group>"; };
+		826AE5682AF186D500DF9129 /* PFCloudScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCloudScript.h; sourceTree = "<group>"; };
+		826AE5692AF186D500DF9129 /* PFCatalog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCatalog.h; sourceTree = "<group>"; };
+		826AE56A2AF186D500DF9129 /* PFCloudScriptTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCloudScriptTypes.h; sourceTree = "<group>"; };
+		826AE56B2AF186D500DF9129 /* PFPlayerDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayerDataManagement.h; sourceTree = "<group>"; };
+		826AE56C2AF186D500DF9129 /* PFCharacter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCharacter.h; sourceTree = "<group>"; };
+		826AE56D2AF186D500DF9129 /* PFExperimentationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFExperimentationTypes.h; sourceTree = "<group>"; };
+		826AE56E2AF186D500DF9129 /* PFFriendsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFFriendsTypes.h; sourceTree = "<group>"; };
+		826AE56F2AF186D500DF9129 /* PFAccountManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFAccountManagementTypes.h; sourceTree = "<group>"; };
+		826AE5702AF186D500DF9129 /* PFMultiplayerServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMultiplayerServer.h; sourceTree = "<group>"; };
+		826AE5712AF186D500DF9129 /* PFProfilesTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFProfilesTypes.h; sourceTree = "<group>"; };
+		826AE5722AF186D500DF9129 /* PFCharacterTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCharacterTypes.h; sourceTree = "<group>"; };
+		826AE5742AF186D500DF9129 /* PFGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFGroups.h; sourceTree = "<group>"; };
+		826AE5752AF186D500DF9129 /* PFPlayerDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayerDataManagementTypes.h; sourceTree = "<group>"; };
+		826AE5762AF186D500DF9129 /* PFInventoryTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFInventoryTypes.h; sourceTree = "<group>"; };
+		826AE5772AF186D500DF9129 /* PFGroupsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFGroupsTypes.h; sourceTree = "<group>"; };
+		826AE57B2AF186D500DF9129 /* PFTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTypes.h; sourceTree = "<group>"; };
+		826AE57C2AF186D500DF9129 /* PFSegmentsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFSegmentsTypes.h; sourceTree = "<group>"; };
+		826AE57D2AF186D500DF9129 /* PFSegments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFSegments.h; sourceTree = "<group>"; };
+		826AE57E2AF186D500DF9129 /* PFTitleDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTitleDataManagement.h; sourceTree = "<group>"; };
+		826AE57F2AF186D500DF9129 /* PFInventory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFInventory.h; sourceTree = "<group>"; };
+		826AE5802AF186D500DF9129 /* PFDataTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFDataTypes.h; sourceTree = "<group>"; };
+		826AE5812AF186D500DF9129 /* PFAccountManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFAccountManagement.h; sourceTree = "<group>"; };
+		826AE5822AF186D500DF9129 /* PFExperimentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFExperimentation.h; sourceTree = "<group>"; };
+		826AE5832AF186D500DF9129 /* PFMultiplayerServerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMultiplayerServerTypes.h; sourceTree = "<group>"; };
+		826AE5842AF186D500DF9129 /* PFFriends.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFFriends.h; sourceTree = "<group>"; };
+		826AE5852AF186D500DF9129 /* PFCatalogTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCatalogTypes.h; sourceTree = "<group>"; };
+		826AE5862AF186D500DF9129 /* PFProfiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFProfiles.h; sourceTree = "<group>"; };
+		826AE5872AF186D500DF9129 /* PFData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFData.h; sourceTree = "<group>"; };
+		826AE5882AF186D500DF9129 /* PFTitleDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTitleDataManagementTypes.h; sourceTree = "<group>"; };
+		826AE5892AF186D500DF9129 /* PFCloudScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCloudScript.h; sourceTree = "<group>"; };
+		826AE58A2AF186D500DF9129 /* PFCatalog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCatalog.h; sourceTree = "<group>"; };
+		826AE58B2AF186D500DF9129 /* PFCloudScriptTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCloudScriptTypes.h; sourceTree = "<group>"; };
+		826AE58C2AF186D500DF9129 /* PFPlayerDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayerDataManagement.h; sourceTree = "<group>"; };
+		826AE58D2AF186D500DF9129 /* PFExperimentationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFExperimentationTypes.h; sourceTree = "<group>"; };
+		826AE58E2AF186D500DF9129 /* PFFriendsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFFriendsTypes.h; sourceTree = "<group>"; };
+		826AE58F2AF186D500DF9129 /* PFAccountManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFAccountManagementTypes.h; sourceTree = "<group>"; };
+		826AE5902AF186D500DF9129 /* PFMultiplayerServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMultiplayerServer.h; sourceTree = "<group>"; };
+		826AE5912AF186D500DF9129 /* PFProfilesTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFProfilesTypes.h; sourceTree = "<group>"; };
+		826AE5922AF186D500DF9129 /* PFServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFServices.h; sourceTree = "<group>"; };
+		826AE5932AF186D500DF9129 /* PFGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFGroups.h; sourceTree = "<group>"; };
+		826AE5942AF186D500DF9129 /* PFPlayerDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayerDataManagementTypes.h; sourceTree = "<group>"; };
+		826AE5952AF186D500DF9129 /* PFInventoryTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFInventoryTypes.h; sourceTree = "<group>"; };
+		826AE5962AF186D500DF9129 /* PFGroupsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFGroupsTypes.h; sourceTree = "<group>"; };
+		826AE5EB2AF1871C00DF9129 /* PlatformSpecificTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformSpecificTypes.h; sourceTree = "<group>"; };
+		826AE5EC2AF1871C00DF9129 /* Groups.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Groups.cpp; sourceTree = "<group>"; };
+		826AE5ED2AF1871C00DF9129 /* ExperimentationTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExperimentationTypes.cpp; sourceTree = "<group>"; };
+		826AE5EE2AF1871C00DF9129 /* ProfilesTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilesTypes.h; sourceTree = "<group>"; };
+		826AE5EF2AF1871C00DF9129 /* CharacterTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterTypes.h; sourceTree = "<group>"; };
+		826AE5F02AF1871C00DF9129 /* Localization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localization.h; sourceTree = "<group>"; };
+		826AE5F12AF1871C00DF9129 /* InventoryTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InventoryTypes.cpp; sourceTree = "<group>"; };
+		826AE5F22AF1871C00DF9129 /* CatalogTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CatalogTypes.cpp; sourceTree = "<group>"; };
+		826AE5F32AF1871C00DF9129 /* Segments.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Segments.cpp; sourceTree = "<group>"; };
+		826AE5F42AF1871C00DF9129 /* InventoryTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InventoryTypes.h; sourceTree = "<group>"; };
+		826AE5F52AF1871C00DF9129 /* AccountManagementTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AccountManagementTypes.cpp; sourceTree = "<group>"; };
+		826AE5F72AF1871C00DF9129 /* Profiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profiles.h; sourceTree = "<group>"; };
+		826AE5F82AF1871C00DF9129 /* TitleDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TitleDataManagementTypes.h; sourceTree = "<group>"; };
+		826AE5F92AF1871C00DF9129 /* PFCloudScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFCloudScript.cpp; sourceTree = "<group>"; };
+		826AE5FA2AF1871C00DF9129 /* Friends.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friends.h; sourceTree = "<group>"; };
+		826AE5FB2AF1871C00DF9129 /* PFMultiplayerServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFMultiplayerServer.cpp; sourceTree = "<group>"; };
+		826AE5FC2AF1871C00DF9129 /* GroupsTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GroupsTypes.cpp; sourceTree = "<group>"; };
+		826AE5FD2AF1871C00DF9129 /* CatalogTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatalogTypes.h; sourceTree = "<group>"; };
+		826AE5FE2AF1871C00DF9129 /* AccountManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountManagementTypes.h; sourceTree = "<group>"; };
+		826AE5FF2AF1871C00DF9129 /* PFPlayerDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFPlayerDataManagement.cpp; sourceTree = "<group>"; };
+		826AE6002AF1871C00DF9129 /* PushNotificationsTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PushNotificationsTypes.cpp; sourceTree = "<group>"; };
+		826AE6022AF1871C00DF9129 /* Profiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Profiles.cpp; sourceTree = "<group>"; };
+		826AE6032AF1871C00DF9129 /* CloudScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudScript.h; sourceTree = "<group>"; };
+		826AE6052AF1871C00DF9129 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
+		826AE6062AF1871C00DF9129 /* LocalizationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalizationTypes.h; sourceTree = "<group>"; };
+		826AE6072AF1871C00DF9129 /* PFTitleDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFTitleDataManagement.cpp; sourceTree = "<group>"; };
+		826AE6082AF1871C00DF9129 /* Experimentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Experimentation.h; sourceTree = "<group>"; };
+		826AE6092AF1871C00DF9129 /* TitleDataManagementTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TitleDataManagementTypes.cpp; sourceTree = "<group>"; };
+		826AE60A2AF1871C00DF9129 /* PlayerDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDataManagementTypes.h; sourceTree = "<group>"; };
+		826AE60B2AF1871C00DF9129 /* Friends.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Friends.cpp; sourceTree = "<group>"; };
+		826AE60C2AF1871C00DF9129 /* Localization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Localization.cpp; sourceTree = "<group>"; };
+		826AE60D2AF1871C00DF9129 /* PFInventory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFInventory.cpp; sourceTree = "<group>"; };
+		826AE60E2AF1871C00DF9129 /* TitleDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TitleDataManagement.h; sourceTree = "<group>"; };
+		826AE60F2AF1871C00DF9129 /* CloudScriptTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudScriptTypes.h; sourceTree = "<group>"; };
+		826AE6102AF1871C00DF9129 /* MultiplayerServerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerServerTypes.h; sourceTree = "<group>"; };
+		826AE6112AF1871C00DF9129 /* Catalog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Catalog.h; sourceTree = "<group>"; };
+		826AE6122AF1871C00DF9129 /* PlatformSpecific.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlatformSpecific.cpp; sourceTree = "<group>"; };
+		826AE6142AF1871C00DF9129 /* FriendsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsTypes.h; sourceTree = "<group>"; };
+		826AE6152AF1871C00DF9129 /* CacheId.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheId.h; sourceTree = "<group>"; };
+		826AE6162AF1871C00DF9129 /* PFCatalog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFCatalog.cpp; sourceTree = "<group>"; };
+		826AE6172AF1871C00DF9129 /* GroupsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupsTypes.h; sourceTree = "<group>"; };
+		826AE6182AF1871C00DF9129 /* PFData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFData.cpp; sourceTree = "<group>"; };
+		826AE6192AF1871C00DF9129 /* DataTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataTypes.cpp; sourceTree = "<group>"; };
+		826AE61A2AF1871C00DF9129 /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
+		826AE61B2AF1871C00DF9129 /* AccountManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountManagement.h; sourceTree = "<group>"; };
+		826AE61C2AF1871C00DF9129 /* MultiplayerServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultiplayerServer.cpp; sourceTree = "<group>"; };
+		826AE61D2AF1871C00DF9129 /* LocalizationTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalizationTypes.cpp; sourceTree = "<group>"; };
+		826AE61E2AF1871C00DF9129 /* Inventory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Inventory.h; sourceTree = "<group>"; };
+		826AE61F2AF1871C00DF9129 /* PlatformSpecificTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlatformSpecificTypes.cpp; sourceTree = "<group>"; };
+		826AE6202AF1871C00DF9129 /* DataTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataTypes.h; sourceTree = "<group>"; };
+		826AE6212AF1871C00DF9129 /* FriendsTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FriendsTypes.cpp; sourceTree = "<group>"; };
+		826AE6222AF1871C00DF9129 /* CoreTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CoreTypes.cpp; sourceTree = "<group>"; };
+		826AE6232AF1871C00DF9129 /* PushNotificationsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationsTypes.h; sourceTree = "<group>"; };
+		826AE6242AF1871C00DF9129 /* Segments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Segments.h; sourceTree = "<group>"; };
+		826AE6252AF1871C00DF9129 /* PlatformSpecific.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformSpecific.h; sourceTree = "<group>"; };
+		826AE6262AF1871C00DF9129 /* PushNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotifications.h; sourceTree = "<group>"; };
+		826AE6272AF1871C00DF9129 /* PFPlatformSpecific.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFPlatformSpecific.cpp; sourceTree = "<group>"; };
+		826AE6282AF1871C00DF9129 /* PFGroups.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFGroups.cpp; sourceTree = "<group>"; };
+		826AE6292AF1871C00DF9129 /* CloudScriptTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CloudScriptTypes.cpp; sourceTree = "<group>"; };
+		826AE62A2AF1871C00DF9129 /* PFPushNotifications.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFPushNotifications.cpp; sourceTree = "<group>"; };
+		826AE62B2AF1871C00DF9129 /* PFLocalization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFLocalization.cpp; sourceTree = "<group>"; };
+		826AE62C2AF1871C00DF9129 /* PFAccountManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFAccountManagement.cpp; sourceTree = "<group>"; };
+		826AE62D2AF1871C00DF9129 /* MultiplayerServerTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultiplayerServerTypes.cpp; sourceTree = "<group>"; };
+		826AE62E2AF1871C00DF9129 /* TitleDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TitleDataManagement.cpp; sourceTree = "<group>"; };
+		826AE62F2AF1871C00DF9129 /* SegmentsTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SegmentsTypes.cpp; sourceTree = "<group>"; };
+		826AE6302AF1871C00DF9129 /* PFCharacter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFCharacter.cpp; sourceTree = "<group>"; };
+		826AE6312AF1871C00DF9129 /* CloudScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CloudScript.cpp; sourceTree = "<group>"; };
+		826AE6322AF1871C00DF9129 /* Catalog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Catalog.cpp; sourceTree = "<group>"; };
+		826AE6332AF1871C00DF9129 /* PFProfiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFProfiles.cpp; sourceTree = "<group>"; };
+		826AE6342AF1871C00DF9129 /* PlayerDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerDataManagement.cpp; sourceTree = "<group>"; };
+		826AE6352AF1871C00DF9129 /* ProfilesTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProfilesTypes.cpp; sourceTree = "<group>"; };
+		826AE6362AF1871C00DF9129 /* PFSegments.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFSegments.cpp; sourceTree = "<group>"; };
+		826AE6372AF1871C00DF9129 /* PFFriends.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFFriends.cpp; sourceTree = "<group>"; };
+		826AE6382AF1871C00DF9129 /* CharacterTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CharacterTypes.cpp; sourceTree = "<group>"; };
+		826AE6392AF1871C00DF9129 /* AccountManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AccountManagement.cpp; sourceTree = "<group>"; };
+		826AE63A2AF1871C00DF9129 /* Inventory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Inventory.cpp; sourceTree = "<group>"; };
+		826AE63B2AF1871C00DF9129 /* MultiplayerServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerServer.h; sourceTree = "<group>"; };
+		826AE63C2AF1871C00DF9129 /* CoreTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTypes.h; sourceTree = "<group>"; };
+		826AE63D2AF1871C00DF9129 /* PlayerDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDataManagement.h; sourceTree = "<group>"; };
+		826AE63E2AF1871C00DF9129 /* Experimentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Experimentation.cpp; sourceTree = "<group>"; };
+		826AE63F2AF1871C00DF9129 /* SegmentsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentsTypes.h; sourceTree = "<group>"; };
+		826AE6402AF1871C00DF9129 /* Groups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Groups.h; sourceTree = "<group>"; };
+		826AE6412AF1871C00DF9129 /* ExperimentationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExperimentationTypes.h; sourceTree = "<group>"; };
+		826AE6422AF1871C00DF9129 /* PlayerDataManagementTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerDataManagementTypes.cpp; sourceTree = "<group>"; };
+		826AE6432AF1871C00DF9129 /* PFExperimentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFExperimentation.cpp; sourceTree = "<group>"; };
+		826AE6442AF1871C00DF9129 /* PushNotifications.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PushNotifications.cpp; sourceTree = "<group>"; };
+		8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
+		82B3CBE62B5B016B00337232 /* PlayFabServices_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlayFabServices_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		82B3CBF12B5B023A00337232 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		82B3CBF32B5B023E00337232 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		82B3CBF52B5B024500337232 /* libHttpClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libHttpClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		82B3CBF72B5B024900337232 /* libPlayFabSharedInternal.macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.macOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		82B3CBF92B5B024D00337232 /* PlayFabCore.macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabCore.macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		826081522AEC31CA00D8B93D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8260828B2AEC348500D8B93D /* Foundation.framework in Frameworks */,
+				8206F2152B7589F300451339 /* libPlayFabSharedInternal_iOS.a in Frameworks */,
+				826082892AEC347E00D8B93D /* Security.framework in Frameworks */,
+				826082852AEC346600D8B93D /* PlayFabCore_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82B3CBDC2B5B016B00337232 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8206F2092B75898900451339 /* PlayFabCore_macOS.framework in Frameworks */,
+				82B3CBF42B5B023E00337232 /* Security.framework in Frameworks */,
+				8206F2172B7589FB00451339 /* libPlayFabSharedInternal_macOS.a in Frameworks */,
+				82B3CBF22B5B023B00337232 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8260814B2AEC31CA00D8B93D = {
+			isa = PBXGroup;
+			children = (
+				8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */,
+				826AE2A42AF1822900DF9129 /* PlayFabServices.Common */,
+				826AE2A52AF1823700DF9129 /* PlayFabServices.ServiceWrappers */,
+				826081562AEC31CA00D8B93D /* Products */,
+				826082812AEC346600D8B93D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		826081562AEC31CA00D8B93D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				826081552AEC31CA00D8B93D /* PlayFabServices_iOS.framework */,
+				82B3CBE62B5B016B00337232 /* PlayFabServices_macOS.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		826082812AEC346600D8B93D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8206F2162B7589FB00451339 /* libPlayFabSharedInternal_macOS.a */,
+				8206F2142B7589F300451339 /* libPlayFabSharedInternal_iOS.a */,
+				8206F2082B75898900451339 /* PlayFabCore_macOS.framework */,
+				82B3CBF92B5B024D00337232 /* PlayFabCore.macOS.framework */,
+				82B3CBF72B5B024900337232 /* libPlayFabSharedInternal.macOS.a */,
+				82B3CBF52B5B024500337232 /* libHttpClient.a */,
+				82B3CBF32B5B023E00337232 /* Security.framework */,
+				8260828A2AEC348500D8B93D /* Foundation.framework */,
+				82B3CBF12B5B023A00337232 /* Foundation.framework */,
+				826082882AEC347E00D8B93D /* Security.framework */,
+				826082822AEC346600D8B93D /* libHttpClient.a */,
+				826082842AEC346600D8B93D /* PlayFabCore_iOS.framework */,
+				826082862AEC346600D8B93D /* libPlayFabSharedInternal.iOS.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		826AE2A42AF1822900DF9129 /* PlayFabServices.Common */ = {
+			isa = PBXGroup;
+			children = (
+				826AE4912AF1867300DF9129 /* Include */,
+				826AE3522AF1841900DF9129 /* Source */,
+			);
+			name = PlayFabServices.Common;
+			sourceTree = "<group>";
+		};
+		826AE2A52AF1823700DF9129 /* PlayFabServices.ServiceWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				826AE53D2AF186D500DF9129 /* Include */,
+				826AE5E92AF1871C00DF9129 /* Source */,
+			);
+			name = PlayFabServices.ServiceWrappers;
+			sourceTree = "<group>";
+		};
+		826AE3522AF1841900DF9129 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				826AE3BA2AF1841900DF9129 /* Api */,
+				826AE3B32AF1841900DF9129 /* Common */,
+				826AE3B22AF1841900DF9129 /* stdafx.h */,
+				826AE3BC2AF1841900DF9129 /* stdafx.cpp */,
+			);
+			name = Source;
+			path = ../../Source/PlayFabServices/Source;
+			sourceTree = "<group>";
+		};
+		826AE3B32AF1841900DF9129 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				826AE3B42AF1841900DF9129 /* GlobalState.h */,
+				826AE3B52AF1841900DF9129 /* GlobalState.cpp */,
+				826AE3B62AF1841900DF9129 /* HttpClient.h */,
+				826AE3B82AF1841900DF9129 /* HttpClient.cpp */,
+				826AE3B92AF1841900DF9129 /* Platform.h */,
+				826AE3B72AF1841900DF9129 /* Platform.cpp */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		826AE3BA2AF1841900DF9129 /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				826AE3BB2AF1841900DF9129 /* PFServices.cpp */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
+		826AE4912AF1867300DF9129 /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				826AE4922AF1867300DF9129 /* Generated */,
+			);
+			name = Include;
+			path = ../../Source/PlayFabServices/Include;
+			sourceTree = "<group>";
+		};
+		826AE4922AF1867300DF9129 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				826AE4932AF1867300DF9129 /* playfab */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		826AE4932AF1867300DF9129 /* playfab */ = {
+			isa = PBXGroup;
+			children = (
+				826AE4942AF1867300DF9129 /* services */,
+			);
+			path = playfab;
+			sourceTree = "<group>";
+		};
+		826AE4942AF1867300DF9129 /* services */ = {
+			isa = PBXGroup;
+			children = (
+				826AE4C72AF1867400DF9129 /* PFServices.h */,
+			);
+			path = services;
+			sourceTree = "<group>";
+		};
+		826AE53D2AF186D500DF9129 /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				826AE53E2AF186D500DF9129 /* Generated */,
+				826AE5782AF186D500DF9129 /* GeneratedGdk */,
+			);
+			name = Include;
+			path = ../../Source/PlayFabServices/Include;
+			sourceTree = "<group>";
+		};
+		826AE53E2AF186D500DF9129 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				826AE53F2AF186D500DF9129 /* playfab */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		826AE53F2AF186D500DF9129 /* playfab */ = {
+			isa = PBXGroup;
+			children = (
+				826AE5402AF186D500DF9129 /* services */,
+			);
+			path = playfab;
+			sourceTree = "<group>";
+		};
+		826AE5402AF186D500DF9129 /* services */ = {
+			isa = PBXGroup;
+			children = (
+				826AE5502AF186D500DF9129 /* cpp */,
+				826AE5412AF186D500DF9129 /* PFTypes.h */,
+				826AE5422AF186D500DF9129 /* PFSegmentsTypes.h */,
+				826AE5432AF186D500DF9129 /* PFSegments.h */,
+				826AE5442AF186D500DF9129 /* PFTitleDataManagement.h */,
+				826AE5452AF186D500DF9129 /* PFPlatformSpecific.h */,
+				826AE5462AF186D500DF9129 /* PFInventory.h */,
+				826AE5472AF186D500DF9129 /* PFDataTypes.h */,
+				826AE5482AF186D500DF9129 /* PFLocalizationTypes.h */,
+				826AE5492AF186D500DF9129 /* PFPushNotificationsTypes.h */,
+				826AE54A2AF186D500DF9129 /* PFAccountManagement.h */,
+				826AE54B2AF186D500DF9129 /* PFExperimentation.h */,
+				826AE54C2AF186D500DF9129 /* PFMultiplayerServerTypes.h */,
+				826AE54D2AF186D500DF9129 /* PFPlatformSpecificTypes.h */,
+				826AE54E2AF186D500DF9129 /* PFFriends.h */,
+				826AE54F2AF186D500DF9129 /* PFCatalogTypes.h */,
+				826AE5632AF186D500DF9129 /* PFLocalization.h */,
+				826AE5642AF186D500DF9129 /* PFPushNotifications.h */,
+				826AE5652AF186D500DF9129 /* PFProfiles.h */,
+				826AE5662AF186D500DF9129 /* PFData.h */,
+				826AE5672AF186D500DF9129 /* PFTitleDataManagementTypes.h */,
+				826AE5682AF186D500DF9129 /* PFCloudScript.h */,
+				826AE5692AF186D500DF9129 /* PFCatalog.h */,
+				826AE56A2AF186D500DF9129 /* PFCloudScriptTypes.h */,
+				826AE56B2AF186D500DF9129 /* PFPlayerDataManagement.h */,
+				826AE56C2AF186D500DF9129 /* PFCharacter.h */,
+				826AE56D2AF186D500DF9129 /* PFExperimentationTypes.h */,
+				826AE56E2AF186D500DF9129 /* PFFriendsTypes.h */,
+				826AE56F2AF186D500DF9129 /* PFAccountManagementTypes.h */,
+				826AE5702AF186D500DF9129 /* PFMultiplayerServer.h */,
+				826AE5712AF186D500DF9129 /* PFProfilesTypes.h */,
+				826AE5722AF186D500DF9129 /* PFCharacterTypes.h */,
+				826AE5742AF186D500DF9129 /* PFGroups.h */,
+				826AE5752AF186D500DF9129 /* PFPlayerDataManagementTypes.h */,
+				826AE5762AF186D500DF9129 /* PFInventoryTypes.h */,
+				826AE5772AF186D500DF9129 /* PFGroupsTypes.h */,
+			);
+			path = services;
+			sourceTree = "<group>";
+		};
+		826AE5502AF186D500DF9129 /* cpp */ = {
+			isa = PBXGroup;
+			children = (
+				826AE5512AF186D500DF9129 /* MultiplayerServerTypeWrappers.h */,
+				826AE5522AF186D500DF9129 /* DataTypeWrappers.h */,
+				826AE5532AF186D500DF9129 /* AccountManagementTypeWrappers.h */,
+				826AE5542AF186D500DF9129 /* TypeWrappers.h */,
+				826AE5552AF186D500DF9129 /* GroupsTypeWrappers.h */,
+				826AE5562AF186D500DF9129 /* CatalogTypeWrappers.h */,
+				826AE5572AF186D500DF9129 /* CloudScriptTypeWrappers.h */,
+				826AE5582AF186D500DF9129 /* SegmentsTypeWrappers.h */,
+				826AE5592AF186D500DF9129 /* ExperimentationTypeWrappers.h */,
+				826AE55A2AF186D500DF9129 /* CharacterTypeWrappers.h */,
+				826AE55B2AF186D500DF9129 /* LocalizationTypeWrappers.h */,
+				826AE55C2AF186D500DF9129 /* TitleDataManagementTypeWrappers.h */,
+				826AE55D2AF186D500DF9129 /* PlayerDataManagementTypeWrappers.h */,
+				826AE55E2AF186D500DF9129 /* InventoryTypeWrappers.h */,
+				826AE55F2AF186D500DF9129 /* PushNotificationsTypeWrappers.h */,
+				826AE5602AF186D500DF9129 /* ProfilesTypeWrappers.h */,
+				826AE5612AF186D500DF9129 /* PlatformSpecificTypeWrappers.h */,
+				826AE5622AF186D500DF9129 /* FriendsTypeWrappers.h */,
+			);
+			path = cpp;
+			sourceTree = "<group>";
+		};
+		826AE5782AF186D500DF9129 /* GeneratedGdk */ = {
+			isa = PBXGroup;
+			children = (
+				826AE5792AF186D500DF9129 /* playfab */,
+			);
+			path = GeneratedGdk;
+			sourceTree = "<group>";
+		};
+		826AE5792AF186D500DF9129 /* playfab */ = {
+			isa = PBXGroup;
+			children = (
+				826AE57A2AF186D500DF9129 /* services */,
+			);
+			path = playfab;
+			sourceTree = "<group>";
+		};
+		826AE57A2AF186D500DF9129 /* services */ = {
+			isa = PBXGroup;
+			children = (
+				826AE57B2AF186D500DF9129 /* PFTypes.h */,
+				826AE57C2AF186D500DF9129 /* PFSegmentsTypes.h */,
+				826AE57D2AF186D500DF9129 /* PFSegments.h */,
+				826AE57E2AF186D500DF9129 /* PFTitleDataManagement.h */,
+				826AE57F2AF186D500DF9129 /* PFInventory.h */,
+				826AE5802AF186D500DF9129 /* PFDataTypes.h */,
+				826AE5812AF186D500DF9129 /* PFAccountManagement.h */,
+				826AE5822AF186D500DF9129 /* PFExperimentation.h */,
+				826AE5832AF186D500DF9129 /* PFMultiplayerServerTypes.h */,
+				826AE5842AF186D500DF9129 /* PFFriends.h */,
+				826AE5852AF186D500DF9129 /* PFCatalogTypes.h */,
+				826AE5862AF186D500DF9129 /* PFProfiles.h */,
+				826AE5872AF186D500DF9129 /* PFData.h */,
+				826AE5882AF186D500DF9129 /* PFTitleDataManagementTypes.h */,
+				826AE5892AF186D500DF9129 /* PFCloudScript.h */,
+				826AE58A2AF186D500DF9129 /* PFCatalog.h */,
+				826AE58B2AF186D500DF9129 /* PFCloudScriptTypes.h */,
+				826AE58C2AF186D500DF9129 /* PFPlayerDataManagement.h */,
+				826AE58D2AF186D500DF9129 /* PFExperimentationTypes.h */,
+				826AE58E2AF186D500DF9129 /* PFFriendsTypes.h */,
+				826AE58F2AF186D500DF9129 /* PFAccountManagementTypes.h */,
+				826AE5902AF186D500DF9129 /* PFMultiplayerServer.h */,
+				826AE5912AF186D500DF9129 /* PFProfilesTypes.h */,
+				826AE5922AF186D500DF9129 /* PFServices.h */,
+				826AE5932AF186D500DF9129 /* PFGroups.h */,
+				826AE5942AF186D500DF9129 /* PFPlayerDataManagementTypes.h */,
+				826AE5952AF186D500DF9129 /* PFInventoryTypes.h */,
+				826AE5962AF186D500DF9129 /* PFGroupsTypes.h */,
+			);
+			path = services;
+			sourceTree = "<group>";
+		};
+		826AE5E92AF1871C00DF9129 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				826AE5EA2AF1871C00DF9129 /* Generated */,
+			);
+			name = Source;
+			path = ../../Source/PlayFabServices/Source;
+			sourceTree = "<group>";
+		};
+		826AE5EA2AF1871C00DF9129 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				826AE5EB2AF1871C00DF9129 /* PlatformSpecificTypes.h */,
+				826AE5EC2AF1871C00DF9129 /* Groups.cpp */,
+				826AE5ED2AF1871C00DF9129 /* ExperimentationTypes.cpp */,
+				826AE5EE2AF1871C00DF9129 /* ProfilesTypes.h */,
+				826AE5EF2AF1871C00DF9129 /* CharacterTypes.h */,
+				826AE5F02AF1871C00DF9129 /* Localization.h */,
+				826AE5F12AF1871C00DF9129 /* InventoryTypes.cpp */,
+				826AE5F22AF1871C00DF9129 /* CatalogTypes.cpp */,
+				826AE5F32AF1871C00DF9129 /* Segments.cpp */,
+				826AE5F42AF1871C00DF9129 /* InventoryTypes.h */,
+				826AE5F52AF1871C00DF9129 /* AccountManagementTypes.cpp */,
+				826AE5F72AF1871C00DF9129 /* Profiles.h */,
+				826AE5F82AF1871C00DF9129 /* TitleDataManagementTypes.h */,
+				826AE5F92AF1871C00DF9129 /* PFCloudScript.cpp */,
+				826AE5FA2AF1871C00DF9129 /* Friends.h */,
+				826AE5FB2AF1871C00DF9129 /* PFMultiplayerServer.cpp */,
+				826AE5FC2AF1871C00DF9129 /* GroupsTypes.cpp */,
+				826AE5FD2AF1871C00DF9129 /* CatalogTypes.h */,
+				826AE5FE2AF1871C00DF9129 /* AccountManagementTypes.h */,
+				826AE5FF2AF1871C00DF9129 /* PFPlayerDataManagement.cpp */,
+				826AE6002AF1871C00DF9129 /* PushNotificationsTypes.cpp */,
+				826AE6022AF1871C00DF9129 /* Profiles.cpp */,
+				826AE6032AF1871C00DF9129 /* CloudScript.h */,
+				826AE6052AF1871C00DF9129 /* Data.h */,
+				826AE6062AF1871C00DF9129 /* LocalizationTypes.h */,
+				826AE6072AF1871C00DF9129 /* PFTitleDataManagement.cpp */,
+				826AE6082AF1871C00DF9129 /* Experimentation.h */,
+				826AE6092AF1871C00DF9129 /* TitleDataManagementTypes.cpp */,
+				826AE60A2AF1871C00DF9129 /* PlayerDataManagementTypes.h */,
+				826AE60B2AF1871C00DF9129 /* Friends.cpp */,
+				826AE60C2AF1871C00DF9129 /* Localization.cpp */,
+				826AE60D2AF1871C00DF9129 /* PFInventory.cpp */,
+				826AE60E2AF1871C00DF9129 /* TitleDataManagement.h */,
+				826AE60F2AF1871C00DF9129 /* CloudScriptTypes.h */,
+				826AE6102AF1871C00DF9129 /* MultiplayerServerTypes.h */,
+				826AE6112AF1871C00DF9129 /* Catalog.h */,
+				826AE6122AF1871C00DF9129 /* PlatformSpecific.cpp */,
+				826AE6142AF1871C00DF9129 /* FriendsTypes.h */,
+				826AE6152AF1871C00DF9129 /* CacheId.h */,
+				826AE6162AF1871C00DF9129 /* PFCatalog.cpp */,
+				826AE6172AF1871C00DF9129 /* GroupsTypes.h */,
+				826AE6182AF1871C00DF9129 /* PFData.cpp */,
+				826AE6192AF1871C00DF9129 /* DataTypes.cpp */,
+				826AE61A2AF1871C00DF9129 /* Data.cpp */,
+				826AE61B2AF1871C00DF9129 /* AccountManagement.h */,
+				826AE61C2AF1871C00DF9129 /* MultiplayerServer.cpp */,
+				826AE61D2AF1871C00DF9129 /* LocalizationTypes.cpp */,
+				826AE61E2AF1871C00DF9129 /* Inventory.h */,
+				826AE61F2AF1871C00DF9129 /* PlatformSpecificTypes.cpp */,
+				826AE6202AF1871C00DF9129 /* DataTypes.h */,
+				826AE6212AF1871C00DF9129 /* FriendsTypes.cpp */,
+				826AE6222AF1871C00DF9129 /* CoreTypes.cpp */,
+				826AE6232AF1871C00DF9129 /* PushNotificationsTypes.h */,
+				826AE6242AF1871C00DF9129 /* Segments.h */,
+				826AE6252AF1871C00DF9129 /* PlatformSpecific.h */,
+				826AE6262AF1871C00DF9129 /* PushNotifications.h */,
+				826AE6272AF1871C00DF9129 /* PFPlatformSpecific.cpp */,
+				826AE6282AF1871C00DF9129 /* PFGroups.cpp */,
+				826AE6292AF1871C00DF9129 /* CloudScriptTypes.cpp */,
+				826AE62A2AF1871C00DF9129 /* PFPushNotifications.cpp */,
+				826AE62B2AF1871C00DF9129 /* PFLocalization.cpp */,
+				826AE62C2AF1871C00DF9129 /* PFAccountManagement.cpp */,
+				826AE62D2AF1871C00DF9129 /* MultiplayerServerTypes.cpp */,
+				826AE62E2AF1871C00DF9129 /* TitleDataManagement.cpp */,
+				826AE62F2AF1871C00DF9129 /* SegmentsTypes.cpp */,
+				826AE6302AF1871C00DF9129 /* PFCharacter.cpp */,
+				826AE6312AF1871C00DF9129 /* CloudScript.cpp */,
+				826AE6322AF1871C00DF9129 /* Catalog.cpp */,
+				826AE6332AF1871C00DF9129 /* PFProfiles.cpp */,
+				826AE6342AF1871C00DF9129 /* PlayerDataManagement.cpp */,
+				826AE6352AF1871C00DF9129 /* ProfilesTypes.cpp */,
+				826AE6362AF1871C00DF9129 /* PFSegments.cpp */,
+				826AE6372AF1871C00DF9129 /* PFFriends.cpp */,
+				826AE6382AF1871C00DF9129 /* CharacterTypes.cpp */,
+				826AE6392AF1871C00DF9129 /* AccountManagement.cpp */,
+				826AE63A2AF1871C00DF9129 /* Inventory.cpp */,
+				826AE63B2AF1871C00DF9129 /* MultiplayerServer.h */,
+				826AE63C2AF1871C00DF9129 /* CoreTypes.h */,
+				826AE63D2AF1871C00DF9129 /* PlayerDataManagement.h */,
+				826AE63E2AF1871C00DF9129 /* Experimentation.cpp */,
+				826AE63F2AF1871C00DF9129 /* SegmentsTypes.h */,
+				826AE6402AF1871C00DF9129 /* Groups.h */,
+				826AE6412AF1871C00DF9129 /* ExperimentationTypes.h */,
+				826AE6422AF1871C00DF9129 /* PlayerDataManagementTypes.cpp */,
+				826AE6432AF1871C00DF9129 /* PFExperimentation.cpp */,
+				826AE6442AF1871C00DF9129 /* PushNotifications.cpp */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		8286B1F42B73FEFA009A4677 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8286B2012B73FEFA009A4677 /* libSSL.a */,
+				8286B2032B73FEFA009A4677 /* libSSL.a */,
+				8286B2052B73FEFA009A4677 /* libHttpClient.a */,
+				8286B2072B73FEFA009A4677 /* libHttpClient.a */,
+				8286B2092B73FEFA009A4677 /* libHttpClient_NOWEBSOCKETS.a */,
+				8286B20B2B73FEFA009A4677 /* libHttpClient_NOWEBSOCKETS.a */,
+				8286B20D2B73FEFA009A4677 /* HttpClient.framework */,
+				8286B20F2B73FEFA009A4677 /* HttpClient.framework */,
+				8286B2112B73FEFA009A4677 /* NOWEBSOCKETS/HttpClient.framework */,
+				8286B2132B73FEFA009A4677 /* NOWEBSOCKETS/HttpClient.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		826081502AEC31CA00D8B93D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				826AE67D2AF1871C00DF9129 /* FriendsTypes.h in Headers */,
+				826AE5A92AF186D500DF9129 /* TypeWrappers.h in Headers */,
+				826AE6872AF1871C00DF9129 /* Inventory.h in Headers */,
+				826AE5E62AF186D500DF9129 /* PFPlayerDataManagementTypes.h in Headers */,
+				826AE5A42AF186D500DF9129 /* PFFriends.h in Headers */,
+				826AE5DA2AF186D500DF9129 /* PFTitleDataManagementTypes.h in Headers */,
+				826AE5AC2AF186D500DF9129 /* CloudScriptTypeWrappers.h in Headers */,
+				826AE51C2AF1867400DF9129 /* PFServices.h in Headers */,
+				826AE6A62AF1871C00DF9129 /* PlayerDataManagement.h in Headers */,
+				826AE6542AF1871C00DF9129 /* PlatformSpecificTypes.h in Headers */,
+				826AE5C72AF186D500DF9129 /* PFCharacterTypes.h in Headers */,
+				826AE5CA2AF186D500DF9129 /* PFPlayerDataManagementTypes.h in Headers */,
+				826AE59C2AF186D500DF9129 /* PFInventory.h in Headers */,
+				826AE5CE2AF186D500DF9129 /* PFSegmentsTypes.h in Headers */,
+				826AE5A52AF186D500DF9129 /* PFCatalogTypes.h in Headers */,
+				826AE5CF2AF186D500DF9129 /* PFSegments.h in Headers */,
+				826AE5CC2AF186D500DF9129 /* PFGroupsTypes.h in Headers */,
+				826AE5D92AF186D500DF9129 /* PFData.h in Headers */,
+				826AE59D2AF186D500DF9129 /* PFDataTypes.h in Headers */,
+				826AE5A12AF186D500DF9129 /* PFExperimentation.h in Headers */,
+				826AE5BF2AF186D500DF9129 /* PFCloudScriptTypes.h in Headers */,
+				826AE6A92AF1871C00DF9129 /* Groups.h in Headers */,
+				826AE6732AF1871C00DF9129 /* PlayerDataManagementTypes.h in Headers */,
+				826AE5D52AF186D500DF9129 /* PFMultiplayerServerTypes.h in Headers */,
+				826AE5DB2AF186D500DF9129 /* PFCloudScript.h in Headers */,
+				826AE6772AF1871C00DF9129 /* TitleDataManagement.h in Headers */,
+				826AE5AE2AF186D500DF9129 /* ExperimentationTypeWrappers.h in Headers */,
+				826AE5DE2AF186D500DF9129 /* PFPlayerDataManagement.h in Headers */,
+				826AE4202AF1841900DF9129 /* Platform.h in Headers */,
+				826AE6892AF1871C00DF9129 /* DataTypes.h in Headers */,
+				826AE41D2AF1841900DF9129 /* HttpClient.h in Headers */,
+				826AE5C42AF186D500DF9129 /* PFAccountManagementTypes.h in Headers */,
+				826AE5B62AF186D500DF9129 /* PlatformSpecificTypeWrappers.h in Headers */,
+				826AE5E52AF186D500DF9129 /* PFGroups.h in Headers */,
+				826AE5E02AF186D500DF9129 /* PFFriendsTypes.h in Headers */,
+				826AE5C22AF186D500DF9129 /* PFExperimentationTypes.h in Headers */,
+				826AE5E82AF186D500DF9129 /* PFGroupsTypes.h in Headers */,
+				826AE5D32AF186D500DF9129 /* PFAccountManagement.h in Headers */,
+				826AE5BE2AF186D500DF9129 /* PFCatalog.h in Headers */,
+				826AE59E2AF186D500DF9129 /* PFLocalizationTypes.h in Headers */,
+				826AE5982AF186D500DF9129 /* PFSegmentsTypes.h in Headers */,
+				826AE5C62AF186D500DF9129 /* PFProfilesTypes.h in Headers */,
+				826AE5DD2AF186D500DF9129 /* PFCloudScriptTypes.h in Headers */,
+				826AE5B82AF186D500DF9129 /* PFLocalization.h in Headers */,
+				826AE6AA2AF1871C00DF9129 /* ExperimentationTypes.h in Headers */,
+				826AE41A2AF1841900DF9129 /* stdafx.h in Headers */,
+				826AE5B92AF186D500DF9129 /* PFPushNotifications.h in Headers */,
+				826AE5C92AF186D500DF9129 /* PFGroups.h in Headers */,
+				826AE6632AF1871C00DF9129 /* Friends.h in Headers */,
+				826AE5B52AF186D500DF9129 /* ProfilesTypeWrappers.h in Headers */,
+				826AE5D12AF186D500DF9129 /* PFInventory.h in Headers */,
+				826AE6802AF1871C00DF9129 /* GroupsTypes.h in Headers */,
+				826AE5972AF186D500DF9129 /* PFTypes.h in Headers */,
+				826AE5C02AF186D500DF9129 /* PFPlayerDataManagement.h in Headers */,
+				826AE5E12AF186D500DF9129 /* PFAccountManagementTypes.h in Headers */,
+				826AE59F2AF186D500DF9129 /* PFPushNotificationsTypes.h in Headers */,
+				826AE6662AF1871C00DF9129 /* CatalogTypes.h in Headers */,
+				826AE5BB2AF186D500DF9129 /* PFData.h in Headers */,
+				826AE68D2AF1871C00DF9129 /* Segments.h in Headers */,
+				826AE59A2AF186D500DF9129 /* PFTitleDataManagement.h in Headers */,
+				826AE68E2AF1871C00DF9129 /* PlatformSpecific.h in Headers */,
+				826AE5D02AF186D500DF9129 /* PFTitleDataManagement.h in Headers */,
+				826AE6782AF1871C00DF9129 /* CloudScriptTypes.h in Headers */,
+				826AE6792AF1871C00DF9129 /* MultiplayerServerTypes.h in Headers */,
+				826AE6712AF1871C00DF9129 /* Experimentation.h in Headers */,
+				826AE5E72AF186D500DF9129 /* PFInventoryTypes.h in Headers */,
+				826AE67E2AF1871C00DF9129 /* CacheId.h in Headers */,
+				826AE5D22AF186D500DF9129 /* PFDataTypes.h in Headers */,
+				826AE5B02AF186D500DF9129 /* LocalizationTypeWrappers.h in Headers */,
+				826AE5A62AF186D500DF9129 /* MultiplayerServerTypeWrappers.h in Headers */,
+				826AE5DF2AF186D500DF9129 /* PFExperimentationTypes.h in Headers */,
+				826AE6842AF1871C00DF9129 /* AccountManagement.h in Headers */,
+				826AE59B2AF186D500DF9129 /* PFPlatformSpecific.h in Headers */,
+				826AE5AD2AF186D500DF9129 /* SegmentsTypeWrappers.h in Headers */,
+				826AE5D72AF186D500DF9129 /* PFCatalogTypes.h in Headers */,
+				826AE5A82AF186D500DF9129 /* AccountManagementTypeWrappers.h in Headers */,
+				826AE68F2AF1871C00DF9129 /* PushNotifications.h in Headers */,
+				826AE5DC2AF186D500DF9129 /* PFCatalog.h in Headers */,
+				826AE5E42AF186D500DF9129 /* PFServices.h in Headers */,
+				826AE5B32AF186D500DF9129 /* InventoryTypeWrappers.h in Headers */,
+				826AE68C2AF1871C00DF9129 /* PushNotificationsTypes.h in Headers */,
+				826AE5A32AF186D500DF9129 /* PFPlatformSpecificTypes.h in Headers */,
+				826AE67A2AF1871C00DF9129 /* Catalog.h in Headers */,
+				826AE5B12AF186D500DF9129 /* TitleDataManagementTypeWrappers.h in Headers */,
+				826AE5B72AF186D500DF9129 /* FriendsTypeWrappers.h in Headers */,
+				826AE5A02AF186D500DF9129 /* PFAccountManagement.h in Headers */,
+				826AE65D2AF1871C00DF9129 /* InventoryTypes.h in Headers */,
+				826AE6672AF1871C00DF9129 /* AccountManagementTypes.h in Headers */,
+				826AE5E32AF186D500DF9129 /* PFProfilesTypes.h in Headers */,
+				826AE5BC2AF186D500DF9129 /* PFTitleDataManagementTypes.h in Headers */,
+				826AE66C2AF1871C00DF9129 /* CloudScript.h in Headers */,
+				826AE6602AF1871C00DF9129 /* Profiles.h in Headers */,
+				826AE5B42AF186D500DF9129 /* PushNotificationsTypeWrappers.h in Headers */,
+				826AE6592AF1871C00DF9129 /* Localization.h in Headers */,
+				826AE6A52AF1871C00DF9129 /* CoreTypes.h in Headers */,
+				826AE5C52AF186D500DF9129 /* PFMultiplayerServer.h in Headers */,
+				826AE5CD2AF186D500DF9129 /* PFTypes.h in Headers */,
+				826AE5992AF186D500DF9129 /* PFSegments.h in Headers */,
+				826AE5B22AF186D500DF9129 /* PlayerDataManagementTypeWrappers.h in Headers */,
+				826AE5C12AF186D500DF9129 /* PFCharacter.h in Headers */,
+				826AE5A72AF186D500DF9129 /* DataTypeWrappers.h in Headers */,
+				826AE41B2AF1841900DF9129 /* GlobalState.h in Headers */,
+				826AE5C32AF186D500DF9129 /* PFFriendsTypes.h in Headers */,
+				826AE5AB2AF186D500DF9129 /* CatalogTypeWrappers.h in Headers */,
+				826AE5CB2AF186D500DF9129 /* PFInventoryTypes.h in Headers */,
+				826AE66E2AF1871C00DF9129 /* Data.h in Headers */,
+				826AE5E22AF186D500DF9129 /* PFMultiplayerServer.h in Headers */,
+				826AE6572AF1871C00DF9129 /* ProfilesTypes.h in Headers */,
+				826AE66F2AF1871C00DF9129 /* LocalizationTypes.h in Headers */,
+				826AE6A82AF1871C00DF9129 /* SegmentsTypes.h in Headers */,
+				826AE5BA2AF186D500DF9129 /* PFProfiles.h in Headers */,
+				826AE6582AF1871C00DF9129 /* CharacterTypes.h in Headers */,
+				826AE5AA2AF186D500DF9129 /* GroupsTypeWrappers.h in Headers */,
+				826AE5AF2AF186D500DF9129 /* CharacterTypeWrappers.h in Headers */,
+				826AE5D62AF186D500DF9129 /* PFFriends.h in Headers */,
+				826AE5BD2AF186D500DF9129 /* PFCloudScript.h in Headers */,
+				826AE6612AF1871C00DF9129 /* TitleDataManagementTypes.h in Headers */,
+				826AE5A22AF186D500DF9129 /* PFMultiplayerServerTypes.h in Headers */,
+				826AE6A42AF1871C00DF9129 /* MultiplayerServer.h in Headers */,
+				826AE5D82AF186D500DF9129 /* PFProfiles.h in Headers */,
+				826AE5D42AF186D500DF9129 /* PFExperimentation.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82B3CB282B5B016B00337232 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82B3CB292B5B016B00337232 /* FriendsTypes.h in Headers */,
+				82B3CB2A2B5B016B00337232 /* TypeWrappers.h in Headers */,
+				82B3CB2B2B5B016B00337232 /* Inventory.h in Headers */,
+				82B3CB2C2B5B016B00337232 /* PFPlayerDataManagementTypes.h in Headers */,
+				82B3CB2D2B5B016B00337232 /* PFFriends.h in Headers */,
+				82B3CB2E2B5B016B00337232 /* PFTitleDataManagementTypes.h in Headers */,
+				82B3CB2F2B5B016B00337232 /* CloudScriptTypeWrappers.h in Headers */,
+				82B3CB302B5B016B00337232 /* PFServices.h in Headers */,
+				82B3CB312B5B016B00337232 /* PlayerDataManagement.h in Headers */,
+				82B3CB322B5B016B00337232 /* PlatformSpecificTypes.h in Headers */,
+				82B3CB332B5B016B00337232 /* PFCharacterTypes.h in Headers */,
+				82B3CB342B5B016B00337232 /* PFPlayerDataManagementTypes.h in Headers */,
+				82B3CB352B5B016B00337232 /* PFInventory.h in Headers */,
+				82B3CB362B5B016B00337232 /* PFSegmentsTypes.h in Headers */,
+				82B3CB372B5B016B00337232 /* PFCatalogTypes.h in Headers */,
+				82B3CB382B5B016B00337232 /* PFSegments.h in Headers */,
+				82B3CB392B5B016B00337232 /* PFGroupsTypes.h in Headers */,
+				82B3CB3A2B5B016B00337232 /* PFData.h in Headers */,
+				82B3CB3B2B5B016B00337232 /* PFDataTypes.h in Headers */,
+				82B3CB3C2B5B016B00337232 /* PFExperimentation.h in Headers */,
+				82B3CB3D2B5B016B00337232 /* PFCloudScriptTypes.h in Headers */,
+				82B3CB3E2B5B016B00337232 /* Groups.h in Headers */,
+				82B3CB3F2B5B016B00337232 /* PlayerDataManagementTypes.h in Headers */,
+				82B3CB402B5B016B00337232 /* PFMultiplayerServerTypes.h in Headers */,
+				82B3CB412B5B016B00337232 /* PFCloudScript.h in Headers */,
+				82B3CB422B5B016B00337232 /* TitleDataManagement.h in Headers */,
+				82B3CB432B5B016B00337232 /* ExperimentationTypeWrappers.h in Headers */,
+				82B3CB442B5B016B00337232 /* PFPlayerDataManagement.h in Headers */,
+				82B3CB452B5B016B00337232 /* Platform.h in Headers */,
+				82B3CB462B5B016B00337232 /* DataTypes.h in Headers */,
+				82B3CB472B5B016B00337232 /* HttpClient.h in Headers */,
+				82B3CB482B5B016B00337232 /* PFAccountManagementTypes.h in Headers */,
+				82B3CB492B5B016B00337232 /* PlatformSpecificTypeWrappers.h in Headers */,
+				82B3CB4A2B5B016B00337232 /* PFGroups.h in Headers */,
+				82B3CB4B2B5B016B00337232 /* PFFriendsTypes.h in Headers */,
+				82B3CB4C2B5B016B00337232 /* PFExperimentationTypes.h in Headers */,
+				82B3CB4D2B5B016B00337232 /* PFGroupsTypes.h in Headers */,
+				82B3CB4E2B5B016B00337232 /* PFAccountManagement.h in Headers */,
+				82B3CB4F2B5B016B00337232 /* PFCatalog.h in Headers */,
+				82B3CB502B5B016B00337232 /* PFLocalizationTypes.h in Headers */,
+				82B3CB512B5B016B00337232 /* PFSegmentsTypes.h in Headers */,
+				82B3CB522B5B016B00337232 /* PFProfilesTypes.h in Headers */,
+				82B3CB532B5B016B00337232 /* PFCloudScriptTypes.h in Headers */,
+				82B3CB542B5B016B00337232 /* PFLocalization.h in Headers */,
+				82B3CB552B5B016B00337232 /* ExperimentationTypes.h in Headers */,
+				82B3CB562B5B016B00337232 /* stdafx.h in Headers */,
+				82B3CB572B5B016B00337232 /* PFPushNotifications.h in Headers */,
+				82B3CB582B5B016B00337232 /* PFGroups.h in Headers */,
+				82B3CB592B5B016B00337232 /* Friends.h in Headers */,
+				82B3CB5A2B5B016B00337232 /* ProfilesTypeWrappers.h in Headers */,
+				82B3CB5B2B5B016B00337232 /* PFInventory.h in Headers */,
+				82B3CB5C2B5B016B00337232 /* GroupsTypes.h in Headers */,
+				82B3CB5D2B5B016B00337232 /* PFTypes.h in Headers */,
+				82B3CB5E2B5B016B00337232 /* PFPlayerDataManagement.h in Headers */,
+				82B3CB5F2B5B016B00337232 /* PFAccountManagementTypes.h in Headers */,
+				82B3CB602B5B016B00337232 /* PFPushNotificationsTypes.h in Headers */,
+				82B3CB612B5B016B00337232 /* CatalogTypes.h in Headers */,
+				82B3CB622B5B016B00337232 /* PFData.h in Headers */,
+				82B3CB632B5B016B00337232 /* Segments.h in Headers */,
+				82B3CB642B5B016B00337232 /* PFTitleDataManagement.h in Headers */,
+				82B3CB652B5B016B00337232 /* PlatformSpecific.h in Headers */,
+				82B3CB662B5B016B00337232 /* PFTitleDataManagement.h in Headers */,
+				82B3CB672B5B016B00337232 /* CloudScriptTypes.h in Headers */,
+				82B3CB682B5B016B00337232 /* MultiplayerServerTypes.h in Headers */,
+				82B3CB692B5B016B00337232 /* Experimentation.h in Headers */,
+				82B3CB6A2B5B016B00337232 /* PFInventoryTypes.h in Headers */,
+				82B3CB6B2B5B016B00337232 /* CacheId.h in Headers */,
+				82B3CB6C2B5B016B00337232 /* PFDataTypes.h in Headers */,
+				82B3CB6D2B5B016B00337232 /* LocalizationTypeWrappers.h in Headers */,
+				82B3CB6E2B5B016B00337232 /* MultiplayerServerTypeWrappers.h in Headers */,
+				82B3CB6F2B5B016B00337232 /* PFExperimentationTypes.h in Headers */,
+				82B3CB702B5B016B00337232 /* AccountManagement.h in Headers */,
+				82B3CB712B5B016B00337232 /* PFPlatformSpecific.h in Headers */,
+				82B3CB722B5B016B00337232 /* SegmentsTypeWrappers.h in Headers */,
+				82B3CB732B5B016B00337232 /* PFCatalogTypes.h in Headers */,
+				82B3CB742B5B016B00337232 /* AccountManagementTypeWrappers.h in Headers */,
+				82B3CB752B5B016B00337232 /* PushNotifications.h in Headers */,
+				82B3CB762B5B016B00337232 /* PFCatalog.h in Headers */,
+				82B3CB772B5B016B00337232 /* PFServices.h in Headers */,
+				82B3CB782B5B016B00337232 /* InventoryTypeWrappers.h in Headers */,
+				82B3CB792B5B016B00337232 /* PushNotificationsTypes.h in Headers */,
+				82B3CB7A2B5B016B00337232 /* PFPlatformSpecificTypes.h in Headers */,
+				82B3CB7B2B5B016B00337232 /* Catalog.h in Headers */,
+				82B3CB7C2B5B016B00337232 /* TitleDataManagementTypeWrappers.h in Headers */,
+				82B3CB7D2B5B016B00337232 /* FriendsTypeWrappers.h in Headers */,
+				82B3CB7E2B5B016B00337232 /* PFAccountManagement.h in Headers */,
+				82B3CB7F2B5B016B00337232 /* InventoryTypes.h in Headers */,
+				82B3CB802B5B016B00337232 /* AccountManagementTypes.h in Headers */,
+				82B3CB812B5B016B00337232 /* PFProfilesTypes.h in Headers */,
+				82B3CB822B5B016B00337232 /* PFTitleDataManagementTypes.h in Headers */,
+				82B3CB832B5B016B00337232 /* CloudScript.h in Headers */,
+				82B3CB842B5B016B00337232 /* Profiles.h in Headers */,
+				82B3CB852B5B016B00337232 /* PushNotificationsTypeWrappers.h in Headers */,
+				82B3CB862B5B016B00337232 /* Localization.h in Headers */,
+				82B3CB872B5B016B00337232 /* CoreTypes.h in Headers */,
+				82B3CB882B5B016B00337232 /* PFMultiplayerServer.h in Headers */,
+				82B3CB892B5B016B00337232 /* PFTypes.h in Headers */,
+				82B3CB8A2B5B016B00337232 /* PFSegments.h in Headers */,
+				82B3CB8B2B5B016B00337232 /* PlayerDataManagementTypeWrappers.h in Headers */,
+				82B3CB8C2B5B016B00337232 /* PFCharacter.h in Headers */,
+				82B3CB8D2B5B016B00337232 /* DataTypeWrappers.h in Headers */,
+				82B3CB8E2B5B016B00337232 /* GlobalState.h in Headers */,
+				82B3CB8F2B5B016B00337232 /* PFFriendsTypes.h in Headers */,
+				82B3CB902B5B016B00337232 /* CatalogTypeWrappers.h in Headers */,
+				82B3CB912B5B016B00337232 /* PFInventoryTypes.h in Headers */,
+				82B3CB922B5B016B00337232 /* Data.h in Headers */,
+				82B3CB932B5B016B00337232 /* PFMultiplayerServer.h in Headers */,
+				82B3CB942B5B016B00337232 /* ProfilesTypes.h in Headers */,
+				82B3CB952B5B016B00337232 /* LocalizationTypes.h in Headers */,
+				82B3CB962B5B016B00337232 /* SegmentsTypes.h in Headers */,
+				82B3CB972B5B016B00337232 /* PFProfiles.h in Headers */,
+				82B3CB982B5B016B00337232 /* CharacterTypes.h in Headers */,
+				82B3CB992B5B016B00337232 /* GroupsTypeWrappers.h in Headers */,
+				82B3CB9A2B5B016B00337232 /* CharacterTypeWrappers.h in Headers */,
+				82B3CB9B2B5B016B00337232 /* PFFriends.h in Headers */,
+				82B3CB9C2B5B016B00337232 /* PFCloudScript.h in Headers */,
+				82B3CB9D2B5B016B00337232 /* TitleDataManagementTypes.h in Headers */,
+				82B3CB9E2B5B016B00337232 /* PFMultiplayerServerTypes.h in Headers */,
+				82B3CB9F2B5B016B00337232 /* MultiplayerServer.h in Headers */,
+				82B3CBA02B5B016B00337232 /* PFProfiles.h in Headers */,
+				82B3CBA12B5B016B00337232 /* PFExperimentation.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		826081542AEC31CA00D8B93D /* PlayFabServices_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8260815C2AEC31CA00D8B93D /* Build configuration list for PBXNativeTarget "PlayFabServices_iOS" */;
+			buildPhases = (
+				826081502AEC31CA00D8B93D /* Headers */,
+				826081512AEC31CA00D8B93D /* Sources */,
+				826081522AEC31CA00D8B93D /* Frameworks */,
+				826081532AEC31CA00D8B93D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8206F0562B740CB500451339 /* PBXTargetDependency */,
+			);
+			name = PlayFabServices_iOS;
+			productName = PlayFabServices.iOS;
+			productReference = 826081552AEC31CA00D8B93D /* PlayFabServices_iOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		82B3CB272B5B016B00337232 /* PlayFabServices_macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82B3CBE32B5B016B00337232 /* Build configuration list for PBXNativeTarget "PlayFabServices_macOS" */;
+			buildPhases = (
+				82B3CB282B5B016B00337232 /* Headers */,
+				82B3CBA22B5B016B00337232 /* Sources */,
+				82B3CBDC2B5B016B00337232 /* Frameworks */,
+				82B3CBE22B5B016B00337232 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8286B2152B73FF0C009A4677 /* PBXTargetDependency */,
+			);
+			name = PlayFabServices_macOS;
+			productName = PlayFabServices.iOS;
+			productReference = 82B3CBE62B5B016B00337232 /* PlayFabServices_macOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8260814C2AEC31CA00D8B93D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					826081542AEC31CA00D8B93D = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 8260814F2AEC31CA00D8B93D /* Build configuration list for PBXProject "PlayFabServices.Apple" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8260814B2AEC31CA00D8B93D;
+			productRefGroup = 826081562AEC31CA00D8B93D /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 8286B1F42B73FEFA009A4677 /* Products */;
+					ProjectRef = 8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				826081542AEC31CA00D8B93D /* PlayFabServices_iOS */,
+				82B3CB272B5B016B00337232 /* PlayFabServices_macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8286B2012B73FEFA009A4677 /* libSSL.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSL.a;
+			remoteRef = 8286B2002B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2032B73FEFA009A4677 /* libSSL.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSL.a;
+			remoteRef = 8286B2022B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2052B73FEFA009A4677 /* libHttpClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient.a;
+			remoteRef = 8286B2042B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2072B73FEFA009A4677 /* libHttpClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient.a;
+			remoteRef = 8286B2062B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2092B73FEFA009A4677 /* libHttpClient_NOWEBSOCKETS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient_NOWEBSOCKETS.a;
+			remoteRef = 8286B2082B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B20B2B73FEFA009A4677 /* libHttpClient_NOWEBSOCKETS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient_NOWEBSOCKETS.a;
+			remoteRef = 8286B20A2B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B20D2B73FEFA009A4677 /* HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HttpClient.framework;
+			remoteRef = 8286B20C2B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B20F2B73FEFA009A4677 /* HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HttpClient.framework;
+			remoteRef = 8286B20E2B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2112B73FEFA009A4677 /* NOWEBSOCKETS/HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = NOWEBSOCKETS/HttpClient.framework;
+			remoteRef = 8286B2102B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B2132B73FEFA009A4677 /* NOWEBSOCKETS/HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = NOWEBSOCKETS/HttpClient.framework;
+			remoteRef = 8286B2122B73FEFA009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		826081532AEC31CA00D8B93D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82B3CBE22B5B016B00337232 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		826081512AEC31CA00D8B93D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				826AE6A32AF1871C00DF9129 /* Inventory.cpp in Sources */,
+				826AE6A22AF1871C00DF9129 /* AccountManagement.cpp in Sources */,
+				826AE6692AF1871C00DF9129 /* PushNotificationsTypes.cpp in Sources */,
+				826AE6722AF1871C00DF9129 /* TitleDataManagementTypes.cpp in Sources */,
+				826AE67F2AF1871C00DF9129 /* PFCatalog.cpp in Sources */,
+				826AE6AC2AF1871C00DF9129 /* PFExperimentation.cpp in Sources */,
+				826AE69D2AF1871C00DF9129 /* PlayerDataManagement.cpp in Sources */,
+				826AE6552AF1871C00DF9129 /* Groups.cpp in Sources */,
+				826AE6962AF1871C00DF9129 /* MultiplayerServerTypes.cpp in Sources */,
+				826AE69E2AF1871C00DF9129 /* ProfilesTypes.cpp in Sources */,
+				826AE6622AF1871C00DF9129 /* PFCloudScript.cpp in Sources */,
+				826AE6AB2AF1871C00DF9129 /* PlayerDataManagementTypes.cpp in Sources */,
+				826AE65B2AF1871C00DF9129 /* CatalogTypes.cpp in Sources */,
+				826AE6A72AF1871C00DF9129 /* Experimentation.cpp in Sources */,
+				826AE6562AF1871C00DF9129 /* ExperimentationTypes.cpp in Sources */,
+				826AE6742AF1871C00DF9129 /* Friends.cpp in Sources */,
+				826AE6A12AF1871C00DF9129 /* CharacterTypes.cpp in Sources */,
+				826AE69A2AF1871C00DF9129 /* CloudScript.cpp in Sources */,
+				826AE65A2AF1871C00DF9129 /* InventoryTypes.cpp in Sources */,
+				826AE65C2AF1871C00DF9129 /* Segments.cpp in Sources */,
+				826AE6902AF1871C00DF9129 /* PFPlatformSpecific.cpp in Sources */,
+				826AE6642AF1871C00DF9129 /* PFMultiplayerServer.cpp in Sources */,
+				826AE68B2AF1871C00DF9129 /* CoreTypes.cpp in Sources */,
+				826AE6922AF1871C00DF9129 /* CloudScriptTypes.cpp in Sources */,
+				826AE66B2AF1871C00DF9129 /* Profiles.cpp in Sources */,
+				826AE6682AF1871C00DF9129 /* PFPlayerDataManagement.cpp in Sources */,
+				826AE6882AF1871C00DF9129 /* PlatformSpecificTypes.cpp in Sources */,
+				826AE6752AF1871C00DF9129 /* Localization.cpp in Sources */,
+				826AE6942AF1871C00DF9129 /* PFLocalization.cpp in Sources */,
+				826AE69C2AF1871C00DF9129 /* PFProfiles.cpp in Sources */,
+				826AE6812AF1871C00DF9129 /* PFData.cpp in Sources */,
+				826AE6762AF1871C00DF9129 /* PFInventory.cpp in Sources */,
+				826AE41F2AF1841900DF9129 /* HttpClient.cpp in Sources */,
+				826AE6AD2AF1871C00DF9129 /* PushNotifications.cpp in Sources */,
+				826AE6952AF1871C00DF9129 /* PFAccountManagement.cpp in Sources */,
+				826AE6862AF1871C00DF9129 /* LocalizationTypes.cpp in Sources */,
+				826AE41C2AF1841900DF9129 /* GlobalState.cpp in Sources */,
+				826AE6992AF1871C00DF9129 /* PFCharacter.cpp in Sources */,
+				826AE6832AF1871C00DF9129 /* Data.cpp in Sources */,
+				826AE6A02AF1871C00DF9129 /* PFFriends.cpp in Sources */,
+				826AE65E2AF1871C00DF9129 /* AccountManagementTypes.cpp in Sources */,
+				826AE6972AF1871C00DF9129 /* TitleDataManagement.cpp in Sources */,
+				826AE69F2AF1871C00DF9129 /* PFSegments.cpp in Sources */,
+				826AE4212AF1841900DF9129 /* PFServices.cpp in Sources */,
+				826AE6932AF1871C00DF9129 /* PFPushNotifications.cpp in Sources */,
+				826AE6822AF1871C00DF9129 /* DataTypes.cpp in Sources */,
+				826AE67B2AF1871C00DF9129 /* PlatformSpecific.cpp in Sources */,
+				826AE6982AF1871C00DF9129 /* SegmentsTypes.cpp in Sources */,
+				826AE68A2AF1871C00DF9129 /* FriendsTypes.cpp in Sources */,
+				826AE4222AF1841900DF9129 /* stdafx.cpp in Sources */,
+				826AE6702AF1871C00DF9129 /* PFTitleDataManagement.cpp in Sources */,
+				826AE6652AF1871C00DF9129 /* GroupsTypes.cpp in Sources */,
+				826AE6852AF1871C00DF9129 /* MultiplayerServer.cpp in Sources */,
+				826AE69B2AF1871C00DF9129 /* Catalog.cpp in Sources */,
+				826AE6912AF1871C00DF9129 /* PFGroups.cpp in Sources */,
+				826AE41E2AF1841900DF9129 /* Platform.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		82B3CBA22B5B016B00337232 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82B3CBA32B5B016B00337232 /* Inventory.cpp in Sources */,
+				82B3CBA42B5B016B00337232 /* AccountManagement.cpp in Sources */,
+				82B3CBA52B5B016B00337232 /* PushNotificationsTypes.cpp in Sources */,
+				82B3CBA62B5B016B00337232 /* TitleDataManagementTypes.cpp in Sources */,
+				82B3CBA72B5B016B00337232 /* PFCatalog.cpp in Sources */,
+				82B3CBA82B5B016B00337232 /* PFExperimentation.cpp in Sources */,
+				82B3CBA92B5B016B00337232 /* PlayerDataManagement.cpp in Sources */,
+				82B3CBAA2B5B016B00337232 /* Groups.cpp in Sources */,
+				82B3CBAB2B5B016B00337232 /* MultiplayerServerTypes.cpp in Sources */,
+				82B3CBAC2B5B016B00337232 /* ProfilesTypes.cpp in Sources */,
+				82B3CBAD2B5B016B00337232 /* PFCloudScript.cpp in Sources */,
+				82B3CBAE2B5B016B00337232 /* PlayerDataManagementTypes.cpp in Sources */,
+				82B3CBAF2B5B016B00337232 /* CatalogTypes.cpp in Sources */,
+				82B3CBB02B5B016B00337232 /* Experimentation.cpp in Sources */,
+				82B3CBB12B5B016B00337232 /* ExperimentationTypes.cpp in Sources */,
+				82B3CBB22B5B016B00337232 /* Friends.cpp in Sources */,
+				82B3CBB32B5B016B00337232 /* CharacterTypes.cpp in Sources */,
+				82B3CBB42B5B016B00337232 /* CloudScript.cpp in Sources */,
+				82B3CBB62B5B016B00337232 /* InventoryTypes.cpp in Sources */,
+				82B3CBB72B5B016B00337232 /* Segments.cpp in Sources */,
+				82B3CBB82B5B016B00337232 /* PFPlatformSpecific.cpp in Sources */,
+				82B3CBB92B5B016B00337232 /* PFMultiplayerServer.cpp in Sources */,
+				82B3CBBA2B5B016B00337232 /* CoreTypes.cpp in Sources */,
+				82B3CBBB2B5B016B00337232 /* CloudScriptTypes.cpp in Sources */,
+				82B3CBBC2B5B016B00337232 /* Profiles.cpp in Sources */,
+				82B3CBBD2B5B016B00337232 /* PFPlayerDataManagement.cpp in Sources */,
+				82B3CBBE2B5B016B00337232 /* PlatformSpecificTypes.cpp in Sources */,
+				82B3CBBF2B5B016B00337232 /* Localization.cpp in Sources */,
+				82B3CBC02B5B016B00337232 /* PFLocalization.cpp in Sources */,
+				82B3CBC12B5B016B00337232 /* PFProfiles.cpp in Sources */,
+				82B3CBC22B5B016B00337232 /* PFData.cpp in Sources */,
+				82B3CBC32B5B016B00337232 /* PFInventory.cpp in Sources */,
+				82B3CBC42B5B016B00337232 /* HttpClient.cpp in Sources */,
+				82B3CBC52B5B016B00337232 /* PushNotifications.cpp in Sources */,
+				82B3CBC62B5B016B00337232 /* PFAccountManagement.cpp in Sources */,
+				82B3CBC72B5B016B00337232 /* LocalizationTypes.cpp in Sources */,
+				82B3CBC82B5B016B00337232 /* GlobalState.cpp in Sources */,
+				82B3CBC92B5B016B00337232 /* PFCharacter.cpp in Sources */,
+				82B3CBCA2B5B016B00337232 /* Data.cpp in Sources */,
+				82B3CBCB2B5B016B00337232 /* PFFriends.cpp in Sources */,
+				82B3CBCC2B5B016B00337232 /* AccountManagementTypes.cpp in Sources */,
+				82B3CBCD2B5B016B00337232 /* TitleDataManagement.cpp in Sources */,
+				82B3CBCE2B5B016B00337232 /* PFSegments.cpp in Sources */,
+				82B3CBCF2B5B016B00337232 /* PFServices.cpp in Sources */,
+				82B3CBD02B5B016B00337232 /* PFPushNotifications.cpp in Sources */,
+				82B3CBD12B5B016B00337232 /* DataTypes.cpp in Sources */,
+				82B3CBD22B5B016B00337232 /* PlatformSpecific.cpp in Sources */,
+				82B3CBD32B5B016B00337232 /* SegmentsTypes.cpp in Sources */,
+				82B3CBD42B5B016B00337232 /* FriendsTypes.cpp in Sources */,
+				82B3CBD52B5B016B00337232 /* stdafx.cpp in Sources */,
+				82B3CBD62B5B016B00337232 /* PFTitleDataManagement.cpp in Sources */,
+				82B3CBD72B5B016B00337232 /* GroupsTypes.cpp in Sources */,
+				82B3CBD82B5B016B00337232 /* MultiplayerServer.cpp in Sources */,
+				82B3CBD92B5B016B00337232 /* Catalog.cpp in Sources */,
+				82B3CBDA2B5B016B00337232 /* PFGroups.cpp in Sources */,
+				82B3CBDB2B5B016B00337232 /* Platform.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8206F0562B740CB500451339 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libHttpClientFramework_iOS;
+			targetProxy = 8206F0552B740CB500451339 /* PBXContainerItemProxy */;
+		};
+		8286B2152B73FF0C009A4677 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libHttpClientFramework_macOS;
+			targetProxy = 8286B2142B73FF0C009A4677 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8260815A2AEC31CA00D8B93D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"HC_LINK_STATIC=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fstack-protector-strong",
+					"-fPIC",
+					"-Wformat",
+					"-Wformat-security",
+					"-Werror=format-security",
+				);
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		8260815B2AEC31CA00D8B93D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "HC_LINK_STATIC=1";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fstack-protector-strong",
+					"-fPIC",
+					"-Wformat",
+					"-Wformat-security",
+					"-Werror=format-security",
+				);
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		8260815D2AEC31CA00D8B93D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.iOS.exp";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../Source/PlayFabServices/Source/Generated",
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "Microsoft.PlayFabServices-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Debug;
+		};
+		8260815E2AEC31CA00D8B93D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.iOS.exp";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../Source/PlayFabServices/Source/Generated",
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "Microsoft.PlayFabServices-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Release;
+		};
+		82B3CBE42B5B016B00337232 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.macOS.exp";
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../Source/PlayFabServices/Source/Generated",
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "Microsoft.PlayFabServices-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Debug;
+		};
+		82B3CBE52B5B016B00337232 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.macOS.exp";
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabServices/Include",
+					"$(SRCROOT)/../../Source/PlayFabServices/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabServices/Source",
+					"$(SRCROOT)/../../Source/PlayFabServices/Source/Generated",
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "Microsoft.PlayFabServices-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8260814F2AEC31CA00D8B93D /* Build configuration list for PBXProject "PlayFabServices.Apple" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8260815A2AEC31CA00D8B93D /* Debug */,
+				8260815B2AEC31CA00D8B93D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8260815C2AEC31CA00D8B93D /* Build configuration list for PBXNativeTarget "PlayFabServices_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8260815D2AEC31CA00D8B93D /* Debug */,
+				8260815E2AEC31CA00D8B93D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		82B3CBE32B5B016B00337232 /* Build configuration list for PBXNativeTarget "PlayFabServices_macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				82B3CBE42B5B016B00337232 /* Debug */,
+				82B3CBE52B5B016B00337232 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8260814C2AEC31CA00D8B93D /* Project object */;
+}

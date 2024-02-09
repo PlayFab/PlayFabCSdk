@@ -1,6 +1,5 @@
 #pragma once
 
-#include <playfab/httpClient/PFHttpClient.h>
 #include <HttpRequest.h>
 #include "Generated/CacheId.h"
 
