@@ -2,7 +2,6 @@
 
 #include <playfab/core/PFServiceConfig.h>
 #include <playfab/core/PFHttpConfig.h>
-#include <httpClient/httpClient.h>
 #include <HttpRequest.h>
 #include "Generated/CacheId.h"
 

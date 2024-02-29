@@ -42,7 +42,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\ApiHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\Entity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\EntityToken.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\GlobalState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\PFCoreGlobalState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\HandleTable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\HttpClient.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\ServiceConfig.h" />
@@ -71,7 +71,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\ApiHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\Entity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\EntityToken.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\GlobalState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\PFCoreGlobalState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\HttpClient.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\ServiceConfig.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\TokenExpiredHandler.cpp" />
@@ -90,8 +90,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\DebugTraceOutput.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\LocalStorageTraceOutput.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\TraceState.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\LHCExport.def" />
   </ItemGroup>
 </Project>

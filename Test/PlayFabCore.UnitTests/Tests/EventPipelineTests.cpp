@@ -26,31 +26,46 @@ public:
 
         //PlayFabServiceMock loginMock{serviceConfig, "LoginWithCustomID"};
 
+        ////const char* titleId = "AADE6";
+        ////const char* endpoint = "https://AADE6.playfabapi.com";
+        ////const char* customId = "TestIntegrationLoginCustomId";
+
+        ////PFServiceConfigHandle serviceConfigHandle{ nullptr };
+        ////HRESULT hr = PFServiceConfigCreateHandle(
+        ////    endpoint,
+        ////    titleId,
+        ////    &serviceConfigHandle);
+        ////std::cout << hr;
+
         //// Synchronously authenticate
         //XAsyncBlock async{};
         //PFAuthenticationLoginWithCustomIDRequest request{};
+        ////request.createAccount = true;
+        ////request.customId = customId;
         //VERIFY_SUCCEEDED(PFAuthenticationLoginWithCustomIDAsync(serviceConfig.Handle(), &request, &async));
         //VERIFY_SUCCEEDED(XAsyncGetStatus(&async, true));
         //PFEntityHandle entityHandle{ nullptr };
         //VERIFY_SUCCEEDED(PFAuthenticationLoginWithCustomIDGetResult(&async, &entityHandle, 0, nullptr, nullptr, nullptr));
         //auto entity = Wrappers::Entity<>::Wrap(entityHandle);
 
-        //Wrappers::TelemetryPipeline pipeline{ entity.Handle(), nullptr };
-
         //PlayFabServiceMock writeEventsMock{ serviceConfig, "WriteEvents" };
 
         //AsyncTestContext tc;
         //writeEventsMock.SetCallback([&](PlayFabServiceMock& mock, std::string url, std::string requestBody, uint32_t hitCount)
-        //{
-        //    rapidjson::Document requestJson;
-        //    requestJson.Parse(requestBody.data());
-        //    rapidjson::Document payloadJson;
-        //    payloadJson.Parse(requestJson["Events"][0]["PayloadJSON"].GetString());
-        //    tc.Assert(payloadJson["eventId"].GetInt() == 0);
-        //    tc.Complete();
-        //});
-
-        //PFTelemetryEvent event
+        //    {
+        //        rapidjson::Document requestJson;
+        //        requestJson.Parse(requestBody.data());
+        //        rapidjson::Document payloadJson;
+        //        payloadJson.Parse(requestJson["Events"][0]["PayloadJSON"].GetString());
+        //        tc.Assert(payloadJson["eventId"].GetInt() == 0);
+        //        std::cout << hitCount << url;
+        //        mock.JsonAllocator();
+        //        tc.Complete();
+        //    });
+        //
+        //PFEventPipelineHandle eventsHandle;
+        //VERIFY_SUCCEEDED(PFEventPipelineCreateTelemetryPipelineHandleWithEntity(entityHandle, nullptr, nullptr, nullptr, nullptr, &eventsHandle));
+        //PFEvent event
         //{
         //    nullptr,
         //    "playfab.core",
@@ -59,7 +74,7 @@ public:
         //    kTestEventTemplate
         //};
 
-        //pipeline.EmitEvent(&event);
+        //VERIFY_SUCCEEDED(PFEventPipelineEmitEvent(eventsHandle, &event));
 
         //tc.AwaitResult();
     }

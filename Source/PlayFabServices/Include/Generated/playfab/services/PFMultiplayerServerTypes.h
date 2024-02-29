@@ -518,6 +518,12 @@ typedef struct PFMultiplayerServerListQosServersForTitleRequest
     /// </summary>
     _Maybenull_ bool const* includeAllRegions;
 
+    /// <summary>
+    /// (Optional) Indicates the Routing Preference used by the Qos servers. The default Routing Preference
+    /// is Microsoft.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* routingPreference;
+
 } PFMultiplayerServerListQosServersForTitleRequest;
 
 /// <summary>

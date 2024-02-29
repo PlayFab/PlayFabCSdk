@@ -36,6 +36,10 @@
 #include "GDK/GDKPch.h"
 #endif
 
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
+#include "Platform/Android/PlatformUtilsAndroid.h"
+#endif
+
 // PlayFabSharedInternal includes
 #include <ResultMacros.h>
 #include <Memory.h>

@@ -33,7 +33,7 @@ AsyncOp<void> ServicesTestClass::Initialize()
         return S_OK;
     });
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     return operation.Then([&](Result<void> result) -> AsyncOp<Entity>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
@@ -54,7 +54,7 @@ AsyncOp<void> ServicesTestClass::Uninitialize()
 {
     m_defaultTitlePlayer.reset();
     m_defaultPlatformUser.reset();
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
     m_titleEntity.reset();
 #endif
 
@@ -82,7 +82,7 @@ String ServicesTestClass::DefaultTitlePlayerId() noexcept
     return m_defaultTitlePlayer->loginResult.Model().playFabId;
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 Entity ServicesTestClass::TitleEntity() noexcept
 {
     assert(m_titleEntity.has_value());

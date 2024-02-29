@@ -18,6 +18,8 @@ public:
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
         PFHCCompressionLevel compressionLevel,
+        bool retryOnDisconnect,
+        size_t bufferSize,
         PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
         PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
         void* handlerContext
@@ -32,6 +34,8 @@ public:
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
         PFHCCompressionLevel compressionLevel,
+        bool retryOnDisconnect,
+        size_t bufferSize,
         PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
         PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
         void* handlerContext

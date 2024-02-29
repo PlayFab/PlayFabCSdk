@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{fcaa300b-5633-4e30-83f9-b0e0e141b599}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GDK">
+      <UniqueIdentifier>{f337db9e-dfda-42b1-a59f-40aaf4c3303c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\PlayFabServices\Source\GDK\AccountManagementXTokenAPIs.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayFabServices\Source\GDK\FriendsXTokenAPIs.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayFabServices\Source\GDK\InventoryXTokenAPIs.cpp">
+      <Filter>Source\GDK</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

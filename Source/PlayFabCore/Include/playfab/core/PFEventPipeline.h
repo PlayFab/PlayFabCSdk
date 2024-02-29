@@ -47,6 +47,16 @@ const uint32_t PFTelemetryEventPipelineMaxWaitTimeInSecondsDefault = 3;
 const uint32_t PFTelemetryEventPipelinePollDelayInMsDefault = 10;
 
 /// <summary>
+/// Default value for attempting a retry of event emission when losing connection.
+/// </summary>
+const bool PFTelemetryEventPipelineRetryOnDisconnectDefault = true;
+
+/// <summary>
+/// Default value for the maximum amount of events in the event buffer.
+/// </summary>
+const size_t PFEventPipelineBufferSizeDefault = 1024;
+
+/// <summary>
 /// Event to be uploaded to PlayFab.
 /// </summary>
 struct PFEvent
@@ -134,6 +144,16 @@ struct PFEventPipelineConfig
     /// The event pipeline will send events using GZIP compression with the level specified. If sent null, no compression will be made.
     /// </summary>
     _Maybenull_ PFHCCompressionLevel* compressionLevel;
+
+    /// <summary>
+    /// The event pipeline will retry sending events that failed due to lost connection. If sent null, default behavior will be to retry (true) (not available for PlayStream).
+    /// </summary>
+    _Maybenull_ bool* retryOnDisconnect;
+
+    /// <summary>
+    /// The limit of the amount of events in the pipeline's buffer. If sent null, default value will be used (1024 for either type).
+    /// </summary>
+    _Maybenull_ size_t* bufferSize;
 };
 
 /// <summary>

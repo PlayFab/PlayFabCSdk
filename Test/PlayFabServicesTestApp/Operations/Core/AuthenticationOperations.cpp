@@ -33,7 +33,7 @@ Result<LoginResult> LoginWithCustomIDOperation::GetResult(XAsyncBlock* async) no
     return LoginResult{ Entity::Wrap(entityHandle), *loginResult };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 AuthenticateGameServerWithCustomIdOperation::AuthenticateGameServerWithCustomIdOperation(
     Entity entity,
     RequestType request,
@@ -57,9 +57,10 @@ Result<Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>> A
     Vector<char> buffer(bufferSize);
     PFAuthenticationAuthenticateCustomIdResult* result;
     RETURN_IF_FAILED(PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(async, buffer.size(), buffer.data(), &result, nullptr));
-    return *result;
+    Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator> resultWrapper{ std::move(*result) };
+    return resultWrapper;
 }
-
+ 
 DeleteOperation::DeleteOperation(
     Entity entity,
     RequestType request,
@@ -263,7 +264,8 @@ Result<Wrappers::PFAuthenticationValidateEntityTokenResponseWrapper<Allocator>> 
     Vector<char> buffer(bufferSize);
     PFAuthenticationValidateEntityTokenResponse* result;
     RETURN_IF_FAILED(PFAuthenticationValidateEntityTokenGetResult(async, buffer.size(), buffer.data(), &result, nullptr));
-    return *result;
+    Wrappers::PFAuthenticationValidateEntityTokenResponseWrapper<Allocator> resultWrapper{ std::move(*result) };
+    return resultWrapper;
 }
 #endif // HC_PLATFORM == HC_PLATFORM_WIN32
 

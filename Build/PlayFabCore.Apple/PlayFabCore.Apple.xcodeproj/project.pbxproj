@@ -1,0 +1,1577 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8206F1FD2B7588F400451339 /* libPlayFabSharedInternal_macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F1FC2B7588F400451339 /* libPlayFabSharedInternal_macOS.a */; };
+		8206F1FF2B75890E00451339 /* libPlayFabSharedInternal_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F1FE2B75890E00451339 /* libPlayFabSharedInternal_iOS.a */; };
+		8236DDD12B5AEA1700FFA328 /* AuthenticationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083EF2AF06CB400D8B93D /* AuthenticationTypes.h */; };
+		8236DDD22B5AEA1700FFA328 /* TypeWrapperHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CF2AF0610F00D8B93D /* TypeWrapperHelpers.h */; };
+		8236DDD32B5AEA1700FFA328 /* Authentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083F52AF06CB400D8B93D /* Authentication.h */; };
+		8236DDD42B5AEA1700FFA328 /* EventsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083F42AF06CB400D8B93D /* EventsTypes.h */; };
+		8236DDD52B5AEA1700FFA328 /* TypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A32AF06C5B00D8B93D /* TypeWrappers.h */; };
+		8236DDD62B5AEA1700FFA328 /* PFPlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CC2AF0610F00D8B93D /* PFPlatform.h */; };
+		8236DDD72B5AEA1700FFA328 /* PFEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082BE2AF0610F00D8B93D /* PFEntity.h */; };
+		8236DDD82B5AEA1700FFA328 /* PFAuthenticationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A12AF06C5B00D8B93D /* PFAuthenticationTypes.h */; };
+		8236DDD92B5AEA1700FFA328 /* PFPal.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C92AF0610F00D8B93D /* PFPal.h */; };
+		8236DDDA2B5AEA1700FFA328 /* HttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083322AF068E500D8B93D /* HttpClient.h */; };
+		8236DDDB2B5AEA1700FFA328 /* PFHttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C42AF0610F00D8B93D /* PFHttpClient.h */; };
+		8236DDDC2B5AEA1700FFA328 /* PFAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A02AF06C5B00D8B93D /* PFAuthentication.h */; };
+		8236DDDD2B5AEA1700FFA328 /* PFEventPipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CA2AF0610F00D8B93D /* PFEventPipeline.h */; };
+		8236DDDE2B5AEA1700FFA328 /* EventPipelineTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083482AF068E500D8B93D /* EventPipelineTypes.h */; };
+		8236DDDF2B5AEA1700FFA328 /* DebugTraceOutput.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260831E2AF068E500D8B93D /* DebugTraceOutput.h */; };
+		8236DDE02B5AEA1700FFA328 /* PlayFabException.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D12AF0610F00D8B93D /* PlayFabException.h */; };
+		8236DDE12B5AEA1700FFA328 /* PFServiceConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CB2AF0610F00D8B93D /* PFServiceConfig.h */; };
+		8236DDE22B5AEA1700FFA328 /* TokenRefreshedHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260832E2AF068E500D8B93D /* TokenRefreshedHandler.h */; };
+		8236DDE32B5AEA1700FFA328 /* PFMock.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C52AF0610F00D8B93D /* PFMock.h */; };
+		8236DDE42B5AEA1700FFA328 /* LocalStorage_Generic.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6DD2AF1B45900DF9129 /* LocalStorage_Generic.h */; };
+		8236DDE52B5AEA1700FFA328 /* LocalStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083232AF068E500D8B93D /* LocalStorage.h */; };
+		8236DDE62B5AEA1700FFA328 /* Entity.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083342AF068E500D8B93D /* Entity.h */; };
+		8236DDE72B5AEA1700FFA328 /* EventsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A42AF06C5B00D8B93D /* EventsTypeWrappers.h */; };
+		8236DDE82B5AEA1700FFA328 /* GetEntityAsyncProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260834F2AF068E500D8B93D /* GetEntityAsyncProvider.h */; };
+		8236DDE92B5AEA1700FFA328 /* PFErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082B72AF0610F00D8B93D /* PFErrors.h */; };
+		8236DDEA2B5AEA1700FFA328 /* CombinedLoginResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083512AF068E500D8B93D /* CombinedLoginResult.h */; };
+		8236DDEB2B5AEA1700FFA328 /* EventPipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083492AF068E500D8B93D /* EventPipeline.h */; };
+		8236DDEC2B5AEA1700FFA328 /* ServiceConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083382AF068E500D8B93D /* ServiceConfig.h */; };
+		8236DDED2B5AEA1700FFA328 /* PFTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260839D2AF06C5B00D8B93D /* PFTypes.h */; };
+		8236DDEE2B5AEA1700FFA328 /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083292AF068E500D8B93D /* Platform.h */; };
+		8236DDEF2B5AEA1700FFA328 /* ServiceConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D22AF0610F00D8B93D /* ServiceConfig.h */; };
+		8236DDF02B5AEA1700FFA328 /* Events.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083F22AF06CB400D8B93D /* Events.h */; };
+		8236DDF12B5AEA1700FFA328 /* PFHCPal.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C72AF0610F00D8B93D /* PFHCPal.h */; };
+		8236DDF22B5AEA1700FFA328 /* PFEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260839E2AF06C5B00D8B93D /* PFEvents.h */; };
+		8236DDF32B5AEA1700FFA328 /* PFHCTrace.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C22AF0610F00D8B93D /* PFHCTrace.h */; };
+		8236DDF42B5AEA1700FFA328 /* PFCoreGlobalState.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260832F2AF068E500D8B93D /* PFCoreGlobalState.h */; };
+		8236DDF52B5AEA1700FFA328 /* HandleTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260832C2AF068E500D8B93D /* HandleTable.h */; };
+		8236DDF62B5AEA1700FFA328 /* LoginContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083522AF068E500D8B93D /* LoginContext.h */; };
+		8236DDF72B5AEA1700FFA328 /* EntityToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083372AF068E500D8B93D /* EntityToken.h */; };
+		8236DDF82B5AEA1700FFA328 /* CacheId.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260830C2AF068E500D8B93D /* CacheId.h */; };
+		8236DDF92B5AEA1700FFA328 /* TokenExpiredHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083332AF068E500D8B93D /* TokenExpiredHandler.h */; };
+		8236DDFA2B5AEA1700FFA328 /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083192AF068E500D8B93D /* stdafx.h */; };
+		8236DDFB2B5AEA1700FFA328 /* LocalStorageTraceOutput.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083202AF068E500D8B93D /* LocalStorageTraceOutput.h */; };
+		8236DDFC2B5AEA1700FFA328 /* PFHttpProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C62AF0610F00D8B93D /* PFHttpProvider.h */; };
+		8236DDFD2B5AEA1700FFA328 /* TraceState.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260831B2AF068E500D8B93D /* TraceState.h */; };
+		8236DDFE2B5AEA1700FFA328 /* PFTrace.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D42AF0610F00D8B93D /* PFTrace.h */; };
+		8236DDFF2B5AEA1700FFA328 /* AuthenticationTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A52AF06C5B00D8B93D /* AuthenticationTypeWrappers.h */; };
+		8236DE002B5AEA1700FFA328 /* EventPipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D32AF0610F00D8B93D /* EventPipeline.h */; };
+		8236DE012B5AEA1700FFA328 /* PFCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D52AF0610F00D8B93D /* PFCore.h */; };
+		8236DE022B5AEA1700FFA328 /* PFHCConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C32AF0610F00D8B93D /* PFHCConfig.h */; };
+		8236DE032B5AEA1700FFA328 /* ApiHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260833B2AF068E500D8B93D /* ApiHelpers.h */; };
+		8236DE042B5AEA1700FFA328 /* PFHttpConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CD2AF0610F00D8B93D /* PFHttpConfig.h */; };
+		8236DE052B5AEA1700FFA328 /* PFEventsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A72AF06C5B00D8B93D /* PFEventsTypes.h */; };
+		8236DE072B5AEA1700FFA328 /* PFCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260833F2AF068E500D8B93D /* PFCore.cpp */; };
+		8236DE082B5AEA1700FFA328 /* PFServiceConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083442AF068E500D8B93D /* PFServiceConfig.cpp */; };
+		8236DE092B5AEA1700FFA328 /* Authentication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F92AF06CB400D8B93D /* Authentication.cpp */; };
+		8236DE0A2B5AEA1700FFA328 /* TraceState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260831F2AF068E500D8B93D /* TraceState.cpp */; };
+		8236DE0B2B5AEA1700FFA328 /* PFHCTrace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083172AF068E500D8B93D /* PFHCTrace.cpp */; };
+		8236DE0C2B5AEA1700FFA328 /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083EE2AF06CB400D8B93D /* Types.cpp */; };
+		8236DE0D2B5AEA1700FFA328 /* EventPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083472AF068E500D8B93D /* EventPipeline.cpp */; };
+		8236DE0E2B5AEA1700FFA328 /* PFEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083ED2AF06CB400D8B93D /* PFEvents.cpp */; };
+		8236DE0F2B5AEA1700FFA328 /* LoginContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083502AF068E500D8B93D /* LoginContext.cpp */; };
+		8236DE102B5AEA1700FFA328 /* PFAuthentication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F12AF06CB400D8B93D /* PFAuthentication.cpp */; };
+		8236DE112B5AEA1700FFA328 /* LocalStorage_Generic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6DE2AF1B45900DF9129 /* LocalStorage_Generic.cpp */; };
+		8236DE122B5AEA1700FFA328 /* AuthenticationTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F62AF06CB400D8B93D /* AuthenticationTypes.cpp */; };
+		8236DE132B5AEA1700FFA328 /* TokenRefreshedHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083392AF068E500D8B93D /* TokenRefreshedHandler.cpp */; };
+		8236DE142B5AEA1700FFA328 /* DebugTraceOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260831C2AF068E500D8B93D /* DebugTraceOutput.cpp */; };
+		8236DE152B5AEA1700FFA328 /* PFPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083412AF068E500D8B93D /* PFPlatform.cpp */; };
+		8236DE162B5AEA1700FFA328 /* PFTrace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083452AF068E500D8B93D /* PFTrace.cpp */; };
+		8236DE172B5AEA1700FFA328 /* LocalStorageTraceOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260831D2AF068E500D8B93D /* LocalStorageTraceOutput.cpp */; };
+		8236DE182B5AEA1700FFA328 /* Events.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F72AF06CB400D8B93D /* Events.cpp */; };
+		8236DE192B5AEA1700FFA328 /* TokenExpiredHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260832D2AF068E500D8B93D /* TokenExpiredHandler.cpp */; };
+		8236DE1A2B5AEA1700FFA328 /* EntityToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083352AF068E500D8B93D /* EntityToken.cpp */; };
+		8236DE1B2B5AEA1700FFA328 /* CombinedLoginResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083532AF068E500D8B93D /* CombinedLoginResult.cpp */; };
+		8236DE1C2B5AEA1700FFA328 /* PFMock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083162AF068E500D8B93D /* PFMock.cpp */; };
+		8236DE1D2B5AEA1700FFA328 /* ApiHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260832B2AF068E500D8B93D /* ApiHelpers.cpp */; };
+		8236DE1E2B5AEA1700FFA328 /* EventPipelineTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260834A2AF068E500D8B93D /* EventPipelineTypes.cpp */; };
+		8236DE1F2B5AEA1700FFA328 /* PFHttpConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083432AF068E500D8B93D /* PFHttpConfig.cpp */; };
+		8236DE202B5AEA1700FFA328 /* ServiceConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260833A2AF068E500D8B93D /* ServiceConfig.cpp */; };
+		8236DE212B5AEA1700FFA328 /* PFHttpProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083182AF068E500D8B93D /* PFHttpProvider.cpp */; };
+		8236DE222B5AEA1700FFA328 /* LocalStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083222AF068E500D8B93D /* LocalStorage.cpp */; };
+		8236DE232B5AEA1700FFA328 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083362AF068E500D8B93D /* HttpClient.cpp */; };
+		8236DE242B5AEA1700FFA328 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083242AF068E500D8B93D /* Platform.cpp */; };
+		8236DE252B5AEA1700FFA328 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260834B2AF068E500D8B93D /* stdafx.cpp */; };
+		8236DE262B5AEA1700FFA328 /* PFCoreGlobalState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083312AF068E500D8B93D /* PFCoreGlobalState.cpp */; };
+		8236DE272B5AEA1700FFA328 /* EventsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F82AF06CB400D8B93D /* EventsTypes.cpp */; };
+		8236DE282B5AEA1700FFA328 /* Platform_Generic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6DF2AF1B45900DF9129 /* Platform_Generic.cpp */; };
+		8236DE292B5AEA1700FFA328 /* PFEntity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083422AF068E500D8B93D /* PFEntity.cpp */; };
+		8236DE2A2B5AEA1700FFA328 /* PFEventPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260833E2AF068E500D8B93D /* PFEventPipeline.cpp */; };
+		8236DE2B2B5AEA1700FFA328 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083302AF068E500D8B93D /* Entity.cpp */; };
+		8236DE2C2B5AEA1700FFA328 /* PFHttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083142AF068E500D8B93D /* PFHttpClient.cpp */; };
+		8236DE2E2B5AEA1700FFA328 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826081492AEC316F00D8B93D /* Foundation.framework */; };
+		8236DE2F2B5AEA1700FFA328 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826081452AEC310800D8B93D /* Security.framework */; };
+		826081472AEC312A00D8B93D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826081452AEC310800D8B93D /* Security.framework */; };
+		8260814A2AEC316F00D8B93D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 826081492AEC316F00D8B93D /* Foundation.framework */; };
+		826082E22AF0610F00D8B93D /* PFErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082B72AF0610F00D8B93D /* PFErrors.h */; };
+		826082E82AF0610F00D8B93D /* PFEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082BE2AF0610F00D8B93D /* PFEntity.h */; };
+		826082EA2AF0610F00D8B93D /* PFHCTrace.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C22AF0610F00D8B93D /* PFHCTrace.h */; };
+		826082EB2AF0610F00D8B93D /* PFHCConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C32AF0610F00D8B93D /* PFHCConfig.h */; };
+		826082EC2AF0610F00D8B93D /* PFHttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C42AF0610F00D8B93D /* PFHttpClient.h */; };
+		826082ED2AF0610F00D8B93D /* PFMock.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C52AF0610F00D8B93D /* PFMock.h */; };
+		826082EE2AF0610F00D8B93D /* PFHttpProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C62AF0610F00D8B93D /* PFHttpProvider.h */; };
+		826082EF2AF0610F00D8B93D /* PFHCPal.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C72AF0610F00D8B93D /* PFHCPal.h */; };
+		826082F02AF0610F00D8B93D /* PFPal.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082C92AF0610F00D8B93D /* PFPal.h */; };
+		826082F12AF0610F00D8B93D /* PFEventPipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CA2AF0610F00D8B93D /* PFEventPipeline.h */; };
+		826082F22AF0610F00D8B93D /* PFServiceConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CB2AF0610F00D8B93D /* PFServiceConfig.h */; };
+		826082F32AF0610F00D8B93D /* PFPlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CC2AF0610F00D8B93D /* PFPlatform.h */; };
+		826082F42AF0610F00D8B93D /* PFHttpConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CD2AF0610F00D8B93D /* PFHttpConfig.h */; };
+		826082F52AF0610F00D8B93D /* TypeWrapperHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082CF2AF0610F00D8B93D /* TypeWrapperHelpers.h */; };
+		826082F72AF0610F00D8B93D /* PlayFabException.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D12AF0610F00D8B93D /* PlayFabException.h */; };
+		826082F82AF0610F00D8B93D /* ServiceConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D22AF0610F00D8B93D /* ServiceConfig.h */; };
+		826082F92AF0610F00D8B93D /* EventPipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D32AF0610F00D8B93D /* EventPipeline.h */; };
+		826082FA2AF0610F00D8B93D /* PFTrace.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D42AF0610F00D8B93D /* PFTrace.h */; };
+		826082FB2AF0610F00D8B93D /* PFCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 826082D52AF0610F00D8B93D /* PFCore.h */; };
+		8260835A2AF068E500D8B93D /* CacheId.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260830C2AF068E500D8B93D /* CacheId.h */; };
+		826083612AF068E500D8B93D /* PFHttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083142AF068E500D8B93D /* PFHttpClient.cpp */; };
+		826083632AF068E500D8B93D /* PFMock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083162AF068E500D8B93D /* PFMock.cpp */; };
+		826083642AF068E500D8B93D /* PFHCTrace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083172AF068E500D8B93D /* PFHCTrace.cpp */; };
+		826083652AF068E500D8B93D /* PFHttpProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083182AF068E500D8B93D /* PFHttpProvider.cpp */; };
+		826083662AF068E500D8B93D /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083192AF068E500D8B93D /* stdafx.h */; };
+		826083672AF068E500D8B93D /* TraceState.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260831B2AF068E500D8B93D /* TraceState.h */; };
+		826083682AF068E500D8B93D /* DebugTraceOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260831C2AF068E500D8B93D /* DebugTraceOutput.cpp */; };
+		826083692AF068E500D8B93D /* LocalStorageTraceOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260831D2AF068E500D8B93D /* LocalStorageTraceOutput.cpp */; };
+		8260836A2AF068E500D8B93D /* DebugTraceOutput.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260831E2AF068E500D8B93D /* DebugTraceOutput.h */; };
+		8260836B2AF068E500D8B93D /* TraceState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260831F2AF068E500D8B93D /* TraceState.cpp */; };
+		8260836C2AF068E500D8B93D /* LocalStorageTraceOutput.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083202AF068E500D8B93D /* LocalStorageTraceOutput.h */; };
+		8260836D2AF068E500D8B93D /* LocalStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083222AF068E500D8B93D /* LocalStorage.cpp */; };
+		8260836E2AF068E500D8B93D /* LocalStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083232AF068E500D8B93D /* LocalStorage.h */; };
+		8260836F2AF068E500D8B93D /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083242AF068E500D8B93D /* Platform.cpp */; };
+		826083732AF068E500D8B93D /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083292AF068E500D8B93D /* Platform.h */; };
+		826083742AF068E500D8B93D /* ApiHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260832B2AF068E500D8B93D /* ApiHelpers.cpp */; };
+		826083752AF068E500D8B93D /* HandleTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260832C2AF068E500D8B93D /* HandleTable.h */; };
+		826083762AF068E500D8B93D /* TokenExpiredHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260832D2AF068E500D8B93D /* TokenExpiredHandler.cpp */; };
+		826083772AF068E500D8B93D /* TokenRefreshedHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260832E2AF068E500D8B93D /* TokenRefreshedHandler.h */; };
+		826083782AF068E500D8B93D /* PFCoreGlobalState.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260832F2AF068E500D8B93D /* PFCoreGlobalState.h */; };
+		826083792AF068E500D8B93D /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083302AF068E500D8B93D /* Entity.cpp */; };
+		8260837A2AF068E500D8B93D /* PFCoreGlobalState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083312AF068E500D8B93D /* PFCoreGlobalState.cpp */; };
+		8260837B2AF068E500D8B93D /* HttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083322AF068E500D8B93D /* HttpClient.h */; };
+		8260837C2AF068E500D8B93D /* TokenExpiredHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083332AF068E500D8B93D /* TokenExpiredHandler.h */; };
+		8260837D2AF068E500D8B93D /* Entity.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083342AF068E500D8B93D /* Entity.h */; };
+		8260837E2AF068E500D8B93D /* EntityToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083352AF068E500D8B93D /* EntityToken.cpp */; };
+		8260837F2AF068E500D8B93D /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083362AF068E500D8B93D /* HttpClient.cpp */; };
+		826083802AF068E500D8B93D /* EntityToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083372AF068E500D8B93D /* EntityToken.h */; };
+		826083812AF068E500D8B93D /* ServiceConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083382AF068E500D8B93D /* ServiceConfig.h */; };
+		826083822AF068E500D8B93D /* TokenRefreshedHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083392AF068E500D8B93D /* TokenRefreshedHandler.cpp */; };
+		826083832AF068E500D8B93D /* ServiceConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260833A2AF068E500D8B93D /* ServiceConfig.cpp */; };
+		826083842AF068E500D8B93D /* ApiHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260833B2AF068E500D8B93D /* ApiHelpers.h */; };
+		826083862AF068E500D8B93D /* PFEventPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260833E2AF068E500D8B93D /* PFEventPipeline.cpp */; };
+		826083872AF068E500D8B93D /* PFCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260833F2AF068E500D8B93D /* PFCore.cpp */; };
+		826083892AF068E500D8B93D /* PFPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083412AF068E500D8B93D /* PFPlatform.cpp */; };
+		8260838A2AF068E500D8B93D /* PFEntity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083422AF068E500D8B93D /* PFEntity.cpp */; };
+		8260838B2AF068E500D8B93D /* PFHttpConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083432AF068E500D8B93D /* PFHttpConfig.cpp */; };
+		8260838C2AF068E500D8B93D /* PFServiceConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083442AF068E500D8B93D /* PFServiceConfig.cpp */; };
+		8260838D2AF068E500D8B93D /* PFTrace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083452AF068E500D8B93D /* PFTrace.cpp */; };
+		8260838E2AF068E500D8B93D /* EventPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083472AF068E500D8B93D /* EventPipeline.cpp */; };
+		8260838F2AF068E500D8B93D /* EventPipelineTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083482AF068E500D8B93D /* EventPipelineTypes.h */; };
+		826083902AF068E500D8B93D /* EventPipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083492AF068E500D8B93D /* EventPipeline.h */; };
+		826083912AF068E500D8B93D /* EventPipelineTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260834A2AF068E500D8B93D /* EventPipelineTypes.cpp */; };
+		826083922AF068E500D8B93D /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8260834B2AF068E500D8B93D /* stdafx.cpp */; };
+		826083942AF068E500D8B93D /* GetEntityAsyncProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260834F2AF068E500D8B93D /* GetEntityAsyncProvider.h */; };
+		826083952AF068E500D8B93D /* LoginContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083502AF068E500D8B93D /* LoginContext.cpp */; };
+		826083962AF068E500D8B93D /* CombinedLoginResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083512AF068E500D8B93D /* CombinedLoginResult.h */; };
+		826083972AF068E500D8B93D /* LoginContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083522AF068E500D8B93D /* LoginContext.h */; };
+		826083982AF068E500D8B93D /* CombinedLoginResult.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083532AF068E500D8B93D /* CombinedLoginResult.cpp */; };
+		826083C82AF06C5B00D8B93D /* PFTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260839D2AF06C5B00D8B93D /* PFTypes.h */; };
+		826083C92AF06C5B00D8B93D /* PFEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 8260839E2AF06C5B00D8B93D /* PFEvents.h */; };
+		826083CB2AF06C5B00D8B93D /* PFAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A02AF06C5B00D8B93D /* PFAuthentication.h */; };
+		826083CC2AF06C5B00D8B93D /* PFAuthenticationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A12AF06C5B00D8B93D /* PFAuthenticationTypes.h */; };
+		826083CD2AF06C5B00D8B93D /* TypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A32AF06C5B00D8B93D /* TypeWrappers.h */; };
+		826083CE2AF06C5B00D8B93D /* EventsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A42AF06C5B00D8B93D /* EventsTypeWrappers.h */; };
+		826083CF2AF06C5B00D8B93D /* AuthenticationTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A52AF06C5B00D8B93D /* AuthenticationTypeWrappers.h */; };
+		826083D12AF06C5B00D8B93D /* PFEventsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083A72AF06C5B00D8B93D /* PFEventsTypes.h */; };
+		8260843B2AF06CB400D8B93D /* PFEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083ED2AF06CB400D8B93D /* PFEvents.cpp */; };
+		8260843C2AF06CB400D8B93D /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083EE2AF06CB400D8B93D /* Types.cpp */; };
+		8260843D2AF06CB400D8B93D /* AuthenticationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083EF2AF06CB400D8B93D /* AuthenticationTypes.h */; };
+		8260843F2AF06CB400D8B93D /* PFAuthentication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F12AF06CB400D8B93D /* PFAuthentication.cpp */; };
+		826084402AF06CB400D8B93D /* Events.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083F22AF06CB400D8B93D /* Events.h */; };
+		826084422AF06CB400D8B93D /* EventsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083F42AF06CB400D8B93D /* EventsTypes.h */; };
+		826084432AF06CB400D8B93D /* Authentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 826083F52AF06CB400D8B93D /* Authentication.h */; };
+		826084442AF06CB400D8B93D /* AuthenticationTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F62AF06CB400D8B93D /* AuthenticationTypes.cpp */; };
+		826084452AF06CB400D8B93D /* Events.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F72AF06CB400D8B93D /* Events.cpp */; };
+		826084462AF06CB400D8B93D /* EventsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F82AF06CB400D8B93D /* EventsTypes.cpp */; };
+		826084472AF06CB400D8B93D /* Authentication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826083F92AF06CB400D8B93D /* Authentication.cpp */; };
+		826AE7272AF1B45900DF9129 /* LocalStorage_Generic.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6DD2AF1B45900DF9129 /* LocalStorage_Generic.h */; };
+		826AE7282AF1B45900DF9129 /* LocalStorage_Generic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6DE2AF1B45900DF9129 /* LocalStorage_Generic.cpp */; };
+		826AE7292AF1B45900DF9129 /* Platform_Generic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6DF2AF1B45900DF9129 /* Platform_Generic.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8206F0532B740C7300451339 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 58BD256122123EF9008942EB;
+			remoteInfo = libHttpClientFramework_iOS;
+		};
+		8286B1BA2B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 67EE817E2362599C00A5F3DE;
+			remoteInfo = SSL_iOS;
+		};
+		8286B1BC2B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF87AD25A3F0F9005C4BDF;
+			remoteInfo = SSL_macOS;
+		};
+		8286B1BE2B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58722D0E209AD61900B071F7;
+			remoteInfo = libHttpClient_iOS;
+		};
+		8286B1C02B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7DB100A72119206B00AE22F5;
+			remoteInfo = libHttpClient_macOS;
+		};
+		8286B1C22B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF884125A522BC005C4BDF;
+			remoteInfo = libHttpClient_NOWEBSOCKETS_iOS;
+		};
+		8286B1C42B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9FF0A7725A5366A0061B717;
+			remoteInfo = libHttpClient_NOWEBSOCKETS_macOS;
+		};
+		8286B1C62B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58BD256222123EF9008942EB;
+			remoteInfo = libHttpClientFramework_iOS;
+		};
+		8286B1C82B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2C872C65221C91BD0054F791;
+			remoteInfo = libHttpClientFramework_macOS;
+		};
+		8286B1CA2B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9EF888425A52685005C4BDF;
+			remoteInfo = libHttpClientFramework_NOWEBSOCKETS_iOS;
+		};
+		8286B1CC2B73FD26009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9FF0AA225A536A20061B717;
+			remoteInfo = libHttpClientFramework_NOWEBSOCKETS_macOS;
+		};
+		8286B1CE2B73FD2E009A4677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C872C64221C91BD0054F791;
+			remoteInfo = libHttpClientFramework_macOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8206F1FC2B7588F400451339 /* libPlayFabSharedInternal_macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal_macOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8206F1FE2B75890E00451339 /* libPlayFabSharedInternal_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8236DE362B5AEA1700FFA328 /* PlayFabCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlayFabCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8236DE372B5AEA8800FFA328 /* libHttpClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libHttpClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8236DE392B5AEA9600FFA328 /* libPlayFabSharedInternal.macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.macOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8260802B2AEAFFCF00D8B93D /* PlayFabCore_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlayFabCore_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		826081342AEB2A4000D8B93D /* libPlayFabSharedInternal.iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		826081432AEB3EFA00D8B93D /* libHttpClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libHttpClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		826081452AEC310800D8B93D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		826081492AEC316F00D8B93D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		826082B72AF0610F00D8B93D /* PFErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFErrors.h; sourceTree = "<group>"; };
+		826082BE2AF0610F00D8B93D /* PFEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFEntity.h; sourceTree = "<group>"; };
+		826082C22AF0610F00D8B93D /* PFHCTrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFHCTrace.h; sourceTree = "<group>"; };
+		826082C32AF0610F00D8B93D /* PFHCConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFHCConfig.h; sourceTree = "<group>"; };
+		826082C42AF0610F00D8B93D /* PFHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFHttpClient.h; sourceTree = "<group>"; };
+		826082C52AF0610F00D8B93D /* PFMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMock.h; sourceTree = "<group>"; };
+		826082C62AF0610F00D8B93D /* PFHttpProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFHttpProvider.h; sourceTree = "<group>"; };
+		826082C72AF0610F00D8B93D /* PFHCPal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFHCPal.h; sourceTree = "<group>"; };
+		826082C92AF0610F00D8B93D /* PFPal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPal.h; sourceTree = "<group>"; };
+		826082CA2AF0610F00D8B93D /* PFEventPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFEventPipeline.h; sourceTree = "<group>"; };
+		826082CB2AF0610F00D8B93D /* PFServiceConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFServiceConfig.h; sourceTree = "<group>"; };
+		826082CC2AF0610F00D8B93D /* PFPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlatform.h; sourceTree = "<group>"; };
+		826082CD2AF0610F00D8B93D /* PFHttpConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFHttpConfig.h; sourceTree = "<group>"; };
+		826082CF2AF0610F00D8B93D /* TypeWrapperHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeWrapperHelpers.h; sourceTree = "<group>"; };
+		826082D12AF0610F00D8B93D /* PlayFabException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayFabException.h; sourceTree = "<group>"; };
+		826082D22AF0610F00D8B93D /* ServiceConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceConfig.h; sourceTree = "<group>"; };
+		826082D32AF0610F00D8B93D /* EventPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventPipeline.h; sourceTree = "<group>"; };
+		826082D42AF0610F00D8B93D /* PFTrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTrace.h; sourceTree = "<group>"; };
+		826082D52AF0610F00D8B93D /* PFCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCore.h; sourceTree = "<group>"; };
+		8260830C2AF068E500D8B93D /* CacheId.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheId.h; sourceTree = "<group>"; };
+		826083142AF068E500D8B93D /* PFHttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFHttpClient.cpp; sourceTree = "<group>"; };
+		826083162AF068E500D8B93D /* PFMock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFMock.cpp; sourceTree = "<group>"; };
+		826083172AF068E500D8B93D /* PFHCTrace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFHCTrace.cpp; sourceTree = "<group>"; };
+		826083182AF068E500D8B93D /* PFHttpProvider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFHttpProvider.cpp; sourceTree = "<group>"; };
+		826083192AF068E500D8B93D /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
+		8260831B2AF068E500D8B93D /* TraceState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TraceState.h; sourceTree = "<group>"; };
+		8260831C2AF068E500D8B93D /* DebugTraceOutput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugTraceOutput.cpp; sourceTree = "<group>"; };
+		8260831D2AF068E500D8B93D /* LocalStorageTraceOutput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalStorageTraceOutput.cpp; sourceTree = "<group>"; };
+		8260831E2AF068E500D8B93D /* DebugTraceOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugTraceOutput.h; sourceTree = "<group>"; };
+		8260831F2AF068E500D8B93D /* TraceState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TraceState.cpp; sourceTree = "<group>"; };
+		826083202AF068E500D8B93D /* LocalStorageTraceOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorageTraceOutput.h; sourceTree = "<group>"; };
+		826083222AF068E500D8B93D /* LocalStorage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalStorage.cpp; sourceTree = "<group>"; };
+		826083232AF068E500D8B93D /* LocalStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorage.h; sourceTree = "<group>"; };
+		826083242AF068E500D8B93D /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform.cpp; sourceTree = "<group>"; };
+		826083292AF068E500D8B93D /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
+		8260832B2AF068E500D8B93D /* ApiHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ApiHelpers.cpp; sourceTree = "<group>"; };
+		8260832C2AF068E500D8B93D /* HandleTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandleTable.h; sourceTree = "<group>"; };
+		8260832D2AF068E500D8B93D /* TokenExpiredHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TokenExpiredHandler.cpp; sourceTree = "<group>"; };
+		8260832E2AF068E500D8B93D /* TokenRefreshedHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TokenRefreshedHandler.h; sourceTree = "<group>"; };
+		8260832F2AF068E500D8B93D /* PFCoreGlobalState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCoreGlobalState.h; sourceTree = "<group>"; };
+		826083302AF068E500D8B93D /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
+		826083312AF068E500D8B93D /* PFCoreGlobalState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFCoreGlobalState.cpp; sourceTree = "<group>"; };
+		826083322AF068E500D8B93D /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
+		826083332AF068E500D8B93D /* TokenExpiredHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TokenExpiredHandler.h; sourceTree = "<group>"; };
+		826083342AF068E500D8B93D /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		826083352AF068E500D8B93D /* EntityToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EntityToken.cpp; sourceTree = "<group>"; };
+		826083362AF068E500D8B93D /* HttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpClient.cpp; sourceTree = "<group>"; };
+		826083372AF068E500D8B93D /* EntityToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityToken.h; sourceTree = "<group>"; };
+		826083382AF068E500D8B93D /* ServiceConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceConfig.h; sourceTree = "<group>"; };
+		826083392AF068E500D8B93D /* TokenRefreshedHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TokenRefreshedHandler.cpp; sourceTree = "<group>"; };
+		8260833A2AF068E500D8B93D /* ServiceConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServiceConfig.cpp; sourceTree = "<group>"; };
+		8260833B2AF068E500D8B93D /* ApiHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiHelpers.h; sourceTree = "<group>"; };
+		8260833E2AF068E500D8B93D /* PFEventPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFEventPipeline.cpp; sourceTree = "<group>"; };
+		8260833F2AF068E500D8B93D /* PFCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFCore.cpp; sourceTree = "<group>"; };
+		826083412AF068E500D8B93D /* PFPlatform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFPlatform.cpp; sourceTree = "<group>"; };
+		826083422AF068E500D8B93D /* PFEntity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFEntity.cpp; sourceTree = "<group>"; };
+		826083432AF068E500D8B93D /* PFHttpConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFHttpConfig.cpp; sourceTree = "<group>"; };
+		826083442AF068E500D8B93D /* PFServiceConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFServiceConfig.cpp; sourceTree = "<group>"; };
+		826083452AF068E500D8B93D /* PFTrace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFTrace.cpp; sourceTree = "<group>"; };
+		826083472AF068E500D8B93D /* EventPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventPipeline.cpp; sourceTree = "<group>"; };
+		826083482AF068E500D8B93D /* EventPipelineTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventPipelineTypes.h; sourceTree = "<group>"; };
+		826083492AF068E500D8B93D /* EventPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventPipeline.h; sourceTree = "<group>"; };
+		8260834A2AF068E500D8B93D /* EventPipelineTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventPipelineTypes.cpp; sourceTree = "<group>"; };
+		8260834B2AF068E500D8B93D /* stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stdafx.cpp; sourceTree = "<group>"; };
+		8260834F2AF068E500D8B93D /* GetEntityAsyncProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetEntityAsyncProvider.h; sourceTree = "<group>"; };
+		826083502AF068E500D8B93D /* LoginContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoginContext.cpp; sourceTree = "<group>"; };
+		826083512AF068E500D8B93D /* CombinedLoginResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CombinedLoginResult.h; sourceTree = "<group>"; };
+		826083522AF068E500D8B93D /* LoginContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginContext.h; sourceTree = "<group>"; };
+		826083532AF068E500D8B93D /* CombinedLoginResult.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CombinedLoginResult.cpp; sourceTree = "<group>"; };
+		8260839D2AF06C5B00D8B93D /* PFTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTypes.h; sourceTree = "<group>"; };
+		8260839E2AF06C5B00D8B93D /* PFEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFEvents.h; sourceTree = "<group>"; };
+		826083A02AF06C5B00D8B93D /* PFAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFAuthentication.h; sourceTree = "<group>"; };
+		826083A12AF06C5B00D8B93D /* PFAuthenticationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFAuthenticationTypes.h; sourceTree = "<group>"; };
+		826083A32AF06C5B00D8B93D /* TypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeWrappers.h; sourceTree = "<group>"; };
+		826083A42AF06C5B00D8B93D /* EventsTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsTypeWrappers.h; sourceTree = "<group>"; };
+		826083A52AF06C5B00D8B93D /* AuthenticationTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationTypeWrappers.h; sourceTree = "<group>"; };
+		826083A72AF06C5B00D8B93D /* PFEventsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFEventsTypes.h; sourceTree = "<group>"; };
+		826083ED2AF06CB400D8B93D /* PFEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFEvents.cpp; sourceTree = "<group>"; };
+		826083EE2AF06CB400D8B93D /* Types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Types.cpp; sourceTree = "<group>"; };
+		826083EF2AF06CB400D8B93D /* AuthenticationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationTypes.h; sourceTree = "<group>"; };
+		826083F12AF06CB400D8B93D /* PFAuthentication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFAuthentication.cpp; sourceTree = "<group>"; };
+		826083F22AF06CB400D8B93D /* Events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
+		826083F42AF06CB400D8B93D /* EventsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsTypes.h; sourceTree = "<group>"; };
+		826083F52AF06CB400D8B93D /* Authentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Authentication.h; sourceTree = "<group>"; };
+		826083F62AF06CB400D8B93D /* AuthenticationTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AuthenticationTypes.cpp; sourceTree = "<group>"; };
+		826083F72AF06CB400D8B93D /* Events.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Events.cpp; sourceTree = "<group>"; };
+		826083F82AF06CB400D8B93D /* EventsTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventsTypes.cpp; sourceTree = "<group>"; };
+		826083F92AF06CB400D8B93D /* Authentication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Authentication.cpp; sourceTree = "<group>"; };
+		82628C7A2B73125E00ED8BF8 /* HttpClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HttpClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		826AE6DD2AF1B45900DF9129 /* LocalStorage_Generic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorage_Generic.h; sourceTree = "<group>"; };
+		826AE6DE2AF1B45900DF9129 /* LocalStorage_Generic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalStorage_Generic.cpp; sourceTree = "<group>"; };
+		826AE6DF2AF1B45900DF9129 /* Platform_Generic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform_Generic.cpp; sourceTree = "<group>"; };
+		8286B1AB2B73FCCD009A4677 /* HttpClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HttpClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8236DE2D2B5AEA1700FFA328 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8236DE2E2B5AEA1700FFA328 /* Foundation.framework in Frameworks */,
+				8206F1FD2B7588F400451339 /* libPlayFabSharedInternal_macOS.a in Frameworks */,
+				8236DE2F2B5AEA1700FFA328 /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		826080282AEAFFCF00D8B93D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8260814A2AEC316F00D8B93D /* Foundation.framework in Frameworks */,
+				8206F1FF2B75890E00451339 /* libPlayFabSharedInternal_iOS.a in Frameworks */,
+				826081472AEC312A00D8B93D /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		826080212AEAFFCF00D8B93D = {
+			isa = PBXGroup;
+			children = (
+				8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */,
+				8279657B2AF30B1400477203 /* PlayFabCore.Apple */,
+				826082A62AF040AF00D8B93D /* PlayFabCore.Common */,
+				826082A72AF040CA00D8B93D /* PlayFabCore.ServiceWrappers */,
+				8260802C2AEAFFCF00D8B93D /* Products */,
+				826081332AEB2A4000D8B93D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		8260802C2AEAFFCF00D8B93D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8260802B2AEAFFCF00D8B93D /* PlayFabCore_iOS.framework */,
+				8236DE362B5AEA1700FFA328 /* PlayFabCore_macOS.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		826081332AEB2A4000D8B93D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8206F1FE2B75890E00451339 /* libPlayFabSharedInternal_iOS.a */,
+				8206F1FC2B7588F400451339 /* libPlayFabSharedInternal_macOS.a */,
+				8286B1AB2B73FCCD009A4677 /* HttpClient.framework */,
+				82628C7A2B73125E00ED8BF8 /* HttpClient.framework */,
+				8236DE392B5AEA9600FFA328 /* libPlayFabSharedInternal.macOS.a */,
+				8236DE372B5AEA8800FFA328 /* libHttpClient.a */,
+				826081492AEC316F00D8B93D /* Foundation.framework */,
+				826081452AEC310800D8B93D /* Security.framework */,
+				826081432AEB3EFA00D8B93D /* libHttpClient.a */,
+				826081342AEB2A4000D8B93D /* libPlayFabSharedInternal.iOS.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		826082A62AF040AF00D8B93D /* PlayFabCore.Common */ = {
+			isa = PBXGroup;
+			children = (
+				826082B12AF0610F00D8B93D /* Include */,
+				826083042AF068E500D8B93D /* Source */,
+			);
+			name = PlayFabCore.Common;
+			sourceTree = "<group>";
+		};
+		826082A72AF040CA00D8B93D /* PlayFabCore.ServiceWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				826083992AF06C5B00D8B93D /* Include */,
+				826083EB2AF06CB400D8B93D /* Source */,
+			);
+			name = PlayFabCore.ServiceWrappers;
+			sourceTree = "<group>";
+		};
+		826082B12AF0610F00D8B93D /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				826082B22AF0610F00D8B93D /* Generated */,
+				826082C02AF0610F00D8B93D /* playfab */,
+			);
+			name = Include;
+			path = ../../Source/PlayFabCore/Include;
+			sourceTree = "<group>";
+		};
+		826082B22AF0610F00D8B93D /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				826082B32AF0610F00D8B93D /* playfab */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		826082B32AF0610F00D8B93D /* playfab */ = {
+			isa = PBXGroup;
+			children = (
+				826082B42AF0610F00D8B93D /* core */,
+			);
+			path = playfab;
+			sourceTree = "<group>";
+		};
+		826082B42AF0610F00D8B93D /* core */ = {
+			isa = PBXGroup;
+			children = (
+				826082BE2AF0610F00D8B93D /* PFEntity.h */,
+				826082B72AF0610F00D8B93D /* PFErrors.h */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		826082C02AF0610F00D8B93D /* playfab */ = {
+			isa = PBXGroup;
+			children = (
+				826082C12AF0610F00D8B93D /* httpClient */,
+				826082C82AF0610F00D8B93D /* core */,
+			);
+			path = playfab;
+			sourceTree = "<group>";
+		};
+		826082C12AF0610F00D8B93D /* httpClient */ = {
+			isa = PBXGroup;
+			children = (
+				826082C22AF0610F00D8B93D /* PFHCTrace.h */,
+				826082C32AF0610F00D8B93D /* PFHCConfig.h */,
+				826082C42AF0610F00D8B93D /* PFHttpClient.h */,
+				826082C52AF0610F00D8B93D /* PFMock.h */,
+				826082C62AF0610F00D8B93D /* PFHttpProvider.h */,
+				826082C72AF0610F00D8B93D /* PFHCPal.h */,
+			);
+			path = httpClient;
+			sourceTree = "<group>";
+		};
+		826082C82AF0610F00D8B93D /* core */ = {
+			isa = PBXGroup;
+			children = (
+				826082CE2AF0610F00D8B93D /* cpp */,
+				826082C92AF0610F00D8B93D /* PFPal.h */,
+				826082CA2AF0610F00D8B93D /* PFEventPipeline.h */,
+				826082CB2AF0610F00D8B93D /* PFServiceConfig.h */,
+				826082CC2AF0610F00D8B93D /* PFPlatform.h */,
+				826082CD2AF0610F00D8B93D /* PFHttpConfig.h */,
+				826082D42AF0610F00D8B93D /* PFTrace.h */,
+				826082D52AF0610F00D8B93D /* PFCore.h */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		826082CE2AF0610F00D8B93D /* cpp */ = {
+			isa = PBXGroup;
+			children = (
+				826082CF2AF0610F00D8B93D /* TypeWrapperHelpers.h */,
+				826082D12AF0610F00D8B93D /* PlayFabException.h */,
+				826082D22AF0610F00D8B93D /* ServiceConfig.h */,
+				826082D32AF0610F00D8B93D /* EventPipeline.h */,
+			);
+			path = cpp;
+			sourceTree = "<group>";
+		};
+		826083042AF068E500D8B93D /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				826083052AF068E500D8B93D /* Generated */,
+				826083132AF068E500D8B93D /* HttpClient */,
+				8260831A2AF068E500D8B93D /* Trace */,
+				826083212AF068E500D8B93D /* Platform */,
+				8260832A2AF068E500D8B93D /* Common */,
+				8260833C2AF068E500D8B93D /* Api */,
+				826083462AF068E500D8B93D /* EventPipeline */,
+				8260834C2AF068E500D8B93D /* Authentication */,
+				826083192AF068E500D8B93D /* stdafx.h */,
+				8260834B2AF068E500D8B93D /* stdafx.cpp */,
+			);
+			name = Source;
+			path = ../../Source/PlayFabCore/Source;
+			sourceTree = "<group>";
+		};
+		826083052AF068E500D8B93D /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				8260830C2AF068E500D8B93D /* CacheId.h */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		826083132AF068E500D8B93D /* HttpClient */ = {
+			isa = PBXGroup;
+			children = (
+				826083142AF068E500D8B93D /* PFHttpClient.cpp */,
+				826083162AF068E500D8B93D /* PFMock.cpp */,
+				826083172AF068E500D8B93D /* PFHCTrace.cpp */,
+				826083182AF068E500D8B93D /* PFHttpProvider.cpp */,
+			);
+			path = HttpClient;
+			sourceTree = "<group>";
+		};
+		8260831A2AF068E500D8B93D /* Trace */ = {
+			isa = PBXGroup;
+			children = (
+				8260831B2AF068E500D8B93D /* TraceState.h */,
+				8260831C2AF068E500D8B93D /* DebugTraceOutput.cpp */,
+				8260831D2AF068E500D8B93D /* LocalStorageTraceOutput.cpp */,
+				8260831E2AF068E500D8B93D /* DebugTraceOutput.h */,
+				8260831F2AF068E500D8B93D /* TraceState.cpp */,
+				826083202AF068E500D8B93D /* LocalStorageTraceOutput.h */,
+			);
+			path = Trace;
+			sourceTree = "<group>";
+		};
+		826083212AF068E500D8B93D /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				826083222AF068E500D8B93D /* LocalStorage.cpp */,
+				826083232AF068E500D8B93D /* LocalStorage.h */,
+				826083242AF068E500D8B93D /* Platform.cpp */,
+				826083292AF068E500D8B93D /* Platform.h */,
+			);
+			path = Platform;
+			sourceTree = "<group>";
+		};
+		8260832A2AF068E500D8B93D /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				8260832B2AF068E500D8B93D /* ApiHelpers.cpp */,
+				8260832C2AF068E500D8B93D /* HandleTable.h */,
+				8260832D2AF068E500D8B93D /* TokenExpiredHandler.cpp */,
+				8260832E2AF068E500D8B93D /* TokenRefreshedHandler.h */,
+				8260832F2AF068E500D8B93D /* PFCoreGlobalState.h */,
+				826083302AF068E500D8B93D /* Entity.cpp */,
+				826083312AF068E500D8B93D /* PFCoreGlobalState.cpp */,
+				826083322AF068E500D8B93D /* HttpClient.h */,
+				826083332AF068E500D8B93D /* TokenExpiredHandler.h */,
+				826083342AF068E500D8B93D /* Entity.h */,
+				826083352AF068E500D8B93D /* EntityToken.cpp */,
+				826083362AF068E500D8B93D /* HttpClient.cpp */,
+				826083372AF068E500D8B93D /* EntityToken.h */,
+				826083382AF068E500D8B93D /* ServiceConfig.h */,
+				826083392AF068E500D8B93D /* TokenRefreshedHandler.cpp */,
+				8260833A2AF068E500D8B93D /* ServiceConfig.cpp */,
+				8260833B2AF068E500D8B93D /* ApiHelpers.h */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		8260833C2AF068E500D8B93D /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				8260833E2AF068E500D8B93D /* PFEventPipeline.cpp */,
+				8260833F2AF068E500D8B93D /* PFCore.cpp */,
+				826083412AF068E500D8B93D /* PFPlatform.cpp */,
+				826083422AF068E500D8B93D /* PFEntity.cpp */,
+				826083432AF068E500D8B93D /* PFHttpConfig.cpp */,
+				826083442AF068E500D8B93D /* PFServiceConfig.cpp */,
+				826083452AF068E500D8B93D /* PFTrace.cpp */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
+		826083462AF068E500D8B93D /* EventPipeline */ = {
+			isa = PBXGroup;
+			children = (
+				826083472AF068E500D8B93D /* EventPipeline.cpp */,
+				826083482AF068E500D8B93D /* EventPipelineTypes.h */,
+				826083492AF068E500D8B93D /* EventPipeline.h */,
+				8260834A2AF068E500D8B93D /* EventPipelineTypes.cpp */,
+			);
+			path = EventPipeline;
+			sourceTree = "<group>";
+		};
+		8260834C2AF068E500D8B93D /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				8260834F2AF068E500D8B93D /* GetEntityAsyncProvider.h */,
+				826083502AF068E500D8B93D /* LoginContext.cpp */,
+				826083512AF068E500D8B93D /* CombinedLoginResult.h */,
+				826083522AF068E500D8B93D /* LoginContext.h */,
+				826083532AF068E500D8B93D /* CombinedLoginResult.cpp */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		826083992AF06C5B00D8B93D /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				8260839A2AF06C5B00D8B93D /* Generated */,
+			);
+			name = Include;
+			path = ../../Source/PlayFabCore/Include;
+			sourceTree = "<group>";
+		};
+		8260839A2AF06C5B00D8B93D /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				8260839B2AF06C5B00D8B93D /* playfab */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		8260839B2AF06C5B00D8B93D /* playfab */ = {
+			isa = PBXGroup;
+			children = (
+				8260839C2AF06C5B00D8B93D /* core */,
+			);
+			path = playfab;
+			sourceTree = "<group>";
+		};
+		8260839C2AF06C5B00D8B93D /* core */ = {
+			isa = PBXGroup;
+			children = (
+				826083A22AF06C5B00D8B93D /* cpp */,
+				8260839D2AF06C5B00D8B93D /* PFTypes.h */,
+				8260839E2AF06C5B00D8B93D /* PFEvents.h */,
+				826083A02AF06C5B00D8B93D /* PFAuthentication.h */,
+				826083A12AF06C5B00D8B93D /* PFAuthenticationTypes.h */,
+				826083A72AF06C5B00D8B93D /* PFEventsTypes.h */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		826083A22AF06C5B00D8B93D /* cpp */ = {
+			isa = PBXGroup;
+			children = (
+				826083A32AF06C5B00D8B93D /* TypeWrappers.h */,
+				826083A42AF06C5B00D8B93D /* EventsTypeWrappers.h */,
+				826083A52AF06C5B00D8B93D /* AuthenticationTypeWrappers.h */,
+			);
+			path = cpp;
+			sourceTree = "<group>";
+		};
+		826083EB2AF06CB400D8B93D /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				826083EC2AF06CB400D8B93D /* Generated */,
+			);
+			name = Source;
+			path = ../../Source/PlayFabCore/Source;
+			sourceTree = "<group>";
+		};
+		826083EC2AF06CB400D8B93D /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				826083ED2AF06CB400D8B93D /* PFEvents.cpp */,
+				826083EE2AF06CB400D8B93D /* Types.cpp */,
+				826083EF2AF06CB400D8B93D /* AuthenticationTypes.h */,
+				826083F12AF06CB400D8B93D /* PFAuthentication.cpp */,
+				826083F22AF06CB400D8B93D /* Events.h */,
+				826083F42AF06CB400D8B93D /* EventsTypes.h */,
+				826083F52AF06CB400D8B93D /* Authentication.h */,
+				826083F62AF06CB400D8B93D /* AuthenticationTypes.cpp */,
+				826083F72AF06CB400D8B93D /* Events.cpp */,
+				826083F82AF06CB400D8B93D /* EventsTypes.cpp */,
+				826083F92AF06CB400D8B93D /* Authentication.cpp */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		826AE6D82AF1B45900DF9129 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				826AE6DC2AF1B45900DF9129 /* Generic */,
+			);
+			name = Platform;
+			path = ../../../Source/PlayFabCore/Source/Platform;
+			sourceTree = "<group>";
+		};
+		826AE6DC2AF1B45900DF9129 /* Generic */ = {
+			isa = PBXGroup;
+			children = (
+				826AE6DD2AF1B45900DF9129 /* LocalStorage_Generic.h */,
+				826AE6DE2AF1B45900DF9129 /* LocalStorage_Generic.cpp */,
+				826AE6DF2AF1B45900DF9129 /* Platform_Generic.cpp */,
+			);
+			path = Generic;
+			sourceTree = "<group>";
+		};
+		8279657B2AF30B1400477203 /* PlayFabCore.Apple */ = {
+			isa = PBXGroup;
+			children = (
+				8279657C2AF30B2000477203 /* Source */,
+			);
+			name = PlayFabCore.Apple;
+			sourceTree = "<group>";
+		};
+		8279657C2AF30B2000477203 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				826AE6D82AF1B45900DF9129 /* Platform */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		8286B1AE2B73FD26009A4677 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8286B1BB2B73FD26009A4677 /* libSSL.a */,
+				8286B1BD2B73FD26009A4677 /* libSSL.a */,
+				8286B1BF2B73FD26009A4677 /* libHttpClient.a */,
+				8286B1C12B73FD26009A4677 /* libHttpClient.a */,
+				8286B1C32B73FD26009A4677 /* libHttpClient_NOWEBSOCKETS.a */,
+				8286B1C52B73FD26009A4677 /* libHttpClient_NOWEBSOCKETS.a */,
+				8286B1C72B73FD26009A4677 /* HttpClient.framework */,
+				8286B1C92B73FD26009A4677 /* HttpClient.framework */,
+				8286B1CB2B73FD26009A4677 /* NOWEBSOCKETS/HttpClient.framework */,
+				8286B1CD2B73FD26009A4677 /* NOWEBSOCKETS/HttpClient.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8236DDD02B5AEA1700FFA328 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8236DDD12B5AEA1700FFA328 /* AuthenticationTypes.h in Headers */,
+				8236DDD22B5AEA1700FFA328 /* TypeWrapperHelpers.h in Headers */,
+				8236DDD32B5AEA1700FFA328 /* Authentication.h in Headers */,
+				8236DDD42B5AEA1700FFA328 /* EventsTypes.h in Headers */,
+				8236DDD52B5AEA1700FFA328 /* TypeWrappers.h in Headers */,
+				8236DDD62B5AEA1700FFA328 /* PFPlatform.h in Headers */,
+				8236DDD72B5AEA1700FFA328 /* PFEntity.h in Headers */,
+				8236DDD82B5AEA1700FFA328 /* PFAuthenticationTypes.h in Headers */,
+				8236DDD92B5AEA1700FFA328 /* PFPal.h in Headers */,
+				8236DDDA2B5AEA1700FFA328 /* HttpClient.h in Headers */,
+				8236DDDB2B5AEA1700FFA328 /* PFHttpClient.h in Headers */,
+				8236DDDC2B5AEA1700FFA328 /* PFAuthentication.h in Headers */,
+				8236DDDD2B5AEA1700FFA328 /* PFEventPipeline.h in Headers */,
+				8236DDDE2B5AEA1700FFA328 /* EventPipelineTypes.h in Headers */,
+				8236DDDF2B5AEA1700FFA328 /* DebugTraceOutput.h in Headers */,
+				8236DDE02B5AEA1700FFA328 /* PlayFabException.h in Headers */,
+				8236DDE12B5AEA1700FFA328 /* PFServiceConfig.h in Headers */,
+				8236DDE22B5AEA1700FFA328 /* TokenRefreshedHandler.h in Headers */,
+				8236DDE32B5AEA1700FFA328 /* PFMock.h in Headers */,
+				8236DDE42B5AEA1700FFA328 /* LocalStorage_Generic.h in Headers */,
+				8236DDE52B5AEA1700FFA328 /* LocalStorage.h in Headers */,
+				8236DDE62B5AEA1700FFA328 /* Entity.h in Headers */,
+				8236DDE72B5AEA1700FFA328 /* EventsTypeWrappers.h in Headers */,
+				8236DDE82B5AEA1700FFA328 /* GetEntityAsyncProvider.h in Headers */,
+				8236DDE92B5AEA1700FFA328 /* PFErrors.h in Headers */,
+				8236DDEA2B5AEA1700FFA328 /* CombinedLoginResult.h in Headers */,
+				8236DDEB2B5AEA1700FFA328 /* EventPipeline.h in Headers */,
+				8236DDEC2B5AEA1700FFA328 /* ServiceConfig.h in Headers */,
+				8236DDED2B5AEA1700FFA328 /* PFTypes.h in Headers */,
+				8236DDEE2B5AEA1700FFA328 /* Platform.h in Headers */,
+				8236DDEF2B5AEA1700FFA328 /* ServiceConfig.h in Headers */,
+				8236DDF02B5AEA1700FFA328 /* Events.h in Headers */,
+				8236DDF12B5AEA1700FFA328 /* PFHCPal.h in Headers */,
+				8236DDF22B5AEA1700FFA328 /* PFEvents.h in Headers */,
+				8236DDF32B5AEA1700FFA328 /* PFHCTrace.h in Headers */,
+				8236DDF42B5AEA1700FFA328 /* PFCoreGlobalState.h in Headers */,
+				8236DDF52B5AEA1700FFA328 /* HandleTable.h in Headers */,
+				8236DDF62B5AEA1700FFA328 /* LoginContext.h in Headers */,
+				8236DDF72B5AEA1700FFA328 /* EntityToken.h in Headers */,
+				8236DDF82B5AEA1700FFA328 /* CacheId.h in Headers */,
+				8236DDF92B5AEA1700FFA328 /* TokenExpiredHandler.h in Headers */,
+				8236DDFA2B5AEA1700FFA328 /* stdafx.h in Headers */,
+				8236DDFB2B5AEA1700FFA328 /* LocalStorageTraceOutput.h in Headers */,
+				8236DDFC2B5AEA1700FFA328 /* PFHttpProvider.h in Headers */,
+				8236DDFD2B5AEA1700FFA328 /* TraceState.h in Headers */,
+				8236DDFE2B5AEA1700FFA328 /* PFTrace.h in Headers */,
+				8236DDFF2B5AEA1700FFA328 /* AuthenticationTypeWrappers.h in Headers */,
+				8236DE002B5AEA1700FFA328 /* EventPipeline.h in Headers */,
+				8236DE012B5AEA1700FFA328 /* PFCore.h in Headers */,
+				8236DE022B5AEA1700FFA328 /* PFHCConfig.h in Headers */,
+				8236DE032B5AEA1700FFA328 /* ApiHelpers.h in Headers */,
+				8236DE042B5AEA1700FFA328 /* PFHttpConfig.h in Headers */,
+				8236DE052B5AEA1700FFA328 /* PFEventsTypes.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		826080262AEAFFCF00D8B93D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8260843D2AF06CB400D8B93D /* AuthenticationTypes.h in Headers */,
+				826082F52AF0610F00D8B93D /* TypeWrapperHelpers.h in Headers */,
+				826084432AF06CB400D8B93D /* Authentication.h in Headers */,
+				826084422AF06CB400D8B93D /* EventsTypes.h in Headers */,
+				826083CD2AF06C5B00D8B93D /* TypeWrappers.h in Headers */,
+				826082F32AF0610F00D8B93D /* PFPlatform.h in Headers */,
+				826082E82AF0610F00D8B93D /* PFEntity.h in Headers */,
+				826083CC2AF06C5B00D8B93D /* PFAuthenticationTypes.h in Headers */,
+				826082F02AF0610F00D8B93D /* PFPal.h in Headers */,
+				8260837B2AF068E500D8B93D /* HttpClient.h in Headers */,
+				826082EC2AF0610F00D8B93D /* PFHttpClient.h in Headers */,
+				826083CB2AF06C5B00D8B93D /* PFAuthentication.h in Headers */,
+				826082F12AF0610F00D8B93D /* PFEventPipeline.h in Headers */,
+				8260838F2AF068E500D8B93D /* EventPipelineTypes.h in Headers */,
+				8260836A2AF068E500D8B93D /* DebugTraceOutput.h in Headers */,
+				826082F72AF0610F00D8B93D /* PlayFabException.h in Headers */,
+				826082F22AF0610F00D8B93D /* PFServiceConfig.h in Headers */,
+				826083772AF068E500D8B93D /* TokenRefreshedHandler.h in Headers */,
+				826082ED2AF0610F00D8B93D /* PFMock.h in Headers */,
+				826AE7272AF1B45900DF9129 /* LocalStorage_Generic.h in Headers */,
+				8260836E2AF068E500D8B93D /* LocalStorage.h in Headers */,
+				8260837D2AF068E500D8B93D /* Entity.h in Headers */,
+				826083CE2AF06C5B00D8B93D /* EventsTypeWrappers.h in Headers */,
+				826083942AF068E500D8B93D /* GetEntityAsyncProvider.h in Headers */,
+				826082E22AF0610F00D8B93D /* PFErrors.h in Headers */,
+				826083962AF068E500D8B93D /* CombinedLoginResult.h in Headers */,
+				826083902AF068E500D8B93D /* EventPipeline.h in Headers */,
+				826083812AF068E500D8B93D /* ServiceConfig.h in Headers */,
+				826083C82AF06C5B00D8B93D /* PFTypes.h in Headers */,
+				826083732AF068E500D8B93D /* Platform.h in Headers */,
+				826082F82AF0610F00D8B93D /* ServiceConfig.h in Headers */,
+				826084402AF06CB400D8B93D /* Events.h in Headers */,
+				826082EF2AF0610F00D8B93D /* PFHCPal.h in Headers */,
+				826083C92AF06C5B00D8B93D /* PFEvents.h in Headers */,
+				826082EA2AF0610F00D8B93D /* PFHCTrace.h in Headers */,
+				826083782AF068E500D8B93D /* PFCoreGlobalState.h in Headers */,
+				826083752AF068E500D8B93D /* HandleTable.h in Headers */,
+				826083972AF068E500D8B93D /* LoginContext.h in Headers */,
+				826083802AF068E500D8B93D /* EntityToken.h in Headers */,
+				8260835A2AF068E500D8B93D /* CacheId.h in Headers */,
+				8260837C2AF068E500D8B93D /* TokenExpiredHandler.h in Headers */,
+				826083662AF068E500D8B93D /* stdafx.h in Headers */,
+				8260836C2AF068E500D8B93D /* LocalStorageTraceOutput.h in Headers */,
+				826082EE2AF0610F00D8B93D /* PFHttpProvider.h in Headers */,
+				826083672AF068E500D8B93D /* TraceState.h in Headers */,
+				826082FA2AF0610F00D8B93D /* PFTrace.h in Headers */,
+				826083CF2AF06C5B00D8B93D /* AuthenticationTypeWrappers.h in Headers */,
+				826082F92AF0610F00D8B93D /* EventPipeline.h in Headers */,
+				826082FB2AF0610F00D8B93D /* PFCore.h in Headers */,
+				826082EB2AF0610F00D8B93D /* PFHCConfig.h in Headers */,
+				826083842AF068E500D8B93D /* ApiHelpers.h in Headers */,
+				826082F42AF0610F00D8B93D /* PFHttpConfig.h in Headers */,
+				826083D12AF06C5B00D8B93D /* PFEventsTypes.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8236DDCF2B5AEA1700FFA328 /* PlayFabCore_macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8236DE332B5AEA1700FFA328 /* Build configuration list for PBXNativeTarget "PlayFabCore_macOS" */;
+			buildPhases = (
+				8236DDD02B5AEA1700FFA328 /* Headers */,
+				8236DE062B5AEA1700FFA328 /* Sources */,
+				8236DE2D2B5AEA1700FFA328 /* Frameworks */,
+				8236DE322B5AEA1700FFA328 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8286B1CF2B73FD2E009A4677 /* PBXTargetDependency */,
+			);
+			name = PlayFabCore_macOS;
+			productName = PlayFabCore.iOS;
+			productReference = 8236DE362B5AEA1700FFA328 /* PlayFabCore_macOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		8260802A2AEAFFCF00D8B93D /* PlayFabCore_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 826080322AEAFFCF00D8B93D /* Build configuration list for PBXNativeTarget "PlayFabCore_iOS" */;
+			buildPhases = (
+				826080262AEAFFCF00D8B93D /* Headers */,
+				826080272AEAFFCF00D8B93D /* Sources */,
+				826080282AEAFFCF00D8B93D /* Frameworks */,
+				826080292AEAFFCF00D8B93D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8206F0542B740C7300451339 /* PBXTargetDependency */,
+			);
+			name = PlayFabCore_iOS;
+			productName = PlayFabCore.iOS;
+			productReference = 8260802B2AEAFFCF00D8B93D /* PlayFabCore_iOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		826080222AEAFFCF00D8B93D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					8260802A2AEAFFCF00D8B93D = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 826080252AEAFFCF00D8B93D /* Build configuration list for PBXProject "PlayFabCore.Apple" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 826080212AEAFFCF00D8B93D;
+			productRefGroup = 8260802C2AEAFFCF00D8B93D /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 8286B1AE2B73FD26009A4677 /* Products */;
+					ProjectRef = 8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				8260802A2AEAFFCF00D8B93D /* PlayFabCore_iOS */,
+				8236DDCF2B5AEA1700FFA328 /* PlayFabCore_macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8286B1BB2B73FD26009A4677 /* libSSL.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSL.a;
+			remoteRef = 8286B1BA2B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1BD2B73FD26009A4677 /* libSSL.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSSL.a;
+			remoteRef = 8286B1BC2B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1BF2B73FD26009A4677 /* libHttpClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient.a;
+			remoteRef = 8286B1BE2B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1C12B73FD26009A4677 /* libHttpClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient.a;
+			remoteRef = 8286B1C02B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1C32B73FD26009A4677 /* libHttpClient_NOWEBSOCKETS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient_NOWEBSOCKETS.a;
+			remoteRef = 8286B1C22B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1C52B73FD26009A4677 /* libHttpClient_NOWEBSOCKETS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHttpClient_NOWEBSOCKETS.a;
+			remoteRef = 8286B1C42B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1C72B73FD26009A4677 /* HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HttpClient.framework;
+			remoteRef = 8286B1C62B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1C92B73FD26009A4677 /* HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HttpClient.framework;
+			remoteRef = 8286B1C82B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1CB2B73FD26009A4677 /* NOWEBSOCKETS/HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = NOWEBSOCKETS/HttpClient.framework;
+			remoteRef = 8286B1CA2B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8286B1CD2B73FD26009A4677 /* NOWEBSOCKETS/HttpClient.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = NOWEBSOCKETS/HttpClient.framework;
+			remoteRef = 8286B1CC2B73FD26009A4677 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8236DE322B5AEA1700FFA328 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		826080292AEAFFCF00D8B93D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8236DE062B5AEA1700FFA328 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8236DE072B5AEA1700FFA328 /* PFCore.cpp in Sources */,
+				8236DE082B5AEA1700FFA328 /* PFServiceConfig.cpp in Sources */,
+				8236DE092B5AEA1700FFA328 /* Authentication.cpp in Sources */,
+				8236DE0A2B5AEA1700FFA328 /* TraceState.cpp in Sources */,
+				8236DE0B2B5AEA1700FFA328 /* PFHCTrace.cpp in Sources */,
+				8236DE0C2B5AEA1700FFA328 /* Types.cpp in Sources */,
+				8236DE0D2B5AEA1700FFA328 /* EventPipeline.cpp in Sources */,
+				8236DE0E2B5AEA1700FFA328 /* PFEvents.cpp in Sources */,
+				8236DE0F2B5AEA1700FFA328 /* LoginContext.cpp in Sources */,
+				8236DE102B5AEA1700FFA328 /* PFAuthentication.cpp in Sources */,
+				8236DE112B5AEA1700FFA328 /* LocalStorage_Generic.cpp in Sources */,
+				8236DE122B5AEA1700FFA328 /* AuthenticationTypes.cpp in Sources */,
+				8236DE132B5AEA1700FFA328 /* TokenRefreshedHandler.cpp in Sources */,
+				8236DE142B5AEA1700FFA328 /* DebugTraceOutput.cpp in Sources */,
+				8236DE152B5AEA1700FFA328 /* PFPlatform.cpp in Sources */,
+				8236DE162B5AEA1700FFA328 /* PFTrace.cpp in Sources */,
+				8236DE172B5AEA1700FFA328 /* LocalStorageTraceOutput.cpp in Sources */,
+				8236DE182B5AEA1700FFA328 /* Events.cpp in Sources */,
+				8236DE192B5AEA1700FFA328 /* TokenExpiredHandler.cpp in Sources */,
+				8236DE1A2B5AEA1700FFA328 /* EntityToken.cpp in Sources */,
+				8236DE1B2B5AEA1700FFA328 /* CombinedLoginResult.cpp in Sources */,
+				8236DE1C2B5AEA1700FFA328 /* PFMock.cpp in Sources */,
+				8236DE1D2B5AEA1700FFA328 /* ApiHelpers.cpp in Sources */,
+				8236DE1E2B5AEA1700FFA328 /* EventPipelineTypes.cpp in Sources */,
+				8236DE1F2B5AEA1700FFA328 /* PFHttpConfig.cpp in Sources */,
+				8236DE202B5AEA1700FFA328 /* ServiceConfig.cpp in Sources */,
+				8236DE212B5AEA1700FFA328 /* PFHttpProvider.cpp in Sources */,
+				8236DE222B5AEA1700FFA328 /* LocalStorage.cpp in Sources */,
+				8236DE232B5AEA1700FFA328 /* HttpClient.cpp in Sources */,
+				8236DE242B5AEA1700FFA328 /* Platform.cpp in Sources */,
+				8236DE252B5AEA1700FFA328 /* stdafx.cpp in Sources */,
+				8236DE262B5AEA1700FFA328 /* PFCoreGlobalState.cpp in Sources */,
+				8236DE272B5AEA1700FFA328 /* EventsTypes.cpp in Sources */,
+				8236DE282B5AEA1700FFA328 /* Platform_Generic.cpp in Sources */,
+				8236DE292B5AEA1700FFA328 /* PFEntity.cpp in Sources */,
+				8236DE2A2B5AEA1700FFA328 /* PFEventPipeline.cpp in Sources */,
+				8236DE2B2B5AEA1700FFA328 /* Entity.cpp in Sources */,
+				8236DE2C2B5AEA1700FFA328 /* PFHttpClient.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		826080272AEAFFCF00D8B93D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				826083872AF068E500D8B93D /* PFCore.cpp in Sources */,
+				8260838C2AF068E500D8B93D /* PFServiceConfig.cpp in Sources */,
+				826084472AF06CB400D8B93D /* Authentication.cpp in Sources */,
+				8260836B2AF068E500D8B93D /* TraceState.cpp in Sources */,
+				826083642AF068E500D8B93D /* PFHCTrace.cpp in Sources */,
+				8260843C2AF06CB400D8B93D /* Types.cpp in Sources */,
+				8260838E2AF068E500D8B93D /* EventPipeline.cpp in Sources */,
+				8260843B2AF06CB400D8B93D /* PFEvents.cpp in Sources */,
+				826083952AF068E500D8B93D /* LoginContext.cpp in Sources */,
+				8260843F2AF06CB400D8B93D /* PFAuthentication.cpp in Sources */,
+				826AE7282AF1B45900DF9129 /* LocalStorage_Generic.cpp in Sources */,
+				826084442AF06CB400D8B93D /* AuthenticationTypes.cpp in Sources */,
+				826083822AF068E500D8B93D /* TokenRefreshedHandler.cpp in Sources */,
+				826083682AF068E500D8B93D /* DebugTraceOutput.cpp in Sources */,
+				826083892AF068E500D8B93D /* PFPlatform.cpp in Sources */,
+				8260838D2AF068E500D8B93D /* PFTrace.cpp in Sources */,
+				826083692AF068E500D8B93D /* LocalStorageTraceOutput.cpp in Sources */,
+				826084452AF06CB400D8B93D /* Events.cpp in Sources */,
+				826083762AF068E500D8B93D /* TokenExpiredHandler.cpp in Sources */,
+				8260837E2AF068E500D8B93D /* EntityToken.cpp in Sources */,
+				826083982AF068E500D8B93D /* CombinedLoginResult.cpp in Sources */,
+				826083632AF068E500D8B93D /* PFMock.cpp in Sources */,
+				826083742AF068E500D8B93D /* ApiHelpers.cpp in Sources */,
+				826083912AF068E500D8B93D /* EventPipelineTypes.cpp in Sources */,
+				8260838B2AF068E500D8B93D /* PFHttpConfig.cpp in Sources */,
+				826083832AF068E500D8B93D /* ServiceConfig.cpp in Sources */,
+				826083652AF068E500D8B93D /* PFHttpProvider.cpp in Sources */,
+				8260836D2AF068E500D8B93D /* LocalStorage.cpp in Sources */,
+				8260837F2AF068E500D8B93D /* HttpClient.cpp in Sources */,
+				8260836F2AF068E500D8B93D /* Platform.cpp in Sources */,
+				826083922AF068E500D8B93D /* stdafx.cpp in Sources */,
+				8260837A2AF068E500D8B93D /* PFCoreGlobalState.cpp in Sources */,
+				826084462AF06CB400D8B93D /* EventsTypes.cpp in Sources */,
+				826AE7292AF1B45900DF9129 /* Platform_Generic.cpp in Sources */,
+				8260838A2AF068E500D8B93D /* PFEntity.cpp in Sources */,
+				826083862AF068E500D8B93D /* PFEventPipeline.cpp in Sources */,
+				826083792AF068E500D8B93D /* Entity.cpp in Sources */,
+				826083612AF068E500D8B93D /* PFHttpClient.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8206F0542B740C7300451339 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libHttpClientFramework_iOS;
+			targetProxy = 8206F0532B740C7300451339 /* PBXContainerItemProxy */;
+		};
+		8286B1CF2B73FD2E009A4677 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libHttpClientFramework_macOS;
+			targetProxy = 8286B1CE2B73FD2E009A4677 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8236DE342B5AEA1700FFA328 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Source",
+					"$(SRCROOT)/../../Source/PlayFabCore/Source/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/Generated",
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "Microsoft.PlayFabCore-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		8236DE352B5AEA1700FFA328 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "HC_LINK_STATIC=1";
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Source",
+					"$(SRCROOT)/../../Source/PlayFabCore/Source/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/Generated",
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "Microsoft.PlayFabCore-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		826080302AEAFFCF00D8B93D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"HC_LINK_STATIC=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fstack-protector-strong",
+					"-fPIC",
+					"-Wformat",
+					"-Wformat-security",
+					"-Werror=format-security",
+				);
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		826080312AEAFFCF00D8B93D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "HC_LINK_STATIC=1";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-fstack-protector-strong",
+					"-fPIC",
+					"-Wformat",
+					"-Wformat-security",
+					"-Werror=format-security",
+				);
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		826080332AEAFFCF00D8B93D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Source",
+					"$(SRCROOT)/../../Source/PlayFabCore/Source/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/Generated",
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "Microsoft.PlayFabCore-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		826080342AEAFFCF00D8B93D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = UBF8T346G9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "HC_LINK_STATIC=1";
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../libHttpClient/Include",
+					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source",
+					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Source",
+					"$(SRCROOT)/../../Source/PlayFabCore/Source/Generated",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include",
+					"$(SRCROOT)/../../Source/PlayFabCore/Include/Generated",
+				);
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "Microsoft.PlayFabCore-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8236DE332B5AEA1700FFA328 /* Build configuration list for PBXNativeTarget "PlayFabCore_macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8236DE342B5AEA1700FFA328 /* Debug */,
+				8236DE352B5AEA1700FFA328 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		826080252AEAFFCF00D8B93D /* Build configuration list for PBXProject "PlayFabCore.Apple" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				826080302AEAFFCF00D8B93D /* Debug */,
+				826080312AEAFFCF00D8B93D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		826080322AEAFFCF00D8B93D /* Build configuration list for PBXNativeTarget "PlayFabCore_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				826080332AEAFFCF00D8B93D /* Debug */,
+				826080342AEAFFCF00D8B93D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 826080222AEAFFCF00D8B93D /* Project object */;
+}

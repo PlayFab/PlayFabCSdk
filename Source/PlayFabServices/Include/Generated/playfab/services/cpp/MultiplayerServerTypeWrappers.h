@@ -1004,7 +1004,8 @@ public:
     PFMultiplayerServerListQosServersForTitleRequestWrapper(const PFMultiplayerServerListQosServersForTitleRequest& model) :
         ModelWrapper<PFMultiplayerServerListQosServersForTitleRequest, Alloc>{ model },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
-        m_includeAllRegions{ model.includeAllRegions ? std::optional<bool>{ *model.includeAllRegions } : std::nullopt }
+        m_includeAllRegions{ model.includeAllRegions ? std::optional<bool>{ *model.includeAllRegions } : std::nullopt },
+        m_routingPreference{ SafeString(model.routingPreference) }
     {
         SetModelPointers();
     }
@@ -1034,6 +1035,7 @@ public:
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_includeAllRegions, rhs.m_includeAllRegions);
+        swap(lhs.m_routingPreference, rhs.m_routingPreference);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
@@ -1051,15 +1053,23 @@ public:
         this->m_model.includeAllRegions = m_includeAllRegions ? m_includeAllRegions.operator->() : nullptr;
     }
 
+    void SetRoutingPreference(String value)
+    {
+        m_routingPreference = std::move(value);
+        this->m_model.routingPreference =  m_routingPreference.empty() ? nullptr : m_routingPreference.data();
+    }
+
 private:
     void SetModelPointers()
     {
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.includeAllRegions = m_includeAllRegions ? m_includeAllRegions.operator->() : nullptr;
+        this->m_model.routingPreference = m_routingPreference.empty() ? nullptr : m_routingPreference.data();
     }
 
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<bool> m_includeAllRegions;
+    String m_routingPreference;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>

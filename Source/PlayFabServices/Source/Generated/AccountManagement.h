@@ -34,6 +34,7 @@ public:
     static AsyncOp<GetPlayFabIDsFromNintendoServiceAccountIdsResult> ClientGetPlayFabIDsFromNintendoServiceAccountIds(Entity const& entity, const GetPlayFabIDsFromNintendoServiceAccountIdsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromNintendoSwitchDeviceIdsResult> ClientGetPlayFabIDsFromNintendoSwitchDeviceIds(Entity const& entity, const GetPlayFabIDsFromNintendoSwitchDeviceIdsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromPSNAccountIDsResult> ClientGetPlayFabIDsFromPSNAccountIDs(Entity const& entity, const GetPlayFabIDsFromPSNAccountIDsRequest& request, RunContext rc);
+    static AsyncOp<GetPlayFabIDsFromPSNOnlineIDsResult> ClientGetPlayFabIDsFromPSNOnlineIDs(Entity const& entity, const GetPlayFabIDsFromPSNOnlineIDsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromSteamIDsResult> ClientGetPlayFabIDsFromSteamIDs(Entity const& entity, const GetPlayFabIDsFromSteamIDsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromTwitchIDsResult> ClientGetPlayFabIDsFromTwitchIDs(Entity const& entity, const GetPlayFabIDsFromTwitchIDsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromXboxLiveIDsResult> ClientGetPlayFabIDsFromXboxLiveIDs(Entity const& entity, const GetPlayFabIDsFromXboxLiveIDsRequest& request, RunContext rc);
@@ -85,6 +86,7 @@ public:
     static AsyncOp<GetPlayFabIDsFromNintendoServiceAccountIdsResult> ServerGetPlayFabIDsFromNintendoServiceAccountIds(Entity const& entity, const GetPlayFabIDsFromNintendoServiceAccountIdsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromNintendoSwitchDeviceIdsResult> ServerGetPlayFabIDsFromNintendoSwitchDeviceIds(Entity const& entity, const GetPlayFabIDsFromNintendoSwitchDeviceIdsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromPSNAccountIDsResult> ServerGetPlayFabIDsFromPSNAccountIDs(Entity const& entity, const GetPlayFabIDsFromPSNAccountIDsRequest& request, RunContext rc);
+    static AsyncOp<GetPlayFabIDsFromPSNOnlineIDsResult> ServerGetPlayFabIDsFromPSNOnlineIDs(Entity const& entity, const GetPlayFabIDsFromPSNOnlineIDsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromSteamIDsResult> ServerGetPlayFabIDsFromSteamIDs(Entity const& entity, const GetPlayFabIDsFromSteamIDsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromTwitchIDsResult> ServerGetPlayFabIDsFromTwitchIDs(Entity const& entity, const GetPlayFabIDsFromTwitchIDsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromXboxLiveIDsResult> ServerGetPlayFabIDsFromXboxLiveIDs(Entity const& entity, const GetPlayFabIDsFromXboxLiveIDsRequest& request, RunContext rc);

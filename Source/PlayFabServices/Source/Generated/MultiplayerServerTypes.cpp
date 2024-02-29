@@ -711,6 +711,7 @@ JsonValue ListQosServersForTitleRequest::ToJson(const PFMultiplayerServerListQos
     JsonValue output{ rapidjson::kObjectType };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "IncludeAllRegions", input.includeAllRegions);
+    JsonUtils::ObjectAddMember(output, "RoutingPreference", input.routingPreference);
     return output;
 }
 

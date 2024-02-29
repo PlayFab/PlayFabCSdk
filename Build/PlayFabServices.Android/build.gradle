@@ -1,0 +1,138 @@
+apply plugin: "com.android.library"
+
+android {
+    compileSdk 34
+    ndkVersion "25.1.8937393"
+
+    defaultConfig {
+        targetSdkVersion 34
+        minSdkVersion 21
+
+        externalNativeBuild {
+            cmake {
+                // externalNativeBuild normally skips static
+                // lib targets. This forces it to build.
+                targets "PlayFabServices.Android"
+                arguments "-DANDROID_TOOLCHAIN=clang++"
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            version "3.18.1"
+            path "CMakeLists.txt"
+            buildStagingDirectory "${project.buildDir.getParentFile().getAbsolutePath()}/.cxx/${project.name}"
+        }
+    }
+
+    flavorDimensions "ABI"
+
+    productFlavors {
+        full {
+            dimension "ABI"
+            externalNativeBuild {
+                cmake {
+                    abiFilters "arm64-v8a", "x86_64"
+                }
+            }
+        }
+        arm8 {
+            dimension "ABI"
+            externalNativeBuild {
+                cmake {
+                    abiFilters "arm64-v8a"
+                }
+            }
+        }
+        x86_64 {
+            dimension "ABI"
+            externalNativeBuild {
+                cmake {
+                    abiFilters "x86_64"
+                }
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility=JavaVersion.VERSION_1_8
+        targetCompatibility=JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android.txt")
+        }
+    }
+
+    task archivePlayFabSDKReleasePackage(type: Copy) {
+        println("Generating PlayFab.C SDK archive...")
+
+        // Include the libHttpClient `.so`
+        from('../../../libHttpClient/Binaries/Android/libHttpClient.Android/intermediates/cmake/release/obj') {
+            include 'arm64-v8a/libHttpClient.Android.so'
+            include 'x86_64/libHttpClient.Android.so'
+            into 'bin'
+        }
+
+        // Include the PlayFabServices `.so`
+        from('../../Out/Android/PlayFabServices.Android/intermediates/cmake/fullRelease/obj') {
+            include '*/libPlayFabServices.Android.so'
+            into 'bin'
+        }
+
+        // Include the PlayFabCore `.so`
+        from('../../Out/Android/PlayFabCore.Android/intermediates/cmake/fullRelease/obj') {
+            include '*/libPlayFabCore.Android.so'
+            into 'bin'
+        }
+
+        // Include the PlayFabServices `.aar`
+        from('../../Out/Android/PlayFabServices.Android/outputs/aar') {
+            include 'PlayFabServices.Android-full-release.aar'
+            into 'aar'
+        }
+
+        // Include the libHttpClient.Android `.aar`
+        from('../../../libHttpClient/Binaries/Android/libHttpClient.Android/outputs/aar') {
+            include 'libHttpClient.Android-release.aar'
+            into 'aar'
+        }
+
+        // Include the PlayFabServices header files
+        from('../../Source/PlayFabServices/Include/Generated/playfab/services') {
+            include '*.h'
+            into 'Include/playfab/services'
+        }
+
+        // Include the PlayFabCore header files
+        from('../../Source/PlayFabCore/Include/Generated/playfab/core') {
+            include '*.h'
+            into 'Include/playfab/core'
+        }
+        from('../../Source/PlayFabCore/Include/playfab/core') {
+            include '*.h'
+            into 'Include/playfab/core'
+        }
+        from('../../Source/PlayFabCore/Include/playfab/httpClient') {
+            include '*.h'
+            into 'Include/playfab/httpClient'
+        }
+
+        // Include the libHttpClient header files
+        from('../../../libHttpClient/Include') {
+            include '*.h'
+            include 'httpClient/**'
+            into 'Include'
+        }
+
+        // TODO: Update this archive name to standardize naming schemes
+        into '../../PlayFabServicesAndroidSDK'
+    }
+}
+
+// Put all the Gradle build files under the /Out directory
+def binariesDir = project.file("../../Out/Android/${project.name}").getAbsolutePath()
+project.buildDir(new File(binariesDir))

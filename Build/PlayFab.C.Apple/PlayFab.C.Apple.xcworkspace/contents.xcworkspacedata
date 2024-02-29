@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:../../Test/PlayFabServicesTestApp/Apple/PlayFabServicesTestApp.Apple/PlayFabServicesTestApp.Apple.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../PlayFabServices.Apple/PlayFabServices.Apple.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../PlayFabCore.Apple/PlayFabCore.Apple.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../PlayFabSharedInternal.Apple/PlayFabSharedInternal.Apple.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj">
+   </FileRef>
+</Workspace>

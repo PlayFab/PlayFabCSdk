@@ -13,7 +13,7 @@
 extern "C"
 {
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 /// <summary>
 /// Registers the Android device to receive push notifications
 /// </summary>
@@ -22,6 +22,7 @@ extern "C"
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Android.
 /// More information can be found on configuring your game for the Google Cloud Messaging service in
 /// the Google developer documentation, here: http://developer.android.com/google/gcm/client.html. The
 /// steps to configure and send Push Notifications is described in the PlayFab tutorials, here: https://docs.microsoft.com/gaming/playfab/features/engagement/push-notifications/quickstart.
@@ -59,7 +60,7 @@ PF_API PFPlatformSpecificClientRefreshPSNAuthTokenAsync(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_IOS
 /// <summary>
 /// Registers the iOS device to receive push notifications
 /// </summary>
@@ -68,6 +69,7 @@ PF_API PFPlatformSpecificClientRefreshPSNAuthTokenAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on iOS.
 /// The steps to configure and send Push Notifications is described in the PlayFab tutorials, here: https://docs.microsoft.com/gaming/playfab/features/engagement/push-notifications/quickstart.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -82,7 +84,7 @@ PF_API PFPlatformSpecificClientRegisterForIOSPushNotificationAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Awards the specified users the specified Steam achievements
 /// </summary>
@@ -91,7 +93,7 @@ PF_API PFPlatformSpecificClientRegisterForIOSPushNotificationAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFPlatformSpecificServerAwardSteamAchievementGetResultSize"/>
 /// and <see cref="PFPlatformSpecificServerAwardSteamAchievementGetResult"/> to get the result.
 /// </remarks>

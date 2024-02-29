@@ -14,7 +14,7 @@ HRESULT EventPipelineCreationHelper(
     PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
     PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
     void* handlerContext,
-    GlobalState& state,
+    PFCoreGlobalState& state,
     PFEventPipelineHandle* eventPipelineHandle
 ) noexcept
 {
@@ -45,6 +45,8 @@ HRESULT EventPipelineCreationHelper(
 
     uint32_t maxEvents, maxWaitTime, pollDelay;
     PFHCCompressionLevel compressionLevel;
+    bool retryOnDisconnect;
+    size_t bufferSize;
 
     if (eventPipelineType == PFEventPipelineType::PlayStream)
     {
@@ -57,8 +59,10 @@ HRESULT EventPipelineCreationHelper(
         maxEvents = !eventPipelineConfig || !eventPipelineConfig->maxEventsPerBatch ? PFTelemetryEventPipelineMaxEventsPerBatchDefault : *eventPipelineConfig->maxEventsPerBatch;
         maxWaitTime = !eventPipelineConfig || !eventPipelineConfig->maxWaitTimeInSeconds ? PFTelemetryEventPipelineMaxWaitTimeInSecondsDefault : *eventPipelineConfig->maxWaitTimeInSeconds;
         pollDelay = !eventPipelineConfig || !eventPipelineConfig->pollDelayInMs ? PFTelemetryEventPipelinePollDelayInMsDefault : *eventPipelineConfig->pollDelayInMs;
+        retryOnDisconnect = !eventPipelineConfig || !eventPipelineConfig->retryOnDisconnect ? PFTelemetryEventPipelineRetryOnDisconnectDefault : *eventPipelineConfig->retryOnDisconnect;
     }
 
+    bufferSize = !eventPipelineConfig || !eventPipelineConfig->bufferSize ? PFEventPipelineBufferSizeDefault : *eventPipelineConfig->bufferSize;
     compressionLevel = !eventPipelineConfig || !eventPipelineConfig->compressionLevel ? PFHCCompressionLevel::None : *eventPipelineConfig->compressionLevel;
 
     SharedPtr<EventPipeline> pipeline;
@@ -73,6 +77,8 @@ HRESULT EventPipelineCreationHelper(
             maxWaitTime,
             pollDelay,
             compressionLevel,
+            retryOnDisconnect,
+            bufferSize,
             batchUploadedEventHandler,
             batchFailedEventHandler,
             handlerContext
@@ -89,6 +95,8 @@ HRESULT EventPipelineCreationHelper(
             maxWaitTime,
             pollDelay,
             compressionLevel,
+            retryOnDisconnect,
+            bufferSize,
             batchUploadedEventHandler,
             batchFailedEventHandler,
             handlerContext
@@ -107,7 +115,7 @@ PF_API PFEventPipelineCreateTelemetryPipelineHandleWithKey(
     _Out_ PFEventPipelineHandle* eventPipelineHandle
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineCreateTelemetryPipelineHandleWithKey), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineCreateTelemetryPipelineHandleWithKey), [&](PFCoreGlobalState& state)
     {
         return EventPipelineCreationHelper(
             PFEventPipelineType::Telemetry,
@@ -133,7 +141,7 @@ PF_API PFEventPipelineCreateTelemetryPipelineHandleWithEntity(
     _Out_ PFEventPipelineHandle* eventPipelineHandle
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineCreateTelemetryPipelineHandleWithEntity), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineCreateTelemetryPipelineHandleWithEntity), [&](PFCoreGlobalState& state)
     {
         return EventPipelineCreationHelper(
             PFEventPipelineType::Telemetry,
@@ -159,7 +167,7 @@ PF_API PFEventPipelineCreatePlayStreamPipelineHandle(
     _Out_ PFEventPipelineHandle* eventPipelineHandle
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineCreatePlayStreamPipelineHandle), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineCreatePlayStreamPipelineHandle), [&](PFCoreGlobalState& state)
     {
         return EventPipelineCreationHelper(
             PFEventPipelineType::PlayStream,
@@ -181,7 +189,7 @@ PF_API PFEventPipelineDuplicateHandle(
     _In_ PFEventPipelineHandle* duplicatedEventPipelineHandle
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineDuplicateHandle), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineDuplicateHandle), [&](PFCoreGlobalState& state)
     {
         RETURN_HR_INVALIDARG_IF_NULL(duplicatedEventPipelineHandle);
 
@@ -195,7 +203,7 @@ PF_API_(void) PFEventPipelineCloseHandle(
     _In_ PFEventPipelineHandle eventPipelineHandle
 ) noexcept
 {
-    ApiImpl(XASYNC_IDENTITY(PFEventPipelineCloseHandle), [&](GlobalState& state)
+    ApiImpl(XASYNC_IDENTITY(PFEventPipelineCloseHandle), [&](PFCoreGlobalState& state)
     {
         state.ClientEventPipelines().CloseHandle(eventPipelineHandle);
         return S_OK;
@@ -207,7 +215,7 @@ PF_API PFEventPipelineEmitEvent(
     _In_ PFEvent const* event
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineEmitEvent), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineEmitEvent), [&](PFCoreGlobalState& state)
     {
         RETURN_HR_INVALIDARG_IF_NULL(event);
 
@@ -223,7 +231,7 @@ PF_API PFEventPipelineAddUploadingEntity(
     _In_ PFEntityHandle entityHandle
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineAddUploadingEntity), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineAddUploadingEntity), [&](PFCoreGlobalState& state)
     {
         RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
 
@@ -241,7 +249,7 @@ PF_API PFEventPipelineRemoveUploadingEntity(
     _In_ PFEventPipelineHandle eventPipelineHandle
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineRemoveUploadingEntity), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineRemoveUploadingEntity), [&](PFCoreGlobalState& state)
         {
             SharedPtr<EventPipeline> pipeline;
             RETURN_IF_FAILED(state.ClientEventPipelines().FromHandle(eventPipelineHandle, pipeline));
@@ -255,7 +263,7 @@ PF_API PFEventPipelineUpdateConfiguration(
     _In_ PFEventPipelineConfig eventPipelineConfig
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineUpdateConfiguration), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEventPipelineUpdateConfiguration), [&](PFCoreGlobalState& state)
         {
             SharedPtr<EventPipeline> pipeline;
             RETURN_IF_FAILED(state.ClientEventPipelines().FromHandle(eventPipelineHandle, pipeline));

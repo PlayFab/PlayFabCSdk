@@ -261,12 +261,20 @@ int vstprintf_s(char(&buffer)[SIZE], _Printf_format_string_ char const* format, 
 
 String FormatString(_In_z_ _Printf_format_string_ const char* format, ...)
 {
-    va_list args;
-    va_start(args, format);
-    Vector<char> buffer(1 + std::vsnprintf(NULL, 0, format, args));
-    std::vsnprintf(buffer.data(), buffer.size(), format, args);
-    va_end(args);
-    String strBuffer(buffer.begin(), buffer.end());
+    va_list args1;
+    va_start(args1, format);
+
+    va_list args2;
+    va_copy(args2, args1);
+
+    Vector<char> buffer(1 + std::vsnprintf(NULL, 0, format, args1));
+    va_end(args1);
+    
+    std::vsnprintf(buffer.data(), buffer.size(), format, args2);
+    va_end(args2);
+    
+    String strBuffer(buffer.data(), buffer.size());
+    
     return strBuffer;
 }
 

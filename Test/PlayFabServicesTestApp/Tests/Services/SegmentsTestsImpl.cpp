@@ -8,7 +8,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 constexpr char testTag[] = { "testTag" };
 #endif
 
@@ -72,7 +72,7 @@ void SegmentsTests::TestClientGetPlayerTags(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void SegmentsTests::TestServerAddPlayerTag(TestContext& tc)
 {
     ServerAddPlayerTagOperation::RequestType request;
@@ -118,7 +118,7 @@ void SegmentsTests::TestServerAddPlayerTag(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void SegmentsTests::TestServerGetAllSegments(TestContext& tc)
 {
     ServerGetAllSegmentsOperation::Run(TitleEntity(), RunContext()).Then([&](Result<ServerGetAllSegmentsOperation::ResultType> result) -> AsyncOp<void>
@@ -148,7 +148,7 @@ void SegmentsTests::TestServerGetAllSegments(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void SegmentsTests::TestServerGetPlayerSegments(TestContext& tc)
 {
     ServerGetPlayerSegmentsOperation::RequestType request;
@@ -182,7 +182,7 @@ void SegmentsTests::TestServerGetPlayerSegments(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void SegmentsTests::TestServerGetPlayersInSegment(TestContext& tc)
 {
     ServerGetPlayersInSegmentOperation::RequestType request;
@@ -217,7 +217,7 @@ void SegmentsTests::TestServerGetPlayersInSegment(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void SegmentsTests::TestServerGetPlayerTags(TestContext& tc)
 {
     // Already covered in TestServerAddPlayerTag
@@ -225,7 +225,7 @@ void SegmentsTests::TestServerGetPlayerTags(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void SegmentsTests::TestServerRemovePlayerTag(TestContext& tc)
 {
     // Already covered in TestServerAddPlayerTag

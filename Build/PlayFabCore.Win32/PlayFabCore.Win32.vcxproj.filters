@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{f5cdda0b-a0ac-44fb-8caf-93b7ddc80e1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{a1675670-bc77-4ec2-af06-9675f776fa26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform\Generic">
+      <UniqueIdentifier>{dfb53dc6-bc36-4be2-9208-62a801d52605}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.cpp">
+      <Filter>Source\Platform\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayFabCore\Source\Platform\Generic\Platform_Generic.cpp">
+      <Filter>Source\Platform\Generic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\PlayFabCore\Source\Platform\Generic\LocalStorage_Generic.h">
+      <Filter>Source\Platform\Generic</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

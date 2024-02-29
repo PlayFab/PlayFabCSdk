@@ -729,6 +729,66 @@ typedef struct PFAccountManagementGetPlayFabIDsFromPSNAccountIDsResult
 } PFAccountManagementGetPlayFabIDsFromPSNAccountIDsResult;
 
 /// <summary>
+/// PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest data model.
+/// </summary>
+typedef struct PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest
+{
+    /// <summary>
+    /// (Optional) Id of the PlayStation :tm: Network issuer environment. If null, defaults to production
+    /// environment.
+    /// </summary>
+    _Maybenull_ int32_t const* issuerId;
+
+    /// <summary>
+    /// Array of unique PlayStation :tm: Network identifiers for which the title needs to get PlayFab
+    /// identifiers. The array cannot exceed 2,000 in length.
+    /// </summary>
+    _Field_size_(PSNOnlineIDsCount) const char* const* PSNOnlineIDs;
+
+    /// <summary>
+    /// Count of PSNOnlineIDs
+    /// </summary>
+    uint32_t PSNOnlineIDsCount;
+
+} PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest;
+
+/// <summary>
+/// PFAccountManagementPSNOnlinePlayFabIdPair data model.
+/// </summary>
+typedef struct PFAccountManagementPSNOnlinePlayFabIdPair
+{
+    /// <summary>
+    /// (Optional) Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the
+    /// PlayStation :tm: Network identifier.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* playFabId;
+
+    /// <summary>
+    /// (Optional) Unique PlayStation :tm: Network identifier for a user.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* PSNOnlineId;
+
+} PFAccountManagementPSNOnlinePlayFabIdPair;
+
+/// <summary>
+/// PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult data model. For PlayStation :tm: Network identifiers
+/// which have not been linked to PlayFab accounts, null will be returned.
+/// </summary>
+typedef struct PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult
+{
+    /// <summary>
+    /// (Optional) Mapping of PlayStation :tm: Network identifiers to PlayFab identifiers.
+    /// </summary>
+    _Maybenull_ _Field_size_(dataCount) PFAccountManagementPSNOnlinePlayFabIdPair const* const* data;
+
+    /// <summary>
+    /// Count of data
+    /// </summary>
+    uint32_t dataCount;
+
+} PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult;
+
+/// <summary>
 /// PFAccountManagementGetPlayFabIDsFromSteamIDsRequest data model.
 /// </summary>
 typedef struct PFAccountManagementGetPlayFabIDsFromSteamIDsRequest

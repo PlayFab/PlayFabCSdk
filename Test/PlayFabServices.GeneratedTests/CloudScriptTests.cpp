@@ -9,7 +9,7 @@ namespace Test
 void CloudScriptTests::AddTests()
 {
     AddTest("TestClientExecuteCloudScript", &CloudScriptTests::TestClientExecuteCloudScript);
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerExecuteCloudScript", &CloudScriptTests::TestServerExecuteCloudScript);
 #endif
     AddTest("TestExecuteEntityCloudScript", &CloudScriptTests::TestExecuteEntityCloudScript);

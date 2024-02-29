@@ -14,16 +14,15 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup>
-    <PlayFabServicesProjectName>PlayFabServices.$(HCPlatform).$(PlayFabCoreToolset)</PlayFabServicesProjectName>
+    <PlayFabServicesProjectName>PlayFabServices.$(HCPlatform)</PlayFabServicesProjectName>
     <PlayFabServicesOutDir>$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabServicesProjectName)\</PlayFabServicesOutDir>
   </PropertyGroup>
 
   <!--Add reference to appropriate PlayFabServices project-->
   <ItemGroup Condition="'$(HCPlatform)' == 'Win32' Or '$(HCPlatform)' == 'GDK'" Label="PlayFabServices project reference">
     <ProjectReference Include="$(PlayFabBuildRoot)\$(PlayFabServicesProjectName)\$(PlayFabServicesProjectName).vcxproj">
-      <Project Condition="'$(HCPlatform)' == 'Win32' and '$(PlayFabCoreToolset)' == '143'">{9740c935-821c-498c-a942-817eea7fdcd7}</Project>
-      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(PlayFabCoreToolset)' == '142'">{7cf96aad-a922-47b4-9da2-fa30f7e47d72}</Project>
-      <Project Condition="'$(HCPlatform)' == 'GDK' and '$(PlayFabCoreToolset)' == '143'">{fb3a4738-544d-4a89-ba69-31d7c86e7af7}</Project>
+      <Project Condition="'$(HCPlatform)' == 'Win32'">{9740c935-821c-498c-a942-817eea7fdcd7}</Project>
+      <Project Condition="'$(HCPlatform)' == 'GDK'">{fb3a4738-544d-4a89-ba69-31d7c86e7af7}</Project>
     </ProjectReference>
   </ItemGroup>
 

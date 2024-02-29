@@ -12,13 +12,14 @@
 extern "C"
 {
 
-// PlayFab HRESULT error codes start at FACILITY_XBOX + 0x5400
+// PlayFab Core HRESULT error codes start at FACILITY_XBOX + 0x5400
 
 // Client-side errors. Typically these errors indicate improper calling patterns.
 #define E_PF_CORE_NOT_INITIALIZED                                               MAKE_E_HC(0x5400L) // 0x89235400
 #define E_PF_CORE_ALREADY_INITIALIZED                                           MAKE_E_HC(0x5401L) // 0x89235401
 #define E_PF_INVALIDHANDLE                                                      MAKE_E_HC(0x5402L) // 0x89235402
 #define E_PF_CORE_MISSING_PLATFORM_HANDLER                                      MAKE_E_HC(0x5403L) // 0x89235403
+#define E_PF_CORE_EVENT_PIPELINE_BUFFER_FULL                                    MAKE_E_HC(0x5404L) // 0x89235404
 
 // Client-side auth token check errors. Returned when the required auth token is missing or expired.
 #define E_PF_NOENTITYTOKEN                                                      MAKE_E_HC(0x5411L) // 0x89235411
@@ -575,6 +576,11 @@ extern "C"
 #define E_PF_INVALID_NAMESPACE_MISMATCH                                         MAKE_E_HC(0x5643L) // 0x89235643
 #define E_PF_LEADERBOARD_COLUMN_LENGTH_MISMATCH                                 MAKE_E_HC(0x5644L) // 0x89235644
 #define E_PF_INVALID_STATISTIC_SCORE                                            MAKE_E_HC(0x5645L) // 0x89235645
+#define E_PF_LEADERBOARD_COLUMNS_NOT_SPECIFIED                                  MAKE_E_HC(0x570aL) // 0x8923570a
+#define E_PF_LEADERBOARD_MAX_SIZE_TOO_LARGE                                     MAKE_E_HC(0x5710L) // 0x89235710
+#define E_PF_INVALID_ATTRIBUTE_STATISTICS_SPECIFIED                             MAKE_E_HC(0x5712L) // 0x89235712
+#define E_PF_LEADERBOARD_NOT_FOUND                                              MAKE_E_HC(0x5725L) // 0x89235725
+#define E_PF_TOKEN_SIGNING_KEY_NOT_FOUND                                        MAKE_E_HC(0x5726L) // 0x89235726
 #define E_PF_MATCHMAKING_ENTITY_INVALID                                         MAKE_E_HC(0x5646L) // 0x89235646
 #define E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID                              MAKE_E_HC(0x5647L) // 0x89235647
 #define E_PF_MATCHMAKING_QUEUE_NOT_FOUND                                        MAKE_E_HC(0x5648L) // 0x89235648
@@ -618,6 +624,7 @@ extern "C"
 #define E_PF_CATALOG_ITEM_TYPE_INVALID                                          MAKE_E_HC(0x566eL) // 0x8923566e
 #define E_PF_CATALOG_BAD_REQUEST                                                MAKE_E_HC(0x566fL) // 0x8923566f
 #define E_PF_CATALOG_TOO_MANY_REQUESTS                                          MAKE_E_HC(0x5670L) // 0x89235670
+#define E_PF_INVALID_CATALOG_ITEM_CONFIGURATION                                 MAKE_E_HC(0x5711L) // 0x89235711
 #define E_PF_EXPORT_INVALID_STATUS_UPDATE                                       MAKE_E_HC(0x5671L) // 0x89235671
 #define E_PF_EXPORT_INVALID_PREFIX                                              MAKE_E_HC(0x5672L) // 0x89235672
 #define E_PF_EXPORT_BLOB_CONTAINER_DOES_NOT_EXIST                               MAKE_E_HC(0x5673L) // 0x89235673
@@ -719,48 +726,76 @@ extern "C"
 #define E_PF_LOBBY_NEW_OWNER_MUST_BE_CONNECTED                                  MAKE_E_HC(0x56d3L) // 0x892356d3
 #define E_PF_LOBBY_CURRENT_OWNER_STILL_CONNECTED                                MAKE_E_HC(0x56d4L) // 0x892356d4
 #define E_PF_LOBBY_MEMBER_IS_NOT_OWNER                                          MAKE_E_HC(0x56d5L) // 0x892356d5
-#define E_PF_EVENT_SAMPLING_INVALID_RATIO                                       MAKE_E_HC(0x56d6L) // 0x892356d6
-#define E_PF_EVENT_SAMPLING_INVALID_EVENT_NAMESPACE                             MAKE_E_HC(0x56d7L) // 0x892356d7
-#define E_PF_EVENT_SAMPLING_INVALID_EVENT_NAME                                  MAKE_E_HC(0x56d8L) // 0x892356d8
-#define E_PF_EVENT_SAMPLING_RATIO_NOT_FOUND                                     MAKE_E_HC(0x56d9L) // 0x892356d9
-#define E_PF_TELEMETRY_KEY_NOT_FOUND                                            MAKE_E_HC(0x56daL) // 0x892356da
-#define E_PF_TELEMETRY_KEY_INVALID_NAME                                         MAKE_E_HC(0x56dbL) // 0x892356db
-#define E_PF_TELEMETRY_KEY_ALREADY_EXISTS                                       MAKE_E_HC(0x56dcL) // 0x892356dc
-#define E_PF_TELEMETRY_KEY_INVALID                                              MAKE_E_HC(0x56ddL) // 0x892356dd
-#define E_PF_TELEMETRY_KEY_COUNT_OVER_LIMIT                                     MAKE_E_HC(0x56deL) // 0x892356de
-#define E_PF_TELEMETRY_KEY_DEACTIVATED                                          MAKE_E_HC(0x56dfL) // 0x892356df
-#define E_PF_TELEMETRY_KEY_LONG_INSIGHTS_RETENTION_NOT_ALLOWED                  MAKE_E_HC(0x56e0L) // 0x892356e0
-#define E_PF_EVENT_SINK_CONNECTION_INVALID                                      MAKE_E_HC(0x56e1L) // 0x892356e1
-#define E_PF_EVENT_SINK_CONNECTION_UNAUTHORIZED                                 MAKE_E_HC(0x56e2L) // 0x892356e2
-#define E_PF_EVENT_SINK_REGION_INVALID                                          MAKE_E_HC(0x56e3L) // 0x892356e3
-#define E_PF_EVENT_SINK_LIMIT_EXCEEDED                                          MAKE_E_HC(0x56e4L) // 0x892356e4
-#define E_PF_EVENT_SINK_SAS_TOKEN_INVALID                                       MAKE_E_HC(0x56e5L) // 0x892356e5
-#define E_PF_EVENT_SINK_NOT_FOUND                                               MAKE_E_HC(0x56e6L) // 0x892356e6
-#define E_PF_EVENT_SINK_NAME_INVALID                                            MAKE_E_HC(0x56e7L) // 0x892356e7
-#define E_PF_EVENT_SINK_SAS_TOKEN_PERMISSION_INVALID                            MAKE_E_HC(0x56e8L) // 0x892356e8
-#define E_PF_EVENT_SINK_SECRET_INVALID                                          MAKE_E_HC(0x56e9L) // 0x892356e9
-#define E_PF_EVENT_SINK_TENANT_NOT_FOUND                                        MAKE_E_HC(0x56eaL) // 0x892356ea
-#define E_PF_EVENT_SINK_AAD_NOT_FOUND                                           MAKE_E_HC(0x56ebL) // 0x892356eb
-#define E_PF_EVENT_SINK_DATABASE_NOT_FOUND                                      MAKE_E_HC(0x56ecL) // 0x892356ec
-#define E_PF_OPERATION_CANCELED                                                 MAKE_E_HC(0x56edL) // 0x892356ed
-#define E_PF_INVALID_DISPLAY_NAME_RANDOM_SUFFIX_LENGTH                          MAKE_E_HC(0x56eeL) // 0x892356ee
-#define E_PF_ALLOW_NON_UNIQUE_PLAYER_DISPLAY_NAMES_DISABLE_NOT_ALLOWED          MAKE_E_HC(0x56efL) // 0x892356ef
-#define E_PF_PARTITIONED_EVENT_INVALID                                          MAKE_E_HC(0x56f0L) // 0x892356f0
-#define E_PF_PARTITIONED_EVENT_COUNT_OVER_LIMIT                                 MAKE_E_HC(0x56f1L) // 0x892356f1
-#define E_PF_MANAGE_EVENT_NAMESPACE_INVALID                                     MAKE_E_HC(0x56f2L) // 0x892356f2
-#define E_PF_MANAGE_EVENT_NAME_INVALID                                          MAKE_E_HC(0x56f3L) // 0x892356f3
-#define E_PF_MANAGED_EVENT_NOT_FOUND                                            MAKE_E_HC(0x56f4L) // 0x892356f4
-#define E_PF_MANAGE_EVENTS_INVALID_RATIO                                        MAKE_E_HC(0x56f5L) // 0x892356f5
-#define E_PF_MANAGED_EVENT_INVALID                                              MAKE_E_HC(0x56f6L) // 0x892356f6
-#define E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_TOO_LONG                    MAKE_E_HC(0x56f7L) // 0x892356f7
-#define E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_IS_INVALID                  MAKE_E_HC(0x56f8L) // 0x892356f8
-#define E_PF_PLAYER_CUSTOM_PROPERTIES_STRING_PROPERTY_VALUE_TOO_LONG            MAKE_E_HC(0x56f9L) // 0x892356f9
-#define E_PF_PLAYER_CUSTOM_PROPERTIES_VALUE_IS_INVALID_TYPE                     MAKE_E_HC(0x56faL) // 0x892356fa
-#define E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH                          MAKE_E_HC(0x56fbL) // 0x892356fb
-#define E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_COUNT_TOO_HIGH                   MAKE_E_HC(0x56fcL) // 0x892356fc
-#define E_PF_PLAYER_CUSTOM_PROPERTIES_DUPLICATE_PROPERTY_NAME                   MAKE_E_HC(0x56fdL) // 0x892356fd
-#define E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_DOES_NOT_EXIST                   MAKE_E_HC(0x56feL) // 0x892356fe
-#define E_PF_ADDON_ALREADY_EXISTS                                               MAKE_E_HC(0x56ffL) // 0x892356ff
-#define E_PF_ADDON_DOESNT_EXIST                                                 MAKE_E_HC(0x5700L) // 0x89235700
+#define E_PF_LOBBY_SERVER_MISMATCH                                              MAKE_E_HC(0x570bL) // 0x8923570b
+#define E_PF_LOBBY_SERVER_NOT_FOUND                                             MAKE_E_HC(0x570cL) // 0x8923570c
+#define E_PF_LOBBY_DIFFERENT_SERVER_ALREADY_JOINED                              MAKE_E_HC(0x570dL) // 0x8923570d
+#define E_PF_LOBBY_SERVER_ALREADY_JOINED                                        MAKE_E_HC(0x570eL) // 0x8923570e
+#define E_PF_LOBBY_IS_NOT_CLIENT_OWNED                                          MAKE_E_HC(0x56daL) // 0x892356da
+#define E_PF_LOBBY_DOES_NOT_USE_CONNECTIONS                                     MAKE_E_HC(0x56dbL) // 0x892356db
+#define E_PF_EVENT_SAMPLING_INVALID_RATIO                                       MAKE_E_HC(0x56dcL) // 0x892356dc
+#define E_PF_EVENT_SAMPLING_INVALID_EVENT_NAMESPACE                             MAKE_E_HC(0x56ddL) // 0x892356dd
+#define E_PF_EVENT_SAMPLING_INVALID_EVENT_NAME                                  MAKE_E_HC(0x56deL) // 0x892356de
+#define E_PF_EVENT_SAMPLING_RATIO_NOT_FOUND                                     MAKE_E_HC(0x56dfL) // 0x892356df
+#define E_PF_TELEMETRY_KEY_NOT_FOUND                                            MAKE_E_HC(0x56e0L) // 0x892356e0
+#define E_PF_TELEMETRY_KEY_INVALID_NAME                                         MAKE_E_HC(0x56e1L) // 0x892356e1
+#define E_PF_TELEMETRY_KEY_ALREADY_EXISTS                                       MAKE_E_HC(0x56e2L) // 0x892356e2
+#define E_PF_TELEMETRY_KEY_INVALID                                              MAKE_E_HC(0x56e3L) // 0x892356e3
+#define E_PF_TELEMETRY_KEY_COUNT_OVER_LIMIT                                     MAKE_E_HC(0x56e4L) // 0x892356e4
+#define E_PF_TELEMETRY_KEY_DEACTIVATED                                          MAKE_E_HC(0x56e5L) // 0x892356e5
+#define E_PF_TELEMETRY_KEY_LONG_INSIGHTS_RETENTION_NOT_ALLOWED                  MAKE_E_HC(0x56e6L) // 0x892356e6
+#define E_PF_EVENT_SINK_CONNECTION_INVALID                                      MAKE_E_HC(0x56e7L) // 0x892356e7
+#define E_PF_EVENT_SINK_CONNECTION_UNAUTHORIZED                                 MAKE_E_HC(0x56e8L) // 0x892356e8
+#define E_PF_EVENT_SINK_REGION_INVALID                                          MAKE_E_HC(0x56e9L) // 0x892356e9
+#define E_PF_EVENT_SINK_LIMIT_EXCEEDED                                          MAKE_E_HC(0x56eaL) // 0x892356ea
+#define E_PF_EVENT_SINK_SAS_TOKEN_INVALID                                       MAKE_E_HC(0x56ebL) // 0x892356eb
+#define E_PF_EVENT_SINK_NOT_FOUND                                               MAKE_E_HC(0x56ecL) // 0x892356ec
+#define E_PF_EVENT_SINK_NAME_INVALID                                            MAKE_E_HC(0x56edL) // 0x892356ed
+#define E_PF_EVENT_SINK_SAS_TOKEN_PERMISSION_INVALID                            MAKE_E_HC(0x56eeL) // 0x892356ee
+#define E_PF_EVENT_SINK_SECRET_INVALID                                          MAKE_E_HC(0x56efL) // 0x892356ef
+#define E_PF_EVENT_SINK_TENANT_NOT_FOUND                                        MAKE_E_HC(0x56f0L) // 0x892356f0
+#define E_PF_EVENT_SINK_AAD_NOT_FOUND                                           MAKE_E_HC(0x56f1L) // 0x892356f1
+#define E_PF_EVENT_SINK_DATABASE_NOT_FOUND                                      MAKE_E_HC(0x56f2L) // 0x892356f2
+#define E_PF_EVENT_SINK_TITLE_UNAUTHORIZED                                      MAKE_E_HC(0x56f3L) // 0x892356f3
+#define E_PF_EVENT_SINK_INSUFFICIENT_ROLE_ASSIGNMENT                            MAKE_E_HC(0x5713L) // 0x89235713
+#define E_PF_EVENT_SINK_CONTAINER_NOT_FOUND                                     MAKE_E_HC(0x5714L) // 0x89235714
+#define E_PF_OPERATION_CANCELED                                                 MAKE_E_HC(0x56f4L) // 0x892356f4
+#define E_PF_INVALID_DISPLAY_NAME_RANDOM_SUFFIX_LENGTH                          MAKE_E_HC(0x56f5L) // 0x892356f5
+#define E_PF_ALLOW_NON_UNIQUE_PLAYER_DISPLAY_NAMES_DISABLE_NOT_ALLOWED          MAKE_E_HC(0x56f6L) // 0x892356f6
+#define E_PF_PARTITIONED_EVENT_INVALID                                          MAKE_E_HC(0x56f7L) // 0x892356f7
+#define E_PF_PARTITIONED_EVENT_COUNT_OVER_LIMIT                                 MAKE_E_HC(0x56f8L) // 0x892356f8
+#define E_PF_MANAGE_EVENT_NAMESPACE_INVALID                                     MAKE_E_HC(0x56f9L) // 0x892356f9
+#define E_PF_MANAGE_EVENT_NAME_INVALID                                          MAKE_E_HC(0x56faL) // 0x892356fa
+#define E_PF_MANAGED_EVENT_NOT_FOUND                                            MAKE_E_HC(0x56fbL) // 0x892356fb
+#define E_PF_MANAGE_EVENTS_INVALID_RATIO                                        MAKE_E_HC(0x56fcL) // 0x892356fc
+#define E_PF_MANAGED_EVENT_INVALID                                              MAKE_E_HC(0x56fdL) // 0x892356fd
+#define E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_TOO_LONG                    MAKE_E_HC(0x56feL) // 0x892356fe
+#define E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_IS_INVALID                  MAKE_E_HC(0x56ffL) // 0x892356ff
+#define E_PF_PLAYER_CUSTOM_PROPERTIES_STRING_PROPERTY_VALUE_TOO_LONG            MAKE_E_HC(0x5700L) // 0x89235700
+#define E_PF_PLAYER_CUSTOM_PROPERTIES_VALUE_IS_INVALID_TYPE                     MAKE_E_HC(0x5701L) // 0x89235701
+#define E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH                          MAKE_E_HC(0x5702L) // 0x89235702
+#define E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_COUNT_TOO_HIGH                   MAKE_E_HC(0x5703L) // 0x89235703
+#define E_PF_PLAYER_CUSTOM_PROPERTIES_DUPLICATE_PROPERTY_NAME                   MAKE_E_HC(0x5704L) // 0x89235704
+#define E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_DOES_NOT_EXIST                   MAKE_E_HC(0x5705L) // 0x89235705
+#define E_PF_ADDON_ALREADY_EXISTS                                               MAKE_E_HC(0x5706L) // 0x89235706
+#define E_PF_ADDON_DOESNT_EXIST                                                 MAKE_E_HC(0x5707L) // 0x89235707
+#define E_PF_COPILOT_DISABLED                                                   MAKE_E_HC(0x5708L) // 0x89235708
+#define E_PF_COPILOT_INVALID_REQUEST                                            MAKE_E_HC(0x5709L) // 0x89235709
+#define E_PF_TRUE_SKILL_UNAUTHORIZED                                            MAKE_E_HC(0x570fL) // 0x8923570f
+#define E_PF_TRUE_SKILL_BAD_REQUEST                                             MAKE_E_HC(0x5715L) // 0x89235715
+#define E_PF_TRUE_SKILL_MATCH_RESULT_ALREADY_SUBMITTED                          MAKE_E_HC(0x5716L) // 0x89235716
+#define E_PF_TRUE_SKILL_DUPLICATE_PLAYER_IN_MATCH_RESULT                        MAKE_E_HC(0x5717L) // 0x89235717
+#define E_PF_TRUE_SKILL_INVALID_RANKS_IN_MATCH_RESULT                           MAKE_E_HC(0x5718L) // 0x89235718
+#define E_PF_TRUE_SKILL_NO_WINNER_IN_MATCH_RESULT                               MAKE_E_HC(0x5719L) // 0x89235719
+#define E_PF_TRUE_SKILL_MISSING_REQUIRED_CONDITION_IN_MATCH_RESULT              MAKE_E_HC(0x571aL) // 0x8923571a
+#define E_PF_TRUE_SKILL_MISSING_REQUIRED_EVENT_IN_MATCH_RESULT                  MAKE_E_HC(0x571bL) // 0x8923571b
+#define E_PF_TRUE_SKILL_UNKNOWN_EVENT_IN_MATCH_RESULT                           MAKE_E_HC(0x571cL) // 0x8923571c
+#define E_PF_TRUE_SKILL_UNKNOWN_CONDITION_NAME                                  MAKE_E_HC(0x571dL) // 0x8923571d
+#define E_PF_TRUE_SKILL_UNKNOWN_CONDITION_VALUE                                 MAKE_E_HC(0x571eL) // 0x8923571e
+#define E_PF_TRUE_SKILL_UNKNOWN_SCENARIO_ID                                     MAKE_E_HC(0x571fL) // 0x8923571f
+#define E_PF_TRUE_SKILL_UNKNOWN_MODEL_ID                                        MAKE_E_HC(0x5720L) // 0x89235720
+#define E_PF_TRUE_SKILL_NO_ACTIVE_MODEL_IN_SCENARIO                             MAKE_E_HC(0x5721L) // 0x89235721
+#define E_PF_STATE_SHARE_UNAUTHORIZED                                           MAKE_E_HC(0x5722L) // 0x89235722
+#define E_PF_STATE_SHARE_STATE_NOT_FOUND                                        MAKE_E_HC(0x5723L) // 0x89235723
+#define E_PF_STATE_SHARE_LINK_NOT_FOUND                                         MAKE_E_HC(0x5724L) // 0x89235724
 
 }

@@ -22,7 +22,8 @@ extern "C"
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// Aborts the pending upload of the requested files.
+/// Aborts the pending upload of the requested files. See also FileDeleteFilesAsync, FileFinalizeFileUploadsAsync,
+/// FileGetFilesAsync, FileInitiateFileUploadsAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFDataAbortFileUploadsGetResultSize"/> and
 /// <see cref="PFDataAbortFileUploadsGetResult"/> to get the result.
@@ -81,7 +82,8 @@ PF_API PFDataAbortFileUploadsGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// Deletes the requested files from the entity's profile.
+/// Deletes the requested files from the entity's profile. See also FileAbortFileUploadsAsync, FileFinalizeFileUploadsAsync,
+/// FileGetFilesAsync, FileInitiateFileUploadsAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFDataDeleteFilesGetResultSize"/> and <see
 /// cref="PFDataDeleteFilesGetResult"/> to get the result.
@@ -141,7 +143,8 @@ PF_API PFDataDeleteFilesGetResult(
 /// <remarks>
 /// This API is available on all platforms.
 /// Finalizes the upload of the requested files. Verifies that the files have been successfully uploaded
-/// and moves the file pointers from pending to live.
+/// and moves the file pointers from pending to live. See also FileAbortFileUploadsAsync, FileDeleteFilesAsync,
+/// FileGetFilesAsync, FileInitiateFileUploadsAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFDataFinalizeFileUploadsGetResultSize"/>
 /// and <see cref="PFDataFinalizeFileUploadsGetResult"/> to get the result.
@@ -318,7 +321,8 @@ PF_API PFDataGetObjectsGetResult(
 /// <remarks>
 /// This API is available on all platforms.
 /// Returns URLs that may be used to upload the files for a profile 5 minutes. After using the upload
-/// calls FinalizeFileUploads must be called to move the file status from pending to live.
+/// calls FinalizeFileUploads must be called to move the file status from pending to live. See also FileAbortFileUploadsAsync,
+/// FileDeleteFilesAsync, FileFinalizeFileUploadsAsync, FileGetFilesAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFDataInitiateFileUploadsGetResultSize"/>
 /// and <see cref="PFDataInitiateFileUploadsGetResult"/> to get the result.
@@ -381,7 +385,7 @@ PF_API PFDataInitiateFileUploadsGetResult(
 /// optimistic concurrency operations during update. If the current version differs from the version in
 /// the request the request will be ignored. If no version is set on the request then the value will always
 /// be updated if the values differ. Using the version value does not guarantee a write though, ConcurrentEditError
-/// may still occur if multiple clients are attempting to update the same profile. .
+/// may still occur if multiple clients are attempting to update the same profile.  See also ObjectGetObjectsAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFDataSetObjectsGetResultSize"/> and <see
 /// cref="PFDataSetObjectsGetResult"/> to get the result.

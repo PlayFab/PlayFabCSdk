@@ -17,7 +17,7 @@ AsyncOp<void> PlatformSpecificTests::Uninitialize()
     return ServicesTestClass::Uninitialize();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 void PlatformSpecificTests::TestClientAndroidDevicePushNotificationRegistration(TestContext& tc)
 {
     tc.Skip();
@@ -31,14 +31,14 @@ void PlatformSpecificTests::TestClientRefreshPSNAuthToken(TestContext& tc)
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_IOS
 void PlatformSpecificTests::TestClientRegisterForIOSPushNotification(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlatformSpecificTests::TestServerAwardSteamAchievement(TestContext& tc)
 {
     tc.Skip();

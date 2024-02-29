@@ -133,7 +133,7 @@ AsyncOp<void> InventoryTests::Initialize()
         
         return *initResult;
     })
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     .Then([&, initResult](Result<void> result) -> AsyncOp<CreateDraftItemOperation::ResultType>
     {
         *initResult = result.hr;
@@ -212,7 +212,7 @@ AsyncOp<void> InventoryTests::Initialize()
         
         return S_OK;
     })
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     .Then([&](Result<void>) -> AsyncOp<CreateDraftItemOperation::ResultType>
     {
         // Create a permanent buyable item since the catalog publishing has possibly long processing times that can and do cause intermittent test failures
@@ -380,7 +380,7 @@ void InventoryTests::TestGetInventoryItems(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestGetMicrosoftStoreAccessTokens(TestContext& tc)
 {
     // TODO: This test is currently failing due to the PlayFab service currently being reworked
@@ -402,7 +402,7 @@ void InventoryTests::TestGetMicrosoftStoreAccessTokens(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestGetTransactionHistory(TestContext& tc)
 {
     constexpr char kCollectionId[]{ "purchaseInventoryItemsCollection" };
@@ -496,21 +496,21 @@ void InventoryTests::TestPurchaseInventoryItems(TestContext& tc)
 #endif
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_IOS
 void InventoryTests::TestRedeemAppleAppStoreInventoryItems(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 void InventoryTests::TestRedeemGooglePlayInventoryItems(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestRedeemMicrosoftStoreInventoryItems(TestContext& tc)
 {
 #if HC_PLATFORM == HC_PLATFORM_GDK
@@ -531,21 +531,21 @@ void InventoryTests::TestRedeemMicrosoftStoreInventoryItems(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_4 && HC_PLATFORM != HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestRedeemNintendoEShopInventoryItems(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM != HC_PLATFORM_GDK && HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && HC_PLATFORM != HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestRedeemPlayStationStoreInventoryItems(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestRedeemSteamInventoryItems(TestContext& tc)
 {
     const char* storeId = "100";

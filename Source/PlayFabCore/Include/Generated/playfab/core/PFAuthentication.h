@@ -112,7 +112,7 @@ PF_API PFAuthenticationReLoginWithAndroidDeviceIDAsync(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Signs in the user with a Sign in with Apple identity token.
 /// </summary>
@@ -121,6 +121,7 @@ PF_API PFAuthenticationReLoginWithAndroidDeviceIDAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on iOS and macOS.
 /// See also ClientLinkAppleAsync, ClientUnlinkAppleAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithAppleGetResult"/>
@@ -140,9 +141,9 @@ PF_API PFAuthenticationLoginWithAppleAsync(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_APPLE_NOT_ENABLED_FOR_TITLE,
 /// E_PF_ENCRYPTION_KEY_MISSING, E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME,
-/// E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED,
+/// E_PF_TOKEN_SIGNING_KEY_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFAuthenticationLoginWithAppleGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -162,9 +163,9 @@ PF_API PFAuthenticationLoginWithAppleGetResultSize(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_APPLE_NOT_ENABLED_FOR_TITLE,
 /// E_PF_ENCRYPTION_KEY_MISSING, E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME,
-/// E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED,
+/// E_PF_TOKEN_SIGNING_KEY_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// If the PFAuthenticationLoginWithAppleAsync call fails, entityHandle with be null. Otherwise, the handle must be closed with PFEntityCloseHandle
@@ -378,7 +379,7 @@ PF_API PFAuthenticationReLoginWithEmailAddressAsync(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_IOS
 /// <summary>
 /// Signs the user in using a Facebook access token, returning a session identifier that can subsequently
 /// be used for API calls which require an authenticated user
@@ -388,6 +389,7 @@ PF_API PFAuthenticationReLoginWithEmailAddressAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Android and iOS.
 /// Facebook sign-in is accomplished using the Facebook User Access Token. More information on the Token
 /// can be found in the Facebook developer documentation (https://developers.facebook.com/docs/facebook-login/access-tokens/).
 /// In Unity, for example, the Token is available as AccessToken in the Facebook SDK ScriptableObject
@@ -566,7 +568,7 @@ PF_API PFAuthenticationReLoginWithFacebookInstantGamesIdAsync(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_IOS
 /// <summary>
 /// Signs the user in using an iOS Game Center player identifier, returning a session identifier that
 /// can subsequently be used for API calls which require an authenticated user. Logging in with a Game
@@ -580,6 +582,7 @@ PF_API PFAuthenticationReLoginWithFacebookInstantGamesIdAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on iOS.
 /// The Game Center player identifier (https://developer.apple.com/library/ios/documentation/Accounts/Reference/ACAccountClassRef/index.html#//apple_ref/occ/instp/ACAccount/identifier)
 /// is a generated string which is stored on the local device. As with device identifiers, care must be
 /// taken to never expose a player's Game Center identifier to end users, as that could result in a user's
@@ -665,7 +668,7 @@ PF_API PFAuthenticationReLoginWithGameCenterAsync(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 /// <summary>
 /// Signs the user in using their Google account credentials
 /// </summary>
@@ -674,6 +677,7 @@ PF_API PFAuthenticationReLoginWithGameCenterAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Android.
 /// Google sign-in is accomplished by obtaining a Google OAuth 2.0 credential using the Google sign-in
 /// for Android APIs on the device and passing it to this API. If this is the first time a user has signed
 /// in with the Google account and CreateAccount is set to true, a new PlayFab account will be created
@@ -766,7 +770,7 @@ PF_API PFAuthenticationReLoginWithGoogleAccountAsync(
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 /// <summary>
 /// Signs the user in using their Google Play Games account credentials
 /// </summary>
@@ -775,6 +779,7 @@ PF_API PFAuthenticationReLoginWithGoogleAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Android.
 /// Google Play Games sign-in is accomplished by obtaining a Google OAuth 2.0 credential using the Google
 /// Play Games sign-in for Android APIs on the device and passing it to this API. If this is the first
 /// time a user has signed in with the Google Play Games account and CreateAccount is set to true, a new
@@ -1495,7 +1500,7 @@ PF_API PFAuthenticationReLoginWithPSNAsync(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Signs the user in using a Steam authentication ticket, returning a session identifier that can subsequently
 /// be used for API calls which require an authenticated user
@@ -1505,7 +1510,7 @@ PF_API PFAuthenticationReLoginWithPSNAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Steam sign-in is accomplished with the Steam Session Ticket. More information on the Ticket can be
 /// found in the Steamworks SDK, here: https://partner.steamgames.com/documentation/auth. NOTE: For Steam
 /// authentication to work, the title must be configured with the Steam Application ID and Web API Key
@@ -1685,7 +1690,7 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Signs the user in using a Xbox Live Token, returning a session identifier that can subsequently be
 /// used for API calls which require an authenticated user
@@ -1695,7 +1700,7 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// If this is the first time a user has signed in with the Xbox Live account and CreateAccount is set
 /// to true, a new PlayFab account will be created and linked to the Xbox Live account. In this case,
 /// no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab account
@@ -1930,7 +1935,7 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResult(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Securely login a game client from an external server backend using a custom identifier for that player.
 /// Server Custom ID and Client Custom ID are mutually exclusive and cannot be used to retrieve the same
@@ -1942,7 +1947,7 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationServerLoginWithServerCustomIdGetResult"/>
 /// to get the result.
 /// </remarks>
@@ -1998,7 +2003,7 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdGetResult(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Signs the user in using an Steam ID, returning a session identifier that can subsequently be used
 /// for API calls which require an authenticated user
@@ -2009,7 +2014,7 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// If this is the first time a user has signed in with the Steam ID and CreateAccount is set to true,
 /// a new PlayFab account will be created and linked to the Steam account. In this case, no email or username
 /// will be associated with the PlayFab account. Otherwise, if no PlayFab account is linked to the Steam
@@ -2075,7 +2080,7 @@ PF_API PFAuthenticationServerLoginWithSteamIdGetResult(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Signs the user in using a Xbox Live Token from an external server backend, returning a session identifier
 /// that can subsequently be used for API calls which require an authenticated user
@@ -2086,7 +2091,7 @@ PF_API PFAuthenticationServerLoginWithSteamIdGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// If this is the first time a user has signed in with the Xbox Live account and CreateAccount is set
 /// to true, a new PlayFab account will be created and linked to the Xbox Live account. In this case,
 /// no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab account
@@ -2152,7 +2157,7 @@ PF_API PFAuthenticationServerLoginWithXboxGetResult(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Signs the user in using an Xbox ID and Sandbox ID, returning a session identifier that can subsequently
 /// be used for API calls which require an authenticated user
@@ -2163,7 +2168,7 @@ PF_API PFAuthenticationServerLoginWithXboxGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// If this is the first time a user has signed in with the Xbox ID and CreateAccount is set to true,
 /// a new PlayFab account will be created and linked to the Xbox Live account. In this case, no email
 /// or username will be associated with the PlayFab account. Otherwise, if no PlayFab account is linked
@@ -2227,7 +2232,7 @@ PF_API PFAuthenticationServerLoginWithXboxIdGetResult(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Create a game_server entity token and return a new or existing game_server entity.
 /// </summary>
@@ -2236,7 +2241,7 @@ PF_API PFAuthenticationServerLoginWithXboxIdGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Create or return a game_server entity token. Caller must be a title entity.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationAuthenticateGameServerWithCustomIdGetResultSize"/>
@@ -2284,7 +2289,7 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Delete a game_server entity.
 /// </summary>
@@ -2293,7 +2298,7 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Delete a game_server entity. The caller can be the game_server entity attempting to delete itself.
 /// Or a title entity attempting to delete game_server entities for this title.
 ///
@@ -2309,7 +2314,7 @@ PF_API PFAuthenticationDeleteAsync(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Method to exchange a legacy AuthenticationTicket or title SecretKey for an Entity Token or to refresh
 /// a still valid Entity Token.
@@ -2319,7 +2324,7 @@ PF_API PFAuthenticationDeleteAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This API must be called with X-SecretKey, X-Authentication or X-EntityToken headers. An optional
 /// EntityKey may be included to attempt to set the resulting EntityToken to a specific entity, however
 /// the entity must be a relation of the caller, such as the master_player_account of a character. If
@@ -2357,7 +2362,7 @@ PF_API PFAuthenticationGetEntityGetResult(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Method to exchange a legacy AuthenticationTicket or title SecretKey for an Entity Token or to refresh
 /// a still valid Entity Token.
@@ -2368,7 +2373,7 @@ PF_API PFAuthenticationGetEntityGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// This API must be called with X-SecretKey, X-Authentication or X-EntityToken headers. An optional
 /// EntityKey may be included to attempt to set the resulting EntityToken to a specific entity, however
 /// the entity must be a relation of the caller, such as the master_player_account of a character. If
@@ -2407,7 +2412,7 @@ PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Method for a server to validate a client provided EntityToken. Only callable by the title entity.
 /// </summary>
@@ -2416,7 +2421,7 @@ PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32.
+/// This API is available on Win32, Linux, and macOS.
 /// Given an entity token, validates that it hasn't expired or been revoked and will return details of
 /// the owner.
 ///

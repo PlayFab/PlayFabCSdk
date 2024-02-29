@@ -38,7 +38,7 @@ void CloudScriptTests::TestClientExecuteCloudScript(TestContext& tc)
 
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void CloudScriptTests::TestServerExecuteCloudScript(TestContext& tc)
 {
     // TestGetServerFriendsList is a custom Cloud Script function stored in PlayFab Game Manager

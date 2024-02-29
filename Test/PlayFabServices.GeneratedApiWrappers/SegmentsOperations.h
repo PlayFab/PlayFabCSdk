@@ -42,7 +42,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerAddPlayerTagOperation : public XAsyncOperation<void>
 {
 public:
@@ -60,7 +60,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerGetAllSegmentsOperation : public XAsyncOperation<Wrappers::PFSegmentsGetAllSegmentsResultWrapper<Allocator>>
 {
 public:
@@ -78,7 +78,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerGetPlayerSegmentsOperation : public XAsyncOperation<Wrappers::PFSegmentsGetPlayerSegmentsResultWrapper<Allocator>>
 {
 public:
@@ -98,7 +98,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerGetPlayersInSegmentOperation : public XAsyncOperation<Wrappers::PFSegmentsGetPlayersInSegmentResultWrapper<Allocator>>
 {
 public:
@@ -118,7 +118,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerGetPlayerTagsOperation : public XAsyncOperation<Wrappers::PFSegmentsGetPlayerTagsResultWrapper<Allocator>>
 {
 public:
@@ -138,7 +138,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerRemovePlayerTagOperation : public XAsyncOperation<void>
 {
 public:

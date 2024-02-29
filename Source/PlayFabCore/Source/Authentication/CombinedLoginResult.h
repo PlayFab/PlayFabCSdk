@@ -2,7 +2,7 @@
 
 #include "Generated/AuthenticationTypes.h"
 #include "Entity.h"
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 
 namespace PlayFab
 {
@@ -18,13 +18,13 @@ struct PFCombinedLoginResult
 };
 
 // Internal combined LoginResult. Contains both the Entity object and the (trimmed) LoginResult model.
-// Holds reference to GlobalState to create Entity object and handles to it.
+// Holds reference to PFCoreGlobalState to create Entity object and handles to it.
 class CombinedLoginResult : public ClientOutputModel<PFCombinedLoginResult>
 {
 public:
     static Result<CombinedLoginResult> FromJson(
         const JsonValue& loginResponse,
-        SharedPtr<GlobalState> globalState,
+        SharedPtr<PFCoreGlobalState> PFCoreGlobalState,
         SharedPtr<ServiceConfig const> serviceConfig,
         SharedPtr<LoginContext> loginContext
     ) noexcept;
@@ -45,10 +45,10 @@ public:
     Result<PFCombinedLoginResult const*> Copy(ModelBuffer& buffer) const override;
 
 private:
-    CombinedLoginResult(SharedPtr<GlobalState> globalState) noexcept;
+    CombinedLoginResult(SharedPtr<PFCoreGlobalState> PFCoreGlobalState) noexcept;
 
     // Need global state to Copy, as that creates a PFEntityHandle for 'entity'
-    SharedPtr<GlobalState> const m_globalState;
+    SharedPtr<PFCoreGlobalState> const m_PFCoreGlobalState;
 };
 
 // Struct to hold public server result types. Although the entityToken and loginResult are returned via separate parameters

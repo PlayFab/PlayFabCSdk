@@ -22,7 +22,7 @@ void CloudScriptTests::TestClientExecuteCloudScript(TestContext& tc)
     tc.Skip();
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void CloudScriptTests::TestServerExecuteCloudScript(TestContext& tc)
 {
     tc.Skip();

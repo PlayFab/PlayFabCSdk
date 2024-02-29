@@ -4,12 +4,6 @@
 
   <Import Condition="'$(PlayFabPathsImported)' != 'true'" Project="PlayFab.C.paths.props" />
 
-  <!--We have to explicitly exclude GDK extension libraries because XSAPI and LHC will be pulled in by default, conflicting -->
-  <!--with the LHC lib built from source.-->
-  <PropertyGroup>
-    <GDKExtLibNames>;</GDKExtLibNames>
-  </PropertyGroup>
-
   <!--Use same build config as LHC-->
   <Import Project="$(HCBuildRoot)\libHttpClient.GDK.props" />
 

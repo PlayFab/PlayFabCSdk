@@ -17,9 +17,15 @@
 
 #if HC_PLATFORM_IS_MICROSOFT || HC_PLATFORM_IS_PLAYSTATION
 #define PF_API_ATTRIBUTES __declspec(dllexport)
+#elif HC_PLATFORM == HC_PLATFORM_LINUX
+#define PF_API_ATTRIBUTES __attribute__((visibility("default")))
 #else
 #define PF_API_ATTRIBUTES
 #endif
+
+#if HC_PLATFORM_IS_APPLE || HC_PLATFORM == HC_PLATFORM_ANDROID
+#include <time.h>
+#endif // HC_PLATFORM_IS_APPLE || HC_PLATFORM == HC_PLATFORM_ANDROID
 
 #ifndef STDAPICALLTYPE
 #define STDAPICALLTYPE

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <playfab/core/PFCore.h>
+#include "PlayFabException.h"
 #include <string>
 #include <assert.h>
 
@@ -22,7 +23,7 @@ class ServiceConfig
 public:
     using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
     template<typename T>
-    using Vector = typename std::vector<T, Allocator<T>>;
+    using Vector = typename std::vector<T, Alloc<T>>;
 
     // Creates a ServiceConfig by wrapping a PFServiceConfigHandle (transfers ownership of the handle)
     static ServiceConfig Wrap(PFServiceConfigHandle handle)

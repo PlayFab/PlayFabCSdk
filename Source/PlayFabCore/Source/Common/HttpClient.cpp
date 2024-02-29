@@ -24,6 +24,30 @@ String HttpClient::GetUrl(const char* path) const
     // Add sdk version param (used by service for telemetry)
     fullUrl << "?sdk=" << versionString << sdkVersion;
 
+    fullUrl << "&platform=";
+
+    // Add Platform param (used by service for telemetry)
+#if HC_PLATFORM == HC_PLATFORM_WIN32
+    fullUrl << win32Plat;
+#elif HC_PLATFORM == HC_PLATFORM_GDK
+    fullUrl << gdkPlat;
+#elif HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4
+    fullUrl << ps4Plat;
+#elif HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+    fullUrl << ps5Plat;
+#elif HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+    fullUrl << nintendoPlat;
+#elif HC_PLATFORM ==  HC_PLATFORM_LINUX
+    fullUrl << linuxPlat;
+#elif HC_PLATFORM ==  HC_PLATFORM_IOS
+    fullUrl << iosPlat;
+#elif HC_PLATFORM ==  HC_PLATFORM_ANDROID
+    fullUrl << androidPlat;
+#endif
+
+    // Add Build Origin param (used by service for telemetry)
+    fullUrl << "&origin=" << buildOrigin;
+
     return fullUrl.str();
 }
 

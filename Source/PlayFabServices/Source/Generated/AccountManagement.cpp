@@ -496,6 +496,41 @@ AsyncOp<GetPlayFabIDsFromPSNAccountIDsResult> AccountManagementAPI::ClientGetPla
     });
 }
 
+AsyncOp<GetPlayFabIDsFromPSNOnlineIDsResult> AccountManagementAPI::ClientGetPlayFabIDsFromPSNOnlineIDs(
+    Entity const& entity,
+    const GetPlayFabIDsFromPSNOnlineIDsRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/GetPlayFabIDsFromPSNOnlineIDs" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::AccountManagementClientGetPlayFabIDsFromPSNOnlineIDs,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayFabIDsFromPSNOnlineIDsResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetPlayFabIDsFromPSNOnlineIDsResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetPlayFabIDsFromPSNOnlineIDsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<GetPlayFabIDsFromSteamIDsResult> AccountManagementAPI::ClientGetPlayFabIDsFromSteamIDs(
     Entity const& entity,
     const GetPlayFabIDsFromSteamIDsRequest& request,
@@ -2203,6 +2238,41 @@ AsyncOp<GetPlayFabIDsFromPSNAccountIDsResult> AccountManagementAPI::ServerGetPla
         else
         {
             return Result<GetPlayFabIDsFromPSNAccountIDsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<GetPlayFabIDsFromPSNOnlineIDsResult> AccountManagementAPI::ServerGetPlayFabIDsFromPSNOnlineIDs(
+    Entity const& entity,
+    const GetPlayFabIDsFromPSNOnlineIDsRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/GetPlayFabIDsFromPSNOnlineIDs" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerGetPlayFabIDsFromPSNOnlineIDs,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayFabIDsFromPSNOnlineIDsResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetPlayFabIDsFromPSNOnlineIDsResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetPlayFabIDsFromPSNOnlineIDsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }

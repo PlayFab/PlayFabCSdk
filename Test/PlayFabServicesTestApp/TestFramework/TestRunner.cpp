@@ -51,7 +51,7 @@ HRESULT TestRunner::Initialize()
     m_testClasses.insert(m_testClasses.end(), generatedTests.begin(), generatedTests.end());
 
     m_activeTestClass = m_testClasses.begin();
-
+    
     return S_OK;
 }
 
@@ -193,11 +193,11 @@ bool TestRunner::Cleanup()
 
         (*m_activeTestClass)->ClassTearDown();
     }
-
+    
     // Reset LHC trace callback
     PFHCTraceSetClientCallback(nullptr);
     s_hcTraceCallbackContext = nullptr;
-
+    
     return m_testReport.AllTestsPassed();
 }
 
@@ -268,11 +268,17 @@ String TestRunner::GenerateTestSummary()
 
 void TestRunner::AddLog(PFHCTraceLevel level, _In_z_ _Printf_format_string_ const char* format, ...)
 {
-    va_list args;
-    va_start(args, format);
-    Vector<char> buf(1 + std::vsnprintf(NULL, 0, format, args));
-    auto ret = std::vsnprintf(buf.data(), buf.size(), format, args);
-    va_end(args);
+    va_list args1;
+    va_start(args1, format);
+
+    va_list args2;
+    va_copy(args2, args1);
+    
+    Vector<char> buf(1 + std::vsnprintf(NULL, 0, format, args1));
+    va_end(args1);
+    
+    auto ret = std::vsnprintf(buf.data(), buf.size(), format, args2);
+    va_end(args2);
 
     if (ret < 0)
     {
@@ -280,7 +286,7 @@ void TestRunner::AddLog(PFHCTraceLevel level, _In_z_ _Printf_format_string_ cons
     }
 
     Stringstream message;
-    message << Platform::GetTimeString();
+    message << Platform::GetTimeString() << "\t";
     message << buf.data();
     message << std::endl;
 

@@ -14,29 +14,29 @@ void InventoryTests::AddTests()
     AddTest("TestExecuteInventoryOperations", &InventoryTests::TestExecuteInventoryOperations);
     AddTest("TestGetInventoryCollectionIds", &InventoryTests::TestGetInventoryCollectionIds);
     AddTest("TestGetInventoryItems", &InventoryTests::TestGetInventoryItems);
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestGetMicrosoftStoreAccessTokens", &InventoryTests::TestGetMicrosoftStoreAccessTokens);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestGetTransactionHistory", &InventoryTests::TestGetTransactionHistory);
 #endif
     AddTest("TestPurchaseInventoryItems", &InventoryTests::TestPurchaseInventoryItems);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_IOS
     AddTest("TestRedeemAppleAppStoreInventoryItems", &InventoryTests::TestRedeemAppleAppStoreInventoryItems);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
     AddTest("TestRedeemGooglePlayInventoryItems", &InventoryTests::TestRedeemGooglePlayInventoryItems);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestRedeemMicrosoftStoreInventoryItems", &InventoryTests::TestRedeemMicrosoftStoreInventoryItems);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestRedeemNintendoEShopInventoryItems", &InventoryTests::TestRedeemNintendoEShopInventoryItems);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestRedeemPlayStationStoreInventoryItems", &InventoryTests::TestRedeemPlayStationStoreInventoryItems);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestRedeemSteamInventoryItems", &InventoryTests::TestRedeemSteamInventoryItems);
 #endif
     AddTest("TestSubtractInventoryItems", &InventoryTests::TestSubtractInventoryItems);

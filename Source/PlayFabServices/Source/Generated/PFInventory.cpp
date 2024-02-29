@@ -248,7 +248,7 @@ PF_API PFInventoryGetInventoryItemsGetResult(
     return S_OK;
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryGetMicrosoftStoreAccessTokensAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryGetMicrosoftStoreAccessTokensRequest* request,
@@ -294,7 +294,7 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryGetTransactionHistoryAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryGetTransactionHistoryRequest* request,
@@ -384,7 +384,7 @@ PF_API PFInventoryPurchaseInventoryItemsGetResult(
     return S_OK;
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_IOS
 PF_API PFInventoryRedeemAppleAppStoreInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemAppleAppStoreInventoryItemsRequest* request,
@@ -430,7 +430,7 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResult(
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
 PF_API PFInventoryRedeemGooglePlayInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemGooglePlayInventoryItemsRequest* request,
@@ -476,7 +476,7 @@ PF_API PFInventoryRedeemGooglePlayInventoryItemsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemMicrosoftStoreInventoryItemsRequest* request,
@@ -522,7 +522,7 @@ PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryRedeemNintendoEShopInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemNintendoEShopInventoryItemsRequest* request,
@@ -568,7 +568,7 @@ PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryRedeemPlayStationStoreInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemPlayStationStoreInventoryItemsRequest* request,
@@ -614,7 +614,7 @@ PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryRedeemSteamInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemSteamInventoryItemsRequest* request,

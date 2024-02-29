@@ -76,18 +76,24 @@ WriteEventsResponse::WriteEventsResponse(ServiceResponse&& serviceResponse) :
 class EventBuffer
 {
 public:
-    EventBuffer() = default;
+    EventBuffer(size_t bufferSize);
     EventBuffer(EventBuffer const&) = delete;
     EventBuffer& operator=(EventBuffer const&) = delete;
     ~EventBuffer() = default;
 
-    HRESULT Push(Event&& event) noexcept;
-    HRESULT Push(Vector<Event>&& events) noexcept;
+    HRESULT PushBack(Event&& event) noexcept;
+    HRESULT PushBack(Vector<Event>&& events) noexcept;
+    HRESULT PushFront(Event&& event) noexcept;
+    HRESULT PushFront(Vector<Event>&& events) noexcept;
     bool PopFront(Event& eventContents) noexcept;
+    void SetConfiguration(PFEventPipelineConfig eventPipelineConfig);
 
 private:
     std::mutex m_mutex;
-    Queue<Event> m_queue;
+    std::mutex m_configMutex;
+    Deque<Event> m_deque;
+    size_t m_bufferSize;
+    
 };
 
 class EventUploader : public ITaskQueueWork, public std::enable_shared_from_this<EventUploader>
@@ -102,6 +108,7 @@ public:
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
         PFHCCompressionLevel compressionLevel,
+        bool retryOnDisconnect,
         EventPipelineEventHandlers eventHandlers
     );
 
@@ -115,13 +122,15 @@ public:
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
         PFHCCompressionLevel compressionLevel,
+        bool retryOnDisconnect,
         EventPipelineEventHandlers eventHandlers
     );
 
     void Start();
     void Stop();
     void SetUploadingEntity(SharedPtr<Entity> entity);
-    void SetConfiguration(PFEventPipelineConfig eventPipelineConfig);
+    void SetConfiguration(PFEventPipelineConfig eventPipelineConfig); 
+    void ExponentialBackoff(uint32_t retryCount);
     PFEventPipelineType EventPipelineType() { return m_eventPipelineType; }
     PlayFab::String TelemetryKey() { return m_telemetryKey; }
     SharedPtr<ServiceConfig> ServiceConfig() { return m_serviceConfig; }
@@ -146,6 +155,8 @@ private:
     uint32_t m_maxWaitTimeInSeconds;
     uint32_t m_pollDelayInMs;
     PFHCCompressionLevel m_compressionLevel;
+    bool m_retryOnDisconnect;
+    uint32_t m_retryCount = 0;
     EventPipelineEventHandlers const m_eventHandlers;
     Vector<Event> m_pendingPayload;
     SharedPtr<Queue<Vector<Event>>> m_retryPayloads;
@@ -185,12 +196,14 @@ EventPipeline::EventPipeline(
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
     PFHCCompressionLevel compressionLevel,
+    bool retryOnDisconnect,
+    size_t bufferSize,
     PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
     PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
     void* handlerContext
 ) noexcept :
-    m_buffer{ MakeShared<EventBuffer>() },
-    m_uploader{ MakeShared<EventUploader>(rc.Derive(), uploadingEntity, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, compressionLevel, m_eventHandlers)}
+    m_buffer{ MakeShared<EventBuffer>(bufferSize) },
+    m_uploader{ MakeShared<EventUploader>(rc.Derive(), uploadingEntity, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, compressionLevel, retryOnDisconnect, m_eventHandlers)}
 {
     Initialize(rc, batchUploadedEventHandler, batchFailedEventHandler, handlerContext);
 }
@@ -204,12 +217,14 @@ EventPipeline::EventPipeline(
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
     PFHCCompressionLevel compressionLevel,
+    bool retryOnDisconnect,
+    size_t bufferSize,
     PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
     PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
     void* handlerContext
 ) noexcept :
-    m_buffer{ MakeShared<EventBuffer>() },
-    m_uploader{ MakeShared<EventUploader>(rc.Derive(), serviceConfig, telemetryKey, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, compressionLevel, m_eventHandlers) }
+    m_buffer{ MakeShared<EventBuffer>(bufferSize) },
+    m_uploader{ MakeShared<EventUploader>(rc.Derive(), serviceConfig, telemetryKey, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, compressionLevel, retryOnDisconnect, m_eventHandlers) }
 {
     Initialize(rc, batchUploadedEventHandler, batchFailedEventHandler, handlerContext);
 }
@@ -231,7 +246,7 @@ EventPipeline::~EventPipeline()
 // Should we do client side payload validation?
 HRESULT EventPipeline::EmitEvent(Event&& event) noexcept
 {
-    return m_buffer->Push(std::move(event));
+    return m_buffer->PushBack(std::move(event));
 }
 
 HRESULT EventPipeline::AddUploadingEntity(SharedPtr<Entity> uploadingEntity) noexcept
@@ -257,15 +272,19 @@ HRESULT EventPipeline::RemoveUploadingEntity() noexcept
 HRESULT EventPipeline::UpdateConfiguration(PFEventPipelineConfig eventPipelineConfig) noexcept
 {
     m_uploader->SetConfiguration(eventPipelineConfig);
+    m_buffer->SetConfiguration(eventPipelineConfig);
 
     return S_OK;
 }
 
-HRESULT EventBuffer::Push(Event&& event) noexcept
+EventBuffer::EventBuffer(size_t bufferSize) : m_bufferSize{bufferSize} {}
+
+HRESULT EventBuffer::PushBack(Event&& event) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(event.Model().eventNamespace);
     RETURN_HR_INVALIDARG_IF_NULL(event.Model().name);
     RETURN_HR_INVALIDARG_IF_NULL(event.Model().payloadJson);
+    RETURN_HR_IF(E_PF_CORE_EVENT_PIPELINE_BUFFER_FULL, m_deque.size() >= m_bufferSize);
 
     // If the client didn't provide an eventId, use a default based on a counter. ID will not be unique accross multiple sessions and/or clients,
     // but the service will assign a unique ID upon upload.
@@ -279,16 +298,50 @@ HRESULT EventBuffer::Push(Event&& event) noexcept
     }
 
     std::lock_guard<std::mutex> lock{ m_mutex };
-    m_queue.push(std::move(event));
+    m_deque.push_back(std::move(event));
 
     return S_OK;
 }
 
-HRESULT EventBuffer::Push(Vector<Event>&& events) noexcept
+HRESULT EventBuffer::PushBack(Vector<Event>&& events) noexcept
 {
     for (size_t i = 0; i < events.size(); i++)
     {
-        Push(std::move(events[i]));
+        PushBack(std::move(events[i]));
+    }
+
+    return S_OK;
+}
+
+HRESULT EventBuffer::PushFront(Event&& event) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(event.Model().eventNamespace);
+    RETURN_HR_INVALIDARG_IF_NULL(event.Model().name);
+    RETURN_HR_INVALIDARG_IF_NULL(event.Model().payloadJson);
+    // We will not drop events retried after network failure even if buffer is over limit size
+
+    // If the client didn't provide an eventId, use a default based on a counter. ID will not be unique accross multiple sessions and/or clients,
+    // but the service will assign a unique ID upon upload.
+    static std::atomic<uint64_t> s_eventId{ 0 };
+
+    if (!event.Model().clientId || strlen(event.Model().clientId) == 0)
+    {
+        Stringstream eventIdStream;
+        eventIdStream << "PlayFabCoreSDK_Event" << ++s_eventId;
+        event.SetClientId(eventIdStream.str());
+    }
+
+    std::lock_guard<std::mutex> lock{ m_mutex };
+    m_deque.push_front(std::move(event));
+
+    return S_OK;
+}
+
+HRESULT EventBuffer::PushFront(Vector<Event>&& events) noexcept
+{
+    for (size_t i = 0; i < events.size(); i++)
+    {
+        PushFront(std::move(events[i]));
     }
 
     return S_OK;
@@ -297,13 +350,13 @@ HRESULT EventBuffer::Push(Vector<Event>&& events) noexcept
 bool EventBuffer::PopFront(Event& event) noexcept
 {
     std::lock_guard<std::mutex> lock{ m_mutex };
-    if (m_queue.empty())
+    if (m_deque.empty())
     {
         return false;
     }
 
-    std::swap(event, m_queue.front());
-    m_queue.pop();
+    std::swap(event, m_deque.front());
+    m_deque.pop_front();
     return true;
 }
 
@@ -316,6 +369,7 @@ EventUploader::EventUploader(
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
     PFHCCompressionLevel compressionLevel,
+    bool retryOnDisconnect,
     EventPipelineEventHandlers eventHandlers
 ) :
     m_rc{ std::move(rc) },
@@ -326,6 +380,7 @@ EventUploader::EventUploader(
     m_maxWaitTimeInSeconds{ maxWaitTimeInSeconds },
     m_pollDelayInMs{ pollDelayInMs },
     m_compressionLevel{ compressionLevel },
+    m_retryOnDisconnect{ retryOnDisconnect },
     m_eventHandlers{ std::move(eventHandlers) },
     m_retryPayloads{ MakeShared<Queue<Vector<Event>>>() } 
 {
@@ -341,6 +396,7 @@ EventUploader::EventUploader(
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
     PFHCCompressionLevel compressionLevel,
+    bool retryOnDisconnect,
     EventPipelineEventHandlers eventHandlers
 ) :
     m_rc{ std::move(rc) },
@@ -352,6 +408,7 @@ EventUploader::EventUploader(
     m_maxWaitTimeInSeconds{ maxWaitTimeInSeconds },
     m_pollDelayInMs{ pollDelayInMs },
     m_compressionLevel{ compressionLevel },
+    m_retryOnDisconnect{ retryOnDisconnect },
     m_eventHandlers{ std::move(eventHandlers) },
     m_retryPayloads{ MakeShared<Queue<Vector<Event>>>() }
 {
@@ -378,6 +435,13 @@ void EventUploader::SetUploadingEntity(SharedPtr<Entity> entity)
     m_entity = entity;
 }
 
+void EventBuffer::SetConfiguration(PFEventPipelineConfig eventPipelineConfig)
+{
+    std::unique_lock<std::mutex> lock{ m_configMutex };
+
+    m_bufferSize = !eventPipelineConfig.bufferSize ? PFEventPipelineBufferSizeDefault : *eventPipelineConfig.bufferSize;
+}
+
 void EventUploader::SetConfiguration(PFEventPipelineConfig eventPipelineConfig)
 {
     std::unique_lock<std::mutex> lock{ m_configMutex };
@@ -393,6 +457,7 @@ void EventUploader::SetConfiguration(PFEventPipelineConfig eventPipelineConfig)
         m_maxEventsPerBatch = !eventPipelineConfig.maxEventsPerBatch ? PFTelemetryEventPipelineMaxEventsPerBatchDefault : *eventPipelineConfig.maxEventsPerBatch;
         m_maxWaitTimeInSeconds = !eventPipelineConfig.maxWaitTimeInSeconds ? PFTelemetryEventPipelineMaxWaitTimeInSecondsDefault : *eventPipelineConfig.maxWaitTimeInSeconds;
         m_pollDelayInMs = !eventPipelineConfig.pollDelayInMs ? PFTelemetryEventPipelinePollDelayInMsDefault : *eventPipelineConfig.pollDelayInMs;
+        m_retryOnDisconnect = !eventPipelineConfig.retryOnDisconnect ? PFTelemetryEventPipelineRetryOnDisconnectDefault : *eventPipelineConfig.retryOnDisconnect;
     }
 
     m_compressionLevel = !eventPipelineConfig.compressionLevel ? PFHCCompressionLevel::None : *eventPipelineConfig.compressionLevel;
@@ -436,6 +501,7 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
 
         return requestOp.Then([](Result<ServiceResponse> result) -> Result<WriteEventsResponse>
             {
+                RETURN_IF_FAILED(result.hr);
                 auto serviceResponse = result.ExtractPayload();
                 return WriteEventsResponse{ std::move(serviceResponse) };
             }
@@ -453,7 +519,8 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
         );
 
         return requestOp.Then([](Result<ServiceResponse> result) -> Result<WriteEventsResponse>
-            {
+            {   
+                RETURN_IF_FAILED(result.hr);
                 auto serviceResponse = result.ExtractPayload();
                 return WriteEventsResponse{ std::move(serviceResponse) };
             }
@@ -472,95 +539,105 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
 
 void EventUploader::ProcessResponse(Result<WriteEventsResponse> result, Vector<Event> payload, EventPipelineEventHandlers eventHandlers, bool isRetry)
 {
-    WriteEventsResponse response = result.ExtractPayload();
-
-    if (response.HttpCode() < 200 || response.HttpCode() >= 300)
+    if (FAILED(result.hr) && m_retryOnDisconnect)
     {
-        if (response.HttpCode() >= 400 && response.HttpCode() < 500)  // Client-side error
-        {
-            if (response.ServiceErrorCode() == ServiceErrorCode::TelemetryKeyInvalid || response.ServiceErrorCode() == ServiceErrorCode::TelemetryKeyDeactivated)
-            {
-                if (response.ServiceErrorCode() == ServiceErrorCode::TelemetryKeyInvalid)
-                {
-                    if (!m_telemetryKeyInvalid)
-                    {
-                        m_telemetryKeyInvalid = true;
-                        TRACE_ERROR("EventPipeline EventUploader failed, Telemetry Key is invalid (hr=0x%08x)", result.hr);
-                    }
-                }
-                else
-                {
-                    if (!m_telemetryKeyDeactivated)
-                    {
-                        m_telemetryKeyDeactivated = true;
-                        TRACE_ERROR("EventPipeline EventUploader failed, Telemetry Key is deactivated (hr=0x%08x)", result.hr);
-                    }
-                }
-            }
-            else if (response.ServiceErrorCode() == ServiceErrorCode::InvalidParams)  // If Invalid Params, we can identify failed events, so strip out failed events from payload and do a retry with the remaining
-            {
-                if (!isRetry)
-                {
-                    Vector<int> failedEventIndexes = response.FailedEventIndexes();
-                    Vector<Event> failedEvents, retryEvents;
+        // We assume network failure and if retries are enabled, we count the retries to delay the normal periodic schedule and add the events back to the buffer
+        m_retryCount++;
+        m_buffer->PushFront(std::move(payload));
+    }
+    else
+    {
+        WriteEventsResponse response = result.ExtractPayload();
+        m_retryCount = 0; // reset network failure delay
 
-                    for (size_t i = 0; i < payload.size(); i++)
+        if (response.HttpCode() < 200 || response.HttpCode() >= 300)
+        {
+            if (response.HttpCode() >= 400 && response.HttpCode() < 500)  // Client-side error
+            {
+                if (response.ServiceErrorCode() == ServiceErrorCode::TelemetryKeyInvalid || response.ServiceErrorCode() == ServiceErrorCode::TelemetryKeyDeactivated)
+                {
+                    if (response.ServiceErrorCode() == ServiceErrorCode::TelemetryKeyInvalid)
                     {
-                        if (std::find(failedEventIndexes.begin(), failedEventIndexes.end(), static_cast<int>(i)) != failedEventIndexes.end())
+                        if (!m_telemetryKeyInvalid)
                         {
-                            failedEvents.push_back(std::move(payload[i]));
-                        }
-                        else
-                        {
-                            retryEvents.push_back(std::move(payload[i]));
+                            m_telemetryKeyInvalid = true;
+                            TRACE_ERROR("EventPipeline EventUploader failed, Telemetry Key is invalid (hr=0x%08x)", result.hr);
                         }
                     }
-
-                    if (!retryEvents.empty() && retryEvents.size() < payload.size())
+                    else
                     {
-                        m_retryPayloads->push(std::move(retryEvents));
+                        if (!m_telemetryKeyDeactivated)
+                        {
+                            m_telemetryKeyDeactivated = true;
+                            TRACE_ERROR("EventPipeline EventUploader failed, Telemetry Key is deactivated (hr=0x%08x)", result.hr);
+                        }
                     }
-
-                    payload = std::move(failedEvents);
                 }
-            }
+                else if (response.ServiceErrorCode() == ServiceErrorCode::InvalidParams)  // If Invalid Params, we can identify failed events, so strip out failed events from payload and do a retry with the remaining
+                {
+                    if (!isRetry)
+                    {
+                        Vector<int> failedEventIndexes = response.FailedEventIndexes();
+                        Vector<Event> failedEvents, retryEvents;
 
-            const char* eventsApi = m_eventPipelineType == PFEventPipelineType::PlayStream ? "WriteEvents" : "WriteTelemetryEvents";
-            TRACE_ERROR("EventPipeline EventUploader %s failed, invoking event handler. (hr=0x%08x)", eventsApi, result.hr);
+                        for (size_t i = 0; i < payload.size(); i++)
+                        {
+                            if (std::find(failedEventIndexes.begin(), failedEventIndexes.end(), static_cast<int>(i)) != failedEventIndexes.end())
+                            {
+                                failedEvents.push_back(std::move(payload[i]));
+                            }
+                            else
+                            {
+                                retryEvents.push_back(std::move(payload[i]));
+                            }
+                        }
 
-            eventHandlers.InvokeBatchFailed(response.TranslatedHResult(), response.ErrorMessage(), FailedBatch{ std::move(payload) });
-        }
-        else    // Server-side error
-        {
-            if (isRetry)    // If this is a retry, return the whole batch back to the failure handler
-            {
+                        if (!retryEvents.empty() && retryEvents.size() < payload.size())
+                        {
+                            m_retryPayloads->push(std::move(retryEvents));
+                        }
+
+                        payload = std::move(failedEvents);
+                    }
+                }
+
                 const char* eventsApi = m_eventPipelineType == PFEventPipelineType::PlayStream ? "WriteEvents" : "WriteTelemetryEvents";
                 TRACE_ERROR("EventPipeline EventUploader %s failed, invoking event handler. (hr=0x%08x)", eventsApi, result.hr);
 
                 eventHandlers.InvokeBatchFailed(response.TranslatedHResult(), response.ErrorMessage(), FailedBatch{ std::move(payload) });
             }
-            else            // Insert into list of retry payloads
+            else    // Server-side error
             {
-                m_retryPayloads->push(std::move(payload));
+                if (isRetry)    // If this is a retry, return the whole batch back to the failure handler
+                {
+                    const char* eventsApi = m_eventPipelineType == PFEventPipelineType::PlayStream ? "WriteEvents" : "WriteTelemetryEvents";
+                    TRACE_ERROR("EventPipeline EventUploader %s failed, invoking event handler. (hr=0x%08x)", eventsApi, result.hr);
+
+                    eventHandlers.InvokeBatchFailed(response.TranslatedHResult(), response.ErrorMessage(), FailedBatch{ std::move(payload) });
+                }
+                else            // Insert into list of retry payloads
+                {
+                    m_retryPayloads->push(std::move(payload));
+                }
             }
         }
-    }
-    else if (response.ResultModel().Model().assignedEventIdsCount != payload.size())
-    {
-        // The service only responds with service assignedEventIds and the mapping of clientIds to serviceIds is just based on the order of the ids in the request
-        // and response. We don't have a way to handle a case where the lists are different sizes, so we'll consider the entire batch failed.
+        else if (response.ResultModel().Model().assignedEventIdsCount != payload.size())
+        {
+            // The service only responds with service assignedEventIds and the mapping of clientIds to serviceIds is just based on the order of the ids in the request
+            // and response. We don't have a way to handle a case where the lists are different sizes, so we'll consider the entire batch failed.
 
-        constexpr char s_mismatchedAssignedEventIdsError[]{ "EventPipeline EventUploader WriteEventsResponse contained mismatched number of AssignedEventIds." };
+            constexpr char s_mismatchedAssignedEventIdsError[]{ "EventPipeline EventUploader WriteEventsResponse contained mismatched number of AssignedEventIds." };
 
-        TRACE_ERROR("%s, invoking event handler", s_mismatchedAssignedEventIdsError);
-        eventHandlers.InvokeBatchFailed(E_FAIL, s_mismatchedAssignedEventIdsError, FailedBatch{ std::move(payload) });
-    }
-    else
-    {
-        // WriteEvents Succeeded
-        auto& model = response.ResultModel().Model();
-        Vector<String> assignedEventIds{ model.assignedEventIds, model.assignedEventIds + model.assignedEventIdsCount };
-        eventHandlers.InvokeBatchSucceeded(UploadedBatch{ std::move(payload), std::move(assignedEventIds) });
+            TRACE_ERROR("%s, invoking event handler", s_mismatchedAssignedEventIdsError);
+            eventHandlers.InvokeBatchFailed(E_FAIL, s_mismatchedAssignedEventIdsError, FailedBatch{ std::move(payload) });
+        }
+        else
+        {
+            // WriteEvents Succeeded
+            auto& model = response.ResultModel().Model();
+            Vector<String> assignedEventIds{ model.assignedEventIds, model.assignedEventIds + model.assignedEventIdsCount };
+            eventHandlers.InvokeBatchSucceeded(UploadedBatch{ std::move(payload), std::move(assignedEventIds) });
+        }
     }
 }
 
@@ -641,9 +718,9 @@ void EventUploader::Run() noexcept
             // Keep track of eventIds of the batch for use in callbacks
             Vector<Event> payload{ std::move(m_pendingPayload) };
             assert(m_pendingPayload.empty());
-
-            WriteEvents(std::move(payload), m_rc.Derive()).Finally([payload, sharedThis = shared_from_this(), eventHandlers = m_eventHandlers](Result<WriteEventsResponse> result) mutable
-                {
+            auto payloadCopy = payload;
+            WriteEvents(std::move(payload), m_rc.Derive()).Finally([payload = std::move(payloadCopy), sharedThis = shared_from_this(), eventHandlers = m_eventHandlers](Result<WriteEventsResponse> result) mutable
+                {   
                     sharedThis->ProcessResponse(std::move(result), std::move(payload), eventHandlers, false);
                 }
             );
@@ -655,10 +732,10 @@ void EventUploader::Run() noexcept
 
     // Using a polling model to check EventBuffer again after we've emptied it. This is the same algorithm used by XPlatCpp Event Pipeline.
     // Only schedule next poll if the EventUploader has not been cancelled. If it has been cancelled, 'this' may be destroyed here.
+    // If a network failure has been detected, a backoff exponential delay will be added to the scheduling
     if (!cancelled)
     {
-        m_rc.TaskQueueSubmitWork(shared_from_this(), m_pollDelayInMs);
+        m_rc.TaskQueueSubmitWork(shared_from_this(), m_pollDelayInMs + (m_retryCount*m_retryCount*1000) );
     }
 }
-
 }

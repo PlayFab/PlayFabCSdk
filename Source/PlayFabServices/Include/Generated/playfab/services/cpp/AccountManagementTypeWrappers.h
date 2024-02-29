@@ -2421,6 +2421,208 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper() = default;
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest& model) :
+        ModelWrapper<PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest, Alloc>{ model },
+        m_issuerId{ model.issuerId ? std::optional<int32_t>{ *model.issuerId } : std::nullopt },
+        m_PSNOnlineIDs{ model.PSNOnlineIDs, model.PSNOnlineIDs + model.PSNOnlineIDsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper& src) :
+        PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper(PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper&& src) :
+        PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper& operator=(PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper& lhs, PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_issuerId, rhs.m_issuerId);
+        swap(lhs.m_PSNOnlineIDs, rhs.m_PSNOnlineIDs);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetIssuerId(std::optional<int32_t> value)
+    {
+        m_issuerId = std::move(value);
+        this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
+    }
+
+    void SetPSNOnlineIDs(CStringVector<Alloc> value)
+    {
+        m_PSNOnlineIDs = std::move(value);
+        this->m_model.PSNOnlineIDs =  m_PSNOnlineIDs.empty() ? nullptr : m_PSNOnlineIDs.data();
+        this->m_model.PSNOnlineIDsCount =  static_cast<uint32_t>(m_PSNOnlineIDs.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
+        this->m_model.PSNOnlineIDs = m_PSNOnlineIDs.empty() ? nullptr : m_PSNOnlineIDs.data();
+    }
+
+    std::optional<int32_t> m_issuerId;
+    CStringVector<Alloc> m_PSNOnlineIDs;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementPSNOnlinePlayFabIdPairWrapper : public ModelWrapper<PFAccountManagementPSNOnlinePlayFabIdPair, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementPSNOnlinePlayFabIdPair;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementPSNOnlinePlayFabIdPairWrapper() = default;
+
+    PFAccountManagementPSNOnlinePlayFabIdPairWrapper(const PFAccountManagementPSNOnlinePlayFabIdPair& model) :
+        ModelWrapper<PFAccountManagementPSNOnlinePlayFabIdPair, Alloc>{ model },
+        m_playFabId{ SafeString(model.playFabId) },
+        m_PSNOnlineId{ SafeString(model.PSNOnlineId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementPSNOnlinePlayFabIdPairWrapper(const PFAccountManagementPSNOnlinePlayFabIdPairWrapper& src) :
+        PFAccountManagementPSNOnlinePlayFabIdPairWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementPSNOnlinePlayFabIdPairWrapper(PFAccountManagementPSNOnlinePlayFabIdPairWrapper&& src) :
+        PFAccountManagementPSNOnlinePlayFabIdPairWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementPSNOnlinePlayFabIdPairWrapper& operator=(PFAccountManagementPSNOnlinePlayFabIdPairWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementPSNOnlinePlayFabIdPairWrapper() = default;
+
+    friend void swap(PFAccountManagementPSNOnlinePlayFabIdPairWrapper& lhs, PFAccountManagementPSNOnlinePlayFabIdPairWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        swap(lhs.m_PSNOnlineId, rhs.m_PSNOnlineId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    void SetPSNOnlineId(String value)
+    {
+        m_PSNOnlineId = std::move(value);
+        this->m_model.PSNOnlineId =  m_PSNOnlineId.empty() ? nullptr : m_PSNOnlineId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+        this->m_model.PSNOnlineId = m_PSNOnlineId.empty() ? nullptr : m_PSNOnlineId.data();
+    }
+
+    String m_playFabId;
+    String m_PSNOnlineId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper() = default;
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult& model) :
+        ModelWrapper<PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult, Alloc>{ model },
+        m_data{ model.data, model.data + model.dataCount }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper(const PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper& src) :
+        PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper(PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper&& src) :
+        PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper& operator=(PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper() = default;
+
+    friend void swap(PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper& lhs, PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_data, rhs.m_data);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetData(ModelVector<PFAccountManagementPSNOnlinePlayFabIdPairWrapper<Alloc>, Alloc> value)
+    {
+        m_data = std::move(value);
+        this->m_model.data =  m_data.empty() ? nullptr : m_data.data();
+        this->m_model.dataCount =  static_cast<uint32_t>(m_data.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.data = m_data.empty() ? nullptr : m_data.data();
+    }
+
+    ModelVector<PFAccountManagementPSNOnlinePlayFabIdPairWrapper<Alloc>, Alloc> m_data;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFAccountManagementGetPlayFabIDsFromSteamIDsRequestWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromSteamIDsRequest, Alloc>
 {
 public:

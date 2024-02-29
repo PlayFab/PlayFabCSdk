@@ -1,0 +1,11 @@
+include ':app'
+
+def pathToRoot = "../../.."
+
+// Uncomment these if you want to build these along with the test app
+// Don't forget to pass -DBUILD_SHARED_LIBS=1
+// include ":libHttpClient.Android"
+// project(":libHttpClient.Android").projectDir = new File("${pathToRoot}/../libHttpClient/Build/libHttpClient.Android")
+
+// include ":PlayFabServices.Android"
+// project(":PlayFabServices.Android").projectDir = new File("${pathToRoot}/Build/PlayFabServices.Android")

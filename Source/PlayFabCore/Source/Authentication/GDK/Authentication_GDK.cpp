@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Generated/Authentication.h"
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 #include "JsonUtils.h"
 #include "GDK/PlatformUser_GDK.h"
 
@@ -52,7 +52,7 @@ AsyncOp<JsonValue> XUserLoginContext::GetRequestBody(RunContext runContext) cons
 }
 
 AsyncOp<CombinedLoginResult> AuthenticationAPI::LoginWithXUser(
-    SharedPtr<GlobalState> state,
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
     const LoginWithXUserRequest& request,
     RunContext rc

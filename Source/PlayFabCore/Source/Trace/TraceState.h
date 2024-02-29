@@ -27,7 +27,7 @@ struct TraceOutput
     virtual void Stop() {};
 };
 
-// Global TraceState that is independent from GlobalState so that initialization and cleanup can be Traced.
+// Global TraceState that is independent from PFCoreGlobalState so that initialization and cleanup can be Traced.
 // Tracing is routed through LHC trace infrastructure to leverage existing tracing features (message formatting,
 // client callbacks, etc.)
 class TraceState : public ITerminationListener

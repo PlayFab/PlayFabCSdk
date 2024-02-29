@@ -16,12 +16,11 @@
 #include <playfab/core/PFEvents.h>
 #include <playfab/core/PFEventPipeline.h>
 #include <playfab/core/PFTrace.h>
-#include <playfab/httpClient/PFHCTrace.h>
 
 extern "C"
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Initialize PlayFabCore global state. Custom platform hooks must be configured prior to calling PFInitialize.
 /// </summary>
@@ -29,6 +28,25 @@ extern "C"
 /// <returns>Result code for this API operation.</returns>
 PF_API PFInitialize(
     _In_opt_ XTaskQueueHandle backgroundQueue
+) noexcept;
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
+/// <summary>
+/// Initializes PlayFabCore global state. Custom platform hooks must be configured prior to calling PFInitialize.
+/// </summary>
+/// <param name="backgroundQueue">An XTaskQueue that should be used for background work. If no queue is provided then a default (threadpool) queue will be used.</param>
+/// <param name="args">Args for initializing libHttpClient.</param>
+/// <remarks>
+/// This will internally call PFInitialize(nullptr) if it hasn't been called already by the
+/// title. If control of PFCore background work is needed, the title should explicitly call
+/// PFInitialize and PFUninitialize.
+/// </remarks>
+/// <returns>Result code for this API operation.</returns>
+PF_API PFInitialize(
+    _In_opt_ XTaskQueueHandle backgroundQueue,
+    _In_ JavaVM* javaVm,
+    _In_ jobject applicationContext
 ) noexcept;
 #endif
 

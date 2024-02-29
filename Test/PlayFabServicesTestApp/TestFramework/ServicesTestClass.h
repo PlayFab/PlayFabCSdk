@@ -27,7 +27,7 @@ protected:
     // PlayFabId for DefaultTitlePlayer
     String DefaultTitlePlayerId() noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     // Title Entity, need to call certain APIs
     Entity TitleEntity() noexcept;
 #endif
@@ -42,7 +42,7 @@ private:
     PlayFab::Platform::UserPtr m_defaultPlatformUser;
     std::optional<LoginResult> m_defaultTitlePlayer;
     Map<String, LoginResult> m_playersByCustomId;
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     std::optional<Entity> m_titleEntity;
 #endif
 };

@@ -2,7 +2,7 @@
 
 #include "EventsTypes.h"
 #include "Common/Entity.h"
-#include "Common/GlobalState.h"
+#include "Common/PFCoreGlobalState.h"
 
 namespace PlayFab
 {

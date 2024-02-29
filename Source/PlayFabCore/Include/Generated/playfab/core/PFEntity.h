@@ -110,7 +110,7 @@ PF_API PFEntityGetEntityTokenResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
 /// <summary>
 /// Gets the size of the buffer needed to hold the PlayFab secretKey. Will fail with E_PF_NOSECRETKEY if there is no 
 /// Secret Key associated with the provided Entity.

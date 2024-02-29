@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include <playfab/core/PFEntity.h>
-#include "GlobalState.h"
+#include "PFCoreGlobalState.h"
 #include "ApiHelpers.h"
 #include <ApiXAsyncProvider.h>
 
@@ -11,7 +11,7 @@ PF_API PFEntityDuplicateHandle(
     _Out_ PFEntityHandle* duplicatedEntityHandle
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEntityDuplicateHandle), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEntityDuplicateHandle), [&](PFCoreGlobalState& state)
     {
         RETURN_HR_INVALIDARG_IF_NULL(duplicatedEntityHandle);
 
@@ -25,7 +25,7 @@ PF_API_(void) PFEntityCloseHandle(
     _In_ PFEntityHandle entityHandle
 ) noexcept
 {
-    ApiImpl(XASYNC_IDENTITY(PFEntityCloseHandle), [&](GlobalState& state)
+    ApiImpl(XASYNC_IDENTITY(PFEntityCloseHandle), [&](PFCoreGlobalState& state)
     {
         state.Entities().CloseHandle(entityHandle);
         return S_OK;
@@ -88,7 +88,7 @@ PF_API PFEntityGetEntityTokenResult(
     return hr;
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFEntityGetSecretKeySize(
     _In_  PFEntityHandle handle,
     _Out_ size_t* secretKeySize
@@ -229,7 +229,7 @@ PF_API PFEntityRegisterTokenExpiredEventHandler(
     _Out_ PFRegistrationToken* token
 ) noexcept
 {
-    return ApiImpl(XASYNC_IDENTITY(PFEntityRegisterTokenExpiredEventHandler), [&](GlobalState& state)
+    return ApiImpl(XASYNC_IDENTITY(PFEntityRegisterTokenExpiredEventHandler), [&](PFCoreGlobalState& state)
     {
         return state.TokenExpiredHandler().RegisterClientHandler(state.RunContext().DeriveOnQueue(queue), context, handler, token);
     });
@@ -239,8 +239,8 @@ PF_API_(void) PFEntityUnregisterTokenExpiredEventHandler(
     _In_ PFRegistrationToken token
 ) noexcept
 {
-    SharedPtr<GlobalState> state;
-    GlobalState::Get(state);
+    SharedPtr<PFCoreGlobalState> state;
+    PFCoreGlobalState::Get(state);
     if (state)
     {
         state->TokenExpiredHandler().UnregisterClientHandler(token);
@@ -254,8 +254,8 @@ PF_API PFEntityRegisterTokenRefreshedEventHandler(
     _Out_ PFRegistrationToken* token
 ) noexcept
 {
-    SharedPtr<GlobalState> state;
-    RETURN_IF_FAILED(GlobalState::Get(state));
+    SharedPtr<PFCoreGlobalState> state;
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
 
     return state->TokenRefreshedHandler().RegisterClientHandler(
         state->RunContext().DeriveOnQueue(queue),
@@ -270,8 +270,8 @@ PF_API_(void) PFEntityUnregisterTokenRefreshedEventHandler(
 ) noexcept
 {
 
-    SharedPtr<GlobalState> state;
-    GlobalState::Get(state);
+    SharedPtr<PFCoreGlobalState> state;
+    PFCoreGlobalState::Get(state);
     if (state)
     {
         state->TokenRefreshedHandler().UnregisterClientHandler(token);

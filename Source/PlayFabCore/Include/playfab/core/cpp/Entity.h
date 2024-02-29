@@ -85,7 +85,7 @@ public:
     {
         try
         {
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
             size_t size{ 0 };
             THROW_IF_FAILED(PFEntityGetSecretKeySize(m_handle, &size));
 
@@ -97,7 +97,7 @@ public:
 #else   
             UNREFERENCED_PARAMETER(secretKey);
             assert(false);
-            return S_OK;
+            return E_PF_NOSECRETKEY;
 #endif
         }
         catch (Wrappers::Exception& e)
