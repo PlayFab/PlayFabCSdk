@@ -159,7 +159,7 @@ void TokenRefreshWorker::CheckAndRefreshToken(SharedPtr<Entity> entity) noexcept
     if (FAILED(getEntityTokenResult.hr))
     {
         // If we are able to get an entity token for the Entity, invoke the TokenExpired handler.
-        TRACE_INFORMATION("TokenRefreshWorker unable to get EntityToken (hr = 0x%08x)");
+        TRACE_INFORMATION("TokenRefreshWorker unable to get EntityToken (hr = 0x%08x)", getEntityTokenResult.hr);
         m_tokenExpiredHandler.Invoke(entity->EntityKey());
     }
     else if (CheckRefreshRequired(getEntityTokenResult.Payload()))

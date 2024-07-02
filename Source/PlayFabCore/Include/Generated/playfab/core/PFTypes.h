@@ -231,7 +231,8 @@ enum class PFUserOrigination : uint32_t
     OpenIdConnect,
     Apple,
     NintendoSwitchAccount,
-    GooglePlayGames
+    GooglePlayGames,
+    XboxMobileStore
 };
 
 /// <summary>
@@ -270,7 +271,8 @@ enum class PFLoginIdentityProvider : uint32_t
     OpenIdConnect,
     Apple,
     NintendoSwitchAccount,
-    GooglePlayGames
+    GooglePlayGames,
+    XboxMobileStore
 };
 
 /// <summary>

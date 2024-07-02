@@ -7,9 +7,10 @@
 namespace PlayFab
 {
 
-HttpClient::HttpClient(String&& apiEndpoint, SharedPtr<PFHttpRetrySettings> retrySettings) :
+HttpClient::HttpClient(String&& apiEndpoint, SharedPtr<PFHttpRetrySettings> retrySettings, SharedPtr<PFHttpSettings> httpSettings) :
     m_apiEndpoint{ std::move(apiEndpoint) },
-    m_retrySettings{ std::move(retrySettings) }
+    m_retrySettings{ std::move(retrySettings) },
+    m_httpSettings{ std::move(httpSettings) }
 {
 }
 
@@ -67,7 +68,8 @@ AsyncOp<ServiceResponse> HttpClient::MakePostRequest(
         JsonUtils::WriteToString(requestBody),
         static_cast<uint32_t>(retryCacheId),
         *m_retrySettings,
-        std::move(runContext),
+        std::move(runContext), 
+        *m_httpSettings,
         compressionLevel
     );
 

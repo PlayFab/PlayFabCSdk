@@ -50,15 +50,11 @@ HRESULT AuthenticateGameServerWithCustomIdOperation::OnStarted(XAsyncBlock* asyn
     return PFAuthenticationAuthenticateGameServerWithCustomIdAsync(m_entity.Handle(), &m_request.Model(), async);
 }
 
-Result<Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>> AuthenticateGameServerWithCustomIdOperation::GetResult(XAsyncBlock* async) noexcept
+Result<Entity> AuthenticateGameServerWithCustomIdOperation::GetResult(XAsyncBlock* async) noexcept
 {
-    size_t bufferSize;
-    RETURN_IF_FAILED(PFAuthenticationAuthenticateGameServerWithCustomIdGetResultSize(async, &bufferSize));
-    Vector<char> buffer(bufferSize);
-    PFAuthenticationAuthenticateCustomIdResult* result;
-    RETURN_IF_FAILED(PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(async, buffer.size(), buffer.data(), &result, nullptr));
-    Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator> resultWrapper{ std::move(*result) };
-    return resultWrapper;
+    PFEntityHandle entityHandle;
+    RETURN_IF_FAILED(PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(async, &entityHandle, nullptr));
+    return Entity::Wrap(entityHandle);
 }
  
 DeleteOperation::DeleteOperation(

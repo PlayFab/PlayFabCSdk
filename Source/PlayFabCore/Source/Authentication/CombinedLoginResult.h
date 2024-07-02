@@ -84,5 +84,45 @@ public:
     Result<PFServerCombinedLoginResult const*> Copy(ModelBuffer& buffer) const override;
 };
 
+// Struct to hold AuthenticateGameServerWithCustomId result. Although the fields of this struct are returned via separate parameters
+// from the public API, XAsync only allows for a single result type per call
+struct PFAuthenticationAuthenticateGameServerResult
+{
+    PFEntityHandle entityHandle;
+    bool newlyCreated;
+};
+
+// Internal combined AuthenticateGameServerWithCustomId result. Contains both the Entity object and the newlyCreated field.
+class AuthenticateGameServerResult : public ClientOutputModel<PFAuthenticationAuthenticateGameServerResult>
+{
+public:
+    static Result<AuthenticateGameServerResult> FromJson(
+        const JsonValue& authResponse,
+        SharedPtr<PFCoreGlobalState> PFCoreGlobalState,
+        SharedPtr<ServiceConfig const> serviceConfig
+    ) noexcept;
+
+    AuthenticateGameServerResult(const AuthenticateGameServerResult&) = default;
+    AuthenticateGameServerResult(AuthenticateGameServerResult&&) = default;
+    AuthenticateGameServerResult& operator=(const AuthenticateGameServerResult&) = delete;
+    virtual ~AuthenticateGameServerResult() = default;
+
+    SharedPtr<Entity> entity;
+    bool newlyCreated{ false };
+
+public:
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    // Copy into a buffer in order to return to client. Note that this method creates a PFEntityHandle
+    // that must later be closed by the client.
+    Result<PFAuthenticationAuthenticateGameServerResult const*> Copy(ModelBuffer& buffer) const override;
+
+private:
+    AuthenticateGameServerResult(SharedPtr<PFCoreGlobalState> PFCoreGlobalState) noexcept;
+
+    // Need global state to Copy, as that creates a PFEntityHandle for 'entity'
+    SharedPtr<PFCoreGlobalState> const m_PFCoreGlobalState;
+};
+
 } // namespace Authentication
 } // namespace PlayFab

@@ -964,6 +964,59 @@ HRESULT FilterOptions::Copy(const PFCatalogFilterOptions& input, PFCatalogFilter
     return S_OK;
 }
 
+JsonValue Permissions::ToJson() const
+{
+    return Permissions::ToJson(this->Model());
+}
+
+JsonValue Permissions::ToJson(const PFCatalogPermissions& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberArray(output, "SegmentIds", input.segmentIds, input.segmentIdsCount);
+    return output;
+}
+
+HRESULT Permissions::FromJson(const JsonValue& input)
+{
+    CStringVector segmentIds{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SegmentIds", segmentIds));
+    this->SetSegmentIds(std::move(segmentIds));
+
+    return S_OK;
+}
+
+size_t Permissions::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFCatalogPermissions const*> Permissions::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<Permissions>(&this->Model());
+}
+
+size_t Permissions::RequiredBufferSize(const PFCatalogPermissions& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(char*) + sizeof(char*) * model.segmentIdsCount);
+    for (size_t i = 0; i < model.segmentIdsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.segmentIds[i]) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT Permissions::Copy(const PFCatalogPermissions& input, PFCatalogPermissions& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyToArray(input.segmentIds, input.segmentIdsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.segmentIds = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue CatalogPriceAmountOverride::ToJson() const
 {
     return CatalogPriceAmountOverride::ToJson(this->Model());
@@ -1159,6 +1212,7 @@ JsonValue StoreDetails::ToJson(const PFCatalogStoreDetails& input)
 {
     JsonValue output{ rapidjson::kObjectType };
     JsonUtils::ObjectAddMember<FilterOptions>(output, "FilterOptions", input.filterOptions);
+    JsonUtils::ObjectAddMember<Permissions>(output, "Permissions", input.permissions);
     JsonUtils::ObjectAddMember<CatalogPriceOptionsOverride>(output, "PriceOptionsOverride", input.priceOptionsOverride);
     return output;
 }
@@ -1170,6 +1224,13 @@ HRESULT StoreDetails::FromJson(const JsonValue& input)
     if (filterOptions)
     {
         this->SetFilterOptions(std::move(*filterOptions));
+    }
+
+    std::optional<Permissions> permissions{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Permissions", permissions));
+    if (permissions)
+    {
+        this->SetPermissions(std::move(*permissions));
     }
 
     std::optional<CatalogPriceOptionsOverride> priceOptionsOverride{};
@@ -1199,6 +1260,10 @@ size_t StoreDetails::RequiredBufferSize(const PFCatalogStoreDetails& model)
     {
         requiredSize += FilterOptions::RequiredBufferSize(*model.filterOptions);
     }
+    if (model.permissions)
+    {
+        requiredSize += Permissions::RequiredBufferSize(*model.permissions);
+    }
     if (model.priceOptionsOverride)
     {
         requiredSize += CatalogPriceOptionsOverride::RequiredBufferSize(*model.priceOptionsOverride);
@@ -1213,6 +1278,11 @@ HRESULT StoreDetails::Copy(const PFCatalogStoreDetails& input, PFCatalogStoreDet
         auto propCopyResult = buffer.CopyTo<FilterOptions>(input.filterOptions); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.filterOptions = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<Permissions>(input.permissions); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.permissions = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo<CatalogPriceOptionsOverride>(input.priceOptionsOverride); 
@@ -2216,6 +2286,111 @@ HRESULT ImageConfig::Copy(const PFCatalogImageConfig& input, PFCatalogImageConfi
     return S_OK;
 }
 
+JsonValue CategoryRatingConfig::ToJson() const
+{
+    return CategoryRatingConfig::ToJson(this->Model());
+}
+
+JsonValue CategoryRatingConfig::ToJson(const PFCatalogCategoryRatingConfig& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMember(output, "Name", input.name);
+    return output;
+}
+
+HRESULT CategoryRatingConfig::FromJson(const JsonValue& input)
+{
+    String name{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Name", name));
+    this->SetName(std::move(name));
+
+    return S_OK;
+}
+
+size_t CategoryRatingConfig::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFCatalogCategoryRatingConfig const*> CategoryRatingConfig::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<CategoryRatingConfig>(&this->Model());
+}
+
+size_t CategoryRatingConfig::RequiredBufferSize(const PFCatalogCategoryRatingConfig& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.name)
+    {
+        requiredSize += (std::strlen(model.name) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT CategoryRatingConfig::Copy(const PFCatalogCategoryRatingConfig& input, PFCatalogCategoryRatingConfig& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.name); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.name = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+JsonValue ReviewConfig::ToJson() const
+{
+    return ReviewConfig::ToJson(this->Model());
+}
+
+JsonValue ReviewConfig::ToJson(const PFCatalogReviewConfig& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberArray<CategoryRatingConfig>(output, "CategoryRatings", input.categoryRatings, input.categoryRatingsCount);
+    return output;
+}
+
+HRESULT ReviewConfig::FromJson(const JsonValue& input)
+{
+    ModelVector<CategoryRatingConfig> categoryRatings{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<CategoryRatingConfig>(input, "CategoryRatings", categoryRatings));
+    this->SetCategoryRatings(std::move(categoryRatings));
+
+    return S_OK;
+}
+
+size_t ReviewConfig::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFCatalogReviewConfig const*> ReviewConfig::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<ReviewConfig>(&this->Model());
+}
+
+size_t ReviewConfig::RequiredBufferSize(const PFCatalogReviewConfig& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFCatalogCategoryRatingConfig*) + sizeof(PFCatalogCategoryRatingConfig*) * model.categoryRatingsCount);
+    for (size_t i = 0; i < model.categoryRatingsCount; ++i)
+    {
+        requiredSize += CategoryRatingConfig::RequiredBufferSize(*model.categoryRatings[i]);
+    }
+    return requiredSize;
+}
+
+HRESULT ReviewConfig::Copy(const PFCatalogReviewConfig& input, PFCatalogReviewConfig& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyToArray<CategoryRatingConfig>(input.categoryRatings, input.categoryRatingsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.categoryRatings = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue UserGeneratedContentSpecificConfig::ToJson() const
 {
     return UserGeneratedContentSpecificConfig::ToJson(this->Model());
@@ -2300,6 +2475,7 @@ JsonValue CatalogConfig::ToJson(const PFCatalogCatalogConfig& input)
     JsonUtils::ObjectAddMember<ImageConfig>(output, "Image", input.image);
     JsonUtils::ObjectAddMember(output, "IsCatalogEnabled", input.isCatalogEnabled);
     JsonUtils::ObjectAddMemberArray(output, "Platforms", input.platforms, input.platformsCount);
+    JsonUtils::ObjectAddMember<ReviewConfig>(output, "Review", input.review);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "ReviewerEntities", input.reviewerEntities, input.reviewerEntitiesCount);
     JsonUtils::ObjectAddMember<UserGeneratedContentSpecificConfig>(output, "UserGeneratedContent", input.userGeneratedContent);
     return output;
@@ -2345,6 +2521,13 @@ HRESULT CatalogConfig::FromJson(const JsonValue& input)
     CStringVector platforms{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Platforms", platforms));
     this->SetPlatforms(std::move(platforms));
+
+    std::optional<ReviewConfig> review{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Review", review));
+    if (review)
+    {
+        this->SetReview(std::move(*review));
+    }
 
     ModelVector<EntityKey> reviewerEntities{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember<EntityKey>(input, "ReviewerEntities", reviewerEntities));
@@ -2405,6 +2588,10 @@ size_t CatalogConfig::RequiredBufferSize(const PFCatalogCatalogConfig& model)
     {
         requiredSize += (std::strlen(model.platforms[i]) + 1);
     }
+    if (model.review)
+    {
+        requiredSize += ReviewConfig::RequiredBufferSize(*model.review);
+    }
     requiredSize += (alignof(PFEntityKey*) + sizeof(PFEntityKey*) * model.reviewerEntitiesCount);
     for (size_t i = 0; i < model.reviewerEntitiesCount; ++i)
     {
@@ -2454,6 +2641,11 @@ HRESULT CatalogConfig::Copy(const PFCatalogCatalogConfig& input, PFCatalogCatalo
         auto propCopyResult = buffer.CopyToArray(input.platforms, input.platformsCount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platforms = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<ReviewConfig>(input.review); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.review = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyToArray<EntityKey>(input.reviewerEntities, input.reviewerEntitiesCount);
@@ -2731,6 +2923,7 @@ JsonValue Review::ToJson() const
 JsonValue Review::ToJson(const PFCatalogReview& input)
 {
     JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberDictionary(output, "CategoryRatings", input.categoryRatings, input.categoryRatingsCount);
     JsonUtils::ObjectAddMember(output, "HelpfulNegative", input.helpfulNegative);
     JsonUtils::ObjectAddMember(output, "HelpfulPositive", input.helpfulPositive);
     JsonUtils::ObjectAddMember(output, "IsInstalled", input.isInstalled);
@@ -2749,6 +2942,10 @@ JsonValue Review::ToJson(const PFCatalogReview& input)
 
 HRESULT Review::FromJson(const JsonValue& input)
 {
+    DictionaryEntryVector<PFInt32DictionaryEntry> categoryRatings{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CategoryRatings", categoryRatings));
+    this->SetCategoryRatings(std::move(categoryRatings));
+
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "HelpfulNegative", this->m_model.helpfulNegative));
 
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "HelpfulPositive", this->m_model.helpfulPositive));
@@ -2810,6 +3007,11 @@ Result<PFCatalogReview const*> Review::Copy(ModelBuffer& buffer) const
 size_t Review::RequiredBufferSize(const PFCatalogReview& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFInt32DictionaryEntry) + sizeof(PFInt32DictionaryEntry) * model.categoryRatingsCount);
+    for (size_t i = 0; i < model.categoryRatingsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.categoryRatings[i].key) + 1);
+    }
     if (model.itemId)
     {
         requiredSize += (std::strlen(model.itemId) + 1);
@@ -2848,6 +3050,11 @@ size_t Review::RequiredBufferSize(const PFCatalogReview& model)
 HRESULT Review::Copy(const PFCatalogReview& input, PFCatalogReview& output, ModelBuffer& buffer)
 {
     output = input;
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.categoryRatings, input.categoryRatingsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.categoryRatings = propCopyResult.ExtractPayload();
+    }
     {
         auto propCopyResult = buffer.CopyTo(input.itemId); 
         RETURN_IF_FAILED(propCopyResult.hr);

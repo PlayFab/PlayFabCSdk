@@ -10,7 +10,7 @@ namespace PlayFab
 class ServiceConfig
 {
 public:
-    ServiceConfig(String&& apiEndpoint, String&& titleId, SharedPtr<PFHttpRetrySettings> httpRetrySettings);
+    ServiceConfig(String&& apiEndpoint, String&& titleId, SharedPtr<PFHttpRetrySettings> httpRetrySettings, SharedPtr<PFHttpSettings> httpSettings);
 
     SharedPtr<HttpClient const> HttpClient() const noexcept;
     String const& APIEndpoint() const noexcept;

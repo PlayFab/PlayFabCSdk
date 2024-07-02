@@ -373,6 +373,25 @@ typedef struct PFCatalogFilterOptions
 } PFCatalogFilterOptions;
 
 /// <summary>
+/// PFCatalogPermissions data model.
+/// </summary>
+typedef struct PFCatalogPermissions
+{
+    /// <summary>
+    /// (Optional) The list of ids of Segments that the a player can be in to purchase from the store.
+    /// When a value is provided, the player must be in at least one of the segments listed for the purchase
+    /// to be allowed.
+    /// </summary>
+    _Maybenull_ _Field_size_(segmentIdsCount) const char* const* segmentIds;
+
+    /// <summary>
+    /// Count of segmentIds
+    /// </summary>
+    uint32_t segmentIdsCount;
+
+} PFCatalogPermissions;
+
+/// <summary>
 /// PFCatalogCatalogPriceAmountOverride data model.
 /// </summary>
 typedef struct PFCatalogCatalogPriceAmountOverride
@@ -439,6 +458,11 @@ typedef struct PFCatalogStoreDetails
     /// with item references.
     /// </summary>
     _Maybenull_ PFCatalogFilterOptions const* filterOptions;
+
+    /// <summary>
+    /// (Optional) The permissions that control which players can purchase from the store.
+    /// </summary>
+    _Maybenull_ PFCatalogPermissions const* permissions;
 
     /// <summary>
     /// (Optional) The global prices utilized in the store. These options are mutually exclusive with
@@ -967,6 +991,35 @@ typedef struct PFCatalogImageConfig
 } PFCatalogImageConfig;
 
 /// <summary>
+/// PFCatalogCategoryRatingConfig data model.
+/// </summary>
+typedef struct PFCatalogCategoryRatingConfig
+{
+    /// <summary>
+    /// (Optional) Name of the category.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* name;
+
+} PFCatalogCategoryRatingConfig;
+
+/// <summary>
+/// PFCatalogReviewConfig data model.
+/// </summary>
+typedef struct PFCatalogReviewConfig
+{
+    /// <summary>
+    /// (Optional) A set of categories that can be applied toward ratings and reviews.
+    /// </summary>
+    _Maybenull_ _Field_size_(categoryRatingsCount) PFCatalogCategoryRatingConfig const* const* categoryRatings;
+
+    /// <summary>
+    /// Count of categoryRatings
+    /// </summary>
+    uint32_t categoryRatingsCount;
+
+} PFCatalogReviewConfig;
+
+/// <summary>
 /// PFCatalogUserGeneratedContentSpecificConfig data model.
 /// </summary>
 typedef struct PFCatalogUserGeneratedContentSpecificConfig
@@ -1060,6 +1113,11 @@ typedef struct PFCatalogCatalogConfig
     /// Count of platforms
     /// </summary>
     uint32_t platformsCount;
+
+    /// <summary>
+    /// (Optional) The set of configuration that only applies to Ratings and Reviews.
+    /// </summary>
+    _Maybenull_ PFCatalogReviewConfig const* review;
 
     /// <summary>
     /// (Optional) A set of player entity keys that are allowed to review content. There is a maximum
@@ -1301,6 +1359,16 @@ typedef struct PFCatalogGetEntityItemReviewRequest
 /// </summary>
 typedef struct PFCatalogReview
 {
+    /// <summary>
+    /// (Optional) The star rating associated with each selected category in this review.
+    /// </summary>
+    _Maybenull_ _Field_size_(categoryRatingsCount) struct PFInt32DictionaryEntry const* categoryRatings;
+
+    /// <summary>
+    /// Count of categoryRatings
+    /// </summary>
+    uint32_t categoryRatingsCount;
+
     /// <summary>
     /// The number of negative helpfulness votes for this review.
     /// </summary>

@@ -58,7 +58,7 @@ private:
     }
 
     std::mutex m_mutex;
-    IOperation* m_runningOperation; // non-owning
+    IOperation* m_runningOperation{ nullptr }; // non-owning
     Queue<UniquePtr<IOperation>> m_operationQueue;
 };
 

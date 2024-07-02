@@ -1032,7 +1032,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Android device identifier to the user's PlayFab account
 /// </summary>
@@ -1041,7 +1041,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, Android, and macOS.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLoginWithAndroidDeviceIDAsync, ClientUnlinkAndroidDeviceIDAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1356,7 +1356,7 @@ PF_API PFAccountManagementClientLinkOpenIdConnectAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the PlayStation :tm: Network account associated with the provided access code to the user's
 /// PlayFab account
@@ -1366,7 +1366,7 @@ PF_API PFAccountManagementClientLinkOpenIdConnectAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Sony PlayStation®, and macOS.
+/// This API is available on Win32, Sony PlayStation®, Linux, and macOS.
 /// See also ClientLoginWithPSNAsync, ClientUnlinkPSNAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1543,7 +1543,7 @@ PF_API PFAccountManagementClientSendAccountRecoveryEmailAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Android device identifier from the user's PlayFab account
 /// </summary>
@@ -1552,7 +1552,7 @@ PF_API PFAccountManagementClientSendAccountRecoveryEmailAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, Android, and macOS.
+/// This API is available on Win32, Linux, and macOS.
 /// See also ClientLinkAndroidDeviceIDAsync, ClientLoginWithAndroidDeviceIDAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -2045,8 +2045,9 @@ PF_API PFAccountManagementServerBanUsersAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_USERIS_NOT_VALID
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFAccountManagementServerBanUsersGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -2062,8 +2063,9 @@ PF_API PFAccountManagementServerBanUsersGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_USERIS_NOT_VALID
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

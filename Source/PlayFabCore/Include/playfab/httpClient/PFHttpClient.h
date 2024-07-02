@@ -755,7 +755,6 @@ enum class PFHCCompressionLevel : uint32_t
     High = 9
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Enable GZIP compression on the provided body payload.
 /// </summary>
@@ -767,7 +766,18 @@ PF_API PFHCHttpCallRequestEnableGzipCompression(
     _In_ PFHCCallHandle call,
     _In_ PFHCCompressionLevel level
 ) noexcept;
-#endif
+
+/// <summary>
+/// Enable GZIP compression on the expected response.
+/// </summary>
+/// <param name="call">The handle of the HTTP call.</param>
+/// <param name="compress">Boolean indicating whether a compressed response is expected.</param>
+/// <returns>Result code for this API operation. Possible values are S_OK, E_INVALIDARG, or E_HC_NOT_INITIALISED.</returns>
+/// <remarks>This must be called prior to calling PFHCHttpCallPerformAsync.</remarks>
+PF_API PFHCHttpCallResponseSetGzipCompressed(
+    _In_ PFHCCallHandle call,
+    _In_ bool compress
+) noexcept;
 
 #if !HC_NOWEBSOCKETS
 /////////////////////////////////////////////////////////////////////////////////////////

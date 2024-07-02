@@ -108,5 +108,57 @@ Result<PFServerCombinedLoginResult const*> ServerCombinedLoginResult::Copy(Model
     return std::move(output);
 }
 
+AuthenticateGameServerResult::AuthenticateGameServerResult(SharedPtr<PFCoreGlobalState> PFCoreGlobalState) noexcept
+    : m_PFCoreGlobalState(std::move(PFCoreGlobalState))
+{
+}
+
+Result<AuthenticateGameServerResult> AuthenticateGameServerResult::FromJson(
+    const JsonValue& authResponse,
+    SharedPtr<PFCoreGlobalState> PFCoreGlobalState,
+    SharedPtr<ServiceConfig const> serviceConfig
+) noexcept
+{
+    AuthenticateGameServerResult result{ std::move(PFCoreGlobalState) };
+
+    EntityTokenResponse entityToken;
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(authResponse, "EntityToken", entityToken));
+
+    auto makeEntityResult = Entity::Make(
+        std::move(entityToken),
+        std::move(serviceConfig),
+        result.m_PFCoreGlobalState->RunContext().Derive(),
+        nullptr,
+        result.m_PFCoreGlobalState->TokenExpiredHandler(),
+        result.m_PFCoreGlobalState->TokenRefreshedHandler()
+    );
+
+    RETURN_IF_FAILED(makeEntityResult.hr);
+    result.entity = makeEntityResult.ExtractPayload();
+
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(authResponse, "NewlyCreated", result.newlyCreated));
+
+    return result;
+}
+
+size_t AuthenticateGameServerResult::RequiredBufferSize() const
+{
+    return sizeof(ModelType);
+}
+
+Result<PFAuthenticationAuthenticateGameServerResult const*> AuthenticateGameServerResult::Copy(ModelBuffer& buffer) const
+{
+    auto allocResult = buffer.Alloc<PFAuthenticationAuthenticateGameServerResult>(1);
+    RETURN_IF_FAILED(allocResult.hr);
+
+    auto output = allocResult.ExtractPayload();
+
+    // Create PFEntityHandle for entity
+    RETURN_IF_FAILED(m_PFCoreGlobalState->Entities().MakeHandle(entity, output->entityHandle));
+    output->newlyCreated = newlyCreated;
+
+    return std::move(output);
+}
+
 } // namespace Authentication
 } // namespace PlayFab

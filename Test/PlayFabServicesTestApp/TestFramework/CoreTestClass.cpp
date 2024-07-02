@@ -14,16 +14,6 @@ CoreTestClass::CoreTestClass(TestTitleData testTitleData) :
 {
 }
 
-void CoreTestClass::ClassSetUp()
-{
-    THROW_IF_FAILED(Initialize().Wait().hr);
-}
-
-void CoreTestClass::ClassTearDown()
-{
-    THROW_IF_FAILED(Uninitialize().Wait().hr);
-}
-
 AsyncOp<void> CoreTestClass::Initialize()
 {
     RETURN_IF_FAILED(Platform::CoreInitialize(nullptr));

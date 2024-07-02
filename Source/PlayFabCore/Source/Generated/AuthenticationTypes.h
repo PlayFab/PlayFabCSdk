@@ -362,6 +362,20 @@ public:
     static HRESULT Copy(const PFAuthenticationRegisterPlayFabUserResult& input, PFAuthenticationRegisterPlayFabUserResult& output, ModelBuffer& buffer);
 };
 
+class ServerLoginWithPSNRequest : public Wrappers::PFAuthenticationServerLoginWithPSNRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAuthenticationServerLoginWithPSNRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAuthenticationServerLoginWithPSNRequest& input);
+};
+
 class LoginWithServerCustomIdRequest : public Wrappers::PFAuthenticationLoginWithServerCustomIdRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -552,7 +566,7 @@ template<typename T> struct EnumRange;
 
 template<> struct EnumRange<PFAuthenticationIdentifiedDeviceType>
 {
-    static constexpr PFAuthenticationIdentifiedDeviceType maxValue = PFAuthenticationIdentifiedDeviceType::Scarlett;
+    static constexpr PFAuthenticationIdentifiedDeviceType maxValue = PFAuthenticationIdentifiedDeviceType::Nintendo;
 };
 
 } // namespace PlayFab

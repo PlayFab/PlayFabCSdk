@@ -79,8 +79,8 @@ HRESULT AccessTraceState(AccessMode mode, SharedPtr<TraceState>& traceState)
     }
 }
 
-TraceState::TraceState(RunContext&& runContext, LocalStorage localStorage) noexcept :
-    m_runContext{ std::move(runContext) }
+TraceState::TraceState(RunContext&& initContext, RunContext&& traceContext, LocalStorage localStorage) noexcept :
+    m_runContext{ std::move(traceContext) }
 {
     // Init LibHttpClient Tracing
     HCTraceInit();
@@ -105,7 +105,7 @@ TraceState::TraceState(RunContext&& runContext, LocalStorage localStorage) noexc
 
     TraceSettings& settings = GetTraceSettings();
 
-    Result<Vector<uint8_t>> readResult = localStorage.Read(s_configFile, m_runContext).Wait();
+    Result<Vector<uint8_t>> readResult = localStorage.Read(s_configFile, initContext).Wait();
     if (SUCCEEDED(readResult.hr))
     {
         auto fileData{ readResult.ExtractPayload() };
@@ -146,8 +146,25 @@ TraceState::~TraceState() noexcept
 
 HRESULT TraceState::Create(RunContext&& runContext, LocalStorage localStorage) noexcept
 {
+    // Use an immediate queue during TraceState initialization so that PFInitialize can complete without the client
+    // needing to dispatch the background queue. This is to support clients who wrap PlayFabCore state in an object,
+    // and use a member method to dispatch the background queue.
+    struct TaskQueue
+    {
+        inline ~TaskQueue()
+        {
+            if (handle)
+            {
+                XTaskQueueCloseHandle(handle);
+            }
+        }
+        XTaskQueueHandle handle{ nullptr };
+    } immediateQueue;
+
+    RETURN_IF_FAILED(XTaskQueueCreate(XTaskQueueDispatchMode::Immediate, XTaskQueueDispatchMode::Immediate, &immediateQueue.handle));
+
     Allocator<TraceState> a{};
-    SharedPtr<TraceState> traceState{ new (a.allocate(1)) TraceState{ std::move(runContext), std::move(localStorage) }, Deleter<TraceState>{}, a };
+    SharedPtr<TraceState> traceState{ new (a.allocate(1)) TraceState{ RunContext::Root(immediateQueue.handle), std::move(runContext), std::move(localStorage) }, Deleter<TraceState>{}, a };
 
     return AccessTraceState(AccessMode::Initialize, traceState);
 }
@@ -160,7 +177,7 @@ HRESULT TraceState::Get(SharedPtr<TraceState>& state) noexcept
 struct CleanupContext
 {
     SharedPtr<TraceState> traceState;
-    XAsyncBlock* asyncBlock;
+    XAsyncBlock* asyncBlock{ nullptr };
 };
 
 HRESULT TraceState::CleanupAsync(XAsyncBlock* async) noexcept
@@ -210,7 +227,7 @@ HRESULT CALLBACK TraceState::CleanupAsyncProvider(XAsyncOp op, XAsyncProviderDat
             output->Stop();
         }
 
-        // Forcibily terminate any remaining work
+        // Forcibly terminate any remaining work
         context->traceState->m_runContext.Terminate(*context->traceState, context);
         return E_PENDING;
     }

@@ -78,6 +78,26 @@ private:
     RequestType m_request;
 };
 
+#if 0
+class ExecuteTransferOperationsOperation : public XAsyncOperation<Wrappers::PFInventoryExecuteTransferOperationsResponseWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFInventoryExecuteTransferOperationsRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFInventoryExecuteTransferOperationsResponseWrapper<Allocator>;
+
+    ExecuteTransferOperationsOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFInventoryExecuteTransferOperationsResponseWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 class GetInventoryCollectionIdsOperation : public XAsyncOperation<Wrappers::PFInventoryGetInventoryCollectionIdsResponseWrapper<Allocator>>
 {
 public:
@@ -113,6 +133,26 @@ private:
     Entity m_entity;
     RequestType m_request;
 };
+
+#if 0
+class GetInventoryOperationStatusOperation : public XAsyncOperation<Wrappers::PFInventoryGetInventoryOperationStatusResponseWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFInventoryGetInventoryOperationStatusRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFInventoryGetInventoryOperationStatusResponseWrapper<Allocator>;
+
+    GetInventoryOperationStatusOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFInventoryGetInventoryOperationStatusResponseWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class GetMicrosoftStoreAccessTokensOperation : public XAsyncOperation<Wrappers::PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper<Allocator>>
@@ -272,7 +312,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class RedeemSteamInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemSteamInventoryItemsResponseWrapper<Allocator>>
 {
 public:

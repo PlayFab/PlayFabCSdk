@@ -39,6 +39,20 @@ void CloudScriptTests::TestExecuteFunction(TestContext& tc)
     tc.Skip();
 }
 
+#if 0
+void CloudScriptTests::TestListEventHubFunctions(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void CloudScriptTests::TestRegisterEventHubFunction(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 
 }
 }

@@ -10,7 +10,8 @@ IOperation::IOperation(PlayFab::RunContext&& runContext) noexcept : m_rc{ std::m
 
 void IOperation::Run(UniquePtr<IOperation> operation) noexcept
 {
-    operation->OnStarted(std::move(operation));
+    IOperation& operationRef{ *operation };
+    operationRef.OnStarted(std::move(operation));
 }
 
 RunContext IOperation::RunContext() const noexcept

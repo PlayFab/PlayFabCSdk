@@ -14,7 +14,7 @@ class ServiceConfig;
 class HttpClient
 {
 public:
-    HttpClient(String&& apiEndpoint, SharedPtr<PFHttpRetrySettings> retrySettings);
+    HttpClient(String&& apiEndpoint, SharedPtr<PFHttpRetrySettings> retrySettings, SharedPtr<PFHttpSettings> httpSettings);
     HttpClient(const HttpClient&) = default;
     ~HttpClient() = default;
 
@@ -71,6 +71,7 @@ private:
 
     String const m_apiEndpoint;
     SharedPtr<PFHttpRetrySettings> const m_retrySettings;
+    SharedPtr<PFHttpSettings> const m_httpSettings;
 };
 
 }

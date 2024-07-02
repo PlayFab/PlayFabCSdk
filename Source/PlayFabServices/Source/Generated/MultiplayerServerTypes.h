@@ -10,6 +10,20 @@ namespace MultiplayerServer
 {
 
 // MultiplayerServer Classes
+class DeleteSecretRequest : public Wrappers::PFMultiplayerServerDeleteSecretRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerDeleteSecretRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFMultiplayerServerDeleteSecretRequest& input);
+};
+
 class ListBuildAliasesRequest : public Wrappers::PFMultiplayerServerListBuildAliasesRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -299,6 +313,58 @@ public:
     static HRESULT Copy(const PFMultiplayerServerListQosServersForTitleResponse& input, PFMultiplayerServerListQosServersForTitleResponse& output, ModelBuffer& buffer);
 };
 
+class ListSecretSummariesRequest : public Wrappers::PFMultiplayerServerListSecretSummariesRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerListSecretSummariesRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFMultiplayerServerListSecretSummariesRequest& input);
+};
+
+class SecretSummary : public Wrappers::PFMultiplayerServerSecretSummaryWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFMultiplayerServerSecretSummary>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerSecretSummaryWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFMultiplayerServerSecretSummary const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFMultiplayerServerSecretSummary& model);
+    static HRESULT Copy(const PFMultiplayerServerSecretSummary& input, PFMultiplayerServerSecretSummary& output, ModelBuffer& buffer);
+};
+
+class ListSecretSummariesResponse : public Wrappers::PFMultiplayerServerListSecretSummariesResponseWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFMultiplayerServerListSecretSummariesResponse>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerListSecretSummariesResponseWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFMultiplayerServerListSecretSummariesResponse const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFMultiplayerServerListSecretSummariesResponse& model);
+    static HRESULT Copy(const PFMultiplayerServerListSecretSummariesResponse& input, PFMultiplayerServerListSecretSummariesResponse& output, ModelBuffer& buffer);
+};
+
 class BuildAliasParams : public Wrappers::PFMultiplayerServerBuildAliasParamsWrapper<Allocator>, public InputModel
 {
 public:
@@ -464,6 +530,34 @@ public:
     static HRESULT Copy(const PFMultiplayerServerRequestPartyServiceResponse& input, PFMultiplayerServerRequestPartyServiceResponse& output, ModelBuffer& buffer);
 };
 
+class Secret : public Wrappers::PFMultiplayerServerSecretWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerSecretWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFMultiplayerServerSecret& input);
+};
+
+class UploadSecretRequest : public Wrappers::PFMultiplayerServerUploadSecretRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFMultiplayerServerUploadSecretRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFMultiplayerServerUploadSecretRequest& input);
+};
+
 } // namespace MultiplayerServer
 
 // EnumRange definitions used for Enum (de)serialization
@@ -471,7 +565,7 @@ template<typename T> struct EnumRange;
 
 template<> struct EnumRange<PFMultiplayerServerAzureVmSize>
 {
-    static constexpr PFMultiplayerServerAzureVmSize maxValue = PFMultiplayerServerAzureVmSize::Standard_HB120rs_v3;
+    static constexpr PFMultiplayerServerAzureVmSize maxValue = PFMultiplayerServerAzureVmSize::Standard_D32ds_v5;
 };
 
 template<> struct EnumRange<PFMultiplayerServerProtocolType>

@@ -4,6 +4,7 @@ log () {
 }
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+TEST_TITLE_JSON="${SCRIPT_DIR}/../../testTitleData.json" 
 
 POSITIONAL_ARGS=()
 
@@ -52,6 +53,7 @@ if [ "$DO_APTGET" != "false" ]; then
   sudo apt-get install autoconf
   sudo apt-get install automake
   sudo apt-get install libtool
+  sudo apt-get install zlib1g zlib1g-dev
 fi
 
 log "#### Building TestApp ####" 
@@ -62,3 +64,4 @@ log "BUILD_PF = ${BUILD_PF}"
 make TestApp
 sudo cmake -S "$SCRIPT_DIR" -B "$SCRIPT_DIR"/../../../Int/CMake/PlayFabTestApp.Linux -D CMAKE_BUILD_TYPE=$CONFIGURATION -D LHC_PATH=$LHC_PATH
 sudo make -C "$SCRIPT_DIR"/../../../Int/CMake/PlayFabTestApp.Linux
+cp "$TEST_TITLE_JSON" "${SCRIPT_DIR}/../../../Out/x64/Release/PlayFabTestApp.Linux"

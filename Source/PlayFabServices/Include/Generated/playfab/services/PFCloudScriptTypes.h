@@ -405,6 +405,98 @@ typedef struct PFCloudScriptExecuteFunctionResult
 
 } PFCloudScriptExecuteFunctionResult;
 
+/// <summary>
+/// PFCloudScriptListFunctionsRequest data model. A title can have many functions, ListHttpFunctions
+/// will return a list of all the currently registered HTTP triggered functions for a given title.
+/// </summary>
+typedef struct PFCloudScriptListFunctionsRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+} PFCloudScriptListFunctionsRequest;
+
+/// <summary>
+/// PFCloudScriptEventHubFunctionModel data model.
+/// </summary>
+typedef struct PFCloudScriptEventHubFunctionModel
+{
+    /// <summary>
+    /// (Optional) The connection string for the event hub.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* connectionString;
+
+    /// <summary>
+    /// (Optional) The name of the event hub that triggers the Azure Function.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* eventHubName;
+
+    /// <summary>
+    /// (Optional) The name the function was registered under.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* functionName;
+
+} PFCloudScriptEventHubFunctionModel;
+
+/// <summary>
+/// PFCloudScriptListEventHubFunctionsResult data model.
+/// </summary>
+typedef struct PFCloudScriptListEventHubFunctionsResult
+{
+    /// <summary>
+    /// (Optional) The list of EventHub triggered functions that are currently registered for the title.
+    /// </summary>
+    _Maybenull_ _Field_size_(functionsCount) PFCloudScriptEventHubFunctionModel const* const* functions;
+
+    /// <summary>
+    /// Count of functions
+    /// </summary>
+    uint32_t functionsCount;
+
+} PFCloudScriptListEventHubFunctionsResult;
+
+/// <summary>
+/// PFCloudScriptRegisterEventHubFunctionRequest data model. A title can have many functions, RegisterEventHubFunction
+/// associates a function name with an event hub name and connection string.
+/// </summary>
+typedef struct PFCloudScriptRegisterEventHubFunctionRequest
+{
+    /// <summary>
+    /// A connection string for the namespace of the event hub for the Azure Function.
+    /// </summary>
+    _Null_terminated_ const char* connectionString;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// The name of the event hub for the Azure Function.
+    /// </summary>
+    _Null_terminated_ const char* eventHubName;
+
+    /// <summary>
+    /// The name of the function to register.
+    /// </summary>
+    _Null_terminated_ const char* functionName;
+
+} PFCloudScriptRegisterEventHubFunctionRequest;
+
 #pragma pop_macro("IN")
 
 }

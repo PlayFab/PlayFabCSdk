@@ -82,5 +82,43 @@ private:
     RequestType m_request;
 };
 
+#if 0
+class ListEventHubFunctionsOperation : public XAsyncOperation<Wrappers::PFCloudScriptListEventHubFunctionsResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFCloudScriptListFunctionsRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFCloudScriptListEventHubFunctionsResultWrapper<Allocator>;
+
+    ListEventHubFunctionsOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFCloudScriptListEventHubFunctionsResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if 0
+class RegisterEventHubFunctionOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFCloudScriptRegisterEventHubFunctionRequestWrapper<Allocator>;
+
+    RegisterEventHubFunctionOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 }
 }

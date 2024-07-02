@@ -20,6 +20,7 @@ set(CMAKE_C_FLAGS "-fvisibility=hidden")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_CXX_FLAGS "-pthread")
 
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -98,6 +99,8 @@ target_link_libraries(
     PRIVATE PlayFabCore.Linux
     PRIVATE PlayFabServices.Linux
     PRIVATE ${PLAYFAB_SHARED_INTERNAL_BINARY_PATH}
+    PRIVATE z # zlib
+    ${CMAKE_DL_LIBS}
     )
  
 target_sources(

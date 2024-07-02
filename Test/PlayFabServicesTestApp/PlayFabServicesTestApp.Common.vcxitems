@@ -30,9 +30,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)TestFramework\TestRunner.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Core\AuthenticationTests.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Core\EventPipelineTests.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Core\LibHCTests.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\AccountManagementTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CatalogTestsImpl.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CharacterTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CloudScriptTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\DataTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\ExperimentationTestsImpl.cpp" />
@@ -67,5 +67,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\TestTypes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Tests\Core\AuthenticationTests.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Tests\Core\EventPipelineTests.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Tests\Core\LibHCTests.h" />
   </ItemGroup>
 </Project>

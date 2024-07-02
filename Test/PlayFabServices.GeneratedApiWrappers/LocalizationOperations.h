@@ -1,6 +1,8 @@
 #pragma once
 
+#if HC_PLATFORM != HC_PLATFORM_GDK
 #include <playfab/services/cpp/LocalizationTypeWrappers.h>
+#endif
 #include "TestContext.h"
 
 namespace PlayFab

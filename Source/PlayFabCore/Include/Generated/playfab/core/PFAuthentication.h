@@ -1935,6 +1935,83 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResult(
 
 #endif
 
+#if 0
+/// <summary>
+/// Signs the user in using a PlayStation :tm: Network authentication code, returning a session identifier
+/// that can subsequently be used for API calls which require an authenticated user
+/// </summary>
+/// <param name="serviceConfigHandle">PFServiceConfigHandle returned from PFServiceConfigCreateHandle call.</param>
+/// <param name="secretKey">Title Secret Key used to authenticate the service request.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// If this is the first time a user has signed in with the PlayStation :tm: Network account and CreateAccount
+/// is set to true, a new PlayFab account will be created and linked to the PlayStation :tm: Network account.
+/// In this case, no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab
+/// account is linked to the PlayStation :tm: Network account, an error indicating this will be returned,
+/// so that the title can guide the user through creation of a PlayFab account. See also ServerLinkPSNAccountAsync,
+/// ServerUnlinkPSNAccountAsync.
+///
+/// When the asynchronous task is complete, call <see cref="PFAuthenticationServerLoginWithPSNGetResult"/>
+/// to get the result.
+/// </remarks>
+PF_API PFAuthenticationServerLoginWithPSNAsync(
+    _In_ PFServiceConfigHandle serviceConfigHandle,
+    _In_z_ const char* secretKey,
+    _In_ const PFAuthenticationServerLoginWithPSNRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+
+/// <summary>
+/// Get the size in bytes needed to store the result of a PFAuthenticationServerLoginWithPSNAsync call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENCRYPTION_KEY_MISSING,
+/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID,
+/// E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
+/// </returns>
+PF_API PFAuthenticationServerLoginWithPSNGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept;
+
+/// <summary>
+/// Get the result from a PFAuthenticationServerLoginWithPSNAsync call. The PFEntityHandle will always be returned, but the additional info
+/// in the PFAuthenticationLoginResult is only returned if a buffer is provided.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="entityHandle">PFEntityHandle which can be used to authenticate other PlayFab API calls.</param>
+/// <param name="bufferSize">The size of the buffer for the result object.</param>
+/// <param name="buffer">Byte buffer used for the Login result value and its fields.</param>
+/// <param name="result">Pointer to the LoginResult object.</param>
+/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENCRYPTION_KEY_MISSING,
+/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID,
+/// E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
+/// </returns>
+/// <remarks>
+/// If the PFAuthenticationServerLoginWithPSNAsync call fails, entityHandle with be null. Otherwise, the handle must be closed with PFEntityCloseHandle
+/// when it is no longer needed. If returned, 'result' is a pointer within 'buffer' and does not need to be freed separately.
+/// </remarks>
+PF_API PFAuthenticationServerLoginWithPSNGetResult(
+    _Inout_ XAsyncBlock* async,
+    _Outptr_ PFAuthenticationEntityTokenResponse const** entityTokenResponse,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_opt_ PFAuthenticationLoginResult const** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept;
+
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Securely login a game client from an external server backend using a custom identifier for that player.
@@ -2254,37 +2331,23 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdAsync(
 ) noexcept;
 
 /// <summary>
-/// Get the size in bytes needed to store the result of a AuthenticateGameServerWithCustomId call.
+/// Get the result from a PFAuthenticationAuthenticateGameServerWithCustomIdAsync call.
 /// </summary>
 /// <param name="async">XAsyncBlock for the async operation.</param>
-/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
+/// <param name="entityHandle">PFEntityHandle which can be used to authenticate other PlayFab API calls.</param>
+/// <param name="newlyCreated">Will be set to true if the account was newly created on this authentication and false otherwise</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be one of
 /// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
-PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResultSize(
-    _Inout_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept;
-
-/// <summary>
-/// Gets the result of a successful PFAuthenticationAuthenticateGameServerWithCustomIdAsync call.
-/// </summary>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <param name="bufferSize">The size of the buffer for the result object.</param>
-/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
-/// <param name="result">Pointer to the result object.</param>
-/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
-/// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// result is a pointer within buffer and does not need to be freed separately.
+/// If the PFAuthenticationAuthenticateGameServerWithCustomIdAsync call fails, entityHandle with be null. Otherwise, the handle must be closed with PFEntityCloseHandle
+/// when it is no longer needed.
 /// </remarks>
 PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
     _Inout_ XAsyncBlock* async,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_ PFAuthenticationAuthenticateCustomIdResult** result,
-    _Out_opt_ size_t* bufferUsed
+    _Out_ PFEntityHandle* entityHandle,
+    _Out_opt_ bool* newlyCreated
 ) noexcept;
 
 #endif
@@ -2357,7 +2420,7 @@ PF_API PFAuthenticationGetEntityAsync(
 /// </remarks>
 PF_API PFAuthenticationGetEntityGetResult(
     _Inout_ XAsyncBlock* async,
-    _Out_ PFEntityHandle* result
+    _Out_ PFEntityHandle* entityHandle
 ) noexcept;
 
 #endif
@@ -2407,7 +2470,7 @@ PF_API PFAuthenticationGetEntityWithSecretKeyAsync(
 /// </remarks>
 PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
     _Inout_ XAsyncBlock* async,
-    _Out_ PFEntityHandle* result
+    _Out_ PFEntityHandle* entityHandle
 ) noexcept;
 
 #endif

@@ -10,9 +10,27 @@ endif()
 
 project("PlayFabSharedInternal.Android")
 
+# For PlayFab, we need to compile with c++20 rather than c++17 because of an issue with std::optional discussed here:
+# https://discourse.llvm.org/t/code-which-compiles-with-g-but-not-with-clang/56868/4
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
+
+##################################
+### Set up binary output paths ###
+##################################
+
+# Set final shared libraries output folder
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Debug/${PROJECT_NAME})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Release/${PROJECT_NAME})
+
+# Set final static libraries output folder
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Debug/${PROJECT_NAME})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Release/${PROJECT_NAME})
+
+# Set final runtime output folder
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Debug/${PROJECT_NAME})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Release/${PROJECT_NAME})
 
 ###########################################
 ### Set up paths for source and include ###

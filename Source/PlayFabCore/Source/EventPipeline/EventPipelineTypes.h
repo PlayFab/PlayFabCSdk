@@ -13,7 +13,7 @@ public:
     Event() = default;
     Event(PFEvent const& src);
     Event(Event const& src);
-    Event(Event&& src);
+    Event(Event&& src) noexcept;
     Event& operator=(Event src);
     ~Event() = default;
 
@@ -30,7 +30,7 @@ private:
     String m_name;
     String m_clientId;
     String m_payloadJson;
-    time_t m_emitTime;
+    time_t m_emitTime{ 0 };
 };
 
 class UploadedEvent : public Wrappers::ModelWrapper<PFUploadedEvent, Allocator>
@@ -40,7 +40,7 @@ public:
 
     UploadedEvent(String&& clientId, String&& serviceId);
     UploadedEvent(UploadedEvent const& src);
-    UploadedEvent(UploadedEvent&& src);
+    UploadedEvent(UploadedEvent&& src) noexcept;
     UploadedEvent& operator=(UploadedEvent src);
     ~UploadedEvent() = default;
 

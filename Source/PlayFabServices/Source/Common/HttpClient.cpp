@@ -84,6 +84,9 @@ AsyncOp<ServiceResponse> ServicesHttpClient::MakePostRequest(
     PFHttpRetrySettings retrySettings{};
     RETURN_IF_FAILED(PFGetHttpRetrySettings(&retrySettings));
 
+    PFHttpSettings httpSettings{};
+    RETURN_IF_FAILED(PFGetHttpSettings(&httpSettings));
+
     auto requestOp = MakeUnique<HCHttpCall>(
         kPostMethod,
         GetUrl(endpoint, path),
@@ -91,7 +94,8 @@ AsyncOp<ServiceResponse> ServicesHttpClient::MakePostRequest(
         JsonUtils::WriteToString(requestBody),
         static_cast<uint32_t>(cacheId),
         retrySettings,
-        std::move(runContext)
+        std::move(runContext),
+        httpSettings
     );
 
     return RunOperation(std::move(requestOp));
@@ -122,6 +126,9 @@ AsyncOp<ServiceResponse> ServicesHttpClient::MakeEntityRequest(
         PFHttpRetrySettings retrySettings{};
         RETURN_IF_FAILED(PFGetHttpRetrySettings(&retrySettings));
 
+        PFHttpSettings httpSettings{};
+        RETURN_IF_FAILED(PFGetHttpSettings(&httpSettings));
+
         auto requestOp = MakeUnique<HCHttpCall>(
             kPostMethod,
             url,
@@ -129,7 +136,8 @@ AsyncOp<ServiceResponse> ServicesHttpClient::MakeEntityRequest(
             std::move(body),
             static_cast<uint32_t>(cacheId),
             retrySettings,
-            std::move(runContextDerived)
+            std::move(runContextDerived),
+            httpSettings
         );
 
         return RunOperation(std::move(requestOp));
@@ -154,6 +162,9 @@ AsyncOp<ServiceResponse> ServicesHttpClient::MakeSecretKeyRequest(
     PFHttpRetrySettings retrySettings{};
     RETURN_IF_FAILED(PFGetHttpRetrySettings(&retrySettings));
 
+    PFHttpSettings httpSettings{};
+    RETURN_IF_FAILED(PFGetHttpSettings(&httpSettings));
+
     auto requestOp = MakeUnique<HCHttpCall>(
         kPostMethod,
         GetUrl(entity.APIEndpoint(), path),
@@ -161,7 +172,8 @@ AsyncOp<ServiceResponse> ServicesHttpClient::MakeSecretKeyRequest(
         JsonUtils::WriteToString(requestBody),
         static_cast<uint32_t>(cacheId),
         retrySettings,
-        std::move(runContext)
+        std::move(runContext),
+        httpSettings
     );
 
     return RunOperation(std::move(requestOp));

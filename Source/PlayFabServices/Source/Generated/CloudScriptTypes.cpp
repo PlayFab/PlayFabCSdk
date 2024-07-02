@@ -480,5 +480,139 @@ HRESULT ExecuteFunctionResult::Copy(const PFCloudScriptExecuteFunctionResult& in
     return S_OK;
 }
 
+JsonValue ListFunctionsRequest::ToJson() const
+{
+    return ListFunctionsRequest::ToJson(this->Model());
+}
+
+JsonValue ListFunctionsRequest::ToJson(const PFCloudScriptListFunctionsRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    return output;
+}
+
+HRESULT EventHubFunctionModel::FromJson(const JsonValue& input)
+{
+    String connectionString{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ConnectionString", connectionString));
+    this->SetConnectionString(std::move(connectionString));
+
+    String eventHubName{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EventHubName", eventHubName));
+    this->SetEventHubName(std::move(eventHubName));
+
+    String functionName{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "FunctionName", functionName));
+    this->SetFunctionName(std::move(functionName));
+
+    return S_OK;
+}
+
+size_t EventHubFunctionModel::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFCloudScriptEventHubFunctionModel const*> EventHubFunctionModel::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<EventHubFunctionModel>(&this->Model());
+}
+
+size_t EventHubFunctionModel::RequiredBufferSize(const PFCloudScriptEventHubFunctionModel& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.connectionString)
+    {
+        requiredSize += (std::strlen(model.connectionString) + 1);
+    }
+    if (model.eventHubName)
+    {
+        requiredSize += (std::strlen(model.eventHubName) + 1);
+    }
+    if (model.functionName)
+    {
+        requiredSize += (std::strlen(model.functionName) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT EventHubFunctionModel::Copy(const PFCloudScriptEventHubFunctionModel& input, PFCloudScriptEventHubFunctionModel& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.connectionString); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.connectionString = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.eventHubName); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.eventHubName = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.functionName); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.functionName = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+HRESULT ListEventHubFunctionsResult::FromJson(const JsonValue& input)
+{
+    ModelVector<EventHubFunctionModel> functions{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<EventHubFunctionModel>(input, "Functions", functions));
+    this->SetFunctions(std::move(functions));
+
+    return S_OK;
+}
+
+size_t ListEventHubFunctionsResult::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFCloudScriptListEventHubFunctionsResult const*> ListEventHubFunctionsResult::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<ListEventHubFunctionsResult>(&this->Model());
+}
+
+size_t ListEventHubFunctionsResult::RequiredBufferSize(const PFCloudScriptListEventHubFunctionsResult& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFCloudScriptEventHubFunctionModel*) + sizeof(PFCloudScriptEventHubFunctionModel*) * model.functionsCount);
+    for (size_t i = 0; i < model.functionsCount; ++i)
+    {
+        requiredSize += EventHubFunctionModel::RequiredBufferSize(*model.functions[i]);
+    }
+    return requiredSize;
+}
+
+HRESULT ListEventHubFunctionsResult::Copy(const PFCloudScriptListEventHubFunctionsResult& input, PFCloudScriptListEventHubFunctionsResult& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyToArray<EventHubFunctionModel>(input.functions, input.functionsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.functions = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+JsonValue RegisterEventHubFunctionRequest::ToJson() const
+{
+    return RegisterEventHubFunctionRequest::ToJson(this->Model());
+}
+
+JsonValue RegisterEventHubFunctionRequest::ToJson(const PFCloudScriptRegisterEventHubFunctionRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMember(output, "ConnectionString", input.connectionString);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "EventHubName", input.eventHubName);
+    JsonUtils::ObjectAddMember(output, "FunctionName", input.functionName);
+    return output;
+}
+
 } // namespace CloudScript
 } // namespace PlayFab

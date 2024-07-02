@@ -8,6 +8,39 @@ namespace MultiplayerServer
 {
 
 
+AsyncOp<void> MultiplayerServerAPI::DeleteSecret(
+    Entity const& entity,
+    const DeleteSecretRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/MultiplayerServer/DeleteSecret" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::MultiplayerServerDeleteSecret,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<ListBuildAliasesResponse> MultiplayerServerAPI::ListBuildAliases(
     Entity const& entity,
     const ListBuildAliasesRequest& request,
@@ -113,6 +146,41 @@ AsyncOp<ListQosServersForTitleResponse> MultiplayerServerAPI::ListQosServersForT
     });
 }
 
+AsyncOp<ListSecretSummariesResponse> MultiplayerServerAPI::ListSecretSummaries(
+    Entity const& entity,
+    const ListSecretSummariesRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/MultiplayerServer/ListSecretSummaries" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::MultiplayerServerListSecretSummaries,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ListSecretSummariesResponse>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ListSecretSummariesResponse resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ListSecretSummariesResponse>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<RequestMultiplayerServerResponse> MultiplayerServerAPI::RequestMultiplayerServer(
     Entity const& entity,
     const RequestMultiplayerServerRequest& request,
@@ -179,6 +247,39 @@ AsyncOp<RequestPartyServiceResponse> MultiplayerServerAPI::RequestPartyService(
         else
         {
             return Result<RequestPartyServiceResponse>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<void> MultiplayerServerAPI::UploadSecret(
+    Entity const& entity,
+    const UploadSecretRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/MultiplayerServer/UploadSecret" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::MultiplayerServerUploadSecret,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }

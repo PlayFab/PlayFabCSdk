@@ -153,7 +153,7 @@ PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromPSNOnlin
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromSteamIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromSteamIDs,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromTwitchIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromTwitchIDs,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromXboxLiveIDs,false,Yes,Yes,No,No,Yes,No,No,Yes
-PF Services,AccountManagement,PFAccountManagementClientLinkAndroidDeviceIDAsync,SessionTicket,Account Management,ClientLinkAndroidDeviceID,false,No,Yes,No,No,Yes,Yes,No,Yes
+PF Services,AccountManagement,PFAccountManagementClientLinkAndroidDeviceIDAsync,SessionTicket,Account Management,ClientLinkAndroidDeviceID,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkAppleAsync,SessionTicket,Account Management,ClientLinkApple,false,No,Yes,No,No,Yes,No,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkCustomIDAsync,SessionTicket,Account Management,ClientLinkCustomID,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkFacebookAccountAsync,SessionTicket,Account Management,ClientLinkFacebookAccount,false,No,Yes,No,No,Yes,Yes,Yes,Yes
@@ -166,7 +166,7 @@ PF Services,AccountManagement,PFAccountManagementClientLinkKongregateAsync,Sessi
 PF Services,AccountManagement,PFAccountManagementClientLinkNintendoServiceAccountAsync,SessionTicket,Account Management,ClientLinkNintendoServiceAccount,false,No,Yes,Yes,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkNintendoSwitchDeviceIdAsync,SessionTicket,Account Management,ClientLinkNintendoSwitchDeviceId,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkOpenIdConnectAsync,SessionTicket,Account Management,ClientLinkOpenIdConnect,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
-PF Services,AccountManagement,PFAccountManagementClientLinkPSNAccountAsync,SessionTicket,Account Management,ClientLinkPSNAccount,false,No,Yes,No,Yes,No,No,No,Yes
+PF Services,AccountManagement,PFAccountManagementClientLinkPSNAccountAsync,SessionTicket,Account Management,ClientLinkPSNAccount,false,No,Yes,No,Yes,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkSteamAccountAsync,SessionTicket,Account Management,ClientLinkSteamAccount,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkTwitchAsync,SessionTicket,Account Management,ClientLinkTwitch,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkXboxAccountAsync,SessionTicket,Account Management,ClientLinkXboxAccount,false,Yes,Yes,No,No,Yes,No,No,Yes
@@ -174,7 +174,7 @@ PF Services,AccountManagement,PFAccountManagementClientRemoveContactEmailAsync,S
 PF Services,AccountManagement,PFAccountManagementClientRemoveGenericIDAsync,SessionTicket,Account Management,ClientRemoveGenericID,false,No,No,No,No,No,No,No,No
 PF Services,AccountManagement,PFAccountManagementClientReportPlayerAsync,SessionTicket,Account Management,ClientReportPlayer,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientSendAccountRecoveryEmailAsync,None,Account Management,ClientSendAccountRecoveryEmail,false,No,Yes,No,No,Yes,No,No,Yes
-PF Services,AccountManagement,PFAccountManagementClientUnlinkAndroidDeviceIDAsync,SessionTicket,Account Management,ClientUnlinkAndroidDeviceID,false,No,Yes,No,No,Yes,Yes,No,Yes
+PF Services,AccountManagement,PFAccountManagementClientUnlinkAndroidDeviceIDAsync,SessionTicket,Account Management,ClientUnlinkAndroidDeviceID,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientUnlinkAppleAsync,SessionTicket,Account Management,ClientUnlinkApple,false,No,Yes,No,No,Yes,No,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientUnlinkCustomIDAsync,SessionTicket,Account Management,ClientUnlinkCustomID,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientUnlinkFacebookAccountAsync,SessionTicket,Account Management,ClientUnlinkFacebookAccount,false,No,Yes,No,No,Yes,Yes,Yes,Yes
@@ -266,6 +266,7 @@ PF Services,CloudScript,PFCloudScriptServerExecuteCloudScriptAsync,SecretKey,Ser
 PF Services,CloudScript,PFCloudScriptExecuteEntityCloudScriptAsync,EntityToken,Server-Side Cloud Script,ExecuteEntityCloudScript,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,CloudScript,PFCloudScriptExecuteFunctionAsync,EntityToken,Server-Side Cloud Script,ExecuteFunction,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,CloudScript,PFCloudScriptGetFunctionAsync,EntityToken,Server-Side Cloud Script,GetFunction,false,No,No,No,No,No,No,No,No
+PF Services,CloudScript,PFCloudScriptListEventHubFunctionsAsync,EntityToken,Server-Side Cloud Script,ListEventHubFunctions,false,No,No,No,No,No,No,No,No
 PF Services,CloudScript,PFCloudScriptListFunctionsAsync,EntityToken,Server-Side Cloud Script,ListFunctions,false,No,No,No,No,No,No,No,No
 PF Services,CloudScript,PFCloudScriptListHttpFunctionsAsync,EntityToken,Server-Side Cloud Script,ListHttpFunctions,false,No,No,No,No,No,No,No,No
 PF Services,CloudScript,PFCloudScriptListQueuedFunctionsAsync,EntityToken,Server-Side Cloud Script,ListQueuedFunctions,false,No,No,No,No,No,No,No,No
@@ -273,6 +274,7 @@ PF Services,CloudScript,PFCloudScriptPostFunctionResultForEntityTriggeredActionA
 PF Services,CloudScript,PFCloudScriptPostFunctionResultForFunctionExecutionAsync,EntityToken,Server-Side Cloud Script,PostFunctionResultForFunctionExecution,false,No,No,No,No,No,No,No,No
 PF Services,CloudScript,PFCloudScriptPostFunctionResultForPlayerTriggeredActionAsync,EntityToken,Server-Side Cloud Script,PostFunctionResultForPlayerTriggeredAction,false,No,No,No,No,No,No,No,No
 PF Services,CloudScript,PFCloudScriptPostFunctionResultForScheduledTaskAsync,EntityToken,Server-Side Cloud Script,PostFunctionResultForScheduledTask,false,No,No,No,No,No,No,No,No
+PF Services,CloudScript,PFCloudScriptRegisterEventHubFunctionAsync,EntityToken,Server-Side Cloud Script,RegisterEventHubFunction,false,No,No,No,No,No,No,No,No
 PF Services,CloudScript,PFCloudScriptRegisterHttpFunctionAsync,EntityToken,Server-Side Cloud Script,RegisterHttpFunction,false,No,No,No,No,No,No,No,No
 PF Services,CloudScript,PFCloudScriptRegisterQueuedFunctionAsync,EntityToken,Server-Side Cloud Script,RegisterQueuedFunction,false,No,No,No,No,No,No,No,No
 PF Services,CloudScript,PFCloudScriptUnregisterFunctionAsync,EntityToken,Server-Side Cloud Script,UnregisterFunction,false,No,No,No,No,No,No,No,No
@@ -404,8 +406,10 @@ PF Services,Inventory,PFInventoryAddInventoryItemsAsync,EntityToken,Inventory,Ad
 PF Services,Inventory,PFInventoryDeleteInventoryCollectionAsync,EntityToken,Inventory,DeleteInventoryCollection,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Inventory,PFInventoryDeleteInventoryItemsAsync,EntityToken,Inventory,DeleteInventoryItems,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Inventory,PFInventoryExecuteInventoryOperationsAsync,EntityToken,Inventory,ExecuteInventoryOperations,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,Inventory,PFInventoryExecuteTransferOperationsAsync,EntityToken,Inventory,ExecuteTransferOperations,false,No,No,No,No,No,No,No,No
 PF Services,Inventory,PFInventoryGetInventoryCollectionIdsAsync,EntityToken,Inventory,GetInventoryCollectionIds,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Inventory,PFInventoryGetInventoryItemsAsync,EntityToken,Inventory,GetInventoryItems,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,Inventory,PFInventoryGetInventoryOperationStatusAsync,EntityToken,Inventory,GetInventoryOperationStatus,false,No,No,No,No,No,No,No,No
 PF Services,Inventory,PFInventoryGetMicrosoftStoreAccessTokensAsync,EntityToken,Inventory,GetMicrosoftStoreAccessTokens,false,Yes,Yes,No,No,Yes,No,No,Yes
 PF Services,Inventory,PFInventoryGetTransactionHistoryAsync,EntityToken,Inventory,GetTransactionHistory,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,Inventory,PFInventoryPurchaseInventoryItemsAsync,EntityToken,Inventory,PurchaseInventoryItems,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
@@ -414,7 +418,7 @@ PF Services,Inventory,PFInventoryRedeemGooglePlayInventoryItemsAsync,EntityToken
 PF Services,Inventory,PFInventoryRedeemMicrosoftStoreInventoryItemsAsync,EntityToken,Inventory,RedeemMicrosoftStoreInventoryItems,false,Yes,Yes,No,No,Yes,No,No,Yes
 PF Services,Inventory,PFInventoryRedeemNintendoEShopInventoryItemsAsync,EntityToken,Inventory,RedeemNintendoEShopInventoryItems,false,No,Yes,Yes,No,Yes,No,No,Yes
 PF Services,Inventory,PFInventoryRedeemPlayStationStoreInventoryItemsAsync,EntityToken,Inventory,RedeemPlayStationStoreInventoryItems,false,No,Yes,No,Yes,Yes,No,No,Yes
-PF Services,Inventory,PFInventoryRedeemSteamInventoryItemsAsync,EntityToken,Inventory,RedeemSteamInventoryItems,false,No,Yes,No,No,No,No,No,Yes
+PF Services,Inventory,PFInventoryRedeemSteamInventoryItemsAsync,EntityToken,Inventory,RedeemSteamInventoryItems,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,Inventory,PFInventorySubtractInventoryItemsAsync,EntityToken,Inventory,SubtractInventoryItems,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Inventory,PFInventoryTransferInventoryItemsAsync,EntityToken,Inventory,TransferInventoryItems,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Inventory,PFInventoryUpdateInventoryItemsAsync,EntityToken,Inventory,UpdateInventoryItems,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
@@ -516,6 +520,7 @@ PF Services,MultiplayerServer,PFMultiplayerServerDeleteBuildRegionAsync,EntityTo
 PF Services,MultiplayerServer,PFMultiplayerServerDeleteCertificateAsync,EntityToken,MultiplayerServer,DeleteCertificate,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerDeleteContainerImageRepositoryAsync,EntityToken,MultiplayerServer,DeleteContainerImageRepository,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerDeleteRemoteUserAsync,EntityToken,MultiplayerServer,DeleteRemoteUser,false,No,No,No,No,No,No,No,No
+PF Services,MultiplayerServer,PFMultiplayerServerDeleteSecretAsync,EntityToken,MultiplayerServer,DeleteSecret,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerEnableMultiplayerServersForTitleAsync,EntityToken,MultiplayerServer,EnableMultiplayerServersForTitle,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerGetAssetDownloadUrlAsync,EntityToken,MultiplayerServer,GetAssetDownloadUrl,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerGetAssetUploadUrlAsync,EntityToken,MultiplayerServer,GetAssetUploadUrl,false,No,No,No,No,No,No,No,No
@@ -539,6 +544,7 @@ PF Services,MultiplayerServer,PFMultiplayerServerListContainerImageTagsAsync,Ent
 PF Services,MultiplayerServer,PFMultiplayerServerListMultiplayerServersAsync,EntityToken,MultiplayerServer,ListMultiplayerServers,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerListPartyQosServersAsync,None,MultiplayerServer,ListPartyQosServers,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerListQosServersForTitleAsync,EntityToken,MultiplayerServer,ListQosServersForTitle,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,MultiplayerServer,PFMultiplayerServerListSecretSummariesAsync,EntityToken,MultiplayerServer,ListSecretSummaries,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerListTitleMultiplayerServersQuotaChangesAsync,EntityToken,MultiplayerServer,ListTitleMultiplayerServersQuotaChanges,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerListVirtualMachineSummariesAsync,EntityToken,MultiplayerServer,ListVirtualMachineSummaries,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerRequestMultiplayerServerAsync,EntityToken,MultiplayerServer,RequestMultiplayerServer,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
@@ -551,6 +557,7 @@ PF Services,MultiplayerServer,PFMultiplayerServerUpdateBuildNameAsync,EntityToke
 PF Services,MultiplayerServer,PFMultiplayerServerUpdateBuildRegionAsync,EntityToken,MultiplayerServer,UpdateBuildRegion,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerUpdateBuildRegionsAsync,EntityToken,MultiplayerServer,UpdateBuildRegions,false,No,No,No,No,No,No,No,No
 PF Services,MultiplayerServer,PFMultiplayerServerUploadCertificateAsync,EntityToken,MultiplayerServer,UploadCertificate,false,No,No,No,No,No,No,No,No
+PF Services,MultiplayerServer,PFMultiplayerServerUploadSecretAsync,EntityToken,MultiplayerServer,UploadSecret,false,No,No,No,No,No,No,No,No
 PF Services,Lobby,PFLobbyCreateLobbyAsync,EntityToken,Lobby,CreateLobby,false,No,No,No,No,No,No,No,No
 PF Services,Lobby,PFLobbyDeleteLobbyAsync,EntityToken,Lobby,DeleteLobby,false,No,No,No,No,No,No,No,No
 PF Services,Lobby,PFLobbyFindFriendLobbiesAsync,EntityToken,Lobby,FindFriendLobbies,false,No,No,No,No,No,No,No,No

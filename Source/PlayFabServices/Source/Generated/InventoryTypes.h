@@ -299,6 +299,39 @@ public:
     static HRESULT Copy(const PFInventoryExecuteInventoryOperationsResponse& input, PFInventoryExecuteInventoryOperationsResponse& output, ModelBuffer& buffer);
 };
 
+class ExecuteTransferOperationsRequest : public Wrappers::PFInventoryExecuteTransferOperationsRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFInventoryExecuteTransferOperationsRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFInventoryExecuteTransferOperationsRequest& input);
+};
+
+class ExecuteTransferOperationsResponse : public Wrappers::PFInventoryExecuteTransferOperationsResponseWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFInventoryExecuteTransferOperationsResponse>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFInventoryExecuteTransferOperationsResponseWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFInventoryExecuteTransferOperationsResponse const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFInventoryExecuteTransferOperationsResponse& model);
+    static HRESULT Copy(const PFInventoryExecuteTransferOperationsResponse& input, PFInventoryExecuteTransferOperationsResponse& output, ModelBuffer& buffer);
+};
+
 class GetInventoryCollectionIdsRequest : public Wrappers::PFInventoryGetInventoryCollectionIdsRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -363,6 +396,39 @@ public:
 
     static size_t RequiredBufferSize(const PFInventoryGetInventoryItemsResponse& model);
     static HRESULT Copy(const PFInventoryGetInventoryItemsResponse& input, PFInventoryGetInventoryItemsResponse& output, ModelBuffer& buffer);
+};
+
+class GetInventoryOperationStatusRequest : public Wrappers::PFInventoryGetInventoryOperationStatusRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFInventoryGetInventoryOperationStatusRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFInventoryGetInventoryOperationStatusRequest& input);
+};
+
+class GetInventoryOperationStatusResponse : public Wrappers::PFInventoryGetInventoryOperationStatusResponseWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFInventoryGetInventoryOperationStatusResponse>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFInventoryGetInventoryOperationStatusResponseWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFInventoryGetInventoryOperationStatusResponse const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFInventoryGetInventoryOperationStatusResponse& model);
+    static HRESULT Copy(const PFInventoryGetInventoryOperationStatusResponse& input, PFInventoryGetInventoryOperationStatusResponse& output, ModelBuffer& buffer);
 };
 
 class GetMicrosoftStoreAccessTokensRequest : public Wrappers::PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper<Allocator>, public InputModel

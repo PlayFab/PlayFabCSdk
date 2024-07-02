@@ -11,6 +11,7 @@ PF_API PFHCSettingsSetTraceLevel(
     _In_ PFHCTraceLevel traceLevel
 ) noexcept
 {
+    PFHC_TRACE_SET_VERBOSITY(PlayFab, traceLevel);
     return HCSettingsSetTraceLevel(static_cast<HCTraceLevel>(traceLevel));
 }
 

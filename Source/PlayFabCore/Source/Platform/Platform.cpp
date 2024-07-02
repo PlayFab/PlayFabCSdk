@@ -6,6 +6,9 @@
 // route through the configured memory hooks (or the default memory functions, which use std::malloc and std::free).
 // If these operators are ever used, it indicates we have an allocation that is unhooked and needs to be.
 
+#pragma warning( push )
+#pragma warning( disable : 28251 6387 28196 )
+
 #if !HC_PLATFORM_IS_PLAYSTATION
 void* operator new(size_t size)
 {
@@ -14,6 +17,8 @@ void* operator new(size_t size)
 #endif
     return malloc(size);
 }
+
+#pragma warning( pop )
 
 void operator delete(void* p)
 {

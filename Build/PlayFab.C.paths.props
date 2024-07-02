@@ -4,12 +4,12 @@
     <PlayFabPathsImported>true</PlayFabPathsImported>
   </PropertyGroup>
 
-  <!-- Pull in PlayFab.C.external.props. It will define $(HCRoot) which defines the root directory of the LHC repo. -->
-  <!-- If the external props file can't be found, assume libHttpClient repo is cloned alongside PlayFab.C repo.-->
+  <!-- Pull in PlayFabSDKCommonProperties.props. It will define $(HCRoot) which defines the root directory of the LHC repo. -->
+  <!-- If this props file can't be found, assume libHttpClient repo is cloned alongside PlayFab.C repo.-->
   <PropertyGroup>
-    <ExternalPropsFile>$([MSBuild]::GetPathOfFileAbove(PlayFab.C.external.props))</ExternalPropsFile>
+    <PlayFabSDKCommonPropertiesFile>$([MSBuild]::GetPathOfFileAbove(PlayFabSDKCommonProperties.props))</PlayFabSDKCommonPropertiesFile>
   </PropertyGroup>
-  <Import Condition="Exists($(ExternalPropsFile))" Project="$(ExternalPropsFile)"/>
+  <Import Condition="Exists($(PlayFabSDKCommonPropertiesFile)) and '$(PlayFabSDKCommonPropertiesImported)'!='true'" Project="$(PlayFabSDKCommonPropertiesFile)"/>
 
   <PropertyGroup>
     <PlayFabRoot>$(MSBuildThisFileDirectory)..</PlayFabRoot>

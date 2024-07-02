@@ -30,7 +30,7 @@ EntityToken::EntityToken(const EntityToken& src) :
     expiration = m_expiration ? m_expiration.operator->() : nullptr;
 }
 
-EntityToken::EntityToken(EntityToken&& src) :
+EntityToken::EntityToken(EntityToken&& src) noexcept :
     m_token{ std::move(src.m_token) },
     m_expiration{ src.m_expiration }
 {
@@ -49,7 +49,7 @@ EntityToken& EntityToken::operator=(const EntityToken& src)
     return *this;
 }
 
-EntityToken& EntityToken::operator=(EntityToken&& src)
+EntityToken& EntityToken::operator=(EntityToken&& src) noexcept
 {
     m_token = std::move(src.m_token);
     token = m_token.empty() ? nullptr : m_token.data();
@@ -62,7 +62,7 @@ EntityToken& EntityToken::operator=(EntityToken&& src)
 
 size_t EntityToken::RequiredBufferSize() const
 {
-    size_t requiredSize{ alignof(EntityToken) + sizeof(EntityToken) };
+    size_t requiredSize{ alignof(PFEntityToken) + sizeof(PFEntityToken) };
     if (token)
     {
         requiredSize += (std::strlen(token) + 1);
@@ -79,16 +79,19 @@ Result<PFEntityToken const*> EntityToken::Copy(ModelBuffer& buffer) const
     // Alloc
     auto allocResult = buffer.Alloc<PFEntityToken>(1);
     RETURN_IF_FAILED(allocResult.hr);
-    // Copy
+    
     auto outputPtr = allocResult.ExtractPayload();
-    {
-        auto tokenCopyResult = buffer.CopyTo(this->token);
-        RETURN_IF_FAILED(tokenCopyResult.hr);
-        outputPtr->token = tokenCopyResult.ExtractPayload();
-    }
-    {
-        outputPtr->expiration = this->expiration;
-    }
+
+    // Copy token
+    auto tokenCopyResult = buffer.CopyTo(this->token);
+    RETURN_IF_FAILED(tokenCopyResult.hr);
+    outputPtr->token = tokenCopyResult.ExtractPayload();
+
+    // Copy expiration
+    auto expirationCopyResult = buffer.CopyTo(this->expiration);
+    RETURN_IF_FAILED(expirationCopyResult.hr);
+    outputPtr->expiration = expirationCopyResult.ExtractPayload();
+
     return std::move(outputPtr);
 }
 

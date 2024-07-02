@@ -11,20 +11,20 @@ class WriteEventsResponse : protected ServiceResponse
 public:
     WriteEventsResponse(ServiceResponse&& serviceResponse);
 
-    HRESULT TranslatedHResult() { return m_translatedHResult; }
+    HRESULT TranslatedHResult() const { return m_translatedHResult; }
 
     PlayFab::Events::WriteEventsResponse const& ResultModel() { return m_resultModel; };
 
     Vector<int> FailedEventIndexes() { return m_failedEventIndexes; }
 
-    ServiceErrorCode ServiceErrorCode() { return ServiceResponse::ErrorCode; }
+    ServiceErrorCode ServiceErrorCode() const { return ServiceResponse::ErrorCode; }
 
-    String ErrorMessage() { return ServiceResponse::ErrorMessage; }
+    String ErrorMessage() const { return ServiceResponse::ErrorMessage; }
 
-    int HttpCode() { return ServiceResponse::HttpCode ; }
+    int HttpCode() const { return ServiceResponse::HttpCode ; }
 
 private:
-    HRESULT m_translatedHResult;
+    HRESULT m_translatedHResult = S_OK;
     PlayFab::Events::WriteEventsResponse m_resultModel;
     Vector<int> m_failedEventIndexes;
 };
@@ -131,7 +131,7 @@ public:
     void SetUploadingEntity(SharedPtr<Entity> entity);
     void SetConfiguration(PFEventPipelineConfig eventPipelineConfig); 
     void ExponentialBackoff(uint32_t retryCount);
-    PFEventPipelineType EventPipelineType() { return m_eventPipelineType; }
+    PFEventPipelineType EventPipelineType() const { return m_eventPipelineType; }
     PlayFab::String TelemetryKey() { return m_telemetryKey; }
     SharedPtr<ServiceConfig> ServiceConfig() { return m_serviceConfig; }
 
@@ -160,7 +160,7 @@ private:
     EventPipelineEventHandlers const m_eventHandlers;
     Vector<Event> m_pendingPayload;
     SharedPtr<Queue<Vector<Event>>> m_retryPayloads;
-    time_t m_oldestEventTimeStamp;
+    time_t m_oldestEventTimeStamp{ 0 };
     bool m_telemetryKeyInvalid{ false };
     bool m_telemetryKeyDeactivated{ false };
     std::mutex m_mutex;
@@ -286,7 +286,7 @@ HRESULT EventBuffer::PushBack(Event&& event) noexcept
     RETURN_HR_INVALIDARG_IF_NULL(event.Model().payloadJson);
     RETURN_HR_IF(E_PF_CORE_EVENT_PIPELINE_BUFFER_FULL, m_deque.size() >= m_bufferSize);
 
-    // If the client didn't provide an eventId, use a default based on a counter. ID will not be unique accross multiple sessions and/or clients,
+    // If the client didn't provide an eventId, use a default based on a counter. ID will not be unique across multiple sessions and/or clients,
     // but the service will assign a unique ID upon upload.
     static std::atomic<uint64_t> s_eventId{ 0 };
 
@@ -320,7 +320,7 @@ HRESULT EventBuffer::PushFront(Event&& event) noexcept
     RETURN_HR_INVALIDARG_IF_NULL(event.Model().payloadJson);
     // We will not drop events retried after network failure even if buffer is over limit size
 
-    // If the client didn't provide an eventId, use a default based on a counter. ID will not be unique accross multiple sessions and/or clients,
+    // If the client didn't provide an eventId, use a default based on a counter. ID will not be unique across multiple sessions and/or clients,
     // but the service will assign a unique ID upon upload.
     static std::atomic<uint64_t> s_eventId{ 0 };
 

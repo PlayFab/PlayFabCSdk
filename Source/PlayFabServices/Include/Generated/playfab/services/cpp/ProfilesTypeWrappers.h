@@ -364,88 +364,6 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
-class PFProfilesEntityStatisticAttributeValueWrapper : public ModelWrapper<PFProfilesEntityStatisticAttributeValue, Alloc>
-{
-public:
-    using ModelType = PFProfilesEntityStatisticAttributeValue;
-    using DictionaryEntryType = PFProfilesEntityStatisticAttributeValueDictionaryEntry;
-    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
-    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
-
-    PFProfilesEntityStatisticAttributeValueWrapper() = default;
-
-    PFProfilesEntityStatisticAttributeValueWrapper(const PFProfilesEntityStatisticAttributeValue& model) :
-        ModelWrapper<PFProfilesEntityStatisticAttributeValue, Alloc>{ model },
-        m_metadata{ SafeString(model.metadata) },
-        m_name{ SafeString(model.name) },
-        m_scores{ model.scores, model.scores + model.scoresCount }
-    {
-        SetModelPointers();
-    }
-
-    PFProfilesEntityStatisticAttributeValueWrapper(const PFProfilesEntityStatisticAttributeValueWrapper& src) :
-        PFProfilesEntityStatisticAttributeValueWrapper{ src.Model() }
-    {
-    }
-
-    PFProfilesEntityStatisticAttributeValueWrapper(PFProfilesEntityStatisticAttributeValueWrapper&& src) :
-        PFProfilesEntityStatisticAttributeValueWrapper{}
-    {
-        swap(*this, src);
-    }
-
-    PFProfilesEntityStatisticAttributeValueWrapper& operator=(PFProfilesEntityStatisticAttributeValueWrapper src) 
-    {
-        swap(*this, src);
-        return *this;
-    }
-
-    virtual ~PFProfilesEntityStatisticAttributeValueWrapper() = default;
-
-    friend void swap(PFProfilesEntityStatisticAttributeValueWrapper& lhs, PFProfilesEntityStatisticAttributeValueWrapper& rhs)
-    {
-        using std::swap;
-        swap(lhs.m_model, rhs.m_model);
-        swap(lhs.m_metadata, rhs.m_metadata);
-        swap(lhs.m_name, rhs.m_name);
-        swap(lhs.m_scores, rhs.m_scores);
-        lhs.SetModelPointers();
-        rhs.SetModelPointers();
-    }
-
-    void SetMetadata(String value)
-    {
-        m_metadata = std::move(value);
-        this->m_model.metadata =  m_metadata.empty() ? nullptr : m_metadata.data();
-    }
-
-    void SetName(String value)
-    {
-        m_name = std::move(value);
-        this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
-    }
-
-    void SetScores(CStringVector<Alloc> value)
-    {
-        m_scores = std::move(value);
-        this->m_model.scores =  m_scores.empty() ? nullptr : m_scores.data();
-        this->m_model.scoresCount =  static_cast<uint32_t>(m_scores.size());
-    }
-
-private:
-    void SetModelPointers()
-    {
-        this->m_model.metadata = m_metadata.empty() ? nullptr : m_metadata.data();
-        this->m_model.name = m_name.empty() ? nullptr : m_name.data();
-        this->m_model.scores = m_scores.empty() ? nullptr : m_scores.data();
-    }
-
-    String m_metadata;
-    String m_name;
-    CStringVector<Alloc> m_scores;
-};
-
-template<template<typename AllocT> class Alloc = std::allocator>
 class PFProfilesEntityStatisticValueWrapper : public ModelWrapper<PFProfilesEntityStatisticValue, Alloc>
 {
 public:
@@ -458,11 +376,9 @@ public:
 
     PFProfilesEntityStatisticValueWrapper(const PFProfilesEntityStatisticValue& model) :
         ModelWrapper<PFProfilesEntityStatisticValue, Alloc>{ model },
-        m_attributeStatistics{ model.attributeStatistics, model.attributeStatistics + model.attributeStatisticsCount },
         m_metadata{ SafeString(model.metadata) },
         m_name{ SafeString(model.name) },
-        m_scores{ model.scores, model.scores + model.scoresCount },
-        m_value{ model.value ? std::optional<int32_t>{ *model.value } : std::nullopt }
+        m_scores{ model.scores, model.scores + model.scoresCount }
     {
         SetModelPointers();
     }
@@ -490,20 +406,11 @@ public:
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
-        swap(lhs.m_attributeStatistics, rhs.m_attributeStatistics);
         swap(lhs.m_metadata, rhs.m_metadata);
         swap(lhs.m_name, rhs.m_name);
         swap(lhs.m_scores, rhs.m_scores);
-        swap(lhs.m_value, rhs.m_value);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
-    }
-
-    void SetAttributeStatistics(ModelDictionaryEntryVector<PFProfilesEntityStatisticAttributeValueWrapper<Alloc>, Alloc> value)
-    {
-        m_attributeStatistics = std::move(value);
-        this->m_model.attributeStatistics =  m_attributeStatistics.empty() ? nullptr : m_attributeStatistics.data();
-        this->m_model.attributeStatisticsCount =  static_cast<uint32_t>(m_attributeStatistics.size());
     }
 
     void SetMetadata(String value)
@@ -525,12 +432,6 @@ public:
         this->m_model.scoresCount =  static_cast<uint32_t>(m_scores.size());
     }
 
-    void SetValue(std::optional<int32_t> value)
-    {
-        m_value = std::move(value);
-        this->m_model.value = m_value ? m_value.operator->() : nullptr;
-    }
-
     void SetVersion(int32_t value)
     {
         this->m_model.version = value;
@@ -539,18 +440,14 @@ public:
 private:
     void SetModelPointers()
     {
-        this->m_model.attributeStatistics = m_attributeStatistics.empty() ? nullptr : m_attributeStatistics.data();
         this->m_model.metadata = m_metadata.empty() ? nullptr : m_metadata.data();
         this->m_model.name = m_name.empty() ? nullptr : m_name.data();
         this->m_model.scores = m_scores.empty() ? nullptr : m_scores.data();
-        this->m_model.value = m_value ? m_value.operator->() : nullptr;
     }
 
-    ModelDictionaryEntryVector<PFProfilesEntityStatisticAttributeValueWrapper<Alloc>, Alloc> m_attributeStatistics;
     String m_metadata;
     String m_name;
     CStringVector<Alloc> m_scores;
-    std::optional<int32_t> m_value;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>

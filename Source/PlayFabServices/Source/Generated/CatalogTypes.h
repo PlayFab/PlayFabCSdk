@@ -275,6 +275,28 @@ public:
     static HRESULT Copy(const PFCatalogFilterOptions& input, PFCatalogFilterOptions& output, ModelBuffer& buffer);
 };
 
+class Permissions : public Wrappers::PFCatalogPermissionsWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFCatalogPermissions>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFCatalogPermissionsWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFCatalogPermissions& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFCatalogPermissions const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFCatalogPermissions& model);
+    static HRESULT Copy(const PFCatalogPermissions& input, PFCatalogPermissions& output, ModelBuffer& buffer);
+};
+
 class CatalogPriceAmountOverride : public Wrappers::PFCatalogCatalogPriceAmountOverrideWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFCatalogCatalogPriceAmountOverride>
 {
 public:
@@ -634,6 +656,50 @@ public:
 
     static size_t RequiredBufferSize(const PFCatalogImageConfig& model);
     static HRESULT Copy(const PFCatalogImageConfig& input, PFCatalogImageConfig& output, ModelBuffer& buffer);
+};
+
+class CategoryRatingConfig : public Wrappers::PFCatalogCategoryRatingConfigWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFCatalogCategoryRatingConfig>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFCatalogCategoryRatingConfigWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFCatalogCategoryRatingConfig& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFCatalogCategoryRatingConfig const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFCatalogCategoryRatingConfig& model);
+    static HRESULT Copy(const PFCatalogCategoryRatingConfig& input, PFCatalogCategoryRatingConfig& output, ModelBuffer& buffer);
+};
+
+class ReviewConfig : public Wrappers::PFCatalogReviewConfigWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFCatalogReviewConfig>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFCatalogReviewConfigWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFCatalogReviewConfig& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFCatalogReviewConfig const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFCatalogReviewConfig& model);
+    static HRESULT Copy(const PFCatalogReviewConfig& input, PFCatalogReviewConfig& output, ModelBuffer& buffer);
 };
 
 class UserGeneratedContentSpecificConfig : public Wrappers::PFCatalogUserGeneratedContentSpecificConfigWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFCatalogUserGeneratedContentSpecificConfig>

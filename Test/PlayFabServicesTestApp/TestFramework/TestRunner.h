@@ -46,7 +46,15 @@ private:
 
     List<SharedPtr<TestClass>> m_testClasses;
     List<SharedPtr<TestClass>>::iterator m_activeTestClass;
-    bool m_activeTestClassInitialized{ false };
+
+    enum class TestClassState
+    {
+        Pending,
+        Initializing,
+        Active,
+        Uninitializing,
+        Complete
+    } m_activeTestClassState{ TestClassState::Pending };
 
     List<SharedPtr<TestContext>> m_activeTestClassTests;
     List<SharedPtr<TestContext>>::iterator m_activeTest;

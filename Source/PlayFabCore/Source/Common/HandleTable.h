@@ -1,6 +1,9 @@
 namespace PlayFab
 {
 
+#pragma warning( push )
+#pragma warning( disable : 6273 ) // Non-integer passed as _Param_(5) when an integer is required in call to 'PFHCTraceImplMessage' 
+
 // Simple handle table used to track and map open client handles 
 template<typename HandleT, typename ObjectT>
 class HandleTable
@@ -87,5 +90,7 @@ void HandleTable<HandleT, ObjectT>::CloseHandle(HandleT handle)
 
     m_handles.erase(it);
 }
+
+#pragma warning( pop )
 
 }

@@ -37,6 +37,13 @@ void InventoryTests::TestExecuteInventoryOperations(TestContext& tc)
     tc.Skip();
 }
 
+#if 0
+void InventoryTests::TestExecuteTransferOperations(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 void InventoryTests::TestGetInventoryCollectionIds(TestContext& tc)
 {
     tc.Skip();
@@ -46,6 +53,13 @@ void InventoryTests::TestGetInventoryItems(TestContext& tc)
 {
     tc.Skip();
 }
+
+#if 0
+void InventoryTests::TestGetInventoryOperationStatus(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestGetMicrosoftStoreAccessTokens(TestContext& tc)
@@ -101,7 +115,7 @@ void InventoryTests::TestRedeemPlayStationStoreInventoryItems(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestRedeemSteamInventoryItems(TestContext& tc)
 {
     tc.Skip();

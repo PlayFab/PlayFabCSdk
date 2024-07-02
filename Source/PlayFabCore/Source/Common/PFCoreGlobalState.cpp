@@ -95,13 +95,15 @@ PFCoreGlobalState::PFCoreGlobalState(XTaskQueueHandle backgroundQueue) noexcept 
     m_serviceConfigs{ Detail::kFirstServiceConfigHandle },
     m_entities{ Detail::kFirstEntityHandle },
     m_clientEventPipelines{ Detail::kFirstEventPipelineHandle },
-    m_httpRetrySettings{ MakeShared<PFHttpRetrySettings>() }
+    m_httpRetrySettings{ MakeShared<PFHttpRetrySettings>() },
+    m_httpSettings{ MakeShared<PFHttpSettings>() }
 {
     TRACE_VERBOSE("PlayFabCore::PFCoreGlobalState::PFCoreGlobalState");
 
     m_httpRetrySettings->allowRetry = kDefaultHttpRetryAllowed;
     m_httpRetrySettings->minimumRetryDelayInSeconds = kDefaultHttpRetryDelay;
     m_httpRetrySettings->timeoutWindowInSeconds = kDefaultHttpTimeoutWindow;
+    m_httpSettings->requestResponseCompression = kDefaultHttpCompressedResponsesExpected;
 }
 
 PFCoreGlobalState::~PFCoreGlobalState() noexcept
@@ -314,4 +316,8 @@ SharedPtr<PFHttpRetrySettings> PFCoreGlobalState::HttpRetrySettings() const noex
     return m_httpRetrySettings;
 }
 
+SharedPtr<PFHttpSettings> PFCoreGlobalState::HttpSettings() const noexcept
+{
+    return m_httpSettings;
+}
 } // namespace PlayFab

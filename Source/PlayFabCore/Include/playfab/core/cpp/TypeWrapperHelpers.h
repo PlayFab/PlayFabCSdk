@@ -12,6 +12,7 @@
 #include <string>
 #include <type_traits>
 #include <optional>
+#include <map>
 
 namespace PlayFab
 {

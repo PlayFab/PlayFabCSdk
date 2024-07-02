@@ -14,9 +14,9 @@ public:
     EntityToken(const Authentication::EntityTokenResponse& tokenResponse);
     EntityToken(const Authentication::GetEntityTokenResponse& tokenResponse);
     EntityToken(const EntityToken& src);
-    EntityToken(EntityToken&& src);
+    EntityToken(EntityToken&& src) noexcept;
     EntityToken& operator=(const EntityToken& src);
-    EntityToken& operator=(EntityToken&& src);
+    EntityToken& operator=(EntityToken&& src) noexcept;
     ~EntityToken() = default;
 
     // ClientOutputModel

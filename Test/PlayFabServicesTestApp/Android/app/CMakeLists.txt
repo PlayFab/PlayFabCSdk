@@ -93,11 +93,13 @@ endif()
 
 string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_LOWER)
 
-set(PLAYFAB_SERVICES_PATH "${PATH_TO_ROOT}/Out/Android/PlayFabServices.Android/intermediates/cmake/${ANDROID_ABI_DIRECTORY}${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI}/libPlayFabServices.Android.so")
+set(PLAYFAB_SERVICES_PATH "${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/${CMAKE_BUILD_TYPE}/PlayFabServices.Android/libPlayFabServices.Android.so")
 
-set(PLAYFAB_CORE_PATH "${PATH_TO_ROOT}/Out/Android/PlayFabServices.Android/intermediates/cmake/${ANDROID_ABI_DIRECTORY}${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI}/libPlayFabCore.Android.so")
+set(PLAYFAB_CORE_PATH "${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/${CMAKE_BUILD_TYPE}/PlayFabCore.Android/libPlayFabCore.Android.so")
 
-set(LIBHTTPCLIENT_PATH "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI}/libHttpClient.Android.so")
+# libHttpClient Shared Lib
+string(TOLOWER "${CMAKE_BUILD_TYPE}" PATH_FLAVOR)
+set(LIBHTTPCLIENT_PATH ${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${PATH_FLAVOR}/obj/${ANDROID_ABI}/libHttpClient.Android.so)
 
 find_library(ANDROID_LOG_PATH log) # Android log library
 

@@ -13,10 +13,10 @@ class ServicesTestClass : public CoreTestClass
 public:
     using CoreTestClass::CoreTestClass;
 
-protected:
     AsyncOp<void> Initialize() override;
     AsyncOp<void> Uninitialize() override;
 
+protected:
     // Default Platform user. May be null on some platforms
     PlayFab::Platform::UserPtr DefaultPlatformUser() noexcept;
 

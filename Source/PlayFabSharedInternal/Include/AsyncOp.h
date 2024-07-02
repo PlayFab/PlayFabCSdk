@@ -61,7 +61,7 @@ struct ContinuationTraits
 //
 // The AsyncOp class doesn't implicitly control the thread/TaskQueue of the async operation - that is left to the implementer of
 // first-class async operations. Continuation functions will be invoked synchronously on the thread where the antecedent task completed.
-// If a continuation requires additional asyncronous work it is the responsibility of that continuation to schedule
+// If a continuation requires additional asynchronous work it is the responsibility of that continuation to schedule
 // that work to appropriately.
 //
 // Currently there is no support for synchronously waiting for an AsyncOp to complete.
@@ -280,7 +280,7 @@ void AsyncOpContext<T>::SetContinuation(SharedPtr<IContinuation<ResultT>> contin
 
     // Don't allow multiple continuations to a single async operation. Logically this is like a function returning to two places and
     // it's extremely hard to reason about & debug. It also creates issues with transferring ownership of the Result object
-    // to the continutation, etc.
+    // to the continuation, etc.
     assert(!m_continuation);
 
     switch (m_operationState)

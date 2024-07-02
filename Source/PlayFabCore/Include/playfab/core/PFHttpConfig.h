@@ -34,7 +34,23 @@ struct PFHttpRetrySettings
 };
 
 /// <summary>
-/// Sets global HTTP retry retry settings for the SDK.
+/// Struct that defines generic Http settings for PlayFab HTTP requests.
+/// Currently holds settings to enable gzip compression on all sdk responses.
+/// </summary>
+struct PFHttpSettings
+{
+    /// <summary>
+    /// Controls whether the SDK currently requests that incoming responses be compressed. 
+    /// Response compression is enabled by specifying the Accept-Encoding Header as "application/gzip".
+    /// In order to decompress a compressed response provided by an API endpoint PFHCHttpCallResponseSetGzipCompressed 
+    /// must be called prior to calling PFHCHttpCallPerformAsync.
+    /// </summary>
+    bool requestResponseCompression;
+};
+
+
+/// <summary>
+/// Sets global HTTP retry settings for the SDK.
 /// </summary>
 /// <param name="settings">Pointer to retry settings.</param>
 /// <returns>Result code for this API operation.</returns>
@@ -43,12 +59,30 @@ PF_API PFSetHttpRetrySettings(
 ) noexcept;
 
 /// <summary>
-/// Gets the current HTTP retry retry settings for the SDK.
+/// Gets the current HTTP retry settings for the SDK.
 /// </summary>
 /// <param name="settings">Pointer to retry settings that will be populated.</param>
 /// <returns>Result code for this API operation.</returns>
 PF_API PFGetHttpRetrySettings(
     _Out_ PFHttpRetrySettings* settings
+) noexcept;
+
+/// <summary>
+/// Sets global generic HTTP settings for the SDK.
+/// </summary>
+/// <param name="settings">Pointer to generic settings.</param>
+/// <returns>Result code for this API operation.</returns>
+PF_API PFSetHttpSettings(
+    _In_ PFHttpSettings const* settings
+) noexcept;
+
+/// <summary>
+/// Gets the current generic HTTP settings for the SDK.
+/// </summary>
+/// <param name="settings">Pointer to generic settings that will be populated.</param>
+/// <returns>Result code for this API operation.</returns>
+PF_API PFGetHttpSettings(
+    _Out_ PFHttpSettings* settings
 ) noexcept;
 
 }

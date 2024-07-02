@@ -1413,6 +1413,53 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResult(
 }
 #endif
 
+#if 0
+PF_API PFAuthenticationServerLoginWithPSNAsync(
+    _In_ PFServiceConfigHandle contextHandle,
+    _In_z_ const char* secretKey,
+    _In_ const PFAuthenticationServerLoginWithPSNRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<PFCoreGlobalState> state{ nullptr };
+    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+
+    SharedPtr<ServiceConfig> context;
+    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async, 
+        XASYNC_IDENTITY(PFAuthenticationServerLoginWithPSNAsync),
+        std::bind(&AuthenticationAPI::ServerLoginWithPSN, state, std::move(context), secretKey, *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+
+PF_API PFAuthenticationServerLoginWithPSNGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return XAsyncGetResultSize(async, bufferSize);
+}
+
+PF_API PFAuthenticationServerLoginWithPSNGetResult(
+    _Inout_ XAsyncBlock* async,
+    _Outptr_ PFAuthenticationEntityTokenResponse const** entityTokenResponse,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_opt_ PFAuthenticationLoginResult const** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+}
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationServerLoginWithServerCustomIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
@@ -1621,32 +1668,27 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdAsync(
         state->RunContext().DeriveOnQueue(async->queue),
         async, 
         XASYNC_IDENTITY(PFAuthenticationAuthenticateGameServerWithCustomIdAsync),
-        std::bind(&AuthenticationAPI::AuthenticateGameServerWithCustomId, std::move(context), *request, std::placeholders::_1)
+        std::bind(&AuthenticationAPI::AuthenticateGameServerWithCustomId, state, std::move(context), *request, std::placeholders::_1)
     );
     return XAsyncProviderBase::Run(std::move(provider));
 }
 
-PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResultSize(
-    _Inout_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept
-{
-    return XAsyncGetResultSize(async, bufferSize);
-}
-
 PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
     _Inout_ XAsyncBlock* async,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_ PFAuthenticationAuthenticateCustomIdResult** result,
-    _Out_opt_ size_t* bufferUsed
+    _Out_ PFEntityHandle* entityHandle,
+    _Out_opt_ bool* newlyCreated
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFAuthenticationAuthenticateCustomIdResult*>(buffer);
+    PFAuthenticationAuthenticateGameServerResult result{};
+    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, sizeof(PFAuthenticationAuthenticateGameServerResult), &result, nullptr));
 
+    *entityHandle = result.entityHandle;
+    if (newlyCreated)
+    {
+        *newlyCreated = result.newlyCreated;
+    }
     return S_OK;
 }
 #endif
@@ -1705,10 +1747,10 @@ PF_API PFAuthenticationGetEntityAsync(
 
 PF_API PFAuthenticationGetEntityGetResult(
     _Inout_ XAsyncBlock* async,
-    _Out_ PFEntityHandle* result
+    _Out_ PFEntityHandle* entityHandle
 ) noexcept
 {
-    return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), result, nullptr);
+    return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), entityHandle, nullptr);
 }
 #endif
 
@@ -1741,10 +1783,10 @@ PF_API PFAuthenticationGetEntityWithSecretKeyAsync(
 
 PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
     _Inout_ XAsyncBlock* async,
-    _Out_ PFEntityHandle* result
+    _Out_ PFEntityHandle* entityHandle
 ) noexcept
 {
-    return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), result, nullptr);
+    return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), entityHandle, nullptr);
 }
 #endif
 

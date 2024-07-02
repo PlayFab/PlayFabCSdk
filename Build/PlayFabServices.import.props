@@ -6,10 +6,15 @@
 
   <Import Condition="'$(PlayFabCoreImported)' != 'true'" Project="PlayFabCore.import.props" />
 
+  <PropertyGroup>
+    <PlayFabServicesGeneratedHeadersDir Condition="'$(HCPlatform)' != 'GDK'">$(PlayFabSourceDir)\PlayFabServices\Include\Generated</PlayFabServicesGeneratedHeadersDir>
+    <PlayFabServicesGeneratedHeadersDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabSourceDir)\PlayFabServices\Include\GeneratedGdk</PlayFabServicesGeneratedHeadersDir>
+  </PropertyGroup>
+
   <!--Add PlayFab include directory to client include path-->
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabServices\Include;$(PlayFabSourceDir)\PlayFabServices\Include\Generated</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabServices\Include;$(PlayFabServicesGeneratedHeadersDir)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
 
@@ -28,7 +33,8 @@
 
   <!--Copy PlayFabCore and dependencies to OutDir-->
   <ItemGroup Label="CopyDependencies">
-    <ReferenceCopyLocalPaths Include="$(PlayFabServicesOutDir)\*" />
+    <ReferenceCopyLocalPaths Include="$(PlayFabServicesOutDir)\$(PlayFabServicesProjectName).dll" />
+    <ReferenceCopyLocalPaths Include="$(PlayFabServicesOutDir)\$(PlayFabServicesProjectName).pdb" />
   </ItemGroup>
 
 </Project>

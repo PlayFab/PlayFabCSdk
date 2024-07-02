@@ -51,9 +51,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CatalogTestsImpl.cpp">
       <Filter>Source\Tests\Services</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CharacterTestsImpl.cpp">
-      <Filter>Source\Tests\Services</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\CloudScriptTestsImpl.cpp">
       <Filter>Source\Tests\Services</Filter>
     </ClCompile>
@@ -126,6 +123,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Platform\Generic\MemoryManager.cpp">
       <Filter>Source\Platform\Generic</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Core\LibHCTests.cpp">
+      <Filter>Source\Tests\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)TestAppPch.h">
@@ -181,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Platform\Generic\MemoryManager.h">
       <Filter>Source\Platform\Generic</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Tests\Core\LibHCTests.h">
+      <Filter>Source\Tests\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

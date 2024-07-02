@@ -266,5 +266,90 @@ PF_API PFCloudScriptExecuteFunctionGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
+#if 0
+/// <summary>
+/// Lists all currently registered Event Hub triggered Azure Functions for a given title.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// See also CloudScriptListFunctionsAsync, CloudScriptListHttpFunctionsAsync, CloudScriptListQueuedFunctionsAsync,
+/// CloudScriptRegisterEventHubFunctionAsync.
+///
+/// When the asynchronous task is complete, call <see cref="PFCloudScriptListEventHubFunctionsGetResultSize"/>
+/// and <see cref="PFCloudScriptListEventHubFunctionsGetResult"/> to get the result.
+/// </remarks>
+PF_API PFCloudScriptListEventHubFunctionsAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFCloudScriptListFunctionsRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+
+/// <summary>
+/// Get the size in bytes needed to store the result of a ListEventHubFunctions call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
+/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+PF_API PFCloudScriptListEventHubFunctionsGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept;
+
+/// <summary>
+/// Gets the result of a successful PFCloudScriptListEventHubFunctionsAsync call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The size of the buffer for the result object.</param>
+/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
+/// <param name="result">Pointer to the result object.</param>
+/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
+/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+/// <remarks>
+/// result is a pointer within buffer and does not need to be freed separately.
+/// </remarks>
+PF_API PFCloudScriptListEventHubFunctionsGetResult(
+    _Inout_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFCloudScriptListEventHubFunctionsResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept;
+#endif
+
+#if 0
+/// <summary>
+/// Registers an event hub triggered Azure Function with a title.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// A title can have many functions, RegisterEventHubFunction associates a function name with an event
+/// hub name and connection string. See also CloudScriptExecuteFunctionAsync, CloudScriptListEventHubFunctionsAsync,
+/// CloudScriptListFunctionsAsync, CloudScriptPostFunctionResultForEntityTriggeredActionAsync, CloudScriptPostFunctionResultForFunctionExecutionAsync,
+/// CloudScriptPostFunctionResultForPlayerTriggeredActionAsync, CloudScriptPostFunctionResultForScheduledTaskAsync,
+/// CloudScriptRegisterHttpFunctionAsync, CloudScriptRegisterQueuedFunctionAsync, CloudScriptUnregisterFunctionAsync.
+///
+/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
+/// the async result will be one of global PlayFab Service errors. See doc page "Handling PlayFab Errors"
+/// for more details on error handling.
+/// </remarks>
+PF_API PFCloudScriptRegisterEventHubFunctionAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFCloudScriptRegisterEventHubFunctionRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+#endif
+
 
 }

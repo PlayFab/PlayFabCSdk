@@ -149,47 +149,10 @@ typedef struct PFProfilesEntityPermissionStatement
 } PFProfilesEntityPermissionStatement;
 
 /// <summary>
-/// PFProfilesEntityStatisticAttributeValue data model.
-/// </summary>
-typedef struct PFProfilesEntityStatisticAttributeValue
-{
-    /// <summary>
-    /// (Optional) Metadata associated with the Statistic.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* metadata;
-
-    /// <summary>
-    /// (Optional) Attribute name.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* name;
-
-    /// <summary>
-    /// (Optional) Attribute Statistic scores.
-    /// </summary>
-    _Maybenull_ _Field_size_(scoresCount) const char* const* scores;
-
-    /// <summary>
-    /// Count of scores
-    /// </summary>
-    uint32_t scoresCount;
-
-} PFProfilesEntityStatisticAttributeValue;
-
-/// <summary>
 /// PFProfilesEntityStatisticValue data model.
 /// </summary>
 typedef struct PFProfilesEntityStatisticValue
 {
-    /// <summary>
-    /// (Optional) Attribute Statistic values.
-    /// </summary>
-    _Maybenull_ _Field_size_(attributeStatisticsCount) struct PFProfilesEntityStatisticAttributeValueDictionaryEntry const* attributeStatistics;
-
-    /// <summary>
-    /// Count of attributeStatistics
-    /// </summary>
-    uint32_t attributeStatisticsCount;
-
     /// <summary>
     /// (Optional) Metadata associated with the Statistic.
     /// </summary>
@@ -209,11 +172,6 @@ typedef struct PFProfilesEntityStatisticValue
     /// Count of scores
     /// </summary>
     uint32_t scoresCount;
-
-    /// <summary>
-    /// (Optional) Statistic value.
-    /// </summary>
-    _Maybenull_ int32_t const* value;
 
     /// <summary>
     /// Statistic version.
@@ -576,15 +534,6 @@ typedef struct PFProfilesEntityStatisticValueDictionaryEntry
     _Null_terminated_ const char* key;
     PFProfilesEntityStatisticValue const* value;
 } PFProfilesEntityStatisticValueDictionaryEntry;
-
-/// <summary>
-/// Dictionary entry for an associative array with PFProfilesEntityStatisticAttributeValue values.
-/// </summary>
-typedef struct PFProfilesEntityStatisticAttributeValueDictionaryEntry
-{
-    _Null_terminated_ const char* key;
-    PFProfilesEntityStatisticAttributeValue const* value;
-} PFProfilesEntityStatisticAttributeValueDictionaryEntry;
 
 #pragma pop_macro("IN")
 

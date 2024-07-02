@@ -30,7 +30,7 @@ protected:
         {
             if (Succeeded(result))
             {
-                TRACE_VERBOSE("ApiProvider[ID=%s] Call suceeded (hr=0x%08x)", identityName, result.hr);
+                TRACE_VERBOSE("ApiProvider[ID=%s] Call succeeded (hr=0x%08x)", identityName, result.hr);
                 this->Complete(this->StoreResult(std::move(result)));
             }
             else

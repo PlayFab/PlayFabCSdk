@@ -8,6 +8,19 @@ namespace PlayFab
 namespace MultiplayerServer
 {
 
+JsonValue DeleteSecretRequest::ToJson() const
+{
+    return DeleteSecretRequest::ToJson(this->Model());
+}
+
+JsonValue DeleteSecretRequest::ToJson(const PFMultiplayerServerDeleteSecretRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "Name", input.name);
+    return output;
+}
+
 JsonValue ListBuildAliasesRequest::ToJson() const
 {
     return ListBuildAliasesRequest::ToJson(this->Model());
@@ -824,6 +837,142 @@ HRESULT ListQosServersForTitleResponse::Copy(const PFMultiplayerServerListQosSer
     return S_OK;
 }
 
+JsonValue ListSecretSummariesRequest::ToJson() const
+{
+    return ListSecretSummariesRequest::ToJson(this->Model());
+}
+
+JsonValue ListSecretSummariesRequest::ToJson(const PFMultiplayerServerListSecretSummariesRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
+    JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
+    return output;
+}
+
+HRESULT SecretSummary::FromJson(const JsonValue& input)
+{
+    std::optional<time_t> expirationDate{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "ExpirationDate", expirationDate));
+    this->SetExpirationDate(std::move(expirationDate));
+
+    String name{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Name", name));
+    this->SetName(std::move(name));
+
+    String version{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Version", version));
+    this->SetVersion(std::move(version));
+
+    return S_OK;
+}
+
+size_t SecretSummary::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFMultiplayerServerSecretSummary const*> SecretSummary::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<SecretSummary>(&this->Model());
+}
+
+size_t SecretSummary::RequiredBufferSize(const PFMultiplayerServerSecretSummary& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.expirationDate)
+    {
+        requiredSize += (alignof(time_t) + sizeof(time_t));
+    }
+    if (model.name)
+    {
+        requiredSize += (std::strlen(model.name) + 1);
+    }
+    if (model.version)
+    {
+        requiredSize += (std::strlen(model.version) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT SecretSummary::Copy(const PFMultiplayerServerSecretSummary& input, PFMultiplayerServerSecretSummary& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.expirationDate); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.expirationDate = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.name); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.name = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.version); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.version = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+HRESULT ListSecretSummariesResponse::FromJson(const JsonValue& input)
+{
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PageSize", this->m_model.pageSize));
+
+    ModelVector<SecretSummary> secretSummaries{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<SecretSummary>(input, "SecretSummaries", secretSummaries));
+    this->SetSecretSummaries(std::move(secretSummaries));
+
+    String skipToken{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SkipToken", skipToken));
+    this->SetSkipToken(std::move(skipToken));
+
+    return S_OK;
+}
+
+size_t ListSecretSummariesResponse::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFMultiplayerServerListSecretSummariesResponse const*> ListSecretSummariesResponse::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<ListSecretSummariesResponse>(&this->Model());
+}
+
+size_t ListSecretSummariesResponse::RequiredBufferSize(const PFMultiplayerServerListSecretSummariesResponse& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFMultiplayerServerSecretSummary*) + sizeof(PFMultiplayerServerSecretSummary*) * model.secretSummariesCount);
+    for (size_t i = 0; i < model.secretSummariesCount; ++i)
+    {
+        requiredSize += SecretSummary::RequiredBufferSize(*model.secretSummaries[i]);
+    }
+    if (model.skipToken)
+    {
+        requiredSize += (std::strlen(model.skipToken) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT ListSecretSummariesResponse::Copy(const PFMultiplayerServerListSecretSummariesResponse& input, PFMultiplayerServerListSecretSummariesResponse& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyToArray<SecretSummary>(input.secretSummaries, input.secretSummariesCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.secretSummaries = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.skipToken); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.skipToken = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue BuildAliasParams::ToJson() const
 {
     return BuildAliasParams::ToJson(this->Model());
@@ -1301,6 +1450,34 @@ HRESULT RequestPartyServiceResponse::Copy(const PFMultiplayerServerRequestPartyS
         output.serializedNetworkDescriptor = propCopyResult.ExtractPayload();
     }
     return S_OK;
+}
+
+JsonValue Secret::ToJson() const
+{
+    return Secret::ToJson(this->Model());
+}
+
+JsonValue Secret::ToJson(const PFMultiplayerServerSecret& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberTime(output, "ExpirationDate", input.expirationDate);
+    JsonUtils::ObjectAddMember(output, "Name", input.name);
+    JsonUtils::ObjectAddMember(output, "Value", input.value);
+    return output;
+}
+
+JsonValue UploadSecretRequest::ToJson() const
+{
+    return UploadSecretRequest::ToJson(this->Model());
+}
+
+JsonValue UploadSecretRequest::ToJson(const PFMultiplayerServerUploadSecretRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "ForceUpdate", input.forceUpdate);
+    JsonUtils::ObjectAddMember<Secret>(output, "GameSecret", input.gameSecret);
+    return output;
 }
 
 } // namespace MultiplayerServer

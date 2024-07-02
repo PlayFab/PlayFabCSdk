@@ -7,9 +7,14 @@
   <Import Condition="'$(PlayFabPathsImported)' != 'true'" Project="PlayFab.C.paths.props" />
   <Import Condition="'$(HCPlatform)' == ''" Project="$(HCRoot)\platform_select.props" />
 
+  <PropertyGroup>
+    <PlayFabCoreGeneratedHeadersDir Condition="'$(HCPlatform)' != 'GDK'">$(PlayFabSourceDir)\PlayFabCore\Include\Generated</PlayFabCoreGeneratedHeadersDir>
+    <PlayFabCoreGeneratedHeadersDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabSourceDir)\PlayFabCore\Include\GeneratedGdk</PlayFabCoreGeneratedHeadersDir>
+  </PropertyGroup>
+
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabCore\Include;$(PlayFabSourceDir)\PlayFabCore\Include\Generated;$(PlayFabSourceDir)\PlayFabSharedInternal\Include;$(PlayFabSourceDir)\PlayFabSharedInternal\Include\Generated</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabCore\Include;$(PlayFabCoreGeneratedHeadersDir);$(PlayFabSourceDir)\PlayFabSharedInternal\Include;$(PlayFabSourceDir)\PlayFabSharedInternal\Include\Generated</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
 
@@ -41,7 +46,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
 
-  <!--LibHttpClient (XAsync) dependency-->
+  <!--LibHttpClient dependency-->
   <Import Condition="'$(LibHttpClientImported)' != 'true' and '$(HCPlatform)' != 'GDK'" Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
 
 </Project>

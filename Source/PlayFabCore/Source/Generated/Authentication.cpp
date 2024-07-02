@@ -1508,6 +1508,45 @@ AsyncOp<RegisterPlayFabUserResult> AuthenticationAPI::RegisterPlayFabUser(
     });
 }
 
+AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithPSN(
+    SharedPtr<PFCoreGlobalState> state,
+    SharedPtr<ServiceConfig const> serviceConfig,
+    String&& secretKey,
+    const ServerLoginWithPSNRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/LoginWithPSN" };
+    JsonValue requestBody{ request.ToJson() };
+    RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
+    CacheId retryCacheId = CacheId::AuthenticationServerLoginWithPSN;
+
+    auto requestOp = serviceConfig->HttpClient()->MakeSecretKeyRequest(
+        serviceConfig,
+        secretKey,
+        path,
+        requestBody,
+        retryCacheId,
+        rc.Derive()
+    );
+
+    SharedPtr<LoginContext> loginContext = MakeShared<LoginContext>(path, std::move(requestBody), retryCacheId);
+    return requestOp.Then([state, serviceConfig, loginContext, secretKey](Result<ServiceResponse> result) -> Result<ServerCombinedLoginResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return ServerCombinedLoginResult::FromJson(serviceResponse.Data);
+        }
+        else
+        {
+            return Result<ServerCombinedLoginResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithServerCustomId(
     SharedPtr<PFCoreGlobalState> state,
     SharedPtr<ServiceConfig const> serviceConfig,
@@ -1665,7 +1704,8 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithXboxId(
 }
 
 #if HC_PLATFORM != HC_PLATFORM_GDK
-AsyncOp<AuthenticateCustomIdResult> AuthenticationAPI::AuthenticateGameServerWithCustomId(
+AsyncOp<AuthenticateGameServerResult> AuthenticationAPI::AuthenticateGameServerWithCustomId(
+    SharedPtr<PFCoreGlobalState> state,
     SharedPtr<Entity> entity,
     const AuthenticateCustomIdRequest& request,
     RunContext rc
@@ -1683,20 +1723,18 @@ AsyncOp<AuthenticateCustomIdResult> AuthenticationAPI::AuthenticateGameServerWit
         rc.Derive()
     );
 
-    return requestOp.Then([](Result<ServiceResponse> result) -> Result<AuthenticateCustomIdResult>
+    return requestOp.Then([state, serviceConfig{ entity->ServiceConfig() }](Result<ServiceResponse> result) -> Result<AuthenticateGameServerResult>
     {
         RETURN_IF_FAILED(result.hr);
 
         auto serviceResponse = result.ExtractPayload();
         if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
         {
-            AuthenticateCustomIdResult resultModel;
-            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
-            return resultModel;
+            return AuthenticateGameServerResult::FromJson(serviceResponse.Data, state, serviceConfig);
         }
         else
         {
-            return Result<AuthenticateCustomIdResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+            return Result<AuthenticateGameServerResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }

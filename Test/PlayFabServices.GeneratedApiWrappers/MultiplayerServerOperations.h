@@ -8,6 +8,24 @@ namespace PlayFab
 namespace Test
 {
 
+#if 0
+class DeleteSecretOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFMultiplayerServerDeleteSecretRequestWrapper<Allocator>;
+
+    DeleteSecretOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 class ListBuildAliasesOperation : public XAsyncOperation<Wrappers::PFMultiplayerServerListBuildAliasesResponseWrapper<Allocator>>
 {
 public:
@@ -62,6 +80,26 @@ private:
     RequestType m_request;
 };
 
+#if 0
+class ListSecretSummariesOperation : public XAsyncOperation<Wrappers::PFMultiplayerServerListSecretSummariesResponseWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFMultiplayerServerListSecretSummariesRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFMultiplayerServerListSecretSummariesResponseWrapper<Allocator>;
+
+    ListSecretSummariesOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFMultiplayerServerListSecretSummariesResponseWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 class RequestMultiplayerServerOperation : public XAsyncOperation<Wrappers::PFMultiplayerServerRequestMultiplayerServerResponseWrapper<Allocator>>
 {
 public:
@@ -94,6 +132,24 @@ public:
 private:
     HRESULT OnStarted(XAsyncBlock* async) noexcept override;
     Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if 0
+class UploadSecretOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFMultiplayerServerUploadSecretRequestWrapper<Allocator>;
+
+    UploadSecretOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
 
     Entity m_entity;
     RequestType m_request;

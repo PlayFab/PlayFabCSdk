@@ -37,13 +37,13 @@ PF_API PFEntityGetEntityTokenAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
-    // Although the internal method to retreive an EntityToken from and Entity object is synchronous, the public API is asynchronous for
+    // Although the internal method to retrieve an EntityToken from and Entity object is synchronous, the public API is asynchronous for
     // a somewhat subtle reason. Because EntityTokens are not fixed size, clients must first call an API to query the size of the buffer required to
-    // store the token, and only then request the token. At the same time, the SDK is updating EntityTokens in the backround. If PFEntityGetEntityToken
+    // store the token, and only then request the token. At the same time, the SDK is updating EntityTokens in the background. If PFEntityGetEntityToken
     // is were synchronous, we could run into a sequence where the client queries the size of the EntityToken, allocates a buffer, the SDK refreshes the token,
     // and then the client calls GetEntityToken only to find out that the newly refreshed Token doesn't fit in their buffer. This would make error handling
-    // somewhat problemetic for callers. Instead, we make the public GetEntityToken call asynchronous, effectively associating a Token "snapshot" with an
-    // XAsync operation. This functor wraps the internal syncronous Entity::GetEntityToken in an AsyncOp, allowing us to easily reuse the generic ApiXAsyncProvider
+    // somewhat problematic for callers. Instead, we make the public GetEntityToken call asynchronous, effectively associating a Token "snapshot" with an
+    // XAsync operation. This functor wraps the internal synchronous Entity::GetEntityToken in an AsyncOp, allowing us to easily reuse the generic ApiXAsyncProvider
 
     struct GetEntityTokenAsyncWrapper
     {

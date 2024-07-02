@@ -2001,4 +2001,11 @@ public:
 } // namespace AccountManagement
 
 // EnumRange definitions used for Enum (de)serialization
+template<typename T> struct EnumRange;
+
+template<> struct EnumRange<PFAccountManagementUserFamilyType>
+{
+    static constexpr PFAccountManagementUserFamilyType maxValue = PFAccountManagementUserFamilyType::Steam;
+};
+
 } // namespace PlayFab

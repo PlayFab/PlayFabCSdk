@@ -568,7 +568,7 @@ typedef struct PFInventoryExecuteInventoryOperationsRequest
 
     /// <summary>
     /// (Optional) The operations to run transactionally. The operations will be executed in-order sequentially
-    /// and will succeed or fail as a batch. Up to 10 operations can be added.
+    /// and will succeed or fail as a batch. Up to 50 operations can be added.
     /// </summary>
     _Maybenull_ _Field_size_(operationsCount) PFInventoryInventoryOperation const* const* operations;
 
@@ -606,6 +606,124 @@ typedef struct PFInventoryExecuteInventoryOperationsResponse
     uint32_t transactionIdsCount;
 
 } PFInventoryExecuteInventoryOperationsResponse;
+
+/// <summary>
+/// PFInventoryExecuteTransferOperationsRequest data model. Transfer the specified list of inventory
+/// items of an entity's container Id to another entity's container Id.
+/// </summary>
+typedef struct PFInventoryExecuteTransferOperationsRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) The inventory collection id the request is transferring from. (Default="default").
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* givingCollectionId;
+
+    /// <summary>
+    /// (Optional) The entity the request is transferring from. Set to the caller by default.
+    /// </summary>
+    _Maybenull_ PFEntityKey const* givingEntity;
+
+    /// <summary>
+    /// (Optional) ETags are used for concurrency checking when updating resources. More information
+    /// about using ETags can be found here: https://learn.microsoft.com/en-us/gaming/playfab/features/economy-v2/catalog/etags.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* givingETag;
+
+    /// <summary>
+    /// (Optional) The idempotency id for the request.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* idempotencyId;
+
+    /// <summary>
+    /// (Optional) The transfer operations to run transactionally. The operations will be executed in-order
+    /// sequentially and will succeed or fail as a batch. Up to 50 operations can be added.
+    /// </summary>
+    _Maybenull_ _Field_size_(operationsCount) PFInventoryTransferInventoryItemsOperation const* const* operations;
+
+    /// <summary>
+    /// Count of operations
+    /// </summary>
+    uint32_t operationsCount;
+
+    /// <summary>
+    /// (Optional) The inventory collection id the request is transferring to. (Default="default").
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* receivingCollectionId;
+
+    /// <summary>
+    /// (Optional) The entity the request is transferring to. Set to the caller by default.
+    /// </summary>
+    _Maybenull_ PFEntityKey const* receivingEntity;
+
+} PFInventoryExecuteTransferOperationsRequest;
+
+/// <summary>
+/// PFInventoryExecuteTransferOperationsResponse data model.
+/// </summary>
+typedef struct PFInventoryExecuteTransferOperationsResponse
+{
+    /// <summary>
+    /// (Optional) ETags are used for concurrency checking when updating resources (before transferring
+    /// from). This value will be empty if the operation has not completed yet. More information about
+    /// using ETags can be found here: https://learn.microsoft.com/en-us/gaming/playfab/features/economy-v2/catalog/etags.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* givingETag;
+
+    /// <summary>
+    /// (Optional) The ids of transactions that occurred as a result of the request's giving action.
+    /// </summary>
+    _Maybenull_ _Field_size_(givingTransactionIdsCount) const char* const* givingTransactionIds;
+
+    /// <summary>
+    /// Count of givingTransactionIds
+    /// </summary>
+    uint32_t givingTransactionIdsCount;
+
+    /// <summary>
+    /// (Optional) The Idempotency ID for this request.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* idempotencyId;
+
+    /// <summary>
+    /// (Optional) The transfer operation status. Possible values are 'InProgress' or 'Completed'. If
+    /// the operation has completed, the response code will be 200. Otherwise, it will be 202.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* operationStatus;
+
+    /// <summary>
+    /// (Optional) The token that can be used to get the status of the transfer operation. This will
+    /// only have a value if OperationStatus is 'InProgress'.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* operationToken;
+
+    /// <summary>
+    /// (Optional) ETags are used for concurrency checking when updating resources (before transferring
+    /// to). This value will be empty if the operation has not completed yet.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* receivingETag;
+
+    /// <summary>
+    /// (Optional) The ids of transactions that occurred as a result of the request's receiving action.
+    /// </summary>
+    _Maybenull_ _Field_size_(receivingTransactionIdsCount) const char* const* receivingTransactionIds;
+
+    /// <summary>
+    /// Count of receivingTransactionIds
+    /// </summary>
+    uint32_t receivingTransactionIdsCount;
+
+} PFInventoryExecuteTransferOperationsResponse;
 
 /// <summary>
 /// PFInventoryGetInventoryCollectionIdsRequest data model. Get a list of Inventory Collection Ids for
@@ -739,6 +857,47 @@ typedef struct PFInventoryGetInventoryItemsResponse
 } PFInventoryGetInventoryItemsResponse;
 
 /// <summary>
+/// PFInventoryGetInventoryOperationStatusRequest data model. Get the status of an Inventory Operation
+/// using an OperationToken.
+/// </summary>
+typedef struct PFInventoryGetInventoryOperationStatusRequest
+{
+    /// <summary>
+    /// (Optional) The id of the entity's collection to perform this action on. (Default="default").
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* collectionId;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) The entity to perform this action on.
+    /// </summary>
+    _Maybenull_ PFEntityKey const* entity;
+
+} PFInventoryGetInventoryOperationStatusRequest;
+
+/// <summary>
+/// PFInventoryGetInventoryOperationStatusResponse data model.
+/// </summary>
+typedef struct PFInventoryGetInventoryOperationStatusResponse
+{
+    /// <summary>
+    /// (Optional) The inventory operation status.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* operationStatus;
+
+} PFInventoryGetInventoryOperationStatusResponse;
+
+/// <summary>
 /// PFInventoryGetMicrosoftStoreAccessTokensRequest data model. Gets the access tokens for Microsoft
 /// Store authentication.
 /// </summary>
@@ -823,6 +982,12 @@ typedef struct PFInventoryGetTransactionHistoryRequest
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* filter;
 
+    /// <summary>
+    /// (Optional) An OData orderby to order TransactionHistory results. The only supported values are
+    /// 'timestamp asc' or 'timestamp desc'. Default orderby is 'timestamp asc'.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* orderBy;
+
 } PFInventoryGetTransactionHistoryRequest;
 
 /// <summary>
@@ -839,6 +1004,11 @@ typedef struct PFInventoryTransactionOperation
     /// (Optional) The duration modified in this transaction.
     /// </summary>
     _Maybenull_ double const* durationInSeconds;
+
+    /// <summary>
+    /// (Optional) The friendly id of the items in this transaction.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* itemFriendlyId;
 
     /// <summary>
     /// (Optional) The item id of the items in this transaction.
@@ -867,6 +1037,11 @@ typedef struct PFInventoryTransactionOperation
 /// </summary>
 typedef struct PFInventoryTransactionPurchaseDetails
 {
+    /// <summary>
+    /// (Optional) The friendly id of the Store the item was purchased from or null.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* storeFriendlyId;
+
     /// <summary>
     /// (Optional) The id of the Store the item was purchased from or null.
     /// </summary>
@@ -1829,6 +2004,12 @@ typedef struct PFInventoryTransferInventoryItemsResponse
     /// the operation has completed, the response code will be 200. Otherwise, it will be 202.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* operationStatus;
+
+    /// <summary>
+    /// (Optional) The token that can be used to get the status of the transfer operation. This will
+    /// only have a value if OperationStatus is 'InProgress'.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* operationToken;
 
     /// <summary>
     /// (Optional) The ids of transactions that occurred as a result of the request's receiving action.

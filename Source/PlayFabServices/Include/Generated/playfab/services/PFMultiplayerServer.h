@@ -13,6 +13,31 @@
 extern "C"
 {
 
+#if 0
+/// <summary>
+/// Deletes a multiplayer server game secret.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// Deletes a multiplayer server game secret. See also MultiplayerServerListSecretSummariesAsync, MultiplayerServerUploadSecretAsync.
+///
+/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
+/// the async result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS, E_PF_MULTIPLAYER_SERVER_BAD_REQUEST,
+/// E_PF_MULTIPLAYER_SERVER_FORBIDDEN, E_PF_MULTIPLAYER_SERVER_INTERNAL_SERVER_ERROR, E_PF_MULTIPLAYER_SERVER_NO_CONTENT,
+/// E_PF_MULTIPLAYER_SERVER_NOT_FOUND, E_PF_MULTIPLAYER_SERVER_TOO_MANY_REQUESTS, E_PF_MULTIPLAYER_SERVER_UNAUTHORIZED,
+/// E_PF_MULTIPLAYER_SERVER_UNAVAILABLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
+/// </remarks>
+PF_API PFMultiplayerServerDeleteSecretAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFMultiplayerServerDeleteSecretRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+#endif
+
 /// <summary>
 /// Lists details of all build aliases for a title. Accepts tokens for title and if game client access
 /// is enabled, allows game client to request list of builds with player entity token.
@@ -208,6 +233,71 @@ PF_API PFMultiplayerServerListQosServersForTitleGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
+#if 0
+/// <summary>
+/// Lists multiplayer server game secrets for a title.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// Returns a list of multiplayer server game secrets for a title. See also MultiplayerServerDeleteSecretAsync,
+/// MultiplayerServerUploadSecretAsync.
+///
+/// When the asynchronous task is complete, call <see cref="PFMultiplayerServerListSecretSummariesGetResultSize"/>
+/// and <see cref="PFMultiplayerServerListSecretSummariesGetResult"/> to get the result.
+/// </remarks>
+PF_API PFMultiplayerServerListSecretSummariesAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFMultiplayerServerListSecretSummariesRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+
+/// <summary>
+/// Get the size in bytes needed to store the result of a ListSecretSummaries call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS,
+/// E_PF_MULTIPLAYER_SERVER_BAD_REQUEST, E_PF_MULTIPLAYER_SERVER_FORBIDDEN, E_PF_MULTIPLAYER_SERVER_INTERNAL_SERVER_ERROR,
+/// E_PF_MULTIPLAYER_SERVER_NOT_FOUND, E_PF_MULTIPLAYER_SERVER_TOO_MANY_REQUESTS, E_PF_MULTIPLAYER_SERVER_UNAUTHORIZED,
+/// E_PF_MULTIPLAYER_SERVER_UNAVAILABLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
+/// </returns>
+PF_API PFMultiplayerServerListSecretSummariesGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept;
+
+/// <summary>
+/// Gets the result of a successful PFMultiplayerServerListSecretSummariesAsync call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The size of the buffer for the result object.</param>
+/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
+/// <param name="result">Pointer to the result object.</param>
+/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS,
+/// E_PF_MULTIPLAYER_SERVER_BAD_REQUEST, E_PF_MULTIPLAYER_SERVER_FORBIDDEN, E_PF_MULTIPLAYER_SERVER_INTERNAL_SERVER_ERROR,
+/// E_PF_MULTIPLAYER_SERVER_NOT_FOUND, E_PF_MULTIPLAYER_SERVER_TOO_MANY_REQUESTS, E_PF_MULTIPLAYER_SERVER_UNAUTHORIZED,
+/// E_PF_MULTIPLAYER_SERVER_UNAVAILABLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
+/// </returns>
+/// <remarks>
+/// result is a pointer within buffer and does not need to be freed separately.
+/// </remarks>
+PF_API PFMultiplayerServerListSecretSummariesGetResult(
+    _Inout_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFMultiplayerServerListSecretSummariesResponse** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept;
+#endif
+
 /// <summary>
 /// Request a multiplayer server session. Accepts tokens for title and if game client access is enabled,
 /// allows game client to request a server with player entity token.
@@ -333,6 +423,31 @@ PF_API PFMultiplayerServerRequestPartyServiceGetResult(
     _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
     _Outptr_ PFMultiplayerServerRequestPartyServiceResponse** result,
     _Out_opt_ size_t* bufferUsed
+) noexcept;
+#endif
+
+#if 0
+/// <summary>
+/// Uploads a multiplayer server game secret.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// Uploads a multiplayer server game secret. See also MultiplayerServerDeleteSecretAsync, MultiplayerServerListSecretSummariesAsync.
+///
+/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
+/// the async result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS, E_PF_MULTIPLAYER_SERVER_BAD_REQUEST,
+/// E_PF_MULTIPLAYER_SERVER_CONFLICT, E_PF_MULTIPLAYER_SERVER_FORBIDDEN, E_PF_MULTIPLAYER_SERVER_INTERNAL_SERVER_ERROR,
+/// E_PF_MULTIPLAYER_SERVER_NO_CONTENT, E_PF_MULTIPLAYER_SERVER_NOT_FOUND, E_PF_MULTIPLAYER_SERVER_TOO_MANY_REQUESTS,
+/// E_PF_MULTIPLAYER_SERVER_UNAUTHORIZED, E_PF_MULTIPLAYER_SERVER_UNAVAILABLE or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </remarks>
+PF_API PFMultiplayerServerUploadSecretAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFMultiplayerServerUploadSecretRequest* request,
+    _Inout_ XAsyncBlock* async
 ) noexcept;
 #endif
 

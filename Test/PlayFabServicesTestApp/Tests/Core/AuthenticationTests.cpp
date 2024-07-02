@@ -41,7 +41,7 @@ void AuthenticationTests::TestAuthenticateGameServerWithCustomId(TestContext& tc
     SharedPtr<std::optional<Entity>> titleEntity = MakeShared<std::optional<Entity>>();
     Wrappers::PFAuthenticationGetEntityRequestWrapper<Allocator> request{};
 
-    RunOperation(MakeUnique<GetEntityWithSecretKeyOperation>(ServiceConfig(), m_testTitleData.secretKey.data(), std::move(request), RunContext())).Then([&, titleEntity](Result<Entity> result) -> AsyncOp<Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>>
+    RunOperation(MakeUnique<GetEntityWithSecretKeyOperation>(ServiceConfig(), m_testTitleData.secretKey.data(), std::move(request), RunContext())).Then([&, titleEntity](Result<Entity> result) -> AsyncOp<Entity>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
         *titleEntity = result.ExtractPayload();
@@ -50,21 +50,12 @@ void AuthenticationTests::TestAuthenticateGameServerWithCustomId(TestContext& tc
 
         return RunOperation(MakeUnique<AuthenticateGameServerWithCustomIdOperation>(titleEntity->value(), request, RunContext()));
     })
-    .Then([&, titleEntity](Result<Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>> result) -> AsyncOp<Wrappers::PFAuthenticationValidateEntityTokenResponseWrapper<Allocator>>
-    {
-        RETURN_IF_FAILED_PLAYFAB(result);
-
-        ValidateEntityTokenOperation::RequestType request;
-        request.SetEntityToken(result.Payload().Model().entityToken->entityToken);
-
-        return RunOperation(MakeUnique<ValidateEntityTokenOperation>(titleEntity->value(), request, RunContext()));
-    })
-    .Then([&, titleEntity](Result<Wrappers::PFAuthenticationValidateEntityTokenResponseWrapper<Allocator>> result) -> AsyncOp<void>
+    .Then([&, titleEntity](Result<Entity> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
         DeleteOperation::RequestType request;
-        request.SetEntity(*result.Payload().Model().entity);
+        request.SetEntity(result.Payload().EntityKey());
 
         return RunOperation(MakeUnique<DeleteOperation>(titleEntity->value(), request, RunContext()));
     })

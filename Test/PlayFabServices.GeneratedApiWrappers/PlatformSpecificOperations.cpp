@@ -1,6 +1,8 @@
 #include "TestAppPch.h"
 #include "PlatformSpecificOperations.h"
+#if HC_PLATFORM != HC_PLATFORM_GDK
 #include <playfab/services/PFPlatformSpecific.h>
+#endif
 
 namespace PlayFab
 {

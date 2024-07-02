@@ -28,7 +28,14 @@ enum class PFAuthenticationIdentifiedDeviceType : uint32_t
 {
     Unknown,
     XboxOne,
-    Scarlett
+    Scarlett,
+    WindowsOneCore,
+    WindowsOneCoreMobile,
+    Win32,
+    android,
+    iOS,
+    PlayStation,
+    Nintendo
 };
 
 /// <summary>
@@ -1132,6 +1139,55 @@ typedef struct PFAuthenticationRegisterPlayFabUserResult
     _Maybenull_ _Null_terminated_ const char* username;
 
 } PFAuthenticationRegisterPlayFabUserResult;
+
+/// <summary>
+/// PFAuthenticationServerLoginWithPSNRequest data model. If this is the first time a user has signed
+/// in with the PlayStation :tm: Network account and CreateAccount is set to true, a new PlayFab account
+/// will be created and linked to the PlayStation :tm: Network account. In this case, no email or username
+/// will be associated with the PlayFab account. Otherwise, if no PlayFab account is linked to the PlayStation
+/// :tm: Network account, an error indicating this will be returned, so that the title can guide the user
+/// through creation of a PlayFab account.
+/// </summary>
+typedef struct PFAuthenticationServerLoginWithPSNRequest
+{
+    /// <summary>
+    /// Auth code provided by the PlayStation :tm: Network OAuth provider.
+    /// </summary>
+    _Null_terminated_ const char* authCode;
+
+    /// <summary>
+    /// Automatically create a PlayFab account if one is not currently linked to this ID.
+    /// </summary>
+    bool createAccount;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) Flags for which pieces of info to return for the user.
+    /// </summary>
+    _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
+
+    /// <summary>
+    /// (Optional) Id of the PlayStation :tm: Network issuer environment. If null, defaults to production
+    /// environment.
+    /// </summary>
+    _Maybenull_ int32_t const* issuerId;
+
+    /// <summary>
+    /// Redirect URI supplied to PlayStation :tm: Network when requesting an auth code.
+    /// </summary>
+    _Null_terminated_ const char* redirectUri;
+
+} PFAuthenticationServerLoginWithPSNRequest;
 
 /// <summary>
 /// PFAuthenticationLoginWithServerCustomIdRequest data model.

@@ -4,8 +4,8 @@
 namespace PlayFab
 {
 
-ServiceConfig::ServiceConfig(String&& apiEndpoint, String&& titleId, SharedPtr<PFHttpRetrySettings> retrySettings)
-    : m_httpClient{ MakeShared<PlayFab::HttpClient>(std::move(apiEndpoint), std::move(retrySettings)) },
+ServiceConfig::ServiceConfig(String&& apiEndpoint, String&& titleId, SharedPtr<PFHttpRetrySettings> retrySettings, SharedPtr<PFHttpSettings> httpSettings)
+    : m_httpClient{ MakeShared<PlayFab::HttpClient>(std::move(apiEndpoint), std::move(retrySettings), std::move(httpSettings)) },
     m_titleId{ std::move(titleId) }
 {
 }

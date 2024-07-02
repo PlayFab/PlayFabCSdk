@@ -52,7 +52,7 @@ PF_API PFServicesInitialize(
 /// Initializes PlayFab Services global state
 /// </summary>
 /// <param name="backgroundQueue">An XTaskQueue that should be used for background work. If no queue is provided then a default (threadpool) queue will be used.</param>
-/// <param name="args">Args for initializing libHttpClient.</param>
+/// <param name="args">Arguments for initializing libHttpClient. It contains a Java VM and an application context, both can be retrieved through an Android app activity.</param>
 /// <remarks>
 /// This will internally call PFInitialize(nullptr) if it hasn't been called already by the
 /// title. If control of PFCore background work is needed, the title should explicitly call

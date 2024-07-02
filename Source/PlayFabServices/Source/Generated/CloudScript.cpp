@@ -148,5 +148,73 @@ AsyncOp<ExecuteFunctionResult> CloudScriptAPI::ExecuteFunction(
     });
 }
 
+AsyncOp<ListEventHubFunctionsResult> CloudScriptAPI::ListEventHubFunctions(
+    Entity const& entity,
+    const ListFunctionsRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/CloudScript/ListEventHubFunctions" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::CloudScriptListEventHubFunctions,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ListEventHubFunctionsResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ListEventHubFunctionsResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ListEventHubFunctionsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<void> CloudScriptAPI::RegisterEventHubFunction(
+    Entity const& entity,
+    const RegisterEventHubFunctionRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/CloudScript/RegisterEventHubFunction" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::CloudScriptRegisterEventHubFunction,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 } // namespace CloudScript
 } // namespace PlayFab

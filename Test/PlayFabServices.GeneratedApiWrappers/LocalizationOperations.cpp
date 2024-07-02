@@ -1,6 +1,8 @@
 #include "TestAppPch.h"
 #include "LocalizationOperations.h"
+#if HC_PLATFORM != HC_PLATFORM_GDK
 #include <playfab/services/PFLocalization.h>
+#endif
 
 namespace PlayFab
 {

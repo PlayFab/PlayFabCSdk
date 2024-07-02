@@ -159,9 +159,18 @@ void TitleDataManagementTests::TestClientGetTitleData(TestContext& tc)
         RETURN_IF_FAILED_PLAYFAB(result);
 
         auto& model = result.Payload().Model();
-        tc.AssertEqual(1u, model.dataCount, "dataCount");
-        tc.AssertEqual(kTestKey, model.data[0].key, "data[0].key");
-        tc.AssertEqual(kTestVal, model.data[0].value, "data[0].value");
+        // We have two other keys set for TestServerRevokeAllBansForUser and TestServerRevokeBans
+        bool foundData = false;
+        for (uint32_t i = 0; i < model.dataCount; i++)
+        {
+            if (std::strcmp(kTestKey, model.data[i].key) == 0 && std::strcmp(kTestVal, model.data[i].value) == 0)
+            {
+                foundData = true;
+                break;
+            }
+        }
+
+        tc.AssertTrue(foundData, "Data entry not found");
 
         return S_OK;
     })
@@ -299,9 +308,18 @@ void TitleDataManagementTests::TestServerGetTitleData(TestContext& tc)
         RETURN_IF_FAILED_PLAYFAB(result);
 
         auto& model = result.Payload().Model();
-        tc.AssertEqual(1u, model.dataCount, "Unexpected count of results");
-        tc.AssertEqual(kTestKey, model.data[0].key, "Unexpected server title key");
-        tc.AssertEqual(kTestVal, model.data[0].value, "Unexpected server title value");
+        // We have two other keys set for TestServerRevokeAllBansForUser and TestServerRevokeBans
+        bool foundData = false;
+        for (uint32_t i = 0; i < model.dataCount; i++)
+        {
+            if (std::strcmp(kTestKey, model.data[i].key) == 0 && std::strcmp(kTestVal, model.data[i].value) == 0)
+            {
+                foundData = true;
+                break;
+            }
+        }
+
+        tc.AssertTrue(foundData, "Data entry not found");
 
         ServerSetTitleDataOperation::RequestType request;
         request.SetKey(kTestKey);

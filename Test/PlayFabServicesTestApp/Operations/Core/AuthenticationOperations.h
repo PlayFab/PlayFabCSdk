@@ -29,7 +29,7 @@ struct ServerLoginResult
     Wrappers::PFAuthenticationLoginResultWrapper<Allocator> loginResult;
 };
 
-class AuthenticateGameServerWithCustomIdOperation : public XAsyncOperation<Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>>
+class AuthenticateGameServerWithCustomIdOperation : public XAsyncOperation<Entity>
 {
 public:
     using RequestType = Wrappers::PFAuthenticationAuthenticateCustomIdRequestWrapper<Allocator>;
@@ -38,7 +38,7 @@ public:
 
 private: // XAsyncOperation
     HRESULT OnStarted(XAsyncBlock* async) noexcept override;
-    Result<Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>> GetResult(XAsyncBlock* async) noexcept override;
+    Result<Entity> GetResult(XAsyncBlock* async) noexcept override;
 
     Entity m_entity;
     RequestType m_request;

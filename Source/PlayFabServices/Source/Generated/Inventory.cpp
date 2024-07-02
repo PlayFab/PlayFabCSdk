@@ -146,6 +146,41 @@ AsyncOp<ExecuteInventoryOperationsResponse> InventoryAPI::ExecuteInventoryOperat
     });
 }
 
+AsyncOp<ExecuteTransferOperationsResponse> InventoryAPI::ExecuteTransferOperations(
+    Entity const& entity,
+    const ExecuteTransferOperationsRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Inventory/ExecuteTransferOperations" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::InventoryExecuteTransferOperations,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ExecuteTransferOperationsResponse>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ExecuteTransferOperationsResponse resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ExecuteTransferOperationsResponse>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<GetInventoryCollectionIdsResponse> InventoryAPI::GetInventoryCollectionIds(
     Entity const& entity,
     const GetInventoryCollectionIdsRequest& request,
@@ -212,6 +247,41 @@ AsyncOp<GetInventoryItemsResponse> InventoryAPI::GetInventoryItems(
         else
         {
             return Result<GetInventoryItemsResponse>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<GetInventoryOperationStatusResponse> InventoryAPI::GetInventoryOperationStatus(
+    Entity const& entity,
+    const GetInventoryOperationStatusRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Inventory/GetInventoryOperationStatus" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::InventoryGetInventoryOperationStatus,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetInventoryOperationStatusResponse>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetInventoryOperationStatusResponse resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetInventoryOperationStatusResponse>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }

@@ -18,6 +18,16 @@ extern "C"
 #undef IN
 
 /// <summary>
+/// UserFamilyType enum.
+/// </summary>
+enum class PFAccountManagementUserFamilyType : uint32_t
+{
+    None,
+    Xbox,
+    Steam
+};
+
+/// <summary>
 /// PFAccountManagementAddOrUpdateContactEmailRequest data model. This API adds a contact email to the
 /// player's profile. If the player's profile already contains a contact email, it will update the contact
 /// email to the email address specified.
@@ -2062,6 +2072,12 @@ typedef struct PFAccountManagementBanRequest
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* reason;
 
+    /// <summary>
+    /// (Optional) The family type of the user that should be included in the ban if applicable. May
+    /// affect multiple players.
+    /// </summary>
+    _Maybenull_ PFAccountManagementUserFamilyType const* userFamilyType;
+
 } PFAccountManagementBanRequest;
 
 /// <summary>
@@ -2134,6 +2150,11 @@ typedef struct PFAccountManagementBanInfo
     /// (Optional) The reason why this ban was applied.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* reason;
+
+    /// <summary>
+    /// (Optional) The family type of the suer that is included in the ban.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* userFamilyType;
 
 } PFAccountManagementBanInfo;
 
@@ -2910,6 +2931,12 @@ typedef struct PFAccountManagementUpdateBanRequest
     /// change.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* reason;
+
+    /// <summary>
+    /// (Optional) The updated family type of the user that should be included in the ban. Null for no
+    /// change.
+    /// </summary>
+    _Maybenull_ PFAccountManagementUserFamilyType const* userFamilyType;
 
 } PFAccountManagementUpdateBanRequest;
 

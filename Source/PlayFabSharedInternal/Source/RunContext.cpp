@@ -324,7 +324,7 @@ void CALLBACK RunContextState::TaskQueueTerminated(void* c) noexcept
     std::unique_lock<std::mutex> lock{ runContext->m_mutex };
     --runContext->m_pendingTaskQueueCallbacks;
 
-    TRACE_VERBOSE("RunContextState[id=%u] TaskQueueTerminated, %u callbacks remaining", runContext->m_id, runContext->m_pendingTaskQueueCallbacks);
+    TRACE_VERBOSE("RunContextState[id=%u] TaskQueueTerminated, %zu callbacks remaining", runContext->m_id, runContext->m_pendingTaskQueueCallbacks);
 
     CheckTerminationAndNotifyListener(std::move(runContext), std::move(lock));
 }
@@ -396,7 +396,7 @@ void RunContextState::Terminate(ITerminationListener& listener, void* listenerCo
     // where all terminations asynchronously complete before this method returns, potentially cause 'this' to be destroyed unexpectedly
     m_pendingTerminations++;
     
-    TRACE_VERBOSE("RunContextState[id=%u] terminating with %u terminables", m_id, m_pendingTerminations);
+    TRACE_VERBOSE("RunContextState[id=%u] terminating with %zu terminables", m_id, m_pendingTerminations);
 
     // context will ensure our lifetime until Termination completes.
     TerminationContext* context = MakeUnique<TerminationContext>(shared_from_this()).release(); // reclaimed in OnTerminated;
@@ -417,6 +417,10 @@ void RunContextState::Terminate(ITerminationListener& listener, void* listenerCo
         child->Terminate(*this, context);
     }
 
+    // Now that terminables have been notified, we can release the termination mutex. If termination is complete,
+    // the following OnTerminated call may cause 'this' to be destroyed.
+    terminationLock.unlock();
+
     // Dummy termination task added above complete
     OnTerminated(context);
 }
@@ -427,7 +431,7 @@ void RunContextState::OnTerminated(void* c) noexcept
 
     assert(m_pendingTerminations);
     --m_pendingTerminations;
-    TRACE_VERBOSE("RunContextState[id=%u] terminable terminated, %u remaining", m_id, m_pendingTerminations);
+    TRACE_VERBOSE("RunContextState[id=%u] terminable terminated, %zu remaining", m_id, m_pendingTerminations);
 
     if (!m_pendingTerminations)
     {

@@ -62,12 +62,13 @@ public:
     static AsyncOp<void> ReLoginWithXUser(SharedPtr<Entity> entity, const LoginWithXUserRequest& request, RunContext rc);
 #endif
     static AsyncOp<RegisterPlayFabUserResult> RegisterPlayFabUser(SharedPtr<ServiceConfig const> config, const RegisterPlayFabUserRequest& request, RunContext rc);
+    static AsyncOp<ServerCombinedLoginResult> ServerLoginWithPSN(SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig const> config, String&& secretKey, const ServerLoginWithPSNRequest& request, RunContext rc);
     static AsyncOp<ServerCombinedLoginResult> ServerLoginWithServerCustomId(SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig const> config, String&& secretKey, const LoginWithServerCustomIdRequest& request, RunContext rc);
     static AsyncOp<ServerCombinedLoginResult> ServerLoginWithSteamId(SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig const> config, String&& secretKey, const LoginWithSteamIdRequest& request, RunContext rc);
     static AsyncOp<ServerCombinedLoginResult> ServerLoginWithXbox(SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig const> config, String&& secretKey, const ServerLoginWithXboxRequest& request, RunContext rc);
     static AsyncOp<ServerCombinedLoginResult> ServerLoginWithXboxId(SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig const> config, String&& secretKey, const LoginWithXboxIdRequest& request, RunContext rc);
 #if HC_PLATFORM != HC_PLATFORM_GDK
-    static AsyncOp<AuthenticateCustomIdResult> AuthenticateGameServerWithCustomId(SharedPtr<Entity> entity, const AuthenticateCustomIdRequest& request, RunContext rc);
+    static AsyncOp<AuthenticateGameServerResult> AuthenticateGameServerWithCustomId(SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity, const AuthenticateCustomIdRequest& request, RunContext rc);
 #endif
     static AsyncOp<void> Delete(SharedPtr<Entity> entity, const DeleteRequest& request, RunContext rc);
     static AsyncOp<SharedPtr<Entity>> GetEntity(SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity, const GetEntityRequest& request, RunContext rc);

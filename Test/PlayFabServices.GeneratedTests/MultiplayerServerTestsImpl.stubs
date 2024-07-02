@@ -17,6 +17,13 @@ AsyncOp<void> MultiplayerServerTests::Uninitialize()
     return ServicesTestClass::Uninitialize();
 }
 
+#if 0
+void MultiplayerServerTests::TestDeleteSecret(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 void MultiplayerServerTests::TestListBuildAliases(TestContext& tc)
 {
     tc.Skip();
@@ -32,6 +39,13 @@ void MultiplayerServerTests::TestListQosServersForTitle(TestContext& tc)
     tc.Skip();
 }
 
+#if 0
+void MultiplayerServerTests::TestListSecretSummaries(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 void MultiplayerServerTests::TestRequestMultiplayerServer(TestContext& tc)
 {
     tc.Skip();
@@ -39,6 +53,13 @@ void MultiplayerServerTests::TestRequestMultiplayerServer(TestContext& tc)
 
 #if 0
 void MultiplayerServerTests::TestRequestPartyService(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void MultiplayerServerTests::TestUploadSecret(TestContext& tc)
 {
     tc.Skip();
 }

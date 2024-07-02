@@ -806,7 +806,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientLinkAndroidDeviceIDAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementLinkAndroidDeviceIDRequest* request,
@@ -1088,7 +1088,7 @@ PF_API PFAccountManagementClientLinkOpenIdConnectAsync(
     return XAsyncProviderBase::Run(std::move(provider));
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientLinkPSNAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementClientLinkPSNAccountRequest* request,
@@ -1248,7 +1248,7 @@ PF_API PFAccountManagementClientSendAccountRecoveryEmailAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientUnlinkAndroidDeviceIDAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementUnlinkAndroidDeviceIDRequest* request,

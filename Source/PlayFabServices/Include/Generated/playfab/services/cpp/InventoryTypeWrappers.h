@@ -1728,6 +1728,260 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFInventoryExecuteTransferOperationsRequestWrapper : public ModelWrapper<PFInventoryExecuteTransferOperationsRequest, Alloc>
+{
+public:
+    using ModelType = PFInventoryExecuteTransferOperationsRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFInventoryExecuteTransferOperationsRequestWrapper() = default;
+
+    PFInventoryExecuteTransferOperationsRequestWrapper(const PFInventoryExecuteTransferOperationsRequest& model) :
+        ModelWrapper<PFInventoryExecuteTransferOperationsRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_givingCollectionId{ SafeString(model.givingCollectionId) },
+        m_givingEntity{ model.givingEntity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.givingEntity } : std::nullopt },
+        m_givingETag{ SafeString(model.givingETag) },
+        m_idempotencyId{ SafeString(model.idempotencyId) },
+        m_operations{ model.operations, model.operations + model.operationsCount },
+        m_receivingCollectionId{ SafeString(model.receivingCollectionId) },
+        m_receivingEntity{ model.receivingEntity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.receivingEntity } : std::nullopt }
+    {
+        SetModelPointers();
+    }
+
+    PFInventoryExecuteTransferOperationsRequestWrapper(const PFInventoryExecuteTransferOperationsRequestWrapper& src) :
+        PFInventoryExecuteTransferOperationsRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFInventoryExecuteTransferOperationsRequestWrapper(PFInventoryExecuteTransferOperationsRequestWrapper&& src) :
+        PFInventoryExecuteTransferOperationsRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFInventoryExecuteTransferOperationsRequestWrapper& operator=(PFInventoryExecuteTransferOperationsRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFInventoryExecuteTransferOperationsRequestWrapper() = default;
+
+    friend void swap(PFInventoryExecuteTransferOperationsRequestWrapper& lhs, PFInventoryExecuteTransferOperationsRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_givingCollectionId, rhs.m_givingCollectionId);
+        swap(lhs.m_givingEntity, rhs.m_givingEntity);
+        swap(lhs.m_givingETag, rhs.m_givingETag);
+        swap(lhs.m_idempotencyId, rhs.m_idempotencyId);
+        swap(lhs.m_operations, rhs.m_operations);
+        swap(lhs.m_receivingCollectionId, rhs.m_receivingCollectionId);
+        swap(lhs.m_receivingEntity, rhs.m_receivingEntity);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetGivingCollectionId(String value)
+    {
+        m_givingCollectionId = std::move(value);
+        this->m_model.givingCollectionId =  m_givingCollectionId.empty() ? nullptr : m_givingCollectionId.data();
+    }
+
+    void SetGivingEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
+    {
+        m_givingEntity = std::move(value);
+        this->m_model.givingEntity = m_givingEntity ? &m_givingEntity->Model() : nullptr;
+    }
+
+    void SetGivingETag(String value)
+    {
+        m_givingETag = std::move(value);
+        this->m_model.givingETag =  m_givingETag.empty() ? nullptr : m_givingETag.data();
+    }
+
+    void SetIdempotencyId(String value)
+    {
+        m_idempotencyId = std::move(value);
+        this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    void SetOperations(ModelVector<PFInventoryTransferInventoryItemsOperationWrapper<Alloc>, Alloc> value)
+    {
+        m_operations = std::move(value);
+        this->m_model.operations =  m_operations.empty() ? nullptr : m_operations.data();
+        this->m_model.operationsCount =  static_cast<uint32_t>(m_operations.size());
+    }
+
+    void SetReceivingCollectionId(String value)
+    {
+        m_receivingCollectionId = std::move(value);
+        this->m_model.receivingCollectionId =  m_receivingCollectionId.empty() ? nullptr : m_receivingCollectionId.data();
+    }
+
+    void SetReceivingEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
+    {
+        m_receivingEntity = std::move(value);
+        this->m_model.receivingEntity = m_receivingEntity ? &m_receivingEntity->Model() : nullptr;
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.givingCollectionId = m_givingCollectionId.empty() ? nullptr : m_givingCollectionId.data();
+        this->m_model.givingEntity = m_givingEntity ?  &m_givingEntity->Model() : nullptr;
+        this->m_model.givingETag = m_givingETag.empty() ? nullptr : m_givingETag.data();
+        this->m_model.idempotencyId = m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+        this->m_model.operations = m_operations.empty() ? nullptr : m_operations.data();
+        this->m_model.receivingCollectionId = m_receivingCollectionId.empty() ? nullptr : m_receivingCollectionId.data();
+        this->m_model.receivingEntity = m_receivingEntity ?  &m_receivingEntity->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_givingCollectionId;
+    std::optional<PFEntityKeyWrapper<Alloc>> m_givingEntity;
+    String m_givingETag;
+    String m_idempotencyId;
+    ModelVector<PFInventoryTransferInventoryItemsOperationWrapper<Alloc>, Alloc> m_operations;
+    String m_receivingCollectionId;
+    std::optional<PFEntityKeyWrapper<Alloc>> m_receivingEntity;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFInventoryExecuteTransferOperationsResponseWrapper : public ModelWrapper<PFInventoryExecuteTransferOperationsResponse, Alloc>
+{
+public:
+    using ModelType = PFInventoryExecuteTransferOperationsResponse;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFInventoryExecuteTransferOperationsResponseWrapper() = default;
+
+    PFInventoryExecuteTransferOperationsResponseWrapper(const PFInventoryExecuteTransferOperationsResponse& model) :
+        ModelWrapper<PFInventoryExecuteTransferOperationsResponse, Alloc>{ model },
+        m_givingETag{ SafeString(model.givingETag) },
+        m_givingTransactionIds{ model.givingTransactionIds, model.givingTransactionIds + model.givingTransactionIdsCount },
+        m_idempotencyId{ SafeString(model.idempotencyId) },
+        m_operationStatus{ SafeString(model.operationStatus) },
+        m_operationToken{ SafeString(model.operationToken) },
+        m_receivingETag{ SafeString(model.receivingETag) },
+        m_receivingTransactionIds{ model.receivingTransactionIds, model.receivingTransactionIds + model.receivingTransactionIdsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFInventoryExecuteTransferOperationsResponseWrapper(const PFInventoryExecuteTransferOperationsResponseWrapper& src) :
+        PFInventoryExecuteTransferOperationsResponseWrapper{ src.Model() }
+    {
+    }
+
+    PFInventoryExecuteTransferOperationsResponseWrapper(PFInventoryExecuteTransferOperationsResponseWrapper&& src) :
+        PFInventoryExecuteTransferOperationsResponseWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFInventoryExecuteTransferOperationsResponseWrapper& operator=(PFInventoryExecuteTransferOperationsResponseWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFInventoryExecuteTransferOperationsResponseWrapper() = default;
+
+    friend void swap(PFInventoryExecuteTransferOperationsResponseWrapper& lhs, PFInventoryExecuteTransferOperationsResponseWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_givingETag, rhs.m_givingETag);
+        swap(lhs.m_givingTransactionIds, rhs.m_givingTransactionIds);
+        swap(lhs.m_idempotencyId, rhs.m_idempotencyId);
+        swap(lhs.m_operationStatus, rhs.m_operationStatus);
+        swap(lhs.m_operationToken, rhs.m_operationToken);
+        swap(lhs.m_receivingETag, rhs.m_receivingETag);
+        swap(lhs.m_receivingTransactionIds, rhs.m_receivingTransactionIds);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetGivingETag(String value)
+    {
+        m_givingETag = std::move(value);
+        this->m_model.givingETag =  m_givingETag.empty() ? nullptr : m_givingETag.data();
+    }
+
+    void SetGivingTransactionIds(CStringVector<Alloc> value)
+    {
+        m_givingTransactionIds = std::move(value);
+        this->m_model.givingTransactionIds =  m_givingTransactionIds.empty() ? nullptr : m_givingTransactionIds.data();
+        this->m_model.givingTransactionIdsCount =  static_cast<uint32_t>(m_givingTransactionIds.size());
+    }
+
+    void SetIdempotencyId(String value)
+    {
+        m_idempotencyId = std::move(value);
+        this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    void SetOperationStatus(String value)
+    {
+        m_operationStatus = std::move(value);
+        this->m_model.operationStatus =  m_operationStatus.empty() ? nullptr : m_operationStatus.data();
+    }
+
+    void SetOperationToken(String value)
+    {
+        m_operationToken = std::move(value);
+        this->m_model.operationToken =  m_operationToken.empty() ? nullptr : m_operationToken.data();
+    }
+
+    void SetReceivingETag(String value)
+    {
+        m_receivingETag = std::move(value);
+        this->m_model.receivingETag =  m_receivingETag.empty() ? nullptr : m_receivingETag.data();
+    }
+
+    void SetReceivingTransactionIds(CStringVector<Alloc> value)
+    {
+        m_receivingTransactionIds = std::move(value);
+        this->m_model.receivingTransactionIds =  m_receivingTransactionIds.empty() ? nullptr : m_receivingTransactionIds.data();
+        this->m_model.receivingTransactionIdsCount =  static_cast<uint32_t>(m_receivingTransactionIds.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.givingETag = m_givingETag.empty() ? nullptr : m_givingETag.data();
+        this->m_model.givingTransactionIds = m_givingTransactionIds.empty() ? nullptr : m_givingTransactionIds.data();
+        this->m_model.idempotencyId = m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+        this->m_model.operationStatus = m_operationStatus.empty() ? nullptr : m_operationStatus.data();
+        this->m_model.operationToken = m_operationToken.empty() ? nullptr : m_operationToken.data();
+        this->m_model.receivingETag = m_receivingETag.empty() ? nullptr : m_receivingETag.data();
+        this->m_model.receivingTransactionIds = m_receivingTransactionIds.empty() ? nullptr : m_receivingTransactionIds.data();
+    }
+
+    String m_givingETag;
+    CStringVector<Alloc> m_givingTransactionIds;
+    String m_idempotencyId;
+    String m_operationStatus;
+    String m_operationToken;
+    String m_receivingETag;
+    CStringVector<Alloc> m_receivingTransactionIds;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFInventoryGetInventoryCollectionIdsRequestWrapper : public ModelWrapper<PFInventoryGetInventoryCollectionIdsRequest, Alloc>
 {
 public:
@@ -2072,6 +2326,147 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFInventoryGetInventoryOperationStatusRequestWrapper : public ModelWrapper<PFInventoryGetInventoryOperationStatusRequest, Alloc>
+{
+public:
+    using ModelType = PFInventoryGetInventoryOperationStatusRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFInventoryGetInventoryOperationStatusRequestWrapper() = default;
+
+    PFInventoryGetInventoryOperationStatusRequestWrapper(const PFInventoryGetInventoryOperationStatusRequest& model) :
+        ModelWrapper<PFInventoryGetInventoryOperationStatusRequest, Alloc>{ model },
+        m_collectionId{ SafeString(model.collectionId) },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_entity{ model.entity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.entity } : std::nullopt }
+    {
+        SetModelPointers();
+    }
+
+    PFInventoryGetInventoryOperationStatusRequestWrapper(const PFInventoryGetInventoryOperationStatusRequestWrapper& src) :
+        PFInventoryGetInventoryOperationStatusRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFInventoryGetInventoryOperationStatusRequestWrapper(PFInventoryGetInventoryOperationStatusRequestWrapper&& src) :
+        PFInventoryGetInventoryOperationStatusRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFInventoryGetInventoryOperationStatusRequestWrapper& operator=(PFInventoryGetInventoryOperationStatusRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFInventoryGetInventoryOperationStatusRequestWrapper() = default;
+
+    friend void swap(PFInventoryGetInventoryOperationStatusRequestWrapper& lhs, PFInventoryGetInventoryOperationStatusRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_collectionId, rhs.m_collectionId);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_entity, rhs.m_entity);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCollectionId(String value)
+    {
+        m_collectionId = std::move(value);
+        this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
+    {
+        m_entity = std::move(value);
+        this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.collectionId = m_collectionId.empty() ? nullptr : m_collectionId.data();
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.entity = m_entity ?  &m_entity->Model() : nullptr;
+    }
+
+    String m_collectionId;
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<PFEntityKeyWrapper<Alloc>> m_entity;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFInventoryGetInventoryOperationStatusResponseWrapper : public ModelWrapper<PFInventoryGetInventoryOperationStatusResponse, Alloc>
+{
+public:
+    using ModelType = PFInventoryGetInventoryOperationStatusResponse;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFInventoryGetInventoryOperationStatusResponseWrapper() = default;
+
+    PFInventoryGetInventoryOperationStatusResponseWrapper(const PFInventoryGetInventoryOperationStatusResponse& model) :
+        ModelWrapper<PFInventoryGetInventoryOperationStatusResponse, Alloc>{ model },
+        m_operationStatus{ SafeString(model.operationStatus) }
+    {
+        SetModelPointers();
+    }
+
+    PFInventoryGetInventoryOperationStatusResponseWrapper(const PFInventoryGetInventoryOperationStatusResponseWrapper& src) :
+        PFInventoryGetInventoryOperationStatusResponseWrapper{ src.Model() }
+    {
+    }
+
+    PFInventoryGetInventoryOperationStatusResponseWrapper(PFInventoryGetInventoryOperationStatusResponseWrapper&& src) :
+        PFInventoryGetInventoryOperationStatusResponseWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFInventoryGetInventoryOperationStatusResponseWrapper& operator=(PFInventoryGetInventoryOperationStatusResponseWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFInventoryGetInventoryOperationStatusResponseWrapper() = default;
+
+    friend void swap(PFInventoryGetInventoryOperationStatusResponseWrapper& lhs, PFInventoryGetInventoryOperationStatusResponseWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_operationStatus, rhs.m_operationStatus);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetOperationStatus(String value)
+    {
+        m_operationStatus = std::move(value);
+        this->m_model.operationStatus =  m_operationStatus.empty() ? nullptr : m_operationStatus.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.operationStatus = m_operationStatus.empty() ? nullptr : m_operationStatus.data();
+    }
+
+    String m_operationStatus;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper : public ModelWrapper<PFInventoryGetMicrosoftStoreAccessTokensRequest, Alloc>
 {
 public:
@@ -2213,7 +2608,8 @@ public:
         m_continuationToken{ SafeString(model.continuationToken) },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_entity{ model.entity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.entity } : std::nullopt },
-        m_filter{ SafeString(model.filter) }
+        m_filter{ SafeString(model.filter) },
+        m_orderBy{ SafeString(model.orderBy) }
     {
         SetModelPointers();
     }
@@ -2246,6 +2642,7 @@ public:
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_entity, rhs.m_entity);
         swap(lhs.m_filter, rhs.m_filter);
+        swap(lhs.m_orderBy, rhs.m_orderBy);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
@@ -2286,6 +2683,12 @@ public:
         this->m_model.filter =  m_filter.empty() ? nullptr : m_filter.data();
     }
 
+    void SetOrderBy(String value)
+    {
+        m_orderBy = std::move(value);
+        this->m_model.orderBy =  m_orderBy.empty() ? nullptr : m_orderBy.data();
+    }
+
 private:
     void SetModelPointers()
     {
@@ -2294,6 +2697,7 @@ private:
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.entity = m_entity ?  &m_entity->Model() : nullptr;
         this->m_model.filter = m_filter.empty() ? nullptr : m_filter.data();
+        this->m_model.orderBy = m_orderBy.empty() ? nullptr : m_orderBy.data();
     }
 
     String m_collectionId;
@@ -2301,6 +2705,7 @@ private:
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFEntityKeyWrapper<Alloc>> m_entity;
     String m_filter;
+    String m_orderBy;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -2317,6 +2722,7 @@ public:
         ModelWrapper<PFInventoryTransactionOperation, Alloc>{ model },
         m_amount{ model.amount ? std::optional<int32_t>{ *model.amount } : std::nullopt },
         m_durationInSeconds{ model.durationInSeconds ? std::optional<double>{ *model.durationInSeconds } : std::nullopt },
+        m_itemFriendlyId{ SafeString(model.itemFriendlyId) },
         m_itemId{ SafeString(model.itemId) },
         m_itemType{ SafeString(model.itemType) },
         m_stackId{ SafeString(model.stackId) },
@@ -2350,6 +2756,7 @@ public:
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_amount, rhs.m_amount);
         swap(lhs.m_durationInSeconds, rhs.m_durationInSeconds);
+        swap(lhs.m_itemFriendlyId, rhs.m_itemFriendlyId);
         swap(lhs.m_itemId, rhs.m_itemId);
         swap(lhs.m_itemType, rhs.m_itemType);
         swap(lhs.m_stackId, rhs.m_stackId);
@@ -2368,6 +2775,12 @@ public:
     {
         m_durationInSeconds = std::move(value);
         this->m_model.durationInSeconds = m_durationInSeconds ? m_durationInSeconds.operator->() : nullptr;
+    }
+
+    void SetItemFriendlyId(String value)
+    {
+        m_itemFriendlyId = std::move(value);
+        this->m_model.itemFriendlyId =  m_itemFriendlyId.empty() ? nullptr : m_itemFriendlyId.data();
     }
 
     void SetItemId(String value)
@@ -2399,6 +2812,7 @@ private:
     {
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
         this->m_model.durationInSeconds = m_durationInSeconds ? m_durationInSeconds.operator->() : nullptr;
+        this->m_model.itemFriendlyId = m_itemFriendlyId.empty() ? nullptr : m_itemFriendlyId.data();
         this->m_model.itemId = m_itemId.empty() ? nullptr : m_itemId.data();
         this->m_model.itemType = m_itemType.empty() ? nullptr : m_itemType.data();
         this->m_model.stackId = m_stackId.empty() ? nullptr : m_stackId.data();
@@ -2407,6 +2821,7 @@ private:
 
     std::optional<int32_t> m_amount;
     std::optional<double> m_durationInSeconds;
+    String m_itemFriendlyId;
     String m_itemId;
     String m_itemType;
     String m_stackId;
@@ -2425,6 +2840,7 @@ public:
 
     PFInventoryTransactionPurchaseDetailsWrapper(const PFInventoryTransactionPurchaseDetails& model) :
         ModelWrapper<PFInventoryTransactionPurchaseDetails, Alloc>{ model },
+        m_storeFriendlyId{ SafeString(model.storeFriendlyId) },
         m_storeId{ SafeString(model.storeId) }
     {
         SetModelPointers();
@@ -2453,9 +2869,16 @@ public:
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_storeFriendlyId, rhs.m_storeFriendlyId);
         swap(lhs.m_storeId, rhs.m_storeId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    void SetStoreFriendlyId(String value)
+    {
+        m_storeFriendlyId = std::move(value);
+        this->m_model.storeFriendlyId =  m_storeFriendlyId.empty() ? nullptr : m_storeFriendlyId.data();
     }
 
     void SetStoreId(String value)
@@ -2467,9 +2890,11 @@ public:
 private:
     void SetModelPointers()
     {
+        this->m_model.storeFriendlyId = m_storeFriendlyId.empty() ? nullptr : m_storeFriendlyId.data();
         this->m_model.storeId = m_storeId.empty() ? nullptr : m_storeId.data();
     }
 
+    String m_storeFriendlyId;
     String m_storeId;
 };
 
@@ -4841,6 +5266,7 @@ public:
         m_givingTransactionIds{ model.givingTransactionIds, model.givingTransactionIds + model.givingTransactionIdsCount },
         m_idempotencyId{ SafeString(model.idempotencyId) },
         m_operationStatus{ SafeString(model.operationStatus) },
+        m_operationToken{ SafeString(model.operationToken) },
         m_receivingTransactionIds{ model.receivingTransactionIds, model.receivingTransactionIds + model.receivingTransactionIdsCount }
     {
         SetModelPointers();
@@ -4873,6 +5299,7 @@ public:
         swap(lhs.m_givingTransactionIds, rhs.m_givingTransactionIds);
         swap(lhs.m_idempotencyId, rhs.m_idempotencyId);
         swap(lhs.m_operationStatus, rhs.m_operationStatus);
+        swap(lhs.m_operationToken, rhs.m_operationToken);
         swap(lhs.m_receivingTransactionIds, rhs.m_receivingTransactionIds);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
@@ -4903,6 +5330,12 @@ public:
         this->m_model.operationStatus =  m_operationStatus.empty() ? nullptr : m_operationStatus.data();
     }
 
+    void SetOperationToken(String value)
+    {
+        m_operationToken = std::move(value);
+        this->m_model.operationToken =  m_operationToken.empty() ? nullptr : m_operationToken.data();
+    }
+
     void SetReceivingTransactionIds(CStringVector<Alloc> value)
     {
         m_receivingTransactionIds = std::move(value);
@@ -4917,6 +5350,7 @@ private:
         this->m_model.givingTransactionIds = m_givingTransactionIds.empty() ? nullptr : m_givingTransactionIds.data();
         this->m_model.idempotencyId = m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
         this->m_model.operationStatus = m_operationStatus.empty() ? nullptr : m_operationStatus.data();
+        this->m_model.operationToken = m_operationToken.empty() ? nullptr : m_operationToken.data();
         this->m_model.receivingTransactionIds = m_receivingTransactionIds.empty() ? nullptr : m_receivingTransactionIds.data();
     }
 
@@ -4924,6 +5358,7 @@ private:
     CStringVector<Alloc> m_givingTransactionIds;
     String m_idempotencyId;
     String m_operationStatus;
+    String m_operationToken;
     CStringVector<Alloc> m_receivingTransactionIds;
 };
 

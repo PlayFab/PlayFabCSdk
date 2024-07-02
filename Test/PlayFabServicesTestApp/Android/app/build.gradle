@@ -81,7 +81,12 @@ android {
         into 'libs'
 
         into("") {
-            from '../../../../Out/Android/PlayFabServices.Android/outputs/aar'
+            from '../../../../Int/Android/PlayFabServices.Android/outputs/aar'
+            include '*.aar'
+        }
+
+        into("") {
+            from '../../../../Int/Android/PlayFabCore.Android/outputs/aar'
             include '*.aar'
         }
 
@@ -104,8 +109,11 @@ dependencies {
 
     debugImplementation files('libs/libHttpClient.Android-debug.aar')
     releaseImplementation files('libs/libHttpClient.Android-release.aar')
+    debugImplementation files('libs/PlayFabCore.Android-full-debug.aar')
+    releaseImplementation files('libs/PlayFabCore.Android-full-release.aar')
     debugImplementation files('libs/PlayFabServices.Android-full-debug.aar')
     releaseImplementation files('libs/PlayFabServices.Android-full-release.aar')
+
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
 
     implementation "com.google.android.material:material:1.6.0"

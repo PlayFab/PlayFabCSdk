@@ -911,7 +911,7 @@ template<> struct EnumRange<PFCurrency>
 
 template<> struct EnumRange<PFUserOrigination>
 {
-    static constexpr PFUserOrigination maxValue = PFUserOrigination::GooglePlayGames;
+    static constexpr PFUserOrigination maxValue = PFUserOrigination::XboxMobileStore;
 };
 
 template<> struct EnumRange<PFEmailVerificationStatus>
@@ -921,7 +921,7 @@ template<> struct EnumRange<PFEmailVerificationStatus>
 
 template<> struct EnumRange<PFLoginIdentityProvider>
 {
-    static constexpr PFLoginIdentityProvider maxValue = PFLoginIdentityProvider::GooglePlayGames;
+    static constexpr PFLoginIdentityProvider maxValue = PFLoginIdentityProvider::XboxMobileStore;
 };
 
 template<> struct EnumRange<PFContinentCode>

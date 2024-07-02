@@ -83,6 +83,18 @@ public:
         VERIFY_SUCCEEDED(PFUninitializeAsync(&async));
         VERIFY_SUCCEEDED(XAsyncGetStatus(&async, true));
     }
+
+    TEST_METHOD(RepeatedInitialization)
+    {
+        for (uint32_t i = 0; i < 10000; ++i)
+        {
+            VERIFY_SUCCEEDED(PFInitialize(nullptr));
+
+            XAsyncBlock async{};
+            VERIFY_SUCCEEDED(PFUninitializeAsync(&async));
+            VERIFY_SUCCEEDED(XAsyncGetStatus(&async, true));
+        }
+    }
 };
 
 } // UnitTests

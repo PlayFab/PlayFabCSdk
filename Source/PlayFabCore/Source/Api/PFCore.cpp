@@ -35,7 +35,7 @@ PF_API PFInitialize(
 /// </summary>
 PF_API PFInitializeWithLHC(
     _In_opt_ XTaskQueueHandle backgroundQueue,
-    _In_ HCInitArgs* args
+    _In_opt_ HCInitArgs* args
 ) noexcept
 {
     return PFCoreGlobalState::Create(backgroundQueue, args);

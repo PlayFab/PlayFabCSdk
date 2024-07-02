@@ -12,6 +12,7 @@ android {
             cmake {
                 // externalNativeBuild normally skips static
                 // lib targets. This forces it to build.
+                cppFlags "-std=c++20"
                 targets "PlayFabCore.Android"
                 arguments "-DANDROID_TOOLCHAIN=clang++"
             }
@@ -20,6 +21,8 @@ android {
 
     externalNativeBuild {
         cmake {
+            // CXX20 Standard is only available in CMake 3.18.1 and above.
+            // Navigate to SDK Manager > SDK Tools > CMake for the correct version.
             version "3.18.1"
             path "CMakeLists.txt"
             buildStagingDirectory "${project.buildDir.getParentFile().getAbsolutePath()}/.cxx/${project.name}"
@@ -68,6 +71,7 @@ android {
     }
 }
 
-// Put all the Gradle build files under the /Out directory
-def binariesDir = project.file("../../Out/Android/${project.name}").getAbsolutePath()
-project.buildDir(new File(binariesDir))
+dependencies {
+    implementation project(":libHttpClient.Android")
+    implementation project(":PlayFabSharedInternal.Android")
+}

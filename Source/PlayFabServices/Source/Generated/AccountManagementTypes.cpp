@@ -2254,6 +2254,7 @@ JsonValue BanRequest::ToJson(const PFAccountManagementBanRequest& input)
     JsonUtils::ObjectAddMember(output, "IPAddress", input.IPAddress);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember(output, "Reason", input.reason);
+    JsonUtils::ObjectAddMember(output, "UserFamilyType", input.userFamilyType);
     return output;
 }
 
@@ -2298,6 +2299,10 @@ HRESULT BanInfo::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Reason", reason));
     this->SetReason(std::move(reason));
 
+    String userFamilyType{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "UserFamilyType", userFamilyType));
+    this->SetUserFamilyType(std::move(userFamilyType));
+
     return S_OK;
 }
 
@@ -2338,6 +2343,10 @@ size_t BanInfo::RequiredBufferSize(const PFAccountManagementBanInfo& model)
     {
         requiredSize += (std::strlen(model.reason) + 1);
     }
+    if (model.userFamilyType)
+    {
+        requiredSize += (std::strlen(model.userFamilyType) + 1);
+    }
     return requiredSize;
 }
 
@@ -2373,6 +2382,11 @@ HRESULT BanInfo::Copy(const PFAccountManagementBanInfo& input, PFAccountManageme
         auto propCopyResult = buffer.CopyTo(input.reason); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.reason = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.userFamilyType); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.userFamilyType = propCopyResult.ExtractPayload();
     }
     return S_OK;
 }
@@ -3009,6 +3023,7 @@ JsonValue UpdateBanRequest::ToJson(const PFAccountManagementUpdateBanRequest& in
     JsonUtils::ObjectAddMember(output, "IPAddress", input.IPAddress);
     JsonUtils::ObjectAddMember(output, "Permanent", input.permanent);
     JsonUtils::ObjectAddMember(output, "Reason", input.reason);
+    JsonUtils::ObjectAddMember(output, "UserFamilyType", input.userFamilyType);
     return output;
 }
 

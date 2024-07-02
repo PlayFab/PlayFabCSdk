@@ -19,6 +19,7 @@ PF Core,Authentication,PFAuthenticationLoginWithSteamAsync,None,Authentication,L
 PF Core,Authentication,PFAuthenticationLoginWithTwitchAsync,None,Authentication,LoginWithTwitch,false,No,No,No,No,No,No,No,No
 PF Core,Authentication,PFAuthenticationLoginWithXboxAsync,None,Authentication,LoginWithXbox,false,No,Yes,No,No,Yes,No,No,Yes
 PF Core,Authentication,PFAuthenticationRegisterPlayFabUserAsync,None,Authentication,RegisterPlayFabUser,false,No,No,No,No,No,No,No,No
+PF Core,Authentication,PFAuthenticationServerLoginWithPSNAsync,SecretKey,Authentication,ServerLoginWithPSN,false,No,No,No,No,No,No,No,No
 PF Core,Authentication,PFAuthenticationServerLoginWithServerCustomIdAsync,SecretKey,Authentication,ServerLoginWithServerCustomId,false,No,Yes,No,No,Yes,No,No,Yes
 PF Core,Authentication,PFAuthenticationServerLoginWithSteamIdAsync,SecretKey,Authentication,ServerLoginWithSteamId,false,No,Yes,No,No,Yes,No,No,Yes
 PF Core,Authentication,PFAuthenticationServerLoginWithXboxAsync,SecretKey,Authentication,ServerLoginWithXbox,false,No,Yes,No,No,Yes,No,No,Yes

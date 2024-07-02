@@ -28,6 +28,12 @@ private:
 #endif
     void TestExecuteEntityCloudScript(TestContext& testContext);
     void TestExecuteFunction(TestContext& testContext);
+#if 0
+    void TestListEventHubFunctions(TestContext& testContext);
+#endif
+#if 0
+    void TestRegisterEventHubFunction(TestContext& testContext);
+#endif
 
 };
 

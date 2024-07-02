@@ -250,7 +250,7 @@ PlayFab initialization requires two function calls: __PFServicesInitialize__ and
 
 ### Logging in
 
-Once you have a __PFServiceConfigHandle__, you can use it to make a player login call. In the SDK, use a __PFAuthenticationLoginWith\*Async__ method like __PFAuthenticationLoginWithCustomIdAsync__. This function allows you to log in a player to PlayFab using a custom string, which is useful during development and testing.
+Once you have a __PFServiceConfigHandle__, you can use it to make a player login call. In the SDK, use a __PFAuthenticationLoginWith\*Async__ method like __PFAuthenticationLoginWithCustomIDAsync__. This function allows you to log in a player to PlayFab using a custom string, which is useful during development and testing.
 
 After making a login call, you can check the status of the call with __XAsyncGetStatus__. The status starts as __E_PENDING__ and changes to __S_OK__ after the call completes successfully. If the call fails for some reason, the status reflects that failure. Error handling on all PlayFab Services calls works this way.
 
@@ -262,7 +262,7 @@ Along with an __S_OK__ result, you get back a __PFEntityHandle__. You use this h
     request.customId = "player1";
 
     XAsyncBlock async{};
-    HRESULT hr = PFAuthenticationLoginWithCustomIdAsync(serviceConfigHandle, &request, &async); // Add your own error handling when FAILED(hr) == true
+    HRESULT hr = PFAuthenticationLoginWithCustomIDAsync(serviceConfigHandle, &request, &async); // Add your own error handling when FAILED(hr) == true
     hr = XAsyncGetStatus(&async, true); // This is doing a blocking wait for completion, but you can use the XAsyncBlock to set a callback instead for async style usage
 
     std::vector<char> loginResultBuffer;

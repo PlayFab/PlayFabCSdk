@@ -7,6 +7,27 @@ namespace PlayFab
 namespace Test
 {
 
+#if 0
+
+DeleteSecretOperation::DeleteSecretOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<void> DeleteSecretOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<DeleteSecretOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT DeleteSecretOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFMultiplayerServerDeleteSecretAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+#endif
+
 
 ListBuildAliasesOperation::ListBuildAliasesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -91,6 +112,36 @@ Result<ListQosServersForTitleOperation::ResultType> ListQosServersForTitleOperat
     return ResultType{ *result };
 }
 
+#if 0
+
+ListSecretSummariesOperation::ListSecretSummariesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ListSecretSummariesOperation::ResultType> ListSecretSummariesOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ListSecretSummariesOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ListSecretSummariesOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFMultiplayerServerListSecretSummariesAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ListSecretSummariesOperation::ResultType> ListSecretSummariesOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFMultiplayerServerListSecretSummariesGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFMultiplayerServerListSecretSummariesResponse* result;
+    RETURN_IF_FAILED(PFMultiplayerServerListSecretSummariesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
 
 RequestMultiplayerServerOperation::RequestMultiplayerServerOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -147,6 +198,27 @@ Result<RequestPartyServiceOperation::ResultType> RequestPartyServiceOperation::G
     RETURN_IF_FAILED(PFMultiplayerServerRequestPartyServiceGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
+#endif
+
+#if 0
+
+UploadSecretOperation::UploadSecretOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<void> UploadSecretOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<UploadSecretOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT UploadSecretOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFMultiplayerServerUploadSecretAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
 #endif
 
 }

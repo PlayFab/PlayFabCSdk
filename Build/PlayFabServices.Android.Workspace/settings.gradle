@@ -1,10 +1,20 @@
 rootProject.name = "PlayFabServices.Android.Workspace"
 
+def pathToRoot = "../../"
+
 include ":PlayFabServices.Android", ":PlayFabCore.Android", ":PlayFabSharedInternal.Android"
 
-project(":PlayFabServices.Android").projectDir = new File("../PlayFabServices.Android")
+project(":PlayFabServices.Android").projectDir = new File("${pathToRoot}/Build/PlayFabServices.Android")
+project(":PlayFabCore.Android").projectDir = new File("${pathToRoot}/Build/PlayFabCore.Android")
+project(":PlayFabSharedInternal.Android").projectDir = new File("${pathToRoot}/Build/PlayFabSharedInternal.Android")
 
-project(":PlayFabCore.Android").projectDir = new File("../PlayFabCore.Android")
-
-project(":PlayFabSharedInternal.Android").projectDir = new File("../PlayFabSharedInternal.Android")
 include ':libHttpClient.Android'
+def libHttpClientRoot = ""
+if (file("${pathToRoot}/Build/libHttpClient/README.md").exists()) {
+    libHttpClientRoot = "${pathToRoot}/Build/libHttpClient/Build/libHttpClient.Android"
+}
+else {
+    libHttpClientRoot = "${pathToRoot}/../libHttpClient/Build/libHttpClient.Android"
+}
+println "Using libHttpClient from: ${file("${libHttpClientRoot}")}"
+project(":libHttpClient.Android").projectDir = new File("${libHttpClientRoot}")

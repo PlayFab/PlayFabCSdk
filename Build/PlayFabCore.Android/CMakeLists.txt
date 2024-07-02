@@ -10,12 +10,30 @@ endif()
 
 project("PlayFabCore.Android")
 
+# For PlayFab, we need to compile with c++20 rather than c++17 because of an issue with std::optional discussed here:
+# https://discourse.llvm.org/t/code-which-compiles-with-g-but-not-with-clang/56868/4
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,now")
 set(CMAKE_CXX_FLAGS_RELEASE "-gdwarf-5")
 set(CMAKE_C_FLAGS_RELEASE "-gdwarf-5")
+
+##################################
+### Set up binary output paths ###
+##################################
+
+# Set final shared libraries output folder
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Debug/${PROJECT_NAME})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Release/${PROJECT_NAME})
+
+# Set final static libraries output folder
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Debug/${PROJECT_NAME})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Release/${PROJECT_NAME})
+
+# Set final runtime output folder
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Debug/${PROJECT_NAME})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Release/${PROJECT_NAME})
 
 ###########################################
 ### Set up paths for source and include ###
@@ -48,10 +66,11 @@ set(COMMON_INCLUDE_DIRS
 ### Set up shared lib ###
 #########################
 
-add_subdirectory("../PlayFabSharedInternal.Android" ${PATH_TO_ROOT}/Out/Android/PlayFabCore.Android/PlayFabSharedInternal/${CMAKE_BUILD_TYPE}/${ANDROID_ABI})
+set(PlayFabSharedInternal.Android ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/${CMAKE_BUILD_TYPE}/PlayFabSharedInternal.Android/PlayFabSharedInternal.Android.a)
 
-string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_LOWER)
-add_subdirectory("${PATH_TO_LHC}/Build/libHttpClient.Android" "${PATH_TO_LHC}/Binaries/Android/.cxx/libHttpClient.Android/cmake/${CMAKE_BUILD_TYPE_LOWER}/${ANDROID_ABI}")
+# libHttpClient Shared Lib
+string(TOLOWER "${CMAKE_BUILD_TYPE}" PATH_FLAVOR)
+set(libHttpClient ${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${PATH_FLAVOR}/obj/${ANDROID_ABI}/libHttpClient.Android.so)
 
 add_library(
     "PlayFabCore.Android"
@@ -74,11 +93,17 @@ find_library( # Sets the name of the path variable.
     log
 )
 
+find_library(
+    zlib
+    z
+)
+
 target_link_libraries(
     PlayFabCore.Android
-    PlayFabSharedInternal.Android
-    libHttpClient.Android
+    ${PlayFabSharedInternal.Android}
+    ${libHttpClient}
     ${log-lib}
+    ${zlib}
 )
 
 include("../PlayFabSharedInternal.CMake/GetLinuxFlags.cmake")

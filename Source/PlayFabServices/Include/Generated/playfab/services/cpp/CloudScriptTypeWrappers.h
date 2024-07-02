@@ -945,5 +945,298 @@ private:
     std::optional<bool> m_functionResultTooLarge;
 };
 
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFCloudScriptListFunctionsRequestWrapper : public ModelWrapper<PFCloudScriptListFunctionsRequest, Alloc>
+{
+public:
+    using ModelType = PFCloudScriptListFunctionsRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFCloudScriptListFunctionsRequestWrapper() = default;
+
+    PFCloudScriptListFunctionsRequestWrapper(const PFCloudScriptListFunctionsRequest& model) :
+        ModelWrapper<PFCloudScriptListFunctionsRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFCloudScriptListFunctionsRequestWrapper(const PFCloudScriptListFunctionsRequestWrapper& src) :
+        PFCloudScriptListFunctionsRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFCloudScriptListFunctionsRequestWrapper(PFCloudScriptListFunctionsRequestWrapper&& src) :
+        PFCloudScriptListFunctionsRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFCloudScriptListFunctionsRequestWrapper& operator=(PFCloudScriptListFunctionsRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFCloudScriptListFunctionsRequestWrapper() = default;
+
+    friend void swap(PFCloudScriptListFunctionsRequestWrapper& lhs, PFCloudScriptListFunctionsRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFCloudScriptEventHubFunctionModelWrapper : public ModelWrapper<PFCloudScriptEventHubFunctionModel, Alloc>
+{
+public:
+    using ModelType = PFCloudScriptEventHubFunctionModel;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFCloudScriptEventHubFunctionModelWrapper() = default;
+
+    PFCloudScriptEventHubFunctionModelWrapper(const PFCloudScriptEventHubFunctionModel& model) :
+        ModelWrapper<PFCloudScriptEventHubFunctionModel, Alloc>{ model },
+        m_connectionString{ SafeString(model.connectionString) },
+        m_eventHubName{ SafeString(model.eventHubName) },
+        m_functionName{ SafeString(model.functionName) }
+    {
+        SetModelPointers();
+    }
+
+    PFCloudScriptEventHubFunctionModelWrapper(const PFCloudScriptEventHubFunctionModelWrapper& src) :
+        PFCloudScriptEventHubFunctionModelWrapper{ src.Model() }
+    {
+    }
+
+    PFCloudScriptEventHubFunctionModelWrapper(PFCloudScriptEventHubFunctionModelWrapper&& src) :
+        PFCloudScriptEventHubFunctionModelWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFCloudScriptEventHubFunctionModelWrapper& operator=(PFCloudScriptEventHubFunctionModelWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFCloudScriptEventHubFunctionModelWrapper() = default;
+
+    friend void swap(PFCloudScriptEventHubFunctionModelWrapper& lhs, PFCloudScriptEventHubFunctionModelWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_connectionString, rhs.m_connectionString);
+        swap(lhs.m_eventHubName, rhs.m_eventHubName);
+        swap(lhs.m_functionName, rhs.m_functionName);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetConnectionString(String value)
+    {
+        m_connectionString = std::move(value);
+        this->m_model.connectionString =  m_connectionString.empty() ? nullptr : m_connectionString.data();
+    }
+
+    void SetEventHubName(String value)
+    {
+        m_eventHubName = std::move(value);
+        this->m_model.eventHubName =  m_eventHubName.empty() ? nullptr : m_eventHubName.data();
+    }
+
+    void SetFunctionName(String value)
+    {
+        m_functionName = std::move(value);
+        this->m_model.functionName =  m_functionName.empty() ? nullptr : m_functionName.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.connectionString = m_connectionString.empty() ? nullptr : m_connectionString.data();
+        this->m_model.eventHubName = m_eventHubName.empty() ? nullptr : m_eventHubName.data();
+        this->m_model.functionName = m_functionName.empty() ? nullptr : m_functionName.data();
+    }
+
+    String m_connectionString;
+    String m_eventHubName;
+    String m_functionName;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFCloudScriptListEventHubFunctionsResultWrapper : public ModelWrapper<PFCloudScriptListEventHubFunctionsResult, Alloc>
+{
+public:
+    using ModelType = PFCloudScriptListEventHubFunctionsResult;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFCloudScriptListEventHubFunctionsResultWrapper() = default;
+
+    PFCloudScriptListEventHubFunctionsResultWrapper(const PFCloudScriptListEventHubFunctionsResult& model) :
+        ModelWrapper<PFCloudScriptListEventHubFunctionsResult, Alloc>{ model },
+        m_functions{ model.functions, model.functions + model.functionsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFCloudScriptListEventHubFunctionsResultWrapper(const PFCloudScriptListEventHubFunctionsResultWrapper& src) :
+        PFCloudScriptListEventHubFunctionsResultWrapper{ src.Model() }
+    {
+    }
+
+    PFCloudScriptListEventHubFunctionsResultWrapper(PFCloudScriptListEventHubFunctionsResultWrapper&& src) :
+        PFCloudScriptListEventHubFunctionsResultWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFCloudScriptListEventHubFunctionsResultWrapper& operator=(PFCloudScriptListEventHubFunctionsResultWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFCloudScriptListEventHubFunctionsResultWrapper() = default;
+
+    friend void swap(PFCloudScriptListEventHubFunctionsResultWrapper& lhs, PFCloudScriptListEventHubFunctionsResultWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_functions, rhs.m_functions);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetFunctions(ModelVector<PFCloudScriptEventHubFunctionModelWrapper<Alloc>, Alloc> value)
+    {
+        m_functions = std::move(value);
+        this->m_model.functions =  m_functions.empty() ? nullptr : m_functions.data();
+        this->m_model.functionsCount =  static_cast<uint32_t>(m_functions.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.functions = m_functions.empty() ? nullptr : m_functions.data();
+    }
+
+    ModelVector<PFCloudScriptEventHubFunctionModelWrapper<Alloc>, Alloc> m_functions;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFCloudScriptRegisterEventHubFunctionRequestWrapper : public ModelWrapper<PFCloudScriptRegisterEventHubFunctionRequest, Alloc>
+{
+public:
+    using ModelType = PFCloudScriptRegisterEventHubFunctionRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFCloudScriptRegisterEventHubFunctionRequestWrapper() = default;
+
+    PFCloudScriptRegisterEventHubFunctionRequestWrapper(const PFCloudScriptRegisterEventHubFunctionRequest& model) :
+        ModelWrapper<PFCloudScriptRegisterEventHubFunctionRequest, Alloc>{ model },
+        m_connectionString{ SafeString(model.connectionString) },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_eventHubName{ SafeString(model.eventHubName) },
+        m_functionName{ SafeString(model.functionName) }
+    {
+        SetModelPointers();
+    }
+
+    PFCloudScriptRegisterEventHubFunctionRequestWrapper(const PFCloudScriptRegisterEventHubFunctionRequestWrapper& src) :
+        PFCloudScriptRegisterEventHubFunctionRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFCloudScriptRegisterEventHubFunctionRequestWrapper(PFCloudScriptRegisterEventHubFunctionRequestWrapper&& src) :
+        PFCloudScriptRegisterEventHubFunctionRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFCloudScriptRegisterEventHubFunctionRequestWrapper& operator=(PFCloudScriptRegisterEventHubFunctionRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFCloudScriptRegisterEventHubFunctionRequestWrapper() = default;
+
+    friend void swap(PFCloudScriptRegisterEventHubFunctionRequestWrapper& lhs, PFCloudScriptRegisterEventHubFunctionRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_connectionString, rhs.m_connectionString);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_eventHubName, rhs.m_eventHubName);
+        swap(lhs.m_functionName, rhs.m_functionName);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetConnectionString(String value)
+    {
+        m_connectionString = std::move(value);
+        this->m_model.connectionString =  m_connectionString.empty() ? nullptr : m_connectionString.data();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetEventHubName(String value)
+    {
+        m_eventHubName = std::move(value);
+        this->m_model.eventHubName =  m_eventHubName.empty() ? nullptr : m_eventHubName.data();
+    }
+
+    void SetFunctionName(String value)
+    {
+        m_functionName = std::move(value);
+        this->m_model.functionName =  m_functionName.empty() ? nullptr : m_functionName.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.connectionString = m_connectionString.empty() ? nullptr : m_connectionString.data();
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.eventHubName = m_eventHubName.empty() ? nullptr : m_eventHubName.data();
+        this->m_model.functionName = m_functionName.empty() ? nullptr : m_functionName.data();
+    }
+
+    String m_connectionString;
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_eventHubName;
+    String m_functionName;
+};
+
 } // namespace Wrappers
 } // namespace PlayFab

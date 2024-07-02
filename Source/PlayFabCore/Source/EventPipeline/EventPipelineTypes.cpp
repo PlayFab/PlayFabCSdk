@@ -20,7 +20,7 @@ Event::Event(Event const& src) : Event{ src.Model() }
 {
 }
 
-Event::Event(Event&& src) : Event{}
+Event::Event(Event&& src) noexcept : Event{}
 {
     swap(*this, src);
 }
@@ -76,7 +76,7 @@ UploadedEvent::UploadedEvent(UploadedEvent const& src) : UploadedEvent{ src.Mode
 {
 }
 
-UploadedEvent::UploadedEvent(UploadedEvent&& src)
+UploadedEvent::UploadedEvent(UploadedEvent&& src) noexcept
 {
     swap(*this, src);
 }

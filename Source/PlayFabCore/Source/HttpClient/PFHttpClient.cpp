@@ -411,8 +411,6 @@ PF_API PFHCHttpCallResponseGetHeaderAtIndex(
     );
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
-
 PF_API PFHCHttpCallRequestEnableGzipCompression(
     _In_ PFHCCallHandle call,
     _In_ PFHCCompressionLevel level
@@ -424,7 +422,17 @@ PF_API PFHCHttpCallRequestEnableGzipCompression(
     );
 }
 
-#endif
+PF_API PFHCHttpCallResponseSetGzipCompressed(
+    _In_ PFHCCallHandle call,
+    _In_ bool compress
+) noexcept 
+{
+    return HCHttpCallResponseSetGzipCompressed(
+        call,
+        compress
+    );
+}
+
 
 #if !HC_NOWEBSOCKETS
 

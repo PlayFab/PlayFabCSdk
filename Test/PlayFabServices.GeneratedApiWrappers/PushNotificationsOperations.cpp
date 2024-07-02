@@ -1,6 +1,8 @@
 #include "TestAppPch.h"
 #include "PushNotificationsOperations.h"
+#if HC_PLATFORM != HC_PLATFORM_GDK
 #include <playfab/services/PFPushNotifications.h>
+#endif
 
 namespace PlayFab
 {

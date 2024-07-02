@@ -6313,7 +6313,8 @@ public:
         m_durationInHours{ model.durationInHours ? std::optional<uint32_t>{ *model.durationInHours } : std::nullopt },
         m_IPAddress{ SafeString(model.IPAddress) },
         m_playFabId{ SafeString(model.playFabId) },
-        m_reason{ SafeString(model.reason) }
+        m_reason{ SafeString(model.reason) },
+        m_userFamilyType{ model.userFamilyType ? std::optional<PFAccountManagementUserFamilyType>{ *model.userFamilyType } : std::nullopt }
     {
         SetModelPointers();
     }
@@ -6345,6 +6346,7 @@ public:
         swap(lhs.m_IPAddress, rhs.m_IPAddress);
         swap(lhs.m_playFabId, rhs.m_playFabId);
         swap(lhs.m_reason, rhs.m_reason);
+        swap(lhs.m_userFamilyType, rhs.m_userFamilyType);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
@@ -6373,6 +6375,12 @@ public:
         this->m_model.reason =  m_reason.empty() ? nullptr : m_reason.data();
     }
 
+    void SetUserFamilyType(std::optional<PFAccountManagementUserFamilyType> value)
+    {
+        m_userFamilyType = std::move(value);
+        this->m_model.userFamilyType = m_userFamilyType ? m_userFamilyType.operator->() : nullptr;
+    }
+
 private:
     void SetModelPointers()
     {
@@ -6380,12 +6388,14 @@ private:
         this->m_model.IPAddress = m_IPAddress.empty() ? nullptr : m_IPAddress.data();
         this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
         this->m_model.reason = m_reason.empty() ? nullptr : m_reason.data();
+        this->m_model.userFamilyType = m_userFamilyType ? m_userFamilyType.operator->() : nullptr;
     }
 
     std::optional<uint32_t> m_durationInHours;
     String m_IPAddress;
     String m_playFabId;
     String m_reason;
+    std::optional<PFAccountManagementUserFamilyType> m_userFamilyType;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -6477,7 +6487,8 @@ public:
         m_expires{ model.expires ? std::optional<time_t>{ *model.expires } : std::nullopt },
         m_IPAddress{ SafeString(model.IPAddress) },
         m_playFabId{ SafeString(model.playFabId) },
-        m_reason{ SafeString(model.reason) }
+        m_reason{ SafeString(model.reason) },
+        m_userFamilyType{ SafeString(model.userFamilyType) }
     {
         SetModelPointers();
     }
@@ -6511,6 +6522,7 @@ public:
         swap(lhs.m_IPAddress, rhs.m_IPAddress);
         swap(lhs.m_playFabId, rhs.m_playFabId);
         swap(lhs.m_reason, rhs.m_reason);
+        swap(lhs.m_userFamilyType, rhs.m_userFamilyType);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
@@ -6556,6 +6568,12 @@ public:
         this->m_model.reason =  m_reason.empty() ? nullptr : m_reason.data();
     }
 
+    void SetUserFamilyType(String value)
+    {
+        m_userFamilyType = std::move(value);
+        this->m_model.userFamilyType =  m_userFamilyType.empty() ? nullptr : m_userFamilyType.data();
+    }
+
 private:
     void SetModelPointers()
     {
@@ -6565,6 +6583,7 @@ private:
         this->m_model.IPAddress = m_IPAddress.empty() ? nullptr : m_IPAddress.data();
         this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
         this->m_model.reason = m_reason.empty() ? nullptr : m_reason.data();
+        this->m_model.userFamilyType = m_userFamilyType.empty() ? nullptr : m_userFamilyType.data();
     }
 
     String m_banId;
@@ -6573,6 +6592,7 @@ private:
     String m_IPAddress;
     String m_playFabId;
     String m_reason;
+    String m_userFamilyType;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -8835,7 +8855,8 @@ public:
         m_expires{ model.expires ? std::optional<time_t>{ *model.expires } : std::nullopt },
         m_IPAddress{ SafeString(model.IPAddress) },
         m_permanent{ model.permanent ? std::optional<bool>{ *model.permanent } : std::nullopt },
-        m_reason{ SafeString(model.reason) }
+        m_reason{ SafeString(model.reason) },
+        m_userFamilyType{ model.userFamilyType ? std::optional<PFAccountManagementUserFamilyType>{ *model.userFamilyType } : std::nullopt }
     {
         SetModelPointers();
     }
@@ -8869,6 +8890,7 @@ public:
         swap(lhs.m_IPAddress, rhs.m_IPAddress);
         swap(lhs.m_permanent, rhs.m_permanent);
         swap(lhs.m_reason, rhs.m_reason);
+        swap(lhs.m_userFamilyType, rhs.m_userFamilyType);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
@@ -8909,6 +8931,12 @@ public:
         this->m_model.reason =  m_reason.empty() ? nullptr : m_reason.data();
     }
 
+    void SetUserFamilyType(std::optional<PFAccountManagementUserFamilyType> value)
+    {
+        m_userFamilyType = std::move(value);
+        this->m_model.userFamilyType = m_userFamilyType ? m_userFamilyType.operator->() : nullptr;
+    }
+
 private:
     void SetModelPointers()
     {
@@ -8918,6 +8946,7 @@ private:
         this->m_model.IPAddress = m_IPAddress.empty() ? nullptr : m_IPAddress.data();
         this->m_model.permanent = m_permanent ? m_permanent.operator->() : nullptr;
         this->m_model.reason = m_reason.empty() ? nullptr : m_reason.data();
+        this->m_model.userFamilyType = m_userFamilyType ? m_userFamilyType.operator->() : nullptr;
     }
 
     std::optional<bool> m_active;
@@ -8926,6 +8955,7 @@ private:
     String m_IPAddress;
     std::optional<bool> m_permanent;
     String m_reason;
+    std::optional<PFAccountManagementUserFamilyType> m_userFamilyType;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>

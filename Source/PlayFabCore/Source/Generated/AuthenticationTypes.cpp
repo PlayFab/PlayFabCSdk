@@ -567,6 +567,23 @@ HRESULT RegisterPlayFabUserResult::Copy(const PFAuthenticationRegisterPlayFabUse
     return S_OK;
 }
 
+JsonValue ServerLoginWithPSNRequest::ToJson() const
+{
+    return ServerLoginWithPSNRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithPSNRequest::ToJson(const PFAuthenticationServerLoginWithPSNRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMember(output, "AuthCode", input.authCode);
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    JsonUtils::ObjectAddMember(output, "IssuerId", input.issuerId);
+    JsonUtils::ObjectAddMember(output, "RedirectUri", input.redirectUri);
+    return output;
+}
+
 JsonValue LoginWithServerCustomIdRequest::ToJson() const
 {
     return LoginWithServerCustomIdRequest::ToJson(this->Model());

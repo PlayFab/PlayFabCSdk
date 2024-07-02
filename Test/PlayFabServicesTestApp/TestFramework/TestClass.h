@@ -30,7 +30,7 @@ public:
     /// During testing, this is the first function that will be called for each TestClass.
     /// This is run exactly once for this type.
     /// </summary>
-    virtual void ClassSetUp() {}
+    virtual AsyncOp<void> Initialize() = 0;
 
     /// <summary>
     /// During testing, this will be called every tick that a test is asynchronous.
@@ -42,9 +42,8 @@ public:
     /// <summary>
     /// During testing, this is the last function that will be called for each TestClass.
     /// This is run exactly once for this type.
-    /// It is not considered part of any test. A failure or exception in this method will halt the test framework.
     /// </summary>
-    virtual void ClassTearDown() {}
+    virtual AsyncOp<void> Uninitialize() = 0;
 
 protected:
     /// <summary>

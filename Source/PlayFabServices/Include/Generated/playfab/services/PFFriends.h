@@ -212,9 +212,10 @@ PF_API PFFriendsServerGetFriendsListAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
-/// E_PF_EXPIRED_XBOX_LIVE_TOKEN, E_PF_FACEBOOK_API_ERROR, E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_XBOX_INACCESSIBLE,
-/// E_PF_XBOX_SERVICE_TOO_MANY_REQUESTS, E_PF_XBOX_XASS_EXCHANGE_FAILURE or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_EXPIRED_XBOX_LIVE_TOKEN, E_PF_FACEBOOK_API_ERROR, E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME,
+/// E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_XBOX_INACCESSIBLE, E_PF_XBOX_SERVICE_TOO_MANY_REQUESTS,
+/// E_PF_XBOX_XASS_EXCHANGE_FAILURE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFFriendsServerGetFriendsListGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -231,9 +232,10 @@ PF_API PFFriendsServerGetFriendsListGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
-/// E_PF_EXPIRED_XBOX_LIVE_TOKEN, E_PF_FACEBOOK_API_ERROR, E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_XBOX_INACCESSIBLE,
-/// E_PF_XBOX_SERVICE_TOO_MANY_REQUESTS, E_PF_XBOX_XASS_EXCHANGE_FAILURE or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_EXPIRED_XBOX_LIVE_TOKEN, E_PF_FACEBOOK_API_ERROR, E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME,
+/// E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_XBOX_INACCESSIBLE, E_PF_XBOX_SERVICE_TOO_MANY_REQUESTS,
+/// E_PF_XBOX_XASS_EXCHANGE_FAILURE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

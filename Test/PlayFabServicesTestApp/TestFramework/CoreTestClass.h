@@ -16,13 +16,10 @@ public:
     // Add optional way to specify Test RunContext queue and PlayFab background queue. Will default to process queue for both
     CoreTestClass(TestTitleData testTitleData);
 
-    void ClassSetUp() override;
-    void ClassTearDown() override;
-
-protected:
     virtual AsyncOp<void> Initialize();
     virtual AsyncOp<void> Uninitialize();
 
+protected:
     // RunContext for tests
     RunContext RunContext() const;
 

@@ -558,6 +558,145 @@ HRESULT ExecuteInventoryOperationsResponse::Copy(const PFInventoryExecuteInvento
     return S_OK;
 }
 
+JsonValue ExecuteTransferOperationsRequest::ToJson() const
+{
+    return ExecuteTransferOperationsRequest::ToJson(this->Model());
+}
+
+JsonValue ExecuteTransferOperationsRequest::ToJson(const PFInventoryExecuteTransferOperationsRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "GivingCollectionId", input.givingCollectionId);
+    JsonUtils::ObjectAddMember<EntityKey>(output, "GivingEntity", input.givingEntity);
+    JsonUtils::ObjectAddMember(output, "GivingETag", input.givingETag);
+    JsonUtils::ObjectAddMember(output, "IdempotencyId", input.idempotencyId);
+    JsonUtils::ObjectAddMemberArray<TransferInventoryItemsOperation>(output, "Operations", input.operations, input.operationsCount);
+    JsonUtils::ObjectAddMember(output, "ReceivingCollectionId", input.receivingCollectionId);
+    JsonUtils::ObjectAddMember<EntityKey>(output, "ReceivingEntity", input.receivingEntity);
+    return output;
+}
+
+HRESULT ExecuteTransferOperationsResponse::FromJson(const JsonValue& input)
+{
+    String givingETag{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "GivingETag", givingETag));
+    this->SetGivingETag(std::move(givingETag));
+
+    CStringVector givingTransactionIds{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "GivingTransactionIds", givingTransactionIds));
+    this->SetGivingTransactionIds(std::move(givingTransactionIds));
+
+    String idempotencyId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "IdempotencyId", idempotencyId));
+    this->SetIdempotencyId(std::move(idempotencyId));
+
+    String operationStatus{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OperationStatus", operationStatus));
+    this->SetOperationStatus(std::move(operationStatus));
+
+    String operationToken{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OperationToken", operationToken));
+    this->SetOperationToken(std::move(operationToken));
+
+    String receivingETag{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ReceivingETag", receivingETag));
+    this->SetReceivingETag(std::move(receivingETag));
+
+    CStringVector receivingTransactionIds{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ReceivingTransactionIds", receivingTransactionIds));
+    this->SetReceivingTransactionIds(std::move(receivingTransactionIds));
+
+    return S_OK;
+}
+
+size_t ExecuteTransferOperationsResponse::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFInventoryExecuteTransferOperationsResponse const*> ExecuteTransferOperationsResponse::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<ExecuteTransferOperationsResponse>(&this->Model());
+}
+
+size_t ExecuteTransferOperationsResponse::RequiredBufferSize(const PFInventoryExecuteTransferOperationsResponse& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.givingETag)
+    {
+        requiredSize += (std::strlen(model.givingETag) + 1);
+    }
+    requiredSize += (alignof(char*) + sizeof(char*) * model.givingTransactionIdsCount);
+    for (size_t i = 0; i < model.givingTransactionIdsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.givingTransactionIds[i]) + 1);
+    }
+    if (model.idempotencyId)
+    {
+        requiredSize += (std::strlen(model.idempotencyId) + 1);
+    }
+    if (model.operationStatus)
+    {
+        requiredSize += (std::strlen(model.operationStatus) + 1);
+    }
+    if (model.operationToken)
+    {
+        requiredSize += (std::strlen(model.operationToken) + 1);
+    }
+    if (model.receivingETag)
+    {
+        requiredSize += (std::strlen(model.receivingETag) + 1);
+    }
+    requiredSize += (alignof(char*) + sizeof(char*) * model.receivingTransactionIdsCount);
+    for (size_t i = 0; i < model.receivingTransactionIdsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.receivingTransactionIds[i]) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT ExecuteTransferOperationsResponse::Copy(const PFInventoryExecuteTransferOperationsResponse& input, PFInventoryExecuteTransferOperationsResponse& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.givingETag); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.givingETag = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToArray(input.givingTransactionIds, input.givingTransactionIdsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.givingTransactionIds = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.idempotencyId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.operationStatus); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.operationStatus = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.operationToken); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.operationToken = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.receivingETag); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.receivingETag = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToArray(input.receivingTransactionIds, input.receivingTransactionIdsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.receivingTransactionIds = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue GetInventoryCollectionIdsRequest::ToJson() const
 {
     return GetInventoryCollectionIdsRequest::ToJson(this->Model());
@@ -711,6 +850,60 @@ HRESULT GetInventoryItemsResponse::Copy(const PFInventoryGetInventoryItemsRespon
     return S_OK;
 }
 
+JsonValue GetInventoryOperationStatusRequest::ToJson() const
+{
+    return GetInventoryOperationStatusRequest::ToJson(this->Model());
+}
+
+JsonValue GetInventoryOperationStatusRequest::ToJson(const PFInventoryGetInventoryOperationStatusRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
+    return output;
+}
+
+HRESULT GetInventoryOperationStatusResponse::FromJson(const JsonValue& input)
+{
+    String operationStatus{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OperationStatus", operationStatus));
+    this->SetOperationStatus(std::move(operationStatus));
+
+    return S_OK;
+}
+
+size_t GetInventoryOperationStatusResponse::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFInventoryGetInventoryOperationStatusResponse const*> GetInventoryOperationStatusResponse::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<GetInventoryOperationStatusResponse>(&this->Model());
+}
+
+size_t GetInventoryOperationStatusResponse::RequiredBufferSize(const PFInventoryGetInventoryOperationStatusResponse& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.operationStatus)
+    {
+        requiredSize += (std::strlen(model.operationStatus) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT GetInventoryOperationStatusResponse::Copy(const PFInventoryGetInventoryOperationStatusResponse& input, PFInventoryGetInventoryOperationStatusResponse& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.operationStatus); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.operationStatus = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue GetMicrosoftStoreAccessTokensRequest::ToJson() const
 {
     return GetMicrosoftStoreAccessTokensRequest::ToJson(this->Model());
@@ -779,6 +972,7 @@ JsonValue GetTransactionHistoryRequest::ToJson(const PFInventoryGetTransactionHi
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "Filter", input.filter);
+    JsonUtils::ObjectAddMember(output, "OrderBy", input.orderBy);
     return output;
 }
 
@@ -791,6 +985,10 @@ HRESULT TransactionOperation::FromJson(const JsonValue& input)
     std::optional<double> durationInSeconds{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "DurationInSeconds", durationInSeconds));
     this->SetDurationInSeconds(std::move(durationInSeconds));
+
+    String itemFriendlyId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemFriendlyId", itemFriendlyId));
+    this->SetItemFriendlyId(std::move(itemFriendlyId));
 
     String itemId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemId", itemId));
@@ -832,6 +1030,10 @@ size_t TransactionOperation::RequiredBufferSize(const PFInventoryTransactionOper
     {
         requiredSize += (alignof(double) + sizeof(double));
     }
+    if (model.itemFriendlyId)
+    {
+        requiredSize += (std::strlen(model.itemFriendlyId) + 1);
+    }
     if (model.itemId)
     {
         requiredSize += (std::strlen(model.itemId) + 1);
@@ -865,6 +1067,11 @@ HRESULT TransactionOperation::Copy(const PFInventoryTransactionOperation& input,
         output.durationInSeconds = propCopyResult.ExtractPayload();
     }
     {
+        auto propCopyResult = buffer.CopyTo(input.itemFriendlyId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.itemFriendlyId = propCopyResult.ExtractPayload();
+    }
+    {
         auto propCopyResult = buffer.CopyTo(input.itemId); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemId = propCopyResult.ExtractPayload();
@@ -889,6 +1096,10 @@ HRESULT TransactionOperation::Copy(const PFInventoryTransactionOperation& input,
 
 HRESULT TransactionPurchaseDetails::FromJson(const JsonValue& input)
 {
+    String storeFriendlyId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "StoreFriendlyId", storeFriendlyId));
+    this->SetStoreFriendlyId(std::move(storeFriendlyId));
+
     String storeId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "StoreId", storeId));
     this->SetStoreId(std::move(storeId));
@@ -909,6 +1120,10 @@ Result<PFInventoryTransactionPurchaseDetails const*> TransactionPurchaseDetails:
 size_t TransactionPurchaseDetails::RequiredBufferSize(const PFInventoryTransactionPurchaseDetails& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.storeFriendlyId)
+    {
+        requiredSize += (std::strlen(model.storeFriendlyId) + 1);
+    }
     if (model.storeId)
     {
         requiredSize += (std::strlen(model.storeId) + 1);
@@ -919,6 +1134,11 @@ size_t TransactionPurchaseDetails::RequiredBufferSize(const PFInventoryTransacti
 HRESULT TransactionPurchaseDetails::Copy(const PFInventoryTransactionPurchaseDetails& input, PFInventoryTransactionPurchaseDetails& output, ModelBuffer& buffer)
 {
     output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.storeFriendlyId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.storeFriendlyId = propCopyResult.ExtractPayload();
+    }
     {
         auto propCopyResult = buffer.CopyTo(input.storeId); 
         RETURN_IF_FAILED(propCopyResult.hr);
@@ -2161,6 +2381,10 @@ HRESULT TransferInventoryItemsResponse::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OperationStatus", operationStatus));
     this->SetOperationStatus(std::move(operationStatus));
 
+    String operationToken{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OperationToken", operationToken));
+    this->SetOperationToken(std::move(operationToken));
+
     CStringVector receivingTransactionIds{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ReceivingTransactionIds", receivingTransactionIds));
     this->SetReceivingTransactionIds(std::move(receivingTransactionIds));
@@ -2198,6 +2422,10 @@ size_t TransferInventoryItemsResponse::RequiredBufferSize(const PFInventoryTrans
     {
         requiredSize += (std::strlen(model.operationStatus) + 1);
     }
+    if (model.operationToken)
+    {
+        requiredSize += (std::strlen(model.operationToken) + 1);
+    }
     requiredSize += (alignof(char*) + sizeof(char*) * model.receivingTransactionIdsCount);
     for (size_t i = 0; i < model.receivingTransactionIdsCount; ++i)
     {
@@ -2228,6 +2456,11 @@ HRESULT TransferInventoryItemsResponse::Copy(const PFInventoryTransferInventoryI
         auto propCopyResult = buffer.CopyTo(input.operationStatus); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationStatus = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.operationToken); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.operationToken = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyToArray(input.receivingTransactionIds, input.receivingTransactionIdsCount);

@@ -24,8 +24,10 @@ public:
     static AsyncOp<void> DeleteInventoryCollection(Entity const& entity, const DeleteInventoryCollectionRequest& request, RunContext rc);
     static AsyncOp<DeleteInventoryItemsResponse> DeleteInventoryItems(Entity const& entity, const DeleteInventoryItemsRequest& request, RunContext rc);
     static AsyncOp<ExecuteInventoryOperationsResponse> ExecuteInventoryOperations(Entity const& entity, const ExecuteInventoryOperationsRequest& request, RunContext rc);
+    static AsyncOp<ExecuteTransferOperationsResponse> ExecuteTransferOperations(Entity const& entity, const ExecuteTransferOperationsRequest& request, RunContext rc);
     static AsyncOp<GetInventoryCollectionIdsResponse> GetInventoryCollectionIds(Entity const& entity, const GetInventoryCollectionIdsRequest& request, RunContext rc);
     static AsyncOp<GetInventoryItemsResponse> GetInventoryItems(Entity const& entity, const GetInventoryItemsRequest& request, RunContext rc);
+    static AsyncOp<GetInventoryOperationStatusResponse> GetInventoryOperationStatus(Entity const& entity, const GetInventoryOperationStatusRequest& request, RunContext rc);
     static AsyncOp<GetMicrosoftStoreAccessTokensResponse> GetMicrosoftStoreAccessTokens(Entity const& entity, const GetMicrosoftStoreAccessTokensRequest& request, RunContext rc);
     static AsyncOp<GetTransactionHistoryResponse> GetTransactionHistory(Entity const& entity, const GetTransactionHistoryRequest& request, RunContext rc);
     static AsyncOp<PurchaseInventoryItemsResponse> PurchaseInventoryItems(Entity const& entity, const PurchaseInventoryItemsRequest& request, RunContext rc);

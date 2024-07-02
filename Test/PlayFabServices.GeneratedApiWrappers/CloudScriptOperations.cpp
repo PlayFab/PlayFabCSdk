@@ -121,5 +121,56 @@ Result<ExecuteFunctionOperation::ResultType> ExecuteFunctionOperation::GetResult
     return ResultType{ *result };
 }
 
+#if 0
+
+ListEventHubFunctionsOperation::ListEventHubFunctionsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ListEventHubFunctionsOperation::ResultType> ListEventHubFunctionsOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ListEventHubFunctionsOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ListEventHubFunctionsOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFCloudScriptListEventHubFunctionsAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ListEventHubFunctionsOperation::ResultType> ListEventHubFunctionsOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFCloudScriptListEventHubFunctionsGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFCloudScriptListEventHubFunctionsResult* result;
+    RETURN_IF_FAILED(PFCloudScriptListEventHubFunctionsGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
+#if 0
+
+RegisterEventHubFunctionOperation::RegisterEventHubFunctionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<void> RegisterEventHubFunctionOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<RegisterEventHubFunctionOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT RegisterEventHubFunctionOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFCloudScriptRegisterEventHubFunctionAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+#endif
+
 }
 }

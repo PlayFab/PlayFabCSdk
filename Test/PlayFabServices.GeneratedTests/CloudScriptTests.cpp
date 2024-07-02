@@ -14,6 +14,12 @@ void CloudScriptTests::AddTests()
 #endif
     AddTest("TestExecuteEntityCloudScript", &CloudScriptTests::TestExecuteEntityCloudScript);
     AddTest("TestExecuteFunction", &CloudScriptTests::TestExecuteFunction);
+#if 0
+    AddTest("TestListEventHubFunctions", &CloudScriptTests::TestListEventHubFunctions);
+#endif
+#if 0
+    AddTest("TestRegisterEventHubFunction", &CloudScriptTests::TestRegisterEventHubFunction);
+#endif
 
 }
 

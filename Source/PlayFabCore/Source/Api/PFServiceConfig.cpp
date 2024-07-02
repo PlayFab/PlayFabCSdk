@@ -18,7 +18,7 @@ PF_API PFServiceConfigCreateHandle(
         RETURN_HR_INVALIDARG_IF_NULL(titleId);
         RETURN_HR_INVALIDARG_IF_NULL(serviceConfigHandle);
 
-        auto serviceConfig = MakeShared<PlayFab::ServiceConfig>(apiEndpoint, titleId, state.HttpRetrySettings());
+        auto serviceConfig = MakeShared<PlayFab::ServiceConfig>(apiEndpoint, titleId, state.HttpRetrySettings(), state.HttpSettings());
         return state.ServiceConfigs().MakeHandle(std::move(serviceConfig), *serviceConfigHandle);
     });
 }

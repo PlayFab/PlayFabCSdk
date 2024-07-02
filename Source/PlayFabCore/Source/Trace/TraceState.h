@@ -42,7 +42,7 @@ public:
     static HRESULT CleanupAsync(XAsyncBlock* async) noexcept;
 
 private:
-    TraceState(RunContext&& runContext, LocalStorage localStorage) noexcept;
+    TraceState(RunContext&& initContext, RunContext&& traceContext, LocalStorage localStorage) noexcept;
 
     static HRESULT CALLBACK CleanupAsyncProvider(XAsyncOp op, XAsyncProviderData const* data) noexcept;
 

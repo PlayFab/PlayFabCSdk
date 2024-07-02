@@ -24,6 +24,8 @@ public:
     static AsyncOp<ExecuteCloudScriptResult> ServerExecuteCloudScript(Entity const& entity, const ExecuteCloudScriptServerRequest& request, RunContext rc);
     static AsyncOp<ExecuteCloudScriptResult> ExecuteEntityCloudScript(Entity const& entity, const ExecuteEntityCloudScriptRequest& request, RunContext rc);
     static AsyncOp<ExecuteFunctionResult> ExecuteFunction(Entity const& entity, const ExecuteFunctionRequest& request, RunContext rc);
+    static AsyncOp<ListEventHubFunctionsResult> ListEventHubFunctions(Entity const& entity, const ListFunctionsRequest& request, RunContext rc);
+    static AsyncOp<void> RegisterEventHubFunction(Entity const& entity, const RegisterEventHubFunctionRequest& request, RunContext rc);
 };
 
 } // namespace CloudScript

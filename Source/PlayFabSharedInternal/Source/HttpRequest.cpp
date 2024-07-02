@@ -78,6 +78,7 @@ HCHttpCall::HCHttpCall(
     uint32_t retryCacheId,
     PFHttpRetrySettings const& retrySettings,
     PlayFab::RunContext runContext,
+    PFHttpSettings const& httpSettings,
     PFHCCompressionLevel compressionLevel
 ) noexcept :
     XAsyncOperation<ServiceResponse>{ std::move(runContext) },
@@ -89,7 +90,8 @@ HCHttpCall::HCHttpCall(
     m_retryAllowed{ retrySettings.allowRetry },
     m_retryDelay{ retrySettings.minimumRetryDelayInSeconds },
     m_timeoutWindow{ retrySettings.timeoutWindowInSeconds },
-    m_compressionLevel{ compressionLevel }
+    m_compressionLevel{ compressionLevel },
+    m_compressedResponsesExpected {httpSettings.requestResponseCompression }
 {
 }
 
@@ -113,14 +115,19 @@ HRESULT HCHttpCall::OnStarted(XAsyncBlock* async) noexcept
     RETURN_IF_FAILED(PFHCHttpCallRequestSetUrl(m_callHandle, m_method.data(), m_url.data()));
     RETURN_IF_FAILED(PFHCHttpCallResponseSetResponseBodyWriteFunction(m_callHandle, HCHttpCall::HCResponseBodyWrite, this));
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
     // Setup Compression level
     RETURN_IF_FAILED(PFHCHttpCallRequestEnableGzipCompression(m_callHandle, m_compressionLevel));
-#else
+
+    // Set whether the expected response should be compressed
+    if (m_compressedResponsesExpected)
+    {
+        RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, "Accept-Encoding", "application/gzip", true));
+        RETURN_IF_FAILED(PFHCHttpCallResponseSetGzipCompressed(m_callHandle, true));
+    }
+
     // Doing this assignment to avoid guarding the variable and having to add several guards on the header file.
     // This is due to a PlayStation build warning about private field not being used
     m_compressionLevel = PFHCCompressionLevel::None;
-#endif
 
     // Add default PlayFab headers
     RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, "Accept", "application/json", true));
@@ -185,7 +192,7 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
         RETURN_IF_FAILED(PFHCHttpCallResponseGetStatusCode(m_callHandle, &httpCode));
         RETURN_IF_FAILED(HttpStatusToHR(httpCode));
 
-        // This is an unusal case. We weren't able to parse the response body, but the Http status code indicates that the
+        // This is an unusual case. We weren't able to parse the response body, but the Http status code indicates that the
         // call was successful. Return the Json parse error in this case.
         Stringstream errorMessage;
         errorMessage << "Failed to parse PlayFab service response: " << rapidjson::GetParseError_En(responseJson.GetParseError());

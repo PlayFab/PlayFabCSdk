@@ -10,7 +10,7 @@
 #include <playfab/core/cpp/TypeWrappers.h>
 #include "PlayFabException.h"
 #include <string>
-
+#include <assert.h>
 
 namespace PlayFab
 {
@@ -44,7 +44,7 @@ public:
         THROW_IF_FAILED(PFEntityDuplicateHandle(other.m_handle, &m_handle)); 
     }
 
-    Entity(Entity&& other)
+    Entity(Entity&& other) noexcept
     {
         std::swap(m_handle, other.m_handle);
     }

@@ -976,6 +976,67 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFCatalogPermissionsWrapper : public ModelWrapper<PFCatalogPermissions, Alloc>
+{
+public:
+    using ModelType = PFCatalogPermissions;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFCatalogPermissionsWrapper() = default;
+
+    PFCatalogPermissionsWrapper(const PFCatalogPermissions& model) :
+        ModelWrapper<PFCatalogPermissions, Alloc>{ model },
+        m_segmentIds{ model.segmentIds, model.segmentIds + model.segmentIdsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFCatalogPermissionsWrapper(const PFCatalogPermissionsWrapper& src) :
+        PFCatalogPermissionsWrapper{ src.Model() }
+    {
+    }
+
+    PFCatalogPermissionsWrapper(PFCatalogPermissionsWrapper&& src) :
+        PFCatalogPermissionsWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFCatalogPermissionsWrapper& operator=(PFCatalogPermissionsWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFCatalogPermissionsWrapper() = default;
+
+    friend void swap(PFCatalogPermissionsWrapper& lhs, PFCatalogPermissionsWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_segmentIds, rhs.m_segmentIds);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetSegmentIds(CStringVector<Alloc> value)
+    {
+        m_segmentIds = std::move(value);
+        this->m_model.segmentIds =  m_segmentIds.empty() ? nullptr : m_segmentIds.data();
+        this->m_model.segmentIdsCount =  static_cast<uint32_t>(m_segmentIds.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.segmentIds = m_segmentIds.empty() ? nullptr : m_segmentIds.data();
+    }
+
+    CStringVector<Alloc> m_segmentIds;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFCatalogCatalogPriceAmountOverrideWrapper : public ModelWrapper<PFCatalogCatalogPriceAmountOverride, Alloc>
 {
 public:
@@ -1190,6 +1251,7 @@ public:
     PFCatalogStoreDetailsWrapper(const PFCatalogStoreDetails& model) :
         ModelWrapper<PFCatalogStoreDetails, Alloc>{ model },
         m_filterOptions{ model.filterOptions ? std::optional<PFCatalogFilterOptionsWrapper<Alloc>>{ *model.filterOptions } : std::nullopt },
+        m_permissions{ model.permissions ? std::optional<PFCatalogPermissionsWrapper<Alloc>>{ *model.permissions } : std::nullopt },
         m_priceOptionsOverride{ model.priceOptionsOverride ? std::optional<PFCatalogCatalogPriceOptionsOverrideWrapper<Alloc>>{ *model.priceOptionsOverride } : std::nullopt }
     {
         SetModelPointers();
@@ -1219,6 +1281,7 @@ public:
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_filterOptions, rhs.m_filterOptions);
+        swap(lhs.m_permissions, rhs.m_permissions);
         swap(lhs.m_priceOptionsOverride, rhs.m_priceOptionsOverride);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
@@ -1228,6 +1291,12 @@ public:
     {
         m_filterOptions = std::move(value);
         this->m_model.filterOptions = m_filterOptions ? &m_filterOptions->Model() : nullptr;
+    }
+
+    void SetPermissions(std::optional<PFCatalogPermissionsWrapper<Alloc>> value)
+    {
+        m_permissions = std::move(value);
+        this->m_model.permissions = m_permissions ? &m_permissions->Model() : nullptr;
     }
 
     void SetPriceOptionsOverride(std::optional<PFCatalogCatalogPriceOptionsOverrideWrapper<Alloc>> value)
@@ -1240,10 +1309,12 @@ private:
     void SetModelPointers()
     {
         this->m_model.filterOptions = m_filterOptions ?  &m_filterOptions->Model() : nullptr;
+        this->m_model.permissions = m_permissions ?  &m_permissions->Model() : nullptr;
         this->m_model.priceOptionsOverride = m_priceOptionsOverride ?  &m_priceOptionsOverride->Model() : nullptr;
     }
 
     std::optional<PFCatalogFilterOptionsWrapper<Alloc>> m_filterOptions;
+    std::optional<PFCatalogPermissionsWrapper<Alloc>> m_permissions;
     std::optional<PFCatalogCatalogPriceOptionsOverrideWrapper<Alloc>> m_priceOptionsOverride;
 };
 
@@ -2555,6 +2626,127 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFCatalogCategoryRatingConfigWrapper : public ModelWrapper<PFCatalogCategoryRatingConfig, Alloc>
+{
+public:
+    using ModelType = PFCatalogCategoryRatingConfig;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFCatalogCategoryRatingConfigWrapper() = default;
+
+    PFCatalogCategoryRatingConfigWrapper(const PFCatalogCategoryRatingConfig& model) :
+        ModelWrapper<PFCatalogCategoryRatingConfig, Alloc>{ model },
+        m_name{ SafeString(model.name) }
+    {
+        SetModelPointers();
+    }
+
+    PFCatalogCategoryRatingConfigWrapper(const PFCatalogCategoryRatingConfigWrapper& src) :
+        PFCatalogCategoryRatingConfigWrapper{ src.Model() }
+    {
+    }
+
+    PFCatalogCategoryRatingConfigWrapper(PFCatalogCategoryRatingConfigWrapper&& src) :
+        PFCatalogCategoryRatingConfigWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFCatalogCategoryRatingConfigWrapper& operator=(PFCatalogCategoryRatingConfigWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFCatalogCategoryRatingConfigWrapper() = default;
+
+    friend void swap(PFCatalogCategoryRatingConfigWrapper& lhs, PFCatalogCategoryRatingConfigWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_name, rhs.m_name);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetName(String value)
+    {
+        m_name = std::move(value);
+        this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.name = m_name.empty() ? nullptr : m_name.data();
+    }
+
+    String m_name;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFCatalogReviewConfigWrapper : public ModelWrapper<PFCatalogReviewConfig, Alloc>
+{
+public:
+    using ModelType = PFCatalogReviewConfig;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFCatalogReviewConfigWrapper() = default;
+
+    PFCatalogReviewConfigWrapper(const PFCatalogReviewConfig& model) :
+        ModelWrapper<PFCatalogReviewConfig, Alloc>{ model },
+        m_categoryRatings{ model.categoryRatings, model.categoryRatings + model.categoryRatingsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFCatalogReviewConfigWrapper(const PFCatalogReviewConfigWrapper& src) :
+        PFCatalogReviewConfigWrapper{ src.Model() }
+    {
+    }
+
+    PFCatalogReviewConfigWrapper(PFCatalogReviewConfigWrapper&& src) :
+        PFCatalogReviewConfigWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFCatalogReviewConfigWrapper& operator=(PFCatalogReviewConfigWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFCatalogReviewConfigWrapper() = default;
+
+    friend void swap(PFCatalogReviewConfigWrapper& lhs, PFCatalogReviewConfigWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_categoryRatings, rhs.m_categoryRatings);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCategoryRatings(ModelVector<PFCatalogCategoryRatingConfigWrapper<Alloc>, Alloc> value)
+    {
+        m_categoryRatings = std::move(value);
+        this->m_model.categoryRatings =  m_categoryRatings.empty() ? nullptr : m_categoryRatings.data();
+        this->m_model.categoryRatingsCount =  static_cast<uint32_t>(m_categoryRatings.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.categoryRatings = m_categoryRatings.empty() ? nullptr : m_categoryRatings.data();
+    }
+
+    ModelVector<PFCatalogCategoryRatingConfigWrapper<Alloc>, Alloc> m_categoryRatings;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFCatalogUserGeneratedContentSpecificConfigWrapper : public ModelWrapper<PFCatalogUserGeneratedContentSpecificConfig, Alloc>
 {
 public:
@@ -2645,6 +2837,7 @@ public:
         m_file{ model.file ? std::optional<PFCatalogFileConfigWrapper<Alloc>>{ *model.file } : std::nullopt },
         m_image{ model.image ? std::optional<PFCatalogImageConfigWrapper<Alloc>>{ *model.image } : std::nullopt },
         m_platforms{ model.platforms, model.platforms + model.platformsCount },
+        m_review{ model.review ? std::optional<PFCatalogReviewConfigWrapper<Alloc>>{ *model.review } : std::nullopt },
         m_reviewerEntities{ model.reviewerEntities, model.reviewerEntities + model.reviewerEntitiesCount },
         m_userGeneratedContent{ model.userGeneratedContent ? std::optional<PFCatalogUserGeneratedContentSpecificConfigWrapper<Alloc>>{ *model.userGeneratedContent } : std::nullopt }
     {
@@ -2681,6 +2874,7 @@ public:
         swap(lhs.m_file, rhs.m_file);
         swap(lhs.m_image, rhs.m_image);
         swap(lhs.m_platforms, rhs.m_platforms);
+        swap(lhs.m_review, rhs.m_review);
         swap(lhs.m_reviewerEntities, rhs.m_reviewerEntities);
         swap(lhs.m_userGeneratedContent, rhs.m_userGeneratedContent);
         lhs.SetModelPointers();
@@ -2738,6 +2932,12 @@ public:
         this->m_model.platformsCount =  static_cast<uint32_t>(m_platforms.size());
     }
 
+    void SetReview(std::optional<PFCatalogReviewConfigWrapper<Alloc>> value)
+    {
+        m_review = std::move(value);
+        this->m_model.review = m_review ? &m_review->Model() : nullptr;
+    }
+
     void SetReviewerEntities(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
     {
         m_reviewerEntities = std::move(value);
@@ -2761,6 +2961,7 @@ private:
         this->m_model.file = m_file ?  &m_file->Model() : nullptr;
         this->m_model.image = m_image ?  &m_image->Model() : nullptr;
         this->m_model.platforms = m_platforms.empty() ? nullptr : m_platforms.data();
+        this->m_model.review = m_review ?  &m_review->Model() : nullptr;
         this->m_model.reviewerEntities = m_reviewerEntities.empty() ? nullptr : m_reviewerEntities.data();
         this->m_model.userGeneratedContent = m_userGeneratedContent ?  &m_userGeneratedContent->Model() : nullptr;
     }
@@ -2772,6 +2973,7 @@ private:
     std::optional<PFCatalogFileConfigWrapper<Alloc>> m_file;
     std::optional<PFCatalogImageConfigWrapper<Alloc>> m_image;
     CStringVector<Alloc> m_platforms;
+    std::optional<PFCatalogReviewConfigWrapper<Alloc>> m_review;
     ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> m_reviewerEntities;
     std::optional<PFCatalogUserGeneratedContentSpecificConfigWrapper<Alloc>> m_userGeneratedContent;
 };
@@ -3421,6 +3623,7 @@ public:
 
     PFCatalogReviewWrapper(const PFCatalogReview& model) :
         ModelWrapper<PFCatalogReview, Alloc>{ model },
+        m_categoryRatings{ model.categoryRatings, model.categoryRatings + model.categoryRatingsCount },
         m_itemId{ SafeString(model.itemId) },
         m_itemVersion{ SafeString(model.itemVersion) },
         m_locale{ SafeString(model.locale) },
@@ -3456,6 +3659,7 @@ public:
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_categoryRatings, rhs.m_categoryRatings);
         swap(lhs.m_itemId, rhs.m_itemId);
         swap(lhs.m_itemVersion, rhs.m_itemVersion);
         swap(lhs.m_locale, rhs.m_locale);
@@ -3466,6 +3670,13 @@ public:
         swap(lhs.m_title, rhs.m_title);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    void SetCategoryRatings(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
+    {
+        m_categoryRatings = std::move(value);
+        this->m_model.categoryRatings =  m_categoryRatings.empty() ? nullptr : m_categoryRatings.data();
+        this->m_model.categoryRatingsCount =  static_cast<uint32_t>(m_categoryRatings.size());
     }
 
     void SetHelpfulNegative(int32_t value)
@@ -3544,6 +3755,7 @@ public:
 private:
     void SetModelPointers()
     {
+        this->m_model.categoryRatings = m_categoryRatings.empty() ? nullptr : m_categoryRatings.data();
         this->m_model.itemId = m_itemId.empty() ? nullptr : m_itemId.data();
         this->m_model.itemVersion = m_itemVersion.empty() ? nullptr : m_itemVersion.data();
         this->m_model.locale = m_locale.empty() ? nullptr : m_locale.data();
@@ -3554,6 +3766,7 @@ private:
         this->m_model.title = m_title.empty() ? nullptr : m_title.data();
     }
 
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> m_categoryRatings;
     String m_itemId;
     String m_itemVersion;
     String m_locale;

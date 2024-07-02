@@ -36,7 +36,7 @@ protected:
     template<size_t n>
     XAsyncProviderBase(_In_ RunContext&& runContext, _In_ XAsyncBlock* async, const char(&_identityName)[n]) noexcept : identityName{ _identityName }, m_runContext{ std::move(runContext) }, m_async{ async } {}
 
-    // Provider Operations to be overriden.
+    // Provider Operations to be overridden.
 
     // The Begin operation should start the asynchronous task, either by calling Schedule(), or by calling
     // another asynchronous API. Begin will be invoked synchronously by Run(), so this operation should never block.
@@ -64,7 +64,7 @@ protected:
 protected:
     // Methods to be called by derived classes to mark XAsyncOp as complete
 
-    // Mark the async operation as sucessfully completed. Provide the needed buffer size to hold the result object.
+    // Mark the async operation as successfully completed. Provide the needed buffer size to hold the result object.
     void Complete(size_t resultSize);
 
     // Marks the operation as complete with a failure code. By design, the client won't get a result payload

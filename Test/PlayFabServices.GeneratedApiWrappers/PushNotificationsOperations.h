@@ -1,6 +1,8 @@
 #pragma once
 
+#if HC_PLATFORM != HC_PLATFORM_GDK
 #include <playfab/services/cpp/PushNotificationsTypeWrappers.h>
+#endif
 #include "TestContext.h"
 
 namespace PlayFab

@@ -52,9 +52,9 @@ PF_API PFGroupsAcceptGroupApplicationAsync(
 /// GroupListMembershipOpportunitiesAsync, GroupRemoveGroupInvitationAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ENTITY_BLOCKED_BY_GROUP, E_PF_ENTITY_IS_ALREADY_MEMBER, E_PF_GROUP_INVITATION_NOT_FOUND
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// the async result will be E_PF_ENTITY_BLOCKED_BY_GROUP, E_PF_ENTITY_IS_ALREADY_MEMBER, E_PF_GROUP_INVITATION_NOT_FOUND,
+/// E_PF_ROLE_DOES_NOT_EXIST or any of the global PlayFab Service errors. See doc page "Handling PlayFab
+/// Errors" for more details on error handling.
 /// </remarks>
 PF_API PFGroupsAcceptGroupInvitationAsync(
     _In_ PFEntityHandle entityHandle,
@@ -120,8 +120,9 @@ PF_API PFGroupsApplyToGroupAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENTITY_BLOCKED_BY_GROUP,
-/// E_PF_ENTITY_IS_ALREADY_MEMBER, E_PF_OUTSTANDING_INVITATION_ACCEPTED_INSTEAD or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_ENTITY_IS_ALREADY_MEMBER, E_PF_OUTSTANDING_INVITATION_ACCEPTED_INSTEAD, E_PF_ROLE_DOES_NOT_EXIST
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFGroupsApplyToGroupGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -138,8 +139,9 @@ PF_API PFGroupsApplyToGroupGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENTITY_BLOCKED_BY_GROUP,
-/// E_PF_ENTITY_IS_ALREADY_MEMBER, E_PF_OUTSTANDING_INVITATION_ACCEPTED_INSTEAD or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_ENTITY_IS_ALREADY_MEMBER, E_PF_OUTSTANDING_INVITATION_ACCEPTED_INSTEAD, E_PF_ROLE_DOES_NOT_EXIST
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

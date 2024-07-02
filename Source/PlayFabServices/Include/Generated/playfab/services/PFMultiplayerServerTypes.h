@@ -90,7 +90,17 @@ enum class PFMultiplayerServerAzureVmSize : uint32_t
     Standard_HB120_32rs_v3,
     Standard_HB120_64rs_v3,
     Standard_HB120_96rs_v3,
-    Standard_HB120rs_v3
+    Standard_HB120rs_v3,
+    Standard_D2d_v5,
+    Standard_D4d_v5,
+    Standard_D8d_v5,
+    Standard_D16d_v5,
+    Standard_D32d_v5,
+    Standard_D2ds_v5,
+    Standard_D4ds_v5,
+    Standard_D8ds_v5,
+    Standard_D16ds_v5,
+    Standard_D32ds_v5
 };
 
 /// <summary>
@@ -101,6 +111,29 @@ enum class PFMultiplayerServerProtocolType : uint32_t
     TCP,
     UDP
 };
+
+/// <summary>
+/// PFMultiplayerServerDeleteSecretRequest data model. Deletes a multiplayer server game secret.
+/// </summary>
+typedef struct PFMultiplayerServerDeleteSecretRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// The name of the secret.
+    /// </summary>
+    _Null_terminated_ const char* name;
+
+} PFMultiplayerServerDeleteSecretRequest;
 
 /// <summary>
 /// PFMultiplayerServerListBuildAliasesRequest data model. Returns a list of summarized details of all
@@ -571,6 +604,84 @@ typedef struct PFMultiplayerServerListQosServersForTitleResponse
 } PFMultiplayerServerListQosServersForTitleResponse;
 
 /// <summary>
+/// PFMultiplayerServerListSecretSummariesRequest data model. Returns a list of multiplayer server game
+/// secrets for a title.
+/// </summary>
+typedef struct PFMultiplayerServerListSecretSummariesRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) The page size for the request.
+    /// </summary>
+    _Maybenull_ int32_t const* pageSize;
+
+    /// <summary>
+    /// (Optional) The skip token for the paged request.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* skipToken;
+
+} PFMultiplayerServerListSecretSummariesRequest;
+
+/// <summary>
+/// PFMultiplayerServerSecretSummary data model.
+/// </summary>
+typedef struct PFMultiplayerServerSecretSummary
+{
+    /// <summary>
+    /// (Optional) Optional secret expiration date.
+    /// </summary>
+    _Maybenull_ time_t const* expirationDate;
+
+    /// <summary>
+    /// (Optional) The name of the secret.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* name;
+
+    /// <summary>
+    /// (Optional) The secret version auto-generated after upload.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* version;
+
+} PFMultiplayerServerSecretSummary;
+
+/// <summary>
+/// PFMultiplayerServerListSecretSummariesResponse data model.
+/// </summary>
+typedef struct PFMultiplayerServerListSecretSummariesResponse
+{
+    /// <summary>
+    /// The page size on the response.
+    /// </summary>
+    int32_t pageSize;
+
+    /// <summary>
+    /// (Optional) The list of game secret.
+    /// </summary>
+    _Maybenull_ _Field_size_(secretSummariesCount) PFMultiplayerServerSecretSummary const* const* secretSummaries;
+
+    /// <summary>
+    /// Count of secretSummaries
+    /// </summary>
+    uint32_t secretSummariesCount;
+
+    /// <summary>
+    /// (Optional) The skip token for the paged response.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* skipToken;
+
+} PFMultiplayerServerListSecretSummariesResponse;
+
+/// <summary>
 /// PFMultiplayerServerBuildAliasParams data model.
 /// </summary>
 typedef struct PFMultiplayerServerBuildAliasParams
@@ -922,6 +1033,56 @@ typedef struct PFMultiplayerServerRequestPartyServiceResponse
     _Maybenull_ _Null_terminated_ const char* serializedNetworkDescriptor;
 
 } PFMultiplayerServerRequestPartyServiceResponse;
+
+/// <summary>
+/// PFMultiplayerServerSecret data model.
+/// </summary>
+typedef struct PFMultiplayerServerSecret
+{
+    /// <summary>
+    /// (Optional) Optional secret expiration date.
+    /// </summary>
+    _Maybenull_ time_t const* expirationDate;
+
+    /// <summary>
+    /// A name for the secret. This is used to reference secrets in build configurations.
+    /// </summary>
+    _Null_terminated_ const char* name;
+
+    /// <summary>
+    /// Secret value.
+    /// </summary>
+    _Null_terminated_ const char* value;
+
+} PFMultiplayerServerSecret;
+
+/// <summary>
+/// PFMultiplayerServerUploadSecretRequest data model. Uploads a multiplayer server game secret.
+/// </summary>
+typedef struct PFMultiplayerServerUploadSecretRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) Forces the secret renewal if the secret already exists. Default is false.
+    /// </summary>
+    _Maybenull_ bool const* forceUpdate;
+
+    /// <summary>
+    /// The game secret to add.
+    /// </summary>
+    PFMultiplayerServerSecret const* gameSecret;
+
+} PFMultiplayerServerUploadSecretRequest;
 
 #pragma pop_macro("IN")
 

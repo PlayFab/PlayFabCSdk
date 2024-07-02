@@ -16,6 +16,77 @@ namespace Wrappers
 {
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerDeleteSecretRequestWrapper : public ModelWrapper<PFMultiplayerServerDeleteSecretRequest, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerDeleteSecretRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerDeleteSecretRequestWrapper() = default;
+
+    PFMultiplayerServerDeleteSecretRequestWrapper(const PFMultiplayerServerDeleteSecretRequest& model) :
+        ModelWrapper<PFMultiplayerServerDeleteSecretRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_name{ SafeString(model.name) }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerDeleteSecretRequestWrapper(const PFMultiplayerServerDeleteSecretRequestWrapper& src) :
+        PFMultiplayerServerDeleteSecretRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerDeleteSecretRequestWrapper(PFMultiplayerServerDeleteSecretRequestWrapper&& src) :
+        PFMultiplayerServerDeleteSecretRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerDeleteSecretRequestWrapper& operator=(PFMultiplayerServerDeleteSecretRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerDeleteSecretRequestWrapper() = default;
+
+    friend void swap(PFMultiplayerServerDeleteSecretRequestWrapper& lhs, PFMultiplayerServerDeleteSecretRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_name, rhs.m_name);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetName(String value)
+    {
+        m_name = std::move(value);
+        this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.name = m_name.empty() ? nullptr : m_name.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_name;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFMultiplayerServerListBuildAliasesRequestWrapper : public ModelWrapper<PFMultiplayerServerListBuildAliasesRequest, Alloc>
 {
 public:
@@ -1219,6 +1290,243 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerListSecretSummariesRequestWrapper : public ModelWrapper<PFMultiplayerServerListSecretSummariesRequest, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerListSecretSummariesRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerListSecretSummariesRequestWrapper() = default;
+
+    PFMultiplayerServerListSecretSummariesRequestWrapper(const PFMultiplayerServerListSecretSummariesRequest& model) :
+        ModelWrapper<PFMultiplayerServerListSecretSummariesRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_pageSize{ model.pageSize ? std::optional<int32_t>{ *model.pageSize } : std::nullopt },
+        m_skipToken{ SafeString(model.skipToken) }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerListSecretSummariesRequestWrapper(const PFMultiplayerServerListSecretSummariesRequestWrapper& src) :
+        PFMultiplayerServerListSecretSummariesRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerListSecretSummariesRequestWrapper(PFMultiplayerServerListSecretSummariesRequestWrapper&& src) :
+        PFMultiplayerServerListSecretSummariesRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerListSecretSummariesRequestWrapper& operator=(PFMultiplayerServerListSecretSummariesRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerListSecretSummariesRequestWrapper() = default;
+
+    friend void swap(PFMultiplayerServerListSecretSummariesRequestWrapper& lhs, PFMultiplayerServerListSecretSummariesRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_pageSize, rhs.m_pageSize);
+        swap(lhs.m_skipToken, rhs.m_skipToken);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetPageSize(std::optional<int32_t> value)
+    {
+        m_pageSize = std::move(value);
+        this->m_model.pageSize = m_pageSize ? m_pageSize.operator->() : nullptr;
+    }
+
+    void SetSkipToken(String value)
+    {
+        m_skipToken = std::move(value);
+        this->m_model.skipToken =  m_skipToken.empty() ? nullptr : m_skipToken.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.pageSize = m_pageSize ? m_pageSize.operator->() : nullptr;
+        this->m_model.skipToken = m_skipToken.empty() ? nullptr : m_skipToken.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<int32_t> m_pageSize;
+    String m_skipToken;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerSecretSummaryWrapper : public ModelWrapper<PFMultiplayerServerSecretSummary, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerSecretSummary;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerSecretSummaryWrapper() = default;
+
+    PFMultiplayerServerSecretSummaryWrapper(const PFMultiplayerServerSecretSummary& model) :
+        ModelWrapper<PFMultiplayerServerSecretSummary, Alloc>{ model },
+        m_expirationDate{ model.expirationDate ? std::optional<time_t>{ *model.expirationDate } : std::nullopt },
+        m_name{ SafeString(model.name) },
+        m_version{ SafeString(model.version) }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerSecretSummaryWrapper(const PFMultiplayerServerSecretSummaryWrapper& src) :
+        PFMultiplayerServerSecretSummaryWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerSecretSummaryWrapper(PFMultiplayerServerSecretSummaryWrapper&& src) :
+        PFMultiplayerServerSecretSummaryWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerSecretSummaryWrapper& operator=(PFMultiplayerServerSecretSummaryWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerSecretSummaryWrapper() = default;
+
+    friend void swap(PFMultiplayerServerSecretSummaryWrapper& lhs, PFMultiplayerServerSecretSummaryWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_expirationDate, rhs.m_expirationDate);
+        swap(lhs.m_name, rhs.m_name);
+        swap(lhs.m_version, rhs.m_version);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetExpirationDate(std::optional<time_t> value)
+    {
+        m_expirationDate = std::move(value);
+        this->m_model.expirationDate = m_expirationDate ? m_expirationDate.operator->() : nullptr;
+    }
+
+    void SetName(String value)
+    {
+        m_name = std::move(value);
+        this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    void SetVersion(String value)
+    {
+        m_version = std::move(value);
+        this->m_model.version =  m_version.empty() ? nullptr : m_version.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.expirationDate = m_expirationDate ? m_expirationDate.operator->() : nullptr;
+        this->m_model.name = m_name.empty() ? nullptr : m_name.data();
+        this->m_model.version = m_version.empty() ? nullptr : m_version.data();
+    }
+
+    std::optional<time_t> m_expirationDate;
+    String m_name;
+    String m_version;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerListSecretSummariesResponseWrapper : public ModelWrapper<PFMultiplayerServerListSecretSummariesResponse, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerListSecretSummariesResponse;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerListSecretSummariesResponseWrapper() = default;
+
+    PFMultiplayerServerListSecretSummariesResponseWrapper(const PFMultiplayerServerListSecretSummariesResponse& model) :
+        ModelWrapper<PFMultiplayerServerListSecretSummariesResponse, Alloc>{ model },
+        m_secretSummaries{ model.secretSummaries, model.secretSummaries + model.secretSummariesCount },
+        m_skipToken{ SafeString(model.skipToken) }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerListSecretSummariesResponseWrapper(const PFMultiplayerServerListSecretSummariesResponseWrapper& src) :
+        PFMultiplayerServerListSecretSummariesResponseWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerListSecretSummariesResponseWrapper(PFMultiplayerServerListSecretSummariesResponseWrapper&& src) :
+        PFMultiplayerServerListSecretSummariesResponseWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerListSecretSummariesResponseWrapper& operator=(PFMultiplayerServerListSecretSummariesResponseWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerListSecretSummariesResponseWrapper() = default;
+
+    friend void swap(PFMultiplayerServerListSecretSummariesResponseWrapper& lhs, PFMultiplayerServerListSecretSummariesResponseWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_secretSummaries, rhs.m_secretSummaries);
+        swap(lhs.m_skipToken, rhs.m_skipToken);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetPageSize(int32_t value)
+    {
+        this->m_model.pageSize = value;
+    }
+
+    void SetSecretSummaries(ModelVector<PFMultiplayerServerSecretSummaryWrapper<Alloc>, Alloc> value)
+    {
+        m_secretSummaries = std::move(value);
+        this->m_model.secretSummaries =  m_secretSummaries.empty() ? nullptr : m_secretSummaries.data();
+        this->m_model.secretSummariesCount =  static_cast<uint32_t>(m_secretSummaries.size());
+    }
+
+    void SetSkipToken(String value)
+    {
+        m_skipToken = std::move(value);
+        this->m_model.skipToken =  m_skipToken.empty() ? nullptr : m_skipToken.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.secretSummaries = m_secretSummaries.empty() ? nullptr : m_secretSummaries.data();
+        this->m_model.skipToken = m_skipToken.empty() ? nullptr : m_skipToken.data();
+    }
+
+    ModelVector<PFMultiplayerServerSecretSummaryWrapper<Alloc>, Alloc> m_secretSummaries;
+    String m_skipToken;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFMultiplayerServerBuildAliasParamsWrapper : public ModelWrapper<PFMultiplayerServerBuildAliasParams, Alloc>
 {
 public:
@@ -2130,6 +2438,167 @@ private:
     String m_invitationId;
     String m_partyId;
     String m_serializedNetworkDescriptor;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerSecretWrapper : public ModelWrapper<PFMultiplayerServerSecret, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerSecret;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerSecretWrapper() = default;
+
+    PFMultiplayerServerSecretWrapper(const PFMultiplayerServerSecret& model) :
+        ModelWrapper<PFMultiplayerServerSecret, Alloc>{ model },
+        m_expirationDate{ model.expirationDate ? std::optional<time_t>{ *model.expirationDate } : std::nullopt },
+        m_name{ SafeString(model.name) },
+        m_value{ SafeString(model.value) }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerSecretWrapper(const PFMultiplayerServerSecretWrapper& src) :
+        PFMultiplayerServerSecretWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerSecretWrapper(PFMultiplayerServerSecretWrapper&& src) :
+        PFMultiplayerServerSecretWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerSecretWrapper& operator=(PFMultiplayerServerSecretWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerSecretWrapper() = default;
+
+    friend void swap(PFMultiplayerServerSecretWrapper& lhs, PFMultiplayerServerSecretWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_expirationDate, rhs.m_expirationDate);
+        swap(lhs.m_name, rhs.m_name);
+        swap(lhs.m_value, rhs.m_value);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetExpirationDate(std::optional<time_t> value)
+    {
+        m_expirationDate = std::move(value);
+        this->m_model.expirationDate = m_expirationDate ? m_expirationDate.operator->() : nullptr;
+    }
+
+    void SetName(String value)
+    {
+        m_name = std::move(value);
+        this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    void SetValue(String value)
+    {
+        m_value = std::move(value);
+        this->m_model.value =  m_value.empty() ? nullptr : m_value.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.expirationDate = m_expirationDate ? m_expirationDate.operator->() : nullptr;
+        this->m_model.name = m_name.empty() ? nullptr : m_name.data();
+        this->m_model.value = m_value.empty() ? nullptr : m_value.data();
+    }
+
+    std::optional<time_t> m_expirationDate;
+    String m_name;
+    String m_value;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFMultiplayerServerUploadSecretRequestWrapper : public ModelWrapper<PFMultiplayerServerUploadSecretRequest, Alloc>
+{
+public:
+    using ModelType = PFMultiplayerServerUploadSecretRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFMultiplayerServerUploadSecretRequestWrapper() = default;
+
+    PFMultiplayerServerUploadSecretRequestWrapper(const PFMultiplayerServerUploadSecretRequest& model) :
+        ModelWrapper<PFMultiplayerServerUploadSecretRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_forceUpdate{ model.forceUpdate ? std::optional<bool>{ *model.forceUpdate } : std::nullopt },
+        m_gameSecret{ model.gameSecret ? *model.gameSecret : decltype(*model.gameSecret){} }
+    {
+        SetModelPointers();
+    }
+
+    PFMultiplayerServerUploadSecretRequestWrapper(const PFMultiplayerServerUploadSecretRequestWrapper& src) :
+        PFMultiplayerServerUploadSecretRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFMultiplayerServerUploadSecretRequestWrapper(PFMultiplayerServerUploadSecretRequestWrapper&& src) :
+        PFMultiplayerServerUploadSecretRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFMultiplayerServerUploadSecretRequestWrapper& operator=(PFMultiplayerServerUploadSecretRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFMultiplayerServerUploadSecretRequestWrapper() = default;
+
+    friend void swap(PFMultiplayerServerUploadSecretRequestWrapper& lhs, PFMultiplayerServerUploadSecretRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_forceUpdate, rhs.m_forceUpdate);
+        swap(lhs.m_gameSecret, rhs.m_gameSecret);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetForceUpdate(std::optional<bool> value)
+    {
+        m_forceUpdate = std::move(value);
+        this->m_model.forceUpdate = m_forceUpdate ? m_forceUpdate.operator->() : nullptr;
+    }
+
+    void SetGameSecret(PFMultiplayerServerSecretWrapper<Alloc> value)
+    {
+        m_gameSecret = std::move(value);
+        this->m_model.gameSecret = &m_gameSecret.Model();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.forceUpdate = m_forceUpdate ? m_forceUpdate.operator->() : nullptr;
+        this->m_model.gameSecret = &m_gameSecret.Model();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<bool> m_forceUpdate;
+    PFMultiplayerServerSecretWrapper<Alloc> m_gameSecret;
 };
 
 } // namespace Wrappers

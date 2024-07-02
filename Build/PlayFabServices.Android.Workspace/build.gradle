@@ -26,9 +26,19 @@ allprojects {
 }
 
 subprojects.each { prj ->
-    // Put all the Gradle build files under the /Out directory
-    def binariesDir = project.file("../../Out/Android/${prj.name}").getAbsolutePath()
-    prj.buildDir(new File(binariesDir))
+    // Put all the Gradle build files under the /Int directory
+    def binariesDir = project.file("../../Int/Android/${prj.name}").getAbsolutePath()
+    prj.buildDir = new File(binariesDir)
+
+    // If usePlayFabCore is enabled, build the shared library version of LHC
+    prj.ext.BUILD_SHARED_LIBS = true
+}
+
+project(":libHttpClient.Android") {
+    // Put all the Gradle build files under the LHC /Binaries directory
+    // This file path is relative from the LHC.Android `build.gradle` location
+    def binariesDir = project.file("../../Binaries/Android/${name}").getAbsolutePath()
+    buildDir = new File(binariesDir)
 }
 
 ext.getTaskFlavorName = { taskPrefix, task ->

@@ -82,8 +82,7 @@ PF_API PFDataAbortFileUploadsGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// Deletes the requested files from the entity's profile. See also FileAbortFileUploadsAsync, FileFinalizeFileUploadsAsync,
-/// FileGetFilesAsync, FileInitiateFileUploadsAsync.
+/// Deletes the requested files from the entity's profile.
 ///
 /// When the asynchronous task is complete, call <see cref="PFDataDeleteFilesGetResultSize"/> and <see
 /// cref="PFDataDeleteFilesGetResult"/> to get the result.
@@ -205,8 +204,7 @@ PF_API PFDataFinalizeFileUploadsGetResult(
 /// This API is available on all platforms.
 /// Returns URLs that may be used to download the files for a profile for a limited length of time. Only
 /// returns files that have been successfully uploaded, files that are still pending will either return
-/// the old value, if it exists, or nothing. See also FileAbortFileUploadsAsync, FileDeleteFilesAsync,
-/// FileFinalizeFileUploadsAsync, FileInitiateFileUploadsAsync.
+/// the old value, if it exists, or nothing.
 ///
 /// When the asynchronous task is complete, call <see cref="PFDataGetFilesGetResultSize"/> and <see cref="PFDataGetFilesGetResult"/>
 /// to get the result.
@@ -263,7 +261,7 @@ PF_API PFDataGetFilesGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// Gets JSON objects from an entity profile and returns it.  See also ObjectSetObjectsAsync.
+/// Gets JSON objects from an entity profile and returns it. .
 ///
 /// When the asynchronous task is complete, call <see cref="PFDataGetObjectsGetResultSize"/> and <see
 /// cref="PFDataGetObjectsGetResult"/> to get the result.
@@ -402,8 +400,9 @@ PF_API PFDataSetObjectsAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_INVALID_JSON_CONTENT
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFDataSetObjectsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -419,8 +418,9 @@ PF_API PFDataSetObjectsGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_INVALID_JSON_CONTENT
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

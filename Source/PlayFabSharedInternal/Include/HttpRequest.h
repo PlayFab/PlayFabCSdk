@@ -26,6 +26,9 @@ const bool kDefaultHttpRetryAllowed{ true };
 const uint32_t kDefaultHttpRetryDelay{ 2 };
 const uint32_t kDefaultHttpTimeoutWindow{ 20 };
 
+// Default Http decompression settings
+const bool kDefaultHttpCompressedResponsesExpected { false };
+
 // Wrapper around PlayFab service response.
 // See https://docs.microsoft.com/en-us/rest/api/playfab/client/authentication/loginwithcustomid?view=playfab-rest#apierrorwrapper for
 // more information.
@@ -74,6 +77,7 @@ public:
         uint32_t retryCacheId,
         PFHttpRetrySettings const& retrySettings,
         PlayFab::RunContext runContext,
+        PFHttpSettings const& httpSettings,
         PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
     ) noexcept;
 
@@ -115,6 +119,7 @@ private:
     uint32_t m_timeoutWindow{ kDefaultHttpTimeoutWindow };
     PFHCCallHandle m_callHandle{ nullptr };
     PFHCCompressionLevel m_compressionLevel;
+    bool m_compressedResponsesExpected{ kDefaultHttpCompressedResponsesExpected };
 };
 
 }

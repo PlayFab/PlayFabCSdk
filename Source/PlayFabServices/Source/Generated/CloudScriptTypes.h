@@ -161,6 +161,72 @@ public:
     static HRESULT Copy(const PFCloudScriptExecuteFunctionResult& input, PFCloudScriptExecuteFunctionResult& output, ModelBuffer& buffer);
 };
 
+class ListFunctionsRequest : public Wrappers::PFCloudScriptListFunctionsRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFCloudScriptListFunctionsRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFCloudScriptListFunctionsRequest& input);
+};
+
+class EventHubFunctionModel : public Wrappers::PFCloudScriptEventHubFunctionModelWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFCloudScriptEventHubFunctionModel>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFCloudScriptEventHubFunctionModelWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFCloudScriptEventHubFunctionModel const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFCloudScriptEventHubFunctionModel& model);
+    static HRESULT Copy(const PFCloudScriptEventHubFunctionModel& input, PFCloudScriptEventHubFunctionModel& output, ModelBuffer& buffer);
+};
+
+class ListEventHubFunctionsResult : public Wrappers::PFCloudScriptListEventHubFunctionsResultWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFCloudScriptListEventHubFunctionsResult>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFCloudScriptListEventHubFunctionsResultWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFCloudScriptListEventHubFunctionsResult const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFCloudScriptListEventHubFunctionsResult& model);
+    static HRESULT Copy(const PFCloudScriptListEventHubFunctionsResult& input, PFCloudScriptListEventHubFunctionsResult& output, ModelBuffer& buffer);
+};
+
+class RegisterEventHubFunctionRequest : public Wrappers::PFCloudScriptRegisterEventHubFunctionRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFCloudScriptRegisterEventHubFunctionRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFCloudScriptRegisterEventHubFunctionRequest& input);
+};
+
 } // namespace CloudScript
 
 // EnumRange definitions used for Enum (de)serialization

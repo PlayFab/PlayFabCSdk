@@ -33,6 +33,7 @@ public:
     TokenExpiredHandler TokenExpiredHandler() const noexcept;
     TokenRefreshedHandler TokenRefreshedHandler() const noexcept;
     SharedPtr<PFHttpRetrySettings> HttpRetrySettings() const noexcept;
+    SharedPtr<PFHttpSettings> HttpSettings() const noexcept;
 
 private:
     PFCoreGlobalState(XTaskQueueHandle backgroundQueue) noexcept;
@@ -47,6 +48,7 @@ private:
     PlayFab::TokenExpiredHandler m_tokenExpiredHandler;
     PlayFab::TokenRefreshedHandler m_tokenRefreshedHandler;
     SharedPtr<PFHttpRetrySettings> m_httpRetrySettings;
+    SharedPtr<PFHttpSettings> m_httpSettings;
 
     friend struct PFCoreGlobalStateBootstrapper;
 };

@@ -110,6 +110,36 @@ Result<ExecuteInventoryOperationsOperation::ResultType> ExecuteInventoryOperatio
     return ResultType{ *result };
 }
 
+#if 0
+
+ExecuteTransferOperationsOperation::ExecuteTransferOperationsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ExecuteTransferOperationsOperation::ResultType> ExecuteTransferOperationsOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ExecuteTransferOperationsOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ExecuteTransferOperationsOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFInventoryExecuteTransferOperationsAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ExecuteTransferOperationsOperation::ResultType> ExecuteTransferOperationsOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFInventoryExecuteTransferOperationsGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFInventoryExecuteTransferOperationsResponse* result;
+    RETURN_IF_FAILED(PFInventoryExecuteTransferOperationsGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
 
 GetInventoryCollectionIdsOperation::GetInventoryCollectionIdsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -165,6 +195,36 @@ Result<GetInventoryItemsOperation::ResultType> GetInventoryItemsOperation::GetRe
     RETURN_IF_FAILED(PFInventoryGetInventoryItemsGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
+
+#if 0
+
+GetInventoryOperationStatusOperation::GetInventoryOperationStatusOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<GetInventoryOperationStatusOperation::ResultType> GetInventoryOperationStatusOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<GetInventoryOperationStatusOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT GetInventoryOperationStatusOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFInventoryGetInventoryOperationStatusAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<GetInventoryOperationStatusOperation::ResultType> GetInventoryOperationStatusOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFInventoryGetInventoryOperationStatusGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFInventoryGetInventoryOperationStatusResponse* result;
+    RETURN_IF_FAILED(PFInventoryGetInventoryOperationStatusGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
@@ -404,7 +464,7 @@ Result<RedeemPlayStationStoreInventoryItemsOperation::ResultType> RedeemPlayStat
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 RedeemSteamInventoryItemsOperation::RedeemSteamInventoryItemsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

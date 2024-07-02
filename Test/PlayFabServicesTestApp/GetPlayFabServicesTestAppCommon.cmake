@@ -40,7 +40,6 @@ function(GET_PLAYFAB_SERVICES_TEST_APP_COMMMON_FILES
         "${PATH_TO_SOURCE}/Tests/Core/EventPipelineTests.h"
         "${PATH_TO_SOURCE}/Tests/Services/AccountManagementTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/CatalogTestsImpl.cpp"
-        "${PATH_TO_SOURCE}/Tests/Services/CharacterTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/CloudScriptTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/DataTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/ExperimentationTestsImpl.cpp"

@@ -2488,6 +2488,112 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFAuthenticationServerLoginWithPSNRequestWrapper : public ModelWrapper<PFAuthenticationServerLoginWithPSNRequest, Alloc>
+{
+public:
+    using ModelType = PFAuthenticationServerLoginWithPSNRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAuthenticationServerLoginWithPSNRequestWrapper() = default;
+
+    PFAuthenticationServerLoginWithPSNRequestWrapper(const PFAuthenticationServerLoginWithPSNRequest& model) :
+        ModelWrapper<PFAuthenticationServerLoginWithPSNRequest, Alloc>{ model },
+        m_authCode{ SafeString(model.authCode) },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt },
+        m_issuerId{ model.issuerId ? std::optional<int32_t>{ *model.issuerId } : std::nullopt },
+        m_redirectUri{ SafeString(model.redirectUri) }
+    {
+        SetModelPointers();
+    }
+
+    PFAuthenticationServerLoginWithPSNRequestWrapper(const PFAuthenticationServerLoginWithPSNRequestWrapper& src) :
+        PFAuthenticationServerLoginWithPSNRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAuthenticationServerLoginWithPSNRequestWrapper(PFAuthenticationServerLoginWithPSNRequestWrapper&& src) :
+        PFAuthenticationServerLoginWithPSNRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAuthenticationServerLoginWithPSNRequestWrapper& operator=(PFAuthenticationServerLoginWithPSNRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAuthenticationServerLoginWithPSNRequestWrapper() = default;
+
+    friend void swap(PFAuthenticationServerLoginWithPSNRequestWrapper& lhs, PFAuthenticationServerLoginWithPSNRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_authCode, rhs.m_authCode);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
+        swap(lhs.m_issuerId, rhs.m_issuerId);
+        swap(lhs.m_redirectUri, rhs.m_redirectUri);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetAuthCode(String value)
+    {
+        m_authCode = std::move(value);
+        this->m_model.authCode =  m_authCode.empty() ? nullptr : m_authCode.data();
+    }
+
+    void SetCreateAccount(bool value)
+    {
+        this->m_model.createAccount = value;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
+    {
+        m_infoRequestParameters = std::move(value);
+        this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    void SetIssuerId(std::optional<int32_t> value)
+    {
+        m_issuerId = std::move(value);
+        this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
+    }
+
+    void SetRedirectUri(String value)
+    {
+        m_redirectUri = std::move(value);
+        this->m_model.redirectUri =  m_redirectUri.empty() ? nullptr : m_redirectUri.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.authCode = m_authCode.empty() ? nullptr : m_authCode.data();
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
+        this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
+        this->m_model.redirectUri = m_redirectUri.empty() ? nullptr : m_redirectUri.data();
+    }
+
+    String m_authCode;
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
+    std::optional<int32_t> m_issuerId;
+    String m_redirectUri;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFAuthenticationLoginWithServerCustomIdRequestWrapper : public ModelWrapper<PFAuthenticationLoginWithServerCustomIdRequest, Alloc>
 {
 public:

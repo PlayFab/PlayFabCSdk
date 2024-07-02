@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8206F0572B740D6D00451339 /* HttpClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8286B2302B7401C6009A4677 /* HttpClient.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8206F0572B740D6D00451339 /* HttpClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8286B2302B7401C6009A4677 /* HttpClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8206F1892B755EA100451339 /* HttpClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8286B2322B7401C6009A4677 /* HttpClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8206F2192B758A1A00451339 /* libPlayFabSharedInternal_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F2182B758A1A00451339 /* libPlayFabSharedInternal_iOS.a */; };
 		8206F21D2B758A4100451339 /* PlayFabCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F21A2B758A4100451339 /* PlayFabCore_macOS.framework */; };
@@ -185,12 +185,12 @@
 		82CEEB7E2B153920007BD4F5 /* CoreOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB582B153920007BD4F5 /* CoreOperations.cpp */; };
 		82CEEB7F2B153920007BD4F5 /* ServicesOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB5A2B153920007BD4F5 /* ServicesOperations.cpp */; };
 		82CEEB822B153A8B007BD4F5 /* PlayFabServices_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82CEEB812B153A8B007BD4F5 /* PlayFabServices_iOS.framework */; };
-		82CEEB832B153A8B007BD4F5 /* PlayFabServices_iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 82CEEB812B153A8B007BD4F5 /* PlayFabServices_iOS.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		82CEEB832B153A8B007BD4F5 /* PlayFabServices_iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 82CEEB812B153A8B007BD4F5 /* PlayFabServices_iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		82CEEB8C2B1551E8007BD4F5 /* PlayFabApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB8B2B1551E8007BD4F5 /* PlayFabApple.cpp */; };
 		82CEEB8E2B1556D5007BD4F5 /* PlatformUtilsApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB8D2B1556D5007BD4F5 /* PlatformUtilsApple.cpp */; };
 		82CEEB992B156891007BD4F5 /* testTitleData.json in Resources */ = {isa = PBXBuildFile; fileRef = 82CEEB982B156891007BD4F5 /* testTitleData.json */; };
 		82F666482B191A340044EE73 /* PlayFabCore_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82F666472B191A340044EE73 /* PlayFabCore_iOS.framework */; };
-		82F666492B191A340044EE73 /* PlayFabCore_iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 82F666472B191A340044EE73 /* PlayFabCore_iOS.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		82F666492B191A340044EE73 /* PlayFabCore_iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 82F666472B191A340044EE73 /* PlayFabCore_iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1561,7 +1561,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.6;
 				MARKETING_VERSION = 1.0;
-				OTHER_SWIFT_FLAGS = "";
+				OTHER_SWIFT_FLAGS = "-DPLAYFAB_AVOID_UI";
 				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.playfabcommerce.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1620,7 +1620,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.6;
 				MARKETING_VERSION = 1.0;
-				OTHER_SWIFT_FLAGS = "";
+				OTHER_SWIFT_FLAGS = "-DPLAYFAB_AVOID_UI";
 				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.playfabcommerce.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
