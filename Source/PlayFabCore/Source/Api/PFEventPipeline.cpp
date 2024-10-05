@@ -44,7 +44,7 @@ HRESULT EventPipelineCreationHelper(
     }
 
     uint32_t maxEvents, maxWaitTime, pollDelay;
-    PFHCCompressionLevel compressionLevel;
+    HCCompressionLevel compressionLevel;
     bool retryOnDisconnect;
     size_t bufferSize;
 
@@ -63,7 +63,7 @@ HRESULT EventPipelineCreationHelper(
     }
 
     bufferSize = !eventPipelineConfig || !eventPipelineConfig->bufferSize ? PFEventPipelineBufferSizeDefault : *eventPipelineConfig->bufferSize;
-    compressionLevel = !eventPipelineConfig || !eventPipelineConfig->compressionLevel ? PFHCCompressionLevel::None : *eventPipelineConfig->compressionLevel;
+    compressionLevel = !eventPipelineConfig || !eventPipelineConfig->compressionLevel ? HCCompressionLevel::None : *eventPipelineConfig->compressionLevel;
 
     SharedPtr<EventPipeline> pipeline;
 

@@ -126,6 +126,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Core\LibHCTests.cpp">
       <Filter>Source\Tests\Core</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\LeaderboardsTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\StatisticsTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)TestAppPch.h">

@@ -14,12 +14,12 @@ namespace Test
 namespace Platform
 {
 
-constexpr char defaultPlayerCustomId[] = "TestCustomId";
+constexpr char defaultPlayerCustomId[] = "TestCustomIdLinux";
 
 HRESULT SetHooks()
 {
-    // Using built in LocalStorage on Linux
-    RETURN_IF_FAILED(MemoryManager::Instance().SetHooks());
+    // TODO: Investigate why this causes the test app to hang
+    // RETURN_IF_FAILED(MemoryManager::Instance().SetHooks());
     return S_OK;
 }
 
@@ -46,8 +46,11 @@ AsyncOp<LoginResult> LoginDefaultTitlePlayer(
     assert(!platformUser);
     UNREFERENCED_PARAMETER(platformUser);
 
+    Stringstream customId;
+    customId << defaultPlayerCustomId << "_" << time(nullptr);
+
     LoginWithCustomIDOperation::RequestType request;
-    request.SetCustomId(defaultPlayerCustomId);
+    request.SetCustomId(customId.str());
     request.SetCreateAccount(true);
     return RunOperation(MakeUnique<LoginWithCustomIDOperation>(serviceConfig, request, rc));
 }

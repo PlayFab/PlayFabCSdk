@@ -125,6 +125,24 @@
     <None Include="$(MSBuildThisFileDirectory)GroupsTestsImpl.stubs" >
       <Filter>Source\Stubs</Filter>
     </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)LeaderboardsTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)LeaderboardsTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)LeaderboardsTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)StatisticsTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)StatisticsTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)StatisticsTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
     <ClInclude Include="$(MSBuildThisFileDirectory)LocalizationTests.h" >
       <Filter>Include</Filter>
     </ClInclude>

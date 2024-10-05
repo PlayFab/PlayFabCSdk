@@ -114,6 +114,7 @@ public:
     static AsyncOp<void> ServerUpdateAvatarUrl(Entity const& entity, const ServerUpdateAvatarUrlRequest& request, RunContext rc);
     static AsyncOp<UpdateBansResult> ServerUpdateBans(Entity const& entity, const UpdateBansRequest& request, RunContext rc);
     static AsyncOp<GetTitlePlayersFromProviderIDsResponse> GetTitlePlayersFromXboxLiveIDs(Entity const& entity, const GetTitlePlayersFromXboxLiveIDsRequest& request, RunContext rc);
+    static AsyncOp<SetDisplayNameResponse> SetDisplayName(Entity const& entity, const SetDisplayNameRequest& request, RunContext rc);
 };
 
 } // namespace AccountManagement

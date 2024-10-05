@@ -21,6 +21,8 @@
 #include <playfab/services/PFCatalog.h>
 #include <playfab/services/PFExperimentation.h>
 #include <playfab/services/PFGroups.h>
+#include <playfab/services/PFLeaderboards.h>
+#include <playfab/services/PFStatistics.h>
 #include <playfab/services/PFLocalization.h>
 #include <playfab/services/PFMultiplayerServer.h>
 #include <playfab/services/PFProfiles.h>

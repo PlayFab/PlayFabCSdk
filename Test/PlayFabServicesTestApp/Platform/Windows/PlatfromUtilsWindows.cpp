@@ -57,7 +57,7 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
 
     if (titleDataJson.HasParseError())
     {
-        TraceMessage(PFHCTraceLevel::Error, "Unable to parse testTitleData.json");
+        TraceMessage(HCTraceLevel::Error, "Unable to parse testTitleData.json");
         return E_FAIL;
     }
 
@@ -134,13 +134,13 @@ void WriteLogToFile(const char* strIn, const char* strFileName)
     CloseHandle(hFile);
 }
 
-void TraceMessage(PFHCTraceLevel level, String const& message) noexcept
+void TraceMessage(HCTraceLevel level, String const& message) noexcept
 {
     // Trace all messages to debugger output
     OutputDebugStringA(message.data());
 
-    // If PFHCTraceLevel <= Important direct to PFTestAppSummary.txt
-    if (level <= PFHCTraceLevel::Important)
+    // If HCTraceLevel <= Important direct to PFTestAppSummary.txt
+    if (level <= HCTraceLevel::Important)
     {
         WriteLogToFile(message.data(), "PFTestAppSummary.txt");
     }
@@ -150,7 +150,7 @@ void TraceMessage(PFHCTraceLevel level, String const& message) noexcept
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32
     // On Win32 also redirect to STDOUT
-    if (level <= PFHCTraceLevel::Important)
+    if (level <= HCTraceLevel::Important)
     {
         std::cout << message;
     }

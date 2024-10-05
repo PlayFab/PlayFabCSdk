@@ -1088,8 +1088,6 @@ PF_API PFAccountManagementClientLinkAppleAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// See also ClientLoginWithCustomIDAsync, ClientUnlinkCustomIDAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED or any of the global PlayFab Service
 /// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
@@ -1118,7 +1116,7 @@ PF_API PFAccountManagementClientLinkCustomIDAsync(
 /// as Facebook provides unique user IDs per application and doing so can result in issues with the Facebook
 /// ID for the user in their PlayFab account information. If you must re-use an application in a new PlayFab
 /// Title ID, please be sure to first unlink all accounts from Facebook, or delete all users in the first
-/// Title ID. See also ClientLoginWithFacebookAsync, ClientUnlinkFacebookAccountAsync.
+/// Title ID.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_ACCOUNT_NOT_FOUND, E_PF_FACEBOOK_API_ERROR,
@@ -1142,8 +1140,6 @@ PF_API PFAccountManagementClientLinkFacebookAccountAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also ClientLoginWithFacebookInstantGamesIdAsync, ClientUnlinkFacebookInstantGamesIdAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_FACEBOOK_INSTANT_GAMES_AUTH_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_FACEBOOK_INSTANT_GAMES_SIGNATURE,
 /// E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED or any of the global PlayFab Service errors. See doc page "Handling
@@ -1170,8 +1166,6 @@ PF_API PFAccountManagementClientLinkFacebookInstantGamesIdAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, iOS, and macOS.
-/// See also ClientUnlinkGameCenterAccountAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_GAME_CENTER_AUTHENTICATION_FAILED, E_PF_INVALID_GAME_CENTER_AUTH_REQUEST,
 /// E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED or any of the global PlayFab Service errors. See doc page "Handling
@@ -1195,8 +1189,7 @@ PF_API PFAccountManagementClientLinkGameCenterAccountAsync(
 /// <remarks>
 /// This API is available on Win32, Linux, Android, and macOS.
 /// Google sign-in is accomplished by obtaining a Google OAuth 2.0 credential using the Google sign-in
-/// for Android APIs on the device and passing it to this API. See also ClientLoginWithGoogleAccountAsync,
-/// ClientUnlinkGoogleAccountAsync.
+/// for Android APIs on the device and passing it to this API.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_GOOGLE_O_AUTH_ERROR, E_PF_GOOGLE_O_AUTH_NO_ID_TOKEN_INCLUDED_IN_RESPONSE,
@@ -1320,8 +1313,6 @@ PF_API PFAccountManagementClientLinkNintendoServiceAccountAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also ClientLoginWithNintendoSwitchDeviceIdAsync, ClientUnlinkNintendoSwitchDeviceIdAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED or any of the global PlayFab Service
 /// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
@@ -1343,8 +1334,6 @@ PF_API PFAccountManagementClientLinkNintendoSwitchDeviceIdAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// See also ClientLoginWithOpenIdConnectAsync, ClientUnlinkOpenIdConnectAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED
 /// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
@@ -1421,8 +1410,6 @@ PF_API PFAccountManagementClientLinkSteamAccountAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also ClientLoginWithTwitchAsync, ClientUnlinkTwitchAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_TWITCH_TOKEN,
 /// E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED, E_PF_TWITCH_RESPONSE_ERROR or any of the global PlayFab Service
@@ -1445,8 +1432,6 @@ PF_API PFAccountManagementClientLinkTwitchAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, GDK, Linux, and macOS.
-/// See also ClientLoginWithXboxAsync, ClientUnlinkXboxAccountAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_EXPIRED_XBOX_LIVE_TOKEN, E_PF_INVALID_XBOX_LIVE_TOKEN,
 /// E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED or any of the global PlayFab Service errors. See doc page "Handling
@@ -1598,8 +1583,6 @@ PF_API PFAccountManagementClientUnlinkAppleAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// See also ClientLinkCustomIDAsync, ClientLoginWithCustomIDAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_CUSTOM_ID_NOT_LINKED or any of the global PlayFab
 /// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
@@ -1620,8 +1603,6 @@ PF_API PFAccountManagementClientUnlinkCustomIDAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, Android, iOS, and macOS.
-/// See also ClientLinkFacebookAccountAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED or any of the global PlayFab Service errors. See
 /// doc page "Handling PlayFab Errors" for more details on error handling.
@@ -1667,8 +1648,6 @@ PF_API PFAccountManagementClientUnlinkFacebookInstantGamesIdAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, iOS, and macOS.
-/// See also ClientLinkGameCenterAccountAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED or any of the global PlayFab Service errors. See
 /// doc page "Handling PlayFab Errors" for more details on error handling.
@@ -1690,8 +1669,6 @@ PF_API PFAccountManagementClientUnlinkGameCenterAccountAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, Android, and macOS.
-/// See also ClientLinkGoogleAccountAsync, ClientLoginWithGoogleAccountAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED or any of the global PlayFab Service errors. See
 /// doc page "Handling PlayFab Errors" for more details on error handling.
@@ -1806,8 +1783,6 @@ PF_API PFAccountManagementClientUnlinkNintendoServiceAccountAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also ClientLinkNintendoSwitchDeviceIdAsync, ClientLoginWithNintendoSwitchDeviceIdAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_NINTENDO_SWITCH_DEVICE_ID_NOT_LINKED or any
 /// of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
@@ -1875,8 +1850,6 @@ PF_API PFAccountManagementClientUnlinkPSNAccountAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also ClientLinkSteamAccountAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED or any of the global PlayFab Service errors. See
 /// doc page "Handling PlayFab Errors" for more details on error handling.
@@ -1921,8 +1894,6 @@ PF_API PFAccountManagementClientUnlinkTwitchAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, GDK, Linux, and macOS.
-/// See also ClientLinkXboxAccountAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_XBOX_LIVE_TOKEN or any of the global
 /// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
@@ -3577,6 +3548,67 @@ PF_API PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult(
     _In_ size_t bufferSize,
     _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
     _Outptr_ PFAccountManagementGetTitlePlayersFromProviderIDsResponse** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept;
+#endif
+
+#if 0
+/// <summary>
+/// Update the display name of the entity
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// Given an entity profile, will update its display name to the one passed in if the profile's version
+/// is equal to the specified value See also ProfileGetProfileAsync.
+///
+/// When the asynchronous task is complete, call <see cref="PFAccountManagementSetDisplayNameGetResultSize"/>
+/// and <see cref="PFAccountManagementSetDisplayNameGetResult"/> to get the result.
+/// </remarks>
+PF_API PFAccountManagementSetDisplayNameAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFAccountManagementSetDisplayNameRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+
+/// <summary>
+/// Get the size in bytes needed to store the result of a SetDisplayName call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED,
+/// E_PF_INVALID_PARTNER_RESPONSE, E_PF_PROFANE_DISPLAY_NAME or any of the global PlayFab Service errors.
+/// See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+PF_API PFAccountManagementSetDisplayNameGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept;
+
+/// <summary>
+/// Gets the result of a successful PFAccountManagementSetDisplayNameAsync call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The size of the buffer for the result object.</param>
+/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
+/// <param name="result">Pointer to the result object.</param>
+/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED,
+/// E_PF_INVALID_PARTNER_RESPONSE, E_PF_PROFANE_DISPLAY_NAME or any of the global PlayFab Service errors.
+/// See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+/// <remarks>
+/// result is a pointer within buffer and does not need to be freed separately.
+/// </remarks>
+PF_API PFAccountManagementSetDisplayNameGetResult(
+    _Inout_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFAccountManagementSetDisplayNameResponse** result,
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 #endif

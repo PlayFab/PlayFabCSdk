@@ -23,34 +23,24 @@
 		826AE4212AF1841900DF9129 /* PFServices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3BB2AF1841900DF9129 /* PFServices.cpp */; };
 		826AE4222AF1841900DF9129 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3BC2AF1841900DF9129 /* stdafx.cpp */; };
 		826AE51C2AF1867400DF9129 /* PFServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE4C72AF1867400DF9129 /* PFServices.h */; };
-		826AE5AF2AF186D500DF9129 /* CharacterTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55A2AF186D500DF9129 /* CharacterTypeWrappers.h */; };
-		826AE5C12AF186D500DF9129 /* PFCharacter.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56C2AF186D500DF9129 /* PFCharacter.h */; };
-		826AE5C72AF186D500DF9129 /* PFCharacterTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5722AF186D500DF9129 /* PFCharacterTypes.h */; };
 		826AE5E42AF186D500DF9129 /* PFServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5922AF186D500DF9129 /* PFServices.h */; };
-		826AE6582AF1871C00DF9129 /* CharacterTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5EF2AF1871C00DF9129 /* CharacterTypes.h */; };
 		826AE67E2AF1871C00DF9129 /* CacheId.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6152AF1871C00DF9129 /* CacheId.h */; };
-		826AE6992AF1871C00DF9129 /* PFCharacter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6302AF1871C00DF9129 /* PFCharacter.cpp */; };
-		826AE6A12AF1871C00DF9129 /* CharacterTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6382AF1871C00DF9129 /* CharacterTypes.cpp */; };
 		82B3CB302B5B016B00337232 /* PFServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE4C72AF1867400DF9129 /* PFServices.h */; };
-		82B3CB332B5B016B00337232 /* PFCharacterTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5722AF186D500DF9129 /* PFCharacterTypes.h */; };
 		82B3CB452B5B016B00337232 /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B92AF1841900DF9129 /* Platform.h */; };
 		82B3CB472B5B016B00337232 /* HttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B62AF1841900DF9129 /* HttpClient.h */; };
 		82B3CB562B5B016B00337232 /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B22AF1841900DF9129 /* stdafx.h */; };
 		82B3CB6B2B5B016B00337232 /* CacheId.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6152AF1871C00DF9129 /* CacheId.h */; };
 		82B3CB772B5B016B00337232 /* PFServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5922AF186D500DF9129 /* PFServices.h */; };
-		82B3CB8C2B5B016B00337232 /* PFCharacter.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE56C2AF186D500DF9129 /* PFCharacter.h */; };
 		82B3CB8E2B5B016B00337232 /* GlobalState.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE3B42AF1841900DF9129 /* GlobalState.h */; };
-		82B3CB982B5B016B00337232 /* CharacterTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE5EF2AF1871C00DF9129 /* CharacterTypes.h */; };
-		82B3CB9A2B5B016B00337232 /* CharacterTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE55A2AF186D500DF9129 /* CharacterTypeWrappers.h */; };
-		82B3CBB32B5B016B00337232 /* CharacterTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6382AF1871C00DF9129 /* CharacterTypes.cpp */; };
 		82B3CBC42B5B016B00337232 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3B82AF1841900DF9129 /* HttpClient.cpp */; };
 		82B3CBC82B5B016B00337232 /* GlobalState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3B52AF1841900DF9129 /* GlobalState.cpp */; };
-		82B3CBC92B5B016B00337232 /* PFCharacter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6302AF1871C00DF9129 /* PFCharacter.cpp */; };
 		82B3CBCF2B5B016B00337232 /* PFServices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3BB2AF1841900DF9129 /* PFServices.cpp */; };
 		82B3CBD52B5B016B00337232 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3BC2AF1841900DF9129 /* stdafx.cpp */; };
 		82B3CBDB2B5B016B00337232 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE3B72AF1841900DF9129 /* Platform.cpp */; };
 		82B3CBF22B5B023B00337232 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B3CBF12B5B023A00337232 /* Foundation.framework */; };
 		82B3CBF42B5B023E00337232 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B3CBF32B5B023E00337232 /* Security.framework */; };
+		82658A1F2C6D44B300E9DEE0 /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A1D2C6D44B300E9DEE0 /* Types.cpp */; };
+		82658A202C6D44B300E9DEE0 /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A1D2C6D44B300E9DEE0 /* Types.cpp */; };
 		645E37D6547B8165C6BE42C9 /* CoreTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 86EE2FD2352C8DFCB607537C /* CoreTypes.h */; };
 		926E207482B5E159E4AEF3C9 /* CoreTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 86EE2FD2352C8DFCB607537C /* CoreTypes.h */; };
 		50630CE0EA798DF1E56794EC /* CoreTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4865228F17B9EF7035E768C1 /* CoreTypes.cpp */; };
@@ -267,6 +257,38 @@
 		F64A636D3380AE89E8625787 /* PFGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D843C7D75E2181F32B453DC /* PFGroups.h */; };
 		C1A003BECA0F9AF4E74919AC /* PFGroups.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63B785F3F0679DC7AE542CF0 /* PFGroups.cpp */; };
 		6C773ABD4DAAA9DF921EBD3F /* PFGroups.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63B785F3F0679DC7AE542CF0 /* PFGroups.cpp */; };
+		F2393B74B66A7B50E4CB2A72 /* PFLeaderboardsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 87D0E8834320D0A5DDF16BC4 /* PFLeaderboardsTypes.h */; };
+		1954B9C52C9CB3333C4D885C /* PFLeaderboardsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 87D0E8834320D0A5DDF16BC4 /* PFLeaderboardsTypes.h */; };
+		12F6EEBC476B7EEB0FC67B1E /* LeaderboardsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = AAD758203E2F2DA206A4691D /* LeaderboardsTypeWrappers.h */; };
+		DE574CD94DB728B7AF670901 /* LeaderboardsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = AAD758203E2F2DA206A4691D /* LeaderboardsTypeWrappers.h */; };
+		BC5BA18E3528318207348F10 /* LeaderboardsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E1E7B5EDD4FFA8447D13565 /* LeaderboardsTypes.h */; };
+		640860F441FD57F0451EC3F9 /* LeaderboardsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E1E7B5EDD4FFA8447D13565 /* LeaderboardsTypes.h */; };
+		85DE35AC055B62FE084DAD51 /* LeaderboardsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE2D233D5F7B1E53D60ACE34 /* LeaderboardsTypes.cpp */; };
+		952ECE47CF4FD94A83498F53 /* LeaderboardsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE2D233D5F7B1E53D60ACE34 /* LeaderboardsTypes.cpp */; };
+		EB8415E34411E0C753C35C7C /* Leaderboards.h in Headers */ = {isa = PBXBuildFile; fileRef = A9FCC0D787F95415D58EFEA5 /* Leaderboards.h */; };
+		96025849FCB2EBD140B7F4D1 /* Leaderboards.h in Headers */ = {isa = PBXBuildFile; fileRef = A9FCC0D787F95415D58EFEA5 /* Leaderboards.h */; };
+		DD3E2A4EC7AF2D56997AA95D /* Leaderboards.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5A44B9995065854C7B78ECF /* Leaderboards.cpp */; };
+		6819FF5881CF41D5FF2D8CB4 /* Leaderboards.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5A44B9995065854C7B78ECF /* Leaderboards.cpp */; };
+		3C9C316EB00D8D2850FDD97C /* PFLeaderboards.h in Headers */ = {isa = PBXBuildFile; fileRef = E28299F3029B0B8131B04528 /* PFLeaderboards.h */; };
+		CA361AFA1500768D41D1D052 /* PFLeaderboards.h in Headers */ = {isa = PBXBuildFile; fileRef = E28299F3029B0B8131B04528 /* PFLeaderboards.h */; };
+		CEB9CB7536B229DA5D0E166F /* PFLeaderboards.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE919E782CC7950110FAD1C6 /* PFLeaderboards.cpp */; };
+		A9106618EA56FB7253C5232F /* PFLeaderboards.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE919E782CC7950110FAD1C6 /* PFLeaderboards.cpp */; };
+		BB5BFEA056DAF8DC9C01EF6D /* PFStatisticsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DD0B065F2357953C3CDF2CE /* PFStatisticsTypes.h */; };
+		E5EB26118488CBD4FD1779A0 /* PFStatisticsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DD0B065F2357953C3CDF2CE /* PFStatisticsTypes.h */; };
+		1B2A689633C7E556214D790D /* StatisticsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E64E9E63F65681C277218E /* StatisticsTypeWrappers.h */; };
+		92002756AB848649D19BCA17 /* StatisticsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E64E9E63F65681C277218E /* StatisticsTypeWrappers.h */; };
+		A19F17A1A2953CE9348F1D58 /* StatisticsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 32DBA2BFDC14D91361DD1F87 /* StatisticsTypes.h */; };
+		645EA75AD54D4845BC9A6854 /* StatisticsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 32DBA2BFDC14D91361DD1F87 /* StatisticsTypes.h */; };
+		1A8AA13068E98F96CC87D635 /* StatisticsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D9CCF1D1A70BE739210068B /* StatisticsTypes.cpp */; };
+		45E6950DEC930977C8C9E56D /* StatisticsTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D9CCF1D1A70BE739210068B /* StatisticsTypes.cpp */; };
+		6A0A621C37275514AF089B52 /* Statistics.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D66E3696F1643BDED9579A4 /* Statistics.h */; };
+		0AA6305AFF007BF2A492B173 /* Statistics.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D66E3696F1643BDED9579A4 /* Statistics.h */; };
+		200C6EF58990343316BCB409 /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3725CA5E743AF6CCEDD4EBF2 /* Statistics.cpp */; };
+		2DFB50BB5E37850283DD6507 /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3725CA5E743AF6CCEDD4EBF2 /* Statistics.cpp */; };
+		A5D4B87FBB1BE0EE7C4E9CB0 /* PFStatistics.h in Headers */ = {isa = PBXBuildFile; fileRef = 94A2B270C72263B7B3778034 /* PFStatistics.h */; };
+		CCE630B8549AB66E348347B3 /* PFStatistics.h in Headers */ = {isa = PBXBuildFile; fileRef = 94A2B270C72263B7B3778034 /* PFStatistics.h */; };
+		21EA4C34CB1021EF187B9195 /* PFStatistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF8B2F1CD0107526A8EE1D51 /* PFStatistics.cpp */; };
+		D9CF7295A5E35D21D44546EC /* PFStatistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF8B2F1CD0107526A8EE1D51 /* PFStatistics.cpp */; };
 		2575720D0565093E6AC57525 /* PFLocalizationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0630483CC67D398DA2924A40 /* PFLocalizationTypes.h */; };
 		FD0063BE0889BC022F8B34EC /* PFLocalizationTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0630483CC67D398DA2924A40 /* PFLocalizationTypes.h */; };
 		A8EB3F191CF4AA13B95B89D6 /* LocalizationTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 38684AF97CE09CF1CF534126 /* LocalizationTypeWrappers.h */; };
@@ -415,6 +437,7 @@
 		826082862AEC346600D8B93D /* libPlayFabSharedInternal.iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		826082882AEC347E00D8B93D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		8260828A2AEC348500D8B93D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		82658A1D2C6D44B300E9DEE0 /* Types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Types.cpp; sourceTree = "<group>"; };
 		826AE3B22AF1841900DF9129 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
 		826AE3B42AF1841900DF9129 /* GlobalState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalState.h; sourceTree = "<group>"; };
 		826AE3B52AF1841900DF9129 /* GlobalState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GlobalState.cpp; sourceTree = "<group>"; };
@@ -425,14 +448,8 @@
 		826AE3BB2AF1841900DF9129 /* PFServices.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFServices.cpp; sourceTree = "<group>"; };
 		826AE3BC2AF1841900DF9129 /* stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stdafx.cpp; sourceTree = "<group>"; };
 		826AE4C72AF1867400DF9129 /* PFServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFServices.h; sourceTree = "<group>"; };
-		826AE55A2AF186D500DF9129 /* CharacterTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterTypeWrappers.h; sourceTree = "<group>"; };
-		826AE56C2AF186D500DF9129 /* PFCharacter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCharacter.h; sourceTree = "<group>"; };
-		826AE5722AF186D500DF9129 /* PFCharacterTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCharacterTypes.h; sourceTree = "<group>"; };
 		826AE5922AF186D500DF9129 /* PFServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFServices.h; sourceTree = "<group>"; };
-		826AE5EF2AF1871C00DF9129 /* CharacterTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterTypes.h; sourceTree = "<group>"; };
 		826AE6152AF1871C00DF9129 /* CacheId.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheId.h; sourceTree = "<group>"; };
-		826AE6302AF1871C00DF9129 /* PFCharacter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFCharacter.cpp; sourceTree = "<group>"; };
-		826AE6382AF1871C00DF9129 /* CharacterTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CharacterTypes.cpp; sourceTree = "<group>"; };
 		8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
 		82B3CBE62B5B016B00337232 /* PlayFabServices_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlayFabServices_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82B3CBF12B5B023A00337232 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -548,6 +565,22 @@
 		3092E7A4ACACB2E2A503F778 /* Groups.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Groups.cpp; sourceTree = "<group>"; };
 		5D843C7D75E2181F32B453DC /* PFGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFGroups.h; sourceTree = "<group>"; };
 		63B785F3F0679DC7AE542CF0 /* PFGroups.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFGroups.cpp; sourceTree = "<group>"; };
+		87D0E8834320D0A5DDF16BC4 /* PFLeaderboardsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFLeaderboardsTypes.h; sourceTree = "<group>"; };
+		AAD758203E2F2DA206A4691D /* LeaderboardsTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderboardsTypeWrappers.h; sourceTree = "<group>"; };
+		7E1E7B5EDD4FFA8447D13565 /* LeaderboardsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderboardsTypes.h; sourceTree = "<group>"; };
+		DE2D233D5F7B1E53D60ACE34 /* LeaderboardsTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LeaderboardsTypes.cpp; sourceTree = "<group>"; };
+		A9FCC0D787F95415D58EFEA5 /* Leaderboards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Leaderboards.h; sourceTree = "<group>"; };
+		B5A44B9995065854C7B78ECF /* Leaderboards.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Leaderboards.cpp; sourceTree = "<group>"; };
+		E28299F3029B0B8131B04528 /* PFLeaderboards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFLeaderboards.h; sourceTree = "<group>"; };
+		CE919E782CC7950110FAD1C6 /* PFLeaderboards.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFLeaderboards.cpp; sourceTree = "<group>"; };
+		9DD0B065F2357953C3CDF2CE /* PFStatisticsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFStatisticsTypes.h; sourceTree = "<group>"; };
+		00E64E9E63F65681C277218E /* StatisticsTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatisticsTypeWrappers.h; sourceTree = "<group>"; };
+		32DBA2BFDC14D91361DD1F87 /* StatisticsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatisticsTypes.h; sourceTree = "<group>"; };
+		4D9CCF1D1A70BE739210068B /* StatisticsTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StatisticsTypes.cpp; sourceTree = "<group>"; };
+		0D66E3696F1643BDED9579A4 /* Statistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Statistics.h; sourceTree = "<group>"; };
+		3725CA5E743AF6CCEDD4EBF2 /* Statistics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Statistics.cpp; sourceTree = "<group>"; };
+		94A2B270C72263B7B3778034 /* PFStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFStatistics.h; sourceTree = "<group>"; };
+		CF8B2F1CD0107526A8EE1D51 /* PFStatistics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFStatistics.cpp; sourceTree = "<group>"; };
 		0630483CC67D398DA2924A40 /* PFLocalizationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFLocalizationTypes.h; sourceTree = "<group>"; };
 		38684AF97CE09CF1CF534126 /* LocalizationTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalizationTypeWrappers.h; sourceTree = "<group>"; };
 		E1609CE117D724B20A3299C8 /* LocalizationTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalizationTypes.h; sourceTree = "<group>"; };
@@ -754,8 +787,6 @@
 			isa = PBXGroup;
 			children = (
 				826AE5502AF186D500DF9129 /* cpp */,
-				826AE56C2AF186D500DF9129 /* PFCharacter.h */,
-				826AE5722AF186D500DF9129 /* PFCharacterTypes.h */,
 				DC700FB50E8170CFF08E1FAD /* PFTypes.h */,
 				EEC8E3C1F4158581F97E8DDF /* PFFriendsTypes.h */,
 				115774D6BC988CACE8E8AE84 /* PFFriends.h */,
@@ -783,6 +814,10 @@
 				D8BDEA9CE71160BF32CCD5F8 /* PFExperimentation.h */,
 				8A51B8B8F1F797C388C75261 /* PFGroupsTypes.h */,
 				5D843C7D75E2181F32B453DC /* PFGroups.h */,
+				87D0E8834320D0A5DDF16BC4 /* PFLeaderboardsTypes.h */,
+				E28299F3029B0B8131B04528 /* PFLeaderboards.h */,
+				9DD0B065F2357953C3CDF2CE /* PFStatisticsTypes.h */,
+				94A2B270C72263B7B3778034 /* PFStatistics.h */,
 				0630483CC67D398DA2924A40 /* PFLocalizationTypes.h */,
 				0A528A4332030EED8CF3C954 /* PFLocalization.h */,
 				75CBF930EA428B605B01773A /* PFMultiplayerServerTypes.h */,
@@ -796,7 +831,6 @@
 		826AE5502AF186D500DF9129 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
-				826AE55A2AF186D500DF9129 /* CharacterTypeWrappers.h */,
 				036780852ECB55B7D8A5CE2F /* TypeWrappers.h */,
 				6CE6B3476D37C58A4FFA438A /* FriendsTypeWrappers.h */,
 				C9F8B02FB25640E4D3575CA5 /* AccountManagementTypeWrappers.h */,
@@ -811,6 +845,8 @@
 				AB0257B6B8A58A9404C73A15 /* CatalogTypeWrappers.h */,
 				9C8E087ECE541FECF6987446 /* ExperimentationTypeWrappers.h */,
 				ACC0162BDF719EB44ADC0CBB /* GroupsTypeWrappers.h */,
+				AAD758203E2F2DA206A4691D /* LeaderboardsTypeWrappers.h */,
+				00E64E9E63F65681C277218E /* StatisticsTypeWrappers.h */,
 				38684AF97CE09CF1CF534126 /* LocalizationTypeWrappers.h */,
 				5B187013DC1855F7303E4B7F /* MultiplayerServerTypeWrappers.h */,
 				F1AF47FC17AFF5EB236CEBFB /* ProfilesTypeWrappers.h */,
@@ -854,10 +890,8 @@
 		826AE5EA2AF1871C00DF9129 /* Generated */ = {
 			isa = PBXGroup;
 			children = (
-				826AE5EF2AF1871C00DF9129 /* CharacterTypes.h */,
+				82658A1D2C6D44B300E9DEE0 /* Types.cpp */,
 				826AE6152AF1871C00DF9129 /* CacheId.h */,
-				826AE6302AF1871C00DF9129 /* PFCharacter.cpp */,
-				826AE6382AF1871C00DF9129 /* CharacterTypes.cpp */,
 				86EE2FD2352C8DFCB607537C /* CoreTypes.h */,
 				4865228F17B9EF7035E768C1 /* CoreTypes.cpp */,
 				4DEB0B6D7EEE5A0CE22C02EA /* FriendsTypes.h */,
@@ -925,6 +959,16 @@
 				48435F393CD6570326F12F5A /* Groups.h */,
 				3092E7A4ACACB2E2A503F778 /* Groups.cpp */,
 				63B785F3F0679DC7AE542CF0 /* PFGroups.cpp */,
+				7E1E7B5EDD4FFA8447D13565 /* LeaderboardsTypes.h */,
+				DE2D233D5F7B1E53D60ACE34 /* LeaderboardsTypes.cpp */,
+				A9FCC0D787F95415D58EFEA5 /* Leaderboards.h */,
+				B5A44B9995065854C7B78ECF /* Leaderboards.cpp */,
+				CE919E782CC7950110FAD1C6 /* PFLeaderboards.cpp */,
+				32DBA2BFDC14D91361DD1F87 /* StatisticsTypes.h */,
+				4D9CCF1D1A70BE739210068B /* StatisticsTypes.cpp */,
+				0D66E3696F1643BDED9579A4 /* Statistics.h */,
+				3725CA5E743AF6CCEDD4EBF2 /* Statistics.cpp */,
+				CF8B2F1CD0107526A8EE1D51 /* PFStatistics.cpp */,
 				E1609CE117D724B20A3299C8 /* LocalizationTypes.h */,
 				B6F69874EE1FE96F465BE262 /* LocalizationTypes.cpp */,
 				29668568A43BCF57B954193D /* Localization.h */,
@@ -969,16 +1013,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				826AE51C2AF1867400DF9129 /* PFServices.h in Headers */,
-				826AE5C72AF186D500DF9129 /* PFCharacterTypes.h in Headers */,
 				826AE4202AF1841900DF9129 /* Platform.h in Headers */,
 				826AE41D2AF1841900DF9129 /* HttpClient.h in Headers */,
 				826AE41A2AF1841900DF9129 /* stdafx.h in Headers */,
 				826AE67E2AF1871C00DF9129 /* CacheId.h in Headers */,
 				826AE5E42AF186D500DF9129 /* PFServices.h in Headers */,
-				826AE5C12AF186D500DF9129 /* PFCharacter.h in Headers */,
 				826AE41B2AF1841900DF9129 /* GlobalState.h in Headers */,
-				826AE6582AF1871C00DF9129 /* CharacterTypes.h in Headers */,
-				826AE5AF2AF186D500DF9129 /* CharacterTypeWrappers.h in Headers */,
 				926E207482B5E159E4AEF3C9 /* CoreTypes.h in Headers */,
 				1D46738B449BED007B25FB1B /* PFTypes.h in Headers */,
 				DCA598F2F5AE756F671DB01D /* TypeWrappers.h in Headers */,
@@ -1047,6 +1087,16 @@
 				62A441D88C7295F4753C3B80 /* GroupsTypes.h in Headers */,
 				00E0F1905148BDFC90E9346A /* Groups.h in Headers */,
 				F64A636D3380AE89E8625787 /* PFGroups.h in Headers */,
+				1954B9C52C9CB3333C4D885C /* PFLeaderboardsTypes.h in Headers */,
+				DE574CD94DB728B7AF670901 /* LeaderboardsTypeWrappers.h in Headers */,
+				640860F441FD57F0451EC3F9 /* LeaderboardsTypes.h in Headers */,
+				96025849FCB2EBD140B7F4D1 /* Leaderboards.h in Headers */,
+				CA361AFA1500768D41D1D052 /* PFLeaderboards.h in Headers */,
+				E5EB26118488CBD4FD1779A0 /* PFStatisticsTypes.h in Headers */,
+				92002756AB848649D19BCA17 /* StatisticsTypeWrappers.h in Headers */,
+				645EA75AD54D4845BC9A6854 /* StatisticsTypes.h in Headers */,
+				0AA6305AFF007BF2A492B173 /* Statistics.h in Headers */,
+				CCE630B8549AB66E348347B3 /* PFStatistics.h in Headers */,
 				FD0063BE0889BC022F8B34EC /* PFLocalizationTypes.h in Headers */,
 				2022B74DD9EF16159DA04D55 /* LocalizationTypeWrappers.h in Headers */,
 				CF63F40656C7EC8672094FAE /* LocalizationTypes.h in Headers */,
@@ -1070,16 +1120,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				82B3CB302B5B016B00337232 /* PFServices.h in Headers */,
-				82B3CB332B5B016B00337232 /* PFCharacterTypes.h in Headers */,
 				82B3CB452B5B016B00337232 /* Platform.h in Headers */,
 				82B3CB472B5B016B00337232 /* HttpClient.h in Headers */,
 				82B3CB562B5B016B00337232 /* stdafx.h in Headers */,
 				82B3CB6B2B5B016B00337232 /* CacheId.h in Headers */,
 				82B3CB772B5B016B00337232 /* PFServices.h in Headers */,
-				82B3CB8C2B5B016B00337232 /* PFCharacter.h in Headers */,
 				82B3CB8E2B5B016B00337232 /* GlobalState.h in Headers */,
-				82B3CB982B5B016B00337232 /* CharacterTypes.h in Headers */,
-				82B3CB9A2B5B016B00337232 /* CharacterTypeWrappers.h in Headers */,
 				645E37D6547B8165C6BE42C9 /* CoreTypes.h in Headers */,
 				A811FC0E5F5C30E0B358A099 /* PFTypes.h in Headers */,
 				EFBEDD29DD80B0B5A2E943B7 /* TypeWrappers.h in Headers */,
@@ -1148,6 +1194,16 @@
 				0F0F9CD9B36E0D713D61F5FB /* GroupsTypes.h in Headers */,
 				74C5F8DA5255B15F426D01DD /* Groups.h in Headers */,
 				9F852B39FC9878A69BF2FEC4 /* PFGroups.h in Headers */,
+				F2393B74B66A7B50E4CB2A72 /* PFLeaderboardsTypes.h in Headers */,
+				12F6EEBC476B7EEB0FC67B1E /* LeaderboardsTypeWrappers.h in Headers */,
+				BC5BA18E3528318207348F10 /* LeaderboardsTypes.h in Headers */,
+				EB8415E34411E0C753C35C7C /* Leaderboards.h in Headers */,
+				3C9C316EB00D8D2850FDD97C /* PFLeaderboards.h in Headers */,
+				BB5BFEA056DAF8DC9C01EF6D /* PFStatisticsTypes.h in Headers */,
+				1B2A689633C7E556214D790D /* StatisticsTypeWrappers.h in Headers */,
+				A19F17A1A2953CE9348F1D58 /* StatisticsTypes.h in Headers */,
+				6A0A621C37275514AF089B52 /* Statistics.h in Headers */,
+				A5D4B87FBB1BE0EE7C4E9CB0 /* PFStatistics.h in Headers */,
 				2575720D0565093E6AC57525 /* PFLocalizationTypes.h in Headers */,
 				A8EB3F191CF4AA13B95B89D6 /* LocalizationTypeWrappers.h in Headers */,
 				30A5BD94B6287FDF520A48C7 /* LocalizationTypes.h in Headers */,
@@ -1341,13 +1397,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				826AE6A12AF1871C00DF9129 /* CharacterTypes.cpp in Sources */,
 				826AE41F2AF1841900DF9129 /* HttpClient.cpp in Sources */,
 				826AE41C2AF1841900DF9129 /* GlobalState.cpp in Sources */,
-				826AE6992AF1871C00DF9129 /* PFCharacter.cpp in Sources */,
 				826AE4212AF1841900DF9129 /* PFServices.cpp in Sources */,
 				826AE4222AF1841900DF9129 /* stdafx.cpp in Sources */,
 				826AE41E2AF1841900DF9129 /* Platform.cpp in Sources */,
+				82658A202C6D44B300E9DEE0 /* Types.cpp in Sources */,
 				8714259ADFF0592FD1C9EDFF /* CoreTypes.cpp in Sources */,
 				E19F140D0335FDA41C314B9D /* FriendsTypes.cpp in Sources */,
 				5ED9A3E4E69B0C8578EA7ED4 /* Friends.cpp in Sources */,
@@ -1388,6 +1443,12 @@
 				1F3A35BEA72C0B36A9D51ACA /* GroupsTypes.cpp in Sources */,
 				349FA7DF47A0368D5D3EA949 /* Groups.cpp in Sources */,
 				6C773ABD4DAAA9DF921EBD3F /* PFGroups.cpp in Sources */,
+				952ECE47CF4FD94A83498F53 /* LeaderboardsTypes.cpp in Sources */,
+				6819FF5881CF41D5FF2D8CB4 /* Leaderboards.cpp in Sources */,
+				A9106618EA56FB7253C5232F /* PFLeaderboards.cpp in Sources */,
+				45E6950DEC930977C8C9E56D /* StatisticsTypes.cpp in Sources */,
+				2DFB50BB5E37850283DD6507 /* Statistics.cpp in Sources */,
+				D9CF7295A5E35D21D44546EC /* PFStatistics.cpp in Sources */,
 				0B02E217B28E813BA607BEB0 /* LocalizationTypes.cpp in Sources */,
 				8B65675C328BCE30FFA13EC3 /* Localization.cpp in Sources */,
 				AF8260413C5921567D41921D /* PFLocalization.cpp in Sources */,
@@ -1404,13 +1465,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82B3CBB32B5B016B00337232 /* CharacterTypes.cpp in Sources */,
 				82B3CBC42B5B016B00337232 /* HttpClient.cpp in Sources */,
 				82B3CBC82B5B016B00337232 /* GlobalState.cpp in Sources */,
-				82B3CBC92B5B016B00337232 /* PFCharacter.cpp in Sources */,
 				82B3CBCF2B5B016B00337232 /* PFServices.cpp in Sources */,
 				82B3CBD52B5B016B00337232 /* stdafx.cpp in Sources */,
 				82B3CBDB2B5B016B00337232 /* Platform.cpp in Sources */,
+				82658A1F2C6D44B300E9DEE0 /* Types.cpp in Sources */,
 				50630CE0EA798DF1E56794EC /* CoreTypes.cpp in Sources */,
 				96AF19897BF81C1BCBB34801 /* FriendsTypes.cpp in Sources */,
 				B95A2DD7E31A717118DC99FA /* Friends.cpp in Sources */,
@@ -1451,6 +1511,12 @@
 				8CD033F507E1084E1B27CE39 /* GroupsTypes.cpp in Sources */,
 				B850B359999494E53E9D6920 /* Groups.cpp in Sources */,
 				C1A003BECA0F9AF4E74919AC /* PFGroups.cpp in Sources */,
+				85DE35AC055B62FE084DAD51 /* LeaderboardsTypes.cpp in Sources */,
+				DD3E2A4EC7AF2D56997AA95D /* Leaderboards.cpp in Sources */,
+				CEB9CB7536B229DA5D0E166F /* PFLeaderboards.cpp in Sources */,
+				1A8AA13068E98F96CC87D635 /* StatisticsTypes.cpp in Sources */,
+				200C6EF58990343316BCB409 /* Statistics.cpp in Sources */,
+				21EA4C34CB1021EF187B9195 /* PFStatistics.cpp in Sources */,
 				B5F4F79722514307F8104A3D /* LocalizationTypes.cpp in Sources */,
 				EF11F5AD5CEE43C9AE0183DB /* Localization.cpp in Sources */,
 				89B408F62903C5AC7342F898 /* PFLocalization.cpp in Sources */,
@@ -1633,7 +1699,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
-				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.iOS.exp";
+				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.exp";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1679,7 +1745,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
-				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.iOS.exp";
+				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.exp";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1725,7 +1791,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
-				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.macOS.exp";
+				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.exp";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1774,7 +1840,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
-				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.macOS.exp";
+				EXPORTED_SYMBOLS_FILE = "$(SRCROOT)/../../Build/PlayFabServices.Apple/symbols.exp";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GENERATE_INFOPLIST_FILE = YES;

@@ -56,18 +56,18 @@ protected:
     /// Helper method to add a Test to the TestList
     /// </summary>
     template <class T> 
-    void AddTest(const char* testName, void(T::* testCaseFunc)(TestContext&));
+    void AddTest(const char* testName, void(T::* testCaseFunc)(TestContext&), bool IsFlaky = false);
 
 private:
     TestList m_testList;
 };
 
 template <class T>
-void TestClass::AddTest(const char* testName, void(T::* testCaseFunc)(TestContext&))
+void TestClass::AddTest(const char* testName, void(T::* testCaseFunc)(TestContext&), bool IsFlaky)
 {
     T* testClass = static_cast<T*>(this);
     const auto& testFunc = std::bind(testCaseFunc, testClass, std::placeholders::_1);
-    SharedPtr<TestContext> testContext = MakeShared<TestContext>(testName, testFunc);
+    SharedPtr<TestContext> testContext = MakeShared<TestContext>(testName, testFunc, IsFlaky);
 
     m_testList.push_back(testContext);
 }

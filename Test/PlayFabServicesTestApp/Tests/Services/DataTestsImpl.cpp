@@ -1,7 +1,7 @@
 #include "TestAppPch.h"
 #include "DataTests.h"
 #include "DataOperations.h"
-#include <playfab/httpClient/PFHttpClient.h>
+#include <httpClient/httpClient.h>
 #include <JsonUtils.h>
 
 namespace PlayFab
@@ -20,20 +20,20 @@ HRESULT UploadFileSync(String url)
     JsonValue requestBody{ rapidjson::kObjectType };
     JsonUtils::ObjectAddMember(requestBody, kTestKey, kTestVal);
 
-    PFHCCallHandle callHandle{ nullptr };
+    HCCallHandle callHandle{ nullptr };
 
     // Set up HCHttpCallHandle
-    RETURN_IF_FAILED(PFHCHttpCallCreate(&callHandle));
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetUrl(callHandle, "PUT", url.c_str()));
+    RETURN_IF_FAILED(HCHttpCallCreate(&callHandle));
+    RETURN_IF_FAILED(HCHttpCallRequestSetUrl(callHandle, "PUT", url.c_str()));
 
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(callHandle, "Content-Type", "application/json; charset=utf-8", true));
+    RETURN_IF_FAILED(HCHttpCallRequestSetHeader(callHandle, "Content-Type", "application/json; charset=utf-8", true));
 
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetRequestBodyString(callHandle, PlayFab::JsonUtils::WriteToString(requestBody).c_str()));
+    RETURN_IF_FAILED(HCHttpCallRequestSetRequestBodyString(callHandle, PlayFab::JsonUtils::WriteToString(requestBody).c_str()));
 
     XAsyncBlock asyncBlock{};
-    RETURN_IF_FAILED(PFHCHttpCallPerformAsync(callHandle, &asyncBlock));
+    RETURN_IF_FAILED(HCHttpCallPerformAsync(callHandle, &asyncBlock));
 
-    RETURN_IF_FAILED(PFHCHttpCallCloseHandle(callHandle));
+    RETURN_IF_FAILED(HCHttpCallCloseHandle(callHandle));
 
     return XAsyncGetStatus(&asyncBlock, true);
 }

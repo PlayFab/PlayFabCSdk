@@ -3188,5 +3188,40 @@ AsyncOp<GetTitlePlayersFromProviderIDsResponse> AccountManagementAPI::GetTitlePl
     });
 }
 
+AsyncOp<SetDisplayNameResponse> AccountManagementAPI::SetDisplayName(
+    Entity const& entity,
+    const SetDisplayNameRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Profile/SetDisplayName" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::AccountManagementSetDisplayName,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<SetDisplayNameResponse>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            SetDisplayNameResponse resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<SetDisplayNameResponse>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 } // namespace AccountManagement
 } // namespace PlayFab

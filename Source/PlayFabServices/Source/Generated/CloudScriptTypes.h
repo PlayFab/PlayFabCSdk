@@ -1,6 +1,7 @@
 #pragma once
 
 #include <playfab/services/cpp/CloudScriptTypeWrappers.h>
+#include <playfab/services/cpp/TypeWrappers.h>
 #include "Generated/CoreTypes.h"
 #include "BaseModel.h"
 
@@ -229,6 +230,8 @@ public:
 
 } // namespace CloudScript
 
+// Json serialization helpers
+
 // EnumRange definitions used for Enum (de)serialization
 template<typename T> struct EnumRange;
 
@@ -236,5 +239,6 @@ template<> struct EnumRange<PFCloudScriptCloudScriptRevisionOption>
 {
     static constexpr PFCloudScriptCloudScriptRevisionOption maxValue = PFCloudScriptCloudScriptRevisionOption::Specific;
 };
+
 
 } // namespace PlayFab

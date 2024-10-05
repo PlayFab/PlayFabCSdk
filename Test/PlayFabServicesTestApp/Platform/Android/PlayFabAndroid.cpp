@@ -16,7 +16,7 @@ namespace Test
 namespace Platform
 {
 
-constexpr char defaultPlayerCustomId[] = "TestCustomId";
+constexpr char defaultPlayerCustomId[] = "TestCustomIdAndroid";
 
 HRESULT SetHooks()
 {
@@ -87,8 +87,11 @@ AsyncOp<LoginResult> LoginDefaultTitlePlayer(
     assert(!platformUser);
     UNREFERENCED_PARAMETER(platformUser);
 
+    Stringstream customId;
+    customId << defaultPlayerCustomId << "_" << time(nullptr);
+
     LoginWithCustomIDOperation::RequestType request;
-    request.SetCustomId(defaultPlayerCustomId);
+    request.SetCustomId(customId.str());
     request.SetCreateAccount(true);
     return RunOperation(MakeUnique<LoginWithCustomIDOperation>(serviceConfig, request, rc));
 }

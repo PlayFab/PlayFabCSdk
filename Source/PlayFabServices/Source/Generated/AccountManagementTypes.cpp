@@ -3137,5 +3137,76 @@ HRESULT GetTitlePlayersFromProviderIDsResponse::Copy(const PFAccountManagementGe
     return S_OK;
 }
 
+JsonValue SetDisplayNameRequest::ToJson() const
+{
+    return SetDisplayNameRequest::ToJson(this->Model());
+}
+
+JsonValue SetDisplayNameRequest::ToJson(const PFAccountManagementSetDisplayNameRequest& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "DisplayName", input.displayName);
+    JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
+    JsonUtils::ObjectAddMember(output, "ExpectedVersion", input.expectedVersion);
+    return output;
+}
+
+HRESULT SetDisplayNameResponse::FromJson(const JsonValue& input)
+{
+    std::optional<PFOperationTypes> operationResult{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OperationResult", operationResult));
+    this->SetOperationResult(std::move(operationResult));
+
+    std::optional<int32_t> versionNumber{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "VersionNumber", versionNumber));
+    this->SetVersionNumber(std::move(versionNumber));
+
+    return S_OK;
+}
+
+size_t SetDisplayNameResponse::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFAccountManagementSetDisplayNameResponse const*> SetDisplayNameResponse::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<SetDisplayNameResponse>(&this->Model());
+}
+
+size_t SetDisplayNameResponse::RequiredBufferSize(const PFAccountManagementSetDisplayNameResponse& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.operationResult)
+    {
+        requiredSize += (alignof(PFOperationTypes) + sizeof(PFOperationTypes));
+    }
+    if (model.versionNumber)
+    {
+        requiredSize += (alignof(int32_t) + sizeof(int32_t));
+    }
+    return requiredSize;
+}
+
+HRESULT SetDisplayNameResponse::Copy(const PFAccountManagementSetDisplayNameResponse& input, PFAccountManagementSetDisplayNameResponse& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.operationResult); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.operationResult = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.versionNumber); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.versionNumber = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 } // namespace AccountManagement
+
+// Json serialization helpers
+
 } // namespace PlayFab

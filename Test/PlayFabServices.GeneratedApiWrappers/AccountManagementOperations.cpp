@@ -2302,5 +2302,35 @@ Result<GetTitlePlayersFromXboxLiveIDsOperation::ResultType> GetTitlePlayersFromX
 }
 #endif
 
+#if 0
+
+SetDisplayNameOperation::SetDisplayNameOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<SetDisplayNameOperation::ResultType> SetDisplayNameOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<SetDisplayNameOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT SetDisplayNameOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAccountManagementSetDisplayNameAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<SetDisplayNameOperation::ResultType> SetDisplayNameOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFAccountManagementSetDisplayNameGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFAccountManagementSetDisplayNameResponse* result;
+    RETURN_IF_FAILED(PFAccountManagementSetDisplayNameGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
 }
 }

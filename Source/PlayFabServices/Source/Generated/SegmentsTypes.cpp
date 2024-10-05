@@ -1044,4 +1044,7 @@ JsonValue RemovePlayerTagRequest::ToJson(const PFSegmentsRemovePlayerTagRequest&
 }
 
 } // namespace Segments
+
+// Json serialization helpers
+
 } // namespace PlayFab

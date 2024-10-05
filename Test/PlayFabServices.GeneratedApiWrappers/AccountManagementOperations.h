@@ -1758,5 +1758,25 @@ private:
 };
 #endif
 
+#if 0
+class SetDisplayNameOperation : public XAsyncOperation<Wrappers::PFAccountManagementSetDisplayNameResponseWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFAccountManagementSetDisplayNameRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFAccountManagementSetDisplayNameResponseWrapper<Allocator>;
+
+    SetDisplayNameOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFAccountManagementSetDisplayNameResponseWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 }
 }

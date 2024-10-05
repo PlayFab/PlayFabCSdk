@@ -8,7 +8,7 @@ namespace Test
 
 void ExperimentationTests::AddTests()
 {
-    AddTest("TestGetTreatmentAssignment", &ExperimentationTests::TestGetTreatmentAssignment);
+    AddTest("TestGetTreatmentAssignment", &ExperimentationTests::TestGetTreatmentAssignment, true);
 
 }
 

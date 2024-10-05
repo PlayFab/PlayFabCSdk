@@ -21,7 +21,8 @@
 
   <PropertyGroup>
     <PlayFabCoreProjectName>PlayFabCore.$(HCPlatform)</PlayFabCoreProjectName>
-    <PlayFabCoreOutDir>$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
+    <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'Win32'">$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
+    <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\Gaming.Desktop.x64\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
   </PropertyGroup>
 
   <!--Add reference to appropriate PlayFabCore project-->
@@ -32,8 +33,8 @@
     </ProjectReference>
   </ItemGroup>
 
-  <!--Pull in LHC dependency, except on GDK where XAsync comes from GRTS-->
-  <Import Condition="'$(LibHttpClientImported)' != 'true' AND '$(HCPlatform)' != 'GDK'" Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
+  <!--Pull in LHC dependency-->
+  <Import Condition="'$(LibHttpClientImported)' != 'true'" Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
 
   <!--Copy PlayFabCore to OutDir-->
   <ItemGroup Label="CopyDependencies">

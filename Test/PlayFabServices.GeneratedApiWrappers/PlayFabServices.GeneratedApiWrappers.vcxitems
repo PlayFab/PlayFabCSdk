@@ -40,6 +40,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)ExperimentationOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)GroupsOperations.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GroupsOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)LeaderboardsOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)LeaderboardsOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)StatisticsOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)StatisticsOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)LocalizationOperations.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)LocalizationOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)MultiplayerServerOperations.h" />

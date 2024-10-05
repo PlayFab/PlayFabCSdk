@@ -280,12 +280,12 @@ size_t EntityStatisticValue::RequiredBufferSize() const
     return RequiredBufferSize(this->Model());
 }
 
-Result<PFProfilesEntityStatisticValue const*> EntityStatisticValue::Copy(ModelBuffer& buffer) const
+Result<PFEntityStatisticValue const*> EntityStatisticValue::Copy(ModelBuffer& buffer) const
 {
     return buffer.CopyTo<EntityStatisticValue>(&this->Model());
 }
 
-size_t EntityStatisticValue::RequiredBufferSize(const PFProfilesEntityStatisticValue& model)
+size_t EntityStatisticValue::RequiredBufferSize(const PFEntityStatisticValue& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
     if (model.metadata)
@@ -304,7 +304,7 @@ size_t EntityStatisticValue::RequiredBufferSize(const PFProfilesEntityStatisticV
     return requiredSize;
 }
 
-HRESULT EntityStatisticValue::Copy(const PFProfilesEntityStatisticValue& input, PFProfilesEntityStatisticValue& output, ModelBuffer& buffer)
+HRESULT EntityStatisticValue::Copy(const PFEntityStatisticValue& input, PFEntityStatisticValue& output, ModelBuffer& buffer)
 {
     output = input;
     {
@@ -443,7 +443,7 @@ size_t EntityProfileBody::RequiredBufferSize(const PFProfilesEntityProfileBody& 
     {
         requiredSize += EntityPermissionStatement::RequiredBufferSize(*model.permissions[i]);
     }
-    requiredSize += (alignof(PFProfilesEntityStatisticValueDictionaryEntry) + sizeof(PFProfilesEntityStatisticValueDictionaryEntry) * model.statisticsCount);
+    requiredSize += (alignof(PFEntityStatisticValueDictionaryEntry) + sizeof(PFEntityStatisticValueDictionaryEntry) * model.statisticsCount);
     for (size_t i = 0; i < model.statisticsCount; ++i)
     {
         requiredSize += (std::strlen(model.statistics[i].key) + 1);
@@ -804,4 +804,7 @@ HRESULT SetEntityProfilePolicyResponse::Copy(const PFProfilesSetEntityProfilePol
 }
 
 } // namespace Profiles
+
+// Json serialization helpers
+
 } // namespace PlayFab

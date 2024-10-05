@@ -15,7 +15,7 @@ void InventoryTests::AddTests()
 #if 0
     AddTest("TestExecuteTransferOperations", &InventoryTests::TestExecuteTransferOperations);
 #endif
-    AddTest("TestGetInventoryCollectionIds", &InventoryTests::TestGetInventoryCollectionIds);
+    AddTest("TestGetInventoryCollectionIds", &InventoryTests::TestGetInventoryCollectionIds, true);
     AddTest("TestGetInventoryItems", &InventoryTests::TestGetInventoryItems);
 #if 0
     AddTest("TestGetInventoryOperationStatus", &InventoryTests::TestGetInventoryOperationStatus);
@@ -24,7 +24,7 @@ void InventoryTests::AddTests()
     AddTest("TestGetMicrosoftStoreAccessTokens", &InventoryTests::TestGetMicrosoftStoreAccessTokens);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    AddTest("TestGetTransactionHistory", &InventoryTests::TestGetTransactionHistory);
+    AddTest("TestGetTransactionHistory", &InventoryTests::TestGetTransactionHistory, true);
 #endif
     AddTest("TestPurchaseInventoryItems", &InventoryTests::TestPurchaseInventoryItems);
 #if HC_PLATFORM == HC_PLATFORM_IOS
@@ -43,11 +43,11 @@ void InventoryTests::AddTests()
     AddTest("TestRedeemPlayStationStoreInventoryItems", &InventoryTests::TestRedeemPlayStationStoreInventoryItems);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    AddTest("TestRedeemSteamInventoryItems", &InventoryTests::TestRedeemSteamInventoryItems);
+    AddTest("TestRedeemSteamInventoryItems", &InventoryTests::TestRedeemSteamInventoryItems, true);
 #endif
-    AddTest("TestSubtractInventoryItems", &InventoryTests::TestSubtractInventoryItems);
-    AddTest("TestTransferInventoryItems", &InventoryTests::TestTransferInventoryItems);
-    AddTest("TestUpdateInventoryItems", &InventoryTests::TestUpdateInventoryItems);
+    AddTest("TestSubtractInventoryItems", &InventoryTests::TestSubtractInventoryItems, true);
+    AddTest("TestTransferInventoryItems", &InventoryTests::TestTransferInventoryItems, true);
+    AddTest("TestUpdateInventoryItems", &InventoryTests::TestUpdateInventoryItems, true);
 
 }
 

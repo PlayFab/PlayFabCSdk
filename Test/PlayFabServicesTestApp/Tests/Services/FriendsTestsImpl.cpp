@@ -51,10 +51,15 @@ void FriendsTests::TestClientGetFriendsList(TestContext& tc)
     .Then([&](Result<ClientAddFriendOperation::ResultType> result) -> AsyncOp<ClientGetFriendsListOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-    
+
         tc.AssertEqual(true, result.Payload().Model().created, "created");
-        
-        return ClientGetFriendsListOperation::Run(DefaultTitlePlayer(), ClientGetFriendsListOperation::RequestType{}, RunContext());
+
+        PFFriendsExternalFriendSources friendSources{ PFFriendsExternalFriendSources::None };
+
+        ClientGetFriendsListOperation::RequestType request{};
+        request.SetExternalPlatformFriends(friendSources);
+
+        return ClientGetFriendsListOperation::Run(DefaultTitlePlayer(), std::move(request), RunContext());
     })
     .Then([&, friendId](Result<ClientGetFriendsListOperation::ResultType> result) -> AsyncOp<void>
     {

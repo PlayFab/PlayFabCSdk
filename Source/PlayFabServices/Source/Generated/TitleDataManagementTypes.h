@@ -1,6 +1,7 @@
 #pragma once
 
 #include <playfab/services/cpp/TitleDataManagementTypeWrappers.h>
+#include <playfab/services/cpp/TypeWrappers.h>
 #include "Generated/CoreTypes.h"
 #include "BaseModel.h"
 
@@ -177,5 +178,8 @@ public:
 
 } // namespace TitleDataManagement
 
+// Json serialization helpers
+
 // EnumRange definitions used for Enum (de)serialization
+
 } // namespace PlayFab

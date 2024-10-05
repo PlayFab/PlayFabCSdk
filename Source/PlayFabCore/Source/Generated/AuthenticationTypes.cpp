@@ -218,6 +218,7 @@ JsonValue LoginWithFacebookRequest::ToJson(const PFAuthenticationLoginWithFacebo
 {
     JsonValue output{ rapidjson::kObjectType };
     JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
+    JsonUtils::ObjectAddMember(output, "AuthenticationToken", input.authenticationToken);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);

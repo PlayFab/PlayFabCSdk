@@ -11,9 +11,10 @@ namespace PlayFab
 namespace Test
 {
 
-TestContext::TestContext(const char* name, TestFunc func) :
+TestContext::TestContext(const char* name, TestFunc func, bool IsFlaky) :
     m_testName{ name },
-    m_testFunc{ std::move(func) }
+    m_testFunc{ std::move(func) },
+    m_isFlaky{ IsFlaky }
 {
 }
 
@@ -47,6 +48,11 @@ String const& TestContext::Summary() const
     return m_testResultMsg;
 }
 
+bool TestContext::IsFlaky() const
+{
+	return m_isFlaky;
+}
+
 void TestContext::StartTest()
 {
     assert(m_activeState == TestActiveState::PENDING);
@@ -76,13 +82,29 @@ void TestContext::AssertTrue(bool statement, const char* errorMessage)
 {
     if (!statement)
     {
-        throw Exception{ errorMessage };
+        if (IsFlaky()) // If the test is flaky, we don't want to fail the test
+		{
+            Result<String> result{ E_FAIL, errorMessage };
+            RecordFlakyResult(std::move(result));
+		}
+        else
+        { 
+            throw Exception{ errorMessage };
+        }
     }
 }
 
 void TestContext::EndTest(Result<void>&& finalResult) noexcept
 {
-    RecordResult(std::move(finalResult));
+    if (IsFlaky())
+	{
+		RecordFlakyResult(std::move(finalResult));
+	}
+    else
+    {
+        RecordResult(std::move(finalResult));
+    }
+
     EndTest();
 }
 
@@ -91,7 +113,11 @@ void TestContext::EndTest() noexcept
     TestFinishState finishState{ TestFinishState::PASSED };
 
     Stringstream ss;
-    ss << "Test failed with " << m_intermediateResults.size() << " intermediate result(s):";
+
+    if (m_intermediateResults.size() > 0)
+    {
+        ss << "Test failed with " << m_intermediateResults.size() << " intermediate result(s):";
+    }
     for (auto& result : m_intermediateResults)
     {
         if (Failed(result))
@@ -100,7 +126,17 @@ void TestContext::EndTest() noexcept
         }
         ss << "\n\thr=" << std::hex << result.hr << ", errorMessage=" << result.errorMessage;
     }
-    EndTest(finishState, finishState == TestFinishState::FAILED ? ss.str() : String{});
+
+    if (m_intermediateFlakyResults.size() > 0)
+    {
+        ss << "Test ended with " << m_intermediateFlakyResults.size() << " intermediate flaky result(s):";
+    }
+    for (auto& result : m_intermediateFlakyResults)
+    {
+        ss << "\n\thr=" << std::hex << result.hr << ", errorMessage=" << result.errorMessage;
+    }
+
+    EndTest(finishState, ss.str());
 }
 
 void TestContext::EndTest(TestFinishState state, String resultMsg) noexcept

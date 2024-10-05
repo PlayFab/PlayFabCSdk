@@ -100,10 +100,10 @@ void WriteLogToFile(const char* message)
     }
 }
 
-void TraceMessage(PFHCTraceLevel level, String const& message) noexcept
+void TraceMessage(HCTraceLevel level, String const& message) noexcept
 {
     // If PFHCTraceLevel <= Important direct to PFTestAppSummary.txt
-    if (level <= PFHCTraceLevel::Important)
+    if (level <= HCTraceLevel::Important)
     {
         WriteLogToFile(message.c_str());
     }

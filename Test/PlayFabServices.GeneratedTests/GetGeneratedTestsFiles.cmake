@@ -23,6 +23,8 @@ function(GET_PLAYFAB_SERVICES_GENERATED_TESTS_SOURCE_FILES
         "${PATH_TO_SOURCE}/PushNotificationsTests.cpp"
         "${PATH_TO_SOURCE}/SegmentsTests.cpp"
         "${PATH_TO_SOURCE}/TitleDataManagementTests.cpp"
+        "${PATH_TO_SOURCE}/LeaderboardsTests.cpp"
+        "${PATH_TO_SOURCE}/StatisticsTests.cpp"
         "${PATH_TO_SOURCE}/AccountManagementTests.h"
         "${PATH_TO_SOURCE}/CatalogTests.h"
         "${PATH_TO_SOURCE}/CloudScriptTests.h"
@@ -39,6 +41,8 @@ function(GET_PLAYFAB_SERVICES_GENERATED_TESTS_SOURCE_FILES
         "${PATH_TO_SOURCE}/PushNotificationsTests.h"
         "${PATH_TO_SOURCE}/SegmentsTests.h"
         "${PATH_TO_SOURCE}/TitleDataManagementTests.h"
+        "${PATH_TO_SOURCE}/LeaderboardsTests.h"
+        "${PATH_TO_SOURCE}/StatisticsTests.h"
         PARENT_SCOPE
         )
 

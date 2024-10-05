@@ -1,0 +1,100 @@
+#include "TestAppPch.h"
+#include "LeaderboardsTests.h"
+#include "LeaderboardsOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> LeaderboardsTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> LeaderboardsTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void LeaderboardsTests::TestCreateLeaderboardDefinition(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void LeaderboardsTests::TestDeleteLeaderboardDefinition(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void LeaderboardsTests::TestDeleteLeaderboardEntries(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void LeaderboardsTests::TestGetFriendLeaderboardForEntity(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void LeaderboardsTests::TestGetLeaderboard(TestContext& tc)
+{
+    tc.Skip();
+}
+
+void LeaderboardsTests::TestGetLeaderboardAroundEntity(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void LeaderboardsTests::TestGetLeaderboardDefinition(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void LeaderboardsTests::TestGetLeaderboardForEntities(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void LeaderboardsTests::TestIncrementLeaderboardVersion(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void LeaderboardsTests::TestListLeaderboardDefinitions(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void LeaderboardsTests::TestUnlinkLeaderboardFromStatistic(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void LeaderboardsTests::TestUpdateLeaderboardEntries(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+
+}
+}

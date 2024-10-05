@@ -233,6 +233,7 @@ PF Services,AccountManagement,PFAccountManagementServerUnlinkXboxAccountAsync,Se
 PF Services,AccountManagement,PFAccountManagementServerUpdateAvatarUrlAsync,SecretKey,Account Management,ServerUpdateAvatarUrl,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementServerUpdateBansAsync,SecretKey,Account Management,ServerUpdateBans,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementGetTitlePlayersFromXboxLiveIDsAsync,EntityToken,Account Management,GetTitlePlayersFromXboxLiveIDs,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,AccountManagement,PFAccountManagementSetDisplayNameAsync,EntityToken,Account Management,SetDisplayName,false,No,No,No,No,No,No,No,No
 PF Services,Leaderboard,PFLeaderboardAdminCreatePlayerStatisticDefinitionAsync,SecretKey,Player Data Management,AdminCreatePlayerStatisticDefinition,false,No,No,No,No,No,No,No,No
 PF Services,Leaderboard,PFLeaderboardAdminGetPlayerStatisticDefinitionsAsync,SecretKey,Player Data Management,AdminGetPlayerStatisticDefinitions,false,No,No,No,No,No,No,No,No
 PF Services,Leaderboard,PFLeaderboardAdminGetPlayerStatisticVersionsAsync,SecretKey,Player Data Management,AdminGetPlayerStatisticVersions,false,No,No,No,No,No,No,No,No
@@ -492,6 +493,27 @@ PF Services,Groups,PFGroupsRemoveMembersAsync,EntityToken,Groups,RemoveMembers,f
 PF Services,Groups,PFGroupsUnblockEntityAsync,EntityToken,Groups,UnblockEntity,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Groups,PFGroupsUpdateGroupAsync,EntityToken,Groups,UpdateGroup,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Groups,PFGroupsUpdateRoleAsync,EntityToken,Groups,UpdateRole,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,Leaderboards,PFLeaderboardsCreateLeaderboardDefinitionAsync,EntityToken,Leaderboards,CreateLeaderboardDefinition,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Leaderboards,PFLeaderboardsDeleteLeaderboardDefinitionAsync,EntityToken,Leaderboards,DeleteLeaderboardDefinition,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Leaderboards,PFLeaderboardsDeleteLeaderboardEntriesAsync,EntityToken,Leaderboards,DeleteLeaderboardEntries,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Leaderboards,PFLeaderboardsGetFriendLeaderboardForEntityAsync,EntityToken,Leaderboards,GetFriendLeaderboardForEntity,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,Leaderboards,PFLeaderboardsGetLeaderboardAsync,EntityToken,Leaderboards,GetLeaderboard,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,Leaderboards,PFLeaderboardsGetLeaderboardAroundEntityAsync,EntityToken,Leaderboards,GetLeaderboardAroundEntity,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,Leaderboards,PFLeaderboardsGetLeaderboardDefinitionAsync,EntityToken,Leaderboards,GetLeaderboardDefinition,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Leaderboards,PFLeaderboardsGetLeaderboardForEntitiesAsync,EntityToken,Leaderboards,GetLeaderboardForEntities,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Leaderboards,PFLeaderboardsIncrementLeaderboardVersionAsync,EntityToken,Leaderboards,IncrementLeaderboardVersion,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Leaderboards,PFLeaderboardsListLeaderboardDefinitionsAsync,EntityToken,Leaderboards,ListLeaderboardDefinitions,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Leaderboards,PFLeaderboardsUnlinkLeaderboardFromStatisticAsync,EntityToken,Leaderboards,UnlinkLeaderboardFromStatistic,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Leaderboards,PFLeaderboardsUpdateLeaderboardEntriesAsync,EntityToken,Leaderboards,UpdateLeaderboardEntries,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Statistics,PFStatisticsCreateStatisticDefinitionAsync,EntityToken,Statistics,CreateStatisticDefinition,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Statistics,PFStatisticsDeleteStatisticDefinitionAsync,EntityToken,Statistics,DeleteStatisticDefinition,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Statistics,PFStatisticsDeleteStatisticsAsync,EntityToken,Statistics,DeleteStatistics,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,Statistics,PFStatisticsGetStatisticDefinitionAsync,EntityToken,Statistics,GetStatisticDefinition,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Statistics,PFStatisticsGetStatisticsAsync,EntityToken,Statistics,GetStatistics,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,Statistics,PFStatisticsGetStatisticsForEntitiesAsync,EntityToken,Statistics,GetStatisticsForEntities,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Statistics,PFStatisticsIncrementStatisticVersionAsync,EntityToken,Statistics,IncrementStatisticVersion,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Statistics,PFStatisticsListStatisticDefinitionsAsync,EntityToken,Statistics,ListStatisticDefinitions,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,Statistics,PFStatisticsUpdateStatisticsAsync,EntityToken,Statistics,UpdateStatistics,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Localization,PFLocalizationGetLanguageListAsync,EntityToken,Localization,GetLanguageList,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,Matchmaking,PFMatchmakingCancelAllMatchmakingTicketsForPlayerAsync,EntityToken,Matchmaking,CancelAllMatchmakingTicketsForPlayer,false,No,No,No,No,No,No,No,No
 PF Services,Matchmaking,PFMatchmakingCancelAllServerBackfillTicketsForPlayerAsync,EntityToken,Matchmaking,CancelAllServerBackfillTicketsForPlayer,false,No,No,No,No,No,No,No,No
@@ -581,4 +603,31 @@ PF Services,Profiles,PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsAsync,En
 PF Services,Profiles,PFProfilesSetGlobalPolicyAsync,EntityToken,Account Management,SetGlobalPolicy,false,No,No,No,No,No,No,No,No
 PF Services,Profiles,PFProfilesSetProfileLanguageAsync,EntityToken,Account Management,SetProfileLanguage,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Profiles,PFProfilesSetProfilePolicyAsync,EntityToken,Account Management,SetProfilePolicy,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+PF Services,Addon,PFAddonCreateOrUpdateAppleAsync,EntityToken,Addon,CreateOrUpdateApple,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonCreateOrUpdateFacebookAsync,EntityToken,Addon,CreateOrUpdateFacebook,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonCreateOrUpdateFacebookInstantGamesAsync,EntityToken,Addon,CreateOrUpdateFacebookInstantGames,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonCreateOrUpdateGoogleAsync,EntityToken,Addon,CreateOrUpdateGoogle,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonCreateOrUpdateKongregateAsync,EntityToken,Addon,CreateOrUpdateKongregate,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonCreateOrUpdateNintendoAsync,EntityToken,Addon,CreateOrUpdateNintendo,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonCreateOrUpdatePSNAsync,EntityToken,Addon,CreateOrUpdatePSN,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonCreateOrUpdateSteamAsync,EntityToken,Addon,CreateOrUpdateSteam,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonCreateOrUpdateTwitchAsync,EntityToken,Addon,CreateOrUpdateTwitch,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonDeleteAppleAsync,EntityToken,Addon,DeleteApple,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonDeleteFacebookAsync,EntityToken,Addon,DeleteFacebook,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonDeleteFacebookInstantGamesAsync,EntityToken,Addon,DeleteFacebookInstantGames,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonDeleteGoogleAsync,EntityToken,Addon,DeleteGoogle,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonDeleteKongregateAsync,EntityToken,Addon,DeleteKongregate,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonDeleteNintendoAsync,EntityToken,Addon,DeleteNintendo,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonDeletePSNAsync,EntityToken,Addon,DeletePSN,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonDeleteSteamAsync,EntityToken,Addon,DeleteSteam,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonDeleteTwitchAsync,EntityToken,Addon,DeleteTwitch,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonGetAppleAsync,EntityToken,Addon,GetApple,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonGetFacebookAsync,EntityToken,Addon,GetFacebook,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonGetFacebookInstantGamesAsync,EntityToken,Addon,GetFacebookInstantGames,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonGetGoogleAsync,EntityToken,Addon,GetGoogle,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonGetKongregateAsync,EntityToken,Addon,GetKongregate,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonGetNintendoAsync,EntityToken,Addon,GetNintendo,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonGetPSNAsync,EntityToken,Addon,GetPSN,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonGetSteamAsync,EntityToken,Addon,GetSteam,false,No,No,No,No,No,No,No,No
+PF Services,Addon,PFAddonGetTwitchAsync,EntityToken,Addon,GetTwitch,false,No,No,No,No,No,No,No,No
 

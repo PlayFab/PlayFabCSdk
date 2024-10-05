@@ -72,4 +72,7 @@ JsonValue SendPushNotificationFromTemplateRequest::ToJson(const PFPushNotificati
 }
 
 } // namespace PushNotifications
+
+// Json serialization helpers
+
 } // namespace PlayFab

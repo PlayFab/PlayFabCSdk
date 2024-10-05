@@ -401,8 +401,9 @@ PF_API PFAuthenticationReLoginWithEmailAddressAsync(
 /// the same Facebook applications between PlayFab Title IDs, as Facebook provides unique user IDs per
 /// application and doing so can result in issues with the Facebook ID for the user in their PlayFab account
 /// information. If you must re-use an application in a new PlayFab Title ID, please be sure to first
-/// unlink all accounts from Facebook, or delete all users in the first Title ID. See also ClientLinkFacebookAccountAsync,
-/// ClientUnlinkFacebookAccountAsync.
+/// unlink all accounts from Facebook, or delete all users in the first Title ID. Note: If the user is
+/// authenticated with AuthenticationToken, instead of AccessToken, the GetFriendsList API will return
+/// an empty list. See also ClientLinkFacebookAccountAsync, ClientUnlinkFacebookAccountAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithFacebookGetResult"/>
 /// to get the result.
@@ -591,7 +592,7 @@ PF_API PFAuthenticationReLoginWithFacebookInstantGamesIdAsync(
 /// this case, no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab
 /// account is linked to the Game Center account, an error indicating this will be returned, so that the
 /// title can guide the user through creation of a PlayFab account. If an invalid iOS Game Center player
-/// identifier is used, an error indicating this will be returned. See also ClientLoginWithIOSDeviceIDAsync.
+/// identifier is used, an error indicating this will be returned.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithGameCenterGetResult"/>
 /// to get the result.
@@ -1242,8 +1243,6 @@ PF_API PFAuthenticationReLoginWithNintendoSwitchDeviceIdAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// See also ClientLinkOpenIdConnectAsync, ClientUnlinkOpenIdConnectAsync.
-///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithOpenIdConnectGetResult"/>
 /// to get the result.
 /// </remarks>
@@ -1422,8 +1421,7 @@ PF_API PFAuthenticationReLoginWithPlayFabAsync(
 /// is set to true, a new PlayFab account will be created and linked to the PlayStation :tm: Network account.
 /// In this case, no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab
 /// account is linked to the PlayStation :tm: Network account, an error indicating this will be returned,
-/// so that the title can guide the user through creation of a PlayFab account. See also ClientLinkPSNAccountAsync,
-/// ClientUnlinkPSNAccountAsync.
+/// so that the title can guide the user through creation of a PlayFab account.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithPSNGetResult"/>
 /// to get the result.
@@ -1705,7 +1703,7 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
 /// to true, a new PlayFab account will be created and linked to the Xbox Live account. In this case,
 /// no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab account
 /// is linked to the Xbox Live account, an error indicating this will be returned, so that the title can
-/// guide the user through creation of a PlayFab account. See also ClientLinkXboxAccountAsync, ClientUnlinkXboxAccountAsync.
+/// guide the user through creation of a PlayFab account.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithXboxGetResult"/>
 /// to get the result.

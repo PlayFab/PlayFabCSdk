@@ -1,6 +1,7 @@
 #pragma once
 
 #include <playfab/services/cpp/FriendsTypeWrappers.h>
+#include <playfab/services/cpp/TypeWrappers.h>
 #include "Generated/CoreTypes.h"
 #include "BaseModel.h"
 
@@ -181,6 +182,14 @@ public:
 
 } // namespace Friends
 
+// Json serialization helpers
+namespace JsonUtils
+{
+
+JsonValue ToJson(PFFriendsExternalFriendSources const* input);
+
+} // namespace JsonUtils
+
 // EnumRange definitions used for Enum (de)serialization
 template<typename T> struct EnumRange;
 
@@ -188,5 +197,6 @@ template<> struct EnumRange<PFFriendsExternalFriendSources>
 {
     static constexpr PFFriendsExternalFriendSources maxValue = PFFriendsExternalFriendSources::All;
 };
+
 
 } // namespace PlayFab

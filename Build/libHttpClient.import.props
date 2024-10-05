@@ -7,8 +7,7 @@
   <Import Condition="'$(PlayFabPathsImported)' != 'true'" Project="PlayFab.C.paths.props" />
   <Import Condition="'$(HCPlatform)' == ''" Project="$(HCRoot)\platform_select.props" />
   <PropertyGroup>
-    <HCProjectName Condition="'$(HCPlatform)' == 'Win32'">libHttpClient.Win32</HCProjectName>
-    <HCProjectName Condition="'$(HCPlatform)' == 'GDK'">libHttpClient.143.GDK.C</HCProjectName>
+    <HCProjectName>libHttpClient.$(HCPlatform)</HCProjectName>
     <HCOutDir>$(HCOutRoot)\$(Platform)\$(Configuration)\$(HCProjectName)\</HCOutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
@@ -25,19 +24,9 @@
       <AdditionalDependencies>%(AdditionalDependencies);$(HCProjectName).lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <!--Additional GDK dependencies-->
-  <ImportGroup Condition="'$(HCPlatform)' == 'GDK' AND '$(GameDK)' != ''">
-    <Import Project="$(GameDK)\$(XdkEditionTarget)\GRDK\ExtensionLibraries\Xbox.XCurl.API\DesignTime\CommonConfiguration\neutral\ExtensionLibrary.props"/>
-  </ImportGroup>
-  <ItemDefinitionGroup  Condition="'$(HCPlatform)' == 'GDK'">
-    <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(Console_SdkLibPath)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);Appnotify.lib;winhttp.lib;crypt32.lib</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
   <!--Copy dlls to OutDir-->
-  <ItemGroup Condition="'$(HCPlatform)' == 'Win32'" Label="CopyDependencies">
-    <ReferenceCopyLocalPaths Include="$(HCOutDir)\libHttpClient.Win32.dll" />
-    <ReferenceCopyLocalPaths Include="$(HCOutDir)\libHttpClient.Win32.pdb" />
+  <ItemGroup Label="CopyDependencies">
+    <ReferenceCopyLocalPaths Include="$(HCOutDir)\$(HCProjectName).dll" />
+    <ReferenceCopyLocalPaths Include="$(HCOutDir)\$(HCProjectName).pdb" />
   </ItemGroup>
 </Project>

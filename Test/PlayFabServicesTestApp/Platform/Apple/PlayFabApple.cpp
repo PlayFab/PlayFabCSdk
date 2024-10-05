@@ -15,7 +15,7 @@ namespace Test
 namespace Platform
 {
 
-constexpr char defaultPlayerCustomId[] = "TestCustomId";
+constexpr char defaultPlayerCustomId[] = "TestCustomIdApple";
 
 HRESULT SetHooks()
 {
@@ -103,8 +103,11 @@ AsyncOp<LoginResult> LoginDefaultTitlePlayer(
         else
         {
             // If we weren't able to get an Apple User, fallback to LoginWithCustomId
+            Stringstream customId;
+            customId << defaultPlayerCustomId << "_" << time(nullptr);
+
             LoginWithCustomIDOperation::RequestType request;
-            request.SetCustomId(defaultPlayerCustomId);
+            request.SetCustomId(customId.str());
             request.SetCreateAccount(true);
             return RunOperation(MakeUnique<LoginWithCustomIDOperation>(serviceConfig, request, rc));
         }

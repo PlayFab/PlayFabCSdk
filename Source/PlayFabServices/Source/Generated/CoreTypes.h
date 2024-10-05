@@ -858,6 +858,8 @@ public:
 };
 
 
+// Json serialization helpers
+
 // EnumRange definitions used for Enum (de)serialization
 template<typename T> struct EnumRange;
 
@@ -873,7 +875,7 @@ template<> struct EnumRange<PFCurrency>
 
 template<> struct EnumRange<PFUserOrigination>
 {
-    static constexpr PFUserOrigination maxValue = PFUserOrigination::XboxMobileStore;
+    static constexpr PFUserOrigination maxValue = PFUserOrigination::King;
 };
 
 template<> struct EnumRange<PFEmailVerificationStatus>
@@ -883,7 +885,7 @@ template<> struct EnumRange<PFEmailVerificationStatus>
 
 template<> struct EnumRange<PFLoginIdentityProvider>
 {
-    static constexpr PFLoginIdentityProvider maxValue = PFLoginIdentityProvider::XboxMobileStore;
+    static constexpr PFLoginIdentityProvider maxValue = PFLoginIdentityProvider::King;
 };
 
 template<> struct EnumRange<PFContinentCode>
@@ -910,5 +912,6 @@ template<> struct EnumRange<PFUserDataPermission>
 {
     static constexpr PFUserDataPermission maxValue = PFUserDataPermission::Public;
 };
+
 
 } // namespace PlayFab

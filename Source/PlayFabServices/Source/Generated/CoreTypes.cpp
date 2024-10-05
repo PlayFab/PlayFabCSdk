@@ -3413,4 +3413,7 @@ HRESULT EntityLineage::Copy(const PFEntityLineage& input, PFEntityLineage& outpu
     return S_OK;
 }
 
+
+// Json serialization helpers
+
 } // namespace PlayFab

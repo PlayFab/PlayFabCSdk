@@ -1481,4 +1481,7 @@ JsonValue UploadSecretRequest::ToJson(const PFMultiplayerServerUploadSecretReque
 }
 
 } // namespace MultiplayerServer
+
+// Json serialization helpers
+
 } // namespace PlayFab

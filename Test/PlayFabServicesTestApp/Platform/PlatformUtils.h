@@ -18,7 +18,7 @@ time_t GetSystemTime() noexcept;
 String GetTimeString() noexcept;
 
 void TraceMessage(
-    PFHCTraceLevel level,
+    HCTraceLevel level,
     String const& message
 ) noexcept;
 

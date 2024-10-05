@@ -615,4 +615,7 @@ JsonValue RegisterEventHubFunctionRequest::ToJson(const PFCloudScriptRegisterEve
 }
 
 } // namespace CloudScript
+
+// Json serialization helpers
+
 } // namespace PlayFab

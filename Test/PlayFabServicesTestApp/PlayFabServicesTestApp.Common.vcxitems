@@ -39,6 +39,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\FriendsTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\GroupsTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\InventoryTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\LeaderboardsTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\LocalizationTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\MultiplayerServerTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlatformSpecificTestsImpl.cpp" />
@@ -46,6 +47,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\ProfilesTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PushNotificationsTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\SegmentsTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\StatisticsTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\TitleDataManagementTestsImpl.cpp" />
   </ItemGroup>
   <ItemGroup>

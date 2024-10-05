@@ -17,7 +17,7 @@
 #include <map>
 
 // libHttpClient headers
-#include <playfab/httpClient/PFHCPal.h>
+#include <httpClient/pal.h>
 #include <XAsync.h>
 #include <XAsyncProvider.h>
 

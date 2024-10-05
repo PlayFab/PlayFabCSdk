@@ -30,17 +30,17 @@ namespace PlayFab
 
         void LibHCTests::TestHCTrace(TestContext& tc)
         {
-            PFHCTraceImplArea area{ "Test", PFHCTraceLevel::Important };
-            PFHCTraceImplMessage(&area, area.Verbosity, "Testing small message");
+            HCTraceImplArea area{ "Test", HCTraceLevel::Important };
+            HCTraceImplMessage(&area, area.Verbosity, "Testing small message");
 
             tc.EndTest(S_OK);
         }
 
         void LibHCTests::TestHCTraceLarge(TestContext& tc)
         {
-            PFHCTraceImplArea area{ "Test", PFHCTraceLevel::Important };
-            std::vector<char> message(8192, 'w');
-            PFHCTraceImplMessage(&area, area.Verbosity, message.data());
+            HCTraceImplArea area{ "Test", HCTraceLevel::Important };
+            std::string message(8192, 'w');
+            HCTraceImplMessage(&area, area.Verbosity, message.c_str());
 
             tc.EndTest(S_OK);
         }

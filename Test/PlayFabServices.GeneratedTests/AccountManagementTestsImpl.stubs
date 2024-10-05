@@ -657,6 +657,13 @@ void AccountManagementTests::TestGetTitlePlayersFromXboxLiveIDs(TestContext& tc)
 }
 #endif
 
+#if 0
+void AccountManagementTests::TestSetDisplayName(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 
 }
 }

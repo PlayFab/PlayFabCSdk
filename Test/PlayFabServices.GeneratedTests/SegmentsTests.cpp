@@ -8,7 +8,7 @@ namespace Test
 
 void SegmentsTests::AddTests()
 {
-    AddTest("TestClientGetPlayerSegments", &SegmentsTests::TestClientGetPlayerSegments);
+    AddTest("TestClientGetPlayerSegments", &SegmentsTests::TestClientGetPlayerSegments, true);
     AddTest("TestClientGetPlayerTags", &SegmentsTests::TestClientGetPlayerTags);
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerAddPlayerTag", &SegmentsTests::TestServerAddPlayerTag);
@@ -17,10 +17,10 @@ void SegmentsTests::AddTests()
     AddTest("TestServerGetAllSegments", &SegmentsTests::TestServerGetAllSegments);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    AddTest("TestServerGetPlayerSegments", &SegmentsTests::TestServerGetPlayerSegments);
+    AddTest("TestServerGetPlayerSegments", &SegmentsTests::TestServerGetPlayerSegments, true);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    AddTest("TestServerGetPlayersInSegment", &SegmentsTests::TestServerGetPlayersInSegment);
+    AddTest("TestServerGetPlayersInSegment", &SegmentsTests::TestServerGetPlayersInSegment, true);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerGetPlayerTags", &SegmentsTests::TestServerGetPlayerTags);

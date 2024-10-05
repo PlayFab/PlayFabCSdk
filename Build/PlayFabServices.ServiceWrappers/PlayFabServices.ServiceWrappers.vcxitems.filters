@@ -340,6 +340,54 @@
     <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFGroups.cpp" >
       <Filter>Source\Generated</Filter>
     </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFLeaderboardsTypes.h" >
+      <Filter>Include\Generated\playfab\services</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\LeaderboardsTypeWrappers.h" >
+      <Filter>Include\Generated\playfab\services\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\LeaderboardsTypes.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\LeaderboardsTypes.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Leaderboards.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Leaderboards.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFLeaderboards.h" >
+      <Filter>Include\Generated\playfab\services</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFLeaderboards.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFStatisticsTypes.h" >
+      <Filter>Include\Generated\playfab\services</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\StatisticsTypeWrappers.h" >
+      <Filter>Include\Generated\playfab\services\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\StatisticsTypes.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\StatisticsTypes.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Statistics.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\Statistics.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFStatistics.h" >
+      <Filter>Include\Generated\playfab\services</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFStatistics.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
     <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFLocalizationTypes.h" >
       <Filter>Include\Generated\playfab\services</Filter>
     </ClInclude>

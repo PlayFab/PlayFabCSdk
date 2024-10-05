@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <playfab/httpClient/PFHCPal.h>
+#include <httpClient/pal.h>
 
 #if !HC_PLATFORM_IS_MICROSOFT
 #ifndef _Null_terminated_

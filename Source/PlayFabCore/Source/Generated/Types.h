@@ -7,32 +7,23 @@ namespace PlayFab
 {
 
 // Shared Classes
-class PlayerProfileViewConstraints : public Wrappers::PFPlayerProfileViewConstraintsWrapper<Allocator>, public InputModel
+class ItemInstance : public Wrappers::PFItemInstanceWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFItemInstance>
 {
 public:
-    using ModelWrapperType = typename Wrappers::PFPlayerProfileViewConstraintsWrapper<Allocator>;
+    using ModelWrapperType = typename Wrappers::PFItemInstanceWrapper<Allocator>;
     using ModelWrapperType::ModelType;
 
     // Constructors
     using ModelWrapperType::ModelWrapperType;
 
-    // InputModel
-    JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFPlayerProfileViewConstraints& input);
-};
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFItemInstance const*> Copy(ModelBuffer& buffer) const override;
 
-class GetPlayerCombinedInfoRequestParams : public Wrappers::PFGetPlayerCombinedInfoRequestParamsWrapper<Allocator>, public InputModel
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFGetPlayerCombinedInfoRequestParamsWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // InputModel
-    JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFGetPlayerCombinedInfoRequestParams& input);
+    static size_t RequiredBufferSize(const PFItemInstance& model);
+    static HRESULT Copy(const PFItemInstance& input, PFItemInstance& output, ModelBuffer& buffer);
 };
 
 class UserAndroidDeviceInfo : public Wrappers::PFUserAndroidDeviceInfoWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFUserAndroidDeviceInfo>
@@ -457,44 +448,6 @@ public:
     static HRESULT Copy(const PFUserAccountInfo& input, PFUserAccountInfo& output, ModelBuffer& buffer);
 };
 
-class ItemInstance : public Wrappers::PFItemInstanceWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFItemInstance>
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFItemInstanceWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // ServiceOutputModel
-    HRESULT FromJson(const JsonValue& input) override;
-    // ClientOutputModel
-    size_t RequiredBufferSize() const override;
-    Result<PFItemInstance const*> Copy(ModelBuffer& buffer) const override;
-
-    static size_t RequiredBufferSize(const PFItemInstance& model);
-    static HRESULT Copy(const PFItemInstance& input, PFItemInstance& output, ModelBuffer& buffer);
-};
-
-class CharacterInventory : public Wrappers::PFCharacterInventoryWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFCharacterInventory>
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFCharacterInventoryWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // ServiceOutputModel
-    HRESULT FromJson(const JsonValue& input) override;
-    // ClientOutputModel
-    size_t RequiredBufferSize() const override;
-    Result<PFCharacterInventory const*> Copy(ModelBuffer& buffer) const override;
-
-    static size_t RequiredBufferSize(const PFCharacterInventory& model);
-    static HRESULT Copy(const PFCharacterInventory& input, PFCharacterInventory& output, ModelBuffer& buffer);
-};
-
 class CharacterResult : public Wrappers::PFCharacterResultWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFCharacterResult>
 {
 public:
@@ -512,6 +465,60 @@ public:
 
     static size_t RequiredBufferSize(const PFCharacterResult& model);
     static HRESULT Copy(const PFCharacterResult& input, PFCharacterResult& output, ModelBuffer& buffer);
+};
+
+class UserDataRecord : public Wrappers::PFUserDataRecordWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFUserDataRecord>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFUserDataRecordWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+    using DictionaryEntryType = ModelWrapperType::DictionaryEntryType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFUserDataRecord const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFUserDataRecord& model);
+    static HRESULT Copy(const PFUserDataRecord& input, PFUserDataRecord& output, ModelBuffer& buffer);
+};
+
+class VirtualCurrencyRechargeTime : public Wrappers::PFVirtualCurrencyRechargeTimeWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFVirtualCurrencyRechargeTime>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFVirtualCurrencyRechargeTimeWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+    using DictionaryEntryType = ModelWrapperType::DictionaryEntryType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFVirtualCurrencyRechargeTime const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFVirtualCurrencyRechargeTime& model);
+    static HRESULT Copy(const PFVirtualCurrencyRechargeTime& input, PFVirtualCurrencyRechargeTime& output, ModelBuffer& buffer);
+};
+
+class PlayerProfileViewConstraints : public Wrappers::PFPlayerProfileViewConstraintsWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFPlayerProfileViewConstraintsWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFPlayerProfileViewConstraints& input);
 };
 
 class AdCampaignAttributionModel : public Wrappers::PFAdCampaignAttributionModelWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFAdCampaignAttributionModel>
@@ -756,6 +763,39 @@ public:
     static HRESULT Copy(const PFPlayerProfileModel& input, PFPlayerProfileModel& output, ModelBuffer& buffer);
 };
 
+class GetPlayerCombinedInfoRequestParams : public Wrappers::PFGetPlayerCombinedInfoRequestParamsWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFGetPlayerCombinedInfoRequestParamsWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFGetPlayerCombinedInfoRequestParams& input);
+};
+
+class CharacterInventory : public Wrappers::PFCharacterInventoryWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFCharacterInventory>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFCharacterInventoryWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFCharacterInventory const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFCharacterInventory& model);
+    static HRESULT Copy(const PFCharacterInventory& input, PFCharacterInventory& output, ModelBuffer& buffer);
+};
+
 class StatisticValue : public Wrappers::PFStatisticValueWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFStatisticValue>
 {
 public:
@@ -773,46 +813,6 @@ public:
 
     static size_t RequiredBufferSize(const PFStatisticValue& model);
     static HRESULT Copy(const PFStatisticValue& input, PFStatisticValue& output, ModelBuffer& buffer);
-};
-
-class UserDataRecord : public Wrappers::PFUserDataRecordWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFUserDataRecord>
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFUserDataRecordWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-    using DictionaryEntryType = ModelWrapperType::DictionaryEntryType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // ServiceOutputModel
-    HRESULT FromJson(const JsonValue& input) override;
-    // ClientOutputModel
-    size_t RequiredBufferSize() const override;
-    Result<PFUserDataRecord const*> Copy(ModelBuffer& buffer) const override;
-
-    static size_t RequiredBufferSize(const PFUserDataRecord& model);
-    static HRESULT Copy(const PFUserDataRecord& input, PFUserDataRecord& output, ModelBuffer& buffer);
-};
-
-class VirtualCurrencyRechargeTime : public Wrappers::PFVirtualCurrencyRechargeTimeWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFVirtualCurrencyRechargeTime>
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFVirtualCurrencyRechargeTimeWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-    using DictionaryEntryType = ModelWrapperType::DictionaryEntryType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // ServiceOutputModel
-    HRESULT FromJson(const JsonValue& input) override;
-    // ClientOutputModel
-    size_t RequiredBufferSize() const override;
-    Result<PFVirtualCurrencyRechargeTime const*> Copy(ModelBuffer& buffer) const override;
-
-    static size_t RequiredBufferSize(const PFVirtualCurrencyRechargeTime& model);
-    static HRESULT Copy(const PFVirtualCurrencyRechargeTime& input, PFVirtualCurrencyRechargeTime& output, ModelBuffer& buffer);
 };
 
 class GetPlayerCombinedInfoResultPayload : public Wrappers::PFGetPlayerCombinedInfoResultPayloadWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFGetPlayerCombinedInfoResultPayload>
@@ -911,7 +911,12 @@ template<> struct EnumRange<PFCurrency>
 
 template<> struct EnumRange<PFUserOrigination>
 {
-    static constexpr PFUserOrigination maxValue = PFUserOrigination::XboxMobileStore;
+    static constexpr PFUserOrigination maxValue = PFUserOrigination::King;
+};
+
+template<> struct EnumRange<PFUserDataPermission>
+{
+    static constexpr PFUserDataPermission maxValue = PFUserDataPermission::Public;
 };
 
 template<> struct EnumRange<PFEmailVerificationStatus>
@@ -921,7 +926,7 @@ template<> struct EnumRange<PFEmailVerificationStatus>
 
 template<> struct EnumRange<PFLoginIdentityProvider>
 {
-    static constexpr PFLoginIdentityProvider maxValue = PFLoginIdentityProvider::XboxMobileStore;
+    static constexpr PFLoginIdentityProvider maxValue = PFLoginIdentityProvider::King;
 };
 
 template<> struct EnumRange<PFContinentCode>
@@ -942,11 +947,6 @@ template<> struct EnumRange<PFSubscriptionProviderStatus>
 template<> struct EnumRange<PFPushNotificationPlatform>
 {
     static constexpr PFPushNotificationPlatform maxValue = PFPushNotificationPlatform::GoogleCloudMessaging;
-};
-
-template<> struct EnumRange<PFUserDataPermission>
-{
-    static constexpr PFUserDataPermission maxValue = PFUserDataPermission::Public;
 };
 
 } // namespace PlayFab

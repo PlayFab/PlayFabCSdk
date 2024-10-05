@@ -1,6 +1,7 @@
 #pragma once
 
 #include <playfab/services/cpp/SegmentsTypeWrappers.h>
+#include <playfab/services/cpp/TypeWrappers.h>
 #include "Generated/CoreTypes.h"
 #include "BaseModel.h"
 
@@ -311,6 +312,8 @@ public:
 
 } // namespace Segments
 
+// Json serialization helpers
+
 // EnumRange definitions used for Enum (de)serialization
 template<typename T> struct EnumRange;
 
@@ -318,5 +321,6 @@ template<> struct EnumRange<PFSegmentsChurnRiskLevel>
 {
     static constexpr PFSegmentsChurnRiskLevel maxValue = PFSegmentsChurnRiskLevel::HighRisk;
 };
+
 
 } // namespace PlayFab

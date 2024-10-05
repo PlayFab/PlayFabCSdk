@@ -1623,13 +1623,13 @@ HRESULT RedemptionFailure::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "FailureDetails", failureDetails));
     this->SetFailureDetails(std::move(failureDetails));
 
+    String marketplaceAlternateId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "MarketplaceAlternateId", marketplaceAlternateId));
+    this->SetMarketplaceAlternateId(std::move(marketplaceAlternateId));
+
     String marketplaceTransactionId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "MarketplaceTransactionId", marketplaceTransactionId));
     this->SetMarketplaceTransactionId(std::move(marketplaceTransactionId));
-
-    String offerId{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OfferId", offerId));
-    this->SetOfferId(std::move(offerId));
 
     return S_OK;
 }
@@ -1655,13 +1655,13 @@ size_t RedemptionFailure::RequiredBufferSize(const PFInventoryRedemptionFailure&
     {
         requiredSize += (std::strlen(model.failureDetails) + 1);
     }
+    if (model.marketplaceAlternateId)
+    {
+        requiredSize += (std::strlen(model.marketplaceAlternateId) + 1);
+    }
     if (model.marketplaceTransactionId)
     {
         requiredSize += (std::strlen(model.marketplaceTransactionId) + 1);
-    }
-    if (model.offerId)
-    {
-        requiredSize += (std::strlen(model.offerId) + 1);
     }
     return requiredSize;
 }
@@ -1680,27 +1680,27 @@ HRESULT RedemptionFailure::Copy(const PFInventoryRedemptionFailure& input, PFInv
         output.failureDetails = propCopyResult.ExtractPayload();
     }
     {
+        auto propCopyResult = buffer.CopyTo(input.marketplaceAlternateId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.marketplaceAlternateId = propCopyResult.ExtractPayload();
+    }
+    {
         auto propCopyResult = buffer.CopyTo(input.marketplaceTransactionId); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.marketplaceTransactionId = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.offerId); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.offerId = propCopyResult.ExtractPayload();
     }
     return S_OK;
 }
 
 HRESULT RedemptionSuccess::FromJson(const JsonValue& input)
 {
+    String marketplaceAlternateId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "MarketplaceAlternateId", marketplaceAlternateId));
+    this->SetMarketplaceAlternateId(std::move(marketplaceAlternateId));
+
     String marketplaceTransactionId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "MarketplaceTransactionId", marketplaceTransactionId));
     this->SetMarketplaceTransactionId(std::move(marketplaceTransactionId));
-
-    String offerId{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OfferId", offerId));
-    this->SetOfferId(std::move(offerId));
 
     RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "SuccessTimestamp", this->m_model.successTimestamp));
 
@@ -1720,13 +1720,13 @@ Result<PFInventoryRedemptionSuccess const*> RedemptionSuccess::Copy(ModelBuffer&
 size_t RedemptionSuccess::RequiredBufferSize(const PFInventoryRedemptionSuccess& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.marketplaceAlternateId)
+    {
+        requiredSize += (std::strlen(model.marketplaceAlternateId) + 1);
+    }
     if (model.marketplaceTransactionId)
     {
         requiredSize += (std::strlen(model.marketplaceTransactionId) + 1);
-    }
-    if (model.offerId)
-    {
-        requiredSize += (std::strlen(model.offerId) + 1);
     }
     return requiredSize;
 }
@@ -1735,14 +1735,14 @@ HRESULT RedemptionSuccess::Copy(const PFInventoryRedemptionSuccess& input, PFInv
 {
     output = input;
     {
+        auto propCopyResult = buffer.CopyTo(input.marketplaceAlternateId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.marketplaceAlternateId = propCopyResult.ExtractPayload();
+    }
+    {
         auto propCopyResult = buffer.CopyTo(input.marketplaceTransactionId); 
         RETURN_IF_FAILED(propCopyResult.hr);
         output.marketplaceTransactionId = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.offerId); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.offerId = propCopyResult.ExtractPayload();
     }
     return S_OK;
 }
@@ -2555,4 +2555,7 @@ HRESULT UpdateInventoryItemsResponse::Copy(const PFInventoryUpdateInventoryItems
 }
 
 } // namespace Inventory
+
+// Json serialization helpers
+
 } // namespace PlayFab

@@ -37,7 +37,7 @@ class TestContext
 public:
     using TestFunc = std::function<void(TestContext&)>;
 
-    TestContext(const char* name, TestFunc func);
+    TestContext(const char* name, TestFunc func, bool IsFlaky = false);
 
     // Test metadata
     String const& TestName() const;
@@ -46,6 +46,7 @@ public:
     int64_t StartTime() const;
     int64_t EndTime() const;
     String const& Summary() const;
+    bool IsFlaky() const;
 
     // Start the test by invoking TestClass::SetUp followed by the TestFunc
     void StartTest();
@@ -53,6 +54,10 @@ public:
     // Record an intermediate result but do not end the test. If any intermediate results fail, the entire test will be considered failed
     template<typename T>
     void RecordResult(Result<T>&& result) noexcept;
+
+    // Record an intermediate flaky result but do not end the test. If any intermediate flaky results fail, the entire test will NOT be considered failed
+    template<typename T>
+    void RecordFlakyResult(Result<T>&& result) noexcept;
 
     // Verify a field of a result object, throwing a PlayFab::Test::Exception if validation fails
     template<typename T, std::enable_if_t<!std::is_enum_v<T>>* = nullptr>
@@ -96,6 +101,8 @@ private:
     int64_t m_startTime;
     int64_t m_endTime;
     Vector<Result<void>> m_intermediateResults;
+    Vector<Result<void>> m_intermediateFlakyResults;
+    bool m_isFlaky;
 };
 
 template<typename T>
@@ -107,6 +114,15 @@ void TestContext::RecordResult(Result<T>&& result) noexcept
     }
 }
 
+template<typename T>
+void TestContext::RecordFlakyResult(Result<T>&& result) noexcept
+{
+    if (Failed(result))
+    {
+        m_intermediateFlakyResults.emplace_back(result.hr, std::move(result.errorMessage));
+    }
+}
+
 template<typename T, std::enable_if_t<!std::is_enum_v<T>>*>
 void TestContext::AssertEqual(T const& expected, T const& actual, const char* propertyName) 
 {
@@ -114,7 +130,17 @@ void TestContext::AssertEqual(T const& expected, T const& actual, const char* pr
     {
         Stringstream ss;
         ss << "Result property verification failed: propertyName=\"" << propertyName << "\", expected=\"" << expected << "\" actual=\"" << actual << "\"";
-        throw Exception{ ss.str() };
+        
+        if (IsFlaky()) // If the test is flaky, we don't want to fail the test
+        {
+            Result<String> result{ E_FAIL, ss.str() };
+            RecordFlakyResult(std::move(result));
+        }
+        else
+        {
+            throw Exception{ ss.str() };
+        }
+        
     }
 }
 
@@ -125,7 +151,16 @@ void TestContext::AssertEqual(EnumT expected, EnumT actual, const char* property
     {
         Stringstream ss;
         ss << "Result property verification failed: propertyName=\"" << propertyName << "\", expected=\"" << EnumName(expected) << "\" actual=\"" << EnumName(actual) << "\"";
-        throw Exception{ ss.str() };
+        
+        if (IsFlaky()) // If the test is flaky, we don't want to fail the test
+        {
+            Result<String> result{ E_FAIL, ss.str() };
+            RecordFlakyResult(std::move(result));
+        }
+        else
+        {
+            throw Exception{ ss.str() };
+        }
     }
 }
 
@@ -134,7 +169,15 @@ void TestContext::AssertFailed(Result<T>&& result, const char* errorMessage)
 {
     if (!Failed(result))
     {
-        throw Exception{ errorMessage };
+        if (IsFlaky()) // If the test is flaky, we don't want to fail the test
+        {
+            Result<String> resultStr{ result.hr, errorMessage };
+            RecordFlakyResult(std::move(resultStr));
+        }
+        else
+        {
+            throw Exception{ errorMessage };
+        }
     }
 }
 

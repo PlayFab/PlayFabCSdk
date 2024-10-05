@@ -13,9 +13,6 @@
     <Filter Include="Include\playfab\core">
       <UniqueIdentifier>{42572e9f-4d2c-4d16-ac4d-4e37fadbdbf0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\playfab\httpClient">
-      <UniqueIdentifier>{d7e28968-8122-4056-90c0-ff691b3c2f0d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include\playfab\core\cpp">
       <UniqueIdentifier>{71d703ab-5fdb-4993-bd3f-8b989d5ed99b}</UniqueIdentifier>
     </Filter>
@@ -30,9 +27,6 @@
     </Filter>
     <Filter Include="Source\EventPipeline">
       <UniqueIdentifier>{a5af1477-a68f-4cb8-bf16-b600bcdc65f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\HttpClient">
-      <UniqueIdentifier>{0627690e-c3d1-47dc-b822-ac02029ffc6c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Platform">
       <UniqueIdentifier>{222582ac-1dd1-42cd-bbeb-3d30871660e9}</UniqueIdentifier>
@@ -92,24 +86,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\core\cpp\TypeWrapperHelpers.h">
       <Filter>Include\playfab\core\cpp</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHCConfig.h">
-      <Filter>Include\playfab\httpClient</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHCPal.h">
-      <Filter>Include\playfab\httpClient</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHCTrace.h">
-      <Filter>Include\playfab\httpClient</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHttpClient.h">
-      <Filter>Include\playfab\httpClient</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFHttpProvider.h">
-      <Filter>Include\playfab\httpClient</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Include\playfab\httpClient\PFMock.h">
-      <Filter>Include\playfab\httpClient</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\CombinedLoginResult.h">
       <Filter>Source\Authentication</Filter>
@@ -238,18 +214,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\TokenRefreshedHandler.cpp">
       <Filter>Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFHCTrace.cpp">
-      <Filter>Source\HttpClient</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFHttpClient.cpp">
-      <Filter>Source\HttpClient</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFHttpProvider.cpp">
-      <Filter>Source\HttpClient</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\HttpClient\PFMock.cpp">
-      <Filter>Source\HttpClient</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Trace\DebugTraceOutput.cpp">
       <Filter>Source\Trace</Filter>

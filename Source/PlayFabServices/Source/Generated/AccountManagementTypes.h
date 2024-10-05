@@ -1,6 +1,7 @@
 #pragma once
 
 #include <playfab/services/cpp/AccountManagementTypeWrappers.h>
+#include <playfab/services/cpp/TypeWrappers.h>
 #include "Generated/CoreTypes.h"
 #include "BaseModel.h"
 
@@ -1998,7 +1999,42 @@ public:
     static HRESULT Copy(const PFAccountManagementGetTitlePlayersFromProviderIDsResponse& input, PFAccountManagementGetTitlePlayersFromProviderIDsResponse& output, ModelBuffer& buffer);
 };
 
+class SetDisplayNameRequest : public Wrappers::PFAccountManagementSetDisplayNameRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementSetDisplayNameRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementSetDisplayNameRequest& input);
+};
+
+class SetDisplayNameResponse : public Wrappers::PFAccountManagementSetDisplayNameResponseWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementSetDisplayNameResponse>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementSetDisplayNameResponseWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementSetDisplayNameResponse const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementSetDisplayNameResponse& model);
+    static HRESULT Copy(const PFAccountManagementSetDisplayNameResponse& input, PFAccountManagementSetDisplayNameResponse& output, ModelBuffer& buffer);
+};
+
 } // namespace AccountManagement
+
+// Json serialization helpers
 
 // EnumRange definitions used for Enum (de)serialization
 template<typename T> struct EnumRange;
@@ -2007,5 +2043,6 @@ template<> struct EnumRange<PFAccountManagementUserFamilyType>
 {
     static constexpr PFAccountManagementUserFamilyType maxValue = PFAccountManagementUserFamilyType::Steam;
 };
+
 
 } // namespace PlayFab

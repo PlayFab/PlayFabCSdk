@@ -20,7 +20,7 @@ void CatalogTests::AddTests()
     AddTest("TestGetDraftItem", &CatalogTests::TestGetDraftItem);
     AddTest("TestGetDraftItems", &CatalogTests::TestGetDraftItems);
     AddTest("TestGetEntityDraftItems", &CatalogTests::TestGetEntityDraftItems);
-    AddTest("TestGetEntityItemReview", &CatalogTests::TestGetEntityItemReview);
+    AddTest("TestGetEntityItemReview", &CatalogTests::TestGetEntityItemReview, true);
     AddTest("TestGetItem", &CatalogTests::TestGetItem);
     AddTest("TestGetItemContainers", &CatalogTests::TestGetItemContainers);
 #if 0

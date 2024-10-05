@@ -286,6 +286,9 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestGetTitlePlayersFromXboxLiveIDs(TestContext& testContext);
 #endif
+#if 0
+    void TestSetDisplayName(TestContext& testContext);
+#endif
 
 };
 

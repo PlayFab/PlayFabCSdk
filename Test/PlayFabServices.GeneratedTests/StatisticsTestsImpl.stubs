@@ -1,0 +1,79 @@
+#include "TestAppPch.h"
+#include "StatisticsTests.h"
+#include "StatisticsOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> StatisticsTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> StatisticsTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void StatisticsTests::TestCreateStatisticDefinition(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void StatisticsTests::TestDeleteStatisticDefinition(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void StatisticsTests::TestDeleteStatistics(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void StatisticsTests::TestGetStatisticDefinition(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void StatisticsTests::TestGetStatistics(TestContext& tc)
+{
+    tc.Skip();
+}
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void StatisticsTests::TestGetStatisticsForEntities(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void StatisticsTests::TestIncrementStatisticVersion(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void StatisticsTests::TestListStatisticDefinitions(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+void StatisticsTests::TestUpdateStatistics(TestContext& tc)
+{
+    tc.Skip();
+}
+
+
+}
+}

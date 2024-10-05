@@ -36,8 +36,8 @@ public:
 
 private:
     String GenerateTestSummary();
-    void AddLog(PFHCTraceLevel level, _In_z_ _Printf_format_string_ const char* format, ...);
-    static void CALLBACK PFHCTraceCallback(_In_z_ const char* areaName, _In_ PFHCTraceLevel level, _In_ uint64_t threadId, _In_ uint64_t timestamp, _In_z_ const char* message);
+    void AddLog(HCTraceLevel level, _In_z_ _Printf_format_string_ const char* format, ...);
+    static void CALLBACK PFHCTraceCallback(_In_z_ const char* areaName, _In_ HCTraceLevel level, _In_ uint64_t threadId, _In_ uint64_t timestamp, _In_z_ const char* message);
 
 private:
     std::mutex m_mutex;

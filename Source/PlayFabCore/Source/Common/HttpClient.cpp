@@ -58,7 +58,7 @@ AsyncOp<ServiceResponse> HttpClient::MakePostRequest(
     const JsonValue& requestBody,
     CacheId retryCacheId,
     RunContext&& runContext,
-    PFHCCompressionLevel compressionLevel
+    HCCompressionLevel compressionLevel
 ) const
 {
     auto httpCallOp = MakeUnique<HCHttpCall>(
@@ -82,7 +82,7 @@ AsyncOp<ServiceResponse> HttpClient::MakeEntityRequest(
     const JsonValue& requestBody,
     CacheId retryCacheId,
     RunContext&& runContext,
-    PFHCCompressionLevel compressionLevel
+    HCCompressionLevel compressionLevel
 ) const
 {
     auto entityTokenResult = entity->GetEntityToken();
@@ -101,7 +101,7 @@ AsyncOp<ServiceResponse> HttpClient::MakeSecretKeyRequest(
     const JsonValue& requestBody,
     CacheId retryCacheId,
     RunContext&& runContext,
-    PFHCCompressionLevel compressionLevel
+    HCCompressionLevel compressionLevel
 ) const
 {
     UnorderedMap<String, String> headers{};
@@ -116,7 +116,7 @@ AsyncOp<ServiceResponse> HttpClient::MakeSecretKeyRequest(
     const JsonValue& requestBody,
     CacheId retryCacheID,
     RunContext&& runContext,
-    PFHCCompressionLevel compressionLevel
+    HCCompressionLevel compressionLevel
 ) const
 {
     auto secretKeyResult = entity->GetSecretKey();
@@ -131,7 +131,7 @@ AsyncOp<ServiceResponse> HttpClient::MakeTelemetryKeyRequest(
     const JsonValue& requestBody,
     CacheId retryCacheId,
     RunContext&& runContext,
-    PFHCCompressionLevel compressionLevel
+    HCCompressionLevel compressionLevel
 ) const
 {
     UnorderedMap<String, String> headers{};

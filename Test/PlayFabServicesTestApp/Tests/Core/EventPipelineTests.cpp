@@ -11,6 +11,11 @@ namespace PlayFab
 namespace Test
 {
 
+EventPipelineTests::EventPipelineTests(TestTitleData testTitleData) :
+    CoreTestClass{ testTitleData }
+{
+}
+
 void EventPipelineTests::AddTests()
 {
     // Telemetry Pipeline Tests
@@ -31,7 +36,6 @@ void EventPipelineTests::AddTests()
     AddTest("TestEmitMalformedPlayStreamEvent", &EventPipelineTests::TestEmitMalformedPlayStreamEvent);
     AddTest("TestInvalidParamsRetryPlayStreamEvent", &EventPipelineTests::TestInvalidParamsRetryPlayStreamEvent);
     AddTest("TestEmitMalformedJSONPlayStreamEvent", &EventPipelineTests::TestEmitMalformedJSONPlayStreamEvent);
-    AddTest("TestEmitBarebonesEventPipeline", &EventPipelineTests::TestEmitBarebonesEventPipeline);
     AddTest("TestRemoveEntityFromPlayStreamPipeline", &EventPipelineTests::TestRemoveEntityFromPlayStreamPipeline);
 }
 
@@ -58,6 +62,7 @@ AsyncOp<void> EventPipelineTests::Initialize()
 AsyncOp<void> EventPipelineTests::Uninitialize()
 {
     m_defaultTitlePlayer.reset();
+    m_currentTestState.reset();
     return CoreTestClass::Uninitialize();
 }
 
@@ -67,33 +72,28 @@ Entity EventPipelineTests::DefaultTitlePlayer() const
     return *m_defaultTitlePlayer;
 }
 
-class EventPipelineTestState
+void EventPipelineTests::BeginTest(UniquePtr<EventPipelineTestState>&& state)
 {
-public:
-    EventPipelineTestState(TestContext& tc, Entity uploadingEntity, RunContext pipelineRunContext);
-    EventPipelineTestState(TestContext& tc, PFEventPipelineTelemetryKeyConfig* telemetryKeyConfig, RunContext pipelineRunContext);
-    virtual ~EventPipelineTestState() = default;
+    if (m_currentTestState)
+    {
+        TRACE_ERROR("Previous test was not cleaned up, its state will be destroyed now");
+    }
 
-    TestContext& TestContext() const;
-    EventPipeline const& PlayStreamEventPipeline() const;
-    EventPipeline const& TelemetryEventPipeline() const;
-    EventPipeline const& BarebonesEventPipeline() const;
-    EventPipeline const& NoAuthEventPipeline() const;
+    m_currentTestState = std::move(state);
+    HRESULT hr = m_currentTestState->BeginTest();
+    if (FAILED(hr))
+    {
+        m_currentTestState->TestContext().EndTest(hr);
+        m_currentTestState.reset();
+    }
+}
 
-protected:
-    virtual void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount);
-    virtual void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount);
-
-private:
-    static void CALLBACK OnBatchUploadedHandler(void* context, PFUploadedEvent const* const* events, size_t eventsCount);
-    static void CALLBACK OnBatchUploadFailedHandler(void* context, HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount);
-
-    Test::TestContext& m_tc;
-    EventPipeline m_playStreamEventPipeline;
-    EventPipeline m_telemetryEventPipeline;
-    EventPipeline m_barebonesEventPipeline;
-    EventPipeline m_noAuthEventPipeline;
-};
+void EventPipelineTests::CompleteTest()
+{
+    TestContext& tc = m_currentTestState->TestContext();
+    m_currentTestState.reset();
+    tc.EndTest(S_OK);
+}
 
 void EventPipelineTests::TestEmitTelemetryEventsWithInvalidTelemetryKey(TestContext& tc)
 {
@@ -102,7 +102,7 @@ void EventPipelineTests::TestEmitTelemetryEventsWithInvalidTelemetryKey(TestCont
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest() override
         {
             PFEvent event
             {
@@ -124,59 +124,36 @@ void EventPipelineTests::TestEmitTelemetryEventsWithInvalidTelemetryKey(TestCont
         }
 
     private:
-        void OnBatchUploaded(PFUploadedEvent const* const* /*events*/, size_t /*eventsCount*/)
+        void OnBatchUploaded(PFUploadedEvent const* const* /*events*/, size_t /*eventsCount*/) override
         {
             // Batch should fail validation because there is an inactive telemetry key
-            TestContext().EndTest(E_FAIL);
-            UniquePtr<State> reclaim{ this };
+            TestContext().RecordResult(Result<void>{ E_FAIL, "Batch upload succeeded with invalid key" });
+            m_testClass.CompleteTest();
         }
 
-        void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount)
+        void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
-
-            try
-            {
-                TestContext().AssertEqual(E_PF_TELEMETRY_KEY_INVALID, hr, "Unexpected error received");
-            }
-            catch (Exception& e)
-            {
-                TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
-            }
+            TestContext().AssertEqual(E_PF_TELEMETRY_KEY_INVALID, hr, "Unexpected error received");
 
             m_completedEvents += eventsCount;
-
             if (m_completedEvents == m_eventIdsToWrite.size())
             {
-                TestContext().EndTest(unexpectedResponse ? E_FAIL : S_OK);
-
                 lock.unlock();
-                UniquePtr<State> reclaim{ this };
+                m_testClass.CompleteTest();
             }
         }
 
         std::mutex m_mutex;
-        bool unexpectedResponse = false;
         Set<int> const m_eventIdsToWrite{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         size_t m_completedEvents{ 0 };
     };
 
     PlayFab::Test::ServiceConfig serviceConfig = ServiceConfig();
     PFEventPipelineTelemetryKeyConfig telemetryKeyConfig{ "invalidKey", serviceConfig.Handle()};
-    UniquePtr<State> state = MakeUnique<State>(tc, &telemetryKeyConfig, RunContext().Derive());
+    auto state = MakeUnique<State>(*this, tc, &telemetryKeyConfig, RunContext().Derive());
 
-    HRESULT hr = state->EmitEvents();
-
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestEmitTelemetryEventsWithInactiveTelemetryKey(TestContext& tc)
@@ -186,7 +163,7 @@ void EventPipelineTests::TestEmitTelemetryEventsWithInactiveTelemetryKey(TestCon
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest() override
         {
             PFEvent event
             {
@@ -208,59 +185,45 @@ void EventPipelineTests::TestEmitTelemetryEventsWithInactiveTelemetryKey(TestCon
         }
 
     private:
-        void OnBatchUploaded(PFUploadedEvent const* const* /*events*/, size_t /*eventsCount*/)
+        void OnBatchUploaded(PFUploadedEvent const* const* /*events*/, size_t /*eventsCount*/) override
         {
             // Batch should fail validation because there is an inactive telemetry key
-            TestContext().EndTest(E_FAIL);
-            UniquePtr<State> reclaim{ this };
+            TestContext().RecordResult(Result<void>{ E_FAIL, "Batch upload succeeded with inactive key" });
+            m_testClass.CompleteTest();
         }
 
-        void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount)
+        void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
 
             try
             {
-                TestContext().AssertEqual(E_PF_TELEMETRY_KEY_DEACTIVATED, hr, "Unexpected error received");
+                TestContext().AssertEqual(E_PF_TELEMETRY_KEY_DEACTIVATED, hr, "Upload result");
             }
             catch (Exception& e)
             {
                 TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
             }
 
             m_completedEvents += eventsCount;
 
             if (m_completedEvents == m_eventIdsToWrite.size())
             {
-                TestContext().EndTest(unexpectedResponse ? E_FAIL : S_OK);
-
                 lock.unlock();
-                UniquePtr<State> reclaim{ this };
+                m_testClass.CompleteTest();
             }
         }
 
         std::mutex m_mutex;
-        bool unexpectedResponse = false;
         Set<int> const m_eventIdsToWrite{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         size_t m_completedEvents{ 0 };
     };
 
     PlayFab::Test::ServiceConfig serviceConfig = ServiceConfig();
     PFEventPipelineTelemetryKeyConfig telemetryKeyConfig{ kInactiveTelemetryKey, serviceConfig.Handle() };
-    UniquePtr<State> state = MakeUnique<State>(tc, &telemetryKeyConfig, RunContext().Derive());
+    auto state = MakeUnique<State>(*this, tc, &telemetryKeyConfig, RunContext().Derive());
 
-    HRESULT hr = state->EmitEvents();
-
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestEmitTelemetryEventsWithTelemetryKey(TestContext& tc)
@@ -270,7 +233,7 @@ void EventPipelineTests::TestEmitTelemetryEventsWithTelemetryKey(TestContext& tc
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest() override
         {
             PFEntityKey pfEntityKey { "my-unique-ID", "external"};
 
@@ -294,7 +257,7 @@ void EventPipelineTests::TestEmitTelemetryEventsWithTelemetryKey(TestContext& tc
         }
 
     private:
-        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount)
+        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
             Vector<int> uploadedEvents(eventsCount);
@@ -305,7 +268,7 @@ void EventPipelineTests::TestEmitTelemetryEventsWithTelemetryKey(TestContext& tc
             ValidateEvents(std::move(uploadedEvents), std::move(lock));
         }
 
-        void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount)
+        void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
             TestContext().RecordResult(Result<void>{ hr, errorMessage });
@@ -328,10 +291,8 @@ void EventPipelineTests::TestEmitTelemetryEventsWithTelemetryKey(TestContext& tc
             m_completedEvents += eventClientIds.size();
             if (m_completedEvents == m_eventIdsToWrite.size())
             {
-                TestContext().EndTest(S_OK);
-
                 lock.unlock();
-                UniquePtr<State> reclaim{ this };
+                m_testClass.CompleteTest();
             }
         }
 
@@ -342,50 +303,16 @@ void EventPipelineTests::TestEmitTelemetryEventsWithTelemetryKey(TestContext& tc
 
     PlayFab::Test::ServiceConfig serviceConfig = ServiceConfig();
     PFEventPipelineTelemetryKeyConfig telemetryKeyConfig{ kActiveTelemetryKey, serviceConfig.Handle() };
-    UniquePtr<State> state = MakeUnique<State>(tc, &telemetryKeyConfig, RunContext().Derive());
+    auto state = MakeUnique<State>(*this, tc, &telemetryKeyConfig, RunContext().Derive());
 
-    HRESULT hr = state->EmitEvents();
-
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestRemoveEntityNoFallbackAuth(TestContext& tc)
 {
-    class State : public EventPipelineTestState
-    {
-    public:
-        using EventPipelineTestState::EventPipelineTestState;
-
-        HRESULT RemoveUploadingEntity()
-        {
-            RETURN_IF_FAILED(TelemetryEventPipeline().RemoveUploadingEntity());
-
-            return S_OK;
-        }
-    };
-
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->RemoveUploadingEntity();
-
-    state.reset(); // Destroy pipeline so no callback arrive after we end the test
-
-    if (FAILED(hr))
-    {
-        hr == E_FAIL ? tc.EndTest(S_OK) : tc.EndTest(hr);
-    }
-    else
-    {
-        tc.EndTest(E_FAIL);
-    }
+    EventPipeline pipeline{ PFEventPipelineType::Telemetry, DefaultTitlePlayer().Handle(), nullptr };
+    HRESULT hr = pipeline.RemoveUploadingEntity();
+    tc.EndTest<void>(FAILED(hr) ? S_OK : E_FAIL);
 }
 
 void EventPipelineTests::TestEmitTelemetryEventsAddRemoveEntity(TestContext& tc)
@@ -395,22 +322,20 @@ void EventPipelineTests::TestEmitTelemetryEventsAddRemoveEntity(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents(std::string eventSuffix)
+        HRESULT BeginTest() override
         {
-            std::string eventName = "custom.playfab.events.PlayFab.Test." + eventSuffix;
+            RETURN_IF_FAILED(NoAuthEventPipeline().AddUploadingEntity(m_testClass.DefaultTitlePlayer().Handle()));
 
             PFEvent event
             {
                 nullptr,
-                eventName.c_str(),
+                "custom.playfab.events.PlayFab.Test.EventsWithEntity",
                 "TelemetryEvent",
                 nullptr,
                 "{}"
             };
 
-            Set<int> eventIdsToWrite = eventSuffix == "EventsWithEntity" ? m_eventIdsToWriteWithEntity : m_eventIdsToWriteWithoutEntity;
-
-            for (auto& eventId : eventIdsToWrite)
+            for (auto& eventId : m_eventIdsToWriteWithEntity)
             {
                 std::string clientId = std::to_string(eventId);
                 event.clientId = clientId.c_str();
@@ -420,22 +345,31 @@ void EventPipelineTests::TestEmitTelemetryEventsAddRemoveEntity(TestContext& tc)
             return S_OK;
         }
 
-        HRESULT AddUploadingEntity(Entity uploadingEntity)
-        {
-            RETURN_IF_FAILED(NoAuthEventPipeline().AddUploadingEntity(std::move(uploadingEntity.Handle())));
-
-            return S_OK;
-        }
-
-        HRESULT RemoveUploadingEntity()
+    private:
+        HRESULT RemoveUploadingEntityAndEmitEvents()
         {
             RETURN_IF_FAILED(NoAuthEventPipeline().RemoveUploadingEntity());
 
+            PFEvent event
+            {
+                nullptr,
+                "custom.playfab.events.PlayFab.Test.EventsWithoutEntity",
+                "TelemetryEvent",
+                nullptr,
+                "{}"
+            };
+
+            for (auto& eventId : m_eventIdsToWriteWithoutEntity)
+            {
+                std::string clientId = std::to_string(eventId);
+                event.clientId = clientId.c_str();
+                RETURN_IF_FAILED(NoAuthEventPipeline().EmitEvent(&event));
+            }
+
             return S_OK;
         }
 
-    private:
-        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount)
+        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
             Vector<int> uploadedEvents(eventsCount);
@@ -446,7 +380,7 @@ void EventPipelineTests::TestEmitTelemetryEventsAddRemoveEntity(TestContext& tc)
             ValidateEvents(std::move(uploadedEvents), std::move(lock));
         }
 
-        void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount)
+        void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
             TestContext().RecordResult(Result<void>{ hr, errorMessage });
@@ -470,12 +404,21 @@ void EventPipelineTests::TestEmitTelemetryEventsAddRemoveEntity(TestContext& tc)
             }
 
             m_completedEvents += eventClientIds.size();
-            if (m_completedEvents == m_eventIdsToWriteWithEntity.size() + m_eventIdsToWriteWithoutEntity.size())
-            {
-                TestContext().EndTest(S_OK);
+            auto completedEvents = m_completedEvents;
+            lock.unlock();
 
-                lock.unlock();
-                UniquePtr<State> reclaim{ this };
+            if (completedEvents == m_eventIdsToWriteWithEntity.size())
+            {
+                HRESULT hr = RemoveUploadingEntityAndEmitEvents();
+                if (FAILED(hr))
+                {
+                    TestContext().RecordResult<void>(hr);
+;                   m_testClass.CompleteTest();
+                }
+            }
+            else if (completedEvents == m_eventIdsToWriteWithEntity.size() + m_eventIdsToWriteWithoutEntity.size())
+            {
+                m_testClass.CompleteTest();
             }
         }
 
@@ -487,51 +430,9 @@ void EventPipelineTests::TestEmitTelemetryEventsAddRemoveEntity(TestContext& tc)
 
     PlayFab::Test::ServiceConfig serviceConfig = ServiceConfig();
     PFEventPipelineTelemetryKeyConfig telemetryKeyConfig{ kActiveTelemetryKey, serviceConfig.Handle() };
-    UniquePtr<State> state = MakeUnique<State>(tc, &telemetryKeyConfig, RunContext().Derive());
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, &telemetryKeyConfig, RunContext().Derive());
 
-    HRESULT hr = state->AddUploadingEntity(DefaultTitlePlayer());
-
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        hr = state->EmitEvents("EventsWithEntity");
-        
-        if (FAILED(hr))
-        {
-            state.reset(); // Destroy pipeline so no callback arrive after we end the test
-            tc.EndTest(hr);
-        }
-        else
-        {
-            Platform::Sleep(5000);
-
-            hr = state->RemoveUploadingEntity();
-
-            if (FAILED(hr))
-            {
-                state.reset(); // Destroy pipeline so no callback arrive after we end the test
-                tc.EndTest(hr);
-            }
-            else
-            {
-                hr = state->EmitEvents("EventsWithoutEntity");
-
-                if (FAILED(hr))
-                {
-                    state.reset(); // Destroy pipeline so no callback arrive after we end the test
-                    tc.EndTest(hr);
-                }
-                else
-                {
-                    state.release(); // Reclaimed in Pipeline callbacks
-                }
-            }
-        }
-    }
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestEmitTelemetryEventsUpdateBatchSize(TestContext& tc)
@@ -541,8 +442,12 @@ void EventPipelineTests::TestEmitTelemetryEventsUpdateBatchSize(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest()
         {
+            uint32_t batchSize = 4;
+            PFEventPipelineConfig config{ &batchSize };
+            RETURN_IF_FAILED(NoAuthEventPipeline().UpdateConfiguration(config));
+
             PFEvent event
             {
                 nullptr,
@@ -552,21 +457,13 @@ void EventPipelineTests::TestEmitTelemetryEventsUpdateBatchSize(TestContext& tc)
                 "{}"
             };
 
+
             for (auto& eventId : m_eventIdsToWrite)
             {
                 std::string clientId = std::to_string(eventId);
                 event.clientId = clientId.c_str();
                 RETURN_IF_FAILED(NoAuthEventPipeline().EmitEvent(&event));
             }
-
-            return S_OK;
-        }
-
-        HRESULT UpdateConfiguration()
-        {
-            uint32_t batchSize = 4;
-            PFEventPipelineConfig config{ &batchSize };
-            RETURN_IF_FAILED(NoAuthEventPipeline().UpdateConfiguration(config));
 
             return S_OK;
         }
@@ -606,10 +503,8 @@ void EventPipelineTests::TestEmitTelemetryEventsUpdateBatchSize(TestContext& tc)
             m_completedEvents += eventClientIds.size();
             if (m_completedEvents == m_eventIdsToWrite.size())
             {
-                TestContext().EndTest(S_OK);
-
                 lock.unlock();
-                UniquePtr<State> reclaim{ this };
+                m_testClass.CompleteTest();
             }
         }
 
@@ -620,29 +515,9 @@ void EventPipelineTests::TestEmitTelemetryEventsUpdateBatchSize(TestContext& tc)
 
     PlayFab::Test::ServiceConfig serviceConfig = ServiceConfig();
     PFEventPipelineTelemetryKeyConfig telemetryKeyConfig{ kActiveTelemetryKey, serviceConfig.Handle() };
-    UniquePtr<State> state = MakeUnique<State>(tc, &telemetryKeyConfig, RunContext().Derive());
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, &telemetryKeyConfig, RunContext().Derive());
 
-    HRESULT hr = state->UpdateConfiguration();
-
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        hr = state->EmitEvents();
-
-        if (FAILED(hr))
-        {
-            state.reset(); // Destroy pipeline so no callback arrive after we end the test
-            tc.EndTest(hr);
-        }
-        else
-        {
-            state.release(); // Reclaimed in Pipeline callbacks
-        }
-    }
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestEmitTelemetryEvents(TestContext& tc)
@@ -652,7 +527,7 @@ void EventPipelineTests::TestEmitTelemetryEvents(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest()
         {
             PFEvent event
             {
@@ -708,10 +583,8 @@ void EventPipelineTests::TestEmitTelemetryEvents(TestContext& tc)
             m_completedEvents += eventClientIds.size();
             if (m_completedEvents == m_eventIdsToWrite.size())
             {
-                TestContext().EndTest(S_OK);
-
                 lock.unlock();
-                UniquePtr<State> reclaim{ this };
+                m_testClass.CompleteTest();
             }
         }
 
@@ -720,18 +593,8 @@ void EventPipelineTests::TestEmitTelemetryEvents(TestContext& tc)
         size_t m_completedEvents{ 0 };
     };
 
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->EmitEvents();
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, DefaultTitlePlayer(), RunContext().Derive());
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestEmitPlayStreamEvents(TestContext& tc)
@@ -741,7 +604,7 @@ void EventPipelineTests::TestEmitPlayStreamEvents(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest() override
         {
             PFEvent event
             {
@@ -763,7 +626,7 @@ void EventPipelineTests::TestEmitPlayStreamEvents(TestContext& tc)
         }
 
     private:
-        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount)
+        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
             Vector<int> uploadedEvents(eventsCount);
@@ -774,7 +637,7 @@ void EventPipelineTests::TestEmitPlayStreamEvents(TestContext& tc)
             ValidateEvents(std::move(uploadedEvents), std::move(lock));
         }
 
-        void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount)
+        void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
             TestContext().RecordResult(Result<void>{ hr, errorMessage });
@@ -797,10 +660,8 @@ void EventPipelineTests::TestEmitPlayStreamEvents(TestContext& tc)
             m_completedEvents += eventClientIds.size();
             if (m_completedEvents == m_eventIdsToWrite.size())
             {
-                TestContext().EndTest(S_OK);
-
                 lock.unlock();
-                UniquePtr<State> reclaim{ this };
+                m_testClass.CompleteTest();
             }
         }
 
@@ -809,67 +670,8 @@ void EventPipelineTests::TestEmitPlayStreamEvents(TestContext& tc)
         size_t m_completedEvents{ 0 };
     };
 
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->EmitEvents();
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
-}
-
-void EventPipelineTests::TestEmitBarebonesEventPipeline(TestContext& tc)
-{
-    class State : public EventPipelineTestState
-    {
-    public:
-        using EventPipelineTestState::EventPipelineTestState;
-
-        HRESULT EmitEvents()
-        {
-            PFEvent event
-            {
-                nullptr,
-                "com.playfab.events.PlayFab.Test.BarebonesEventPipelineTests",
-                "PlayStreamEvent",
-                nullptr,
-                "{}"
-            };
-
-            for (auto& eventId : m_eventIdsToWrite)
-            {
-                std::string clientId = std::to_string(eventId);
-                event.clientId = clientId.c_str();
-                RETURN_IF_FAILED(BarebonesEventPipeline().EmitEvent(&event));
-            }
-
-            return S_OK;
-        }
-
-    private:
-
-        Set<int> const m_eventIdsToWrite{ 0, 1 };
-
-    };
-
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->EmitEvents();
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-        tc.EndTest(S_OK);
-    }
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, DefaultTitlePlayer(), RunContext().Derive());
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestEmitMalformedPlayStreamEvent(TestContext& tc)
@@ -879,10 +681,9 @@ void EventPipelineTests::TestEmitMalformedPlayStreamEvent(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest()
         {
             RETURN_IF_FAILED(PlayStreamEventPipeline().EmitEvent(&malformedEvent));
-
             return S_OK;
         }
 
@@ -899,42 +700,20 @@ void EventPipelineTests::TestEmitMalformedPlayStreamEvent(TestContext& tc)
         void OnBatchUploaded(PFUploadedEvent const* const* /*events*/, size_t /*eventsCount*/)
         {
             // Batch should fail validation because there is a malformed event
-            TestContext().EndTest(E_FAIL);
-            UniquePtr<State> reclaim{ this };
+            TestContext().RecordResult<void>(E_FAIL);
+            m_testClass.CompleteTest();
         }
 
         void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount)
         {
-            try
-            {
-                TestContext().AssertEqual(E_PF_INVALID_PARAMS, hr, "Unexpected error received");
-                TestContext().AssertEqual<size_t>(1, eventsCount, "Unexpected eventsCount found");
-            }
-            catch (Exception& e)
-            {
-                TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
-            }
-            
-            TestContext().EndTest(unexpectedResponse ? E_FAIL : S_OK);
-            UniquePtr<State> reclaim{ this };
+            TestContext().AssertEqual(E_PF_INVALID_PARAMS, hr, "Unexpected error received");
+            TestContext().AssertEqual<size_t>(1, eventsCount, "Unexpected eventsCount found");
+            m_testClass.CompleteTest();
         }
-
-        bool unexpectedResponse = false;
     };
 
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->EmitEvents();
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, DefaultTitlePlayer(), RunContext().Derive());
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestEmitMalformedJSONTelemetryEvent(TestContext& tc)
@@ -944,7 +723,7 @@ void EventPipelineTests::TestEmitMalformedJSONTelemetryEvent(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest()
         {
             RETURN_IF_FAILED(TelemetryEventPipeline().EmitEvent(&event));
             RETURN_IF_FAILED(TelemetryEventPipeline().EmitEvent(&malformedJSONEvent));
@@ -972,45 +751,33 @@ void EventPipelineTests::TestEmitMalformedJSONTelemetryEvent(TestContext& tc)
             "{"
         };
 
-        void OnBatchUploaded(PFUploadedEvent const* const* /*events*/, size_t /*eventsCount*/)
+        void OnBatchUploaded(PFUploadedEvent const* const* /*events*/, size_t eventsCount)
         {
+            m_eventsUploaded += eventsCount;
+
             // Batch should fail validation because there is a malformed event
-            TestContext().EndTest(E_FAIL);
-            UniquePtr<State> reclaim{ this };
+            if (m_eventsUploaded >= 3)
+            {
+                m_testClass.CompleteTest();
+            }
         }
 
         void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount)
         {
-            try
-            {
-                TestContext().AssertEqual(E_PF_INVALID_JSON_CONTENT, hr, "Unexpected error received");
-                TestContext().AssertEqual<size_t>(3, eventsCount, "Unexpected eventsCount found");
-            }
-            catch (Exception& e)
-            {
-                TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
-            }
+            m_eventsUploaded += eventsCount;
 
-            TestContext().EndTest(unexpectedResponse ? E_FAIL : S_OK);
-            UniquePtr<State> reclaim{ this };
+            TestContext().AssertEqual(E_PF_INVALID_JSON_CONTENT, hr, "Unexpected error received");
+            if (m_eventsUploaded >= 3)
+            {
+                TestContext().EndTest(S_OK);
+            }
         }
 
-        bool unexpectedResponse = false;
+        std::atomic<size_t> m_eventsUploaded{ 0 };
     };
 
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->EmitEvents();
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, DefaultTitlePlayer(), RunContext().Derive());
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestEmitMalformedJSONPlayStreamEvent(TestContext& tc)
@@ -1020,7 +787,7 @@ void EventPipelineTests::TestEmitMalformedJSONPlayStreamEvent(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest()
         {
             RETURN_IF_FAILED(PlayStreamEventPipeline().EmitEvent(&malformedJSONEvent));
 
@@ -1040,42 +807,20 @@ void EventPipelineTests::TestEmitMalformedJSONPlayStreamEvent(TestContext& tc)
         void OnBatchUploaded(PFUploadedEvent const* const* /*events*/, size_t /*eventsCount*/)
         {
             // Batch should fail validation because there is a malformed event
-            TestContext().EndTest(E_FAIL);
-            UniquePtr<State> reclaim{ this };
+            TestContext().RecordResult<void>(E_FAIL);
+            m_testClass.CompleteTest();
         }
 
         void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount)
         {
-            try
-            {
-                TestContext().AssertEqual(E_PF_INVALID_JSON_CONTENT, hr, "Unexpected error received");
-                TestContext().AssertEqual<size_t>(1, eventsCount, "Unexpected eventsCount found");
-            }
-            catch (Exception& e)
-            {
-                TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
-            }
-
-            TestContext().EndTest(unexpectedResponse ? E_FAIL : S_OK);
-            UniquePtr<State> reclaim{ this };
+            TestContext().AssertEqual(E_PF_INVALID_JSON_CONTENT, hr, "Unexpected error received");
+            TestContext().AssertEqual<size_t>(1, eventsCount, "Unexpected eventsCount found");
+            m_testClass.CompleteTest();
         }
-
-        bool unexpectedResponse = false;
     };
 
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->EmitEvents();
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, DefaultTitlePlayer(), RunContext().Derive());
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestEmitMalformedTelemetryEvent(TestContext& tc)
@@ -1085,7 +830,7 @@ void EventPipelineTests::TestEmitMalformedTelemetryEvent(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest()
         {
             RETURN_IF_FAILED(TelemetryEventPipeline().EmitEvent(&malformedEvent));
 
@@ -1105,42 +850,21 @@ void EventPipelineTests::TestEmitMalformedTelemetryEvent(TestContext& tc)
         void OnBatchUploaded(PFUploadedEvent const* const* /*events*/, size_t /*eventsCount*/)
         {
             // Batch should fail validation because there is a malformed event
-            TestContext().EndTest(E_FAIL);
-            UniquePtr<State> reclaim{ this };
+            TestContext().RecordResult<void>(E_FAIL);
+            m_testClass.CompleteTest();
         }
 
         void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount)
         {
-            try
-            {
-                TestContext().AssertEqual(E_PF_INVALID_PARAMS, hr, "Unexpected error received");
-                TestContext().AssertEqual<size_t>(1, eventsCount, "Unexpected eventsCount found");
-            }
-            catch (Exception& e)
-            {
-                TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
-            }
+            TestContext().AssertEqual(E_PF_INVALID_PARAMS, hr, "Unexpected error received");
+            TestContext().AssertEqual<size_t>(1, eventsCount, "Unexpected eventsCount found");
 
-            TestContext().EndTest(unexpectedResponse ? E_FAIL : S_OK);
-            UniquePtr<State> reclaim{ this };
+            m_testClass.CompleteTest();
         }
-
-        bool unexpectedResponse = false;
     };
 
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->EmitEvents();
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, DefaultTitlePlayer(), RunContext().Derive());
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestInvalidParamsRetryPlayStreamEvent(TestContext& tc)
@@ -1150,7 +874,7 @@ void EventPipelineTests::TestInvalidParamsRetryPlayStreamEvent(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest() override
         {
             for (auto& eventId : m_retryEventIdsToWrite)
             {
@@ -1202,9 +926,10 @@ void EventPipelineTests::TestInvalidParamsRetryPlayStreamEvent(TestContext& tc)
             "{}"
         };
 
-        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount)
+        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
+            m_eventsUploaded += eventsCount;
             Vector<const char*> uploadedEvents(eventsCount);
 
             std::transform(events, events + eventsCount, uploadedEvents.begin(), [&](PFUploadedEvent const* event)
@@ -1215,95 +940,39 @@ void EventPipelineTests::TestInvalidParamsRetryPlayStreamEvent(TestContext& tc)
             ValidateEvents(std::move(uploadedEvents), std::move(lock));
         }
 
-        void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount)
+        void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount) override
         {
-            try
-            {
-                TestContext().AssertEqual(E_PF_INVALID_PARAMS, hr, "translatedError");
-                TestContext().AssertEqual<size_t>(3, eventsCount, "eventsCount");
-            }
-            catch (Exception& e)
-            {
-                TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
-            }
+            m_eventsUploaded += eventsCount;
+            
+            TestContext().AssertEqual(E_PF_INVALID_PARAMS, hr, "translatedError");
 
-            if (unexpectedResponse)
+            if (m_eventsUploaded >= 5)
             {
-                TestContext().EndTest(E_FAIL);
-                UniquePtr<State> reclaim{ this };
-            }
-            else
-            {
-                if (handlerCompleted)
-                {
-                    TestContext().EndTest(S_OK);
-                    UniquePtr<State> reclaim{ this };
-                }
-                else
-                {
-                    handlerCompleted = true;
-                }
+                m_testClass.CompleteTest();
             }
         }
 
         void ValidateEvents(Vector<const char*>&& eventClientIds, std::unique_lock<std::mutex>&& lock)
         {
-            try
+            for (auto id : eventClientIds)
             {
-                TestContext().AssertEqual(int(eventClientIds.size()), 2, "Unexpected events size");
-
-                for (auto id : eventClientIds)
-                {
-                    std::string str(id);
-                    TestContext().AssertTrue(m_retryEventIdsToWrite.find(str) != m_retryEventIdsToWrite.end(), "Unexpected EventId");
-                }
-            }
-            catch (Exception& e)
-            {
-                TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
+                TestContext().AssertTrue(m_retryEventIdsToWrite.find(id) != m_retryEventIdsToWrite.end(), "Unexpected EventId");
             }
 
-            if (unexpectedResponse)
+            if (m_eventsUploaded >= 5)
             {
-                TestContext().EndTest(S_OK);
                 lock.unlock();
-                UniquePtr<State> reclaim{ this };
-            }
-            else
-            {
-                if (handlerCompleted)
-                {
-                    TestContext().EndTest(S_OK);
-                    lock.unlock();
-                    UniquePtr<State> reclaim{ this };
-                }
-                else
-                {
-                    handlerCompleted = true;
-                }
+                m_testClass.CompleteTest();
             }
         }
 
         std::mutex m_mutex;
         Set<std::string> const m_retryEventIdsToWrite{ "retryEventId1", "retryEventId2" };
-        bool handlerCompleted = false;
-        bool unexpectedResponse = false;
+        std::atomic<size_t> m_eventsUploaded{ 0 };
     };
 
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->EmitEvents();
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, DefaultTitlePlayer(), RunContext().Derive());
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestInvalidParamsRetryTelemetryEvent(TestContext& tc)
@@ -1313,7 +982,7 @@ void EventPipelineTests::TestInvalidParamsRetryTelemetryEvent(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT EmitEvents()
+        HRESULT BeginTest() override
         {
             for (auto& eventId : m_retryEventIdsToWrite)
             {
@@ -1365,9 +1034,10 @@ void EventPipelineTests::TestInvalidParamsRetryTelemetryEvent(TestContext& tc)
             "{}"
         };
 
-        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount)
+        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount) override
         {
             std::unique_lock<std::mutex> lock{ m_mutex };
+            m_eventsUploaded += eventsCount;
             Vector<const char*> uploadedEvents(eventsCount);
 
             std::transform(events, events + eventsCount, uploadedEvents.begin(), [&](PFUploadedEvent const* event)
@@ -1378,125 +1048,47 @@ void EventPipelineTests::TestInvalidParamsRetryTelemetryEvent(TestContext& tc)
             ValidateEvents(std::move(uploadedEvents), std::move(lock));
         }
 
-        void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount)
+        void OnBatchUploadFailed(HRESULT hr, const char* /*errorMessage*/, PFEvent const* const* /*events*/, size_t eventsCount) override
         {
-            try
-            {
-                TestContext().AssertEqual(E_PF_INVALID_PARAMS, hr, "translatedError");
-                TestContext().AssertEqual<size_t>(3, eventsCount, "eventsCount");
-            }
-            catch (Exception& e)
-            {
-                TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
-            }
+            m_eventsUploaded += eventsCount;
 
-            if (unexpectedResponse)
+            TestContext().AssertEqual(E_PF_INVALID_PARAMS, hr, "translatedError");
+
+            if (m_eventsUploaded >= 5)
             {
-                TestContext().EndTest(E_FAIL);
-                UniquePtr<State> reclaim{ this };
-            }
-            else
-            {
-                if (handlerCompleted)
-                {
-                    TestContext().EndTest(S_OK);
-                    UniquePtr<State> reclaim{ this };
-                }
-                else
-                {
-                    handlerCompleted = true;
-                }
+                m_testClass.CompleteTest();
             }
         }
 
         void ValidateEvents(Vector<const char *>&& eventClientIds, std::unique_lock<std::mutex>&& lock)
         {
-            try
+            for (auto id : eventClientIds)
             {
-                TestContext().AssertEqual(int(eventClientIds.size()), 2, "Unexpected events size");
+                std::string str(id);
+                TestContext().AssertTrue(m_retryEventIdsToWrite.find(str) != m_retryEventIdsToWrite.end(), "Unexpected EventId");
+            }
 
-                for (auto id : eventClientIds)
-                {
-                    std::string str(id);
-                    TestContext().AssertTrue(m_retryEventIdsToWrite.find(str) != m_retryEventIdsToWrite.end(), "Unexpected EventId");
-                }
-            }
-            catch (Exception& e)
+            if (m_eventsUploaded >= 5)
             {
-                TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
-                unexpectedResponse = true;
-            }
-            
-            if (unexpectedResponse)
-            {
-                TestContext().EndTest(S_OK);
                 lock.unlock();
-                UniquePtr<State> reclaim{ this };
-            }
-            else
-            {
-                if (handlerCompleted)
-                {
-                    TestContext().EndTest(S_OK);
-                    lock.unlock();
-                    UniquePtr<State> reclaim{ this };
-                }
-                else
-                {
-                    handlerCompleted = true;
-                }
+                m_testClass.CompleteTest();
             }
         }
 
         std::mutex m_mutex;
         Set<std::string> const m_retryEventIdsToWrite{ "retryEventId1", "retryEventId2" };
-        bool handlerCompleted = false;
-        bool unexpectedResponse = false;
+        std::atomic<size_t> m_eventsUploaded{ 0 };
     };
 
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->EmitEvents();
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        state.release(); // Reclaimed in Pipeline callbacks
-    }
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, DefaultTitlePlayer(), RunContext().Derive());
+    BeginTest(std::move(state));
 }
 
 void EventPipelineTests::TestRemoveEntityFromPlayStreamPipeline(TestContext& tc)
 {
-    class State : public EventPipelineTestState
-    {
-    public:
-        using EventPipelineTestState::EventPipelineTestState;
-
-        HRESULT RemoveUploadingEntity()
-        {
-            RETURN_IF_FAILED(PlayStreamEventPipeline().RemoveUploadingEntity());
-
-            return S_OK;
-        }
-    };
-
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    HRESULT hr = state->RemoveUploadingEntity();
-
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(S_OK);
-    }
-    else
-    {
-        state.reset(); // Reclaimed in Pipeline callbacks
-    }
+    EventPipeline pipeline{ PFEventPipelineType::PlayStream, DefaultTitlePlayer().Handle(), nullptr };
+    HRESULT hr = pipeline.RemoveUploadingEntity();
+    tc.EndTest<void>(FAILED(hr) ? S_OK : E_FAIL);
 }
 
 void EventPipelineTests::TestEmitCompressedTelemetryEvents(TestContext& tc)
@@ -1506,16 +1098,12 @@ void EventPipelineTests::TestEmitCompressedTelemetryEvents(TestContext& tc)
     public:
         using EventPipelineTestState::EventPipelineTestState;
 
-        HRESULT UpdateCompression(PFHCCompressionLevel compressionLevel)
+        HRESULT BeginTest() override
         {
+            HCCompressionLevel compressionLevel{ HCCompressionLevel::Medium };
             PFEventPipelineConfig config{ nullptr, nullptr, nullptr, &compressionLevel };
             RETURN_IF_FAILED(TelemetryEventPipeline().UpdateConfiguration(config));
 
-            return S_OK;
-        }
-
-        HRESULT EmitEvents()
-        {
             PFEvent event
             {
                 nullptr,
@@ -1536,10 +1124,8 @@ void EventPipelineTests::TestEmitCompressedTelemetryEvents(TestContext& tc)
         }
 
     private:
-        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount)
+        void OnBatchUploaded(PFUploadedEvent const* const* events, size_t eventsCount) override
         {
-            UpdateCompression(PFHCCompressionLevel::None);
-
             std::unique_lock<std::mutex> lock{ m_mutex };
             Vector<int> uploadedEvents(eventsCount);
             std::transform(events, events + eventsCount, uploadedEvents.begin(), [&](PFUploadedEvent const* event)
@@ -1549,10 +1135,8 @@ void EventPipelineTests::TestEmitCompressedTelemetryEvents(TestContext& tc)
             ValidateEvents(std::move(uploadedEvents), std::move(lock));
         }
 
-        void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount)
+        void OnBatchUploadFailed(HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount) override
         {
-            UpdateCompression(PFHCCompressionLevel::None);
-
             std::unique_lock<std::mutex> lock{ m_mutex };
             TestContext().RecordResult(Result<void>{ hr, errorMessage });
 
@@ -1574,10 +1158,8 @@ void EventPipelineTests::TestEmitCompressedTelemetryEvents(TestContext& tc)
             m_completedEvents += eventClientIds.size();
             if (m_completedEvents == m_eventIdsToWrite.size())
             {
-                TestContext().EndTest(S_OK);
-
                 lock.unlock();
-                UniquePtr<State> reclaim{ this };
+                m_testClass.CompleteTest();
             }
         }
 
@@ -1586,38 +1168,20 @@ void EventPipelineTests::TestEmitCompressedTelemetryEvents(TestContext& tc)
         size_t m_completedEvents{ 0 };
     };
 
-    UniquePtr<State> state = MakeUnique<State>(tc, DefaultTitlePlayer(), RunContext().Derive());
-
-    
-    HRESULT hr = state->UpdateCompression(PFHCCompressionLevel::Medium);
-    if (FAILED(hr))
-    {
-        state.reset(); // Destroy pipeline so no callback arrive after we end the test
-        tc.EndTest(hr);
-    }
-    else
-    {
-        hr = state->EmitEvents();
-        if (FAILED(hr))
-        {
-            state.reset(); // Destroy pipeline so no callback arrive after we end the test
-            tc.EndTest(hr);
-        }
-        else
-        {
-            state.release(); // Reclaimed in Pipeline callbacks
-        }
-    }
+    UniquePtr<State> state = MakeUnique<State>(*this, tc, DefaultTitlePlayer(), RunContext().Derive());
+    BeginTest(std::move(state));
 }
 
 // EventPipelineTestState Implementation
-EventPipelineTestState::EventPipelineTestState(Test::TestContext& tc, Entity uploadingEntity, RunContext pipelineRunContext)
-    : m_tc{ tc },
+EventPipelineTestState::EventPipelineTestState(EventPipelineTests& testClass, Test::TestContext& testContext, Entity uploadingEntity, RunContext rc)
+    : m_testClass{ testClass },
+    m_rc{ std::move(rc) },
+    m_testContext{ testContext },
     m_playStreamEventPipeline
     {
         PFEventPipelineType::PlayStream,
         std::move(uploadingEntity.Handle()),
-        pipelineRunContext.TaskQueueHandle(),
+        m_rc.TaskQueueHandle(),
         &EventPipelineTestState::OnBatchUploadedHandler,
         &EventPipelineTestState::OnBatchUploadFailedHandler,
         this
@@ -1626,7 +1190,7 @@ EventPipelineTestState::EventPipelineTestState(Test::TestContext& tc, Entity upl
     {
         PFEventPipelineType::Telemetry,
         std::move(uploadingEntity.Handle()),
-        pipelineRunContext.TaskQueueHandle(),
+        m_rc.TaskQueueHandle(),
         &EventPipelineTestState::OnBatchUploadedHandler,
         &EventPipelineTestState::OnBatchUploadFailedHandler,
         this
@@ -1635,17 +1199,19 @@ EventPipelineTestState::EventPipelineTestState(Test::TestContext& tc, Entity upl
     {
         PFEventPipelineType::PlayStream,
         std::move(uploadingEntity.Handle()),
-        pipelineRunContext.TaskQueueHandle()
+        m_rc.TaskQueueHandle()
     }
 {
 }
 
 // EventPipelineTestState Implementation
-EventPipelineTestState::EventPipelineTestState(Test::TestContext& tc, PFEventPipelineTelemetryKeyConfig* telemetryKeyConfig, RunContext pipelineRunContext)
-    : m_tc{ tc },
+EventPipelineTestState::EventPipelineTestState(EventPipelineTests& testClass, Test::TestContext& testContext, PFEventPipelineTelemetryKeyConfig* telemetryKeyConfig, RunContext rc)
+    : m_testClass{ testClass },
+    m_rc{ std::move(rc) },
+    m_testContext{ testContext },
     m_noAuthEventPipeline {
         telemetryKeyConfig,
-        pipelineRunContext.TaskQueueHandle(),
+        m_rc.TaskQueueHandle(),
         &EventPipelineTestState::OnBatchUploadedHandler,
         &EventPipelineTestState::OnBatchUploadFailedHandler,
         this
@@ -1655,7 +1221,7 @@ EventPipelineTestState::EventPipelineTestState(Test::TestContext& tc, PFEventPip
 
 TestContext& EventPipelineTestState::TestContext() const
 {
-    return m_tc;
+    return m_testContext;
 }
 
 EventPipeline const& EventPipelineTestState::PlayStreamEventPipeline() const
@@ -1691,13 +1257,29 @@ void EventPipelineTestState::OnBatchUploadFailed(HRESULT /*hr*/, const char* /*e
 void CALLBACK EventPipelineTestState::OnBatchUploadedHandler(void* context, PFUploadedEvent const* const* events, size_t eventsCount)
 {
     auto testState = static_cast<EventPipelineTestState*>(context);
-    testState->OnBatchUploaded(events, eventsCount);
+    try
+    {
+        testState->OnBatchUploaded(events, eventsCount);
+    }
+    catch (Exception& e)
+    {
+        testState->TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
+        testState->m_testClass.CompleteTest();
+    }
 }
 
 void CALLBACK EventPipelineTestState::OnBatchUploadFailedHandler(void* context, HRESULT hr, const char* errorMessage, PFEvent const* const* events, size_t eventsCount)
 {
     auto testState = static_cast<EventPipelineTestState*>(context);
-    testState->OnBatchUploadFailed(hr, errorMessage, events, eventsCount);
+    try
+    {
+        testState->OnBatchUploadFailed(hr, errorMessage, events, eventsCount);
+    }
+    catch (Exception& e)
+    {
+        testState->TestContext().RecordResult(Result<void>{ E_FAIL, e.what() });
+        testState->m_testClass.CompleteTest();
+    }
 }
 
 }

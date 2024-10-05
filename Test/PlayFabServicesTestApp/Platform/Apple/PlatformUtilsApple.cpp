@@ -64,12 +64,12 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
 
     // Parse JSON string into output TestTitleData.
     rapidjson::Document titleDataJson;
-    TraceMessage(PFHCTraceLevel::Verbose, fileData.data());
+    TraceMessage(HCTraceLevel::Verbose, fileData.data());
     titleDataJson.Parse(fileData.data());
 
     if (titleDataJson.HasParseError())
     {
-        TraceMessage(PFHCTraceLevel::Error, "Unable to parse testTitleData.json");
+        TraceMessage(HCTraceLevel::Error, "Unable to parse testTitleData.json");
         return E_FAIL;
     }
 
@@ -124,13 +124,13 @@ void WriteLogToFile(const char* line, const char* strFileName)
     fclose(file);
 }
 
-void TraceMessage(PFHCTraceLevel level, String const& message) noexcept
+void TraceMessage(HCTraceLevel level, String const& message) noexcept
 {
     // Trace all messages to error stream
     std::cerr << message << std::endl;
 
-    // If PFHCTraceLevel <= Important direct to PFTestAppSummary.txt
-    if (level <= PFHCTraceLevel::Important)
+    // If HCTraceLevel <= Important direct to PFTestAppSummary.txt
+    if (level <= HCTraceLevel::Important)
     {
         WriteLogToFile(message.data(), "PFTestAppSummary.txt");
     }
@@ -138,7 +138,7 @@ void TraceMessage(PFHCTraceLevel level, String const& message) noexcept
     // Trace all messages to PFTestAppEventsLog.txt
     WriteLogToFile(message.data(), "PFTestAppEventsLog.txt");
 
-    if (level <= PFHCTraceLevel::Important)
+    if (level <= HCTraceLevel::Important)
     {
         std::cout << message;
     }

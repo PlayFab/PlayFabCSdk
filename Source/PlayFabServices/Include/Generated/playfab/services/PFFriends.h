@@ -24,8 +24,6 @@ extern "C"
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// See also ClientGetFriendsListAsync, ClientSetFriendTagsAsync.
-///
 /// When the asynchronous task is complete, call <see cref="PFFriendsClientAddFriendGetResult"/> to get
 /// the result.
 /// </remarks>

@@ -9,7 +9,7 @@
 
 #include <playfab/core/PFPal.h>
 #include <playfab/core/PFEntity.h>
-#include <playfab/httpClient/PFHttpClient.h>
+#include <httpClient/httpClient.h>
 
 extern "C"
 {
@@ -143,7 +143,7 @@ struct PFEventPipelineConfig
     /// <summary>
     /// The event pipeline will send events using GZIP compression with the level specified. If sent null, no compression will be made.
     /// </summary>
-    _Maybenull_ PFHCCompressionLevel* compressionLevel;
+    _Maybenull_ HCCompressionLevel* compressionLevel;
 
     /// <summary>
     /// The event pipeline will retry sending events that failed due to lost connection. If sent null, default behavior will be to retry (true) (not available for PlayStream).

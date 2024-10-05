@@ -3899,4 +3899,7 @@ HRESULT UpdateDraftItemResponse::Copy(const PFCatalogUpdateDraftItemResponse& in
 }
 
 } // namespace Catalog
+
+// Json serialization helpers
+
 } // namespace PlayFab

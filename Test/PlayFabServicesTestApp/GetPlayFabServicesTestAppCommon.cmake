@@ -38,6 +38,8 @@ function(GET_PLAYFAB_SERVICES_TEST_APP_COMMMON_FILES
         "${PATH_TO_SOURCE}/Tests/Core/AuthenticationTests.h"
         "${PATH_TO_SOURCE}/Tests/Core/EventPipelineTests.cpp"
         "${PATH_TO_SOURCE}/Tests/Core/EventPipelineTests.h"
+        "${PATH_TO_SOURCE}/Tests/Core/LibHCTests.cpp"
+        "${PATH_TO_SOURCE}/Tests/Core/LibHCTests.h"
         "${PATH_TO_SOURCE}/Tests/Services/AccountManagementTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/CatalogTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/CloudScriptTestsImpl.cpp"
@@ -46,6 +48,7 @@ function(GET_PLAYFAB_SERVICES_TEST_APP_COMMMON_FILES
         "${PATH_TO_SOURCE}/Tests/Services/FriendsTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/GroupsTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/InventoryTestsImpl.cpp"
+        "${PATH_TO_SOURCE}/Tests/Services/LeaderboardsTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/LocalizationTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/MultiplayerServerTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/PlatformSpecificTestsImpl.cpp"
@@ -53,6 +56,7 @@ function(GET_PLAYFAB_SERVICES_TEST_APP_COMMMON_FILES
         "${PATH_TO_SOURCE}/Tests/Services/ProfilesTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/PushNotificationsTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/SegmentsTestsImpl.cpp"
+        "${PATH_TO_SOURCE}/Tests/Services/StatisticsTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/TitleDataManagementTestsImpl.cpp"
         PARENT_SCOPE
         )

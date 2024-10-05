@@ -1,6 +1,7 @@
 #pragma once
 
 #include <playfab/services/cpp/ProfilesTypeWrappers.h>
+#include <playfab/services/cpp/TypeWrappers.h>
 #include "Generated/CoreTypes.h"
 #include "BaseModel.h"
 
@@ -86,10 +87,10 @@ public:
     static HRESULT Copy(const PFProfilesEntityPermissionStatement& input, PFProfilesEntityPermissionStatement& output, ModelBuffer& buffer);
 };
 
-class EntityStatisticValue : public Wrappers::PFProfilesEntityStatisticValueWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFProfilesEntityStatisticValue>
+class EntityStatisticValue : public Wrappers::PFEntityStatisticValueWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFEntityStatisticValue>
 {
 public:
-    using ModelWrapperType = typename Wrappers::PFProfilesEntityStatisticValueWrapper<Allocator>;
+    using ModelWrapperType = typename Wrappers::PFEntityStatisticValueWrapper<Allocator>;
     using ModelWrapperType::ModelType;
     using DictionaryEntryType = ModelWrapperType::DictionaryEntryType;
 
@@ -100,10 +101,10 @@ public:
     HRESULT FromJson(const JsonValue& input) override;
     // ClientOutputModel
     size_t RequiredBufferSize() const override;
-    Result<PFProfilesEntityStatisticValue const*> Copy(ModelBuffer& buffer) const override;
+    Result<PFEntityStatisticValue const*> Copy(ModelBuffer& buffer) const override;
 
-    static size_t RequiredBufferSize(const PFProfilesEntityStatisticValue& model);
-    static HRESULT Copy(const PFProfilesEntityStatisticValue& input, PFProfilesEntityStatisticValue& output, ModelBuffer& buffer);
+    static size_t RequiredBufferSize(const PFEntityStatisticValue& model);
+    static HRESULT Copy(const PFEntityStatisticValue& input, PFEntityStatisticValue& output, ModelBuffer& buffer);
 };
 
 class EntityProfileBody : public Wrappers::PFProfilesEntityProfileBodyWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFProfilesEntityProfileBody>
@@ -278,6 +279,8 @@ public:
 
 } // namespace Profiles
 
+// Json serialization helpers
+
 // EnumRange definitions used for Enum (de)serialization
 template<typename T> struct EnumRange;
 
@@ -285,5 +288,6 @@ template<> struct EnumRange<PFProfilesEffectType>
 {
     static constexpr PFProfilesEffectType maxValue = PFProfilesEffectType::Deny;
 };
+
 
 } // namespace PlayFab

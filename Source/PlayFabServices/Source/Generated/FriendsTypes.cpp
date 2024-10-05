@@ -62,7 +62,7 @@ JsonValue ClientGetFriendsListRequest::ToJson(const PFFriendsClientGetFriendsLis
 {
     JsonValue output{ rapidjson::kObjectType };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
-    JsonUtils::ObjectAddMember(output, "ExternalPlatformFriends", input.externalPlatformFriends);
+    JsonUtils::ObjectAddMember(output, "ExternalPlatformFriends", JsonUtils::ToJson(input.externalPlatformFriends));
     JsonUtils::ObjectAddMember<PlayerProfileViewConstraints>(output, "ProfileConstraints", input.profileConstraints);
 #if HC_PLATFORM != HC_PLATFORM_GDK
     JsonUtils::ObjectAddMember(output, "XboxToken", input.xboxToken);
@@ -337,7 +337,7 @@ JsonValue ServerGetFriendsListRequest::ToJson(const PFFriendsServerGetFriendsLis
 {
     JsonValue output{ rapidjson::kObjectType };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
-    JsonUtils::ObjectAddMember(output, "ExternalPlatformFriends", input.externalPlatformFriends);
+    JsonUtils::ObjectAddMember(output, "ExternalPlatformFriends", JsonUtils::ToJson(input.externalPlatformFriends));
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember<PlayerProfileViewConstraints>(output, "ProfileConstraints", input.profileConstraints);
     JsonUtils::ObjectAddMember(output, "XboxToken", input.xboxToken);
@@ -372,4 +372,54 @@ JsonValue ServerSetFriendTagsRequest::ToJson(const PFFriendsServerSetFriendTagsR
 }
 
 } // namespace Friends
+
+// Json serialization helpers
+namespace JsonUtils
+{
+
+JsonValue ToJson(PFFriendsExternalFriendSources const* input)
+{
+    if (input)
+    {
+        String separator{};
+        Stringstream ss;
+        if (*input == PFFriendsExternalFriendSources::None)
+        {
+            return JsonValue{ EnumName(PFFriendsExternalFriendSources::None), JsonUtils::allocator };
+        }
+        if ((*input & PFFriendsExternalFriendSources::Steam) == PFFriendsExternalFriendSources::Steam)
+        {
+            ss << separator << EnumName(PFFriendsExternalFriendSources::Steam);
+            separator = ",";
+        }
+        if ((*input & PFFriendsExternalFriendSources::Facebook) == PFFriendsExternalFriendSources::Facebook)
+        {
+            ss << separator << EnumName(PFFriendsExternalFriendSources::Facebook);
+            separator = ",";
+        }
+        if ((*input & PFFriendsExternalFriendSources::Xbox) == PFFriendsExternalFriendSources::Xbox)
+        {
+            ss << separator << EnumName(PFFriendsExternalFriendSources::Xbox);
+            separator = ",";
+        }
+        if ((*input & PFFriendsExternalFriendSources::Psn) == PFFriendsExternalFriendSources::Psn)
+        {
+            ss << separator << EnumName(PFFriendsExternalFriendSources::Psn);
+            separator = ",";
+        }
+        if ((*input & PFFriendsExternalFriendSources::All) == PFFriendsExternalFriendSources::All)
+        {
+            ss << separator << EnumName(PFFriendsExternalFriendSources::All);
+            separator = ",";
+        }
+        return JsonValue{ ss.str().data(), JsonUtils::allocator };
+    }
+    else
+    {
+        return JsonValue{ rapidjson::kNullType };
+    }
+}
+
+} // namespace JsonUtils
+
 } // namespace PlayFab

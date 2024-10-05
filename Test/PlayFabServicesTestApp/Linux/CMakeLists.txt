@@ -21,6 +21,7 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_CXX_FLAGS "-pthread")
+set(CMAKE_CXX_LINK_FLAGS "-latomic")
 
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -64,15 +65,19 @@ get_playfab_services_generated_api_wrappers_files(
     )
 
 set(COMMON_INCLUDE_DIRS
-    "${PATH_TO_ROOT}/External/rapidjson/include"
+    "${PATH_TO_SOURCE}/PlayFabCore/Include"
+    "${PATH_TO_SOURCE}/PlayFabCore/Include/Generated"
+    "${PATH_TO_SOURCE}/PlayFabServices/Include"
+    "${PATH_TO_SOURCE}/PlayFabServices/Include/Generated"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Generated"
     "${PATH_TO_LHC}/Include"
+    "${PATH_TO_ROOT}/External/rapidjson/include"
     "${PATH_TO_TEST}/PlayFabServicesTestApp"
     "${PATH_TO_TEST}/PlayFabServicesTestApp/TestFramework"
     "${PATH_TO_TEST}/PlayFabServices.GeneratedApiWrappers"
     "${PATH_TO_TEST}/PlayFabServices.GeneratedTests"
-    )
+)
 
 #########################
 ### Set up exe        ###
@@ -90,19 +95,31 @@ set(PLAYFAB_SHARED_INTERNAL_BINARY_PATH
     ${PATH_TO_ROOT}/Out/x64/${CMAKE_BUILD_TYPE}/PlayFabSharedInternal.Linux/PlayFabSharedInternal.Linux.a
 )
 
-find_package(libHttpClient.Linux REQUIRED)
-find_package(PlayFabCore.Linux REQUIRED)
-find_package(PlayFabServices.Linux REQUIRED)
+set(LIBHTTPCLIENT_BINARY_PATH
+    ${PATH_TO_LHC}/Out/x64/${CMAKE_BUILD_TYPE}/libHttpClient.Linux/libHttpClient.Linux.so
+)
+message(STATUS "LIBHTTPCLIENT_BINARY_PATH: ${LIBHTTPCLIENT_BINARY_PATH}")
+
+set(PLAYFAB_CORE_BINARY_PATH
+    ${PATH_TO_ROOT}/Out/x64/${CMAKE_BUILD_TYPE}/PlayFabCore.Linux/PlayFabCore.Linux.so
+)
+message(STATUS "PLAYFAB_CORE_BINARY_PATH: ${PLAYFAB_CORE_BINARY_PATH}")
+
+set(PLAYFAB_SERVICES_BINARY_PATH
+    ${PATH_TO_ROOT}/Out/x64/${CMAKE_BUILD_TYPE}/PlayFabServices.Linux/PlayFabServices.Linux.so
+)
+message(STATUS "PLAYFAB_SERVICES_BINARY_PATH: ${PLAYFAB_SERVICES_BINARY_PATH}")
+
 target_link_libraries(
     ${PROJECT_NAME}
-    PRIVATE libHttpClient.Linux
-    PRIVATE PlayFabCore.Linux
-    PRIVATE PlayFabServices.Linux
+    PRIVATE ${LIBHTTPCLIENT_BINARY_PATH}
+    PRIVATE ${PLAYFAB_CORE_BINARY_PATH}
+    PRIVATE ${PLAYFAB_SERVICES_BINARY_PATH}
     PRIVATE ${PLAYFAB_SHARED_INTERNAL_BINARY_PATH}
     PRIVATE z # zlib
     ${CMAKE_DL_LIBS}
     )
- 
+
 target_sources(
     "${PROJECT_NAME}"
     PRIVATE

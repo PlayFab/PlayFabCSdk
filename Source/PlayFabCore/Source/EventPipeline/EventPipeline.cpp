@@ -21,7 +21,7 @@ public:
 
     String ErrorMessage() const { return ServiceResponse::ErrorMessage; }
 
-    int HttpCode() const { return ServiceResponse::HttpCode ; }
+    int HttpCode() const { return ServiceResponse::HttpCode; }
 
 private:
     HRESULT m_translatedHResult = S_OK;
@@ -93,7 +93,7 @@ private:
     std::mutex m_configMutex;
     Deque<Event> m_deque;
     size_t m_bufferSize;
-    
+
 };
 
 class EventUploader : public ITaskQueueWork, public std::enable_shared_from_this<EventUploader>
@@ -107,7 +107,7 @@ public:
         uint32_t maxEventsPerBatch,
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
-        PFHCCompressionLevel compressionLevel,
+        HCCompressionLevel compressionLevel,
         bool retryOnDisconnect,
         EventPipelineEventHandlers eventHandlers
     );
@@ -121,7 +121,7 @@ public:
         uint32_t maxEventsPerBatch,
         uint32_t maxWaitTimeInSeconds,
         uint32_t pollDelayInMs,
-        PFHCCompressionLevel compressionLevel,
+        HCCompressionLevel compressionLevel,
         bool retryOnDisconnect,
         EventPipelineEventHandlers eventHandlers
     );
@@ -129,7 +129,7 @@ public:
     void Start();
     void Stop();
     void SetUploadingEntity(SharedPtr<Entity> entity);
-    void SetConfiguration(PFEventPipelineConfig eventPipelineConfig); 
+    void SetConfiguration(PFEventPipelineConfig eventPipelineConfig);
     void ExponentialBackoff(uint32_t retryCount);
     PFEventPipelineType EventPipelineType() const { return m_eventPipelineType; }
     PlayFab::String TelemetryKey() { return m_telemetryKey; }
@@ -154,7 +154,7 @@ private:
     uint32_t m_maxEventsPerBatch;
     uint32_t m_maxWaitTimeInSeconds;
     uint32_t m_pollDelayInMs;
-    PFHCCompressionLevel m_compressionLevel;
+    HCCompressionLevel m_compressionLevel;
     bool m_retryOnDisconnect;
     uint32_t m_retryCount = 0;
     EventPipelineEventHandlers const m_eventHandlers;
@@ -169,7 +169,7 @@ private:
 
 void EventPipeline::Initialize(
     RunContext rc,
-    PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler, 
+    PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
     PFEventPipelineBatchUploadFailedEventHandler* batchFailedEventHandler,
     void* handlerContext
 )
@@ -195,7 +195,7 @@ EventPipeline::EventPipeline(
     uint32_t maxEventsPerBatch,
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
-    PFHCCompressionLevel compressionLevel,
+    HCCompressionLevel compressionLevel,
     bool retryOnDisconnect,
     size_t bufferSize,
     PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
@@ -203,7 +203,7 @@ EventPipeline::EventPipeline(
     void* handlerContext
 ) noexcept :
     m_buffer{ MakeShared<EventBuffer>(bufferSize) },
-    m_uploader{ MakeShared<EventUploader>(rc.Derive(), uploadingEntity, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, compressionLevel, retryOnDisconnect, m_eventHandlers)}
+    m_uploader{ MakeShared<EventUploader>(rc.Derive(), uploadingEntity, eventPipelineType, m_buffer, maxEventsPerBatch, maxWaitTimeInSeconds, pollDelayInMs, compressionLevel, retryOnDisconnect, m_eventHandlers) }
 {
     Initialize(rc, batchUploadedEventHandler, batchFailedEventHandler, handlerContext);
 }
@@ -216,7 +216,7 @@ EventPipeline::EventPipeline(
     uint32_t maxEventsPerBatch,
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
-    PFHCCompressionLevel compressionLevel,
+    HCCompressionLevel compressionLevel,
     bool retryOnDisconnect,
     size_t bufferSize,
     PFEventPipelineBatchUploadSucceededEventHandler* batchUploadedEventHandler,
@@ -262,7 +262,7 @@ HRESULT EventPipeline::RemoveUploadingEntity() noexcept
     RETURN_HR_IF(E_FAIL, m_uploader->EventPipelineType() == PFEventPipelineType::PlayStream);
 
     // If there is no valid fallback auth mechanism (Telemetry Key) return error to the client.
-    RETURN_HR_IF(E_FAIL, !m_uploader->ServiceConfig() || m_uploader->TelemetryKey().empty() );
+    RETURN_HR_IF(E_FAIL, !m_uploader->ServiceConfig() || m_uploader->TelemetryKey().empty());
 
     m_uploader->SetUploadingEntity(nullptr);
 
@@ -277,7 +277,7 @@ HRESULT EventPipeline::UpdateConfiguration(PFEventPipelineConfig eventPipelineCo
     return S_OK;
 }
 
-EventBuffer::EventBuffer(size_t bufferSize) : m_bufferSize{bufferSize} {}
+EventBuffer::EventBuffer(size_t bufferSize) : m_bufferSize{ bufferSize } {}
 
 HRESULT EventBuffer::PushBack(Event&& event) noexcept
 {
@@ -368,7 +368,7 @@ EventUploader::EventUploader(
     uint32_t maxEventsPerBatch,
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
-    PFHCCompressionLevel compressionLevel,
+    HCCompressionLevel compressionLevel,
     bool retryOnDisconnect,
     EventPipelineEventHandlers eventHandlers
 ) :
@@ -382,7 +382,7 @@ EventUploader::EventUploader(
     m_compressionLevel{ compressionLevel },
     m_retryOnDisconnect{ retryOnDisconnect },
     m_eventHandlers{ std::move(eventHandlers) },
-    m_retryPayloads{ MakeShared<Queue<Vector<Event>>>() } 
+    m_retryPayloads{ MakeShared<Queue<Vector<Event>>>() }
 {
 }
 
@@ -395,7 +395,7 @@ EventUploader::EventUploader(
     uint32_t maxEventsPerBatch,
     uint32_t maxWaitTimeInSeconds,
     uint32_t pollDelayInMs,
-    PFHCCompressionLevel compressionLevel,
+    HCCompressionLevel compressionLevel,
     bool retryOnDisconnect,
     EventPipelineEventHandlers eventHandlers
 ) :
@@ -460,7 +460,7 @@ void EventUploader::SetConfiguration(PFEventPipelineConfig eventPipelineConfig)
         m_retryOnDisconnect = !eventPipelineConfig.retryOnDisconnect ? PFTelemetryEventPipelineRetryOnDisconnectDefault : *eventPipelineConfig.retryOnDisconnect;
     }
 
-    m_compressionLevel = !eventPipelineConfig.compressionLevel ? PFHCCompressionLevel::None : *eventPipelineConfig.compressionLevel;
+    m_compressionLevel = !eventPipelineConfig.compressionLevel ? HCCompressionLevel::None : *eventPipelineConfig.compressionLevel;
 }
 
 JsonValue EventUploader::BuildRequestBody(Vector<Event> events)
@@ -500,11 +500,11 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
         lock.unlock();
 
         return requestOp.Then([](Result<ServiceResponse> result) -> Result<WriteEventsResponse>
-            {
-                RETURN_IF_FAILED(result.hr);
-                auto serviceResponse = result.ExtractPayload();
-                return WriteEventsResponse{ std::move(serviceResponse) };
-            }
+        {
+            RETURN_IF_FAILED(result.hr);
+            auto serviceResponse = result.ExtractPayload();
+            return WriteEventsResponse{ std::move(serviceResponse) };
+        }
         );
     }
     else if (!m_telemetryKey.empty() && (!m_telemetryKeyInvalid && !m_telemetryKeyDeactivated))
@@ -519,11 +519,11 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
         );
 
         return requestOp.Then([](Result<ServiceResponse> result) -> Result<WriteEventsResponse>
-            {   
-                RETURN_IF_FAILED(result.hr);
-                auto serviceResponse = result.ExtractPayload();
-                return WriteEventsResponse{ std::move(serviceResponse) };
-            }
+        {
+            RETURN_IF_FAILED(result.hr);
+            auto serviceResponse = result.ExtractPayload();
+            return WriteEventsResponse{ std::move(serviceResponse) };
+        }
         );
     }
     else
@@ -651,10 +651,10 @@ void EventUploader::ExecutePendingRetries()
 
             m_retryPayloads->pop();
 
-            WriteEvents(std::move(payload), m_rc.Derive()).Finally([payload, sharedThis = shared_from_this(), eventHandlers = m_eventHandlers ](Result<WriteEventsResponse> result) mutable
-                {
-                    sharedThis->ProcessResponse(std::move(result), std::move(payload), eventHandlers, true);
-                }
+            WriteEvents(std::move(payload), m_rc.Derive()).Finally([payload, sharedThis = shared_from_this(), eventHandlers = m_eventHandlers](Result<WriteEventsResponse> result) mutable
+            {
+                sharedThis->ProcessResponse(std::move(result), std::move(payload), eventHandlers, true);
+            }
             );
         }
     }
@@ -711,7 +711,7 @@ void EventUploader::Run() noexcept
         if ((!m_pendingPayload.empty() && std::time(nullptr) - m_oldestEventTimeStamp >= m_maxWaitTimeInSeconds) ||
             (m_pendingPayload.size() >= m_maxEventsPerBatch) ||
             (!m_pendingPayload.empty() && cancelled && !haveEvents)
-        )
+            )
         {
             configLock.unlock();
 
@@ -720,9 +720,9 @@ void EventUploader::Run() noexcept
             assert(m_pendingPayload.empty());
             auto payloadCopy = payload;
             WriteEvents(std::move(payload), m_rc.Derive()).Finally([payload = std::move(payloadCopy), sharedThis = shared_from_this(), eventHandlers = m_eventHandlers](Result<WriteEventsResponse> result) mutable
-                {   
-                    sharedThis->ProcessResponse(std::move(result), std::move(payload), eventHandlers, false);
-                }
+            {
+                sharedThis->ProcessResponse(std::move(result), std::move(payload), eventHandlers, false);
+            }
             );
         }
     }
@@ -735,7 +735,7 @@ void EventUploader::Run() noexcept
     // If a network failure has been detected, a backoff exponential delay will be added to the scheduling
     if (!cancelled)
     {
-        m_rc.TaskQueueSubmitWork(shared_from_this(), m_pollDelayInMs + (m_retryCount*m_retryCount*1000) );
+        m_rc.TaskQueueSubmitWork(shared_from_this(), m_pollDelayInMs + (m_retryCount * m_retryCount * 1000));
     }
 }
 }

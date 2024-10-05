@@ -14,6 +14,8 @@
 #include "CatalogTests.h"
 #include "ExperimentationTests.h"
 #include "GroupsTests.h"
+#include "LeaderboardsTests.h"
+#include "StatisticsTests.h"
 #include "LocalizationTests.h"
 #include "MultiplayerServerTests.h"
 #include "ProfilesTests.h"
@@ -44,6 +46,8 @@ List<SharedPtr<TestClass>> GetGeneratedTestClasses(TestTitleData& testTitleData)
         MakeShared<CatalogTests>(testTitleData),
         MakeShared<ExperimentationTests>(testTitleData),
         MakeShared<GroupsTests>(testTitleData),
+        MakeShared<LeaderboardsTests>(testTitleData),
+        MakeShared<StatisticsTests>(testTitleData),
         MakeShared<LocalizationTests>(testTitleData),
         MakeShared<MultiplayerServerTests>(testTitleData),
         MakeShared<ProfilesTests>(testTitleData),

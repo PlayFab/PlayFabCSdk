@@ -1,6 +1,7 @@
 #pragma once
 
 #include <playfab/services/cpp/DataTypeWrappers.h>
+#include <playfab/services/cpp/TypeWrappers.h>
 #include "Generated/CoreTypes.h"
 #include "BaseModel.h"
 
@@ -335,5 +336,8 @@ public:
 
 } // namespace Data
 
+// Json serialization helpers
+
 // EnumRange definitions used for Enum (de)serialization
+
 } // namespace PlayFab

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <playfab/httpClient/PFHttpClient.h>
+#include <httpClient/httpClient.h>
 #include <playfab/core/PFHttpConfig.h>
 #include "XAsyncOperation.h"
 #include "RunContext.h"
@@ -66,7 +66,7 @@ public:
         UnorderedMap<String, String> headers,
         String requestBody,
         PlayFab::RunContext runContext,
-        PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
+        HCCompressionLevel compressionLevel = HCCompressionLevel::None
     ) noexcept;
 
     HCHttpCall(
@@ -78,7 +78,7 @@ public:
         PFHttpRetrySettings const& retrySettings,
         PlayFab::RunContext runContext,
         PFHttpSettings const& httpSettings,
-        PFHCCompressionLevel compressionLevel = PFHCCompressionLevel::None
+        HCCompressionLevel compressionLevel = HCCompressionLevel::None
     ) noexcept;
 
     HCHttpCall(HCHttpCall const&) = delete;
@@ -93,7 +93,7 @@ private:
     Result<ServiceResponse> GetResult(XAsyncBlock* async) noexcept override;
 
     static HRESULT CALLBACK HCRequestBodyRead(
-        _In_ PFHCCallHandle callHandle,
+        _In_ HCCallHandle callHandle,
         _In_ size_t offset,
         _In_ size_t bytesAvailable,
         _In_opt_ void* context,
@@ -102,7 +102,7 @@ private:
     );
 
     static HRESULT CALLBACK HCResponseBodyWrite(
-        _In_ PFHCCallHandle callHandle,
+        _In_ HCCallHandle callHandle,
         _In_reads_bytes_(bytesAvailable) const uint8_t* source,
         _In_ size_t bytesAvailable,
         _In_opt_ void* context
@@ -117,8 +117,8 @@ private:
     bool m_retryAllowed{ kDefaultHttpRetryAllowed };
     uint32_t m_retryDelay{ kDefaultHttpRetryDelay };
     uint32_t m_timeoutWindow{ kDefaultHttpTimeoutWindow };
-    PFHCCallHandle m_callHandle{ nullptr };
-    PFHCCompressionLevel m_compressionLevel;
+    HCCallHandle m_callHandle{ nullptr };
+    HCCompressionLevel m_compressionLevel;
     bool m_compressedResponsesExpected{ kDefaultHttpCompressedResponsesExpected };
 };
 

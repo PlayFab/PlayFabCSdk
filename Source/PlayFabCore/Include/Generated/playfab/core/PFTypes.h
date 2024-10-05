@@ -232,7 +232,17 @@ enum class PFUserOrigination : uint32_t
     Apple,
     NintendoSwitchAccount,
     GooglePlayGames,
-    XboxMobileStore
+    XboxMobileStore,
+    King
+};
+
+/// <summary>
+/// UserDataPermission enum.
+/// </summary>
+enum class PFUserDataPermission : uint32_t
+{
+    Private,
+    Public
 };
 
 /// <summary>
@@ -272,7 +282,8 @@ enum class PFLoginIdentityProvider : uint32_t
     Apple,
     NintendoSwitchAccount,
     GooglePlayGames,
-    XboxMobileStore
+    XboxMobileStore,
+    King
 };
 
 /// <summary>
@@ -572,15 +583,6 @@ enum class PFPushNotificationPlatform : uint32_t
 };
 
 /// <summary>
-/// UserDataPermission enum.
-/// </summary>
-enum class PFUserDataPermission : uint32_t
-{
-    Private,
-    Public
-};
-
-/// <summary>
 /// A token returned when registering a callback to identify the registration. This token is later used 
 /// to unregister the callback.
 /// </summary>
@@ -595,203 +597,104 @@ typedef struct PFJsonObject
 } PFJsonObject;
 
 /// <summary>
-/// PFPlayerProfileViewConstraints data model.
+/// PFItemInstance data model. A unique instance of an item in a user's inventory. Note, to retrieve
+/// additional information for an item such as Tags, Description that are the same across all instances
+/// of the item, a call to GetCatalogItems is required. The ItemID of can be matched to a catalog entry,
+/// which contains the additional information. Also note that Custom Data is only set when the User's
+/// specific instance has updated the CustomData via a call to UpdateUserInventoryItemCustomData. Other
+/// fields such as UnitPrice and UnitCurrency are only set when the item was granted via a purchase.
 /// </summary>
-typedef struct PFPlayerProfileViewConstraints
+typedef struct PFItemInstance
 {
     /// <summary>
-    /// Whether to show player's avatar URL. Defaults to false.
+    /// (Optional) Game specific comment associated with this instance when it was added to the user
+    /// inventory.
     /// </summary>
-    bool showAvatarUrl;
+    _Maybenull_ _Null_terminated_ const char* annotation;
 
     /// <summary>
-    /// Whether to show the banned until time. Defaults to false.
+    /// (Optional) Array of unique items that were awarded when this catalog item was purchased.
     /// </summary>
-    bool showBannedUntil;
+    _Maybenull_ _Field_size_(bundleContentsCount) const char* const* bundleContents;
 
     /// <summary>
-    /// Whether to show campaign attributions. Defaults to false.
+    /// Count of bundleContents
     /// </summary>
-    bool showCampaignAttributions;
+    uint32_t bundleContentsCount;
 
     /// <summary>
-    /// Whether to show contact email addresses. Defaults to false.
+    /// (Optional) Unique identifier for the parent inventory item, as defined in the catalog, for object
+    /// which were added from a bundle or container.
     /// </summary>
-    bool showContactEmailAddresses;
+    _Maybenull_ _Null_terminated_ const char* bundleParent;
 
     /// <summary>
-    /// Whether to show the created date. Defaults to false.
+    /// (Optional) Catalog version for the inventory item, when this instance was created.
     /// </summary>
-    bool showCreated;
+    _Maybenull_ _Null_terminated_ const char* catalogVersion;
 
     /// <summary>
-    /// Whether to show the display name. Defaults to false.
+    /// (Optional) A set of custom key-value pairs on the instance of the inventory item, which is not
+    /// to be confused with the catalog item's custom data.
     /// </summary>
-    bool showDisplayName;
+    _Maybenull_ _Field_size_(customDataCount) struct PFStringDictionaryEntry const* customData;
 
     /// <summary>
-    /// Whether to show player's experiment variants. Defaults to false.
+    /// Count of customData
     /// </summary>
-    bool showExperimentVariants;
+    uint32_t customDataCount;
 
     /// <summary>
-    /// Whether to show the last login time. Defaults to false.
+    /// (Optional) CatalogItem.DisplayName at the time this item was purchased.
     /// </summary>
-    bool showLastLogin;
+    _Maybenull_ _Null_terminated_ const char* displayName;
 
     /// <summary>
-    /// Whether to show the linked accounts. Defaults to false.
+    /// (Optional) Timestamp for when this instance will expire.
     /// </summary>
-    bool showLinkedAccounts;
+    _Maybenull_ time_t const* expiration;
 
     /// <summary>
-    /// Whether to show player's locations. Defaults to false.
+    /// (Optional) Class name for the inventory item, as defined in the catalog.
     /// </summary>
-    bool showLocations;
+    _Maybenull_ _Null_terminated_ const char* itemClass;
 
     /// <summary>
-    /// Whether to show player's membership information. Defaults to false.
+    /// (Optional) Unique identifier for the inventory item, as defined in the catalog.
     /// </summary>
-    bool showMemberships;
+    _Maybenull_ _Null_terminated_ const char* itemId;
 
     /// <summary>
-    /// Whether to show origination. Defaults to false.
+    /// (Optional) Unique item identifier for this specific instance of the item.
     /// </summary>
-    bool showOrigination;
+    _Maybenull_ _Null_terminated_ const char* itemInstanceId;
 
     /// <summary>
-    /// Whether to show push notification registrations. Defaults to false.
+    /// (Optional) Timestamp for when this instance was purchased.
     /// </summary>
-    bool showPushNotificationRegistrations;
+    _Maybenull_ time_t const* purchaseDate;
 
     /// <summary>
-    /// Reserved for future development.
+    /// (Optional) Total number of remaining uses, if this is a consumable item.
     /// </summary>
-    bool showStatistics;
+    _Maybenull_ int32_t const* remainingUses;
 
     /// <summary>
-    /// Whether to show tags. Defaults to false.
+    /// (Optional) Currency type for the cost of the catalog item. Not available when granting items.
     /// </summary>
-    bool showTags;
+    _Maybenull_ _Null_terminated_ const char* unitCurrency;
 
     /// <summary>
-    /// Whether to show the total value to date in usd. Defaults to false.
+    /// Cost of the catalog item in the given currency. Not available when granting items.
     /// </summary>
-    bool showTotalValueToDateInUsd;
+    uint32_t unitPrice;
 
     /// <summary>
-    /// Whether to show the values to date. Defaults to false.
+    /// (Optional) The number of uses that were added or removed to this item in this call.
     /// </summary>
-    bool showValuesToDate;
+    _Maybenull_ int32_t const* usesIncrementedBy;
 
-} PFPlayerProfileViewConstraints;
-
-/// <summary>
-/// PFGetPlayerCombinedInfoRequestParams data model.
-/// </summary>
-typedef struct PFGetPlayerCombinedInfoRequestParams
-{
-    /// <summary>
-    /// Whether to get character inventories. Defaults to false.
-    /// </summary>
-    bool getCharacterInventories;
-
-    /// <summary>
-    /// Whether to get the list of characters. Defaults to false.
-    /// </summary>
-    bool getCharacterList;
-
-    /// <summary>
-    /// Whether to get player profile. Defaults to false. Has no effect for a new player.
-    /// </summary>
-    bool getPlayerProfile;
-
-    /// <summary>
-    /// Whether to get player statistics. Defaults to false.
-    /// </summary>
-    bool getPlayerStatistics;
-
-    /// <summary>
-    /// Whether to get title data. Defaults to false.
-    /// </summary>
-    bool getTitleData;
-
-    /// <summary>
-    /// Whether to get the player's account Info. Defaults to false.
-    /// </summary>
-    bool getUserAccountInfo;
-
-    /// <summary>
-    /// Whether to get the player's custom data. Defaults to false.
-    /// </summary>
-    bool getUserData;
-
-    /// <summary>
-    /// Whether to get the player's inventory. Defaults to false.
-    /// </summary>
-    bool getUserInventory;
-
-    /// <summary>
-    /// Whether to get the player's read only data. Defaults to false.
-    /// </summary>
-    bool getUserReadOnlyData;
-
-    /// <summary>
-    /// Whether to get the player's virtual currency balances. Defaults to false.
-    /// </summary>
-    bool getUserVirtualCurrency;
-
-    /// <summary>
-    /// (Optional) Specific statistics to retrieve. Leave null to get all keys. Has no effect if GetPlayerStatistics
-    /// is false.
-    /// </summary>
-    _Maybenull_ _Field_size_(playerStatisticNamesCount) const char* const* playerStatisticNames;
-
-    /// <summary>
-    /// Count of playerStatisticNames
-    /// </summary>
-    uint32_t playerStatisticNamesCount;
-
-    /// <summary>
-    /// (Optional) Specifies the properties to return from the player profile. Defaults to returning
-    /// the player's display name.
-    /// </summary>
-    _Maybenull_ PFPlayerProfileViewConstraints const* profileConstraints;
-
-    /// <summary>
-    /// (Optional) Specific keys to search for in the custom data. Leave null to get all keys. Has no
-    /// effect if GetTitleData is false.
-    /// </summary>
-    _Maybenull_ _Field_size_(titleDataKeysCount) const char* const* titleDataKeys;
-
-    /// <summary>
-    /// Count of titleDataKeys
-    /// </summary>
-    uint32_t titleDataKeysCount;
-
-    /// <summary>
-    /// (Optional) Specific keys to search for in the custom data. Leave null to get all keys. Has no
-    /// effect if GetUserData is false.
-    /// </summary>
-    _Maybenull_ _Field_size_(userDataKeysCount) const char* const* userDataKeys;
-
-    /// <summary>
-    /// Count of userDataKeys
-    /// </summary>
-    uint32_t userDataKeysCount;
-
-    /// <summary>
-    /// (Optional) Specific keys to search for in the custom data. Leave null to get all keys. Has no
-    /// effect if GetUserReadOnlyData is false.
-    /// </summary>
-    _Maybenull_ _Field_size_(userReadOnlyDataKeysCount) const char* const* userReadOnlyDataKeys;
-
-    /// <summary>
-    /// Count of userReadOnlyDataKeys
-    /// </summary>
-    uint32_t userReadOnlyDataKeysCount;
-
-} PFGetPlayerCombinedInfoRequestParams;
+} PFItemInstance;
 
 /// <summary>
 /// PFUserAndroidDeviceInfo data model.
@@ -1308,128 +1211,6 @@ typedef struct PFUserAccountInfo
 } PFUserAccountInfo;
 
 /// <summary>
-/// PFItemInstance data model. A unique instance of an item in a user's inventory. Note, to retrieve
-/// additional information for an item such as Tags, Description that are the same across all instances
-/// of the item, a call to GetCatalogItems is required. The ItemID of can be matched to a catalog entry,
-/// which contains the additional information. Also note that Custom Data is only set when the User's
-/// specific instance has updated the CustomData via a call to UpdateUserInventoryItemCustomData. Other
-/// fields such as UnitPrice and UnitCurrency are only set when the item was granted via a purchase.
-/// </summary>
-typedef struct PFItemInstance
-{
-    /// <summary>
-    /// (Optional) Game specific comment associated with this instance when it was added to the user
-    /// inventory.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* annotation;
-
-    /// <summary>
-    /// (Optional) Array of unique items that were awarded when this catalog item was purchased.
-    /// </summary>
-    _Maybenull_ _Field_size_(bundleContentsCount) const char* const* bundleContents;
-
-    /// <summary>
-    /// Count of bundleContents
-    /// </summary>
-    uint32_t bundleContentsCount;
-
-    /// <summary>
-    /// (Optional) Unique identifier for the parent inventory item, as defined in the catalog, for object
-    /// which were added from a bundle or container.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* bundleParent;
-
-    /// <summary>
-    /// (Optional) Catalog version for the inventory item, when this instance was created.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* catalogVersion;
-
-    /// <summary>
-    /// (Optional) A set of custom key-value pairs on the instance of the inventory item, which is not
-    /// to be confused with the catalog item's custom data.
-    /// </summary>
-    _Maybenull_ _Field_size_(customDataCount) struct PFStringDictionaryEntry const* customData;
-
-    /// <summary>
-    /// Count of customData
-    /// </summary>
-    uint32_t customDataCount;
-
-    /// <summary>
-    /// (Optional) CatalogItem.DisplayName at the time this item was purchased.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* displayName;
-
-    /// <summary>
-    /// (Optional) Timestamp for when this instance will expire.
-    /// </summary>
-    _Maybenull_ time_t const* expiration;
-
-    /// <summary>
-    /// (Optional) Class name for the inventory item, as defined in the catalog.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* itemClass;
-
-    /// <summary>
-    /// (Optional) Unique identifier for the inventory item, as defined in the catalog.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* itemId;
-
-    /// <summary>
-    /// (Optional) Unique item identifier for this specific instance of the item.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* itemInstanceId;
-
-    /// <summary>
-    /// (Optional) Timestamp for when this instance was purchased.
-    /// </summary>
-    _Maybenull_ time_t const* purchaseDate;
-
-    /// <summary>
-    /// (Optional) Total number of remaining uses, if this is a consumable item.
-    /// </summary>
-    _Maybenull_ int32_t const* remainingUses;
-
-    /// <summary>
-    /// (Optional) Currency type for the cost of the catalog item. Not available when granting items.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* unitCurrency;
-
-    /// <summary>
-    /// Cost of the catalog item in the given currency. Not available when granting items.
-    /// </summary>
-    uint32_t unitPrice;
-
-    /// <summary>
-    /// (Optional) The number of uses that were added or removed to this item in this call.
-    /// </summary>
-    _Maybenull_ int32_t const* usesIncrementedBy;
-
-} PFItemInstance;
-
-/// <summary>
-/// PFCharacterInventory data model.
-/// </summary>
-typedef struct PFCharacterInventory
-{
-    /// <summary>
-    /// (Optional) The id of this character.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* characterId;
-
-    /// <summary>
-    /// (Optional) The inventory of this character.
-    /// </summary>
-    _Maybenull_ _Field_size_(inventoryCount) PFItemInstance const* const* inventory;
-
-    /// <summary>
-    /// Count of inventory
-    /// </summary>
-    uint32_t inventoryCount;
-
-} PFCharacterInventory;
-
-/// <summary>
 /// PFCharacterResult data model.
 /// </summary>
 typedef struct PFCharacterResult
@@ -1450,6 +1231,145 @@ typedef struct PFCharacterResult
     _Maybenull_ _Null_terminated_ const char* characterType;
 
 } PFCharacterResult;
+
+/// <summary>
+/// PFUserDataRecord data model.
+/// </summary>
+typedef struct PFUserDataRecord
+{
+    /// <summary>
+    /// Timestamp for when this data was last updated.
+    /// </summary>
+    time_t lastUpdated;
+
+    /// <summary>
+    /// (Optional) Indicates whether this data can be read by all users (public) or only the user (private).
+    /// This is used for GetUserData requests being made by one player about another player.
+    /// </summary>
+    _Maybenull_ PFUserDataPermission const* permission;
+
+    /// <summary>
+    /// (Optional) Data stored for the specified user data key.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* value;
+
+} PFUserDataRecord;
+
+/// <summary>
+/// PFVirtualCurrencyRechargeTime data model.
+/// </summary>
+typedef struct PFVirtualCurrencyRechargeTime
+{
+    /// <summary>
+    /// Maximum value to which the regenerating currency will automatically increment. Note that it can
+    /// exceed this value through use of the AddUserVirtualCurrency API call. However, it will not regenerate
+    /// automatically until it has fallen below this value.
+    /// </summary>
+    int32_t rechargeMax;
+
+    /// <summary>
+    /// Server timestamp in UTC indicating the next time the virtual currency will be incremented.
+    /// </summary>
+    time_t rechargeTime;
+
+    /// <summary>
+    /// Time remaining (in seconds) before the next recharge increment of the virtual currency.
+    /// </summary>
+    int32_t secondsToRecharge;
+
+} PFVirtualCurrencyRechargeTime;
+
+/// <summary>
+/// PFPlayerProfileViewConstraints data model.
+/// </summary>
+typedef struct PFPlayerProfileViewConstraints
+{
+    /// <summary>
+    /// Whether to show player's avatar URL. Defaults to false.
+    /// </summary>
+    bool showAvatarUrl;
+
+    /// <summary>
+    /// Whether to show the banned until time. Defaults to false.
+    /// </summary>
+    bool showBannedUntil;
+
+    /// <summary>
+    /// Whether to show campaign attributions. Defaults to false.
+    /// </summary>
+    bool showCampaignAttributions;
+
+    /// <summary>
+    /// Whether to show contact email addresses. Defaults to false.
+    /// </summary>
+    bool showContactEmailAddresses;
+
+    /// <summary>
+    /// Whether to show the created date. Defaults to false.
+    /// </summary>
+    bool showCreated;
+
+    /// <summary>
+    /// Whether to show the display name. Defaults to false.
+    /// </summary>
+    bool showDisplayName;
+
+    /// <summary>
+    /// Whether to show player's experiment variants. Defaults to false.
+    /// </summary>
+    bool showExperimentVariants;
+
+    /// <summary>
+    /// Whether to show the last login time. Defaults to false.
+    /// </summary>
+    bool showLastLogin;
+
+    /// <summary>
+    /// Whether to show the linked accounts. Defaults to false.
+    /// </summary>
+    bool showLinkedAccounts;
+
+    /// <summary>
+    /// Whether to show player's locations. Defaults to false.
+    /// </summary>
+    bool showLocations;
+
+    /// <summary>
+    /// Whether to show player's membership information. Defaults to false.
+    /// </summary>
+    bool showMemberships;
+
+    /// <summary>
+    /// Whether to show origination. Defaults to false.
+    /// </summary>
+    bool showOrigination;
+
+    /// <summary>
+    /// Whether to show push notification registrations. Defaults to false.
+    /// </summary>
+    bool showPushNotificationRegistrations;
+
+    /// <summary>
+    /// Reserved for future development.
+    /// </summary>
+    bool showStatistics;
+
+    /// <summary>
+    /// Whether to show tags. Defaults to false.
+    /// </summary>
+    bool showTags;
+
+    /// <summary>
+    /// Whether to show the total value to date in usd. Defaults to false.
+    /// </summary>
+    bool showTotalValueToDateInUsd;
+
+    /// <summary>
+    /// Whether to show the values to date. Defaults to false.
+    /// </summary>
+    bool showValuesToDate;
+
+} PFPlayerProfileViewConstraints;
 
 /// <summary>
 /// PFAdCampaignAttributionModel data model.
@@ -1872,6 +1792,135 @@ typedef struct PFPlayerProfileModel
 } PFPlayerProfileModel;
 
 /// <summary>
+/// PFGetPlayerCombinedInfoRequestParams data model.
+/// </summary>
+typedef struct PFGetPlayerCombinedInfoRequestParams
+{
+    /// <summary>
+    /// Whether to get character inventories. Defaults to false.
+    /// </summary>
+    bool getCharacterInventories;
+
+    /// <summary>
+    /// Whether to get the list of characters. Defaults to false.
+    /// </summary>
+    bool getCharacterList;
+
+    /// <summary>
+    /// Whether to get player profile. Defaults to false. Has no effect for a new player.
+    /// </summary>
+    bool getPlayerProfile;
+
+    /// <summary>
+    /// Whether to get player statistics. Defaults to false.
+    /// </summary>
+    bool getPlayerStatistics;
+
+    /// <summary>
+    /// Whether to get title data. Defaults to false.
+    /// </summary>
+    bool getTitleData;
+
+    /// <summary>
+    /// Whether to get the player's account Info. Defaults to false.
+    /// </summary>
+    bool getUserAccountInfo;
+
+    /// <summary>
+    /// Whether to get the player's custom data. Defaults to false.
+    /// </summary>
+    bool getUserData;
+
+    /// <summary>
+    /// Whether to get the player's inventory. Defaults to false.
+    /// </summary>
+    bool getUserInventory;
+
+    /// <summary>
+    /// Whether to get the player's read only data. Defaults to false.
+    /// </summary>
+    bool getUserReadOnlyData;
+
+    /// <summary>
+    /// Whether to get the player's virtual currency balances. Defaults to false.
+    /// </summary>
+    bool getUserVirtualCurrency;
+
+    /// <summary>
+    /// (Optional) Specific statistics to retrieve. Leave null to get all keys. Has no effect if GetPlayerStatistics
+    /// is false.
+    /// </summary>
+    _Maybenull_ _Field_size_(playerStatisticNamesCount) const char* const* playerStatisticNames;
+
+    /// <summary>
+    /// Count of playerStatisticNames
+    /// </summary>
+    uint32_t playerStatisticNamesCount;
+
+    /// <summary>
+    /// (Optional) Specifies the properties to return from the player profile. Defaults to returning
+    /// the player's display name.
+    /// </summary>
+    _Maybenull_ PFPlayerProfileViewConstraints const* profileConstraints;
+
+    /// <summary>
+    /// (Optional) Specific keys to search for in the custom data. Leave null to get all keys. Has no
+    /// effect if GetTitleData is false.
+    /// </summary>
+    _Maybenull_ _Field_size_(titleDataKeysCount) const char* const* titleDataKeys;
+
+    /// <summary>
+    /// Count of titleDataKeys
+    /// </summary>
+    uint32_t titleDataKeysCount;
+
+    /// <summary>
+    /// (Optional) Specific keys to search for in the custom data. Leave null to get all keys. Has no
+    /// effect if GetUserData is false.
+    /// </summary>
+    _Maybenull_ _Field_size_(userDataKeysCount) const char* const* userDataKeys;
+
+    /// <summary>
+    /// Count of userDataKeys
+    /// </summary>
+    uint32_t userDataKeysCount;
+
+    /// <summary>
+    /// (Optional) Specific keys to search for in the custom data. Leave null to get all keys. Has no
+    /// effect if GetUserReadOnlyData is false.
+    /// </summary>
+    _Maybenull_ _Field_size_(userReadOnlyDataKeysCount) const char* const* userReadOnlyDataKeys;
+
+    /// <summary>
+    /// Count of userReadOnlyDataKeys
+    /// </summary>
+    uint32_t userReadOnlyDataKeysCount;
+
+} PFGetPlayerCombinedInfoRequestParams;
+
+/// <summary>
+/// PFCharacterInventory data model.
+/// </summary>
+typedef struct PFCharacterInventory
+{
+    /// <summary>
+    /// (Optional) The id of this character.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* characterId;
+
+    /// <summary>
+    /// (Optional) The inventory of this character.
+    /// </summary>
+    _Maybenull_ _Field_size_(inventoryCount) PFItemInstance const* const* inventory;
+
+    /// <summary>
+    /// Count of inventory
+    /// </summary>
+    uint32_t inventoryCount;
+
+} PFCharacterInventory;
+
+/// <summary>
 /// PFStatisticValue data model.
 /// </summary>
 typedef struct PFStatisticValue
@@ -1893,53 +1942,6 @@ typedef struct PFStatisticValue
     uint32_t version;
 
 } PFStatisticValue;
-
-/// <summary>
-/// PFUserDataRecord data model.
-/// </summary>
-typedef struct PFUserDataRecord
-{
-    /// <summary>
-    /// Timestamp for when this data was last updated.
-    /// </summary>
-    time_t lastUpdated;
-
-    /// <summary>
-    /// (Optional) Indicates whether this data can be read by all users (public) or only the user (private).
-    /// This is used for GetUserData requests being made by one player about another player.
-    /// </summary>
-    _Maybenull_ PFUserDataPermission const* permission;
-
-    /// <summary>
-    /// (Optional) Data stored for the specified user data key.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* value;
-
-} PFUserDataRecord;
-
-/// <summary>
-/// PFVirtualCurrencyRechargeTime data model.
-/// </summary>
-typedef struct PFVirtualCurrencyRechargeTime
-{
-    /// <summary>
-    /// Maximum value to which the regenerating currency will automatically increment. Note that it can
-    /// exceed this value through use of the AddUserVirtualCurrency API call. However, it will not regenerate
-    /// automatically until it has fallen below this value.
-    /// </summary>
-    int32_t rechargeMax;
-
-    /// <summary>
-    /// Server timestamp in UTC indicating the next time the virtual currency will be incremented.
-    /// </summary>
-    time_t rechargeTime;
-
-    /// <summary>
-    /// Time remaining (in seconds) before the next recharge increment of the virtual currency.
-    /// </summary>
-    int32_t secondsToRecharge;
-
-} PFVirtualCurrencyRechargeTime;
 
 /// <summary>
 /// PFGetPlayerCombinedInfoResultPayload data model.

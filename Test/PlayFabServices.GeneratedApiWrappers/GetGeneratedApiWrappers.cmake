@@ -39,6 +39,10 @@ function(GET_PLAYFAB_SERVICES_GENERATED_API_WRAPPERS_FILES
         "${PATH_TO_SOURCE}/MultiplayerServerOperations.cpp"
         "${PATH_TO_SOURCE}/ProfilesOperations.h"
         "${PATH_TO_SOURCE}/ProfilesOperations.cpp"
+        "${PATH_TO_SOURCE}/LeaderboardsOperations.h"
+        "${PATH_TO_SOURCE}/LeaderboardsOperations.cpp"
+        "${PATH_TO_SOURCE}/StatisticsOperations.h"
+        "${PATH_TO_SOURCE}/StatisticsOperations.cpp"
         PARENT_SCOPE
         )
 

@@ -53,6 +53,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)GroupsTests.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GroupsTests.cpp" />
     <None Include="$(MSBuildThisFileDirectory)GroupsTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)LeaderboardsTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)LeaderboardsTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)LeaderboardsTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)StatisticsTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)StatisticsTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)StatisticsTestsImpl.stubs" />
     <ClInclude Include="$(MSBuildThisFileDirectory)LocalizationTests.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)LocalizationTests.cpp" />
     <None Include="$(MSBuildThisFileDirectory)LocalizationTestsImpl.stubs" />

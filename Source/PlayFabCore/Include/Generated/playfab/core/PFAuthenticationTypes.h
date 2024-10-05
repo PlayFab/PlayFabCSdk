@@ -290,7 +290,8 @@ typedef struct PFAuthenticationLoginWithEmailAddressRequest
 /// PlayFab Title IDs, as Facebook provides unique user IDs per application and doing so can result in
 /// issues with the Facebook ID for the user in their PlayFab account information. If you must re-use
 /// an application in a new PlayFab Title ID, please be sure to first unlink all accounts from Facebook,
-/// or delete all users in the first Title ID.
+/// or delete all users in the first Title ID. Note: If the user is authenticated with AuthenticationToken,
+/// instead of AccessToken, the GetFriendsList API will return an empty list.
 /// </summary>
 typedef struct PFAuthenticationLoginWithFacebookRequest
 {
@@ -298,6 +299,11 @@ typedef struct PFAuthenticationLoginWithFacebookRequest
     /// Unique identifier from Facebook for the user.
     /// </summary>
     _Null_terminated_ const char* accessToken;
+
+    /// <summary>
+    /// (Optional) Token used for limited login authentication.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* authenticationToken;
 
     /// <summary>
     /// Automatically create a PlayFab account if one is not currently linked to this ID.

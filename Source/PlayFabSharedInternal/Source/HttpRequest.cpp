@@ -59,7 +59,7 @@ HCHttpCall::HCHttpCall(
     UnorderedMap<String, String> headers,
     String requestBody,
     PlayFab::RunContext runContext,
-    PFHCCompressionLevel compressionLevel
+    HCCompressionLevel compressionLevel
 ) noexcept :
     XAsyncOperation<ServiceResponse>{ std::move(runContext) },
     m_method{ std::move(method) },
@@ -79,7 +79,7 @@ HCHttpCall::HCHttpCall(
     PFHttpRetrySettings const& retrySettings,
     PlayFab::RunContext runContext,
     PFHttpSettings const& httpSettings,
-    PFHCCompressionLevel compressionLevel
+    HCCompressionLevel compressionLevel
 ) noexcept :
     XAsyncOperation<ServiceResponse>{ std::move(runContext) },
     m_method{ std::move(method) },
@@ -99,7 +99,7 @@ HCHttpCall::~HCHttpCall() noexcept
 {
     if (m_callHandle)
     {
-        PFHCHttpCallCloseHandle(m_callHandle);
+        HCHttpCallCloseHandle(m_callHandle);
     }
 }
 
@@ -111,64 +111,64 @@ void HCHttpCall::SetHeader(String headerName, String headerValue) noexcept
 HRESULT HCHttpCall::OnStarted(XAsyncBlock* async) noexcept
 {
     // Set up HCHttpCallHandle
-    RETURN_IF_FAILED(PFHCHttpCallCreate(&m_callHandle));
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetUrl(m_callHandle, m_method.data(), m_url.data()));
-    RETURN_IF_FAILED(PFHCHttpCallResponseSetResponseBodyWriteFunction(m_callHandle, HCHttpCall::HCResponseBodyWrite, this));
+    RETURN_IF_FAILED(HCHttpCallCreate(&m_callHandle));
+    RETURN_IF_FAILED(HCHttpCallRequestSetUrl(m_callHandle, m_method.data(), m_url.data()));
+    RETURN_IF_FAILED(HCHttpCallResponseSetResponseBodyWriteFunction(m_callHandle, HCHttpCall::HCResponseBodyWrite, this));
 
     // Setup Compression level
-    RETURN_IF_FAILED(PFHCHttpCallRequestEnableGzipCompression(m_callHandle, m_compressionLevel));
+    RETURN_IF_FAILED(HCHttpCallRequestEnableGzipCompression(m_callHandle, m_compressionLevel));
 
     // Set whether the expected response should be compressed
     if (m_compressedResponsesExpected)
     {
-        RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, "Accept-Encoding", "application/gzip", true));
-        RETURN_IF_FAILED(PFHCHttpCallResponseSetGzipCompressed(m_callHandle, true));
+        RETURN_IF_FAILED(HCHttpCallRequestSetHeader(m_callHandle, "Accept-Encoding", "application/gzip", true));
+        RETURN_IF_FAILED(HCHttpCallResponseSetGzipCompressed(m_callHandle, true));
     }
 
     // Doing this assignment to avoid guarding the variable and having to add several guards on the header file.
     // This is due to a PlayStation build warning about private field not being used
-    m_compressionLevel = PFHCCompressionLevel::None;
+    m_compressionLevel = HCCompressionLevel::None;
 
     // Add default PlayFab headers
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, "Accept", "application/json", true));
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, "Content-Type", "application/json; charset=utf-8", true));
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, "X-ReportErrorAsSuccess", "true", true));
+    RETURN_IF_FAILED(HCHttpCallRequestSetHeader(m_callHandle, "Accept", "application/json", true));
+    RETURN_IF_FAILED(HCHttpCallRequestSetHeader(m_callHandle, "Content-Type", "application/json; charset=utf-8", true));
+    RETURN_IF_FAILED(HCHttpCallRequestSetHeader(m_callHandle, "X-ReportErrorAsSuccess", "true", true));
 
     // Configure retries
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetRetryAllowed(m_callHandle, m_retryAllowed));
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetRetryDelay(m_callHandle, m_retryDelay));
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetTimeoutWindow(m_callHandle, m_timeoutWindow));
+    RETURN_IF_FAILED(HCHttpCallRequestSetRetryAllowed(m_callHandle, m_retryAllowed));
+    RETURN_IF_FAILED(HCHttpCallRequestSetRetryDelay(m_callHandle, m_retryDelay));
+    RETURN_IF_FAILED(HCHttpCallRequestSetTimeoutWindow(m_callHandle, m_timeoutWindow));
 
     // Add additional version string header
     Stringstream sdkFullVer;
     sdkFullVer << versionString << sdkVersion;
     String strFullVerStr = sdkFullVer.str();
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, kSDKVersionStringHeaderName, strFullVerStr.c_str(), true));
+    RETURN_IF_FAILED(HCHttpCallRequestSetHeader(m_callHandle, kSDKVersionStringHeaderName, strFullVerStr.c_str(), true));
 
     Stringstream sdkUserAgent;
     sdkUserAgent << userAgent << sdkVersion;
     String sdkUserAgentStr = sdkUserAgent.str();
-    RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, kSDKUserAgentHeader, sdkUserAgentStr.c_str(), true));
+    RETURN_IF_FAILED(HCHttpCallRequestSetHeader(m_callHandle, kSDKUserAgentHeader, sdkUserAgentStr.c_str(), true));
 
     for (const auto& pair : m_headers)
     {
         if (!pair.first.empty() && !pair.second.empty())
         {
-            RETURN_IF_FAILED(PFHCHttpCallRequestSetHeader(m_callHandle, pair.first.data(), pair.second.data(), true));
+            RETURN_IF_FAILED(HCHttpCallRequestSetHeader(m_callHandle, pair.first.data(), pair.second.data(), true));
         }
     }
 
     if (!m_requestBody.empty())
     {
-        RETURN_IF_FAILED(PFHCHttpCallRequestSetRequestBodyReadFunction(m_callHandle, HCHttpCall::HCRequestBodyRead, m_requestBody.size(), this));
+        RETURN_IF_FAILED(HCHttpCallRequestSetRequestBodyReadFunction(m_callHandle, HCHttpCall::HCRequestBodyRead, m_requestBody.size(), this));
     }
 
     if (m_retryCacheId.has_value())
     {
-        RETURN_IF_FAILED(PFHCHttpCallRequestSetRetryCacheId(m_callHandle, *m_retryCacheId));
+        RETURN_IF_FAILED(HCHttpCallRequestSetRetryCacheId(m_callHandle, *m_retryCacheId));
     }
 
-    return PFHCHttpCallPerformAsync(m_callHandle, async);
+    return HCHttpCallPerformAsync(m_callHandle, async);
 }
 
 Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
@@ -189,7 +189,7 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
     {
         // Couldn't parse response body, fall back to Http status code
         uint32_t httpCode{ 0 };
-        RETURN_IF_FAILED(PFHCHttpCallResponseGetStatusCode(m_callHandle, &httpCode));
+        RETURN_IF_FAILED(HCHttpCallResponseGetStatusCode(m_callHandle, &httpCode));
         RETURN_IF_FAILED(HttpStatusToHR(httpCode));
 
         // This is an unusual case. We weren't able to parse the response body, but the Http status code indicates that the
@@ -207,7 +207,7 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
 
     // Get requestId response header
     const char* requestId;
-    RETURN_IF_FAILED(PFHCHttpCallResponseGetHeader(m_callHandle, "X-RequestId", &requestId));
+    RETURN_IF_FAILED(HCHttpCallResponseGetHeader(m_callHandle, "X-RequestId", &requestId));
 
     if (requestId)
     {
@@ -218,7 +218,7 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
 }
 
 HRESULT HCHttpCall::HCRequestBodyRead(
-    _In_ PFHCCallHandle callHandle,
+    _In_ HCCallHandle callHandle,
     _In_ size_t offset,
     _In_ size_t bytesAvailable,
     _In_opt_ void* context,
@@ -242,7 +242,7 @@ HRESULT HCHttpCall::HCRequestBodyRead(
 }
 
 HRESULT HCHttpCall::HCResponseBodyWrite(
-    _In_ PFHCCallHandle callHandle,
+    _In_ HCCallHandle callHandle,
     _In_reads_bytes_(bytesAvailable) const uint8_t* source,
     _In_ size_t bytesAvailable,
     _In_opt_ void* context

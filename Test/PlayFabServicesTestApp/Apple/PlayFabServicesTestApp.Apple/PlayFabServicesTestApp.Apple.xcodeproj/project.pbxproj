@@ -15,6 +15,24 @@
 		8206F21F2B758A4100451339 /* PlayFabServices_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F21B2B758A4100451339 /* PlayFabServices_macOS.framework */; };
 		8206F2202B758A4100451339 /* PlayFabServices_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F21B2B758A4100451339 /* PlayFabServices_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8206F2212B758A4100451339 /* libPlayFabSharedInternal_macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8206F21C2B758A4100451339 /* libPlayFabSharedInternal_macOS.a */; };
+		82289E7E2C37204E0050931B /* LibHCTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82289E742C37204E0050931B /* LibHCTests.cpp */; };
+		82289E7F2C37204E0050931B /* LibHCTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82289E742C37204E0050931B /* LibHCTests.cpp */; };
+		826589C02C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 826589BE2C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs */; };
+		826589C12C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 826589BE2C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs */; };
+		826589C22C6D2FF500E9DEE0 /* StatisticsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 826589BF2C6D2FF500E9DEE0 /* StatisticsTestsImpl.stubs */; };
+		826589C32C6D2FF500E9DEE0 /* StatisticsTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = 826589BF2C6D2FF500E9DEE0 /* StatisticsTestsImpl.stubs */; };
+		826589C62C6D302F00E9DEE0 /* LeaderboardsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826589C42C6D302F00E9DEE0 /* LeaderboardsTests.cpp */; };
+		826589C72C6D302F00E9DEE0 /* LeaderboardsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826589C42C6D302F00E9DEE0 /* LeaderboardsTests.cpp */; };
+		826589C82C6D302F00E9DEE0 /* StatisticsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826589C52C6D302F00E9DEE0 /* StatisticsTests.cpp */; };
+		826589C92C6D302F00E9DEE0 /* StatisticsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826589C52C6D302F00E9DEE0 /* StatisticsTests.cpp */; };
+		826589CC2C6D304B00E9DEE0 /* LeaderboardsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826589CA2C6D304B00E9DEE0 /* LeaderboardsTestsImpl.cpp */; };
+		826589CD2C6D304B00E9DEE0 /* LeaderboardsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826589CA2C6D304B00E9DEE0 /* LeaderboardsTestsImpl.cpp */; };
+		826589CE2C6D304B00E9DEE0 /* StatisticsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826589CB2C6D304B00E9DEE0 /* StatisticsTestsImpl.cpp */; };
+		826589CF2C6D304B00E9DEE0 /* StatisticsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826589CB2C6D304B00E9DEE0 /* StatisticsTestsImpl.cpp */; };
+		82658A192C6D430F00E9DEE0 /* LeaderboardsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A172C6D430F00E9DEE0 /* LeaderboardsOperations.cpp */; };
+		82658A1A2C6D430F00E9DEE0 /* LeaderboardsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A172C6D430F00E9DEE0 /* LeaderboardsOperations.cpp */; };
+		82658A1B2C6D430F00E9DEE0 /* StatisticsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */; };
+		82658A1C2C6D430F00E9DEE0 /* StatisticsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */; };
 		82AB6DA42B4DBB980082EDED /* AppleSignInCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB6DA32B4DBB980082EDED /* AppleSignInCoordinator.swift */; };
 		82B3CC6C2B5B04F000337232 /* EventPipelineTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB3F2B153920007BD4F5 /* EventPipelineTests.cpp */; };
 		82B3CC6D2B5B04F000337232 /* SegmentsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB452B153920007BD4F5 /* SegmentsTestsImpl.cpp */; };
@@ -314,6 +332,36 @@
 		8206F21A2B758A4100451339 /* PlayFabCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8206F21B2B758A4100451339 /* PlayFabServices_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlayFabServices_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8206F21C2B758A4100451339 /* libPlayFabSharedInternal_macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal_macOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		82289E742C37204E0050931B /* LibHCTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LibHCTests.cpp; sourceTree = "<group>"; };
+		82289E7D2C37204E0050931B /* LibHCTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibHCTests.h; sourceTree = "<group>"; };
+		826589BC2C6D2FCA00E9DEE0 /* StatisticsTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatisticsTests.h; path = ../../../PlayFabServices.GeneratedTests/StatisticsTests.h; sourceTree = "<group>"; };
+		826589BD2C6D2FCA00E9DEE0 /* LeaderboardsTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeaderboardsTests.h; path = ../../../PlayFabServices.GeneratedTests/LeaderboardsTests.h; sourceTree = "<group>"; };
+		826589BE2C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LeaderboardsTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/LeaderboardsTestsImpl.stubs; sourceTree = "<group>"; };
+		826589BF2C6D2FF500E9DEE0 /* StatisticsTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = StatisticsTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/StatisticsTestsImpl.stubs; sourceTree = "<group>"; };
+		826589C42C6D302F00E9DEE0 /* LeaderboardsTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LeaderboardsTests.cpp; path = ../../../PlayFabServices.GeneratedTests/LeaderboardsTests.cpp; sourceTree = "<group>"; };
+		826589C52C6D302F00E9DEE0 /* StatisticsTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StatisticsTests.cpp; path = ../../../PlayFabServices.GeneratedTests/StatisticsTests.cpp; sourceTree = "<group>"; };
+		826589CA2C6D304B00E9DEE0 /* LeaderboardsTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LeaderboardsTestsImpl.cpp; sourceTree = "<group>"; };
+		826589CB2C6D304B00E9DEE0 /* StatisticsTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StatisticsTestsImpl.cpp; sourceTree = "<group>"; };
+		82658A052C6D42FA00E9DEE0 /* MultiplayerServerOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiplayerServerOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/MultiplayerServerOperations.h; sourceTree = "<group>"; };
+		82658A062C6D42FA00E9DEE0 /* LocalizationOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalizationOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/LocalizationOperations.h; sourceTree = "<group>"; };
+		82658A072C6D42FA00E9DEE0 /* InventoryOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InventoryOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/InventoryOperations.h; sourceTree = "<group>"; };
+		82658A082C6D42FA00E9DEE0 /* GroupsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupsOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/GroupsOperations.h; sourceTree = "<group>"; };
+		82658A092C6D42FA00E9DEE0 /* PlatformSpecificOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformSpecificOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/PlatformSpecificOperations.h; sourceTree = "<group>"; };
+		82658A0A2C6D42FA00E9DEE0 /* CloudScriptOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CloudScriptOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/CloudScriptOperations.h; sourceTree = "<group>"; };
+		82658A0B2C6D42FA00E9DEE0 /* CatalogOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CatalogOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/CatalogOperations.h; sourceTree = "<group>"; };
+		82658A0C2C6D42FA00E9DEE0 /* DataOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/DataOperations.h; sourceTree = "<group>"; };
+		82658A0D2C6D42FA00E9DEE0 /* ExperimentationOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentationOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/ExperimentationOperations.h; sourceTree = "<group>"; };
+		82658A0E2C6D42FA00E9DEE0 /* ProfilesOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfilesOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/ProfilesOperations.h; sourceTree = "<group>"; };
+		82658A0F2C6D42FA00E9DEE0 /* SegmentsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentsOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/SegmentsOperations.h; sourceTree = "<group>"; };
+		82658A102C6D42FA00E9DEE0 /* PlayerDataManagementOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerDataManagementOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/PlayerDataManagementOperations.h; sourceTree = "<group>"; };
+		82658A112C6D42FA00E9DEE0 /* TitleDataManagementOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TitleDataManagementOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/TitleDataManagementOperations.h; sourceTree = "<group>"; };
+		82658A122C6D42FA00E9DEE0 /* PushNotificationsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PushNotificationsOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/PushNotificationsOperations.h; sourceTree = "<group>"; };
+		82658A132C6D42FA00E9DEE0 /* LeaderboardsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeaderboardsOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/LeaderboardsOperations.h; sourceTree = "<group>"; };
+		82658A142C6D42FA00E9DEE0 /* FriendsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendsOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/FriendsOperations.h; sourceTree = "<group>"; };
+		82658A152C6D42FA00E9DEE0 /* AccountManagementOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountManagementOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/AccountManagementOperations.h; sourceTree = "<group>"; };
+		82658A162C6D42FA00E9DEE0 /* StatisticsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatisticsOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/StatisticsOperations.h; sourceTree = "<group>"; };
+		82658A172C6D430F00E9DEE0 /* LeaderboardsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LeaderboardsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/LeaderboardsOperations.cpp; sourceTree = "<group>"; };
+		82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StatisticsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/StatisticsOperations.cpp; sourceTree = "<group>"; };
 		8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
 		82AB6DA32B4DBB980082EDED /* AppleSignInCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInCoordinator.swift; sourceTree = "<group>"; };
 		82AB6DB72B4DE5B60082EDED /* libPlayFabSharedInternal.iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -330,22 +378,6 @@
 		82CEEA802B153285007BD4F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		82CEEA822B153285007BD4F5 /* PlayFabServicesTestApp_Apple.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PlayFabServicesTestApp_Apple.entitlements; sourceTree = "<group>"; };
 		82CEEA842B153285007BD4F5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		82CEEA912B153672007BD4F5 /* PlayerDataManagementOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerDataManagementOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/PlayerDataManagementOperations.h; sourceTree = "<group>"; };
-		82CEEA922B153672007BD4F5 /* ProfilesOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfilesOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/ProfilesOperations.h; sourceTree = "<group>"; };
-		82CEEA932B153672007BD4F5 /* MultiplayerServerOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiplayerServerOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/MultiplayerServerOperations.h; sourceTree = "<group>"; };
-		82CEEA942B153672007BD4F5 /* FriendsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendsOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/FriendsOperations.h; sourceTree = "<group>"; };
-		82CEEA952B153672007BD4F5 /* ExperimentationOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperimentationOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/ExperimentationOperations.h; sourceTree = "<group>"; };
-		82CEEA962B153672007BD4F5 /* LocalizationOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalizationOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/LocalizationOperations.h; sourceTree = "<group>"; };
-		82CEEA972B153672007BD4F5 /* DataOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/DataOperations.h; sourceTree = "<group>"; };
-		82CEEA982B153672007BD4F5 /* GroupsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupsOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/GroupsOperations.h; sourceTree = "<group>"; };
-		82CEEA992B153672007BD4F5 /* PlatformSpecificOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformSpecificOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/PlatformSpecificOperations.h; sourceTree = "<group>"; };
-		82CEEA9A2B153672007BD4F5 /* AccountManagementOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountManagementOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/AccountManagementOperations.h; sourceTree = "<group>"; };
-		82CEEA9B2B153672007BD4F5 /* CloudScriptOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CloudScriptOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/CloudScriptOperations.h; sourceTree = "<group>"; };
-		82CEEA9C2B153672007BD4F5 /* CatalogOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CatalogOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/CatalogOperations.h; sourceTree = "<group>"; };
-		82CEEA9D2B153672007BD4F5 /* PushNotificationsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PushNotificationsOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/PushNotificationsOperations.h; sourceTree = "<group>"; };
-		82CEEA9E2B153672007BD4F5 /* TitleDataManagementOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TitleDataManagementOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/TitleDataManagementOperations.h; sourceTree = "<group>"; };
-		82CEEA9F2B153672007BD4F5 /* InventoryOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InventoryOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/InventoryOperations.h; sourceTree = "<group>"; };
-		82CEEAA02B153672007BD4F5 /* SegmentsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentsOperations.h; path = ../../../../PlayFabServices.GeneratedApiWrappers/SegmentsOperations.h; sourceTree = "<group>"; };
 		82CEEAA22B1536C9007BD4F5 /* LocalizationOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LocalizationOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/LocalizationOperations.cpp; sourceTree = "<group>"; };
 		82CEEAA32B1536C9007BD4F5 /* CloudScriptOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CloudScriptOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/CloudScriptOperations.cpp; sourceTree = "<group>"; };
 		82CEEAA42B1536C9007BD4F5 /* MultiplayerServerOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultiplayerServerOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/MultiplayerServerOperations.cpp; sourceTree = "<group>"; };
@@ -488,6 +520,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		82658A042C6D42D500E9DEE0 /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				82658A152C6D42FA00E9DEE0 /* AccountManagementOperations.h */,
+				82658A0B2C6D42FA00E9DEE0 /* CatalogOperations.h */,
+				82658A0A2C6D42FA00E9DEE0 /* CloudScriptOperations.h */,
+				82658A0C2C6D42FA00E9DEE0 /* DataOperations.h */,
+				82658A0D2C6D42FA00E9DEE0 /* ExperimentationOperations.h */,
+				82658A142C6D42FA00E9DEE0 /* FriendsOperations.h */,
+				82658A082C6D42FA00E9DEE0 /* GroupsOperations.h */,
+				82658A072C6D42FA00E9DEE0 /* InventoryOperations.h */,
+				82658A132C6D42FA00E9DEE0 /* LeaderboardsOperations.h */,
+				82658A062C6D42FA00E9DEE0 /* LocalizationOperations.h */,
+				82658A052C6D42FA00E9DEE0 /* MultiplayerServerOperations.h */,
+				82658A092C6D42FA00E9DEE0 /* PlatformSpecificOperations.h */,
+				82658A102C6D42FA00E9DEE0 /* PlayerDataManagementOperations.h */,
+				82658A0E2C6D42FA00E9DEE0 /* ProfilesOperations.h */,
+				82658A122C6D42FA00E9DEE0 /* PushNotificationsOperations.h */,
+				82658A0F2C6D42FA00E9DEE0 /* SegmentsOperations.h */,
+				82658A162C6D42FA00E9DEE0 /* StatisticsOperations.h */,
+				82658A112C6D42FA00E9DEE0 /* TitleDataManagementOperations.h */,
+			);
+			name = Include;
+			sourceTree = "<group>";
+		};
 		8286B2172B7401C6009A4677 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -574,38 +631,17 @@
 		82CEEA8D2B1533B2007BD4F5 /* PlayFabServices.GeneratedApiWrappers */ = {
 			isa = PBXGroup;
 			children = (
-				82CEEA8E2B153482007BD4F5 /* Include */,
+				82658A042C6D42D500E9DEE0 /* Include */,
 				82CEEA902B153497007BD4F5 /* Source */,
 			);
 			name = PlayFabServices.GeneratedApiWrappers;
 			sourceTree = "<group>";
 		};
-		82CEEA8E2B153482007BD4F5 /* Include */ = {
-			isa = PBXGroup;
-			children = (
-				82CEEA9A2B153672007BD4F5 /* AccountManagementOperations.h */,
-				82CEEA9C2B153672007BD4F5 /* CatalogOperations.h */,
-				82CEEA9B2B153672007BD4F5 /* CloudScriptOperations.h */,
-				82CEEA972B153672007BD4F5 /* DataOperations.h */,
-				82CEEA952B153672007BD4F5 /* ExperimentationOperations.h */,
-				82CEEA942B153672007BD4F5 /* FriendsOperations.h */,
-				82CEEA982B153672007BD4F5 /* GroupsOperations.h */,
-				82CEEA9F2B153672007BD4F5 /* InventoryOperations.h */,
-				82CEEA962B153672007BD4F5 /* LocalizationOperations.h */,
-				82CEEA932B153672007BD4F5 /* MultiplayerServerOperations.h */,
-				82CEEA992B153672007BD4F5 /* PlatformSpecificOperations.h */,
-				82CEEA912B153672007BD4F5 /* PlayerDataManagementOperations.h */,
-				82CEEA922B153672007BD4F5 /* ProfilesOperations.h */,
-				82CEEA9D2B153672007BD4F5 /* PushNotificationsOperations.h */,
-				82CEEAA02B153672007BD4F5 /* SegmentsOperations.h */,
-				82CEEA9E2B153672007BD4F5 /* TitleDataManagementOperations.h */,
-			);
-			path = Include;
-			sourceTree = "<group>";
-		};
 		82CEEA902B153497007BD4F5 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				82658A172C6D430F00E9DEE0 /* LeaderboardsOperations.cpp */,
+				82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */,
 				82CEEAAE2B1536C9007BD4F5 /* AccountManagementOperations.cpp */,
 				82CEEAA62B1536C9007BD4F5 /* CatalogOperations.cpp */,
 				82CEEAA32B1536C9007BD4F5 /* CloudScriptOperations.cpp */,
@@ -629,6 +665,8 @@
 		82CEEAC52B153773007BD4F5 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				826589C42C6D302F00E9DEE0 /* LeaderboardsTests.cpp */,
+				826589C52C6D302F00E9DEE0 /* StatisticsTests.cpp */,
 				82CEEAF72B15382B007BD4F5 /* Stubs */,
 				82CEEAE42B1537FB007BD4F5 /* AccountManagementTests.cpp */,
 				82CEEAE52B1537FB007BD4F5 /* CatalogTests.cpp */,
@@ -653,6 +691,8 @@
 		82CEEAC62B15377A007BD4F5 /* Include */ = {
 			isa = PBXGroup;
 			children = (
+				826589BD2C6D2FCA00E9DEE0 /* LeaderboardsTests.h */,
+				826589BC2C6D2FCA00E9DEE0 /* StatisticsTests.h */,
 				82CEEACB2B1537C9007BD4F5 /* AccountManagementTests.h */,
 				82CEEAC92B1537C9007BD4F5 /* CatalogTests.h */,
 				82CEEACE2B1537C9007BD4F5 /* CloudScriptTests.h */,
@@ -676,6 +716,8 @@
 		82CEEAF72B15382B007BD4F5 /* Stubs */ = {
 			isa = PBXGroup;
 			children = (
+				826589BE2C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs */,
+				826589BF2C6D2FF500E9DEE0 /* StatisticsTestsImpl.stubs */,
 				82CEEAF82B153866007BD4F5 /* AccountManagementTestsImpl.stubs */,
 				82CEEB002B153866007BD4F5 /* CatalogTestsImpl.stubs */,
 				82CEEB072B153866007BD4F5 /* CloudScriptTestsImpl.stubs */,
@@ -761,6 +803,8 @@
 		82CEEB3C2B153920007BD4F5 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				82289E742C37204E0050931B /* LibHCTests.cpp */,
+				82289E7D2C37204E0050931B /* LibHCTests.h */,
 				82CEEB3D2B153920007BD4F5 /* AuthenticationTests.cpp */,
 				82CEEB3E2B153920007BD4F5 /* AuthenticationTests.h */,
 				82CEEB3F2B153920007BD4F5 /* EventPipelineTests.cpp */,
@@ -772,6 +816,8 @@
 		82CEEB412B153920007BD4F5 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				826589CA2C6D304B00E9DEE0 /* LeaderboardsTestsImpl.cpp */,
+				826589CB2C6D304B00E9DEE0 /* StatisticsTestsImpl.cpp */,
 				82CEEB422B153920007BD4F5 /* PlayerDataManagementTestsImpl.cpp */,
 				82CEEB432B153920007BD4F5 /* TitleDataManagementTestsImpl.cpp */,
 				82CEEB442B153920007BD4F5 /* ProfilesTestsImpl.cpp */,
@@ -1027,6 +1073,8 @@
 				82B3CCC02B5B04F000337232 /* DataTestsImpl.stubs in Resources */,
 				82B3CCC12B5B04F000337232 /* Assets.xcassets in Resources */,
 				82B3CCC22B5B04F000337232 /* FriendsTestsImpl.stubs in Resources */,
+				826589C32C6D2FF500E9DEE0 /* StatisticsTestsImpl.stubs in Resources */,
+				826589C12C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs in Resources */,
 				82B3CCC32B5B04F000337232 /* CloudScriptTestsImpl.stubs in Resources */,
 				82B3CCC42B5B04F000337232 /* CatalogTestsImpl.stubs in Resources */,
 				82B3CCC52B5B04F000337232 /* ProfilesTestsImpl.stubs in Resources */,
@@ -1053,6 +1101,8 @@
 				82CEEB0B2B153866007BD4F5 /* DataTestsImpl.stubs in Resources */,
 				82CEEA812B153285007BD4F5 /* Assets.xcassets in Resources */,
 				82CEEB112B153866007BD4F5 /* FriendsTestsImpl.stubs in Resources */,
+				826589C22C6D2FF500E9DEE0 /* StatisticsTestsImpl.stubs in Resources */,
+				826589C02C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs in Resources */,
 				82CEEB172B153866007BD4F5 /* CloudScriptTestsImpl.stubs in Resources */,
 				82CEEB102B153866007BD4F5 /* CatalogTestsImpl.stubs in Resources */,
 				82CEEB0A2B153866007BD4F5 /* ProfilesTestsImpl.stubs in Resources */,
@@ -1077,6 +1127,7 @@
 				82B3CC732B5B04F000337232 /* ExperimentationTests.cpp in Sources */,
 				82B3CC742B5B04F000337232 /* PushNotificationsOperations.cpp in Sources */,
 				82B3CC752B5B04F000337232 /* TitleDataManagementTests.cpp in Sources */,
+				826589C92C6D302F00E9DEE0 /* StatisticsTests.cpp in Sources */,
 				82B3CC762B5B04F000337232 /* CoreOperations.cpp in Sources */,
 				82B3CC772B5B04F000337232 /* DataOperations.cpp in Sources */,
 				82B3CC782B5B04F000337232 /* FriendsTests.cpp in Sources */,
@@ -1091,12 +1142,15 @@
 				82B3CC812B5B04F000337232 /* GroupsOperations.cpp in Sources */,
 				82B3CC822B5B04F000337232 /* DataTestsImpl.cpp in Sources */,
 				82B3CC832B5B04F000337232 /* AppleSignInCoordinator.swift in Sources */,
+				826589C72C6D302F00E9DEE0 /* LeaderboardsTests.cpp in Sources */,
 				82B3CC842B5B04F000337232 /* InventoryOperations.cpp in Sources */,
 				82B3CC852B5B04F000337232 /* LocalizationOperations.cpp in Sources */,
 				82B3CC862B5B04F000337232 /* MainApple.cpp in Sources */,
+				82658A1A2C6D430F00E9DEE0 /* LeaderboardsOperations.cpp in Sources */,
 				82B3CC872B5B04F000337232 /* ContentView.swift in Sources */,
 				82B3CC882B5B04F000337232 /* TestContext.cpp in Sources */,
 				82B3CC892B5B04F000337232 /* PlayerDataManagementOperations.cpp in Sources */,
+				826589CF2C6D304B00E9DEE0 /* StatisticsTestsImpl.cpp in Sources */,
 				82B3CC8A2B5B04F000337232 /* PlayerDataManagementTestsImpl.cpp in Sources */,
 				82B3CC8B2B5B04F000337232 /* PlatformUtilsApple.cpp in Sources */,
 				82B3CC8C2B5B04F000337232 /* CloudScriptTests.cpp in Sources */,
@@ -1105,6 +1159,7 @@
 				82B3CC8F2B5B04F000337232 /* AuthenticationTests.cpp in Sources */,
 				82B3CC902B5B04F000337232 /* TestClass.cpp in Sources */,
 				82B3CC912B5B04F000337232 /* TestRunner.cpp in Sources */,
+				82658A1C2C6D430F00E9DEE0 /* StatisticsOperations.cpp in Sources */,
 				82B3CC922B5B04F000337232 /* MultiplayerServerOperations.cpp in Sources */,
 				82B3CC932B5B04F000337232 /* FriendsOperations.cpp in Sources */,
 				82B3CC942B5B04F000337232 /* CatalogTestsImpl.cpp in Sources */,
@@ -1112,6 +1167,7 @@
 				82B3CC962B5B04F000337232 /* AccountManagementOperations.cpp in Sources */,
 				82B3CC972B5B04F000337232 /* ExperimentationOperations.cpp in Sources */,
 				82B3CC982B5B04F000337232 /* CloudScriptTestsImpl.cpp in Sources */,
+				826589CD2C6D304B00E9DEE0 /* LeaderboardsTestsImpl.cpp in Sources */,
 				82B3CC992B5B04F000337232 /* PlatformSpecificOperations.cpp in Sources */,
 				82B3CC9A2B5B04F000337232 /* TestReport.cpp in Sources */,
 				82B3CC9B2B5B04F000337232 /* MemoryManager.cpp in Sources */,
@@ -1119,6 +1175,7 @@
 				82B3CC9D2B5B04F000337232 /* PushNotificationsTestsImpl.cpp in Sources */,
 				82B3CC9E2B5B04F000337232 /* LocalizationTests.cpp in Sources */,
 				82B3CC9F2B5B04F000337232 /* PlatformSpecificTestsImpl.cpp in Sources */,
+				82289E7F2C37204E0050931B /* LibHCTests.cpp in Sources */,
 				82B3CCA02B5B04F000337232 /* ExperimentationTestsImpl.cpp in Sources */,
 				82B3CCA12B5B04F000337232 /* GroupsTestsImpl.cpp in Sources */,
 				82B3CCA22B5B04F000337232 /* PlayFabApple.cpp in Sources */,
@@ -1151,6 +1208,7 @@
 				82CEEAED2B1537FB007BD4F5 /* ExperimentationTests.cpp in Sources */,
 				82CEEABC2B1536C9007BD4F5 /* PushNotificationsOperations.cpp in Sources */,
 				82CEEAEA2B1537FB007BD4F5 /* TitleDataManagementTests.cpp in Sources */,
+				826589C82C6D302F00E9DEE0 /* StatisticsTests.cpp in Sources */,
 				82CEEB7E2B153920007BD4F5 /* CoreOperations.cpp in Sources */,
 				82CEEABF2B1536C9007BD4F5 /* DataOperations.cpp in Sources */,
 				82CEEAE92B1537FB007BD4F5 /* FriendsTests.cpp in Sources */,
@@ -1165,12 +1223,15 @@
 				82CEEABA2B1536C9007BD4F5 /* GroupsOperations.cpp in Sources */,
 				82CEEB7B2B153920007BD4F5 /* DataTestsImpl.cpp in Sources */,
 				82AB6DA42B4DBB980082EDED /* AppleSignInCoordinator.swift in Sources */,
+				826589C62C6D302F00E9DEE0 /* LeaderboardsTests.cpp in Sources */,
 				82CEEAC02B1536C9007BD4F5 /* InventoryOperations.cpp in Sources */,
 				82CEEAB22B1536C9007BD4F5 /* LocalizationOperations.cpp in Sources */,
 				82B72C892B1FF441003802AA /* MainApple.cpp in Sources */,
+				82658A192C6D430F00E9DEE0 /* LeaderboardsOperations.cpp in Sources */,
 				82CEEA7F2B153284007BD4F5 /* ContentView.swift in Sources */,
 				82CEEB602B153920007BD4F5 /* TestContext.cpp in Sources */,
 				82CEEAC12B1536C9007BD4F5 /* PlayerDataManagementOperations.cpp in Sources */,
+				826589CE2C6D304B00E9DEE0 /* StatisticsTestsImpl.cpp in Sources */,
 				82CEEB6C2B153920007BD4F5 /* PlayerDataManagementTestsImpl.cpp in Sources */,
 				82CEEB8E2B1556D5007BD4F5 /* PlatformUtilsApple.cpp in Sources */,
 				82CEEAE82B1537FB007BD4F5 /* CloudScriptTests.cpp in Sources */,
@@ -1179,6 +1240,7 @@
 				82CEEB6A2B153920007BD4F5 /* AuthenticationTests.cpp in Sources */,
 				82CEEB5C2B153920007BD4F5 /* TestClass.cpp in Sources */,
 				82CEEB5F2B153920007BD4F5 /* TestRunner.cpp in Sources */,
+				82658A1B2C6D430F00E9DEE0 /* StatisticsOperations.cpp in Sources */,
 				82CEEAB42B1536C9007BD4F5 /* MultiplayerServerOperations.cpp in Sources */,
 				82CEEAB72B1536C9007BD4F5 /* FriendsOperations.cpp in Sources */,
 				82CEEB742B153920007BD4F5 /* CatalogTestsImpl.cpp in Sources */,
@@ -1186,6 +1248,7 @@
 				82CEEABE2B1536C9007BD4F5 /* AccountManagementOperations.cpp in Sources */,
 				82CEEABD2B1536C9007BD4F5 /* ExperimentationOperations.cpp in Sources */,
 				82CEEB702B153920007BD4F5 /* CloudScriptTestsImpl.cpp in Sources */,
+				826589CC2C6D304B00E9DEE0 /* LeaderboardsTestsImpl.cpp in Sources */,
 				82CEEAB52B1536C9007BD4F5 /* PlatformSpecificOperations.cpp in Sources */,
 				82CEEB5E2B153920007BD4F5 /* TestReport.cpp in Sources */,
 				82CEEB662B153920007BD4F5 /* MemoryManager.cpp in Sources */,
@@ -1193,6 +1256,7 @@
 				82CEEB792B153920007BD4F5 /* PushNotificationsTestsImpl.cpp in Sources */,
 				82CEEAF32B1537FB007BD4F5 /* LocalizationTests.cpp in Sources */,
 				82CEEB762B153920007BD4F5 /* PlatformSpecificTestsImpl.cpp in Sources */,
+				82289E7E2C37204E0050931B /* LibHCTests.cpp in Sources */,
 				82CEEB7A2B153920007BD4F5 /* ExperimentationTestsImpl.cpp in Sources */,
 				82CEEB712B153920007BD4F5 /* GroupsTestsImpl.cpp in Sources */,
 				82CEEB8C2B1551E8007BD4F5 /* PlayFabApple.cpp in Sources */,
@@ -1282,6 +1346,7 @@
 					"-Wformat-security",
 					"-Werror=format-security",
 				);
+				OTHER_SWIFT_FLAGS = "-DPLAYFAB_AVOID_UI";
 				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.playfabcommerce.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REEXPORTED_FRAMEWORK_NAMES = HttpClient;
@@ -1350,6 +1415,7 @@
 					"-Wformat-security",
 					"-Werror=format-security",
 				);
+				OTHER_SWIFT_FLAGS = "-DPLAYFAB_AVOID_UI";
 				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.playfabcommerce.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REEXPORTED_FRAMEWORK_NAMES = HttpClient;

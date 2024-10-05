@@ -85,6 +85,18 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)GroupsOperations.cpp" >
       <Filter>Source</Filter>
     </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)LeaderboardsOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)LeaderboardsOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)StatisticsOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)StatisticsOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClInclude Include="$(MSBuildThisFileDirectory)LocalizationOperations.h" >
       <Filter>Include</Filter>
     </ClInclude>

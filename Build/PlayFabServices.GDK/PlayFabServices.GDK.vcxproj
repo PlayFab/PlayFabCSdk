@@ -4,7 +4,8 @@
     <ProjectGuid>{fb3a4738-544d-4a89-ba69-31d7c86e7af7}</ProjectGuid>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <GDKExtLibNames>;</GDKExtLibNames>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\PlayFabServices\Source\GDK\AccountManagementXTokenAPIs.cpp" />

@@ -9,17 +9,17 @@ namespace Test
 void TitleDataManagementTests::AddTests()
 {
     AddTest("TestClientGetPublisherData", &TitleDataManagementTests::TestClientGetPublisherData);
-    AddTest("TestClientGetTime", &TitleDataManagementTests::TestClientGetTime);
-    AddTest("TestClientGetTitleData", &TitleDataManagementTests::TestClientGetTitleData);
+    AddTest("TestClientGetTime", &TitleDataManagementTests::TestClientGetTime, true);
+    AddTest("TestClientGetTitleData", &TitleDataManagementTests::TestClientGetTitleData, true);
     AddTest("TestClientGetTitleNews", &TitleDataManagementTests::TestClientGetTitleNews);
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerGetPublisherData", &TitleDataManagementTests::TestServerGetPublisherData);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    AddTest("TestServerGetTime", &TitleDataManagementTests::TestServerGetTime);
+    AddTest("TestServerGetTime", &TitleDataManagementTests::TestServerGetTime, true);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    AddTest("TestServerGetTitleData", &TitleDataManagementTests::TestServerGetTitleData);
+    AddTest("TestServerGetTitleData", &TitleDataManagementTests::TestServerGetTitleData, true);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerGetTitleInternalData", &TitleDataManagementTests::TestServerGetTitleInternalData);

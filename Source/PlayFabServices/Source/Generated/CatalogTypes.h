@@ -1,6 +1,7 @@
 #pragma once
 
 #include <playfab/services/cpp/CatalogTypeWrappers.h>
+#include <playfab/services/cpp/TypeWrappers.h>
 #include "Generated/CoreTypes.h"
 #include "BaseModel.h"
 
@@ -1358,6 +1359,8 @@ public:
 
 } // namespace Catalog
 
+// Json serialization helpers
+
 // EnumRange definitions used for Enum (de)serialization
 template<typename T> struct EnumRange;
 
@@ -1385,5 +1388,6 @@ template<> struct EnumRange<PFCatalogHelpfulnessVote>
 {
     static constexpr PFCatalogHelpfulnessVote maxValue = PFCatalogHelpfulnessVote::Helpful;
 };
+
 
 } // namespace PlayFab

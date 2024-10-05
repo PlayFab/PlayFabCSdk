@@ -5,58 +5,218 @@
 namespace PlayFab
 {
 
-JsonValue PlayerProfileViewConstraints::ToJson() const
+HRESULT ItemInstance::FromJson(const JsonValue& input)
 {
-    return PlayerProfileViewConstraints::ToJson(this->Model());
+    String annotation{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Annotation", annotation));
+    this->SetAnnotation(std::move(annotation));
+
+    CStringVector bundleContents{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "BundleContents", bundleContents));
+    this->SetBundleContents(std::move(bundleContents));
+
+    String bundleParent{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "BundleParent", bundleParent));
+    this->SetBundleParent(std::move(bundleParent));
+
+    String catalogVersion{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CatalogVersion", catalogVersion));
+    this->SetCatalogVersion(std::move(catalogVersion));
+
+    StringDictionaryEntryVector customData{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CustomData", customData));
+    this->SetCustomData(std::move(customData));
+
+    String displayName{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "DisplayName", displayName));
+    this->SetDisplayName(std::move(displayName));
+
+    std::optional<time_t> expiration{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "Expiration", expiration));
+    this->SetExpiration(std::move(expiration));
+
+    String itemClass{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemClass", itemClass));
+    this->SetItemClass(std::move(itemClass));
+
+    String itemId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemId", itemId));
+    this->SetItemId(std::move(itemId));
+
+    String itemInstanceId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemInstanceId", itemInstanceId));
+    this->SetItemInstanceId(std::move(itemInstanceId));
+
+    std::optional<time_t> purchaseDate{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "PurchaseDate", purchaseDate));
+    this->SetPurchaseDate(std::move(purchaseDate));
+
+    std::optional<int32_t> remainingUses{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "RemainingUses", remainingUses));
+    this->SetRemainingUses(std::move(remainingUses));
+
+    String unitCurrency{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "UnitCurrency", unitCurrency));
+    this->SetUnitCurrency(std::move(unitCurrency));
+
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "UnitPrice", this->m_model.unitPrice));
+
+    std::optional<int32_t> usesIncrementedBy{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "UsesIncrementedBy", usesIncrementedBy));
+    this->SetUsesIncrementedBy(std::move(usesIncrementedBy));
+
+    return S_OK;
 }
 
-JsonValue PlayerProfileViewConstraints::ToJson(const PFPlayerProfileViewConstraints& input)
+size_t ItemInstance::RequiredBufferSize() const
 {
-    JsonValue output{ rapidjson::kObjectType };
-    JsonUtils::ObjectAddMember(output, "ShowAvatarUrl", input.showAvatarUrl);
-    JsonUtils::ObjectAddMember(output, "ShowBannedUntil", input.showBannedUntil);
-    JsonUtils::ObjectAddMember(output, "ShowCampaignAttributions", input.showCampaignAttributions);
-    JsonUtils::ObjectAddMember(output, "ShowContactEmailAddresses", input.showContactEmailAddresses);
-    JsonUtils::ObjectAddMember(output, "ShowCreated", input.showCreated);
-    JsonUtils::ObjectAddMember(output, "ShowDisplayName", input.showDisplayName);
-    JsonUtils::ObjectAddMember(output, "ShowExperimentVariants", input.showExperimentVariants);
-    JsonUtils::ObjectAddMember(output, "ShowLastLogin", input.showLastLogin);
-    JsonUtils::ObjectAddMember(output, "ShowLinkedAccounts", input.showLinkedAccounts);
-    JsonUtils::ObjectAddMember(output, "ShowLocations", input.showLocations);
-    JsonUtils::ObjectAddMember(output, "ShowMemberships", input.showMemberships);
-    JsonUtils::ObjectAddMember(output, "ShowOrigination", input.showOrigination);
-    JsonUtils::ObjectAddMember(output, "ShowPushNotificationRegistrations", input.showPushNotificationRegistrations);
-    JsonUtils::ObjectAddMember(output, "ShowStatistics", input.showStatistics);
-    JsonUtils::ObjectAddMember(output, "ShowTags", input.showTags);
-    JsonUtils::ObjectAddMember(output, "ShowTotalValueToDateInUsd", input.showTotalValueToDateInUsd);
-    JsonUtils::ObjectAddMember(output, "ShowValuesToDate", input.showValuesToDate);
-    return output;
+    return RequiredBufferSize(this->Model());
 }
 
-JsonValue GetPlayerCombinedInfoRequestParams::ToJson() const
+Result<PFItemInstance const*> ItemInstance::Copy(ModelBuffer& buffer) const
 {
-    return GetPlayerCombinedInfoRequestParams::ToJson(this->Model());
+    return buffer.CopyTo<ItemInstance>(&this->Model());
 }
 
-JsonValue GetPlayerCombinedInfoRequestParams::ToJson(const PFGetPlayerCombinedInfoRequestParams& input)
+size_t ItemInstance::RequiredBufferSize(const PFItemInstance& model)
 {
-    JsonValue output{ rapidjson::kObjectType };
-    JsonUtils::ObjectAddMember(output, "GetCharacterInventories", input.getCharacterInventories);
-    JsonUtils::ObjectAddMember(output, "GetCharacterList", input.getCharacterList);
-    JsonUtils::ObjectAddMember(output, "GetPlayerProfile", input.getPlayerProfile);
-    JsonUtils::ObjectAddMember(output, "GetPlayerStatistics", input.getPlayerStatistics);
-    JsonUtils::ObjectAddMember(output, "GetTitleData", input.getTitleData);
-    JsonUtils::ObjectAddMember(output, "GetUserAccountInfo", input.getUserAccountInfo);
-    JsonUtils::ObjectAddMember(output, "GetUserData", input.getUserData);
-    JsonUtils::ObjectAddMember(output, "GetUserInventory", input.getUserInventory);
-    JsonUtils::ObjectAddMember(output, "GetUserReadOnlyData", input.getUserReadOnlyData);
-    JsonUtils::ObjectAddMember(output, "GetUserVirtualCurrency", input.getUserVirtualCurrency);
-    JsonUtils::ObjectAddMemberArray(output, "PlayerStatisticNames", input.playerStatisticNames, input.playerStatisticNamesCount);
-    JsonUtils::ObjectAddMember<PlayerProfileViewConstraints>(output, "ProfileConstraints", input.profileConstraints);
-    JsonUtils::ObjectAddMemberArray(output, "TitleDataKeys", input.titleDataKeys, input.titleDataKeysCount);
-    JsonUtils::ObjectAddMemberArray(output, "UserDataKeys", input.userDataKeys, input.userDataKeysCount);
-    JsonUtils::ObjectAddMemberArray(output, "UserReadOnlyDataKeys", input.userReadOnlyDataKeys, input.userReadOnlyDataKeysCount);
-    return output;
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.annotation)
+    {
+        requiredSize += (std::strlen(model.annotation) + 1);
+    }
+    requiredSize += (alignof(char*) + sizeof(char*) * model.bundleContentsCount);
+    for (size_t i = 0; i < model.bundleContentsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.bundleContents[i]) + 1);
+    }
+    if (model.bundleParent)
+    {
+        requiredSize += (std::strlen(model.bundleParent) + 1);
+    }
+    if (model.catalogVersion)
+    {
+        requiredSize += (std::strlen(model.catalogVersion) + 1);
+    }
+    requiredSize += (alignof(PFStringDictionaryEntry) + sizeof(PFStringDictionaryEntry) * model.customDataCount);
+    for (size_t i = 0; i < model.customDataCount; ++i)
+    {
+        requiredSize += (std::strlen(model.customData[i].key) + 1);
+        requiredSize += (std::strlen(model.customData[i].value) + 1);
+    }
+    if (model.displayName)
+    {
+        requiredSize += (std::strlen(model.displayName) + 1);
+    }
+    if (model.expiration)
+    {
+        requiredSize += (alignof(time_t) + sizeof(time_t));
+    }
+    if (model.itemClass)
+    {
+        requiredSize += (std::strlen(model.itemClass) + 1);
+    }
+    if (model.itemId)
+    {
+        requiredSize += (std::strlen(model.itemId) + 1);
+    }
+    if (model.itemInstanceId)
+    {
+        requiredSize += (std::strlen(model.itemInstanceId) + 1);
+    }
+    if (model.purchaseDate)
+    {
+        requiredSize += (alignof(time_t) + sizeof(time_t));
+    }
+    if (model.remainingUses)
+    {
+        requiredSize += (alignof(int32_t) + sizeof(int32_t));
+    }
+    if (model.unitCurrency)
+    {
+        requiredSize += (std::strlen(model.unitCurrency) + 1);
+    }
+    if (model.usesIncrementedBy)
+    {
+        requiredSize += (alignof(int32_t) + sizeof(int32_t));
+    }
+    return requiredSize;
+}
+
+HRESULT ItemInstance::Copy(const PFItemInstance& input, PFItemInstance& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.annotation); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.annotation = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToArray(input.bundleContents, input.bundleContentsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.bundleContents = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.bundleParent); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.bundleParent = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.catalogVersion); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.catalogVersion = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.customData, input.customDataCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.customData = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.displayName); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.displayName = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.expiration); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.expiration = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.itemClass); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.itemClass = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.itemId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.itemId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.itemInstanceId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.itemInstanceId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.purchaseDate); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.purchaseDate = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.remainingUses); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.remainingUses = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.unitCurrency); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.unitCurrency = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.usesIncrementedBy); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.usesIncrementedBy = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
 }
 
 HRESULT UserAndroidDeviceInfo::FromJson(const JsonValue& input)
@@ -1602,274 +1762,6 @@ HRESULT UserAccountInfo::Copy(const PFUserAccountInfo& input, PFUserAccountInfo&
     return S_OK;
 }
 
-HRESULT ItemInstance::FromJson(const JsonValue& input)
-{
-    String annotation{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Annotation", annotation));
-    this->SetAnnotation(std::move(annotation));
-
-    CStringVector bundleContents{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "BundleContents", bundleContents));
-    this->SetBundleContents(std::move(bundleContents));
-
-    String bundleParent{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "BundleParent", bundleParent));
-    this->SetBundleParent(std::move(bundleParent));
-
-    String catalogVersion{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CatalogVersion", catalogVersion));
-    this->SetCatalogVersion(std::move(catalogVersion));
-
-    StringDictionaryEntryVector customData{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CustomData", customData));
-    this->SetCustomData(std::move(customData));
-
-    String displayName{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "DisplayName", displayName));
-    this->SetDisplayName(std::move(displayName));
-
-    std::optional<time_t> expiration{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "Expiration", expiration));
-    this->SetExpiration(std::move(expiration));
-
-    String itemClass{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemClass", itemClass));
-    this->SetItemClass(std::move(itemClass));
-
-    String itemId{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemId", itemId));
-    this->SetItemId(std::move(itemId));
-
-    String itemInstanceId{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemInstanceId", itemInstanceId));
-    this->SetItemInstanceId(std::move(itemInstanceId));
-
-    std::optional<time_t> purchaseDate{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "PurchaseDate", purchaseDate));
-    this->SetPurchaseDate(std::move(purchaseDate));
-
-    std::optional<int32_t> remainingUses{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "RemainingUses", remainingUses));
-    this->SetRemainingUses(std::move(remainingUses));
-
-    String unitCurrency{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "UnitCurrency", unitCurrency));
-    this->SetUnitCurrency(std::move(unitCurrency));
-
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "UnitPrice", this->m_model.unitPrice));
-
-    std::optional<int32_t> usesIncrementedBy{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "UsesIncrementedBy", usesIncrementedBy));
-    this->SetUsesIncrementedBy(std::move(usesIncrementedBy));
-
-    return S_OK;
-}
-
-size_t ItemInstance::RequiredBufferSize() const
-{
-    return RequiredBufferSize(this->Model());
-}
-
-Result<PFItemInstance const*> ItemInstance::Copy(ModelBuffer& buffer) const
-{
-    return buffer.CopyTo<ItemInstance>(&this->Model());
-}
-
-size_t ItemInstance::RequiredBufferSize(const PFItemInstance& model)
-{
-    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
-    if (model.annotation)
-    {
-        requiredSize += (std::strlen(model.annotation) + 1);
-    }
-    requiredSize += (alignof(char*) + sizeof(char*) * model.bundleContentsCount);
-    for (size_t i = 0; i < model.bundleContentsCount; ++i)
-    {
-        requiredSize += (std::strlen(model.bundleContents[i]) + 1);
-    }
-    if (model.bundleParent)
-    {
-        requiredSize += (std::strlen(model.bundleParent) + 1);
-    }
-    if (model.catalogVersion)
-    {
-        requiredSize += (std::strlen(model.catalogVersion) + 1);
-    }
-    requiredSize += (alignof(PFStringDictionaryEntry) + sizeof(PFStringDictionaryEntry) * model.customDataCount);
-    for (size_t i = 0; i < model.customDataCount; ++i)
-    {
-        requiredSize += (std::strlen(model.customData[i].key) + 1);
-        requiredSize += (std::strlen(model.customData[i].value) + 1);
-    }
-    if (model.displayName)
-    {
-        requiredSize += (std::strlen(model.displayName) + 1);
-    }
-    if (model.expiration)
-    {
-        requiredSize += (alignof(time_t) + sizeof(time_t));
-    }
-    if (model.itemClass)
-    {
-        requiredSize += (std::strlen(model.itemClass) + 1);
-    }
-    if (model.itemId)
-    {
-        requiredSize += (std::strlen(model.itemId) + 1);
-    }
-    if (model.itemInstanceId)
-    {
-        requiredSize += (std::strlen(model.itemInstanceId) + 1);
-    }
-    if (model.purchaseDate)
-    {
-        requiredSize += (alignof(time_t) + sizeof(time_t));
-    }
-    if (model.remainingUses)
-    {
-        requiredSize += (alignof(int32_t) + sizeof(int32_t));
-    }
-    if (model.unitCurrency)
-    {
-        requiredSize += (std::strlen(model.unitCurrency) + 1);
-    }
-    if (model.usesIncrementedBy)
-    {
-        requiredSize += (alignof(int32_t) + sizeof(int32_t));
-    }
-    return requiredSize;
-}
-
-HRESULT ItemInstance::Copy(const PFItemInstance& input, PFItemInstance& output, ModelBuffer& buffer)
-{
-    output = input;
-    {
-        auto propCopyResult = buffer.CopyTo(input.annotation); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.annotation = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyToArray(input.bundleContents, input.bundleContentsCount);
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.bundleContents = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.bundleParent); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.bundleParent = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.catalogVersion); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.catalogVersion = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyToDictionary(input.customData, input.customDataCount);
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.customData = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.displayName); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.displayName = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.expiration); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.expiration = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.itemClass); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.itemClass = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.itemId); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.itemId = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.itemInstanceId); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.itemInstanceId = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.purchaseDate); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.purchaseDate = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.remainingUses); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.remainingUses = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.unitCurrency); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.unitCurrency = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.usesIncrementedBy); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.usesIncrementedBy = propCopyResult.ExtractPayload();
-    }
-    return S_OK;
-}
-
-HRESULT CharacterInventory::FromJson(const JsonValue& input)
-{
-    String characterId{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CharacterId", characterId));
-    this->SetCharacterId(std::move(characterId));
-
-    ModelVector<ItemInstance> inventory{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<ItemInstance>(input, "Inventory", inventory));
-    this->SetInventory(std::move(inventory));
-
-    return S_OK;
-}
-
-size_t CharacterInventory::RequiredBufferSize() const
-{
-    return RequiredBufferSize(this->Model());
-}
-
-Result<PFCharacterInventory const*> CharacterInventory::Copy(ModelBuffer& buffer) const
-{
-    return buffer.CopyTo<CharacterInventory>(&this->Model());
-}
-
-size_t CharacterInventory::RequiredBufferSize(const PFCharacterInventory& model)
-{
-    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
-    if (model.characterId)
-    {
-        requiredSize += (std::strlen(model.characterId) + 1);
-    }
-    requiredSize += (alignof(PFItemInstance*) + sizeof(PFItemInstance*) * model.inventoryCount);
-    for (size_t i = 0; i < model.inventoryCount; ++i)
-    {
-        requiredSize += ItemInstance::RequiredBufferSize(*model.inventory[i]);
-    }
-    return requiredSize;
-}
-
-HRESULT CharacterInventory::Copy(const PFCharacterInventory& input, PFCharacterInventory& output, ModelBuffer& buffer)
-{
-    output = input;
-    {
-        auto propCopyResult = buffer.CopyTo(input.characterId); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.characterId = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyToArray<ItemInstance>(input.inventory, input.inventoryCount);
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.inventory = propCopyResult.ExtractPayload();
-    }
-    return S_OK;
-}
-
 HRESULT CharacterResult::FromJson(const JsonValue& input)
 {
     String characterId{};
@@ -1934,6 +1826,123 @@ HRESULT CharacterResult::Copy(const PFCharacterResult& input, PFCharacterResult&
         output.characterType = propCopyResult.ExtractPayload();
     }
     return S_OK;
+}
+
+HRESULT UserDataRecord::FromJson(const JsonValue& input)
+{
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "LastUpdated", this->m_model.lastUpdated));
+
+    std::optional<PFUserDataPermission> permission{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Permission", permission));
+    this->SetPermission(std::move(permission));
+
+    String value{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Value", value));
+    this->SetValue(std::move(value));
+
+    return S_OK;
+}
+
+size_t UserDataRecord::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFUserDataRecord const*> UserDataRecord::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<UserDataRecord>(&this->Model());
+}
+
+size_t UserDataRecord::RequiredBufferSize(const PFUserDataRecord& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.permission)
+    {
+        requiredSize += (alignof(PFUserDataPermission) + sizeof(PFUserDataPermission));
+    }
+    if (model.value)
+    {
+        requiredSize += (std::strlen(model.value) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT UserDataRecord::Copy(const PFUserDataRecord& input, PFUserDataRecord& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.permission); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.permission = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.value); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.value = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+HRESULT VirtualCurrencyRechargeTime::FromJson(const JsonValue& input)
+{
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "RechargeMax", this->m_model.rechargeMax));
+
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "RechargeTime", this->m_model.rechargeTime));
+
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SecondsToRecharge", this->m_model.secondsToRecharge));
+
+    return S_OK;
+}
+
+size_t VirtualCurrencyRechargeTime::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFVirtualCurrencyRechargeTime const*> VirtualCurrencyRechargeTime::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<VirtualCurrencyRechargeTime>(&this->Model());
+}
+
+size_t VirtualCurrencyRechargeTime::RequiredBufferSize(const PFVirtualCurrencyRechargeTime& model)
+{
+    UNREFERENCED_PARAMETER(model); // Fixed size
+    return sizeof(ModelType);
+}
+
+HRESULT VirtualCurrencyRechargeTime::Copy(const PFVirtualCurrencyRechargeTime& input, PFVirtualCurrencyRechargeTime& output, ModelBuffer& buffer)
+{
+    output = input;
+    UNREFERENCED_PARAMETER(buffer); // Fixed size
+    return S_OK;
+}
+
+JsonValue PlayerProfileViewConstraints::ToJson() const
+{
+    return PlayerProfileViewConstraints::ToJson(this->Model());
+}
+
+JsonValue PlayerProfileViewConstraints::ToJson(const PFPlayerProfileViewConstraints& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMember(output, "ShowAvatarUrl", input.showAvatarUrl);
+    JsonUtils::ObjectAddMember(output, "ShowBannedUntil", input.showBannedUntil);
+    JsonUtils::ObjectAddMember(output, "ShowCampaignAttributions", input.showCampaignAttributions);
+    JsonUtils::ObjectAddMember(output, "ShowContactEmailAddresses", input.showContactEmailAddresses);
+    JsonUtils::ObjectAddMember(output, "ShowCreated", input.showCreated);
+    JsonUtils::ObjectAddMember(output, "ShowDisplayName", input.showDisplayName);
+    JsonUtils::ObjectAddMember(output, "ShowExperimentVariants", input.showExperimentVariants);
+    JsonUtils::ObjectAddMember(output, "ShowLastLogin", input.showLastLogin);
+    JsonUtils::ObjectAddMember(output, "ShowLinkedAccounts", input.showLinkedAccounts);
+    JsonUtils::ObjectAddMember(output, "ShowLocations", input.showLocations);
+    JsonUtils::ObjectAddMember(output, "ShowMemberships", input.showMemberships);
+    JsonUtils::ObjectAddMember(output, "ShowOrigination", input.showOrigination);
+    JsonUtils::ObjectAddMember(output, "ShowPushNotificationRegistrations", input.showPushNotificationRegistrations);
+    JsonUtils::ObjectAddMember(output, "ShowStatistics", input.showStatistics);
+    JsonUtils::ObjectAddMember(output, "ShowTags", input.showTags);
+    JsonUtils::ObjectAddMember(output, "ShowTotalValueToDateInUsd", input.showTotalValueToDateInUsd);
+    JsonUtils::ObjectAddMember(output, "ShowValuesToDate", input.showValuesToDate);
+    return output;
 }
 
 JsonValue AdCampaignAttributionModel::ToJson() const
@@ -3050,6 +3059,86 @@ HRESULT PlayerProfileModel::Copy(const PFPlayerProfileModel& input, PFPlayerProf
     return S_OK;
 }
 
+JsonValue GetPlayerCombinedInfoRequestParams::ToJson() const
+{
+    return GetPlayerCombinedInfoRequestParams::ToJson(this->Model());
+}
+
+JsonValue GetPlayerCombinedInfoRequestParams::ToJson(const PFGetPlayerCombinedInfoRequestParams& input)
+{
+    JsonValue output{ rapidjson::kObjectType };
+    JsonUtils::ObjectAddMember(output, "GetCharacterInventories", input.getCharacterInventories);
+    JsonUtils::ObjectAddMember(output, "GetCharacterList", input.getCharacterList);
+    JsonUtils::ObjectAddMember(output, "GetPlayerProfile", input.getPlayerProfile);
+    JsonUtils::ObjectAddMember(output, "GetPlayerStatistics", input.getPlayerStatistics);
+    JsonUtils::ObjectAddMember(output, "GetTitleData", input.getTitleData);
+    JsonUtils::ObjectAddMember(output, "GetUserAccountInfo", input.getUserAccountInfo);
+    JsonUtils::ObjectAddMember(output, "GetUserData", input.getUserData);
+    JsonUtils::ObjectAddMember(output, "GetUserInventory", input.getUserInventory);
+    JsonUtils::ObjectAddMember(output, "GetUserReadOnlyData", input.getUserReadOnlyData);
+    JsonUtils::ObjectAddMember(output, "GetUserVirtualCurrency", input.getUserVirtualCurrency);
+    JsonUtils::ObjectAddMemberArray(output, "PlayerStatisticNames", input.playerStatisticNames, input.playerStatisticNamesCount);
+    JsonUtils::ObjectAddMember<PlayerProfileViewConstraints>(output, "ProfileConstraints", input.profileConstraints);
+    JsonUtils::ObjectAddMemberArray(output, "TitleDataKeys", input.titleDataKeys, input.titleDataKeysCount);
+    JsonUtils::ObjectAddMemberArray(output, "UserDataKeys", input.userDataKeys, input.userDataKeysCount);
+    JsonUtils::ObjectAddMemberArray(output, "UserReadOnlyDataKeys", input.userReadOnlyDataKeys, input.userReadOnlyDataKeysCount);
+    return output;
+}
+
+HRESULT CharacterInventory::FromJson(const JsonValue& input)
+{
+    String characterId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CharacterId", characterId));
+    this->SetCharacterId(std::move(characterId));
+
+    ModelVector<ItemInstance> inventory{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<ItemInstance>(input, "Inventory", inventory));
+    this->SetInventory(std::move(inventory));
+
+    return S_OK;
+}
+
+size_t CharacterInventory::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFCharacterInventory const*> CharacterInventory::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<CharacterInventory>(&this->Model());
+}
+
+size_t CharacterInventory::RequiredBufferSize(const PFCharacterInventory& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.characterId)
+    {
+        requiredSize += (std::strlen(model.characterId) + 1);
+    }
+    requiredSize += (alignof(PFItemInstance*) + sizeof(PFItemInstance*) * model.inventoryCount);
+    for (size_t i = 0; i < model.inventoryCount; ++i)
+    {
+        requiredSize += ItemInstance::RequiredBufferSize(*model.inventory[i]);
+    }
+    return requiredSize;
+}
+
+HRESULT CharacterInventory::Copy(const PFCharacterInventory& input, PFCharacterInventory& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.characterId); 
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.characterId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToArray<ItemInstance>(input.inventory, input.inventoryCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.inventory = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 HRESULT StatisticValue::FromJson(const JsonValue& input)
 {
     String statisticName{};
@@ -3091,95 +3180,6 @@ HRESULT StatisticValue::Copy(const PFStatisticValue& input, PFStatisticValue& ou
         RETURN_IF_FAILED(propCopyResult.hr);
         output.statisticName = propCopyResult.ExtractPayload();
     }
-    return S_OK;
-}
-
-HRESULT UserDataRecord::FromJson(const JsonValue& input)
-{
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "LastUpdated", this->m_model.lastUpdated));
-
-    std::optional<PFUserDataPermission> permission{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Permission", permission));
-    this->SetPermission(std::move(permission));
-
-    String value{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Value", value));
-    this->SetValue(std::move(value));
-
-    return S_OK;
-}
-
-size_t UserDataRecord::RequiredBufferSize() const
-{
-    return RequiredBufferSize(this->Model());
-}
-
-Result<PFUserDataRecord const*> UserDataRecord::Copy(ModelBuffer& buffer) const
-{
-    return buffer.CopyTo<UserDataRecord>(&this->Model());
-}
-
-size_t UserDataRecord::RequiredBufferSize(const PFUserDataRecord& model)
-{
-    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
-    if (model.permission)
-    {
-        requiredSize += (alignof(PFUserDataPermission) + sizeof(PFUserDataPermission));
-    }
-    if (model.value)
-    {
-        requiredSize += (std::strlen(model.value) + 1);
-    }
-    return requiredSize;
-}
-
-HRESULT UserDataRecord::Copy(const PFUserDataRecord& input, PFUserDataRecord& output, ModelBuffer& buffer)
-{
-    output = input;
-    {
-        auto propCopyResult = buffer.CopyTo(input.permission); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.permission = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.value); 
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.value = propCopyResult.ExtractPayload();
-    }
-    return S_OK;
-}
-
-HRESULT VirtualCurrencyRechargeTime::FromJson(const JsonValue& input)
-{
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "RechargeMax", this->m_model.rechargeMax));
-
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "RechargeTime", this->m_model.rechargeTime));
-
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SecondsToRecharge", this->m_model.secondsToRecharge));
-
-    return S_OK;
-}
-
-size_t VirtualCurrencyRechargeTime::RequiredBufferSize() const
-{
-    return RequiredBufferSize(this->Model());
-}
-
-Result<PFVirtualCurrencyRechargeTime const*> VirtualCurrencyRechargeTime::Copy(ModelBuffer& buffer) const
-{
-    return buffer.CopyTo<VirtualCurrencyRechargeTime>(&this->Model());
-}
-
-size_t VirtualCurrencyRechargeTime::RequiredBufferSize(const PFVirtualCurrencyRechargeTime& model)
-{
-    UNREFERENCED_PARAMETER(model); // Fixed size
-    return sizeof(ModelType);
-}
-
-HRESULT VirtualCurrencyRechargeTime::Copy(const PFVirtualCurrencyRechargeTime& input, PFVirtualCurrencyRechargeTime& output, ModelBuffer& buffer)
-{
-    output = input;
-    UNREFERENCED_PARAMETER(buffer); // Fixed size
     return S_OK;
 }
 

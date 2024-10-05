@@ -12,7 +12,7 @@ void AccountManagementTests::AddTests()
     AddTest("TestClientAddOrUpdateContactEmail", &AccountManagementTests::TestClientAddOrUpdateContactEmail);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    AddTest("TestClientAddUsernamePassword", &AccountManagementTests::TestClientAddUsernamePassword);
+    AddTest("TestClientAddUsernamePassword", &AccountManagementTests::TestClientAddUsernamePassword, true);
 #endif
     AddTest("TestClientGetAccountInfo", &AccountManagementTests::TestClientGetAccountInfo);
     AddTest("TestClientGetPlayerCombinedInfo", &AccountManagementTests::TestClientGetPlayerCombinedInfo);
@@ -62,7 +62,7 @@ void AccountManagementTests::AddTests()
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestClientLinkApple", &AccountManagementTests::TestClientLinkApple);
 #endif
-    AddTest("TestClientLinkCustomID", &AccountManagementTests::TestClientLinkCustomID);
+    AddTest("TestClientLinkCustomID", &AccountManagementTests::TestClientLinkCustomID, true);
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestClientLinkFacebookAccount", &AccountManagementTests::TestClientLinkFacebookAccount);
 #endif
@@ -271,6 +271,9 @@ void AccountManagementTests::AddTests()
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestGetTitlePlayersFromXboxLiveIDs", &AccountManagementTests::TestGetTitlePlayersFromXboxLiveIDs);
+#endif
+#if 0
+    AddTest("TestSetDisplayName", &AccountManagementTests::TestSetDisplayName);
 #endif
 
 }
