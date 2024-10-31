@@ -8,14 +8,19 @@ This SDK currently supports the following platforms:
 - iOS
 - macOS
 - Android
+- PlayStation 4/5 (private repo)
+- Nintendo Switch (private repo)
 
 For per-platform getting started guides and a complete list of available APIs, check out the [online documentation](https://learn.microsoft.com/gaming/playfab/sdks/c).
 
+To gain access to platforms supported through private repos, [Request Access](https://learn.microsoft.com/gaming/playfab/features/multiplayer/networking/request-access-for-sdks-samples).
+
 ## Requirements
 
-### Win32
+### Win32 and GDK
 - A [PlayFab developer account](https://developer.playfab.com).
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) installed (to build from source).
+- (For GDK) [Microsoft Game Development Kit](https://learn.microsoft.com/gaming/gdk/) installed.
 
 ### iOS / macOS
 - A [PlayFab developer account](https://developer.playfab.com).
@@ -31,11 +36,15 @@ For per-platform getting started guides and a complete list of available APIs, c
 
 Download the most recent release of the SDK from [PlayFabCSdk releases](https://github.com/PlayFab/PlayFabCSdk/releases). 
 
-#### Integrate PlayFab C SDK into your own project - Visual Studio
+#### Integrate PlayFab C SDK into your own project - Visual Studio (Win32 and GDK)
 
-The release package contains the required headers, binaries, and a PlayFabServicesSDK.Win32.props file that can imported to your project to automatically add references to them.
+Each release package contains the required headers, binaries, and property sheet file (Win32 - PlayFabServicesSDK.Win32.props, GDK - PlayFabServicesSDK.GDK.props) that can be imported to your project to automatically add references.
 
-You can import the props file manually by editing the .vcxproj files directly or by opening the Property Manager window in Visual Studio, right clicking on the project, and choosing __Add Existing Property Sheet__. After importing PlayFabServicesSDK.Win32.props, the headers should be available in your include path and references to the PlayFabServices library and its dependecies will be automatically added.
+You can import the props file manually by editing the .vcxproj files directly or by opening the Property Manager window in Visual Studio, right clicking on the project, and choosing __Add Existing Property Sheet__. After importing the appropriate props file, the headers should be available in your include path and references to the PlayFabServices library and its dependecies will be automatically added.
+
+> __Note for GDK__: It is possible for other GDK extensions such as the Xbox Services API or libHttpClient to be included as references automatically in projects.
+Any duplicate references will need to be removed manually.
+To do this, you can manage extensions in Visual Studio through __Project -> Properties -> Gaming Desktop -> Gaming Extension Libraries__.
 
 #### Integrate PlayFab C SDK into your own project - XCode
 
