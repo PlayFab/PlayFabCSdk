@@ -64,6 +64,9 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientGetPlayFabIDsFromSteamIDs(TestContext& testContext);
 #endif
+#if 0
+    void TestClientGetPlayFabIDsFromSteamNames(TestContext& testContext);
+#endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientGetPlayFabIDsFromTwitchIDs(TestContext& testContext);
 #endif
@@ -207,6 +210,9 @@ private:
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestServerGetPlayFabIDsFromSteamIDs(TestContext& testContext);
+#endif
+#if 0
+    void TestServerGetPlayFabIDsFromSteamNames(TestContext& testContext);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestServerGetPlayFabIDsFromTwitchIDs(TestContext& testContext);

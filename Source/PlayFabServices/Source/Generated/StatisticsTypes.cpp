@@ -15,7 +15,7 @@ JsonValue StatisticColumn::ToJson() const
 
 JsonValue StatisticColumn::ToJson(const PFStatisticsStatisticColumn& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AggregationMethod", input.aggregationMethod);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -56,7 +56,7 @@ HRESULT StatisticColumn::Copy(const PFStatisticsStatisticColumn& input, PFStatis
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
@@ -70,7 +70,7 @@ JsonValue CreateStatisticDefinitionRequest::ToJson() const
 
 JsonValue CreateStatisticDefinitionRequest::ToJson(const PFStatisticsCreateStatisticDefinitionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<StatisticColumn>(output, "Columns", input.columns, input.columnsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "EntityType", input.entityType);
@@ -86,7 +86,7 @@ JsonValue DeleteStatisticDefinitionRequest::ToJson() const
 
 JsonValue DeleteStatisticDefinitionRequest::ToJson(const PFStatisticsDeleteStatisticDefinitionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -99,7 +99,7 @@ JsonValue StatisticDelete::ToJson() const
 
 JsonValue StatisticDelete::ToJson(const PFStatisticsStatisticDelete& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
 }
@@ -111,7 +111,7 @@ JsonValue DeleteStatisticsRequest::ToJson() const
 
 JsonValue DeleteStatisticsRequest::ToJson(const PFStatisticsDeleteStatisticsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<StatisticDelete>(output, "Statistics", input.statistics, input.statisticsCount);
@@ -154,7 +154,7 @@ HRESULT DeleteStatisticsResponse::Copy(const PFStatisticsDeleteStatisticsRespons
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
@@ -168,7 +168,7 @@ JsonValue GetStatisticDefinitionRequest::ToJson() const
 
 JsonValue GetStatisticDefinitionRequest::ToJson(const PFStatisticsGetStatisticDefinitionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -261,12 +261,12 @@ HRESULT GetStatisticDefinitionResponse::Copy(const PFStatisticsGetStatisticDefin
         output.columns = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.entityType); 
+        auto propCopyResult = buffer.CopyTo(input.entityType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entityType = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.lastResetTime); 
+        auto propCopyResult = buffer.CopyTo(input.lastResetTime);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastResetTime = propCopyResult.ExtractPayload();
     }
@@ -276,12 +276,12 @@ HRESULT GetStatisticDefinitionResponse::Copy(const PFStatisticsGetStatisticDefin
         output.linkedLeaderboardNames = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<VersionConfiguration>(input.versionConfiguration); 
+        auto propCopyResult = buffer.CopyTo<VersionConfiguration>(input.versionConfiguration);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.versionConfiguration = propCopyResult.ExtractPayload();
     }
@@ -295,7 +295,7 @@ JsonValue GetStatisticsRequest::ToJson() const
 
 JsonValue GetStatisticsRequest::ToJson(const PFStatisticsGetStatisticsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -394,12 +394,12 @@ HRESULT EntityStatisticValue::Copy(const PFStatisticsEntityStatisticValue& input
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.metadata); 
+        auto propCopyResult = buffer.CopyTo(input.metadata);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.metadata = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
@@ -472,7 +472,7 @@ HRESULT GetStatisticsResponse::Copy(const PFStatisticsGetStatisticsResponse& inp
         output.columnDetails = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
@@ -491,7 +491,7 @@ JsonValue GetStatisticsForEntitiesRequest::ToJson() const
 
 JsonValue GetStatisticsForEntitiesRequest::ToJson(const PFStatisticsGetStatisticsForEntitiesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Entities", input.entities, input.entitiesCount);
     return output;
@@ -542,7 +542,7 @@ HRESULT EntityStatistics::Copy(const PFStatisticsEntityStatistics& input, PFStat
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entityKey); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entityKey);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entityKey = propCopyResult.ExtractPayload();
     }
@@ -617,7 +617,7 @@ JsonValue IncrementStatisticVersionRequest::ToJson() const
 
 JsonValue IncrementStatisticVersionRequest::ToJson(const PFStatisticsIncrementStatisticVersionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -660,7 +660,7 @@ JsonValue ListStatisticDefinitionsRequest::ToJson() const
 
 JsonValue ListStatisticDefinitionsRequest::ToJson(const PFStatisticsListStatisticDefinitionsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
@@ -752,12 +752,12 @@ HRESULT StatisticDefinition::Copy(const PFStatisticsStatisticDefinition& input, 
         output.columns = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.entityType); 
+        auto propCopyResult = buffer.CopyTo(input.entityType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entityType = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.lastResetTime); 
+        auto propCopyResult = buffer.CopyTo(input.lastResetTime);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastResetTime = propCopyResult.ExtractPayload();
     }
@@ -767,12 +767,12 @@ HRESULT StatisticDefinition::Copy(const PFStatisticsStatisticDefinition& input, 
         output.linkedLeaderboardNames = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<VersionConfiguration>(input.versionConfiguration); 
+        auto propCopyResult = buffer.CopyTo<VersionConfiguration>(input.versionConfiguration);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.versionConfiguration = propCopyResult.ExtractPayload();
     }
@@ -842,7 +842,7 @@ JsonValue StatisticUpdate::ToJson() const
 
 JsonValue StatisticUpdate::ToJson(const PFStatisticsStatisticUpdate& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Metadata", input.metadata);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMemberArray(output, "Scores", input.scores, input.scoresCount);
@@ -857,7 +857,7 @@ JsonValue UpdateStatisticsRequest::ToJson() const
 
 JsonValue UpdateStatisticsRequest::ToJson(const PFStatisticsUpdateStatisticsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<StatisticUpdate>(output, "Statistics", input.statistics, input.statisticsCount);
@@ -925,7 +925,7 @@ HRESULT UpdateStatisticsResponse::Copy(const PFStatisticsUpdateStatisticsRespons
         output.columnDetails = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }

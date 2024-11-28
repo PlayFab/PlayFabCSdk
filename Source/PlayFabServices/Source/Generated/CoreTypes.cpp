@@ -13,7 +13,7 @@ JsonValue PlayerProfileViewConstraints::ToJson() const
 
 JsonValue PlayerProfileViewConstraints::ToJson(const PFPlayerProfileViewConstraints& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "ShowAvatarUrl", input.showAvatarUrl);
     JsonUtils::ObjectAddMember(output, "ShowBannedUntil", input.showBannedUntil);
     JsonUtils::ObjectAddMember(output, "ShowCampaignAttributions", input.showCampaignAttributions);
@@ -41,7 +41,7 @@ JsonValue GetPlayerCombinedInfoRequestParams::ToJson() const
 
 JsonValue GetPlayerCombinedInfoRequestParams::ToJson(const PFGetPlayerCombinedInfoRequestParams& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "GetCharacterInventories", input.getCharacterInventories);
     JsonUtils::ObjectAddMember(output, "GetCharacterList", input.getCharacterList);
     JsonUtils::ObjectAddMember(output, "GetPlayerProfile", input.getPlayerProfile);
@@ -67,7 +67,7 @@ JsonValue EntityKey::ToJson() const
 
 JsonValue EntityKey::ToJson(const PFEntityKey& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     return output;
@@ -114,12 +114,12 @@ HRESULT EntityKey::Copy(const PFEntityKey& input, PFEntityKey& output, ModelBuff
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.id); 
+        auto propCopyResult = buffer.CopyTo(input.id);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.id = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.type); 
+        auto propCopyResult = buffer.CopyTo(input.type);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.type = propCopyResult.ExtractPayload();
     }
@@ -159,7 +159,7 @@ HRESULT UserAndroidDeviceInfo::Copy(const PFUserAndroidDeviceInfo& input, PFUser
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.androidDeviceId); 
+        auto propCopyResult = buffer.CopyTo(input.androidDeviceId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.androidDeviceId = propCopyResult.ExtractPayload();
     }
@@ -199,7 +199,7 @@ HRESULT UserAppleIdInfo::Copy(const PFUserAppleIdInfo& input, PFUserAppleIdInfo&
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.appleSubjectId); 
+        auto propCopyResult = buffer.CopyTo(input.appleSubjectId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.appleSubjectId = propCopyResult.ExtractPayload();
     }
@@ -239,7 +239,7 @@ HRESULT UserCustomIdInfo::Copy(const PFUserCustomIdInfo& input, PFUserCustomIdIn
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.customId); 
+        auto propCopyResult = buffer.CopyTo(input.customId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.customId = propCopyResult.ExtractPayload();
     }
@@ -287,12 +287,12 @@ HRESULT UserFacebookInfo::Copy(const PFUserFacebookInfo& input, PFUserFacebookIn
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.facebookId); 
+        auto propCopyResult = buffer.CopyTo(input.facebookId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.facebookId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.fullName); 
+        auto propCopyResult = buffer.CopyTo(input.fullName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.fullName = propCopyResult.ExtractPayload();
     }
@@ -332,7 +332,7 @@ HRESULT UserFacebookInstantGamesIdInfo::Copy(const PFUserFacebookInstantGamesIdI
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.facebookInstantGamesId); 
+        auto propCopyResult = buffer.CopyTo(input.facebookInstantGamesId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.facebookInstantGamesId = propCopyResult.ExtractPayload();
     }
@@ -372,7 +372,7 @@ HRESULT UserGameCenterInfo::Copy(const PFUserGameCenterInfo& input, PFUserGameCe
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.gameCenterId); 
+        auto propCopyResult = buffer.CopyTo(input.gameCenterId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.gameCenterId = propCopyResult.ExtractPayload();
     }
@@ -444,27 +444,27 @@ HRESULT UserGoogleInfo::Copy(const PFUserGoogleInfo& input, PFUserGoogleInfo& ou
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.googleEmail); 
+        auto propCopyResult = buffer.CopyTo(input.googleEmail);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googleEmail = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.googleGender); 
+        auto propCopyResult = buffer.CopyTo(input.googleGender);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googleGender = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.googleId); 
+        auto propCopyResult = buffer.CopyTo(input.googleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googleId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.googleLocale); 
+        auto propCopyResult = buffer.CopyTo(input.googleLocale);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googleLocale = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.googleName); 
+        auto propCopyResult = buffer.CopyTo(input.googleName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googleName = propCopyResult.ExtractPayload();
     }
@@ -520,17 +520,17 @@ HRESULT UserGooglePlayGamesInfo::Copy(const PFUserGooglePlayGamesInfo& input, PF
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.googlePlayGamesPlayerAvatarImageUrl); 
+        auto propCopyResult = buffer.CopyTo(input.googlePlayGamesPlayerAvatarImageUrl);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googlePlayGamesPlayerAvatarImageUrl = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.googlePlayGamesPlayerDisplayName); 
+        auto propCopyResult = buffer.CopyTo(input.googlePlayGamesPlayerDisplayName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googlePlayGamesPlayerDisplayName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.googlePlayGamesPlayerId); 
+        auto propCopyResult = buffer.CopyTo(input.googlePlayGamesPlayerId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googlePlayGamesPlayerId = propCopyResult.ExtractPayload();
     }
@@ -570,7 +570,7 @@ HRESULT UserIosDeviceInfo::Copy(const PFUserIosDeviceInfo& input, PFUserIosDevic
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.iosDeviceId); 
+        auto propCopyResult = buffer.CopyTo(input.iosDeviceId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.iosDeviceId = propCopyResult.ExtractPayload();
     }
@@ -618,12 +618,12 @@ HRESULT UserKongregateInfo::Copy(const PFUserKongregateInfo& input, PFUserKongre
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.kongregateId); 
+        auto propCopyResult = buffer.CopyTo(input.kongregateId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.kongregateId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.kongregateName); 
+        auto propCopyResult = buffer.CopyTo(input.kongregateName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.kongregateName = propCopyResult.ExtractPayload();
     }
@@ -663,7 +663,7 @@ HRESULT UserNintendoSwitchAccountIdInfo::Copy(const PFUserNintendoSwitchAccountI
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.nintendoSwitchAccountSubjectId); 
+        auto propCopyResult = buffer.CopyTo(input.nintendoSwitchAccountSubjectId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.nintendoSwitchAccountSubjectId = propCopyResult.ExtractPayload();
     }
@@ -703,7 +703,7 @@ HRESULT UserNintendoSwitchDeviceIdInfo::Copy(const PFUserNintendoSwitchDeviceIdI
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.nintendoSwitchDeviceId); 
+        auto propCopyResult = buffer.CopyTo(input.nintendoSwitchDeviceId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.nintendoSwitchDeviceId = propCopyResult.ExtractPayload();
     }
@@ -759,17 +759,17 @@ HRESULT UserOpenIdInfo::Copy(const PFUserOpenIdInfo& input, PFUserOpenIdInfo& ou
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.connectionId); 
+        auto propCopyResult = buffer.CopyTo(input.connectionId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.connectionId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.issuer); 
+        auto propCopyResult = buffer.CopyTo(input.issuer);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.issuer = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.subject); 
+        auto propCopyResult = buffer.CopyTo(input.subject);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.subject = propCopyResult.ExtractPayload();
     }
@@ -809,7 +809,7 @@ HRESULT UserPrivateAccountInfo::Copy(const PFUserPrivateAccountInfo& input, PFUs
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.email); 
+        auto propCopyResult = buffer.CopyTo(input.email);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.email = propCopyResult.ExtractPayload();
     }
@@ -857,12 +857,12 @@ HRESULT UserPsnInfo::Copy(const PFUserPsnInfo& input, PFUserPsnInfo& output, Mod
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.psnAccountId); 
+        auto propCopyResult = buffer.CopyTo(input.psnAccountId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.psnAccountId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.psnOnlineId); 
+        auto propCopyResult = buffer.CopyTo(input.psnOnlineId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.psnOnlineId = propCopyResult.ExtractPayload();
     }
@@ -902,7 +902,7 @@ HRESULT UserServerCustomIdInfo::Copy(const PFUserServerCustomIdInfo& input, PFUs
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.customId); 
+        auto propCopyResult = buffer.CopyTo(input.customId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.customId = propCopyResult.ExtractPayload();
     }
@@ -974,27 +974,27 @@ HRESULT UserSteamInfo::Copy(const PFUserSteamInfo& input, PFUserSteamInfo& outpu
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.steamActivationStatus); 
+        auto propCopyResult = buffer.CopyTo(input.steamActivationStatus);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.steamActivationStatus = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.steamCountry); 
+        auto propCopyResult = buffer.CopyTo(input.steamCountry);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.steamCountry = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.steamCurrency); 
+        auto propCopyResult = buffer.CopyTo(input.steamCurrency);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.steamCurrency = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.steamId); 
+        auto propCopyResult = buffer.CopyTo(input.steamId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.steamId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.steamName); 
+        auto propCopyResult = buffer.CopyTo(input.steamName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.steamName = propCopyResult.ExtractPayload();
     }
@@ -1087,37 +1087,37 @@ HRESULT UserTitleInfo::Copy(const PFUserTitleInfo& input, PFUserTitleInfo& outpu
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.avatarUrl); 
+        auto propCopyResult = buffer.CopyTo(input.avatarUrl);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.avatarUrl = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.displayName); 
+        auto propCopyResult = buffer.CopyTo(input.displayName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.displayName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.firstLogin); 
+        auto propCopyResult = buffer.CopyTo(input.firstLogin);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.firstLogin = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.isBanned); 
+        auto propCopyResult = buffer.CopyTo(input.isBanned);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.isBanned = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.lastLogin); 
+        auto propCopyResult = buffer.CopyTo(input.lastLogin);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastLogin = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.origination); 
+        auto propCopyResult = buffer.CopyTo(input.origination);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.origination = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.titlePlayerAccount); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.titlePlayerAccount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.titlePlayerAccount = propCopyResult.ExtractPayload();
     }
@@ -1165,12 +1165,12 @@ HRESULT UserTwitchInfo::Copy(const PFUserTwitchInfo& input, PFUserTwitchInfo& ou
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.twitchId); 
+        auto propCopyResult = buffer.CopyTo(input.twitchId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.twitchId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.twitchUserName); 
+        auto propCopyResult = buffer.CopyTo(input.twitchUserName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.twitchUserName = propCopyResult.ExtractPayload();
     }
@@ -1218,12 +1218,12 @@ HRESULT UserXboxInfo::Copy(const PFUserXboxInfo& input, PFUserXboxInfo& output, 
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.xboxUserId); 
+        auto propCopyResult = buffer.CopyTo(input.xboxUserId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.xboxUserId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.xboxUserSandbox); 
+        auto propCopyResult = buffer.CopyTo(input.xboxUserSandbox);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.xboxUserSandbox = propCopyResult.ExtractPayload();
     }
@@ -1491,62 +1491,62 @@ HRESULT UserAccountInfo::Copy(const PFUserAccountInfo& input, PFUserAccountInfo&
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<UserAndroidDeviceInfo>(input.androidDeviceInfo); 
+        auto propCopyResult = buffer.CopyTo<UserAndroidDeviceInfo>(input.androidDeviceInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.androidDeviceInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserAppleIdInfo>(input.appleAccountInfo); 
+        auto propCopyResult = buffer.CopyTo<UserAppleIdInfo>(input.appleAccountInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.appleAccountInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserCustomIdInfo>(input.customIdInfo); 
+        auto propCopyResult = buffer.CopyTo<UserCustomIdInfo>(input.customIdInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.customIdInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserFacebookInfo>(input.facebookInfo); 
+        auto propCopyResult = buffer.CopyTo<UserFacebookInfo>(input.facebookInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.facebookInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserFacebookInstantGamesIdInfo>(input.facebookInstantGamesIdInfo); 
+        auto propCopyResult = buffer.CopyTo<UserFacebookInstantGamesIdInfo>(input.facebookInstantGamesIdInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.facebookInstantGamesIdInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserGameCenterInfo>(input.gameCenterInfo); 
+        auto propCopyResult = buffer.CopyTo<UserGameCenterInfo>(input.gameCenterInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.gameCenterInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserGoogleInfo>(input.googleInfo); 
+        auto propCopyResult = buffer.CopyTo<UserGoogleInfo>(input.googleInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googleInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserGooglePlayGamesInfo>(input.googlePlayGamesInfo); 
+        auto propCopyResult = buffer.CopyTo<UserGooglePlayGamesInfo>(input.googlePlayGamesInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.googlePlayGamesInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserIosDeviceInfo>(input.iosDeviceInfo); 
+        auto propCopyResult = buffer.CopyTo<UserIosDeviceInfo>(input.iosDeviceInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.iosDeviceInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserKongregateInfo>(input.kongregateInfo); 
+        auto propCopyResult = buffer.CopyTo<UserKongregateInfo>(input.kongregateInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.kongregateInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserNintendoSwitchAccountIdInfo>(input.nintendoSwitchAccountInfo); 
+        auto propCopyResult = buffer.CopyTo<UserNintendoSwitchAccountIdInfo>(input.nintendoSwitchAccountInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.nintendoSwitchAccountInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserNintendoSwitchDeviceIdInfo>(input.nintendoSwitchDeviceIdInfo); 
+        auto propCopyResult = buffer.CopyTo<UserNintendoSwitchDeviceIdInfo>(input.nintendoSwitchDeviceIdInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.nintendoSwitchDeviceIdInfo = propCopyResult.ExtractPayload();
     }
@@ -1556,47 +1556,47 @@ HRESULT UserAccountInfo::Copy(const PFUserAccountInfo& input, PFUserAccountInfo&
         output.openIdInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.playFabId); 
+        auto propCopyResult = buffer.CopyTo(input.playFabId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.playFabId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserPrivateAccountInfo>(input.privateInfo); 
+        auto propCopyResult = buffer.CopyTo<UserPrivateAccountInfo>(input.privateInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.privateInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserPsnInfo>(input.psnInfo); 
+        auto propCopyResult = buffer.CopyTo<UserPsnInfo>(input.psnInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.psnInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserServerCustomIdInfo>(input.serverCustomIdInfo); 
+        auto propCopyResult = buffer.CopyTo<UserServerCustomIdInfo>(input.serverCustomIdInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.serverCustomIdInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserSteamInfo>(input.steamInfo); 
+        auto propCopyResult = buffer.CopyTo<UserSteamInfo>(input.steamInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.steamInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserTitleInfo>(input.titleInfo); 
+        auto propCopyResult = buffer.CopyTo<UserTitleInfo>(input.titleInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.titleInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserTwitchInfo>(input.twitchInfo); 
+        auto propCopyResult = buffer.CopyTo<UserTwitchInfo>(input.twitchInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.twitchInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.username); 
+        auto propCopyResult = buffer.CopyTo(input.username);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.username = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserXboxInfo>(input.xboxInfo); 
+        auto propCopyResult = buffer.CopyTo<UserXboxInfo>(input.xboxInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.xboxInfo = propCopyResult.ExtractPayload();
     }
@@ -1745,7 +1745,7 @@ HRESULT ItemInstance::Copy(const PFItemInstance& input, PFItemInstance& output, 
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.annotation); 
+        auto propCopyResult = buffer.CopyTo(input.annotation);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.annotation = propCopyResult.ExtractPayload();
     }
@@ -1755,12 +1755,12 @@ HRESULT ItemInstance::Copy(const PFItemInstance& input, PFItemInstance& output, 
         output.bundleContents = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.bundleParent); 
+        auto propCopyResult = buffer.CopyTo(input.bundleParent);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.bundleParent = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.catalogVersion); 
+        auto propCopyResult = buffer.CopyTo(input.catalogVersion);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.catalogVersion = propCopyResult.ExtractPayload();
     }
@@ -1770,47 +1770,47 @@ HRESULT ItemInstance::Copy(const PFItemInstance& input, PFItemInstance& output, 
         output.customData = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.displayName); 
+        auto propCopyResult = buffer.CopyTo(input.displayName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.displayName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.expiration); 
+        auto propCopyResult = buffer.CopyTo(input.expiration);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.expiration = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemClass); 
+        auto propCopyResult = buffer.CopyTo(input.itemClass);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemClass = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemId); 
+        auto propCopyResult = buffer.CopyTo(input.itemId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemInstanceId); 
+        auto propCopyResult = buffer.CopyTo(input.itemInstanceId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemInstanceId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.purchaseDate); 
+        auto propCopyResult = buffer.CopyTo(input.purchaseDate);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.purchaseDate = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.remainingUses); 
+        auto propCopyResult = buffer.CopyTo(input.remainingUses);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.remainingUses = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.unitCurrency); 
+        auto propCopyResult = buffer.CopyTo(input.unitCurrency);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.unitCurrency = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.usesIncrementedBy); 
+        auto propCopyResult = buffer.CopyTo(input.usesIncrementedBy);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.usesIncrementedBy = propCopyResult.ExtractPayload();
     }
@@ -1859,7 +1859,7 @@ HRESULT CharacterInventory::Copy(const PFCharacterInventory& input, PFCharacterI
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.characterId); 
+        auto propCopyResult = buffer.CopyTo(input.characterId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.characterId = propCopyResult.ExtractPayload();
     }
@@ -1920,17 +1920,17 @@ HRESULT CharacterResult::Copy(const PFCharacterResult& input, PFCharacterResult&
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.characterId); 
+        auto propCopyResult = buffer.CopyTo(input.characterId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.characterId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.characterName); 
+        auto propCopyResult = buffer.CopyTo(input.characterName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.characterName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.characterType); 
+        auto propCopyResult = buffer.CopyTo(input.characterType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.characterType = propCopyResult.ExtractPayload();
     }
@@ -1980,12 +1980,12 @@ HRESULT AdCampaignAttributionModel::Copy(const PFAdCampaignAttributionModel& inp
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.campaignId); 
+        auto propCopyResult = buffer.CopyTo(input.campaignId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.campaignId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.platform); 
+        auto propCopyResult = buffer.CopyTo(input.platform);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platform = propCopyResult.ExtractPayload();
     }
@@ -2041,17 +2041,17 @@ HRESULT ContactEmailInfoModel::Copy(const PFContactEmailInfoModel& input, PFCont
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.emailAddress); 
+        auto propCopyResult = buffer.CopyTo(input.emailAddress);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.emailAddress = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.verificationStatus); 
+        auto propCopyResult = buffer.CopyTo(input.verificationStatus);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.verificationStatus = propCopyResult.ExtractPayload();
     }
@@ -2115,22 +2115,22 @@ HRESULT LinkedPlatformAccountModel::Copy(const PFLinkedPlatformAccountModel& inp
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.email); 
+        auto propCopyResult = buffer.CopyTo(input.email);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.email = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.platform); 
+        auto propCopyResult = buffer.CopyTo(input.platform);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platform = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.platformUserId); 
+        auto propCopyResult = buffer.CopyTo(input.platformUserId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platformUserId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.username); 
+        auto propCopyResult = buffer.CopyTo(input.username);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.username = propCopyResult.ExtractPayload();
     }
@@ -2202,27 +2202,27 @@ HRESULT LocationModel::Copy(const PFLocationModel& input, PFLocationModel& outpu
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.city); 
+        auto propCopyResult = buffer.CopyTo(input.city);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.city = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.continentCode); 
+        auto propCopyResult = buffer.CopyTo(input.continentCode);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continentCode = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.countryCode); 
+        auto propCopyResult = buffer.CopyTo(input.countryCode);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.countryCode = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.latitude); 
+        auto propCopyResult = buffer.CopyTo(input.latitude);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.latitude = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.longitude); 
+        auto propCopyResult = buffer.CopyTo(input.longitude);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.longitude = propCopyResult.ExtractPayload();
     }
@@ -2292,22 +2292,22 @@ HRESULT SubscriptionModel::Copy(const PFSubscriptionModel& input, PFSubscription
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.status); 
+        auto propCopyResult = buffer.CopyTo(input.status);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.status = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.subscriptionId); 
+        auto propCopyResult = buffer.CopyTo(input.subscriptionId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.subscriptionId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.subscriptionItemId); 
+        auto propCopyResult = buffer.CopyTo(input.subscriptionItemId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.subscriptionItemId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.subscriptionProvider); 
+        auto propCopyResult = buffer.CopyTo(input.subscriptionProvider);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.subscriptionProvider = propCopyResult.ExtractPayload();
     }
@@ -2368,12 +2368,12 @@ HRESULT MembershipModel::Copy(const PFMembershipModel& input, PFMembershipModel&
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.membershipId); 
+        auto propCopyResult = buffer.CopyTo(input.membershipId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.membershipId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.overrideExpiration); 
+        auto propCopyResult = buffer.CopyTo(input.overrideExpiration);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.overrideExpiration = propCopyResult.ExtractPayload();
     }
@@ -2426,12 +2426,12 @@ HRESULT PushNotificationRegistrationModel::Copy(const PFPushNotificationRegistra
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.notificationEndpointARN); 
+        auto propCopyResult = buffer.CopyTo(input.notificationEndpointARN);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.notificationEndpointARN = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.platform); 
+        auto propCopyResult = buffer.CopyTo(input.platform);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platform = propCopyResult.ExtractPayload();
     }
@@ -2475,7 +2475,7 @@ HRESULT StatisticModel::Copy(const PFStatisticModel& input, PFStatisticModel& ou
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
@@ -2515,7 +2515,7 @@ HRESULT TagModel::Copy(const PFTagModel& input, PFTagModel& output, ModelBuffer&
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.tagValue); 
+        auto propCopyResult = buffer.CopyTo(input.tagValue);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.tagValue = propCopyResult.ExtractPayload();
     }
@@ -2565,12 +2565,12 @@ HRESULT ValueToDateModel::Copy(const PFValueToDateModel& input, PFValueToDateMod
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.currency); 
+        auto propCopyResult = buffer.CopyTo(input.currency);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.currency = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.totalValueAsDecimal); 
+        auto propCopyResult = buffer.CopyTo(input.totalValueAsDecimal);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.totalValueAsDecimal = propCopyResult.ExtractPayload();
     }
@@ -2777,12 +2777,12 @@ HRESULT PlayerProfileModel::Copy(const PFPlayerProfileModel& input, PFPlayerProf
         output.adCampaignAttributions = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.avatarUrl); 
+        auto propCopyResult = buffer.CopyTo(input.avatarUrl);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.avatarUrl = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.bannedUntil); 
+        auto propCopyResult = buffer.CopyTo(input.bannedUntil);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.bannedUntil = propCopyResult.ExtractPayload();
     }
@@ -2792,12 +2792,12 @@ HRESULT PlayerProfileModel::Copy(const PFPlayerProfileModel& input, PFPlayerProf
         output.contactEmailAddresses = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.created); 
+        auto propCopyResult = buffer.CopyTo(input.created);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.created = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.displayName); 
+        auto propCopyResult = buffer.CopyTo(input.displayName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.displayName = propCopyResult.ExtractPayload();
     }
@@ -2807,7 +2807,7 @@ HRESULT PlayerProfileModel::Copy(const PFPlayerProfileModel& input, PFPlayerProf
         output.experimentVariants = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.lastLogin); 
+        auto propCopyResult = buffer.CopyTo(input.lastLogin);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastLogin = propCopyResult.ExtractPayload();
     }
@@ -2827,17 +2827,17 @@ HRESULT PlayerProfileModel::Copy(const PFPlayerProfileModel& input, PFPlayerProf
         output.memberships = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.origination); 
+        auto propCopyResult = buffer.CopyTo(input.origination);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.origination = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.playerId); 
+        auto propCopyResult = buffer.CopyTo(input.playerId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.playerId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.publisherId); 
+        auto propCopyResult = buffer.CopyTo(input.publisherId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.publisherId = propCopyResult.ExtractPayload();
     }
@@ -2857,12 +2857,12 @@ HRESULT PlayerProfileModel::Copy(const PFPlayerProfileModel& input, PFPlayerProf
         output.tags = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.titleId); 
+        auto propCopyResult = buffer.CopyTo(input.titleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.titleId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.totalValueToDateInUSD); 
+        auto propCopyResult = buffer.CopyTo(input.totalValueToDateInUSD);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.totalValueToDateInUSD = propCopyResult.ExtractPayload();
     }
@@ -2911,7 +2911,7 @@ HRESULT StatisticValue::Copy(const PFStatisticValue& input, PFStatisticValue& ou
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.statisticName); 
+        auto propCopyResult = buffer.CopyTo(input.statisticName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.statisticName = propCopyResult.ExtractPayload();
     }
@@ -2961,12 +2961,12 @@ HRESULT UserDataRecord::Copy(const PFUserDataRecord& input, PFUserDataRecord& ou
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.permission); 
+        auto propCopyResult = buffer.CopyTo(input.permission);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.permission = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.value); 
+        auto propCopyResult = buffer.CopyTo(input.value);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.value = propCopyResult.ExtractPayload();
     }
@@ -3143,7 +3143,7 @@ HRESULT GetPlayerCombinedInfoResultPayload::Copy(const PFGetPlayerCombinedInfoRe
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<UserAccountInfo>(input.accountInfo); 
+        auto propCopyResult = buffer.CopyTo<UserAccountInfo>(input.accountInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.accountInfo = propCopyResult.ExtractPayload();
     }
@@ -3158,7 +3158,7 @@ HRESULT GetPlayerCombinedInfoResultPayload::Copy(const PFGetPlayerCombinedInfoRe
         output.characterList = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<PlayerProfileModel>(input.playerProfile); 
+        auto propCopyResult = buffer.CopyTo<PlayerProfileModel>(input.playerProfile);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.playerProfile = propCopyResult.ExtractPayload();
     }
@@ -3241,12 +3241,12 @@ HRESULT Variable::Copy(const PFVariable& input, PFVariable& output, ModelBuffer&
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.value); 
+        auto propCopyResult = buffer.CopyTo(input.value);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.value = propCopyResult.ExtractPayload();
     }
@@ -3381,32 +3381,32 @@ HRESULT EntityLineage::Copy(const PFEntityLineage& input, PFEntityLineage& outpu
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.characterId); 
+        auto propCopyResult = buffer.CopyTo(input.characterId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.characterId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.groupId); 
+        auto propCopyResult = buffer.CopyTo(input.groupId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.groupId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.masterPlayerAccountId); 
+        auto propCopyResult = buffer.CopyTo(input.masterPlayerAccountId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.masterPlayerAccountId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.namespaceId); 
+        auto propCopyResult = buffer.CopyTo(input.namespaceId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.namespaceId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.titleId); 
+        auto propCopyResult = buffer.CopyTo(input.titleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.titleId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.titlePlayerAccountId); 
+        auto propCopyResult = buffer.CopyTo(input.titlePlayerAccountId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.titlePlayerAccountId = propCopyResult.ExtractPayload();
     }

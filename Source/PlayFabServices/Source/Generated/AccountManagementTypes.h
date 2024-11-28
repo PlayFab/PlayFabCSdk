@@ -729,6 +729,58 @@ public:
     static HRESULT Copy(const PFAccountManagementGetPlayFabIDsFromSteamIDsResult& input, PFAccountManagementGetPlayFabIDsFromSteamIDsResult& output, ModelBuffer& buffer);
 };
 
+class GetPlayFabIDsFromSteamNamesRequest : public Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementGetPlayFabIDsFromSteamNamesRequest& input);
+};
+
+class SteamNamePlayFabIdPair : public Wrappers::PFAccountManagementSteamNamePlayFabIdPairWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementSteamNamePlayFabIdPair>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementSteamNamePlayFabIdPairWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementSteamNamePlayFabIdPair const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementSteamNamePlayFabIdPair& model);
+    static HRESULT Copy(const PFAccountManagementSteamNamePlayFabIdPair& input, PFAccountManagementSteamNamePlayFabIdPair& output, ModelBuffer& buffer);
+};
+
+class GetPlayFabIDsFromSteamNamesResult : public Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementGetPlayFabIDsFromSteamNamesResult>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementGetPlayFabIDsFromSteamNamesResult const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementGetPlayFabIDsFromSteamNamesResult& model);
+    static HRESULT Copy(const PFAccountManagementGetPlayFabIDsFromSteamNamesResult& input, PFAccountManagementGetPlayFabIDsFromSteamNamesResult& output, ModelBuffer& buffer);
+};
+
 class GetPlayFabIDsFromTwitchIDsRequest : public Wrappers::PFAccountManagementGetPlayFabIDsFromTwitchIDsRequestWrapper<Allocator>, public InputModel
 {
 public:

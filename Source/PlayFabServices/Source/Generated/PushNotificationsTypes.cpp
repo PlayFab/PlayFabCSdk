@@ -15,7 +15,7 @@ JsonValue AdvancedPushPlatformMsg::ToJson() const
 
 JsonValue AdvancedPushPlatformMsg::ToJson(const PFPushNotificationsAdvancedPushPlatformMsg& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "GCMDataOnly", input.gCMDataOnly);
     JsonUtils::ObjectAddMember(output, "Json", input.json);
     JsonUtils::ObjectAddMember(output, "Platform", input.platform);
@@ -29,7 +29,7 @@ JsonValue PushNotificationPackage::ToJson() const
 
 JsonValue PushNotificationPackage::ToJson(const PFPushNotificationsPushNotificationPackage& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Badge", input.badge);
     JsonUtils::ObjectAddMember(output, "CustomData", input.customData);
     JsonUtils::ObjectAddMember(output, "Icon", input.icon);
@@ -46,7 +46,7 @@ JsonValue SendPushNotificationRequest::ToJson() const
 
 JsonValue SendPushNotificationRequest::ToJson(const PFPushNotificationsSendPushNotificationRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<AdvancedPushPlatformMsg>(output, "AdvancedPlatformDelivery", input.advancedPlatformDelivery, input.advancedPlatformDeliveryCount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Message", input.message);
@@ -64,7 +64,7 @@ JsonValue SendPushNotificationFromTemplateRequest::ToJson() const
 
 JsonValue SendPushNotificationFromTemplateRequest::ToJson(const PFPushNotificationsSendPushNotificationFromTemplateRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PushNotificationTemplateId", input.pushNotificationTemplateId);
     JsonUtils::ObjectAddMember(output, "Recipient", input.recipient);

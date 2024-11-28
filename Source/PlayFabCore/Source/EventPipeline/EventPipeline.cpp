@@ -48,9 +48,9 @@ WriteEventsResponse::WriteEventsResponse(ServiceResponse&& serviceResponse) :
             {
                 PlayFab::Vector<int> failedEventIndexes{};
 
-                for (rapidjson::Value::ConstMemberIterator iter = ServiceResponse::ErrorDetails.MemberBegin(); iter != ServiceResponse::ErrorDetails.MemberEnd(); ++iter)
+                for (auto iter = ServiceResponse::ErrorDetails.begin(); iter != ServiceResponse::ErrorDetails.end(); ++iter)
                 {
-                    char* errorDetail = const_cast<char*>(iter->name.GetString());
+                    char* errorDetail = const_cast<char*>(iter.key().c_str());
                     const char* prefix = "Events[";
 
                     if (strncmp(prefix, errorDetail, strlen(prefix)) == 0)

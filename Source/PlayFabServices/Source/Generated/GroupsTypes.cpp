@@ -15,7 +15,7 @@ JsonValue AcceptGroupApplicationRequest::ToJson() const
 
 JsonValue AcceptGroupApplicationRequest::ToJson(const PFGroupsAcceptGroupApplicationRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -29,7 +29,7 @@ JsonValue AcceptGroupInvitationRequest::ToJson() const
 
 JsonValue AcceptGroupInvitationRequest::ToJson(const PFGroupsAcceptGroupInvitationRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -43,7 +43,7 @@ JsonValue AddMembersRequest::ToJson() const
 
 JsonValue AddMembersRequest::ToJson(const PFGroupsAddMembersRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Members", input.members, input.membersCount);
@@ -58,7 +58,7 @@ JsonValue ApplyToGroupRequest::ToJson() const
 
 JsonValue ApplyToGroupRequest::ToJson(const PFGroupsApplyToGroupRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AutoAcceptOutstandingInvite", input.autoAcceptOutstandingInvite);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -112,7 +112,7 @@ HRESULT EntityWithLineage::Copy(const PFGroupsEntityWithLineage& input, PFGroups
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.key); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.key);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.key = propCopyResult.ExtractPayload();
     }
@@ -173,12 +173,12 @@ HRESULT ApplyToGroupResponse::Copy(const PFGroupsApplyToGroupResponse& input, PF
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.group = propCopyResult.ExtractPayload();
     }
@@ -192,7 +192,7 @@ JsonValue BlockEntityRequest::ToJson() const
 
 JsonValue BlockEntityRequest::ToJson(const PFGroupsBlockEntityRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -206,7 +206,7 @@ JsonValue ChangeMemberRoleRequest::ToJson() const
 
 JsonValue ChangeMemberRoleRequest::ToJson(const PFGroupsChangeMemberRoleRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DestinationRoleId", input.destinationRoleId);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -222,7 +222,7 @@ JsonValue CreateGroupRequest::ToJson() const
 
 JsonValue CreateGroupRequest::ToJson(const PFGroupsCreateGroupRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "GroupName", input.groupName);
@@ -300,22 +300,22 @@ HRESULT CreateGroupResponse::Copy(const PFGroupsCreateGroupResponse& input, PFGr
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.adminRoleId); 
+        auto propCopyResult = buffer.CopyTo(input.adminRoleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.adminRoleId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.group = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.groupName); 
+        auto propCopyResult = buffer.CopyTo(input.groupName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.groupName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.memberRoleId); 
+        auto propCopyResult = buffer.CopyTo(input.memberRoleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.memberRoleId = propCopyResult.ExtractPayload();
     }
@@ -334,7 +334,7 @@ JsonValue CreateGroupRoleRequest::ToJson() const
 
 JsonValue CreateGroupRoleRequest::ToJson(const PFGroupsCreateGroupRoleRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMember(output, "RoleId", input.roleId);
@@ -385,12 +385,12 @@ HRESULT CreateGroupRoleResponse::Copy(const PFGroupsCreateGroupRoleResponse& inp
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.roleId); 
+        auto propCopyResult = buffer.CopyTo(input.roleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.roleId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.roleName); 
+        auto propCopyResult = buffer.CopyTo(input.roleName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.roleName = propCopyResult.ExtractPayload();
     }
@@ -404,7 +404,7 @@ JsonValue DeleteGroupRequest::ToJson() const
 
 JsonValue DeleteGroupRequest::ToJson(const PFGroupsDeleteGroupRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -417,7 +417,7 @@ JsonValue DeleteRoleRequest::ToJson() const
 
 JsonValue DeleteRoleRequest::ToJson(const PFGroupsDeleteRoleRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMember(output, "RoleId", input.roleId);
@@ -431,7 +431,7 @@ JsonValue GetGroupRequest::ToJson() const
 
 JsonValue GetGroupRequest::ToJson(const PFGroupsGetGroupRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMember(output, "GroupName", input.groupName);
@@ -509,22 +509,22 @@ HRESULT GetGroupResponse::Copy(const PFGroupsGetGroupResponse& input, PFGroupsGe
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.adminRoleId); 
+        auto propCopyResult = buffer.CopyTo(input.adminRoleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.adminRoleId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.group = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.groupName); 
+        auto propCopyResult = buffer.CopyTo(input.groupName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.groupName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.memberRoleId); 
+        auto propCopyResult = buffer.CopyTo(input.memberRoleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.memberRoleId = propCopyResult.ExtractPayload();
     }
@@ -543,7 +543,7 @@ JsonValue InviteToGroupRequest::ToJson() const
 
 JsonValue InviteToGroupRequest::ToJson(const PFGroupsInviteToGroupRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AutoAcceptOutstandingApplication", input.autoAcceptOutstandingApplication);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -620,22 +620,22 @@ HRESULT InviteToGroupResponse::Copy(const PFGroupsInviteToGroupResponse& input, 
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.group = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.invitedByEntity); 
+        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.invitedByEntity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.invitedByEntity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.invitedEntity); 
+        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.invitedEntity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.invitedEntity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.roleId); 
+        auto propCopyResult = buffer.CopyTo(input.roleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.roleId = propCopyResult.ExtractPayload();
     }
@@ -649,7 +649,7 @@ JsonValue IsMemberRequest::ToJson() const
 
 JsonValue IsMemberRequest::ToJson(const PFGroupsIsMemberRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -694,7 +694,7 @@ JsonValue ListGroupApplicationsRequest::ToJson() const
 
 JsonValue ListGroupApplicationsRequest::ToJson(const PFGroupsListGroupApplicationsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -749,12 +749,12 @@ HRESULT GroupApplication::Copy(const PFGroupsGroupApplication& input, PFGroupsGr
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.group = propCopyResult.ExtractPayload();
     }
@@ -809,7 +809,7 @@ JsonValue ListGroupBlocksRequest::ToJson() const
 
 JsonValue ListGroupBlocksRequest::ToJson(const PFGroupsListGroupBlocksRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -859,12 +859,12 @@ HRESULT GroupBlock::Copy(const PFGroupsGroupBlock& input, PFGroupsGroupBlock& ou
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.group = propCopyResult.ExtractPayload();
     }
@@ -919,7 +919,7 @@ JsonValue ListGroupInvitationsRequest::ToJson() const
 
 JsonValue ListGroupInvitationsRequest::ToJson(const PFGroupsListGroupInvitationsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -993,22 +993,22 @@ HRESULT GroupInvitation::Copy(const PFGroupsGroupInvitation& input, PFGroupsGrou
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.group = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.invitedByEntity); 
+        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.invitedByEntity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.invitedByEntity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.invitedEntity); 
+        auto propCopyResult = buffer.CopyTo<EntityWithLineage>(input.invitedEntity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.invitedEntity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.roleId); 
+        auto propCopyResult = buffer.CopyTo(input.roleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.roleId = propCopyResult.ExtractPayload();
     }
@@ -1063,7 +1063,7 @@ JsonValue ListGroupMembersRequest::ToJson() const
 
 JsonValue ListGroupMembersRequest::ToJson(const PFGroupsListGroupMembersRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -1124,12 +1124,12 @@ HRESULT EntityMemberRole::Copy(const PFGroupsEntityMemberRole& input, PFGroupsEn
         output.members = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.roleId); 
+        auto propCopyResult = buffer.CopyTo(input.roleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.roleId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.roleName); 
+        auto propCopyResult = buffer.CopyTo(input.roleName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.roleName = propCopyResult.ExtractPayload();
     }
@@ -1184,7 +1184,7 @@ JsonValue ListMembershipRequest::ToJson() const
 
 JsonValue ListMembershipRequest::ToJson(const PFGroupsListMembershipRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -1231,12 +1231,12 @@ HRESULT GroupRole::Copy(const PFGroupsGroupRole& input, PFGroupsGroupRole& outpu
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.roleId); 
+        auto propCopyResult = buffer.CopyTo(input.roleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.roleId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.roleName); 
+        auto propCopyResult = buffer.CopyTo(input.roleName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.roleName = propCopyResult.ExtractPayload();
     }
@@ -1298,12 +1298,12 @@ HRESULT GroupWithRoles::Copy(const PFGroupsGroupWithRoles& input, PFGroupsGroupW
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.group);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.group = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.groupName); 
+        auto propCopyResult = buffer.CopyTo(input.groupName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.groupName = propCopyResult.ExtractPayload();
     }
@@ -1363,7 +1363,7 @@ JsonValue ListMembershipOpportunitiesRequest::ToJson() const
 
 JsonValue ListMembershipOpportunitiesRequest::ToJson(const PFGroupsListMembershipOpportunitiesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -1431,7 +1431,7 @@ JsonValue RemoveGroupApplicationRequest::ToJson() const
 
 JsonValue RemoveGroupApplicationRequest::ToJson(const PFGroupsRemoveGroupApplicationRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -1445,7 +1445,7 @@ JsonValue RemoveGroupInvitationRequest::ToJson() const
 
 JsonValue RemoveGroupInvitationRequest::ToJson(const PFGroupsRemoveGroupInvitationRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -1459,7 +1459,7 @@ JsonValue RemoveMembersRequest::ToJson() const
 
 JsonValue RemoveMembersRequest::ToJson(const PFGroupsRemoveMembersRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Members", input.members, input.membersCount);
@@ -1474,7 +1474,7 @@ JsonValue UnblockEntityRequest::ToJson() const
 
 JsonValue UnblockEntityRequest::ToJson(const PFGroupsUnblockEntityRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -1488,7 +1488,7 @@ JsonValue UpdateGroupRequest::ToJson() const
 
 JsonValue UpdateGroupRequest::ToJson(const PFGroupsUpdateGroupRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AdminRoleId", input.adminRoleId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExpectedProfileVersion", input.expectedProfileVersion);
@@ -1541,12 +1541,12 @@ HRESULT UpdateGroupResponse::Copy(const PFGroupsUpdateGroupResponse& input, PFGr
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.operationReason); 
+        auto propCopyResult = buffer.CopyTo(input.operationReason);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationReason = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.setResult); 
+        auto propCopyResult = buffer.CopyTo(input.setResult);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.setResult = propCopyResult.ExtractPayload();
     }
@@ -1560,7 +1560,7 @@ JsonValue UpdateGroupRoleRequest::ToJson() const
 
 JsonValue UpdateGroupRoleRequest::ToJson(const PFGroupsUpdateGroupRoleRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExpectedProfileVersion", input.expectedProfileVersion);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -1612,12 +1612,12 @@ HRESULT UpdateGroupRoleResponse::Copy(const PFGroupsUpdateGroupRoleResponse& inp
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.operationReason); 
+        auto propCopyResult = buffer.CopyTo(input.operationReason);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationReason = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.setResult); 
+        auto propCopyResult = buffer.CopyTo(input.setResult);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.setResult = propCopyResult.ExtractPayload();
     }

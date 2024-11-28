@@ -2815,6 +2815,198 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromSteamNamesRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementGetPlayFabIDsFromSteamNamesRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper() = default;
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper(const PFAccountManagementGetPlayFabIDsFromSteamNamesRequest& model) :
+        ModelWrapper<PFAccountManagementGetPlayFabIDsFromSteamNamesRequest, Alloc>{ model },
+        m_steamNames{ model.steamNames, model.steamNames + model.steamNamesCount }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper(const PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper& src) :
+        PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper(PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper&& src) :
+        PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper& operator=(PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper& lhs, PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_steamNames, rhs.m_steamNames);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetSteamNames(CStringVector<Alloc> value)
+    {
+        m_steamNames = std::move(value);
+        this->m_model.steamNames =  m_steamNames.empty() ? nullptr : m_steamNames.data();
+        this->m_model.steamNamesCount =  static_cast<uint32_t>(m_steamNames.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.steamNames = m_steamNames.empty() ? nullptr : m_steamNames.data();
+    }
+
+    CStringVector<Alloc> m_steamNames;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementSteamNamePlayFabIdPairWrapper : public ModelWrapper<PFAccountManagementSteamNamePlayFabIdPair, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementSteamNamePlayFabIdPair;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementSteamNamePlayFabIdPairWrapper() = default;
+
+    PFAccountManagementSteamNamePlayFabIdPairWrapper(const PFAccountManagementSteamNamePlayFabIdPair& model) :
+        ModelWrapper<PFAccountManagementSteamNamePlayFabIdPair, Alloc>{ model },
+        m_playFabId{ SafeString(model.playFabId) },
+        m_steamName{ SafeString(model.steamName) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementSteamNamePlayFabIdPairWrapper(const PFAccountManagementSteamNamePlayFabIdPairWrapper& src) :
+        PFAccountManagementSteamNamePlayFabIdPairWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementSteamNamePlayFabIdPairWrapper(PFAccountManagementSteamNamePlayFabIdPairWrapper&& src) :
+        PFAccountManagementSteamNamePlayFabIdPairWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementSteamNamePlayFabIdPairWrapper& operator=(PFAccountManagementSteamNamePlayFabIdPairWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementSteamNamePlayFabIdPairWrapper() = default;
+
+    friend void swap(PFAccountManagementSteamNamePlayFabIdPairWrapper& lhs, PFAccountManagementSteamNamePlayFabIdPairWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        swap(lhs.m_steamName, rhs.m_steamName);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    void SetSteamName(String value)
+    {
+        m_steamName = std::move(value);
+        this->m_model.steamName =  m_steamName.empty() ? nullptr : m_steamName.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+        this->m_model.steamName = m_steamName.empty() ? nullptr : m_steamName.data();
+    }
+
+    String m_playFabId;
+    String m_steamName;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromSteamNamesResult, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementGetPlayFabIDsFromSteamNamesResult;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper() = default;
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper(const PFAccountManagementGetPlayFabIDsFromSteamNamesResult& model) :
+        ModelWrapper<PFAccountManagementGetPlayFabIDsFromSteamNamesResult, Alloc>{ model },
+        m_data{ model.data, model.data + model.dataCount }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper(const PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper& src) :
+        PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper(PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper&& src) :
+        PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper& operator=(PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper() = default;
+
+    friend void swap(PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper& lhs, PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_data, rhs.m_data);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetData(ModelVector<PFAccountManagementSteamNamePlayFabIdPairWrapper<Alloc>, Alloc> value)
+    {
+        m_data = std::move(value);
+        this->m_model.data =  m_data.empty() ? nullptr : m_data.data();
+        this->m_model.dataCount =  static_cast<uint32_t>(m_data.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.data = m_data.empty() ? nullptr : m_data.data();
+    }
+
+    ModelVector<PFAccountManagementSteamNamePlayFabIdPairWrapper<Alloc>, Alloc> m_data;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFAccountManagementGetPlayFabIDsFromTwitchIDsRequestWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromTwitchIDsRequest, Alloc>
 {
 public:

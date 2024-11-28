@@ -55,7 +55,7 @@ set(COMMON_INCLUDE_DIRS
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Generated"
     "${PATH_TO_LHC}/Include"
-    "${PATH_TO_ROOT}/External/rapidjson/include"
+    "${PATH_TO_ROOT}/External/nlohmann/include"
     "${PATH_TO_TEST}/PlayFabServicesTestApp"
     "${PATH_TO_TEST}/PlayFabServicesTestApp/TestFramework"
     "${PATH_TO_TEST}/PlayFabServices.GeneratedApiWrappers"
@@ -81,7 +81,7 @@ add_library(
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Android/PlayFabAndroid.cpp"
 )
 
-if (${ANDROID_ABI} STREQUAL "x86_64") 
+if (${ANDROID_ABI} STREQUAL "x86_64")
     set(ANDROID_ABI_DIRECTORY "x86_64")
 else()
     set(ANDROID_ABI_DIRECTORY "arm8")
@@ -104,7 +104,7 @@ set(LIBHTTPCLIENT_PATH ${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/int
 find_library(ANDROID_LOG_PATH log) # Android log library
 
 target_link_libraries(
-    ${PROJECT_NAME} 
+    ${PROJECT_NAME}
     ${PLAYFAB_SERVICES_PATH}
     ${PLAYFAB_CORE_PATH}
     ${LIBHTTPCLIENT_PATH}

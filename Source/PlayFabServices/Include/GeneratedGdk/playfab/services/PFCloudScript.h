@@ -168,10 +168,10 @@ PF_API PFCloudScriptExecuteFunctionAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_ARGUMENT_SIZE_EXCEEDED,
-/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_EXECUTION_TIME_LIMIT_EXCEEDED, E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_HTTP_REQUEST_ERROR,
-/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_QUEUE_REQUEST_ERROR, E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_RETURN_SIZE_EXCEEDED,
-/// E_PF_INVALID_ENTITY_TYPE or any of the global PlayFab Service errors. See doc page "Handling PlayFab
-/// Errors" for more details on error handling.
+/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_EVENT_HUB_REQUEST_ERROR, E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_EXECUTION_TIME_LIMIT_EXCEEDED,
+/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_HTTP_REQUEST_ERROR, E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_QUEUE_REQUEST_ERROR,
+/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_RETURN_SIZE_EXCEEDED, E_PF_INVALID_ENTITY_TYPE or any of the global
+/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFCloudScriptExecuteFunctionGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -188,10 +188,10 @@ PF_API PFCloudScriptExecuteFunctionGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_ARGUMENT_SIZE_EXCEEDED,
-/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_EXECUTION_TIME_LIMIT_EXCEEDED, E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_HTTP_REQUEST_ERROR,
-/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_QUEUE_REQUEST_ERROR, E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_RETURN_SIZE_EXCEEDED,
-/// E_PF_INVALID_ENTITY_TYPE or any of the global PlayFab Service errors. See doc page "Handling PlayFab
-/// Errors" for more details on error handling.
+/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_EVENT_HUB_REQUEST_ERROR, E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_EXECUTION_TIME_LIMIT_EXCEEDED,
+/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_HTTP_REQUEST_ERROR, E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_QUEUE_REQUEST_ERROR,
+/// E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_RETURN_SIZE_EXCEEDED, E_PF_INVALID_ENTITY_TYPE or any of the global
+/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

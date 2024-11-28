@@ -5,16 +5,16 @@ namespace PlayFab
 {
 
 // Default memory functions
-_Ret_maybenull_ _Post_writable_byte_size_(size) void* DefaultAlloc(size_t size) noexcept
+_Ret_maybenull_ _Post_writable_byte_size_(size) void* DefaultAlloc(size_t size, uint32_t) noexcept
 {
-    if (size > 0) 
+    if (size > 0)
     {
         return std::malloc(size);
     }
     return static_cast<void*>(nullptr);
 }
 
-void DefaultFree(_In_ _Post_invalid_ void* pointer) noexcept
+void DefaultFree(_In_ _Post_invalid_ void* pointer, uint32_t) noexcept
 {
     if (pointer)
     {
@@ -52,10 +52,16 @@ HRESULT SetMemoryHooks(PFMemoryHooks& newHooks)
     return S_OK;
 }
 
+bool IsUsingCustomMemoryHooks()
+{
+    PFMemoryHooks& hooks = GetMemoryHooks();
+    return hooks.alloc != DefaultAlloc && hooks.free != DefaultFree;
+}
+
 void* Alloc(size_t size)
 {
-    void* pointer = GetMemoryHooks().alloc(size);
-    if (size != 0) // RapidJson for example will request 0 size alloc during parsing of "Variants":[] and expects to get nullptr back
+    void* pointer = GetMemoryHooks().alloc(size, 0);
+    if (size != 0)
     {
         assert(pointer);
     }
@@ -67,7 +73,7 @@ void Free(void* pointer) noexcept
 {
     if (pointer)
     {
-        GetMemoryHooks().free(pointer);
+        GetMemoryHooks().free(pointer, 0);
     }
 }
 

@@ -7,61 +7,20 @@ namespace PlayFab
 namespace JsonUtils
 {
 
-JsonAllocator allocator{};
-
-// Helper class for writing JsonValue directly into a PlayFab::String. Implements rapidjson write-only stream
-// concept (see rapidjson/stream.h for details). Avoids additional copy needed when first writing to rapidjson::StringBuffer
-class StringOutputStream
-{
-public:
-    using Ch = String::traits_type::char_type;
-
-    StringOutputStream(size_t initialCapacity = kDefaultCapacity)
-    {
-        m_string.reserve(initialCapacity);
-    }
-
-    void Put(Ch c)
-    {
-        m_string.push_back(c);
-    }
-
-    void Flush()
-    {
-        // no-op
-    }
-
-    const String& GetString() const
-    {
-        return m_string;
-    }
-
-    String&& ExtractString()
-    {
-        return std::move(m_string);
-    }
-
-    static const size_t kDefaultCapacity = 256; // use same default capacity as rapidjson::GenericStringBuffer
-
-private:
-    String m_string;
-};
-
 String WriteToString(const JsonValue& jsonValue)
 {
-    StringOutputStream stream;
-    JsonWriter<StringOutputStream> writer{ stream, &allocator };
-    jsonValue.Accept(writer);
-    return stream.ExtractString();
+    // Convert JSON object to string
+    return String{ jsonValue.dump() };
 }
 
 JsonValue ToJson(const char* string)
 {
     if (!string)
     {
-        return JsonValue{ rapidjson::kNullType };
+        return JsonValue::value_t::null;
     }
-    return JsonValue{ string, allocator };
+
+    return string;
 }
 
 JsonValue ToJson(const String& string)
@@ -69,9 +28,10 @@ JsonValue ToJson(const String& string)
     // By design, map empty string to null JsonValue
     if (string.empty())
     {
-        return JsonValue{ rapidjson::kNullType };
+        return JsonValue::value_t::null;
     }
-    return JsonValue{ string.data(), allocator };
+
+    return string.data();
 }
 
 JsonValue ToJson(const PFJsonObject& jsonObject)
@@ -79,16 +39,15 @@ JsonValue ToJson(const PFJsonObject& jsonObject)
     // By design, map empty jsonObject to null JsonValue
     if (!jsonObject.stringValue)
     {
-        return JsonValue{ rapidjson::kNullType };
+        return JsonValue{};
     }
-    JsonDocument document{ &JsonUtils::allocator, JsonUtils::kDefaultStackCapacity, &JsonUtils::allocator };
-    document.Parse(jsonObject.stringValue);
-    return JsonValue{ document, allocator };
+
+    return JsonValue::parse(jsonObject.stringValue);
 }
 
 JsonValue ToJsonTime(time_t value)
 {
-    return JsonValue{ TimeTToIso8601String(value).data(), allocator };
+    return TimeTToIso8601String(value).data();
 }
 
 JsonValue ToJson(const InputModel& value)
@@ -98,128 +57,129 @@ JsonValue ToJson(const InputModel& value)
 
 HRESULT FromJson(const JsonValue& input, String& output)
 {
-    if (!input.IsString())
+    if (!input.is_string())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = input.GetString();
+    output = input.get<String>();
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, bool& output)
 {
-    if (!input.IsBool())
+    if (!input.is_boolean())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = input.GetBool();
+    output = input.get<bool>();
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, int16_t& output)
 {
-    if (!input.IsInt())
+    if (!input.is_number_integer())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = static_cast<int16_t>(input.GetInt());
+    output = static_cast<int16_t>(input.get<int>());
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, uint16_t& output)
 {
-    if (!input.IsUint())
+    if (!input.is_number_unsigned())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = static_cast<uint16_t>(input.GetUint());
+    output = static_cast<uint16_t>(input.get<unsigned int>());
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, int32_t& output)
 {
-    if (!input.IsInt())
+    if (!input.is_number_integer())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = static_cast<int32_t>(input.GetInt());
+    output = static_cast<int32_t>(input.get<int>());
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, uint32_t& output)
 {
-    if (!input.IsUint())
+    if (!input.is_number_unsigned())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = static_cast<uint32_t>(input.GetUint());
+    output = static_cast<uint32_t>(input.get<unsigned int>());
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, int64_t& output)
 {
-    if (!input.IsInt64())
+    if (!input.is_number_integer())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = input.GetInt64();
+    output = static_cast<int64_t>(input.get<int64_t>());
+
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, uint64_t& output)
 {
-    if (!input.IsUint64())
+    if (!input.is_number_unsigned())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = input.GetUint64();
+    output = static_cast<uint64_t>(input.get<unsigned int>());
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, float& output)
 {
-    if (!input.IsFloat())
+    if (!input.is_number_float())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = input.GetFloat();
+    output = input.get<float>();
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, double& output)
 {
-    if (!input.IsDouble())
+    if (!input.is_number_float())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = input.GetDouble();
+    output = input.get<double>();
     return S_OK;
 }
 
 HRESULT FromJsonTime(const JsonValue& input, time_t& output)
 {
-    if (!input.IsString())
+    if (!input.is_string())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = Iso8601StringToTimeT(input.GetString());
+    output = Iso8601StringToTimeT(input.get<String>());
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, JsonObject& output)
 {
-    if (!input.IsObject())
+    if (!input.is_object())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
@@ -230,42 +190,45 @@ HRESULT FromJson(const JsonValue& input, JsonObject& output)
 
 HRESULT FromJson(const JsonValue& input, JsonValue& output)
 {
-    output.CopyFrom(input, allocator); // Deep copy
+    output = input;
     return S_OK;
 }
 
 HRESULT ObjectAddMember(JsonValue& jsonObject, JsonValue&& name, JsonValue&& value)
 {
-    if (!jsonObject.IsObject())
+    if (!jsonObject.is_object())
     {
         TRACE_ERROR("Json Error: cannot add member to non-object");
         return E_FAIL;
     }
-    jsonObject.AddMember(name, value, allocator);
+
+    jsonObject.emplace(name, value);
     return S_OK;
 }
 
-HRESULT ObjectAddMember(JsonValue& jsonObject, JsonValue::StringRefType name, JsonValue&& value)
+HRESULT ObjectAddMember(JsonValue& jsonObject, StringRefType name, JsonValue&& value)
 {
-    return ObjectAddMember(jsonObject, JsonValue{ name }, std::move(value));
+    if (!jsonObject.is_object())
+    {
+        TRACE_ERROR("Json Error: cannot add member to non-object");
+        return E_FAIL;
+    }
+
+    jsonObject.emplace(name, value);
+    return S_OK;
 }
 
-HRESULT ObjectAddMember(JsonValue& jsonObject, JsonValue::StringRefType name, const JsonValue& value)
-{
-    return ObjectAddMember(jsonObject, name, std::move(JsonValue{}.CopyFrom(value, allocator)));
-}
-
-HRESULT ObjectAddMember(JsonValue& jsonObject, JsonValue::StringRefType name, const String& value)
+HRESULT ObjectAddMember(JsonValue& jsonObject, StringRefType name, const String& value)
 {
     return ObjectAddMember(jsonObject, name, ToJson(value));
 }
 
-HRESULT ObjectAddMemberTime(JsonValue& jsonObject, JsonValue::StringRefType name, time_t value)
+HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, time_t value)
 {
     return ObjectAddMember(jsonObject, name, ToJsonTime(value));
 }
 
-HRESULT ObjectAddMemberTime(JsonValue& jsonObject, JsonValue::StringRefType name, const std::optional<time_t>& value)
+HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const std::optional<time_t>& value)
 {
     if (value.has_value())
     {
@@ -273,11 +236,11 @@ HRESULT ObjectAddMemberTime(JsonValue& jsonObject, JsonValue::StringRefType name
     }
     else
     {
-        return ObjectAddMember(jsonObject, name, JsonValue{ rapidjson::kNullType });
+        return ObjectAddMember(jsonObject, name, JsonValue{});
     }
 }
 
-HRESULT ObjectAddMemberTime(JsonValue& jsonObject, JsonValue::StringRefType name, const time_t* value)
+HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const time_t* value)
 {
     if (value != nullptr)
     {
@@ -285,23 +248,23 @@ HRESULT ObjectAddMemberTime(JsonValue& jsonObject, JsonValue::StringRefType name
     }
     else
     {
-        return ObjectAddMember(jsonObject, name, JsonValue{ rapidjson::kNullType });
+        return ObjectAddMember(jsonObject, name, JsonValue{});
     }
 }
 
-HRESULT ObjectAddMemberTime(JsonValue& jsonObject, JsonValue::StringRefType name, const time_t* array, uint32_t arrayCount)
+HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const time_t* array, uint32_t arrayCount)
 {
-    JsonValue member{ rapidjson::kArrayType };
+    JsonValue member{};
     for (auto i = 0u; i < arrayCount; ++i)
     {
-        member.PushBack(ToJsonTime(array[i]), allocator);
+        member.push_back(ToJsonTime(array[i]));
     }
     return ObjectAddMember(jsonObject, name, std::move(member));
 }
 
-HRESULT ObjectAddMemberTime(JsonValue& jsonObject, JsonValue::StringRefType name, const PFDateTimeDictionaryEntry* associativeArray, uint32_t arrayCount)
+HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const PFDateTimeDictionaryEntry* associativeArray, uint32_t arrayCount)
 {
-    JsonValue member{ rapidjson::kObjectType };
+    JsonValue member{};
     for (auto i = 0u; i < arrayCount; ++i)
     {
         auto& entry{ associativeArray[i] };
@@ -314,10 +277,11 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, JsonValue
 {
     auto findResult = Detail::ObjectFindMember(jsonObject, name);
     RETURN_IF_FAILED(findResult.hr);
-    output.SetNull();
-    if (findResult.Payload() != jsonObject.MemberEnd())
+    output = nullptr;
+
+    if (findResult.Payload() != jsonObject.cend())
     {
-        RETURN_IF_FAILED(FromJson(findResult.Payload()->value, output));
+        RETURN_IF_FAILED(FromJson(*findResult.Payload(), output));
     }
     return S_OK;
 }
@@ -327,9 +291,9 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, String& o
     auto findResult = Detail::ObjectFindMember(jsonObject, name);
     RETURN_IF_FAILED(findResult.hr);
     output.clear();
-    if (findResult.Payload() != jsonObject.MemberEnd())
+    if (findResult.Payload() != jsonObject.cend())
     {
-        RETURN_IF_FAILED(FromJson(findResult.Payload()->value, output));
+        RETURN_IF_FAILED(FromJson(*findResult.Payload(), output));
     }
     return S_OK;
 }
@@ -339,9 +303,9 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, JsonObjec
     auto findResult = Detail::ObjectFindMember(jsonObject, name);
     RETURN_IF_FAILED(findResult.hr);
     output.stringValue.clear();
-    if (findResult.Payload() != jsonObject.MemberEnd())
+    if (findResult.Payload() != jsonObject.cend())
     {
-        RETURN_IF_FAILED(FromJson(findResult.Payload()->value, output));
+        RETURN_IF_FAILED(FromJson(*findResult.Payload(), output));
     }
     return S_OK;
 }
@@ -351,17 +315,17 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, CStringVe
     auto findResult = Detail::ObjectFindMember(jsonObject, name);
     RETURN_IF_FAILED(findResult.hr);
     output.clear();
-    if (findResult.Payload() != jsonObject.MemberEnd())
+    if (findResult.Payload() != jsonObject.cend())
     {
-        if (!findResult.Payload()->value.IsArray())
+        if (!findResult.Payload().value().is_array())
         {
             TRACE_ERROR("Json Parse Error: unexpected token");
             return E_FAIL;
         }
 
-        auto jsonArray{ findResult.Payload()->value.GetArray() };
-        output.reserve(jsonArray.Size());
-        for (auto& value : jsonArray)
+        auto jsonArray{ findResult.Payload()->get<Vector<String>>() };
+        output.reserve(jsonArray.size());
+        for (const auto& value : jsonArray)
         {
             String stringValue;
             RETURN_IF_FAILED(FromJson(value, stringValue));
@@ -376,21 +340,20 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, StringDic
     auto findResult = Detail::ObjectFindMember(jsonObject, name);
     RETURN_IF_FAILED(findResult.hr);
     output.clear();
-    if (findResult.Payload() != jsonObject.MemberEnd())
+    if (findResult.Payload() != jsonObject.cend())
     {
-        if (!findResult.Payload()->value.IsObject())
+        if (!findResult.Payload().value().is_object())
         {
             TRACE_ERROR("Json Parse Error: unexpected token");
             return E_FAIL;
         }
 
-        auto memberObject{ findResult.Payload()->value.GetObj()};
-        output.reserve(memberObject.MemberCount());
-        for (auto& pair : memberObject)
-        {
+        auto memberObject{ findResult.Payload()->get<JsonValue>() };
+        output.reserve(memberObject.size());
+        for (auto& [key, value] : memberObject.items()) {
             String stringValue{};
-            RETURN_IF_FAILED(FromJson(pair.value, stringValue));
-            output.insert_or_assign(pair.name.GetString(), std::move(stringValue));
+            RETURN_IF_FAILED(FromJson(value, stringValue));
+            output.insert_or_assign(key.c_str(), std::move(stringValue));
         }
     }
     return S_OK;
@@ -400,12 +363,12 @@ HRESULT ObjectGetMemberTime(const JsonValue& jsonObject, const char* name, time_
 {
     auto findResult = Detail::ObjectFindMember(jsonObject, name);
     RETURN_IF_FAILED(findResult.hr);
-    if (findResult.Payload() == jsonObject.MemberEnd())
+    if (findResult.Payload() == jsonObject.cend())
     {
         TRACE_ERROR("Json Parse Error: object missing non-optional member \"%s\"", name);
         return E_FAIL;
     }
-    return FromJsonTime(findResult.Payload()->value, output);
+    return FromJsonTime(findResult.Payload().value(), output);
 }
 
 HRESULT ObjectGetMemberTime(const JsonValue& jsonObject, const char* name, std::optional<time_t>& output)
@@ -413,10 +376,10 @@ HRESULT ObjectGetMemberTime(const JsonValue& jsonObject, const char* name, std::
     auto findResult = Detail::ObjectFindMember(jsonObject, name);
     RETURN_IF_FAILED(findResult.hr);
     output.reset();
-    if (findResult.Payload() != jsonObject.MemberEnd())
+    if (findResult.Payload() != jsonObject.cend())
     {
         output.emplace();
-        RETURN_IF_FAILED(FromJsonTime(findResult.Payload()->value, *output));
+        RETURN_IF_FAILED(FromJsonTime(findResult.Payload().value(), *output));
     }
     return S_OK;
 }
@@ -426,17 +389,17 @@ HRESULT ObjectGetMemberTime(const JsonValue& jsonObject, const char* name, Vecto
     auto findResult = Detail::ObjectFindMember(jsonObject, name);
     RETURN_IF_FAILED(findResult.hr);
     output.clear();
-    if (findResult.Payload() != jsonObject.MemberEnd())
+    if (findResult.Payload() != jsonObject.cend())
     {
-        if (!findResult.Payload()->value.IsArray())
+        if (!findResult.Payload().value().is_array())
         {
             TRACE_ERROR("Json Parse Error: unexpected token");
             return E_FAIL;
         }
 
-        auto jsonArray{ findResult.Payload()->value.GetArray() };
-        output.reserve(jsonArray.Size());
-        for (auto& value : jsonArray)
+        auto jsonArray{ findResult.Payload()->get<Vector<time_t>>() };
+        output.reserve(jsonArray.size());
+        for (const auto& value : jsonArray)
         {
             output.emplace_back();
             RETURN_IF_FAILED(FromJsonTime(value, output.back()));
@@ -450,21 +413,20 @@ HRESULT ObjectGetMemberTime(const JsonValue& jsonObject, const char* name, Dicti
     auto findResult = Detail::ObjectFindMember(jsonObject, name);
     RETURN_IF_FAILED(findResult.hr);
     output.clear();
-    if (findResult.Payload() != jsonObject.MemberEnd())
+    if (findResult.Payload() != jsonObject.cend())
     {
-        if (!findResult.Payload()->value.IsObject())
+        if (!findResult.Payload().value().is_object())
         {
             TRACE_ERROR("Json Parse Error: unexpected token");
             return E_FAIL;
         }
 
-        auto memberObject{ findResult.Payload()->value.GetObj() };
-        output.reserve(memberObject.MemberCount());
-        for (auto& pair : memberObject)
-        {
-            time_t value{};
-            RETURN_IF_FAILED(FromJsonTime(pair.value, value));
-            output.insert_or_assign(pair.name.GetString(), value);
+        auto memberObject{ findResult.Payload()->get<JsonValue>() };
+        output.reserve(memberObject.size());
+        for (auto& [key, value] : memberObject.items()) {
+            time_t timeValue{};
+            RETURN_IF_FAILED(FromJsonTime(value, timeValue));
+            output.insert_or_assign(key.c_str(), timeValue);
         }
     }
     return S_OK;
@@ -473,14 +435,14 @@ HRESULT ObjectGetMemberTime(const JsonValue& jsonObject, const char* name, Dicti
 namespace Detail
 {
 
-Result<JsonValue::ConstMemberIterator> ObjectFindMember(const JsonValue& jsonObject, const char* name)
+Result<JsonValue::const_iterator> ObjectFindMember(const JsonValue& jsonObject, const char* name)
 {
-    if (!jsonObject.IsObject())
+    if (!jsonObject.is_object())
     {
         TRACE_ERROR("Json Parse Error: cannot get member from a JsonValue that isn't an object");
         return E_FAIL;
     }
-    return jsonObject.FindMember(name);
+    return jsonObject.find(name);
 }
 
 } // namespace Detail

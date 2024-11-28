@@ -45,6 +45,15 @@ PF_API PFMemGetFunctions(
     return S_OK;
 }
 
+PF_API PFMemIsUsingCustomMemoryFunctions(
+    _Out_ bool* isUsingCustomMemoryFunctions
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(isUsingCustomMemoryFunctions);
+
+    *isUsingCustomMemoryFunctions = PlayFab::IsUsingCustomMemoryHooks();
+    return S_OK;
+}
 
 PF_API PFPlatformLocalStorageSetHandlers(
     _In_ PFLocalStorageHooks* hooks

@@ -16,16 +16,16 @@ String GetExeDirectory()
     char path[256] = {0};
     int size = 256;
     ssize_t len = readlink("/proc/self/exe", path, size - 1); // Linux
-    if (len == -1) 
+    if (len == -1)
     {
         len = readlink("/proc/curproc/file", path, size - 1); // FreeBSD
-        if (len == -1) 
+        if (len == -1)
         {
             len = readlink("/proc/self/path/a.out", path, size - 1); // Solaris
         }
     }
 
-    if (len != -1) 
+    if (len != -1)
     {
         path[len] = '\0'; // Null-terminate the string
     }
@@ -34,7 +34,7 @@ String GetExeDirectory()
 }
 
 
-std::vector<char> readFileIntoVector(const std::string &filename) 
+std::vector<char> readFileIntoVector(const std::string &filename)
 {
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
 
@@ -66,18 +66,45 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
      auto fileData = readFileIntoVector("testTitleData.json");
 
     // Parse JSON string into output TestTitleData.
-    rapidjson::Document titleDataJson;
-    titleDataJson.Parse(fileData.data());
+    JsonValue titleDataJson;
+    bool parseError = false;
+    String parseErrorMsg;
 
-    if (titleDataJson.HasParseError())
+    try
+    {
+        if (fileData.data())
+        {
+            titleDataJson = JsonValue::parse(fileData.data());
+        }
+        else
+        {
+            parseError = true;
+        }
+    }
+    catch (const JsonValue::parse_error& e)
+    {
+        parseErrorMsg = e.what();
+        parseError = true;
+    }
+
+    if (parseError)
     {
         TraceMessage(HCTraceLevel::Error, "Unable to parse testTitleData.json");
         return E_FAIL;
     }
 
-    testTitleData.titleId = titleDataJson["titleId"].GetString();
-    testTitleData.secretKey = titleDataJson["secretKey"].GetString();
-    testTitleData.connectionString = titleDataJson["connectionString"].GetString();
+    testTitleData.titleId = titleDataJson["titleId"].get<String>();
+    testTitleData.secretKey = titleDataJson["secretKey"].get<String>();
+    testTitleData.connectionString = titleDataJson["connectionString"].get<String>();
+	testTitleData.allowRetries = titleDataJson["allowRetries"].get<bool>();
+	testTitleData.runTestList = titleDataJson["runTestList"].get<bool>();
+    testTitleData.testList = titleDataJson["testList"].get<Set<String>>();
+    testTitleData.retryableHRs = titleDataJson["retryableHRs"].get<Set<String>>();
+
+    #if HC_PLATFORM == HC_PLATFORM_WIN32
+    testTitleData.steamAppId = titleDataJson["steamAppId"].get<String>();
+    testTitleData.steamPublisherKey = titleDataJson["steamPublisherKey"].get<String>();
+    #endif
 
     return S_OK;
 }

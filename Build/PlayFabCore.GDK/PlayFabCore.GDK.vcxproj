@@ -25,6 +25,14 @@
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(Console_SdkLibPath)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies);Appnotify.lib</AdditionalDependencies>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">/profile /opt:ref /opt:icf %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">/profile /opt:ref /opt:icf %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <ClCompile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">/Zi %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">/Zi %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
   </ItemDefinitionGroup>
 </Project>

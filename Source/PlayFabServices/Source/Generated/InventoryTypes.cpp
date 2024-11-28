@@ -15,7 +15,7 @@ JsonValue AlternateId::ToJson() const
 
 JsonValue AlternateId::ToJson(const PFInventoryAlternateId& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;
@@ -28,7 +28,7 @@ JsonValue InventoryItemReference::ToJson() const
 
 JsonValue InventoryItemReference::ToJson(const PFInventoryInventoryItemReference& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<AlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "StackId", input.stackId);
@@ -42,7 +42,7 @@ JsonValue InitialValues::ToJson() const
 
 JsonValue InitialValues::ToJson(const PFInventoryInitialValues& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "DisplayProperties", input.displayProperties);
     return output;
 }
@@ -54,7 +54,7 @@ JsonValue AddInventoryItemsRequest::ToJson() const
 
 JsonValue AddInventoryItemsRequest::ToJson(const PFInventoryAddInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -117,12 +117,12 @@ HRESULT AddInventoryItemsResponse::Copy(const PFInventoryAddInventoryItemsRespon
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.eTag); 
+        auto propCopyResult = buffer.CopyTo(input.eTag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.eTag = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
+        auto propCopyResult = buffer.CopyTo(input.idempotencyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.idempotencyId = propCopyResult.ExtractPayload();
     }
@@ -141,7 +141,7 @@ JsonValue DeleteInventoryCollectionRequest::ToJson() const
 
 JsonValue DeleteInventoryCollectionRequest::ToJson(const PFInventoryDeleteInventoryCollectionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -156,7 +156,7 @@ JsonValue DeleteInventoryItemsRequest::ToJson() const
 
 JsonValue DeleteInventoryItemsRequest::ToJson(const PFInventoryDeleteInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -216,12 +216,12 @@ HRESULT DeleteInventoryItemsResponse::Copy(const PFInventoryDeleteInventoryItems
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.eTag); 
+        auto propCopyResult = buffer.CopyTo(input.eTag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.eTag = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
+        auto propCopyResult = buffer.CopyTo(input.idempotencyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.idempotencyId = propCopyResult.ExtractPayload();
     }
@@ -240,7 +240,7 @@ JsonValue AddInventoryItemsOperation::ToJson() const
 
 JsonValue AddInventoryItemsOperation::ToJson(const PFInventoryAddInventoryItemsOperation& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DurationInSeconds", input.durationInSeconds);
     JsonUtils::ObjectAddMember<InventoryItemReference>(output, "Item", input.item);
@@ -255,7 +255,7 @@ JsonValue DeleteInventoryItemsOperation::ToJson() const
 
 JsonValue DeleteInventoryItemsOperation::ToJson(const PFInventoryDeleteInventoryItemsOperation& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<InventoryItemReference>(output, "Item", input.item);
     return output;
 }
@@ -267,7 +267,7 @@ JsonValue PurchasePriceAmount::ToJson() const
 
 JsonValue PurchasePriceAmount::ToJson(const PFInventoryPurchasePriceAmount& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "ItemId", input.itemId);
     JsonUtils::ObjectAddMember(output, "StackId", input.stackId);
@@ -281,7 +281,7 @@ JsonValue PurchaseInventoryItemsOperation::ToJson() const
 
 JsonValue PurchaseInventoryItemsOperation::ToJson(const PFInventoryPurchaseInventoryItemsOperation& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DeleteEmptyStacks", input.deleteEmptyStacks);
     JsonUtils::ObjectAddMember(output, "DurationInSeconds", input.durationInSeconds);
@@ -299,7 +299,7 @@ JsonValue SubtractInventoryItemsOperation::ToJson() const
 
 JsonValue SubtractInventoryItemsOperation::ToJson(const PFInventorySubtractInventoryItemsOperation& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DeleteEmptyStacks", input.deleteEmptyStacks);
     JsonUtils::ObjectAddMember(output, "DurationInSeconds", input.durationInSeconds);
@@ -314,7 +314,7 @@ JsonValue TransferInventoryItemsOperation::ToJson() const
 
 JsonValue TransferInventoryItemsOperation::ToJson(const PFInventoryTransferInventoryItemsOperation& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DeleteEmptyStacks", input.deleteEmptyStacks);
     JsonUtils::ObjectAddMember<InventoryItemReference>(output, "GivingItem", input.givingItem);
@@ -330,7 +330,7 @@ JsonValue InventoryItem::ToJson() const
 
 JsonValue InventoryItem::ToJson(const PFInventoryInventoryItem& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DisplayProperties", input.displayProperties);
     JsonUtils::ObjectAddMemberTime(output, "ExpirationDate", input.expirationDate);
@@ -413,7 +413,7 @@ HRESULT InventoryItem::Copy(const PFInventoryInventoryItem& input, PFInventoryIn
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.amount); 
+        auto propCopyResult = buffer.CopyTo(input.amount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.amount = propCopyResult.ExtractPayload();
     }
@@ -423,22 +423,22 @@ HRESULT InventoryItem::Copy(const PFInventoryInventoryItem& input, PFInventoryIn
         output.displayProperties.stringValue = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.expirationDate); 
+        auto propCopyResult = buffer.CopyTo(input.expirationDate);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.expirationDate = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.id); 
+        auto propCopyResult = buffer.CopyTo(input.id);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.id = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.stackId); 
+        auto propCopyResult = buffer.CopyTo(input.stackId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.stackId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.type); 
+        auto propCopyResult = buffer.CopyTo(input.type);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.type = propCopyResult.ExtractPayload();
     }
@@ -452,7 +452,7 @@ JsonValue UpdateInventoryItemsOperation::ToJson() const
 
 JsonValue UpdateInventoryItemsOperation::ToJson(const PFInventoryUpdateInventoryItemsOperation& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<InventoryItem>(output, "Item", input.item);
     return output;
 }
@@ -464,7 +464,7 @@ JsonValue InventoryOperation::ToJson() const
 
 JsonValue InventoryOperation::ToJson(const PFInventoryInventoryOperation& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<AddInventoryItemsOperation>(output, "Add", input.add);
     JsonUtils::ObjectAddMember<DeleteInventoryItemsOperation>(output, "Delete", input.deleteOp);
     JsonUtils::ObjectAddMember<PurchaseInventoryItemsOperation>(output, "Purchase", input.purchase);
@@ -481,7 +481,7 @@ JsonValue ExecuteInventoryOperationsRequest::ToJson() const
 
 JsonValue ExecuteInventoryOperationsRequest::ToJson(const PFInventoryExecuteInventoryOperationsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -541,12 +541,12 @@ HRESULT ExecuteInventoryOperationsResponse::Copy(const PFInventoryExecuteInvento
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.eTag); 
+        auto propCopyResult = buffer.CopyTo(input.eTag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.eTag = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
+        auto propCopyResult = buffer.CopyTo(input.idempotencyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.idempotencyId = propCopyResult.ExtractPayload();
     }
@@ -565,7 +565,7 @@ JsonValue ExecuteTransferOperationsRequest::ToJson() const
 
 JsonValue ExecuteTransferOperationsRequest::ToJson(const PFInventoryExecuteTransferOperationsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "GivingCollectionId", input.givingCollectionId);
     JsonUtils::ObjectAddMember<EntityKey>(output, "GivingEntity", input.givingEntity);
@@ -660,7 +660,7 @@ HRESULT ExecuteTransferOperationsResponse::Copy(const PFInventoryExecuteTransfer
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.givingETag); 
+        auto propCopyResult = buffer.CopyTo(input.givingETag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.givingETag = propCopyResult.ExtractPayload();
     }
@@ -670,22 +670,22 @@ HRESULT ExecuteTransferOperationsResponse::Copy(const PFInventoryExecuteTransfer
         output.givingTransactionIds = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
+        auto propCopyResult = buffer.CopyTo(input.idempotencyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.idempotencyId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.operationStatus); 
+        auto propCopyResult = buffer.CopyTo(input.operationStatus);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationStatus = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.operationToken); 
+        auto propCopyResult = buffer.CopyTo(input.operationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationToken = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.receivingETag); 
+        auto propCopyResult = buffer.CopyTo(input.receivingETag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.receivingETag = propCopyResult.ExtractPayload();
     }
@@ -704,7 +704,7 @@ JsonValue GetInventoryCollectionIdsRequest::ToJson() const
 
 JsonValue GetInventoryCollectionIdsRequest::ToJson(const PFInventoryGetInventoryCollectionIdsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -759,7 +759,7 @@ HRESULT GetInventoryCollectionIdsResponse::Copy(const PFInventoryGetInventoryCol
         output.collectionIds = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.continuationToken); 
+        auto propCopyResult = buffer.CopyTo(input.continuationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continuationToken = propCopyResult.ExtractPayload();
     }
@@ -773,7 +773,7 @@ JsonValue GetInventoryItemsRequest::ToJson() const
 
 JsonValue GetInventoryItemsRequest::ToJson(const PFInventoryGetInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
@@ -833,12 +833,12 @@ HRESULT GetInventoryItemsResponse::Copy(const PFInventoryGetInventoryItemsRespon
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.continuationToken); 
+        auto propCopyResult = buffer.CopyTo(input.continuationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continuationToken = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.eTag); 
+        auto propCopyResult = buffer.CopyTo(input.eTag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.eTag = propCopyResult.ExtractPayload();
     }
@@ -857,7 +857,7 @@ JsonValue GetInventoryOperationStatusRequest::ToJson() const
 
 JsonValue GetInventoryOperationStatusRequest::ToJson(const PFInventoryGetInventoryOperationStatusRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -897,7 +897,7 @@ HRESULT GetInventoryOperationStatusResponse::Copy(const PFInventoryGetInventoryO
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.operationStatus); 
+        auto propCopyResult = buffer.CopyTo(input.operationStatus);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationStatus = propCopyResult.ExtractPayload();
     }
@@ -911,7 +911,7 @@ JsonValue GetMicrosoftStoreAccessTokensRequest::ToJson() const
 
 JsonValue GetMicrosoftStoreAccessTokensRequest::ToJson(const PFInventoryGetMicrosoftStoreAccessTokensRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
@@ -951,7 +951,7 @@ HRESULT GetMicrosoftStoreAccessTokensResponse::Copy(const PFInventoryGetMicrosof
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.collectionsAccessToken); 
+        auto propCopyResult = buffer.CopyTo(input.collectionsAccessToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.collectionsAccessToken = propCopyResult.ExtractPayload();
     }
@@ -965,7 +965,7 @@ JsonValue GetTransactionHistoryRequest::ToJson() const
 
 JsonValue GetTransactionHistoryRequest::ToJson(const PFInventoryGetTransactionHistoryRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
@@ -1057,37 +1057,37 @@ HRESULT TransactionOperation::Copy(const PFInventoryTransactionOperation& input,
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.amount); 
+        auto propCopyResult = buffer.CopyTo(input.amount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.amount = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.durationInSeconds); 
+        auto propCopyResult = buffer.CopyTo(input.durationInSeconds);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.durationInSeconds = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemFriendlyId); 
+        auto propCopyResult = buffer.CopyTo(input.itemFriendlyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemFriendlyId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemId); 
+        auto propCopyResult = buffer.CopyTo(input.itemId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemType); 
+        auto propCopyResult = buffer.CopyTo(input.itemType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemType = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.stackId); 
+        auto propCopyResult = buffer.CopyTo(input.stackId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.stackId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.type); 
+        auto propCopyResult = buffer.CopyTo(input.type);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.type = propCopyResult.ExtractPayload();
     }
@@ -1135,12 +1135,12 @@ HRESULT TransactionPurchaseDetails::Copy(const PFInventoryTransactionPurchaseDet
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.storeFriendlyId); 
+        auto propCopyResult = buffer.CopyTo(input.storeFriendlyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.storeFriendlyId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.storeId); 
+        auto propCopyResult = buffer.CopyTo(input.storeId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.storeId = propCopyResult.ExtractPayload();
     }
@@ -1196,17 +1196,17 @@ HRESULT TransactionRedeemDetails::Copy(const PFInventoryTransactionRedeemDetails
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.marketplace); 
+        auto propCopyResult = buffer.CopyTo(input.marketplace);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.marketplace = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.marketplaceTransactionId); 
+        auto propCopyResult = buffer.CopyTo(input.marketplaceTransactionId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.marketplaceTransactionId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.offerId); 
+        auto propCopyResult = buffer.CopyTo(input.offerId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.offerId = propCopyResult.ExtractPayload();
     }
@@ -1284,27 +1284,27 @@ HRESULT TransactionTransferDetails::Copy(const PFInventoryTransactionTransferDet
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.givingCollectionId); 
+        auto propCopyResult = buffer.CopyTo(input.givingCollectionId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.givingCollectionId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.givingEntity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.givingEntity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.givingEntity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.receivingCollectionId); 
+        auto propCopyResult = buffer.CopyTo(input.receivingCollectionId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.receivingCollectionId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.receivingEntity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.receivingEntity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.receivingEntity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.transferId); 
+        auto propCopyResult = buffer.CopyTo(input.transferId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.transferId = propCopyResult.ExtractPayload();
     }
@@ -1412,12 +1412,12 @@ HRESULT Transaction::Copy(const PFInventoryTransaction& input, PFInventoryTransa
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.apiName); 
+        auto propCopyResult = buffer.CopyTo(input.apiName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.apiName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemType); 
+        auto propCopyResult = buffer.CopyTo(input.itemType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemType = propCopyResult.ExtractPayload();
     }
@@ -1427,27 +1427,27 @@ HRESULT Transaction::Copy(const PFInventoryTransaction& input, PFInventoryTransa
         output.operations = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.operationType); 
+        auto propCopyResult = buffer.CopyTo(input.operationType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationType = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<TransactionPurchaseDetails>(input.purchaseDetails); 
+        auto propCopyResult = buffer.CopyTo<TransactionPurchaseDetails>(input.purchaseDetails);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.purchaseDetails = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<TransactionRedeemDetails>(input.redeemDetails); 
+        auto propCopyResult = buffer.CopyTo<TransactionRedeemDetails>(input.redeemDetails);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.redeemDetails = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.transactionId); 
+        auto propCopyResult = buffer.CopyTo(input.transactionId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.transactionId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<TransactionTransferDetails>(input.transferDetails); 
+        auto propCopyResult = buffer.CopyTo<TransactionTransferDetails>(input.transferDetails);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.transferDetails = propCopyResult.ExtractPayload();
     }
@@ -1496,7 +1496,7 @@ HRESULT GetTransactionHistoryResponse::Copy(const PFInventoryGetTransactionHisto
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.continuationToken); 
+        auto propCopyResult = buffer.CopyTo(input.continuationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continuationToken = propCopyResult.ExtractPayload();
     }
@@ -1515,7 +1515,7 @@ JsonValue PurchaseInventoryItemsRequest::ToJson() const
 
 JsonValue PurchaseInventoryItemsRequest::ToJson(const PFInventoryPurchaseInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -1581,12 +1581,12 @@ HRESULT PurchaseInventoryItemsResponse::Copy(const PFInventoryPurchaseInventoryI
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.eTag); 
+        auto propCopyResult = buffer.CopyTo(input.eTag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.eTag = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
+        auto propCopyResult = buffer.CopyTo(input.idempotencyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.idempotencyId = propCopyResult.ExtractPayload();
     }
@@ -1605,7 +1605,7 @@ JsonValue RedeemAppleAppStoreInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemAppleAppStoreInventoryItemsRequest::ToJson(const PFInventoryRedeemAppleAppStoreInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -1670,22 +1670,22 @@ HRESULT RedemptionFailure::Copy(const PFInventoryRedemptionFailure& input, PFInv
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.failureCode); 
+        auto propCopyResult = buffer.CopyTo(input.failureCode);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.failureCode = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.failureDetails); 
+        auto propCopyResult = buffer.CopyTo(input.failureDetails);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.failureDetails = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.marketplaceAlternateId); 
+        auto propCopyResult = buffer.CopyTo(input.marketplaceAlternateId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.marketplaceAlternateId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.marketplaceTransactionId); 
+        auto propCopyResult = buffer.CopyTo(input.marketplaceTransactionId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.marketplaceTransactionId = propCopyResult.ExtractPayload();
     }
@@ -1735,12 +1735,12 @@ HRESULT RedemptionSuccess::Copy(const PFInventoryRedemptionSuccess& input, PFInv
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.marketplaceAlternateId); 
+        auto propCopyResult = buffer.CopyTo(input.marketplaceAlternateId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.marketplaceAlternateId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.marketplaceTransactionId); 
+        auto propCopyResult = buffer.CopyTo(input.marketplaceTransactionId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.marketplaceTransactionId = propCopyResult.ExtractPayload();
     }
@@ -1823,7 +1823,7 @@ JsonValue GooglePlayProductPurchase::ToJson() const
 
 JsonValue GooglePlayProductPurchase::ToJson(const PFInventoryGooglePlayProductPurchase& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "ProductId", input.productId);
     JsonUtils::ObjectAddMember(output, "Token", input.token);
     return output;
@@ -1836,7 +1836,7 @@ JsonValue RedeemGooglePlayInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemGooglePlayInventoryItemsRequest::ToJson(const PFInventoryRedeemGooglePlayInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -1920,7 +1920,7 @@ JsonValue RedeemMicrosoftStoreInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemMicrosoftStoreInventoryItemsRequest::ToJson(const PFInventoryRedeemMicrosoftStoreInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMember(output, "CollectionsIdKey", input.collectionsIdKey);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -2007,7 +2007,7 @@ JsonValue RedeemNintendoEShopInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemNintendoEShopInventoryItemsRequest::ToJson(const PFInventoryRedeemNintendoEShopInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2091,7 +2091,7 @@ JsonValue RedeemPlayStationStoreInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemPlayStationStoreInventoryItemsRequest::ToJson(const PFInventoryRedeemPlayStationStoreInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AuthorizationCode", input.authorizationCode);
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -2177,7 +2177,7 @@ JsonValue RedeemSteamInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemSteamInventoryItemsRequest::ToJson(const PFInventoryRedeemSteamInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2260,7 +2260,7 @@ JsonValue SubtractInventoryItemsRequest::ToJson() const
 
 JsonValue SubtractInventoryItemsRequest::ToJson(const PFInventorySubtractInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -2323,12 +2323,12 @@ HRESULT SubtractInventoryItemsResponse::Copy(const PFInventorySubtractInventoryI
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.eTag); 
+        auto propCopyResult = buffer.CopyTo(input.eTag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.eTag = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
+        auto propCopyResult = buffer.CopyTo(input.idempotencyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.idempotencyId = propCopyResult.ExtractPayload();
     }
@@ -2347,7 +2347,7 @@ JsonValue TransferInventoryItemsRequest::ToJson() const
 
 JsonValue TransferInventoryItemsRequest::ToJson(const PFInventoryTransferInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DeleteEmptyStacks", input.deleteEmptyStacks);
@@ -2438,7 +2438,7 @@ HRESULT TransferInventoryItemsResponse::Copy(const PFInventoryTransferInventoryI
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.givingETag); 
+        auto propCopyResult = buffer.CopyTo(input.givingETag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.givingETag = propCopyResult.ExtractPayload();
     }
@@ -2448,17 +2448,17 @@ HRESULT TransferInventoryItemsResponse::Copy(const PFInventoryTransferInventoryI
         output.givingTransactionIds = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
+        auto propCopyResult = buffer.CopyTo(input.idempotencyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.idempotencyId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.operationStatus); 
+        auto propCopyResult = buffer.CopyTo(input.operationStatus);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationStatus = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.operationToken); 
+        auto propCopyResult = buffer.CopyTo(input.operationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationToken = propCopyResult.ExtractPayload();
     }
@@ -2477,7 +2477,7 @@ JsonValue UpdateInventoryItemsRequest::ToJson() const
 
 JsonValue UpdateInventoryItemsRequest::ToJson(const PFInventoryUpdateInventoryItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2537,12 +2537,12 @@ HRESULT UpdateInventoryItemsResponse::Copy(const PFInventoryUpdateInventoryItems
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.eTag); 
+        auto propCopyResult = buffer.CopyTo(input.eTag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.eTag = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.idempotencyId); 
+        auto propCopyResult = buffer.CopyTo(input.idempotencyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.idempotencyId = propCopyResult.ExtractPayload();
     }

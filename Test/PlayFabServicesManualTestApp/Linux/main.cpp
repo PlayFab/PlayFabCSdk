@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <vector>
 #include <fstream>
-#include <rapidjson/document.h>
+#include <nlohmann/json.hpp>
 
 #include <playfab/services/PFServices.h>
 #include <playfab/httpclient/PFHCTrace.h>
@@ -27,12 +27,12 @@ struct TestTitleData
 };
 
 
-std::vector<char> readFileIntoVector(const std::string &filename) 
+std::vector<char> readFileIntoVector(const std::string &filename)
 {
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
 
     if (!file.is_open()) {
-        std::cerr << "Error opening file" << std::endl;        
+        std::cerr << "Error opening file" << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -56,18 +56,17 @@ std::vector<char> readFileIntoVector(const std::string &filename)
 
 HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
 {
-    // the testTitleData JSON file looks something like this:    
+    // the testTitleData JSON file looks something like this:
     // {
     //  "titleId": "YOUR_TITLE_ID",
     //  "secretKey": "",
     //  "connectionString": "https://YOUR_TITLE_ID.playfabapi.com",
-    // }    
+    // }
 
      auto fileData = readFileIntoVector("../../testTitleData.json");
-     
 
     // Parse JSON string into output TestTitleData.
-    rapidjson::Document titleDataJson;
+    JsonValue titleDataJson;
     titleDataJson.Parse(fileData.data());
 
     if (titleDataJson.HasParseError())
@@ -75,9 +74,21 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
         return E_FAIL;
     }
 
-    testTitleData.titleId = titleDataJson["titleId"].GetString();
-    testTitleData.secretKey = titleDataJson["secretKey"].GetString();
-    testTitleData.connectionString = titleDataJson["connectionString"].GetString();
+    testTitleData.titleId = titleDataJson["titleId"].get<String>();
+    testTitleData.secretKey = titleDataJson["secretKey"].get<String>();
+    testTitleData.connectionString = titleDataJson["connectionString"].get<String>();
+    testTitleData.allowRetries = titleDataJson["allowRetries"].GetBool();
+    testTitleData.runTestList = titleDataJson["runTestList"].GetBool();
+
+    for (const auto& test : titleDataJson["testList"].GetArray())
+    {
+        testTitleData.testList.insert(test.get<String>());
+    }
+
+    for (const auto& hr : titleDataJson["retryableHRs"].GetArray())
+    {
+        testTitleData.retryableHRs.insert(hr.get<String>());
+    }
 
     return S_OK;
 }
@@ -87,7 +98,7 @@ int main()
     PFHCSettingsSetTraceLevel(PFHCTraceLevel::Verbose);
     PFHCTraceSetClientCallback(MyTraceCallback);
 
-    HRESULT hr = PFServicesInitialize(nullptr); 
+    HRESULT hr = PFServicesInitialize(nullptr);
     cout << "PFServicesInitialize: 0x" << setw(8) << setfill('0') << hex << hr << endl;
 
     PFServiceConfigHandle serviceConfigHandle{ nullptr };
@@ -104,7 +115,7 @@ int main()
 
     PFAuthenticationLoginWithCustomIDRequest request{};
     request.createAccount = true;
-    request.customId = "player1"; // change to per player custom ID 
+    request.customId = "player1"; // change to per player custom ID
 
     XAsyncBlock async1{};
     hr = PFAuthenticationLoginWithCustomIDAsync(serviceConfigHandle, &request, &async1); // Add your own error handling when FAILED(hr) == true
@@ -152,7 +163,7 @@ int main()
 
             std::vector<char> getFilesResultBuffer(resultSize);
             PFDataGetFilesResponse* getFilesResponseResult{ nullptr };
-            hr = PFDataGetFilesGetResult(&async2, getFilesResultBuffer.size(), getFilesResultBuffer.data(), &getFilesResponseResult, nullptr);            
+            hr = PFDataGetFilesGetResult(&async2, getFilesResultBuffer.size(), getFilesResultBuffer.data(), &getFilesResponseResult, nullptr);
             cout << "PFDataGetFilesGetResult: 0x" << setw(8) << setfill('0') << hex << hr << endl;
         }
 
@@ -168,7 +179,7 @@ int main()
         PFServiceConfigCloseHandle(serviceConfigHandle);
         serviceConfigHandle = nullptr;
     }
-    
+
     XAsyncBlock async3{};
     hr = PFServicesUninitializeAsync(&async3); // Add your own error handling when FAILED(hr) == true
     cout << "PFServicesUninitializeAsync: 0x" << setw(8) << setfill('0') << hex << hr << endl;

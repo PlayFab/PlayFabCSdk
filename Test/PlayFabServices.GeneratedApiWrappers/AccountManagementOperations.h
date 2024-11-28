@@ -320,6 +320,26 @@ private:
 };
 #endif
 
+#if 0
+class ClientGetPlayFabIDsFromSteamNamesOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper<Allocator>;
+
+    ClientGetPlayFabIDsFromSteamNamesOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ClientGetPlayFabIDsFromTwitchIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromTwitchIDsResultWrapper<Allocator>>
 {
@@ -1262,6 +1282,26 @@ public:
     ServerGetPlayFabIDsFromSteamIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
 
     static AsyncOp<Wrappers::PFAccountManagementGetPlayFabIDsFromSteamIDsResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if 0
+class ServerGetPlayFabIDsFromSteamNamesOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper<Allocator>;
+
+    ServerGetPlayFabIDsFromSteamNamesOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFAccountManagementGetPlayFabIDsFromSteamNamesResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
 
 private:
     HRESULT OnStarted(XAsyncBlock* async) noexcept override;

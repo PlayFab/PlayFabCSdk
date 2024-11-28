@@ -58,8 +58,7 @@ set(COMMON_INCLUDE_DIRS
     "${PATH_TO_SOURCE}/PlayFabServices/Include/Generated"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Generated"
-    "${PATH_TO_ROOT}/External/rapidjson/include/rapidjson"
-    "${PATH_TO_ROOT}/External/rapidjson/include"
+    "${PATH_TO_ROOT}/External/nlohmann/include"
     "${PATH_TO_LHC}/Include"
     )
 
@@ -73,11 +72,13 @@ set(PLAYFAB_SHARED_INTERNAL_BINARY_PATH
 )
 message(STATUS "PLAYFAB_SHARED_INTERNAL_BINARY_PATH: ${PLAYFAB_SHARED_INTERNAL_BINARY_PATH}")
 
+# Removing -D_DEBUG flag due to a crash that's happening on Debug,
+# The crash seems to be related with RTTI symbols not being loaded despite we're including the -frtti flag
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_definitions("-DDBG -D_DBG -DDEBUG -D_DEBUG")
+    add_definitions("-DDBG -D_DBG -DDEBUG")
 endif()
-    
+
 #########################
 ### Set up shared lib ###
 #########################
@@ -94,7 +95,7 @@ add_library(
     "${PATH_TO_SOURCE}/PlayFabCore/Source/Platform/Generic/LocalStorage_Generic.h"
     )
 
-target_link_libraries("${PROJECT_NAME}" 
+target_link_libraries("${PROJECT_NAME}"
     PRIVATE ${PLAYFAB_SHARED_INTERNAL_BINARY_PATH}
     PRIVATE ${LIBHTTPCLIENT_BINARY_PATH}
 )

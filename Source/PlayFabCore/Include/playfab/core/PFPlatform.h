@@ -35,7 +35,9 @@ extern "C"
 /// <returns>A pointer to an allocated block of memory of the specified size, or a null 
 /// pointer if allocation failed.</returns>
 /// <param name="size">The size of the allocation to be made. This value will never be zero.</param>
-typedef _Ret_maybenull_ _Post_writable_byte_size_(size) void* STDAPIVCALLTYPE PFMemAllocFunction(_In_ size_t size);
+/// <param name="memoryTypeId">An opaque identifier representing the internal category of
+/// memory being allocated. This value should be ignored.</param>
+typedef _Ret_maybenull_ _Post_writable_byte_size_(size) void* STDAPIVCALLTYPE PFMemAllocFunction(_In_ size_t size, _In_ uint32_t memoryTypeId);
 
 /// <summary>
 /// A callback invoked every time a previously allocated memory buffer is no longer needed by 
@@ -47,7 +49,9 @@ typedef _Ret_maybenull_ _Post_writable_byte_size_(size) void* STDAPIVCALLTYPE PF
 /// </summary>
 /// <param name="pointer">The pointer to the memory buffer previously allocated. This value will
 /// never be a null pointer.</param>
-typedef void STDAPIVCALLTYPE PFMemFreeFunction(_In_ _Post_invalid_ void* pointer);
+/// <param name="memoryTypeId">An opaque identifier representing the internal category of
+/// memory being allocated. This value should be ignored.</param>
+typedef void STDAPIVCALLTYPE PFMemFreeFunction(_In_ _Post_invalid_ void* pointer, _In_ uint32_t memoryTypeId);
 
 /// <summary>
 /// Struct encapsulating memory hooks.
@@ -95,6 +99,15 @@ PF_API PFMemSetFunctions(
 /// <returns>HRESULT return code for this API operation.</returns>
 PF_API PFMemGetFunctions(
     _Out_ PFMemoryHooks* hooks
+) noexcept;
+
+/// <summary>
+/// Determines if custom memory functions are being used.
+/// </summary>
+/// <param name="isUsingCustomMemoryFunctions">Indicates if custom memory functions are in use.</param>
+/// <returns>HRESULT return code for this API operation.</returns>
+PF_API PFMemIsUsingCustomMemoryFunctions(
+    _Out_ bool* isUsingCustomMemoryFunctions
 ) noexcept;
 
 //-----------------------------------------------------------------------------

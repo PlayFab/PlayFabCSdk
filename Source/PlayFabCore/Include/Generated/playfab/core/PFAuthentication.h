@@ -592,7 +592,7 @@ PF_API PFAuthenticationReLoginWithFacebookInstantGamesIdAsync(
 /// this case, no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab
 /// account is linked to the Game Center account, an error indicating this will be returned, so that the
 /// title can guide the user through creation of a PlayFab account. If an invalid iOS Game Center player
-/// identifier is used, an error indicating this will be returned.
+/// identifier is used, an error indicating this will be returned. See also ClientLoginWithIOSDeviceIDAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithGameCenterGetResult"/>
 /// to get the result.
@@ -1243,6 +1243,8 @@ PF_API PFAuthenticationReLoginWithNintendoSwitchDeviceIdAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
+/// See also ClientLinkOpenIdConnectAsync, ClientUnlinkOpenIdConnectAsync.
+///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithOpenIdConnectGetResult"/>
 /// to get the result.
 /// </remarks>
@@ -1421,7 +1423,8 @@ PF_API PFAuthenticationReLoginWithPlayFabAsync(
 /// is set to true, a new PlayFab account will be created and linked to the PlayStation :tm: Network account.
 /// In this case, no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab
 /// account is linked to the PlayStation :tm: Network account, an error indicating this will be returned,
-/// so that the title can guide the user through creation of a PlayFab account.
+/// so that the title can guide the user through creation of a PlayFab account. See also ClientLinkPSNAccountAsync,
+/// ClientUnlinkPSNAccountAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithPSNGetResult"/>
 /// to get the result.
@@ -1439,10 +1442,10 @@ PF_API PFAuthenticationLoginWithPSNAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENCRYPTION_KEY_MISSING,
-/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID,
-/// E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PSN_AUTH_CODE,
+/// E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFAuthenticationLoginWithPSNGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -1461,10 +1464,10 @@ PF_API PFAuthenticationLoginWithPSNGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENCRYPTION_KEY_MISSING,
-/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID,
-/// E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED, E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PSN_AUTH_CODE,
+/// E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// If the PFAuthenticationLoginWithPSNAsync call fails, entityHandle with be null. Otherwise, the handle must be closed with PFEntityCloseHandle
@@ -1703,7 +1706,7 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
 /// to true, a new PlayFab account will be created and linked to the Xbox Live account. In this case,
 /// no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab account
 /// is linked to the Xbox Live account, an error indicating this will be returned, so that the title can
-/// guide the user through creation of a PlayFab account.
+/// guide the user through creation of a PlayFab account. See also ClientLinkXboxAccountAsync, ClientUnlinkXboxAccountAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithXboxGetResult"/>
 /// to get the result.
@@ -2115,9 +2118,9 @@ PF_API PFAuthenticationServerLoginWithSteamIdAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED,
-/// E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED, E_PF_STEAM_NOT_ENABLED_FOR_TITLE, E_PF_STEAM_USER_NOT_FOUND
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED,
+/// E_PF_STEAM_NOT_ENABLED_FOR_TITLE, E_PF_STEAM_USER_NOT_FOUND or any of the global PlayFab Service errors.
+/// See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFAuthenticationServerLoginWithSteamIdGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -2136,9 +2139,9 @@ PF_API PFAuthenticationServerLoginWithSteamIdGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED,
-/// E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED, E_PF_STEAM_NOT_ENABLED_FOR_TITLE, E_PF_STEAM_USER_NOT_FOUND
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED,
+/// E_PF_STEAM_NOT_ENABLED_FOR_TITLE, E_PF_STEAM_USER_NOT_FOUND or any of the global PlayFab Service errors.
+/// See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// If the PFAuthenticationServerLoginWithSteamIdAsync call fails, entityHandle with be null. Otherwise, the handle must be closed with PFEntityCloseHandle

@@ -16,7 +16,6 @@
 
 #include <httpClient/httpClient.h>
 #include <playfab/core/PFTrace.h>
-#include <rapidjson/document.h>
 #include <fstream>
 
 namespace PlayFab
@@ -43,6 +42,17 @@ HRESULT TestRunner::Initialize()
     TestTitleData titleData;
     RETURN_IF_FAILED(Platform::GetTestTitleData(titleData));
 
+    if (titleData.allowRetries && titleData.retryableHRs.size() > 0)
+    {
+        m_allowRetries = titleData.allowRetries;
+        SetretryableHRs(titleData.retryableHRs);
+    }
+
+    if (titleData.runTestList && titleData.testList.size() > 0)
+    {
+        SetTestList(titleData.testList);
+    }
+
     // Initialize the list of TestClasses
     m_testClasses.emplace_back(MakeShared<AuthenticationTests>(titleData));
     m_testClasses.emplace_back(MakeShared<EventPipelineTests>(titleData));
@@ -53,7 +63,7 @@ HRESULT TestRunner::Initialize()
     m_testClasses.insert(m_testClasses.end(), generatedTests.begin(), generatedTests.end());
 
     m_activeTestClass = m_testClasses.begin();
-    
+
     return S_OK;
 }
 
@@ -62,10 +72,88 @@ void TestRunner::SetTestList(Set<String> testNames)
     m_testList = std::move(testNames);
 }
 
+void TestRunner::SetretryableHRs(Set<String> retryableHRs)
+{
+    for (auto& hr : retryableHRs)
+    {
+        Stringstream ss;
+        ss << std::hex << hr;
+
+        unsigned long result;
+        ss >> result;
+
+        m_retryableHRs.insert(static_cast<HRESULT>(result));
+    }
+}
+
+void TestRunner::ProcessRetries()
+{
+    Set<String> testRetryList = m_testRetryList;
+    m_testRetryList.clear();
+
+    for (auto& testClass : m_testClasses)
+    {
+        auto& testClassTests = testClass->GetTests();
+        for (auto& test : testClassTests)
+        {
+            if (TestFinishState::TIMEDOUT == test->IntermediateState() || TestFinishState::TIMEDOUT == test->FinishState())
+            {
+                // Retry timeouts if they haven't been previously retried
+                bool alreadyRetried = testRetryList.find(test->TestName()) != testRetryList.end();
+
+                if (!alreadyRetried)
+                {
+                    m_testRetryList.insert(test->TestName());
+                }
+            }
+            else if (TestFinishState::FAILED == test->FinishState())
+            {
+                bool retryable = false;
+
+                // Check failures and see if they're allowed to be retried.
+                Vector<Result<void>> intermediateResults = test->IntermediateResults();
+                for (auto& result : intermediateResults)
+                {
+                    retryable = (m_retryableHRs.find(result.hr) != m_retryableHRs.end() ? true : false);
+
+                    if (!retryable)
+                    {
+                        break;
+                    }
+                }
+
+                if (retryable)
+                {
+                    bool alreadyRetried = testRetryList.find(test->TestName()) != testRetryList.end();
+
+                    if (!alreadyRetried)
+                    {
+                        m_testRetryList.insert(test->TestName());
+                    }
+                }
+            }
+        }
+    }
+}
+
 bool TestRunner::Update()
 {
     if (m_activeTestClass == m_testClasses.end())
     {
+        if (m_allowRetries)
+        {
+            // All Tests done, check for any retries
+            ProcessRetries();
+
+            if (m_testRetryList.size() > 0)
+            {
+                // Retry the failed tests
+                m_testList = m_testRetryList;
+                m_activeTestClass = m_testClasses.begin();
+                return false;
+            }
+        }
+
         // All tests done, log test summary. Update() should not be called again after this
         auto testSummary = GenerateTestSummary();
         AddLog(HCTraceLevel::Important, testSummary.c_str());
@@ -245,9 +333,7 @@ bool TestRunner::Cleanup()
 
         (*m_activeTestClass)->Uninitialize().Wait();
     }
-    
-    // Reset LHC trace callback
-    HCTraceSetClientCallback(nullptr);
+
     s_hcTraceCallbackContext = nullptr;
 
     return m_testReport.AllTestsPassed();
@@ -325,10 +411,10 @@ void TestRunner::AddLog(HCTraceLevel level, _In_z_ _Printf_format_string_ const 
 
     va_list args2;
     va_copy(args2, args1);
-    
+
     Vector<char> buf(1 + std::vsnprintf(NULL, 0, format, args1));
     va_end(args1);
-    
+
     auto ret = std::vsnprintf(buf.data(), buf.size(), format, args2);
     va_end(args2);
 

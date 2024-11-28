@@ -17,7 +17,7 @@ const PFJsonObject kObject{ "{ \"testKey\": \"testValue\" }" };
 
 HRESULT UploadFileSync(String url)
 {
-    JsonValue requestBody{ rapidjson::kObjectType };
+    JsonValue requestBody= JsonValue::object();;
     JsonUtils::ObjectAddMember(requestBody, kTestKey, kTestVal);
 
     HCCallHandle callHandle{ nullptr };
@@ -53,7 +53,7 @@ void DataTests::TestAbortFileUploads(TestContext& tc)
     InitiateFileUploadsOperation::RequestType request;
     request.SetEntity(DefaultTitlePlayer().EntityKey());
     request.SetFileNames({ kTestName });
-    
+
     InitiateFileUploadsOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<InitiateFileUploadsOperation::ResultType> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
@@ -77,7 +77,7 @@ void DataTests::TestAbortFileUploads(TestContext& tc)
     .Then([&](Result<AbortFileUploadsOperation::ResultType> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-    
+
         tc.AssertEqual(DefaultTitlePlayer().EntityKey().Model().id, result.Payload().Model().entity->id, "entity->id");
 
         return S_OK;
@@ -110,11 +110,11 @@ void DataTests::TestGetFiles(TestContext& tc)
     InitiateFileUploadsOperation::RequestType request;
     request.SetEntity(DefaultTitlePlayer().EntityKey());
     request.SetFileNames({ kTestName });
-    
+
     InitiateFileUploadsOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<InitiateFileUploadsOperation::ResultType> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-    
+
         auto& model = result.Payload().Model();
         tc.AssertEqual(DefaultTitlePlayer().EntityKey().Model().id, model.entity->id, "entity->id");
         tc.AssertEqual(1u, model.uploadDetailsCount, "uploadDetailsCount");
@@ -136,20 +136,20 @@ void DataTests::TestGetFiles(TestContext& tc)
     .Then([&](Result<FinalizeFileUploadsOperation::ResultType> result) -> AsyncOp<GetFilesOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-    
+
         auto& model = result.Payload().Model();
         tc.AssertEqual(DefaultTitlePlayer().EntityKey().Model().id, model.entity->id, "entity->id");
         tc.AssertEqual(1u, model.metadataCount, "metadataCount");
 
         GetFilesOperation::RequestType request;
         request.SetEntity(DefaultTitlePlayer().EntityKey());
-        
+
         return GetFilesOperation::Run(DefaultTitlePlayer(), request, RunContext());
     })
     .Then([&](Result<GetFilesOperation::ResultType> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-    
+
         auto& model = result.Payload().Model();
         tc.AssertEqual(DefaultTitlePlayer().EntityKey().Model().id, model.entity->id, "entity->id");
         tc.AssertEqual(1u, model.metadataCount, "metadataCount");
@@ -164,7 +164,7 @@ void DataTests::TestGetFiles(TestContext& tc)
         DeleteFilesOperation::RequestType request;
         request.SetEntity(DefaultTitlePlayer().EntityKey());
         request.SetFileNames({ kTestName });
-        
+
         return DeleteFilesOperation::Run(DefaultTitlePlayer(), request, RunContext());
     })
     .Then([&](Result<DeleteFilesOperation::ResultType> result) -> AsyncOp<void>
@@ -222,12 +222,10 @@ void DataTests::TestSetObjects(TestContext& tc)
         tc.AssertEqual(1u, model.objectsCount, "objectsCount");
         tc.AssertEqual(kTestName, model.objects[0].value->objectName, "objects[0].value->objectName");
 
-        JsonDocument expected;
-        expected.Parse(kObject.stringValue);
-        JsonDocument actual;
-        actual.Parse(model.objects[0].value->dataObject.stringValue);
-        tc.AssertTrue(actual.HasMember(kTestKey), "objects[0].value->dataObject.stringValue.key");
-        tc.AssertEqual(expected[kTestKey].GetString(), actual[kTestKey].GetString(), "objects[0].value->dataObject.stringValue.key");
+        JsonDocument expected = JsonValue::parse(kObject.stringValue);
+        JsonDocument actual = JsonValue::parse(model.objects[0].value->dataObject.stringValue);
+        tc.AssertTrue(actual.contains(kTestKey), "objects[0].value->dataObject.stringValue.key");
+        tc.AssertEqual(expected[kTestKey].get<String>(), actual[kTestKey].get<String>(), "objects[0].value->dataObject.stringValue.key");
 
         return S_OK;
     })

@@ -12,12 +12,12 @@ PlayFabServiceMock::~PlayFabServiceMock()
     std::unique_lock<std::mutex> lock{ m_mutex };
 }
 
-rapidjson::Value& PlayFabServiceMock::ResponseBody() noexcept
+JsonValue& PlayFabServiceMock::ResponseBody() noexcept
 {
     return m_responseBody;
 }
 
-rapidjson::Value& PlayFabServiceMock::ResponseBodyPayload() noexcept
+JsonValue& PlayFabServiceMock::ResponseBodyPayload() noexcept
 {
     return m_responseBody["data"];
 }
@@ -28,19 +28,14 @@ void PlayFabServiceMock::SetCallback(Callback callback) noexcept
     m_callback = std::move(callback);
 }
 
-rapidjson::Value const& PlayFabServiceMock::ServiceResponses() const noexcept
+JsonValue const& PlayFabServiceMock::ServiceResponses() const noexcept
 {
     return m_responses;
 }
 
-rapidjson::Value const& PlayFabServiceMock::ServiceErrors() noexcept
+JsonValue const& PlayFabServiceMock::ServiceErrors() noexcept
 {
     return s_serviceResponses["errors"];
-}
-
-PlayFab::JsonAllocator& PlayFabServiceMock::JsonAllocator() noexcept
-{
-    return s_serviceResponses.GetAllocator();
 }
 
 void PlayFabServiceMock::HttpMockCallback(HttpMock const& /*mock*/, std::string url, std::string requestBody, uint32_t hitCount) noexcept
@@ -58,18 +53,18 @@ std::string PlayFabServiceMock::GetUrl(const char* apiEndpoint, const char* apiN
     std::stringstream url;
     url << apiEndpoint;
 
-    assert(s_serviceResponses["calls"].HasMember(apiName));
-    assert(s_serviceResponses["calls"][apiName].HasMember("url"));
-    url << s_serviceResponses["calls"][apiName]["url"].GetString();
+    assert(s_serviceResponses["calls"].contains(apiName));
+    assert(s_serviceResponses["calls"][apiName].contains("url"));
+    url << s_serviceResponses["calls"][apiName]["url"].get<String>();
 
     return url.str();
 }
 
-rapidjson::Value const& PlayFabServiceMock::GetServiceResponses(const char* apiName) noexcept
+JsonValue const& PlayFabServiceMock::GetServiceResponses(const char* apiName) noexcept
 {
-    assert(s_serviceResponses["calls"][apiName].HasMember("result"));
-    const char* resultTypeName = s_serviceResponses["calls"][apiName]["result"].GetString();
-    assert(s_serviceResponses["datatypes"].HasMember(resultTypeName));
+    assert(s_serviceResponses["calls"][apiName].contains("result"));
+    const char* resultTypeName = s_serviceResponses["calls"][apiName]["result"].get<String>().c_str();
+    assert(s_serviceResponses["datatypes"].contains(resultTypeName));
 
     return s_serviceResponses["datatypes"][resultTypeName];
 }
@@ -78,11 +73,11 @@ rapidjson::Value const& PlayFabServiceMock::GetServiceResponses(const char* apiN
 // TODO doc location, schema, etc of MockResponses file
 // TODO we could get fancy here and use sample responses from service API specs but I've just manually populated a separate
 // MockResponses.json file for the time being.
-rapidjson::Document InitServiceResponses()
+JsonValue InitServiceResponses()
 {
     constexpr char kMockResponseJsonFile[] = "MockResponses.json";
 
-    rapidjson::Document serviceResponses;
+    JsonValue serviceResponses;
 
     std::ifstream file{ kMockResponseJsonFile, std::ios::binary | std::ios::ate };
     assert(file.is_open());
@@ -91,18 +86,36 @@ rapidjson::Document InitServiceResponses()
     file.seekg(0);
     file.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(data.size()));
     assert(file.good());
+    bool parseError = false;
+    String parseErrorMsg;
 
-    serviceResponses.Parse(data.data(), data.size());
+    try
+    {
+        if (data.data())
+        {
+            serviceResponses = JsonValue::parse(data.data());
+        }
+        else
+        {
+            parseError = true;
+        }
+    }
+    catch (const JsonValue::parse_error& e)
+    {
+        parseErrorMsg = e.what();
+        parseError = true;
+    }
+
     // Basic validation. Additional validation for specific mocks done during PlayFabServiceMock construction
-    assert(!serviceResponses.HasParseError());
-    assert(serviceResponses.HasMember("calls"));
-    assert(serviceResponses.HasMember("datatypes"));
-    assert(serviceResponses.HasMember("errors"));
+    assert(!parseError);
+    assert(serviceResponses.contains("calls"));
+    assert(serviceResponses.contains("datatypes"));
+    assert(serviceResponses.contains("errors"));
 
     return serviceResponses;
 }
 
-rapidjson::Document PlayFabServiceMock::s_serviceResponses = InitServiceResponses();
+JsonValue PlayFabServiceMock::s_serviceResponses = InitServiceResponses();
 
 }
 }

@@ -186,7 +186,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(PlayFabCoreExternalDir)\rapidjson\include;$(PlayFabServicesManualTestDir);$(PlayFabServicesSourceDir)\source;$(PlayFabServicesSourceDir)\source\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(PlayFabCoreExternalDir)\nlohmann\include;$(PlayFabServicesManualTestDir);$(PlayFabServicesSourceDir)\source;$(PlayFabServicesSourceDir)\source\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">
@@ -472,8 +472,8 @@
   </ImportGroup>
   <ItemDefinitionGroup>
     <PostBuildEvent>
-      <Command>xcopy /Y /I /E "$(PlayFabServicesManualTestDir)\GDK\Assets\*.*" "$(OutDir)Assets" &amp; 
-	  xcopy /Y /I /E "$(PlayFabCoreOutDirRoot)Gaming.Desktop.x64\$(Configuration)\$(PlayFabCoreProjectName)\$(PlayFabCoreProjectName).*" "$(OutDir)" &amp; 
+      <Command>xcopy /Y /I /E "$(PlayFabServicesManualTestDir)\GDK\Assets\*.*" "$(OutDir)Assets" &amp;
+	  xcopy /Y /I /E "$(PlayFabCoreOutDirRoot)Gaming.Desktop.x64\$(Configuration)\$(PlayFabCoreProjectName)\$(PlayFabCoreProjectName).*" "$(OutDir)" &amp;
 	  xcopy /Y /I /E "$(PlayFabServicesOutDirRoot)Gaming.Desktop.x64\$(Configuration)\$(PlayFabServicesProjectName)\$(PlayFabServicesProjectName).*" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

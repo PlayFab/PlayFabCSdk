@@ -11,9 +11,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
+# Removing -D_DEBUG flag due to a crash that's happening on Debug,
+# The crash seems to be related with RTTI symbols not being loaded despite we're including the -frtti flag
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_definitions("-DDBG -D_DBG -DDEBUG -D_DEBUG")
+    add_definitions("-DDBG -D_DBG -DDEBUG")
 endif()
 
 ###########################################
@@ -48,17 +50,17 @@ set(PlayFabServices.Linux_DIR "${PATH_TO_ROOT}/Int/CMake/PlayFabServices.Linux")
 find_package(PlayFabServices.Linux REQUIRED)
 find_package(PlayFabCore.Linux REQUIRED)
 find_package(libHttpClient.Linux REQUIRED)
-target_link_libraries(${PROJECT_NAME} 
+target_link_libraries(${PROJECT_NAME}
     PRIVATE libHttpClient.Linux
     PRIVATE PlayFabCore.Linux
     PRIVATE PlayFabServices.Linux
     )
 
-# Set up include directories.  Using rapidjson so needed to add that include path
+# Set up include directories.  Using nlohmann so needed to add that include path
 target_include_directories(
     "${PROJECT_NAME}"
     PRIVATE
-	"${PATH_TO_ROOT}/External/rapidjson/include"
+	"${PATH_TO_ROOT}/External/nlohmann/include"
     "${PATH_TO_ROOT}/../PlayFabServicesLinuxSDK/include" # Required if building against release package
     )
 # -------------------------------------------------------------------------------------------------
@@ -66,19 +68,19 @@ target_include_directories(
 
 # -------------------------------------------------------------------------------------------------
 # Building against a binary release at ${PATH_TO_ROOT}/../PlayFabServicesLinuxSDK/
-# Use the following section rather than the "build from source" section above. 
+# Use the following section rather than the "build from source" section above.
 
-#target_link_libraries(${PROJECT_NAME} 
+#target_link_libraries(${PROJECT_NAME}
 #    PRIVATE ${PATH_TO_ROOT}/../PlayFabServicesLinuxSDK/bin/libHttpClient.Linux.so
 #    PRIVATE ${PATH_TO_ROOT}/../PlayFabServicesLinuxSDK/bin/PlayFabCore.Linux.so
 #    PRIVATE ${PATH_TO_ROOT}/../PlayFabServicesLinuxSDK/bin/PlayFabServices.Linux.so
 #    )
 
-# Set up include directories.  Using rapidjson so needed to add that include path
+# Set up include directories.  Using nlohmann so needed to add that include path
 #target_include_directories(
 #    "${PROJECT_NAME}"
 #    PRIVATE
-#	"${PATH_TO_ROOT}/External/rapidjson/include"
+#	"${PATH_TO_ROOT}/External/nlohmann/include"
 #    "${PATH_TO_ROOT}/../PlayFabServicesLinuxSDK/include" # Required if building against release package
 #    )
 # -------------------------------------------------------------------------------------------------

@@ -57,17 +57,17 @@ HRESULT GetSegmentResult::Copy(const PFSegmentsGetSegmentResult& input, PFSegmen
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.aBTestParent); 
+        auto propCopyResult = buffer.CopyTo(input.aBTestParent);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.aBTestParent = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.id); 
+        auto propCopyResult = buffer.CopyTo(input.id);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.id = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
@@ -122,7 +122,7 @@ JsonValue GetPlayerTagsRequest::ToJson() const
 
 JsonValue GetPlayerTagsRequest::ToJson(const PFSegmentsGetPlayerTagsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Namespace", input.playfabNamespace);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
@@ -171,7 +171,7 @@ HRESULT GetPlayerTagsResult::Copy(const PFSegmentsGetPlayerTagsResult& input, PF
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.playFabId); 
+        auto propCopyResult = buffer.CopyTo(input.playFabId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.playFabId = propCopyResult.ExtractPayload();
     }
@@ -190,7 +190,7 @@ JsonValue AddPlayerTagRequest::ToJson() const
 
 JsonValue AddPlayerTagRequest::ToJson(const PFSegmentsAddPlayerTagRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember(output, "TagName", input.tagName);
@@ -245,7 +245,7 @@ JsonValue GetPlayersSegmentsRequest::ToJson() const
 
 JsonValue GetPlayersSegmentsRequest::ToJson(const PFSegmentsGetPlayersSegmentsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     return output;
@@ -258,7 +258,7 @@ JsonValue GetPlayersInSegmentRequest::ToJson() const
 
 JsonValue GetPlayersInSegmentRequest::ToJson(const PFSegmentsGetPlayersInSegmentRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "GetProfilesAsync", input.getProfilesAsync);
@@ -311,12 +311,12 @@ HRESULT AdCampaignAttribution::Copy(const PFSegmentsAdCampaignAttribution& input
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.campaignId); 
+        auto propCopyResult = buffer.CopyTo(input.campaignId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.campaignId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.platform); 
+        auto propCopyResult = buffer.CopyTo(input.platform);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platform = propCopyResult.ExtractPayload();
     }
@@ -372,17 +372,17 @@ HRESULT ContactEmailInfo::Copy(const PFSegmentsContactEmailInfo& input, PFSegmen
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.emailAddress); 
+        auto propCopyResult = buffer.CopyTo(input.emailAddress);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.emailAddress = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.verificationStatus); 
+        auto propCopyResult = buffer.CopyTo(input.verificationStatus);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.verificationStatus = propCopyResult.ExtractPayload();
     }
@@ -446,22 +446,22 @@ HRESULT PlayerLinkedAccount::Copy(const PFSegmentsPlayerLinkedAccount& input, PF
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.email); 
+        auto propCopyResult = buffer.CopyTo(input.email);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.email = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.platform); 
+        auto propCopyResult = buffer.CopyTo(input.platform);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platform = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.platformUserId); 
+        auto propCopyResult = buffer.CopyTo(input.platformUserId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platformUserId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.username); 
+        auto propCopyResult = buffer.CopyTo(input.username);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.username = propCopyResult.ExtractPayload();
     }
@@ -521,17 +521,17 @@ HRESULT PlayerLocation::Copy(const PFSegmentsPlayerLocation& input, PFSegmentsPl
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.city); 
+        auto propCopyResult = buffer.CopyTo(input.city);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.city = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.latitude); 
+        auto propCopyResult = buffer.CopyTo(input.latitude);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.latitude = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.longitude); 
+        auto propCopyResult = buffer.CopyTo(input.longitude);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.longitude = propCopyResult.ExtractPayload();
     }
@@ -583,12 +583,12 @@ HRESULT PlayerStatistic::Copy(const PFSegmentsPlayerStatistic& input, PFSegments
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.id); 
+        auto propCopyResult = buffer.CopyTo(input.id);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.id = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
@@ -636,12 +636,12 @@ HRESULT PushNotificationRegistration::Copy(const PFSegmentsPushNotificationRegis
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.notificationEndpointARN); 
+        auto propCopyResult = buffer.CopyTo(input.notificationEndpointARN);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.notificationEndpointARN = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.platform); 
+        auto propCopyResult = buffer.CopyTo(input.platform);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platform = propCopyResult.ExtractPayload();
     }
@@ -866,17 +866,17 @@ HRESULT PlayerProfile::Copy(const PFSegmentsPlayerProfile& input, PFSegmentsPlay
         output.adCampaignAttributions = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.avatarUrl); 
+        auto propCopyResult = buffer.CopyTo(input.avatarUrl);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.avatarUrl = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.bannedUntil); 
+        auto propCopyResult = buffer.CopyTo(input.bannedUntil);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.bannedUntil = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.churnPrediction); 
+        auto propCopyResult = buffer.CopyTo(input.churnPrediction);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.churnPrediction = propCopyResult.ExtractPayload();
     }
@@ -886,17 +886,17 @@ HRESULT PlayerProfile::Copy(const PFSegmentsPlayerProfile& input, PFSegmentsPlay
         output.contactEmailAddresses = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.created); 
+        auto propCopyResult = buffer.CopyTo(input.created);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.created = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.displayName); 
+        auto propCopyResult = buffer.CopyTo(input.displayName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.displayName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.lastLogin); 
+        auto propCopyResult = buffer.CopyTo(input.lastLogin);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastLogin = propCopyResult.ExtractPayload();
     }
@@ -911,7 +911,7 @@ HRESULT PlayerProfile::Copy(const PFSegmentsPlayerProfile& input, PFSegmentsPlay
         output.locations = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.origination); 
+        auto propCopyResult = buffer.CopyTo(input.origination);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.origination = propCopyResult.ExtractPayload();
     }
@@ -921,7 +921,7 @@ HRESULT PlayerProfile::Copy(const PFSegmentsPlayerProfile& input, PFSegmentsPlay
         output.playerExperimentVariants = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.playerId); 
+        auto propCopyResult = buffer.CopyTo(input.playerId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.playerId = propCopyResult.ExtractPayload();
     }
@@ -931,7 +931,7 @@ HRESULT PlayerProfile::Copy(const PFSegmentsPlayerProfile& input, PFSegmentsPlay
         output.playerStatistics = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.publisherId); 
+        auto propCopyResult = buffer.CopyTo(input.publisherId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.publisherId = propCopyResult.ExtractPayload();
     }
@@ -951,12 +951,12 @@ HRESULT PlayerProfile::Copy(const PFSegmentsPlayerProfile& input, PFSegmentsPlay
         output.tags = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.titleId); 
+        auto propCopyResult = buffer.CopyTo(input.titleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.titleId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.totalValueToDateInUSD); 
+        auto propCopyResult = buffer.CopyTo(input.totalValueToDateInUSD);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.totalValueToDateInUSD = propCopyResult.ExtractPayload();
     }
@@ -1017,7 +1017,7 @@ HRESULT GetPlayersInSegmentResult::Copy(const PFSegmentsGetPlayersInSegmentResul
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.continuationToken); 
+        auto propCopyResult = buffer.CopyTo(input.continuationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continuationToken = propCopyResult.ExtractPayload();
     }
@@ -1036,7 +1036,7 @@ JsonValue RemovePlayerTagRequest::ToJson() const
 
 JsonValue RemovePlayerTagRequest::ToJson(const PFSegmentsRemovePlayerTagRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember(output, "TagName", input.tagName);

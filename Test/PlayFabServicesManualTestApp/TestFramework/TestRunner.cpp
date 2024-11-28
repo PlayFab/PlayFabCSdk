@@ -497,7 +497,7 @@ void TestRunner::CallPFGetFiles()
 
     if (m_offlineTesting)
     {
-        bool offlineErrors = 
+        bool offlineErrors =
             (hr1 == HTTP_E_STATUS_NOT_FOUND || hr2 == HTTP_E_STATUS_NOT_FOUND || hr3 == HTTP_E_STATUS_NOT_FOUND ||
              hr1 == HTTP_E_STATUS_UNEXPECTED || hr2 == HTTP_E_STATUS_UNEXPECTED || hr3 == HTTP_E_STATUS_UNEXPECTED);
         if (offlineErrors)
@@ -529,7 +529,7 @@ void TestRunner::CallPFGetTime()
     if (m_offlineTesting)
     {
         bool offlineErrors =
-            (hr1 == HTTP_E_STATUS_NOT_FOUND || hr2 == HTTP_E_STATUS_NOT_FOUND || 
+            (hr1 == HTTP_E_STATUS_NOT_FOUND || hr2 == HTTP_E_STATUS_NOT_FOUND ||
              hr1 == HTTP_E_STATUS_UNEXPECTED || hr2 == HTTP_E_STATUS_UNEXPECTED);
 
         if (offlineErrors)
@@ -914,7 +914,7 @@ std::string FormatStr(_In_z_ _Printf_format_string_ const char* format, ...)
     std::vector<char> buf(1 + std::vsnprintf(NULL, 0, format, args));
     std::vsnprintf(buf.data(), buf.size(), format, args);
     va_end(args);
-    
+
     return buf.data();
 }
 
@@ -989,7 +989,7 @@ void Tracer::AddLog(LOG_TYPE logType, _In_z_ _Printf_format_string_ const char* 
             OutputDebugStringA(strBuffer.c_str());
             WriteLogToFile(strBuffer.c_str(), "PFTestAppSummary.txt");
 
-#if HC_PLATFORM != HC_PLATFORM_GDK            
+#if HC_PLATFORM != HC_PLATFORM_GDK
             puts(strBuffer.c_str()); // Write to STDOUT for Win32
 #endif
         }
@@ -1019,9 +1019,9 @@ std::string GetExeDirectory()
 bool LoadTitleDataJson(std::shared_ptr<char*>& testDataJson, size_t& testDataJsonLen)
 {
     // Read the title data from the file into the output character array.
-    std::ifstream titleDataFile;   
+    std::ifstream titleDataFile;
     SetCurrentDirectoryA(GetExeDirectory().c_str());
-    
+
     std::ios_base::iostate exceptionMask = titleDataFile.exceptions() | std::ios::failbit;
     titleDataFile.exceptions(exceptionMask);
 
@@ -1081,7 +1081,6 @@ bool TestRunner::LoadTitleData(TestTitleData& titleData)
         return false;
     }
 
-    // Not using rapidJson since that header isn't in the exposed by GDK's PlayFab.C
     titleData.titleId = GetValueForKey(*titleJsonPtr, "\"titleId\"");
     titleData.connectionString = GetValueForKey(*titleJsonPtr, "\"connectionString\"");
     titleData.secretKey = GetValueForKey(*titleJsonPtr, "\"secretKey\"");

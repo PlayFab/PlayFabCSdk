@@ -15,7 +15,7 @@ JsonValue ExecuteCloudScriptRequest::ToJson() const
 
 JsonValue ExecuteCloudScriptRequest::ToJson(const PFCloudScriptExecuteCloudScriptRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "FunctionName", input.functionName);
     JsonUtils::ObjectAddMember(output, "FunctionParameter", input.functionParameter);
@@ -74,17 +74,17 @@ HRESULT ScriptExecutionError::Copy(const PFCloudScriptScriptExecutionError& inpu
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.error); 
+        auto propCopyResult = buffer.CopyTo(input.error);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.error = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.message); 
+        auto propCopyResult = buffer.CopyTo(input.message);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.message = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.stackTrace); 
+        auto propCopyResult = buffer.CopyTo(input.stackTrace);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.stackTrace = propCopyResult.ExtractPayload();
     }
@@ -145,12 +145,12 @@ HRESULT LogStatement::Copy(const PFCloudScriptLogStatement& input, PFCloudScript
         output.data.stringValue = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.level); 
+        auto propCopyResult = buffer.CopyTo(input.level);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.level = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.message); 
+        auto propCopyResult = buffer.CopyTo(input.message);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.message = propCopyResult.ExtractPayload();
     }
@@ -246,12 +246,12 @@ HRESULT ExecuteCloudScriptResult::Copy(const PFCloudScriptExecuteCloudScriptResu
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<ScriptExecutionError>(input.error); 
+        auto propCopyResult = buffer.CopyTo<ScriptExecutionError>(input.error);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.error = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.functionName); 
+        auto propCopyResult = buffer.CopyTo(input.functionName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.functionName = propCopyResult.ExtractPayload();
     }
@@ -261,7 +261,7 @@ HRESULT ExecuteCloudScriptResult::Copy(const PFCloudScriptExecuteCloudScriptResu
         output.functionResult.stringValue = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.functionResultTooLarge); 
+        auto propCopyResult = buffer.CopyTo(input.functionResultTooLarge);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.functionResultTooLarge = propCopyResult.ExtractPayload();
     }
@@ -271,7 +271,7 @@ HRESULT ExecuteCloudScriptResult::Copy(const PFCloudScriptExecuteCloudScriptResu
         output.logs = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.logsTooLarge); 
+        auto propCopyResult = buffer.CopyTo(input.logsTooLarge);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.logsTooLarge = propCopyResult.ExtractPayload();
     }
@@ -285,7 +285,7 @@ JsonValue ExecuteCloudScriptServerRequest::ToJson() const
 
 JsonValue ExecuteCloudScriptServerRequest::ToJson(const PFCloudScriptExecuteCloudScriptServerRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "FunctionName", input.functionName);
     JsonUtils::ObjectAddMember(output, "FunctionParameter", input.functionParameter);
@@ -303,7 +303,7 @@ JsonValue ExecuteEntityCloudScriptRequest::ToJson() const
 
 JsonValue ExecuteEntityCloudScriptRequest::ToJson(const PFCloudScriptExecuteEntityCloudScriptRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "FunctionName", input.functionName);
@@ -321,7 +321,7 @@ JsonValue ExecuteFunctionRequest::ToJson() const
 
 JsonValue ExecuteFunctionRequest::ToJson(const PFCloudScriptExecuteFunctionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "FunctionName", input.functionName);
@@ -379,17 +379,17 @@ HRESULT FunctionExecutionError::Copy(const PFCloudScriptFunctionExecutionError& 
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.error); 
+        auto propCopyResult = buffer.CopyTo(input.error);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.error = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.message); 
+        auto propCopyResult = buffer.CopyTo(input.message);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.message = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.stackTrace); 
+        auto propCopyResult = buffer.CopyTo(input.stackTrace);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.stackTrace = propCopyResult.ExtractPayload();
     }
@@ -458,12 +458,12 @@ HRESULT ExecuteFunctionResult::Copy(const PFCloudScriptExecuteFunctionResult& in
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<FunctionExecutionError>(input.error); 
+        auto propCopyResult = buffer.CopyTo<FunctionExecutionError>(input.error);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.error = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.functionName); 
+        auto propCopyResult = buffer.CopyTo(input.functionName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.functionName = propCopyResult.ExtractPayload();
     }
@@ -473,7 +473,7 @@ HRESULT ExecuteFunctionResult::Copy(const PFCloudScriptExecuteFunctionResult& in
         output.functionResult.stringValue = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.functionResultTooLarge); 
+        auto propCopyResult = buffer.CopyTo(input.functionResultTooLarge);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.functionResultTooLarge = propCopyResult.ExtractPayload();
     }
@@ -487,7 +487,7 @@ JsonValue ListFunctionsRequest::ToJson() const
 
 JsonValue ListFunctionsRequest::ToJson(const PFCloudScriptListFunctionsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
@@ -541,17 +541,17 @@ HRESULT EventHubFunctionModel::Copy(const PFCloudScriptEventHubFunctionModel& in
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.connectionString); 
+        auto propCopyResult = buffer.CopyTo(input.connectionString);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.connectionString = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.eventHubName); 
+        auto propCopyResult = buffer.CopyTo(input.eventHubName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.eventHubName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.functionName); 
+        auto propCopyResult = buffer.CopyTo(input.functionName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.functionName = propCopyResult.ExtractPayload();
     }
@@ -606,7 +606,7 @@ JsonValue RegisterEventHubFunctionRequest::ToJson() const
 
 JsonValue RegisterEventHubFunctionRequest::ToJson(const PFCloudScriptRegisterEventHubFunctionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "ConnectionString", input.connectionString);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "EventHubName", input.eventHubName);

@@ -20,7 +20,7 @@ function(GET_PLAYFAB_SHARED_INTERNAL_FILES
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/ModelBuffer.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/PlatformUser.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/PlatformUtils.h"
-        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/RapidJson.h"
+        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Nlohmann.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Result.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/ResultMacros.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/RunContext.h"

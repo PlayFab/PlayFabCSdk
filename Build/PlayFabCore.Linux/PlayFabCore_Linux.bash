@@ -44,4 +44,4 @@ log "LHC_PATH = ${LHC_PATH}"
 
 # make PlayFabCore
 sudo cmake -S "$SCRIPT_DIR" -B "$SCRIPT_DIR"/../../Int/CMake/PlayFabCore.Linux -D CMAKE_BUILD_TYPE=$CONFIGURATION -D LHC_PATH=$LHC_PATH
-sudo make -C "$SCRIPT_DIR"/../../Int/CMake/PlayFabCore.Linux
+sudo make VERBOSE=1 -C "$SCRIPT_DIR"/../../Int/CMake/PlayFabCore.Linux

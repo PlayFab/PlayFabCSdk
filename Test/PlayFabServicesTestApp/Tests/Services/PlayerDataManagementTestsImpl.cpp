@@ -15,7 +15,7 @@ constexpr char kTestVal[]{ "testVal" };
 
 AsyncOp<void> ServerUpdateUserReadonlyData(ServiceConfig serviceConfig, String secretKey, String playFabId, String path, bool cleanup, PlayFab::RunContext rc) noexcept
 {
-    JsonValue requestBody{ rapidjson::kObjectType };
+    JsonValue requestBody= JsonValue::object();;
     JsonUtils::ObjectAddMember(requestBody, "PlayFabId", playFabId);
 
     if (cleanup)
@@ -31,7 +31,7 @@ AsyncOp<void> ServerUpdateUserReadonlyData(ServiceConfig serviceConfig, String s
     headerVal << versionString << sdkVersion;
     UnorderedMap<String, String> headers{ { kSDKVersionStringHeaderName, headerVal.str() } };
     headers[kSecretKeyHeaderName] = secretKey;
-        
+
     Stringstream fullUrl;
     fullUrl << serviceConfig.APIEndpoint();
 
@@ -162,7 +162,7 @@ void PlayerDataManagementTests::TestClientUpdateUserData(TestContext& tc)
         tc.AssertEqual(1u, result.Payload().Model().dataCount, "dataCount");
         tc.AssertEqual<String>(kTestKey, result.Payload().Model().data[0].key, "dataKey");
         tc.AssertEqual<String>(kTestVal, result.Payload().Model().data[0].value->value, "dataValue");
-        
+
         return S_OK;
     })
     .Then([&](Result<void> result) ->AsyncOp<ClientUpdateUserDataOperation::ResultType>
@@ -326,7 +326,7 @@ void PlayerDataManagementTests::TestServerUpdateUserInternalData(TestContext& tc
     data.insert_or_assign(kTestKey, kTestVal);
     request.SetData(data);
     request.SetPlayFabId(DefaultTitlePlayerId());
-    
+
     ServerUpdateUserInternalDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerUpdateUserInternalDataOperation::ResultType> result) -> AsyncOp<ServerGetUserInternalDataOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);

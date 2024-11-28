@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <cassert>
 #include <string.h>
+#include "nlohmann/json.hpp"
 
 JNIEnv* JniEnvFromJavaVm(JavaVM* javaVm)
 {
@@ -49,22 +50,44 @@ namespace Platform
 HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
 {
     std::vector<char> fileBuffer;
-    AndroidTestApp::TestApp::GetInstance().GetBufferFromFile("testTitleData.json", fileBuffer);  
-    std::string str{ fileBuffer.begin(), fileBuffer.end() };
+    AndroidTestApp::TestApp::GetInstance().GetBufferFromFile("testTitleData.json", fileBuffer);
 
     // Parse JSON string into output TestTitleData.
-    rapidjson::Document titleDataJson;
-    titleDataJson.Parse(fileBuffer.data());
+    JsonValue titleDataJson;
+    bool parseError = false;
+    String parseErrorMsg;
 
-    if (titleDataJson.HasParseError())
+    try
+    {
+        if (fileBuffer.data())
+        {
+            titleDataJson = JsonValue::parse(fileBuffer.data());
+        }
+        else
+        {
+            parseError = true;
+        }
+    }
+    catch (const JsonValue::parse_error& e)
+    {
+        parseErrorMsg = e.what();
+        parseError = true;
+    }
+
+    if (parseError)
     {
         LOGE("Unable to parse testTitleData.json");
+        LOGE("\nError: %s\n", parseErrorMsg.c_str());
         return E_FAIL;
     }
 
-    testTitleData.titleId = titleDataJson["titleId"].GetString();
-    testTitleData.secretKey = titleDataJson["secretKey"].GetString();
-    testTitleData.connectionString = titleDataJson["connectionString"].GetString();
+    testTitleData.titleId = titleDataJson["titleId"].get<String>();
+    testTitleData.secretKey = titleDataJson["secretKey"].get<String>();
+    testTitleData.connectionString = titleDataJson["connectionString"].get<String>();
+    testTitleData.allowRetries = titleDataJson["allowRetries"].get<bool>();
+    testTitleData.runTestList = titleDataJson["runTestList"].get<bool>();
+    testTitleData.testList = titleDataJson["testList"].get<Set<String>>();
+    testTitleData.retryableHRs = titleDataJson["retryableHRs"].get<Set<String>>();
 
     return S_OK;
 }

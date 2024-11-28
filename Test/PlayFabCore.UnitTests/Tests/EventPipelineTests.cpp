@@ -53,10 +53,10 @@ public:
         //AsyncTestContext tc;
         //writeEventsMock.SetCallback([&](PlayFabServiceMock& mock, std::string url, std::string requestBody, uint32_t hitCount)
         //    {
-        //        rapidjson::Document requestJson;
+        //        nlohmann::Document requestJson;
         //        requestJson.Parse(requestBody.data());
-        //        rapidjson::Document payloadJson;
-        //        payloadJson.Parse(requestJson["Events"][0]["PayloadJSON"].GetString());
+        //        nlohmann::Document payloadJson;
+        //        payloadJson.Parse(requestJson["Events"][0]["PayloadJSON"].get<String>());
         //        tc.Assert(payloadJson["eventId"].GetInt() == 0);
         //        std::cout << hitCount << url;
         //        mock.JsonAllocator();
@@ -108,14 +108,14 @@ public:
         //AsyncTestContext tc;
         //writeEventsMock.SetCallback([&](PlayFabServiceMock& mock, std::string url, std::string requestBody, uint32_t hitCount)
         //{
-        //    rapidjson::Document requestJson;
+        //    nlohmann::Document requestJson;
         //    requestJson.Parse(requestBody.data());
 
         //    auto& eventsJson = requestJson["Events"];
         //    for (auto& eventJson : eventsJson.GetArray())
         //    {
-        //        rapidjson::Document payloadJson;
-        //        payloadJson.Parse(eventJson["PayloadJSON"].GetString());
+        //        nlohmann::Document payloadJson;
+        //        payloadJson.Parse(eventJson["PayloadJSON"].get<String>());
         //        tc.Assert(eventIdsToWrite.find(payloadJson["eventId"].GetInt()) != eventIdsToWrite.end());
         //        ++eventsWritten;
         //    }
@@ -126,7 +126,7 @@ public:
         //    }
         //});
 
-        //rapidjson::Document eventPayloadJson;
+        //nlohmann::Document eventPayloadJson;
         //eventPayloadJson.Parse(kTestEventTemplate);
 
         //PFTelemetryEvent event
@@ -146,7 +146,7 @@ public:
         //    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
         //    eventPayloadJson.Accept(writer);
 
-        //    event.payloadJson = buffer.GetString();
+        //    event.payloadJson = buffer.get<String>();
         //    pipeline.EmitEvent(&event);
         //}
 

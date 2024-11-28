@@ -88,7 +88,7 @@ if [ "$BUILD_PF_CORE" = true ]; then
     bash "$SCRIPT_DIR"/../PlayFabCore.Linux/PlayFabCore_Linux.bash -c "$CONFIGURATION" -lhc "$LHC_PATH"
 fi
 
-log "#### Building PlayFabServices ####" 
+log "#### Building PlayFabServices ####"
 log "CONFIGURATION = ${CONFIGURATION}"
 log "LHC_PATH = ${LHC_PATH}"
 log "BUILD_LHC = ${BUILD_LHC}"
@@ -97,4 +97,4 @@ log "BUILD_PF_CORE = ${BUILD_PF_CORE}"
 
 # make PlayFabServices
 sudo cmake -S "$SCRIPT_DIR" -B "$SCRIPT_DIR"/../../Int/CMake/PlayFabServices.Linux -D CMAKE_BUILD_TYPE=$CONFIGURATION -D LHC_PATH=$LHC_PATH
-sudo make -C "$SCRIPT_DIR"/../../Int/CMake/PlayFabServices.Linux
+sudo make VERBOSE=1 -C "$SCRIPT_DIR"/../../Int/CMake/PlayFabServices.Linux

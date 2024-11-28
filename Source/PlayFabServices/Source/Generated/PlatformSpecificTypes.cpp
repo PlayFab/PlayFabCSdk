@@ -15,7 +15,7 @@ JsonValue AndroidDevicePushNotificationRegistrationRequest::ToJson() const
 
 JsonValue AndroidDevicePushNotificationRegistrationRequest::ToJson(const PFPlatformSpecificAndroidDevicePushNotificationRegistrationRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "ConfirmationMessage", input.confirmationMessage);
     JsonUtils::ObjectAddMember(output, "DeviceToken", input.deviceToken);
     JsonUtils::ObjectAddMember(output, "SendPushNotificationConfirmation", input.sendPushNotificationConfirmation);
@@ -29,7 +29,7 @@ JsonValue RefreshPSNAuthTokenRequest::ToJson() const
 
 JsonValue RefreshPSNAuthTokenRequest::ToJson(const PFPlatformSpecificRefreshPSNAuthTokenRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AuthCode", input.authCode);
     JsonUtils::ObjectAddMember(output, "IssuerId", input.issuerId);
     JsonUtils::ObjectAddMember(output, "RedirectUri", input.redirectUri);
@@ -43,7 +43,7 @@ JsonValue RegisterForIOSPushNotificationRequest::ToJson() const
 
 JsonValue RegisterForIOSPushNotificationRequest::ToJson(const PFPlatformSpecificRegisterForIOSPushNotificationRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "ConfirmationMessage", input.confirmationMessage);
     JsonUtils::ObjectAddMember(output, "DeviceToken", input.deviceToken);
     JsonUtils::ObjectAddMember(output, "SendPushNotificationConfirmation", input.sendPushNotificationConfirmation);
@@ -57,7 +57,7 @@ JsonValue AwardSteamAchievementItem::ToJson() const
 
 JsonValue AwardSteamAchievementItem::ToJson(const PFPlatformSpecificAwardSteamAchievementItem& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AchievementName", input.achievementName);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember(output, "Result", input.result);
@@ -107,12 +107,12 @@ HRESULT AwardSteamAchievementItem::Copy(const PFPlatformSpecificAwardSteamAchiev
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.achievementName); 
+        auto propCopyResult = buffer.CopyTo(input.achievementName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.achievementName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.playFabId); 
+        auto propCopyResult = buffer.CopyTo(input.playFabId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.playFabId = propCopyResult.ExtractPayload();
     }
@@ -126,7 +126,7 @@ JsonValue AwardSteamAchievementRequest::ToJson() const
 
 JsonValue AwardSteamAchievementRequest::ToJson(const PFPlatformSpecificAwardSteamAchievementRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<AwardSteamAchievementItem>(output, "Achievements", input.achievements, input.achievementsCount);
     return output;
 }

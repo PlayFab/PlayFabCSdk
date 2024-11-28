@@ -14,7 +14,7 @@ JsonValue EventContents::ToJson() const
 
 JsonValue EventContents::ToJson(const PFEventsEventContents& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "EventNamespace", input.eventNamespace);
@@ -33,7 +33,7 @@ JsonValue WriteEventsRequest::ToJson() const
 
 JsonValue WriteEventsRequest::ToJson(const PFEventsWriteEventsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<EventContents>(output, "Events", input.events, input.eventsCount);
     return output;

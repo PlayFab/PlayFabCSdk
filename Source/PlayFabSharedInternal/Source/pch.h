@@ -20,7 +20,7 @@
 
 #include "ResultMacros.h"
 #include "Memory.h"
-#include "RapidJson.h"
+#include "Nlohmann.h"
 #include "Types.h"
 #include "Result.h"
 #include "Error.h"

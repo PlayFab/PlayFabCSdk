@@ -11,7 +11,7 @@
 		8236DDA22B5AE91900FFA328 /* RunContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FD92AEAF76A00D8B93D /* RunContext.h */; };
 		8236DDA32B5AE91900FFA328 /* XAsyncOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDA2AEAF76A00D8B93D /* XAsyncOperation.h */; };
 		8236DDA42B5AE91900FFA328 /* EnumTraits.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDB2AEAF76A00D8B93D /* EnumTraits.h */; };
-		8236DDA52B5AE91900FFA328 /* RapidJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDC2AEAF76A00D8B93D /* RapidJson.h */; };
+		8236DDA52B5AE91900FFA328 /* Nlohmann.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDC2AEAF76A00D8B93D /* Nlohmann.h */; };
 		8236DDA62B5AE91900FFA328 /* SdkVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDD2AEAF76A00D8B93D /* SdkVersion.h */; };
 		8236DDA72B5AE91900FFA328 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDE2AEAF76A00D8B93D /* Types.h */; };
 		8236DDA82B5AE91900FFA328 /* Trace.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDF2AEAF76A00D8B93D /* Trace.h */; };
@@ -46,7 +46,7 @@
 		82607FED2AEAF76A00D8B93D /* RunContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FD92AEAF76A00D8B93D /* RunContext.h */; };
 		82607FEE2AEAF76A00D8B93D /* XAsyncOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDA2AEAF76A00D8B93D /* XAsyncOperation.h */; };
 		82607FEF2AEAF76A00D8B93D /* EnumTraits.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDB2AEAF76A00D8B93D /* EnumTraits.h */; };
-		82607FF02AEAF76A00D8B93D /* RapidJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDC2AEAF76A00D8B93D /* RapidJson.h */; };
+		82607FF02AEAF76A00D8B93D /* Nlohmann.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDC2AEAF76A00D8B93D /* Nlohmann.h */; };
 		82607FF12AEAF76A00D8B93D /* SdkVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDD2AEAF76A00D8B93D /* SdkVersion.h */; };
 		82607FF22AEAF76A00D8B93D /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDE2AEAF76A00D8B93D /* Types.h */; };
 		82607FF32AEAF76A00D8B93D /* Trace.h in Headers */ = {isa = PBXBuildFile; fileRef = 82607FDF2AEAF76A00D8B93D /* Trace.h */; };
@@ -193,7 +193,7 @@
 		82607FD92AEAF76A00D8B93D /* RunContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RunContext.h; path = ../../Source/PlayFabSharedInternal/Include/RunContext.h; sourceTree = "<group>"; };
 		82607FDA2AEAF76A00D8B93D /* XAsyncOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XAsyncOperation.h; path = ../../Source/PlayFabSharedInternal/Include/XAsyncOperation.h; sourceTree = "<group>"; };
 		82607FDB2AEAF76A00D8B93D /* EnumTraits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EnumTraits.h; path = ../../Source/PlayFabSharedInternal/Include/EnumTraits.h; sourceTree = "<group>"; };
-		82607FDC2AEAF76A00D8B93D /* RapidJson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RapidJson.h; path = ../../Source/PlayFabSharedInternal/Include/RapidJson.h; sourceTree = "<group>"; };
+		82607FDC2AEAF76A00D8B93D /* Nlohmann.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Nlohmann.h; path = ../../Source/PlayFabSharedInternal/Include/Nlohmann.h; sourceTree = "<group>"; };
 		82607FDD2AEAF76A00D8B93D /* SdkVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SdkVersion.h; path = ../../Source/PlayFabSharedInternal/Include/SdkVersion.h; sourceTree = "<group>"; };
 		82607FDE2AEAF76A00D8B93D /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Types.h; path = ../../Source/PlayFabSharedInternal/Include/Types.h; sourceTree = "<group>"; };
 		82607FDF2AEAF76A00D8B93D /* Trace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Trace.h; path = ../../Source/PlayFabSharedInternal/Include/Trace.h; sourceTree = "<group>"; };
@@ -273,7 +273,7 @@
 				82607FE42AEAF76A00D8B93D /* ModelBuffer.h */,
 				82607FE82AEAF76A00D8B93D /* PlatformUser.h */,
 				82607FE22AEAF76A00D8B93D /* PlatformUtils.h */,
-				82607FDC2AEAF76A00D8B93D /* RapidJson.h */,
+				82607FDC2AEAF76A00D8B93D /* Nlohmann.h */,
 				82607FE02AEAF76A00D8B93D /* Result.h */,
 				82607FE52AEAF76A00D8B93D /* ResultMacros.h */,
 				82607FD92AEAF76A00D8B93D /* RunContext.h */,
@@ -356,7 +356,7 @@
 				8236DDA22B5AE91900FFA328 /* RunContext.h in Headers */,
 				8236DDA32B5AE91900FFA328 /* XAsyncOperation.h in Headers */,
 				8236DDA42B5AE91900FFA328 /* EnumTraits.h in Headers */,
-				8236DDA52B5AE91900FFA328 /* RapidJson.h in Headers */,
+				8236DDA52B5AE91900FFA328 /* Nlohmann.h in Headers */,
 				8236DDA62B5AE91900FFA328 /* SdkVersion.h in Headers */,
 				8236DDA72B5AE91900FFA328 /* Types.h in Headers */,
 				8236DDA82B5AE91900FFA328 /* Trace.h in Headers */,
@@ -384,7 +384,7 @@
 				82607FED2AEAF76A00D8B93D /* RunContext.h in Headers */,
 				82607FEE2AEAF76A00D8B93D /* XAsyncOperation.h in Headers */,
 				82607FEF2AEAF76A00D8B93D /* EnumTraits.h in Headers */,
-				82607FF02AEAF76A00D8B93D /* RapidJson.h in Headers */,
+				82607FF02AEAF76A00D8B93D /* Nlohmann.h in Headers */,
 				82607FF12AEAF76A00D8B93D /* SdkVersion.h in Headers */,
 				82607FF22AEAF76A00D8B93D /* Types.h in Headers */,
 				82607FF32AEAF76A00D8B93D /* Trace.h in Headers */,
@@ -628,7 +628,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
 					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
-					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../External/nlohmann/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 				);
 				OTHER_LDFLAGS = "";
@@ -652,7 +652,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
 					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
-					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../External/nlohmann/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 				);
 				OTHER_LDFLAGS = "";
@@ -809,7 +809,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
 					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
-					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../External/nlohmann/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 				);
 				OTHER_LDFLAGS = "";
@@ -831,7 +831,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
 					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
-					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../External/nlohmann/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 				);
 				OTHER_LDFLAGS = "";

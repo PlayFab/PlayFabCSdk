@@ -15,7 +15,7 @@ JsonValue ClientAddFriendRequest::ToJson() const
 
 JsonValue ClientAddFriendRequest::ToJson(const PFFriendsClientAddFriendRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "FriendEmail", input.friendEmail);
     JsonUtils::ObjectAddMember(output, "FriendPlayFabId", input.friendPlayFabId);
     JsonUtils::ObjectAddMember(output, "FriendTitleDisplayName", input.friendTitleDisplayName);
@@ -60,7 +60,7 @@ JsonValue ClientGetFriendsListRequest::ToJson() const
 
 JsonValue ClientGetFriendsListRequest::ToJson(const PFFriendsClientGetFriendsListRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExternalPlatformFriends", JsonUtils::ToJson(input.externalPlatformFriends));
     JsonUtils::ObjectAddMember<PlayerProfileViewConstraints>(output, "ProfileConstraints", input.profileConstraints);
@@ -194,32 +194,32 @@ HRESULT FriendInfo::Copy(const PFFriendsFriendInfo& input, PFFriendsFriendInfo& 
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<UserFacebookInfo>(input.facebookInfo); 
+        auto propCopyResult = buffer.CopyTo<UserFacebookInfo>(input.facebookInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.facebookInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.friendPlayFabId); 
+        auto propCopyResult = buffer.CopyTo(input.friendPlayFabId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.friendPlayFabId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserGameCenterInfo>(input.gameCenterInfo); 
+        auto propCopyResult = buffer.CopyTo<UserGameCenterInfo>(input.gameCenterInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.gameCenterInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<PlayerProfileModel>(input.profile); 
+        auto propCopyResult = buffer.CopyTo<PlayerProfileModel>(input.profile);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.profile = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserPsnInfo>(input.PSNInfo); 
+        auto propCopyResult = buffer.CopyTo<UserPsnInfo>(input.PSNInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.PSNInfo = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserSteamInfo>(input.steamInfo); 
+        auto propCopyResult = buffer.CopyTo<UserSteamInfo>(input.steamInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.steamInfo = propCopyResult.ExtractPayload();
     }
@@ -229,17 +229,17 @@ HRESULT FriendInfo::Copy(const PFFriendsFriendInfo& input, PFFriendsFriendInfo& 
         output.tags = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.titleDisplayName); 
+        auto propCopyResult = buffer.CopyTo(input.titleDisplayName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.titleDisplayName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.username); 
+        auto propCopyResult = buffer.CopyTo(input.username);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.username = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserXboxInfo>(input.xboxInfo); 
+        auto propCopyResult = buffer.CopyTo<UserXboxInfo>(input.xboxInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.xboxInfo = propCopyResult.ExtractPayload();
     }
@@ -294,7 +294,7 @@ JsonValue ClientRemoveFriendRequest::ToJson() const
 
 JsonValue ClientRemoveFriendRequest::ToJson(const PFFriendsClientRemoveFriendRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "FriendPlayFabId", input.friendPlayFabId);
     return output;
 }
@@ -306,7 +306,7 @@ JsonValue ClientSetFriendTagsRequest::ToJson() const
 
 JsonValue ClientSetFriendTagsRequest::ToJson(const PFFriendsClientSetFriendTagsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "FriendPlayFabId", input.friendPlayFabId);
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
     return output;
@@ -319,7 +319,7 @@ JsonValue ServerAddFriendRequest::ToJson() const
 
 JsonValue ServerAddFriendRequest::ToJson(const PFFriendsServerAddFriendRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "FriendEmail", input.friendEmail);
     JsonUtils::ObjectAddMember(output, "FriendPlayFabId", input.friendPlayFabId);
     JsonUtils::ObjectAddMember(output, "FriendTitleDisplayName", input.friendTitleDisplayName);
@@ -335,7 +335,7 @@ JsonValue ServerGetFriendsListRequest::ToJson() const
 
 JsonValue ServerGetFriendsListRequest::ToJson(const PFFriendsServerGetFriendsListRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExternalPlatformFriends", JsonUtils::ToJson(input.externalPlatformFriends));
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
@@ -351,7 +351,7 @@ JsonValue ServerRemoveFriendRequest::ToJson() const
 
 JsonValue ServerRemoveFriendRequest::ToJson(const PFFriendsServerRemoveFriendRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "FriendPlayFabId", input.friendPlayFabId);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     return output;
@@ -364,7 +364,7 @@ JsonValue ServerSetFriendTagsRequest::ToJson() const
 
 JsonValue ServerSetFriendTagsRequest::ToJson(const PFFriendsServerSetFriendTagsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "FriendPlayFabId", input.friendPlayFabId);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
@@ -385,7 +385,7 @@ JsonValue ToJson(PFFriendsExternalFriendSources const* input)
         Stringstream ss;
         if (*input == PFFriendsExternalFriendSources::None)
         {
-            return JsonValue{ EnumName(PFFriendsExternalFriendSources::None), JsonUtils::allocator };
+            return JsonValue{ EnumName(PFFriendsExternalFriendSources::None) };
         }
         if ((*input & PFFriendsExternalFriendSources::Steam) == PFFriendsExternalFriendSources::Steam)
         {
@@ -412,11 +412,11 @@ JsonValue ToJson(PFFriendsExternalFriendSources const* input)
             ss << separator << EnumName(PFFriendsExternalFriendSources::All);
             separator = ",";
         }
-        return JsonValue{ ss.str().data(), JsonUtils::allocator };
+        return JsonValue{ ss.str().data() };
     }
     else
     {
-        return JsonValue{ rapidjson::kNullType };
+        return JsonValue{};
     }
 }
 

@@ -49,7 +49,7 @@ AsyncOp<GetTimeResult> TitleDataManagementAPI::ClientGetTime(
 )
 {
     const char* path{ "/Client/GetTime" };
-    JsonValue requestBody{ rapidjson::kNullType };
+    JsonValue requestBody { JsonValue::object() };
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::TitleDataManagementClientGetTime,
@@ -188,7 +188,7 @@ AsyncOp<GetTimeResult> TitleDataManagementAPI::ServerGetTime(
 )
 {
     const char* path{ "/Server/GetTime" };
-    JsonValue requestBody{ rapidjson::kNullType };
+    JsonValue requestBody { JsonValue::object() };
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::TitleDataManagementServerGetTime,

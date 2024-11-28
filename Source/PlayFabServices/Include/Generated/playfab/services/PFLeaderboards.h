@@ -26,9 +26,11 @@ extern "C"
 /// See also LeaderboardDeleteLeaderboardDefinitionAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_API_NOT_ENABLED_FOR_TITLE, E_PF_DUPLICATE_LINKED_STATISTIC_COLUMN_NAME_FOUND,
-/// E_PF_INVALID_BASE_TIME_FOR_INTERVAL, E_PF_LEADERBOARD_NAME_CONFLICT, E_PF_LEADERBOARD_SIZE_LIMIT_EXCEEDED,
-/// E_PF_LINKED_STATISTIC_COLUMN_MISMATCH, E_PF_LINKING_STATS_NOT_ALLOWED_FOR_ENTITY_TYPE, E_PF_MAX_QUERYABLE_VERSIONS_VALUE_NOT_ALLOWED_FOR_TIER,
+/// the async result will be E_PF_API_NOT_ENABLED_FOR_TITLE, E_PF_DUPLICATE_COLUMN_NAME_FOUND, E_PF_DUPLICATE_LINKED_STATISTIC_COLUMN_NAME_FOUND,
+/// E_PF_EXTERNAL_ENTITY_NOT_ALLOWED_FOR_TIER, E_PF_INVALID_BASE_TIME_FOR_INTERVAL, E_PF_LEADERBOARD_COUNT_LIMIT_EXCEEDED,
+/// E_PF_LEADERBOARD_NAME_CONFLICT, E_PF_LEADERBOARD_SIZE_LIMIT_EXCEEDED, E_PF_LINKED_STATISTIC_COLUMN_MISMATCH,
+/// E_PF_LINKED_STATISTIC_COLUMN_NOT_FOUND, E_PF_LINKED_STATISTIC_COLUMN_REQUIRED, E_PF_LINKING_STATS_NOT_ALLOWED_FOR_ENTITY_TYPE,
+/// E_PF_MAX_QUERYABLE_VERSIONS_VALUE_NOT_ALLOWED_FOR_TIER, E_PF_MULTIPLE_LINKED_STATISTICS_NOT_ALLOWED,
 /// E_PF_STAT_DEFINITION_ALREADY_LINKED_TO_LEADERBOARD, E_PF_STATISTIC_NOT_FOUND or any of the global
 /// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
@@ -88,7 +90,7 @@ PF_API PFLeaderboardsDeleteLeaderboardEntriesAsync(
 #endif
 
 /// <summary>
-/// Get the friend leaderboard for the specified entity. A maximum of 100 friend entries are listed in
+/// Get the friend leaderboard for the specified entity. A maximum of 25 friend entries are listed in
 /// the leaderboard.
 /// </summary>
 /// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
@@ -112,8 +114,11 @@ PF_API PFLeaderboardsGetFriendLeaderboardForEntityAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_TITLE,
-/// E_PF_INVALID_ENTITY_TYPE, E_PF_LEADERBOARD_NOT_FOUND, E_PF_NO_LEADERBOARD_FOR_STATISTIC, E_PF_STATISTIC_NOT_FOUND
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
+/// E_PF_API_NOT_ENABLED_FOR_TITLE, E_PF_DOWNSTREAM_SERVICE_UNAVAILABLE, E_PF_EXPIRED_XBOX_LIVE_TOKEN,
+/// E_PF_FACEBOOK_API_ERROR, E_PF_INVALID_ENTITY_TYPE, E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME,
+/// E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_LEADERBOARD_NOT_FOUND, E_PF_NO_LEADERBOARD_FOR_STATISTIC, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_STATISTIC_NOT_FOUND, E_PF_XBOX_INACCESSIBLE, E_PF_XBOX_SERVICE_TOO_MANY_REQUESTS, E_PF_XBOX_XASS_EXCHANGE_FAILURE
 /// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
 /// on error handling.
 /// </returns>
@@ -131,8 +136,11 @@ PF_API PFLeaderboardsGetFriendLeaderboardForEntityGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_TITLE,
-/// E_PF_INVALID_ENTITY_TYPE, E_PF_LEADERBOARD_NOT_FOUND, E_PF_NO_LEADERBOARD_FOR_STATISTIC, E_PF_STATISTIC_NOT_FOUND
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
+/// E_PF_API_NOT_ENABLED_FOR_TITLE, E_PF_DOWNSTREAM_SERVICE_UNAVAILABLE, E_PF_EXPIRED_XBOX_LIVE_TOKEN,
+/// E_PF_FACEBOOK_API_ERROR, E_PF_INVALID_ENTITY_TYPE, E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME,
+/// E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_LEADERBOARD_NOT_FOUND, E_PF_NO_LEADERBOARD_FOR_STATISTIC, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_STATISTIC_NOT_FOUND, E_PF_XBOX_INACCESSIBLE, E_PF_XBOX_SERVICE_TOO_MANY_REQUESTS, E_PF_XBOX_XASS_EXCHANGE_FAILURE
 /// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
 /// on error handling.
 /// </returns>
@@ -521,9 +529,9 @@ PF_API PFLeaderboardsUnlinkLeaderboardFromStatisticAsync(
 /// See also LeaderboardDeleteLeaderboardEntriesAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_LEADERBOARD_COLUMN_LENGTH_MISMATCH, E_PF_LEADERBOARD_NOT_FOUND, E_PF_LEADERBOARD_UPDATE_NOT_ALLOWED_WHILE_LINKED
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// the async result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS, E_PF_LEADERBOARD_COLUMN_LENGTH_MISMATCH,
+/// E_PF_LEADERBOARD_NOT_FOUND, E_PF_LEADERBOARD_UPDATE_NOT_ALLOWED_WHILE_LINKED or any of the global
+/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFLeaderboardsUpdateLeaderboardEntriesAsync(
     _In_ PFEntityHandle entityHandle,

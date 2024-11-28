@@ -2,7 +2,7 @@
 
 #include "TestAppPch.h"
 #include "playfab/services/PFServices.h"
-#include "RapidJson.h"
+#include "Nlohmann.h"
 #include "TestRunner.h"
 #include "../PlatformUtils.h"
 

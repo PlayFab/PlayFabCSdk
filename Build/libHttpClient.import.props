@@ -12,7 +12,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <PreBuildEvent>
-      <Command>MSBuild /nologo /v:m /t:"$(HCPlatform)\$([System.String]::Copy('$(HCProjectName)').Replace('.','_'))" /p:Configuration="$(Configuration)" /p:Platform="$(Platform)" "$(HCRoot)\libHttpClient.vs2022.sln"</Command>
+      <Command>MSBuild /nologo /v:m /t:"$(HCPlatform)\$([System.String]::Copy('$(HCProjectName)').Replace('.','_'))" /p:Configuration="$(Configuration)" /p:Platform="$(Platform)" /p:VCToolsVersion="$(VCToolsVersion)" "$(HCRoot)\libHttpClient.vs2022.sln"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>

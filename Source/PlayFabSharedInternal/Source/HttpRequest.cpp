@@ -183,9 +183,28 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
     // Ensure response is null terminated before treating as a string
     m_responseBody.push_back(0);
 
-    JsonDocument responseJson{ &JsonUtils::allocator, JsonUtils::kDefaultStackCapacity, &JsonUtils::allocator };
-    responseJson.Parse(m_responseBody.data());
-    if (responseJson.HasParseError())
+    JsonDocument responseJson;
+    bool parseError = false;
+    String parseErrorMsg;
+
+    try
+    {
+        if (m_responseBody.data())
+        {
+            responseJson = JsonDocument::parse(m_responseBody.data());
+        }
+        else
+        {
+            parseError = true;
+        }
+    }
+    catch (const JsonDocument::parse_error& e)
+    {
+        parseErrorMsg = e.what();
+        parseError = true;
+    }
+
+    if (parseError)
     {
         // Couldn't parse response body, fall back to Http status code
         uint32_t httpCode{ 0 };
@@ -195,7 +214,7 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
         // This is an unusual case. We weren't able to parse the response body, but the Http status code indicates that the
         // call was successful. Return the Json parse error in this case.
         Stringstream errorMessage;
-        errorMessage << "Failed to parse PlayFab service response: " << rapidjson::GetParseError_En(responseJson.GetParseError());
+        errorMessage << "Failed to parse PlayFab service response: " << parseErrorMsg;
         TRACE_ERROR(errorMessage.str().data());
 
         return Result<ServiceResponse>{ E_FAIL, errorMessage.str() };

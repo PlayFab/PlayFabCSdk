@@ -4,7 +4,7 @@
 #pragma once
 
 #include <httpClient/httpClient.h>
-#include <playfab/core/cpp/ServiceConfig.h> 
+#include <playfab/core/cpp/ServiceConfig.h>
 
 namespace PlayFab
 {
@@ -28,7 +28,7 @@ public:
 
     void SetResponseHttpStatus(uint32_t httpStatus) const noexcept;
     void SetResponseBody(const char* responseBodyString) const noexcept;
-    void SetResponseBody(const rapidjson::Value& responseBodyJson) const noexcept;
+    void SetResponseBody(const JsonValue& responseBodyJson) const noexcept;
     void SetResponseBody(const uint8_t* responseBodyBytes, size_t responseBodySize) const noexcept;
     void ClearReponseBody() const noexcept;
     void SetResponseHeaders(const HttpHeaders& responseHeaders) const noexcept;

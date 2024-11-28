@@ -606,6 +606,10 @@ extern "C"
 #define E_PF_MAX_QUERYABLE_VERSIONS_VALUE_NOT_ALLOWED_FOR_TIER                  MAKE_E_HC(0x578cL) // 0x8923578c
 #define E_PF_STATISTIC_DEFINITION_HAS_NULL_OR_EMPTY_VERSION_CONFIGURATION       MAKE_E_HC(0x5784L) // 0x89235784
 #define E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH                                   MAKE_E_HC(0x5785L) // 0x89235785
+#define E_PF_INVALID_EXTERNAL_ENTITY_ID                                         MAKE_E_HC(0x5791L) // 0x89235791
+#define E_PF_UPDATING_STATISTICS_USING_TRANSACTION_ID_NOT_AVAILABLE_FOR_FREE_TIER MAKE_E_HC(0x5792L) // 0x89235792
+#define E_PF_TRANSACTION_ALREADY_APPLIED                                        MAKE_E_HC(0x5793L) // 0x89235793
+#define E_PF_REPORT_DATA_NOT_RETRIEVED_SUCCESSFULLY                             MAKE_E_HC(0x5794L) // 0x89235794
 #define E_PF_MATCHMAKING_ENTITY_INVALID                                         MAKE_E_HC(0x5646L) // 0x89235646
 #define E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID                              MAKE_E_HC(0x5647L) // 0x89235647
 #define E_PF_MATCHMAKING_QUEUE_NOT_FOUND                                        MAKE_E_HC(0x5648L) // 0x89235648
@@ -872,6 +876,8 @@ extern "C"
 #define E_PF_TRUE_SKILL_INVALID_PLAYER_ID                                       MAKE_E_HC(0x577cL) // 0x8923577c
 #define E_PF_TRUE_SKILL_INVALID_SQUAD_SIZE                                      MAKE_E_HC(0x577dL) // 0x8923577d
 #define E_PF_TRUE_SKILL_CONDITION_SET_NOT_IN_MODEL                              MAKE_E_HC(0x577eL) // 0x8923577e
+#define E_PF_TRUE_SKILL_MODEL_STATE_INVALID_FOR_OPERATION                       MAKE_E_HC(0x578dL) // 0x8923578d
+#define E_PF_TRUE_SKILL_SCENARIO_CONTAINS_ACTIVE_MODEL                          MAKE_E_HC(0x578eL) // 0x8923578e
 #define E_PF_GAME_SAVE_MANIFEST_NOT_FOUND                                       MAKE_E_HC(0x577fL) // 0x8923577f
 #define E_PF_GAME_SAVE_MANIFEST_VERSION_ALREADY_EXISTS                          MAKE_E_HC(0x5780L) // 0x89235780
 #define E_PF_GAME_SAVE_CONFLICT_UPDATING_MANIFEST                               MAKE_E_HC(0x5781L) // 0x89235781
@@ -881,6 +887,10 @@ extern "C"
 #define E_PF_GAME_SAVE_UNKNOWN_FILE_IN_MANIFEST                                 MAKE_E_HC(0x5789L) // 0x89235789
 #define E_PF_GAME_SAVE_FILE_EXCEEDED_REPORTED_SIZE                              MAKE_E_HC(0x578aL) // 0x8923578a
 #define E_PF_GAME_SAVE_FILE_NOT_UPLOADED                                        MAKE_E_HC(0x578bL) // 0x8923578b
+#define E_PF_GAME_SAVE_BAD_REQUEST                                              MAKE_E_HC(0x578fL) // 0x8923578f
+#define E_PF_GAME_SAVE_OPERATION_NOT_ALLOWED                                    MAKE_E_HC(0x5790L) // 0x89235790
+#define E_PF_GAME_SAVE_DATA_STORAGE_QUOTA_EXCEEDED                              MAKE_E_HC(0x5795L) // 0x89235795
+#define E_PF_GAME_SAVE_NEWER_MANIFEST_EXISTS                                    MAKE_E_HC(0x5796L) // 0x89235796
 #define E_PF_STATE_SHARE_FORBIDDEN                                              MAKE_E_HC(0x5769L) // 0x89235769
 #define E_PF_STATE_SHARE_TITLE_NOT_IN_FLIGHT                                    MAKE_E_HC(0x576aL) // 0x8923576a
 #define E_PF_STATE_SHARE_STATE_NOT_FOUND                                        MAKE_E_HC(0x5723L) // 0x89235723

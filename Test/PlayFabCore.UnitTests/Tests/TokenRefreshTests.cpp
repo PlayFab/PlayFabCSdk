@@ -29,15 +29,15 @@ public:
                 // On the initial Login, set token to expire in 1 minute to trigger a refresh
                 time_t tokenExpiration = time(nullptr) + 60;
                 auto tokenExpirationString = TimeTToIso8601String(tokenExpiration);
-                rapidjson::Value tokenExpirationJson{ tokenExpirationString.data(), PlayFabServiceMock::JsonAllocator() };
-                loginMock.ResponseBodyPayload()["EntityToken"].AddMember("TokenExpiration", tokenExpirationJson.Move(), PlayFabServiceMock::JsonAllocator());
+                JsonValue tokenExpirationJson{ tokenExpirationString.data() };
+                loginMock.ResponseBodyPayload()["EntityToken"].emplace("TokenExpiration", std::move(tokenExpirationJson));
             }
             else if (hitCount == 2)
             {
                 // On subsequent Login, supply a new, non-expiring token
                 auto& entityTokenJson = mock.ResponseBodyPayload()["EntityToken"];
-                entityTokenJson.RemoveMember("TokenExpiration");
-                entityTokenJson["EntityToken"] = rapidjson::Value{ refreshedToken };
+                entityTokenJson.erase("TokenExpiration");
+                entityTokenJson["EntityToken"] = JsonValue{ refreshedToken };
             }
             else
             {
@@ -113,19 +113,19 @@ public:
                 // On the initial Login, set token to expire in 1 minute to trigger a refresh
                 time_t tokenExpiration = time(nullptr) + 60;
                 auto tokenExpirationString = TimeTToIso8601String(tokenExpiration);
-                rapidjson::Value tokenExpirationJson{ tokenExpirationString.data(), PlayFabServiceMock::JsonAllocator() };
-                loginMock.ResponseBodyPayload()["EntityToken"].AddMember("TokenExpiration", tokenExpirationJson.Move(), PlayFabServiceMock::JsonAllocator());
+                JsonValue tokenExpirationJson{ tokenExpirationString.data() };
+                loginMock.ResponseBodyPayload()["EntityToken"].emplace("TokenExpiration", tokenExpirationJson);
             }
             else if (hitCount == 2)
             {
                 // On second Login attempt, respond with error
-                mock.ResponseBody().CopyFrom(PlayFabServiceMock::ServiceErrors()["ExpiredAuthToken"], PlayFabServiceMock::JsonAllocator());
+                mock.ResponseBody() = PlayFabServiceMock::ServiceErrors()["ExpiredAuthToken"];
             }
             else if (hitCount == 3)
             {
                 // Reset to default response with the new token
-                mock.ResponseBody().CopyFrom(mock.ServiceResponses()["default"], mock.JsonAllocator());
-                mock.ResponseBodyPayload()["EntityToken"]["EntityToken"] = rapidjson::Value{ newToken };
+                mock.ResponseBody() = mock.ServiceResponses()["default"];
+                mock.ResponseBodyPayload()["EntityToken"]["EntityToken"] = JsonValue{ newToken };
             }
             else
             {

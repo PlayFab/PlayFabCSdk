@@ -15,7 +15,7 @@ JsonValue GetPublisherDataRequest::ToJson() const
 
 JsonValue GetPublisherDataRequest::ToJson(const PFTitleDataManagementGetPublisherDataRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray(output, "Keys", input.keys, input.keysCount);
     return output;
 }
@@ -99,7 +99,7 @@ JsonValue GetTitleDataRequest::ToJson() const
 
 JsonValue GetTitleDataRequest::ToJson(const PFTitleDataManagementGetTitleDataRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray(output, "Keys", input.keys, input.keysCount);
     JsonUtils::ObjectAddMember(output, "OverrideLabel", input.overrideLabel);
     return output;
@@ -154,7 +154,7 @@ JsonValue GetTitleNewsRequest::ToJson() const
 
 JsonValue GetTitleNewsRequest::ToJson(const PFTitleDataManagementGetTitleNewsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Count", input.count);
     return output;
 }
@@ -210,17 +210,17 @@ HRESULT TitleNewsItem::Copy(const PFTitleDataManagementTitleNewsItem& input, PFT
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.body); 
+        auto propCopyResult = buffer.CopyTo(input.body);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.body = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.newsId); 
+        auto propCopyResult = buffer.CopyTo(input.newsId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.newsId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.title); 
+        auto propCopyResult = buffer.CopyTo(input.title);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.title = propCopyResult.ExtractPayload();
     }
@@ -275,7 +275,7 @@ JsonValue SetPublisherDataRequest::ToJson() const
 
 JsonValue SetPublisherDataRequest::ToJson(const PFTitleDataManagementSetPublisherDataRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Key", input.key);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;
@@ -288,7 +288,7 @@ JsonValue SetTitleDataRequest::ToJson() const
 
 JsonValue SetTitleDataRequest::ToJson(const PFTitleDataManagementSetTitleDataRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Key", input.key);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;

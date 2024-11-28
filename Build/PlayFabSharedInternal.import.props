@@ -34,15 +34,15 @@
     </ProjectReference>
   </ItemGroup>
 
-  <!--RapidJSON dependency-->
-  <PropertyGroup Label="RapidJson">
-    <RapidJsonSdkRoot>$(PlayFabExternalDir)\rapidjson\</RapidJsonSdkRoot>
-    <RapidJsonSdkInclude>$(RapidJsonSdkRoot)include\</RapidJsonSdkInclude>
+  <!--NLohmann dependency-->
+  <PropertyGroup Label="NLohmann">
+    <NLohmannSdkRoot>$(PlayFabExternalDir)\nlohmann\</NLohmannSdkRoot>
+    <NLohmannSdkInclude>$(NLohmannSdkRoot)include</NLohmannSdkInclude>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(RapidJsonSdkInclude)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(NLohmannSdkInclude)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
 

@@ -6,7 +6,7 @@
 #include "Platform/PlayFabPal.h"
 #include "Platform/Generic/MemoryManager.h"
 #include "Operations/Core/AuthenticationOperations.h"
-#include "RapidJson.h"
+#include "Nlohmann.h"
 #include "TestRunner.h"
 #include "../PlatformUtils.h"
 
@@ -60,7 +60,7 @@ void TestApp::AppInitialize(
     );
 
     HCTraceSetTraceToDebugger(true);
-    
+
     LOGI("AndroidTestApp initialized");
 
     m_initialized = true;
@@ -85,7 +85,7 @@ void TestApp::UpdateInstances(JNIEnv* env, jobject activityInstance, jobject con
     m_context = env->NewGlobalRef(context);
 }
 
-bool TestApp::RunTests() 
+bool TestApp::RunTests()
 {
     PlayFab::Test::TestRunner testRunner;
     THROW_IF_FAILED(testRunner.Initialize());

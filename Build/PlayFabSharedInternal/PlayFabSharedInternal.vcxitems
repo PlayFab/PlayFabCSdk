@@ -7,7 +7,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabCore\Include;$(PlayFabSourceDir)\PlayFabCore\Include\Generated;$(PlayFabSourceDir)\PlayFabSharedInternal\Include;$(PlayFabSourceDir)\PlayFabSharedInternal\Include\Generated;$(PlayFabSourceDir)\PlayFabSharedInternal\Source;$(RapidJsonIncludeDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabCore\Include;$(PlayFabSourceDir)\PlayFabCore\Include\Generated;$(PlayFabSourceDir)\PlayFabSharedInternal\Include;$(PlayFabSourceDir)\PlayFabSharedInternal\Include\Generated;$(PlayFabSourceDir)\PlayFabSharedInternal\Source;$(NLohmannIncludeDir)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -26,7 +26,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\ModelBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\PlatformUser.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\PlatformUtils.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\RapidJson.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Nlohmann.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\Result.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\ResultMacros.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\RunContext.h" />
@@ -52,8 +52,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Trace.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\XAsyncOperation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\XAsyncProviderBase.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Natvis Include="$(MSBuildThisFileDirectory)..\..\External\rapidjson.natvis" />
   </ItemGroup>
 </Project>

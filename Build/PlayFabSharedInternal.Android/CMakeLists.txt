@@ -49,7 +49,7 @@ set(COMMON_INCLUDE_DIRS
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/Common"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Generated"
-    "${PATH_TO_ROOT}/External/rapidjson/include"
+    "${PATH_TO_ROOT}/External/nlohmann/include"
     "${PATH_TO_LHC}/Include"
 )
 

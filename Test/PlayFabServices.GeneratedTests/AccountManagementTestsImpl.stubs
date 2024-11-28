@@ -123,6 +123,13 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromSteamIDs(TestContext& tc
 }
 #endif
 
+#if 0
+void AccountManagementTests::TestClientGetPlayFabIDsFromSteamNames(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientGetPlayFabIDsFromTwitchIDs(TestContext& tc)
 {
@@ -470,6 +477,13 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromPSNOnlineIDs(TestContext
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayFabIDsFromSteamIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromSteamNames(TestContext& tc)
 {
     tc.Skip();
 }

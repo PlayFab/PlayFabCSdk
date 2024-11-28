@@ -254,6 +254,8 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
+/// See also ClientLoginWithCustomIDAsync, ClientUnlinkCustomIDAsync.
+///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED or any of the global PlayFab Service
 /// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
@@ -274,6 +276,8 @@ PF_API PFAccountManagementClientLinkCustomIDAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
+/// See also ClientLoginWithOpenIdConnectAsync, ClientUnlinkOpenIdConnectAsync.
+///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED
 /// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
@@ -295,6 +299,8 @@ PF_API PFAccountManagementClientLinkOpenIdConnectAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, GDK, Linux, and macOS.
+/// See also ClientLoginWithXboxAsync, ClientUnlinkXboxAccountAsync.
+///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_EXPIRED_XBOX_LIVE_TOKEN, E_PF_INVALID_XBOX_LIVE_TOKEN,
 /// E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED or any of the global PlayFab Service errors. See doc page "Handling
@@ -349,6 +355,8 @@ PF_API PFAccountManagementClientReportPlayerGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
+/// See also ClientLinkCustomIDAsync, ClientLoginWithCustomIDAsync.
+///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_CUSTOM_ID_NOT_LINKED or any of the global PlayFab
 /// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
@@ -391,6 +399,8 @@ PF_API PFAccountManagementClientUnlinkOpenIdConnectAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, GDK, Linux, and macOS.
+/// See also ClientLinkXboxAccountAsync.
+///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_XBOX_LIVE_TOKEN or any of the global
 /// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.

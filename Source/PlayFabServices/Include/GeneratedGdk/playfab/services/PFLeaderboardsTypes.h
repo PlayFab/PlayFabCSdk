@@ -280,7 +280,7 @@ typedef struct PFLeaderboardsEntityLeaderboardEntry
 typedef struct PFLeaderboardsGetEntityLeaderboardResponse
 {
     /// <summary>
-    /// (Optional) Leaderboard columns describing the sort directions,.
+    /// (Optional) Leaderboard columns describing the sort directions.
     /// </summary>
     _Maybenull_ _Field_size_(columnsCount) PFLeaderboardsLeaderboardColumn const* const* columns;
 
@@ -288,6 +288,11 @@ typedef struct PFLeaderboardsGetEntityLeaderboardResponse
     /// Count of columns
     /// </summary>
     uint32_t columnsCount;
+
+    /// <summary>
+    /// The number of entries on the leaderboard.
+    /// </summary>
+    uint32_t entryCount;
 
     /// <summary>
     /// (Optional) Individual entity rankings in the leaderboard, in sorted order by rank.

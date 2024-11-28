@@ -77,7 +77,7 @@ typedef struct PFStatisticsCreateStatisticDefinitionRequest
     _Maybenull_ _Null_terminated_ const char* entityType;
 
     /// <summary>
-    /// Name of the statistic. Must be less than 50 characters. Restricted to a-Z, 0-9, '(', ')', '_',
+    /// Name of the statistic. Must be less than 150 characters. Restricted to a-Z, 0-9, '(', ')', '_',
     /// '-' and '.'.
     /// </summary>
     _Null_terminated_ const char* name;
@@ -187,7 +187,7 @@ typedef struct PFStatisticsGetStatisticDefinitionRequest
     uint32_t customTagsCount;
 
     /// <summary>
-    /// Name of the statistic. Must be less than 50 characters.
+    /// Name of the statistic. Must be less than 150 characters.
     /// </summary>
     _Null_terminated_ const char* name;
 

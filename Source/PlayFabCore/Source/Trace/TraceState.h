@@ -13,7 +13,6 @@ struct TraceSettings
     bool enableTraceToFile{ false };
     char traceFileDirectory[FILENAME_MAX]{ 0 };
     bool traceToDebugger{ false };
-    HCTraceCallback* traceCallback{ nullptr };
 };
 
 TraceSettings& GetTraceSettings();

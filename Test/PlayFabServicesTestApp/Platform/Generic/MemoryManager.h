@@ -24,8 +24,8 @@ private:
     MemoryManager() = default;
 
     // PlayFab SDK Callbacks
-    static void* STDAPIVCALLTYPE AllocHook(size_t size);
-    static void  STDAPIVCALLTYPE FreeHook(void* pointer);
+    static void* STDAPIVCALLTYPE AllocHook(size_t size, uint32_t memoryTypeId);
+    static void  STDAPIVCALLTYPE FreeHook(void* pointer, uint32_t memoryTypeId);
 
     std::mutex m_mutex;
     uint64_t m_nextId{ 0 };

@@ -29,9 +29,11 @@ public:
 
 private:
     static _Ret_maybenull_ _Post_writable_byte_size_(dwSize) void* STDAPIVCALLTYPE MemAllocHook(
-        _In_ size_t dwSize
+        _In_ size_t dwSize,
+        _In_ uint32_t memoryTypeId
     )
     {
+		UNREFERENCED_PARAMETER(memoryTypeId);
         std::lock_guard<std::mutex> lock{ s_mutex };
         auto ret = new char[dwSize];
         s_allocMap[ret] = s_allocCalls++;
@@ -39,9 +41,11 @@ private:
     }
 
     static void STDAPIVCALLTYPE MemFreeHook(
-        _In_ void* pAddress
+        _In_ void* pAddress,
+        _In_ uint32_t memoryTypeId
     )
     {
+		UNREFERENCED_PARAMETER(memoryTypeId);
         std::lock_guard<std::mutex> lock{ s_mutex };
         s_freeCalls++;
         Assert::IsTrue(s_allocMap.erase(pAddress) > 0);

@@ -50,14 +50,16 @@ public class AndroidTestClient extends Activity {
     }
 
     public byte[] GetBufferFromFile(String filename) throws IOException {
-        try {
-            AssetManager manager = getApplicationContext().getAssets();
-            InputStream is = manager.open(filename);
+        AssetManager assetManager = getApplicationContext().getAssets();
+        try (InputStream is = assetManager.open(filename);
+             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
             int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            return buffer;
+            int nRead;
+            byte[] data = new byte[size];
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            return buffer.toByteArray();
         }
         catch (IOException e) {
             return null;

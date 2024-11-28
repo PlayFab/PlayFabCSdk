@@ -158,8 +158,8 @@ PF_API PFStatisticsUpdateStatisticsAsync(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS,
 /// E_PF_ENTITY_TYPE_MISMATCH_WITH_STAT_DEFINITION, E_PF_INVALID_ENTITY_TYPE, E_PF_NOT_AUTHORIZED, E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH,
-/// E_PF_STATISTIC_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab
-/// Errors" for more details on error handling.
+/// E_PF_STATISTIC_NOT_FOUND, E_PF_TRANSACTION_ALREADY_APPLIED or any of the global PlayFab Service errors.
+/// See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFStatisticsUpdateStatisticsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -177,8 +177,8 @@ PF_API PFStatisticsUpdateStatisticsGetResultSize(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS,
 /// E_PF_ENTITY_TYPE_MISMATCH_WITH_STAT_DEFINITION, E_PF_INVALID_ENTITY_TYPE, E_PF_NOT_AUTHORIZED, E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH,
-/// E_PF_STATISTIC_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab
-/// Errors" for more details on error handling.
+/// E_PF_STATISTIC_NOT_FOUND, E_PF_TRANSACTION_ALREADY_APPLIED or any of the global PlayFab Service errors.
+/// See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

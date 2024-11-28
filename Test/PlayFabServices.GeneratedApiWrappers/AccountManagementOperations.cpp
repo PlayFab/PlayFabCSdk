@@ -472,6 +472,36 @@ Result<ClientGetPlayFabIDsFromSteamIDsOperation::ResultType> ClientGetPlayFabIDs
 }
 #endif
 
+#if 0
+
+ClientGetPlayFabIDsFromSteamNamesOperation::ClientGetPlayFabIDsFromSteamNamesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ClientGetPlayFabIDsFromSteamNamesOperation::ResultType> ClientGetPlayFabIDsFromSteamNamesOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ClientGetPlayFabIDsFromSteamNamesOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ClientGetPlayFabIDsFromSteamNamesOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAccountManagementClientGetPlayFabIDsFromSteamNamesAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ClientGetPlayFabIDsFromSteamNamesOperation::ResultType> ClientGetPlayFabIDsFromSteamNamesOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFAccountManagementClientGetPlayFabIDsFromSteamNamesGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFAccountManagementGetPlayFabIDsFromSteamNamesResult* result;
+    RETURN_IF_FAILED(PFAccountManagementClientGetPlayFabIDsFromSteamNamesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ClientGetPlayFabIDsFromTwitchIDsOperation::ClientGetPlayFabIDsFromTwitchIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
@@ -1671,6 +1701,36 @@ Result<ServerGetPlayFabIDsFromSteamIDsOperation::ResultType> ServerGetPlayFabIDs
     Vector<char> resultBuffer(resultSize);
     PFAccountManagementGetPlayFabIDsFromSteamIDsResult* result;
     RETURN_IF_FAILED(PFAccountManagementServerGetPlayFabIDsFromSteamIDsGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
+#if 0
+
+ServerGetPlayFabIDsFromSteamNamesOperation::ServerGetPlayFabIDsFromSteamNamesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ServerGetPlayFabIDsFromSteamNamesOperation::ResultType> ServerGetPlayFabIDsFromSteamNamesOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerGetPlayFabIDsFromSteamNamesOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerGetPlayFabIDsFromSteamNamesOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAccountManagementServerGetPlayFabIDsFromSteamNamesAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ServerGetPlayFabIDsFromSteamNamesOperation::ResultType> ServerGetPlayFabIDsFromSteamNamesOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFAccountManagementServerGetPlayFabIDsFromSteamNamesGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFAccountManagementGetPlayFabIDsFromSteamNamesResult* result;
+    RETURN_IF_FAILED(PFAccountManagementServerGetPlayFabIDsFromSteamNamesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
 #endif

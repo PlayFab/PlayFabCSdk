@@ -566,6 +566,41 @@ AsyncOp<GetPlayFabIDsFromSteamIDsResult> AccountManagementAPI::ClientGetPlayFabI
     });
 }
 
+AsyncOp<GetPlayFabIDsFromSteamNamesResult> AccountManagementAPI::ClientGetPlayFabIDsFromSteamNames(
+    Entity const& entity,
+    const GetPlayFabIDsFromSteamNamesRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/GetPlayFabIDsFromSteamNames" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::AccountManagementClientGetPlayFabIDsFromSteamNames,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayFabIDsFromSteamNamesResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetPlayFabIDsFromSteamNamesResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetPlayFabIDsFromSteamNamesResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<GetPlayFabIDsFromTwitchIDsResult> AccountManagementAPI::ClientGetPlayFabIDsFromTwitchIDs(
     Entity const& entity,
     const GetPlayFabIDsFromTwitchIDsRequest& request,
@@ -2308,6 +2343,41 @@ AsyncOp<GetPlayFabIDsFromSteamIDsResult> AccountManagementAPI::ServerGetPlayFabI
         else
         {
             return Result<GetPlayFabIDsFromSteamIDsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<GetPlayFabIDsFromSteamNamesResult> AccountManagementAPI::ServerGetPlayFabIDsFromSteamNames(
+    Entity const& entity,
+    const GetPlayFabIDsFromSteamNamesRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/GetPlayFabIDsFromSteamNames" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerGetPlayFabIDsFromSteamNames,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayFabIDsFromSteamNamesResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetPlayFabIDsFromSteamNamesResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetPlayFabIDsFromSteamNamesResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }

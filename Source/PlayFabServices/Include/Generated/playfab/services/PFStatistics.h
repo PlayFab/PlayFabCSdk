@@ -27,10 +27,11 @@ extern "C"
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_AGGREGATION_TYPE_NOT_ALLOWED_FOR_MULTI_COLUMN_STATISTIC, E_PF_API_NOT_ENABLED_FOR_TITLE,
-/// E_PF_DUPLICATE_STATISTIC_NAME, E_PF_INVALID_BASE_TIME_FOR_INTERVAL, E_PF_MAX_QUERYABLE_VERSIONS_VALUE_NOT_ALLOWED_FOR_TIER,
-/// E_PF_STATISTIC_COUNT_LIMIT_EXCEEDED, E_PF_STATISTIC_DEFINITION_HAS_NULL_OR_EMPTY_VERSION_CONFIGURATION,
-/// E_PF_STATISTIC_NAME_CONFLICT or any of the global PlayFab Service errors. See doc page "Handling PlayFab
-/// Errors" for more details on error handling.
+/// E_PF_DUPLICATE_COLUMN_NAME_FOUND, E_PF_DUPLICATE_STATISTIC_NAME, E_PF_EXTERNAL_ENTITY_NOT_ALLOWED_FOR_TIER,
+/// E_PF_INVALID_BASE_TIME_FOR_INTERVAL, E_PF_MAX_QUERYABLE_VERSIONS_VALUE_NOT_ALLOWED_FOR_TIER, E_PF_STATISTIC_COUNT_LIMIT_EXCEEDED,
+/// E_PF_STATISTIC_DEFINITION_HAS_NULL_OR_EMPTY_VERSION_CONFIGURATION, E_PF_STATISTIC_NAME_CONFLICT or
+/// any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </remarks>
 PF_API PFStatisticsCreateStatisticDefinitionAsync(
     _In_ PFEntityHandle entityHandle,
@@ -428,8 +429,8 @@ PF_API PFStatisticsUpdateStatisticsAsync(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS,
 /// E_PF_ENTITY_TYPE_MISMATCH_WITH_STAT_DEFINITION, E_PF_INVALID_ENTITY_TYPE, E_PF_NOT_AUTHORIZED, E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH,
-/// E_PF_STATISTIC_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab
-/// Errors" for more details on error handling.
+/// E_PF_STATISTIC_NOT_FOUND, E_PF_TRANSACTION_ALREADY_APPLIED or any of the global PlayFab Service errors.
+/// See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFStatisticsUpdateStatisticsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -447,8 +448,8 @@ PF_API PFStatisticsUpdateStatisticsGetResultSize(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS,
 /// E_PF_ENTITY_TYPE_MISMATCH_WITH_STAT_DEFINITION, E_PF_INVALID_ENTITY_TYPE, E_PF_NOT_AUTHORIZED, E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH,
-/// E_PF_STATISTIC_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab
-/// Errors" for more details on error handling.
+/// E_PF_STATISTIC_NOT_FOUND, E_PF_TRANSACTION_ALREADY_APPLIED or any of the global PlayFab Service errors.
+/// See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

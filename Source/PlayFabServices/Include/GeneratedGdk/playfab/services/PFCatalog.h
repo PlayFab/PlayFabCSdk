@@ -41,8 +41,8 @@ PF_API PFCatalogCreateDraftItemAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_ITEM_NOT_FOUND, E_PF_NOT_IMPLEMENTED or any of the global PlayFab Service errors. See doc page
-/// "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INVALID_REQUEST, E_PF_ITEM_NOT_FOUND, E_PF_NOT_IMPLEMENTED or any of the global PlayFab Service
+/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFCatalogCreateDraftItemGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -59,8 +59,8 @@ PF_API PFCatalogCreateDraftItemGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_ITEM_NOT_FOUND, E_PF_NOT_IMPLEMENTED or any of the global PlayFab Service errors. See doc page
-/// "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INVALID_REQUEST, E_PF_ITEM_NOT_FOUND, E_PF_NOT_IMPLEMENTED or any of the global PlayFab Service
+/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -931,8 +931,8 @@ PF_API PFCatalogUpdateDraftItemAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors"
-/// for more details on error handling.
+/// E_PF_INVALID_REQUEST, E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page
+/// "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFCatalogUpdateDraftItemGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -949,8 +949,8 @@ PF_API PFCatalogUpdateDraftItemGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors"
-/// for more details on error handling.
+/// E_PF_INVALID_REQUEST, E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page
+/// "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

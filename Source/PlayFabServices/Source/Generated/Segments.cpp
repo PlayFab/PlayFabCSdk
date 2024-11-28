@@ -14,7 +14,7 @@ AsyncOp<GetPlayerSegmentsResult> SegmentsAPI::ClientGetPlayerSegments(
 )
 {
     const char* path{ "/Client/GetPlayerSegments" };
-    JsonValue requestBody{ rapidjson::kNullType };
+    JsonValue requestBody { JsonValue::object() };
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::SegmentsClientGetPlayerSegments,
@@ -116,7 +116,7 @@ AsyncOp<GetAllSegmentsResult> SegmentsAPI::ServerGetAllSegments(
 )
 {
     const char* path{ "/Server/GetAllSegments" };
-    JsonValue requestBody{ rapidjson::kNullType };
+    JsonValue requestBody { JsonValue::object() };
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::SegmentsServerGetAllSegments,

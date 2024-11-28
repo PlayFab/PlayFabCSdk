@@ -15,7 +15,7 @@ JsonValue GetUserDataRequest::ToJson() const
 
 JsonValue GetUserDataRequest::ToJson(const PFPlayerDataManagementGetUserDataRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "IfChangedFromDataVersion", input.ifChangedFromDataVersion);
     JsonUtils::ObjectAddMemberArray(output, "Keys", input.keys, input.keysCount);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
@@ -73,7 +73,7 @@ JsonValue ClientUpdateUserDataRequest::ToJson() const
 
 JsonValue ClientUpdateUserDataRequest::ToJson(const PFPlayerDataManagementClientUpdateUserDataRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "Data", input.data, input.dataCount);
     JsonUtils::ObjectAddMemberArray(output, "KeysToRemove", input.keysToRemove, input.keysToRemoveCount);
@@ -161,7 +161,7 @@ HRESULT ServerGetUserDataResult::Copy(const PFPlayerDataManagementServerGetUserD
         output.data = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.playFabId); 
+        auto propCopyResult = buffer.CopyTo(input.playFabId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.playFabId = propCopyResult.ExtractPayload();
     }
@@ -175,7 +175,7 @@ JsonValue ServerUpdateUserDataRequest::ToJson() const
 
 JsonValue ServerUpdateUserDataRequest::ToJson(const PFPlayerDataManagementServerUpdateUserDataRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "Data", input.data, input.dataCount);
     JsonUtils::ObjectAddMemberArray(output, "KeysToRemove", input.keysToRemove, input.keysToRemoveCount);
@@ -191,7 +191,7 @@ JsonValue UpdateUserInternalDataRequest::ToJson() const
 
 JsonValue UpdateUserInternalDataRequest::ToJson(const PFPlayerDataManagementUpdateUserInternalDataRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "Data", input.data, input.dataCount);
     JsonUtils::ObjectAddMemberArray(output, "KeysToRemove", input.keysToRemove, input.keysToRemoveCount);

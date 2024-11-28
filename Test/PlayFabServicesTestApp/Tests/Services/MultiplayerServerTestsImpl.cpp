@@ -54,14 +54,14 @@ private:
 #if HC_PLATFORM != HC_PLATFORM_GDK
 AsyncOp<String> CreateBuildAlias(ServiceConfig serviceConfig, Entity title, RunContext rc, TestContext& tc)
 {
-    JsonValue requestBody{ rapidjson::kObjectType };
+    JsonValue requestBody= JsonValue::object();;
     JsonUtils::ObjectAddMember(requestBody, "AliasName", kTestBuildAlias);
     const char* path{ "/MultiplayerServer/CreateBuildAlias" };
 
     Stringstream headerVal;
     headerVal << versionString << sdkVersion;
     UnorderedMap<String, String> headers{ { kSDKVersionStringHeaderName, headerVal.str() }};
-    
+
     Stringstream fullUrl;
     fullUrl << serviceConfig.APIEndpoint();
 
@@ -81,12 +81,12 @@ AsyncOp<String> CreateBuildAlias(ServiceConfig serviceConfig, Entity title, RunC
     (Result<String> result) mutable -> AsyncOp<ServiceResponse>
     {
         RETURN_IF_FAILED(result.hr);
-        
+
         Stringstream headerVal;
         headerVal << versionString << sdkVersion;
         UnorderedMap<String, String> headers{ { kSDKVersionStringHeaderName, headerVal.str() } };
         headers[kEntityTokenHeaderName] = result.ExtractPayload();
-        
+
         return RunOperation(MakeUnique<HCHttpCall>(kPostMethod, url, std::move(headers), body, std::move(rc)));
     })
     .Then([&](Result<ServiceResponse> result) -> Result<String>
@@ -96,11 +96,11 @@ AsyncOp<String> CreateBuildAlias(ServiceConfig serviceConfig, Entity title, RunC
         auto serviceResponse = result.ExtractPayload();
         if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
         {
-            tc.AssertTrue(serviceResponse.Data.HasMember("AliasName"), "AliasName");
-            tc.AssertEqual(kTestBuildAlias, serviceResponse.Data["AliasName"].GetString(), "AliasName");
-            tc.AssertTrue(serviceResponse.Data.HasMember("AliasId"), "AliasId");
-            
-            return Result<String>(serviceResponse.Data["AliasId"].GetString());
+            tc.AssertTrue(serviceResponse.Data.contains("AliasName"), "AliasName");
+            tc.AssertEqual(kTestBuildAlias, serviceResponse.Data["AliasName"].get<String>().c_str(), "AliasName");
+            tc.AssertTrue(serviceResponse.Data.contains("AliasId"), "AliasId");
+
+            return Result<String>(serviceResponse.Data["AliasId"].get<String>());
         }
         else
         {
@@ -111,7 +111,7 @@ AsyncOp<String> CreateBuildAlias(ServiceConfig serviceConfig, Entity title, RunC
 
 AsyncOp<void> DeleteBuildAlias(ServiceConfig serviceConfig, Entity title, String aliasId, RunContext rc)
 {
-    JsonValue requestBody{ rapidjson::kObjectType };
+    JsonValue requestBody= JsonValue::object();;
     JsonUtils::ObjectAddMember(requestBody, "AliasId", aliasId);
     const char* path{ "/MultiplayerServer/DeleteBuildAlias" };
 
@@ -163,7 +163,7 @@ AsyncOp<void> DeleteBuildAlias(ServiceConfig serviceConfig, Entity title, String
 
 AsyncOp<void> ShutdownServerSession(ServiceConfig serviceConfig, Entity titlePlayer, RunContext rc)
 {
-    JsonValue requestBody{ rapidjson::kObjectType };
+    JsonValue requestBody= JsonValue::object();;
     JsonUtils::ObjectAddMember(requestBody, "SessionId", kTestSessionId);
     const char* path{ "/MultiplayerServer/ShutdownMultiplayerServer" };
 
@@ -228,12 +228,12 @@ void MultiplayerServerTests::TestListBuildAliases(TestContext& tc)
 {
 #if HC_PLATFORM == HC_PLATFORM_WIN32
     auto aliasId = MakeShared<String>();
-    
+
     CreateBuildAlias(ServiceConfig(), TitleEntity(), RunContext(), tc)
     .Then([&, aliasId](Result<String> result) -> AsyncOp<ListBuildAliasesOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        
+
         *aliasId = result.ExtractPayload();
 
         ListBuildAliasesOperation::RequestType request{};
@@ -242,12 +242,12 @@ void MultiplayerServerTests::TestListBuildAliases(TestContext& tc)
     .Then([&, aliasId](Result<ListBuildAliasesOperation::ResultType> result) -> Result<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        
+
         //auto& model = result.Payload().Model();
         tc.AssertEqual(1u, result.Payload().Model().buildAliasesCount, "buildAliasesCount");
         tc.AssertEqual(kTestBuildAlias, result.Payload().Model().buildAliases[0]->aliasName, "aliasName");
         tc.AssertEqual<String>(*aliasId, result.Payload().Model().buildAliases[0]->aliasId, "aliasId");
-        
+
         return S_OK;
     })
     .Then([&, aliasId](Result<void> result) -> AsyncOp<void>
@@ -279,10 +279,10 @@ void MultiplayerServerTests::TestListQosServersForTitle(TestContext& tc)
     .Then([&](Result<ListQosServersForTitleOperation::ResultType> result) -> Result<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        
+
         tc.AssertTrue(1u <= result.Payload().Model().qosServersCount, "qosServersCount");
         tc.AssertTrue(result.Payload().Model().qosServers[0]->serverUrl, "serverUrl");
-        
+
         return S_OK;
     })
     .Finally([&](Result<void> result)
@@ -298,7 +298,7 @@ void MultiplayerServerTests::TestRequestMultiplayerServer(TestContext& tc)
     constexpr char kTestRegion[]{ "EastUs" };
 
     auto buildId = MakeShared<String>();
-    
+
     ListBuildSummariesV2Operation::Run(DefaultTitlePlayer(), ListBuildSummariesV2Operation::RequestType{}, RunContext())
     .Then([&, buildId, kTestRegion](Result<ListBuildSummariesV2Operation::ResultType> result) -> AsyncOp<RequestMultiplayerServerOperation::ResultType>
     {

@@ -21,34 +21,31 @@ public:
     ~PlayFabServiceMock();
 
     // Response body that will be used when the mock is matched. Will be initialized to a default value if one is configured
-    rapidjson::Value& ResponseBody() noexcept;
+    JsonValue& ResponseBody() noexcept;
 
     // "data" field of a successful service responses. Will cause an assertion if the field isn't present (ex. the response
     // represents a service error
-    rapidjson::Value& ResponseBodyPayload() noexcept;
+    JsonValue& ResponseBodyPayload() noexcept;
 
     void SetCallback(Callback callback) noexcept;
 
     // All configured service responses for this mock API. See MockResponses.json for details.
-    rapidjson::Value const& ServiceResponses() const noexcept;
+    JsonValue const& ServiceResponses() const noexcept;
 
     // General PlayFab Service errors
-    static rapidjson::Value const& ServiceErrors() noexcept;
-
-    // Global allocator to use for rapidjson allocations
-    static PlayFab::JsonAllocator& JsonAllocator() noexcept;
+    static JsonValue const& ServiceErrors() noexcept;
 
 private:
     void HttpMockCallback(HttpMock const& mock, std::string url, std::string requestBody, uint32_t hitCount) noexcept;
 
     static std::string GetUrl(const char* apiEndpoint, const char* apiName) noexcept;
-    static rapidjson::Value const& GetServiceResponses(const char* apiName) noexcept;
-    static rapidjson::Document s_serviceResponses;
+    static JsonValue const& GetServiceResponses(const char* apiName) noexcept;
+    static JsonValue s_serviceResponses;
 
     std::mutex m_mutex;
     Callback m_callback;
-    rapidjson::Value const& m_responses;
-    rapidjson::Value m_responseBody;
+    JsonValue const& m_responses;
+    JsonValue m_responseBody;
 };
 
 // Template implementations
@@ -57,9 +54,9 @@ PlayFabServiceMock::PlayFabServiceMock(Wrappers::ServiceConfig<Alloc> const& ser
     HttpMock{ "POST", GetUrl(serviceConfig.APIEndpoint().data(), apiName).data() },
     m_responses{ GetServiceResponses(apiName) }
 {
-    if (m_responses.HasMember("default"))
+    if (m_responses.contains("default"))
     {
-        m_responseBody.CopyFrom(m_responses["default"], JsonAllocator());
+        m_responseBody = m_responses["default"];
     }
 
     HttpMock::SetCallback(std::bind(&PlayFabServiceMock::HttpMockCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));

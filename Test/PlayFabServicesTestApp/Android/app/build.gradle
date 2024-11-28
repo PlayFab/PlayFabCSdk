@@ -70,9 +70,10 @@ android {
 
     // Custom task to copy test json file for test app
     task copyTestFiles(type: Copy) {
+        println("Copying testTitleData.json...")
         from '../../..'
         into 'src/main/assets'
-        include '*.json'
+        include 'testTitleData.json'
     }
 
     // Custom task to copy aar files for test app

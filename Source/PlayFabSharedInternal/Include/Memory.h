@@ -12,6 +12,7 @@ namespace PlayFab
 //------------------------------------------------------------------------------
 PFMemoryHooks& GetMemoryHooks();
 HRESULT SetMemoryHooks(PFMemoryHooks& hooks);
+bool IsUsingCustomMemoryHooks();
 
 //------------------------------------------------------------------------------
 // Raw allocation and free methods
@@ -56,7 +57,7 @@ struct Deleter
 };
 
 //------------------------------------------------------------------------------
-// rapidjson Allocator
+// nlohmann Allocator
 //------------------------------------------------------------------------------
 struct JsonAllocator
 {

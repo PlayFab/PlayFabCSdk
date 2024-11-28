@@ -37,14 +37,11 @@ void HttpMock::SetResponseBody(const char* responseBodyString) const noexcept
     }
 }
 
-void HttpMock::SetResponseBody(const rapidjson::Value& responseBodyJson) const noexcept
+void HttpMock::SetResponseBody(const JsonValue& responseBodyJson) const noexcept
 {
-    if (!responseBodyJson.IsNull())
+    if (!responseBodyJson.is_null())
     {
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-        responseBodyJson.Accept(writer);
-        SetResponseBody(buffer.GetString());
+        SetResponseBody(responseBodyJson.dump());
     }
 }
 

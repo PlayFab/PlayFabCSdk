@@ -590,6 +590,10 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::MaxQueryableVersionsValueNotAllowedForTier: return E_PF_MAX_QUERYABLE_VERSIONS_VALUE_NOT_ALLOWED_FOR_TIER;
     case ServiceErrorCode::StatisticDefinitionHasNullOrEmptyVersionConfiguration: return E_PF_STATISTIC_DEFINITION_HAS_NULL_OR_EMPTY_VERSION_CONFIGURATION;
     case ServiceErrorCode::StatisticColumnLengthMismatch: return E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH;
+    case ServiceErrorCode::InvalidExternalEntityId: return E_PF_INVALID_EXTERNAL_ENTITY_ID;
+    case ServiceErrorCode::UpdatingStatisticsUsingTransactionIdNotAvailableForFreeTier: return E_PF_UPDATING_STATISTICS_USING_TRANSACTION_ID_NOT_AVAILABLE_FOR_FREE_TIER;
+    case ServiceErrorCode::TransactionAlreadyApplied: return E_PF_TRANSACTION_ALREADY_APPLIED;
+    case ServiceErrorCode::ReportDataNotRetrievedSuccessfully: return E_PF_REPORT_DATA_NOT_RETRIEVED_SUCCESSFULLY;
     case ServiceErrorCode::MatchmakingEntityInvalid: return E_PF_MATCHMAKING_ENTITY_INVALID;
     case ServiceErrorCode::MatchmakingPlayerAttributesInvalid: return E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID;
     case ServiceErrorCode::MatchmakingQueueNotFound: return E_PF_MATCHMAKING_QUEUE_NOT_FOUND;
@@ -856,6 +860,8 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::TrueSkillInvalidPlayerId: return E_PF_TRUE_SKILL_INVALID_PLAYER_ID;
     case ServiceErrorCode::TrueSkillInvalidSquadSize: return E_PF_TRUE_SKILL_INVALID_SQUAD_SIZE;
     case ServiceErrorCode::TrueSkillConditionSetNotInModel: return E_PF_TRUE_SKILL_CONDITION_SET_NOT_IN_MODEL;
+    case ServiceErrorCode::TrueSkillModelStateInvalidForOperation: return E_PF_TRUE_SKILL_MODEL_STATE_INVALID_FOR_OPERATION;
+    case ServiceErrorCode::TrueSkillScenarioContainsActiveModel: return E_PF_TRUE_SKILL_SCENARIO_CONTAINS_ACTIVE_MODEL;
     case ServiceErrorCode::GameSaveManifestNotFound: return E_PF_GAME_SAVE_MANIFEST_NOT_FOUND;
     case ServiceErrorCode::GameSaveManifestVersionAlreadyExists: return E_PF_GAME_SAVE_MANIFEST_VERSION_ALREADY_EXISTS;
     case ServiceErrorCode::GameSaveConflictUpdatingManifest: return E_PF_GAME_SAVE_CONFLICT_UPDATING_MANIFEST;
@@ -865,6 +871,10 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::GameSaveUnknownFileInManifest: return E_PF_GAME_SAVE_UNKNOWN_FILE_IN_MANIFEST;
     case ServiceErrorCode::GameSaveFileExceededReportedSize: return E_PF_GAME_SAVE_FILE_EXCEEDED_REPORTED_SIZE;
     case ServiceErrorCode::GameSaveFileNotUploaded: return E_PF_GAME_SAVE_FILE_NOT_UPLOADED;
+    case ServiceErrorCode::GameSaveBadRequest: return E_PF_GAME_SAVE_BAD_REQUEST;
+    case ServiceErrorCode::GameSaveOperationNotAllowed: return E_PF_GAME_SAVE_OPERATION_NOT_ALLOWED;
+    case ServiceErrorCode::GameSaveDataStorageQuotaExceeded: return E_PF_GAME_SAVE_DATA_STORAGE_QUOTA_EXCEEDED;
+    case ServiceErrorCode::GameSaveNewerManifestExists: return E_PF_GAME_SAVE_NEWER_MANIFEST_EXISTS;
     case ServiceErrorCode::StateShareForbidden: return E_PF_STATE_SHARE_FORBIDDEN;
     case ServiceErrorCode::StateShareTitleNotInFlight: return E_PF_STATE_SHARE_TITLE_NOT_IN_FLIGHT;
     case ServiceErrorCode::StateShareStateNotFound: return E_PF_STATE_SHARE_STATE_NOT_FOUND;

@@ -51,23 +51,44 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
 
     titleDataFile.close();
 
-    // Parse JSON string into output TestTitleData.
-    rapidjson::Document titleDataJson;
-    titleDataJson.Parse(data.data());
+    JsonDocument titleDataJson;
+    bool parseError = false;
+    String parseErrorMsg;
 
-    if (titleDataJson.HasParseError())
+    try
+    {
+        if (data.data())
+        {
+            titleDataJson = JsonValue::parse(data.data());
+        }
+        else
+        {
+            parseError = true;
+        }
+    }
+    catch (const JsonValue::parse_error& e)
+    {
+        parseErrorMsg = e.what();
+        parseError = true;
+    }
+
+    if (parseError)
     {
         TraceMessage(HCTraceLevel::Error, "Unable to parse testTitleData.json");
         return E_FAIL;
     }
 
-    testTitleData.titleId = titleDataJson["titleId"].GetString();
-    testTitleData.secretKey = titleDataJson["secretKey"].GetString();
-    testTitleData.connectionString = titleDataJson["connectionString"].GetString();
+    testTitleData.titleId = titleDataJson["titleId"].get<String>();
+    testTitleData.secretKey = titleDataJson["secretKey"].get<String>();
+    testTitleData.connectionString = titleDataJson["connectionString"].get<String>();
+	testTitleData.allowRetries = titleDataJson["allowRetries"].get<bool>();
+	testTitleData.runTestList = titleDataJson["runTestList"].get<bool>();
+    testTitleData.testList = titleDataJson["testList"].get<Set<String>>();
+    testTitleData.retryableHRs = titleDataJson["retryableHRs"].get<Set<String>>();
 
     #if HC_PLATFORM == HC_PLATFORM_WIN32
-    testTitleData.steamAppId = titleDataJson["steamAppId"].GetString();
-    testTitleData.steamPublisherKey = titleDataJson["steamPublisherKey"].GetString();
+    testTitleData.steamAppId = titleDataJson["steamAppId"].get<String>();
+    testTitleData.steamPublisherKey = titleDataJson["steamPublisherKey"].get<String>();
     #endif
 
     return S_OK;

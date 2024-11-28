@@ -17,7 +17,7 @@ private:
     void AddTests() override;
 
     // Test Methods
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
+#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestAuthenticateGameServerWithCustomId(TestContext& testContext);
     void TestDelete(TestContext& testContext);
     void TestGetEntity(TestContext& testContext);

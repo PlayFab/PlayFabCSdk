@@ -15,7 +15,7 @@ JsonValue AbortFileUploadsRequest::ToJson() const
 
 JsonValue AbortFileUploadsRequest::ToJson(const PFDataAbortFileUploadsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "FileNames", input.fileNames, input.fileNamesCount);
@@ -61,7 +61,7 @@ HRESULT AbortFileUploadsResponse::Copy(const PFDataAbortFileUploadsResponse& inp
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
@@ -75,7 +75,7 @@ JsonValue DeleteFilesRequest::ToJson() const
 
 JsonValue DeleteFilesRequest::ToJson(const PFDataDeleteFilesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "FileNames", input.fileNames, input.fileNamesCount);
@@ -121,7 +121,7 @@ HRESULT DeleteFilesResponse::Copy(const PFDataDeleteFilesResponse& input, PFData
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
@@ -135,7 +135,7 @@ JsonValue FinalizeFileUploadsRequest::ToJson() const
 
 JsonValue FinalizeFileUploadsRequest::ToJson(const PFDataFinalizeFileUploadsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "FileNames", input.fileNames, input.fileNamesCount);
@@ -196,17 +196,17 @@ HRESULT GetFileMetadata::Copy(const PFDataGetFileMetadata& input, PFDataGetFileM
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.checksum); 
+        auto propCopyResult = buffer.CopyTo(input.checksum);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.checksum = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.downloadUrl); 
+        auto propCopyResult = buffer.CopyTo(input.downloadUrl);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.downloadUrl = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.fileName); 
+        auto propCopyResult = buffer.CopyTo(input.fileName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.fileName = propCopyResult.ExtractPayload();
     }
@@ -261,7 +261,7 @@ HRESULT FinalizeFileUploadsResponse::Copy(const PFDataFinalizeFileUploadsRespons
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
@@ -280,7 +280,7 @@ JsonValue GetFilesRequest::ToJson() const
 
 JsonValue GetFilesRequest::ToJson(const PFDataGetFilesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -334,7 +334,7 @@ HRESULT GetFilesResponse::Copy(const PFDataGetFilesResponse& input, PFDataGetFil
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
@@ -353,7 +353,7 @@ JsonValue GetObjectsRequest::ToJson() const
 
 JsonValue GetObjectsRequest::ToJson(const PFDataGetObjectsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "EscapeObject", input.escapeObject);
@@ -414,12 +414,12 @@ HRESULT ObjectResult::Copy(const PFDataObjectResult& input, PFDataObjectResult& 
         output.dataObject.stringValue = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.escapedDataObject); 
+        auto propCopyResult = buffer.CopyTo(input.escapedDataObject);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.escapedDataObject = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.objectName); 
+        auto propCopyResult = buffer.CopyTo(input.objectName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.objectName = propCopyResult.ExtractPayload();
     }
@@ -474,7 +474,7 @@ HRESULT GetObjectsResponse::Copy(const PFDataGetObjectsResponse& input, PFDataGe
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
@@ -493,7 +493,7 @@ JsonValue InitiateFileUploadsRequest::ToJson() const
 
 JsonValue InitiateFileUploadsRequest::ToJson(const PFDataInitiateFileUploadsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "FileNames", input.fileNames, input.fileNamesCount);
@@ -542,12 +542,12 @@ HRESULT InitiateFileUploadMetadata::Copy(const PFDataInitiateFileUploadMetadata&
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.fileName); 
+        auto propCopyResult = buffer.CopyTo(input.fileName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.fileName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.uploadUrl); 
+        auto propCopyResult = buffer.CopyTo(input.uploadUrl);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.uploadUrl = propCopyResult.ExtractPayload();
     }
@@ -601,7 +601,7 @@ HRESULT InitiateFileUploadsResponse::Copy(const PFDataInitiateFileUploadsRespons
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
@@ -620,7 +620,7 @@ JsonValue SetObject::ToJson() const
 
 JsonValue SetObject::ToJson(const PFDataSetObject& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "DataObject", input.dataObject);
     JsonUtils::ObjectAddMember(output, "DeleteObject", input.deleteObject);
     JsonUtils::ObjectAddMember(output, "EscapedDataObject", input.escapedDataObject);
@@ -635,7 +635,7 @@ JsonValue SetObjectsRequest::ToJson() const
 
 JsonValue SetObjectsRequest::ToJson(const PFDataSetObjectsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "ExpectedProfileVersion", input.expectedProfileVersion);
@@ -692,17 +692,17 @@ HRESULT SetObjectInfo::Copy(const PFDataSetObjectInfo& input, PFDataSetObjectInf
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.objectName); 
+        auto propCopyResult = buffer.CopyTo(input.objectName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.objectName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.operationReason); 
+        auto propCopyResult = buffer.CopyTo(input.operationReason);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationReason = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.setResult); 
+        auto propCopyResult = buffer.CopyTo(input.setResult);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.setResult = propCopyResult.ExtractPayload();
     }

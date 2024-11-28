@@ -41,7 +41,7 @@ auto read_file(std::string_view path) -> std::string {
     if (not stream) {
         throw std::ios_base::failure("File does not exist");
     }
-    
+
     auto out = std::string();
     auto buf = std::string(read_size, '\0');
     while (stream.read(& buf[0], read_size)) {
@@ -63,25 +63,46 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
      auto fileData = readFileIntoVector();
 
     // Parse JSON string into output TestTitleData.
-    rapidjson::Document titleDataJson;
-    TraceMessage(HCTraceLevel::Verbose, fileData.data());
-    titleDataJson.Parse(fileData.data());
+    JsonValue titleDataJson;
+    bool parseError = false;
+    String parseErrorMsg;
 
-    if (titleDataJson.HasParseError())
+    try
+    {
+        if (fileData.data())
+        {
+            titleDataJson = JsonValue::parse(fileData.data());
+        }
+        else
+        {
+            parseError = true;
+        }
+    }
+    catch (const JsonValue::parse_error& e)
+    {
+        parseErrorMsg = e.what();
+        parseError = true;
+    }
+
+    if (parseError)
     {
         TraceMessage(HCTraceLevel::Error, "Unable to parse testTitleData.json");
         return E_FAIL;
     }
 
-    testTitleData.titleId = titleDataJson["titleId"].GetString();
-    testTitleData.secretKey = titleDataJson["secretKey"].GetString();
-    testTitleData.connectionString = titleDataJson["connectionString"].GetString();
-    
+    testTitleData.titleId = titleDataJson["titleId"].get<String>();
+    testTitleData.secretKey = titleDataJson["secretKey"].get<String>();
+    testTitleData.connectionString = titleDataJson["connectionString"].get<String>();
+    testTitleData.allowRetries = titleDataJson["allowRetries"].get<bool>();
+    testTitleData.runTestList = titleDataJson["runTestList"].get<bool>();
+    testTitleData.testList = titleDataJson["testList"].get<Set<String>>();
+    testTitleData.retryableHRs = titleDataJson["retryableHRs"].get<Set<String>>();
+
 #if HC_PLATFORM == HC_PLATFORM_MAC
-    testTitleData.steamAppId = titleDataJson["steamAppId"].GetString();
-    testTitleData.steamPublisherKey = titleDataJson["steamPublisherKey"].GetString();
+    testTitleData.steamAppId = titleDataJson["steamAppId"].get<String>();
+    testTitleData.steamPublisherKey = titleDataJson["steamPublisherKey"].get<String>();
 #endif
-        
+
     return S_OK;
 }
 
@@ -112,7 +133,7 @@ void WriteLogToFile(const char* line, const char* strFileName)
     //concatenating the path string returned from HOME
     strcat(buffer,"/Documents/");
     strcat(buffer,strFileName);
-    
+
    FILE *file = fopen(buffer, "a"); // "a" for append mode
 
     if (file == NULL) {

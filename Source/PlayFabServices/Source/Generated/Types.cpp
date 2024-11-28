@@ -13,7 +13,7 @@ JsonValue VersionConfiguration::ToJson() const
 
 JsonValue VersionConfiguration::ToJson(const PFVersionConfiguration& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "MaxQueryableVersions", input.maxQueryableVersions);
     JsonUtils::ObjectAddMember(output, "ResetInterval", input.resetInterval);
     return output;

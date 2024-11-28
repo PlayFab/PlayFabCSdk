@@ -79,7 +79,7 @@ private:
     std::shared_ptr<SharedState> m_state;
 };
 
-// Default TaskQueue Work timeout if not terminated/cancelled. 
+// Default TaskQueue Work timeout if not terminated/cancelled.
 // Don't want a number to large so tests don't hang if cancellation/termiantion doesn't work as expected
 static constexpr uint32_t kDefaultWorkTimeout{ 10000 }; // 10 seconds in MS
 
@@ -124,7 +124,7 @@ private:
         {
             m_completionEvent->Set();
         }
-    } 
+    }
 
     void OnCancellation() noexcept override
     {
@@ -301,7 +301,7 @@ public:
         Event completionEvent;
         EventList events;
         RunContext root = RunContext::Root(nullptr);
-     
+
         // Run work and immediately cancel
         CancellableWork::Run(root.Derive(), &completionEvent, events);
         root.CancellationToken().Cancel();
@@ -372,7 +372,7 @@ public:
         auto provider = MakeUnique<TestProvider>(rc.DeriveOnQueue(nullptr), &async, &events, 1000000);
         VERIFY_SUCCEEDED(XAsyncProviderBase::Run(std::move(provider)));
 
-        // Terminate 
+        // Terminate
         rc.Terminate(listener, nullptr);
 
         Assert::IsTrue(listener.TerminationEvent().Wait());
@@ -405,7 +405,7 @@ public:
         HRESULT hr = XAsyncGetStatus(&async, true);
         VERIFY_SUCCEEDED(hr);
 
-        // Terminate 
+        // Terminate
         rc.Terminate(listener, nullptr);
 
         Assert::IsFalse(listener.TerminationEvent().Wait(1000)); // Terminate shouldn't complete because XAsync result is pending

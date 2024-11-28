@@ -151,6 +151,7 @@ PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromNintendo
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromPSNAccountIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromPSNAccountIDs,false,No,Yes,No,Yes,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromPSNOnlineIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromPSNOnlineIDs,false,No,No,No,No,No,No,No,No
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromSteamIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromSteamIDs,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromSteamNamesAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromSteamNames,false,No,No,No,No,No,No,No,No
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromTwitchIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromTwitchIDs,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromXboxLiveIDs,false,Yes,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkAndroidDeviceIDAsync,SessionTicket,Account Management,ClientLinkAndroidDeviceID,false,No,Yes,No,No,Yes,No,No,Yes
@@ -206,6 +207,7 @@ PF Services,AccountManagement,PFAccountManagementServerGetPlayFabIDsFromNintendo
 PF Services,AccountManagement,PFAccountManagementServerGetPlayFabIDsFromPSNAccountIDsAsync,SecretKey,Account Management,ServerGetPlayFabIDsFromPSNAccountIDs,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsAsync,SecretKey,Account Management,ServerGetPlayFabIDsFromPSNOnlineIDs,false,No,No,No,No,No,No,No,No
 PF Services,AccountManagement,PFAccountManagementServerGetPlayFabIDsFromSteamIDsAsync,SecretKey,Account Management,ServerGetPlayFabIDsFromSteamIDs,false,No,Yes,No,No,Yes,No,No,Yes
+PF Services,AccountManagement,PFAccountManagementServerGetPlayFabIDsFromSteamNamesAsync,SecretKey,Account Management,ServerGetPlayFabIDsFromSteamNames,false,No,No,No,No,No,No,No,No
 PF Services,AccountManagement,PFAccountManagementServerGetPlayFabIDsFromTwitchIDsAsync,SecretKey,Account Management,ServerGetPlayFabIDsFromTwitchIDs,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementServerGetPlayFabIDsFromXboxLiveIDsAsync,SecretKey,Account Management,ServerGetPlayFabIDsFromXboxLiveIDs,false,No,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementServerGetServerCustomIDsFromPlayFabIDsAsync,SecretKey,Account Management,ServerGetServerCustomIDsFromPlayFabIDs,false,No,Yes,No,No,Yes,No,No,Yes

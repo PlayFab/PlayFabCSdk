@@ -1167,7 +1167,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
-					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../External/nlohmann/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source",
@@ -1216,7 +1216,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
-					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../External/nlohmann/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source",
@@ -1406,7 +1406,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
-					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../External/nlohmann/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source",
@@ -1456,7 +1456,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
-					"$(SRCROOT)/../../External/rapidjson/include",
+					"$(SRCROOT)/../../External/nlohmann/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Source",

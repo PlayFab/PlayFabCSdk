@@ -22,7 +22,7 @@
 #include <XAsyncProvider.h>
 
 // PlayFabSharedInternal
-#include <RapidJson.h>
+#include <Nlohmann.h>
 #include <ResultMacros.h>
 #include <Memory.h>
 #include <Types.h>

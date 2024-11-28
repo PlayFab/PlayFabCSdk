@@ -60,7 +60,7 @@ set(COMMON_INCLUDE_DIRS
     "${PATH_TO_SOURCE}/PlayFabServices/Include/Generated"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Generated"
-    "${PATH_TO_ROOT}/External/rapidjson/include"
+    "${PATH_TO_ROOT}/External/nlohmann/include"
     "${PATH_TO_LHC}/Include"
 )
 
@@ -68,7 +68,7 @@ set(COMMON_INCLUDE_DIRS
 ### Set up shared lib ###
 #########################
 
-# We'll usually want to build for full, but adding a case here if we want to build just for x84_64 or arm8 
+# We'll usually want to build for full, but adding a case here if we want to build just for x84_64 or arm8
 # TODO: Full flavor should just trigger the other two flavors. Weird that it creates a full directory. Something to look into.
 # IF (EXISTS "${PATH_TO_ROOT}/Out/Android/PlayFabCore.Android/intermediates/cmake/full${CMAKE_BUILD_TYPE}")
 #     add_subdirectory("../PlayFabCore.Android" ${PATH_TO_ROOT}/Out/Android/PlayFabCore.Android/intermediates/cmake/full${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI})

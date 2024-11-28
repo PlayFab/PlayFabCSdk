@@ -9,7 +9,7 @@
 #include <queue>
 #include <chrono>
 #include "Memory.h"
-#include "RapidJson.h"
+#include "Nlohmann.h"
 
 namespace PlayFab
 {
@@ -23,6 +23,10 @@ template<class C, class TRAITS = std::char_traits<C>>
 using BasicStringsteam = std::basic_stringstream<C, TRAITS, Allocator<C>>;
 using Stringstream = BasicStringsteam<char>;
 using WStringstream = BasicStringsteam<wchar_t>;
+
+template<class C, class TRAITS = std::char_traits<C>>
+using BasicStringView = std::basic_string_view<C, TRAITS>;
+using StringRefType = BasicStringView<char>;
 
 template<typename T>
 struct Hash : public std::hash<T>{};
@@ -54,11 +58,8 @@ using Queue = std::queue<T, Deque<T>>;
 template<class T>
 using List = std::list<T, Allocator<T>>;
 
-using JsonDocument = rapidjson::Document;
-using JsonValue = rapidjson::Value;
-
-template<class OutputStream>
-using JsonWriter = rapidjson::Writer<OutputStream, rapidjson::UTF8<>, rapidjson::UTF8<>, JsonAllocator>;
+using JsonDocument = nlohmann::json;
+using JsonValue = nlohmann::json;
 
 using Clock = std::chrono::steady_clock;
 using SystemClock = std::chrono::system_clock;

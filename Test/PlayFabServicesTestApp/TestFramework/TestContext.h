@@ -43,6 +43,8 @@ public:
     String const& TestName() const;
     TestActiveState ActiveState() const;
     TestFinishState FinishState() const;
+    TestFinishState IntermediateState() const;
+    Vector<Result<void>> IntermediateResults() const;
     int64_t StartTime() const;
     int64_t EndTime() const;
     String const& Summary() const;
@@ -96,6 +98,7 @@ private:
     String const m_testName;
     TestActiveState m_activeState{ TestActiveState::PENDING };
     TestFinishState m_finishState{ TestFinishState::PENDING };
+    TestFinishState m_intermediateState{ TestFinishState::PENDING };
     String m_testResultMsg;
     TestFunc m_testFunc;
     int64_t m_startTime;

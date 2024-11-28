@@ -853,6 +853,60 @@ typedef struct PFAccountManagementGetPlayFabIDsFromSteamIDsResult
 } PFAccountManagementGetPlayFabIDsFromSteamIDsResult;
 
 /// <summary>
+/// PFAccountManagementGetPlayFabIDsFromSteamNamesRequest data model.
+/// </summary>
+typedef struct PFAccountManagementGetPlayFabIDsFromSteamNamesRequest
+{
+    /// <summary>
+    /// Array of unique Steam identifiers for which the title needs to get PlayFab identifiers. The array
+    /// cannot exceed 2,000 in length.
+    /// </summary>
+    _Field_size_(steamNamesCount) const char* const* steamNames;
+
+    /// <summary>
+    /// Count of steamNames
+    /// </summary>
+    uint32_t steamNamesCount;
+
+} PFAccountManagementGetPlayFabIDsFromSteamNamesRequest;
+
+/// <summary>
+/// PFAccountManagementSteamNamePlayFabIdPair data model.
+/// </summary>
+typedef struct PFAccountManagementSteamNamePlayFabIdPair
+{
+    /// <summary>
+    /// (Optional) Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the
+    /// Steam identifier.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* playFabId;
+
+    /// <summary>
+    /// (Optional) Unique Steam identifier for a user, also known as Steam persona name.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* steamName;
+
+} PFAccountManagementSteamNamePlayFabIdPair;
+
+/// <summary>
+/// PFAccountManagementGetPlayFabIDsFromSteamNamesResult data model. For Steam identifiers which have
+/// not been linked to PlayFab accounts, or if the user has not logged in recently, null will be returned.
+/// </summary>
+typedef struct PFAccountManagementGetPlayFabIDsFromSteamNamesResult
+{
+    /// <summary>
+    /// (Optional) Mapping of Steam identifiers to PlayFab identifiers.
+    /// </summary>
+    _Maybenull_ _Field_size_(dataCount) PFAccountManagementSteamNamePlayFabIdPair const* const* data;
+
+    /// <summary>
+    /// Count of data
+    /// </summary>
+    uint32_t dataCount;
+
+} PFAccountManagementGetPlayFabIDsFromSteamNamesResult;
+
+/// <summary>
 /// PFAccountManagementGetPlayFabIDsFromTwitchIDsRequest data model.
 /// </summary>
 typedef struct PFAccountManagementGetPlayFabIDsFromTwitchIDsRequest

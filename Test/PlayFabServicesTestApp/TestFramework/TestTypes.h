@@ -25,6 +25,10 @@ struct TestTitleData
     String titleId;
     String secretKey;
     String connectionString;
+    bool allowRetries;
+    bool runTestList;
+    Set<String> testList;
+    Set<String> retryableHRs;
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
     String steamAppId;
     String steamPublisherKey;

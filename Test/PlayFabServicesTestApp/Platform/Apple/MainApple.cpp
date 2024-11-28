@@ -2,7 +2,7 @@
 
 #include "TestAppPch.h"
 #include "playfab/services/PFServices.h"
-#include "RapidJson.h"
+#include "Nlohmann.h"
 #include "TestRunner.h"
 #include "../PlatformUtils.h"
 #include "MainApple.h"
@@ -18,7 +18,7 @@ void WriteLogToFile(const char* line, const char* strFileName)
     //concatenating the path string returned from HOME
     strcat(buffer,"/Documents/");
     strcat(buffer,strFileName);
-    
+
    FILE *file = fopen(buffer, "a"); // "a" for append mode
 
     if (file == NULL) {
@@ -34,21 +34,21 @@ int MainApple()
 {
     PlayFab::Test::TestRunner testRunner;
     THROW_IF_FAILED(testRunner.Initialize());
-        
+
     while (!testRunner.Update())
     {
         PlayFab::Test::Platform::Sleep(10);
     }
-        
+
     bool allTestsPassed = testRunner.Cleanup();
-    
+
     // Logging result in a separate file inside the simulator to make it easier for the pipeline script to assess if the test app run was successful or not
     std::string resultStr = allTestsPassed ? "PASS" : "FAIL";
-    
+
 #if HC_PLATFORM == HC_PLATFORM_IOS
     WriteLogToFile(resultStr.c_str(), "PFTestAppResult.txt");
 #endif
-    
+
     // Return 0 (success) if all tests passed. Otherwise, return 1 (error).
     return allTestsPassed ? 0 : 1;
 }

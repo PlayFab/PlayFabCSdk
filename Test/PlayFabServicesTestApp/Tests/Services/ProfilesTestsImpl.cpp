@@ -86,8 +86,8 @@ void ProfilesTests::TestGetProfiles(TestContext& tc)
         Wrappers::PFProfilesEntityPermissionStatementWrapper<Allocator> statement;
         statement.SetEffect(PFProfilesEffectType::Allow);
         statement.SetAction("Read");
-        JsonDocument principalJson{ rapidjson::kObjectType };
-        principalJson.AddMember("Friend", "true", principalJson.GetAllocator());
+        JsonDocument principalJson{};
+        principalJson.emplace("Friend", "true");
         statement.SetPrincipal(JsonUtils::WriteToString(principalJson));
         Stringstream resource;
         resource << "pfrn:data--*!*/Profile/*";
@@ -136,8 +136,8 @@ void ProfilesTests::TestGetProfiles(TestContext& tc)
         Wrappers::PFProfilesEntityPermissionStatementWrapper<Allocator> statement;
         statement.SetEffect(PFProfilesEffectType::Deny);
         statement.SetAction("Read");
-        JsonDocument principalJson{ rapidjson::kObjectType };
-        principalJson.AddMember("Friend", "true", principalJson.GetAllocator());
+        JsonDocument principalJson{};
+        principalJson.emplace("Friend", "true");
         statement.SetPrincipal(JsonUtils::WriteToString(principalJson));
         Stringstream resource;
         resource << "pfrn:data--*!*/Profile/*";

@@ -15,7 +15,7 @@ JsonValue DeleteSecretRequest::ToJson() const
 
 JsonValue DeleteSecretRequest::ToJson(const PFMultiplayerServerDeleteSecretRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -28,7 +28,7 @@ JsonValue ListBuildAliasesRequest::ToJson() const
 
 JsonValue ListBuildAliasesRequest::ToJson(const PFMultiplayerServerListBuildAliasesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
     JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
@@ -126,12 +126,12 @@ HRESULT BuildAliasDetailsResponse::Copy(const PFMultiplayerServerBuildAliasDetai
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.aliasId); 
+        auto propCopyResult = buffer.CopyTo(input.aliasId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.aliasId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.aliasName); 
+        auto propCopyResult = buffer.CopyTo(input.aliasName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.aliasName = propCopyResult.ExtractPayload();
     }
@@ -192,7 +192,7 @@ HRESULT ListBuildAliasesResponse::Copy(const PFMultiplayerServerListBuildAliases
         output.buildAliases = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.skipToken); 
+        auto propCopyResult = buffer.CopyTo(input.skipToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.skipToken = propCopyResult.ExtractPayload();
     }
@@ -206,7 +206,7 @@ JsonValue ListBuildSummariesRequest::ToJson() const
 
 JsonValue ListBuildSummariesRequest::ToJson(const PFMultiplayerServerListBuildSummariesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
     JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
@@ -330,7 +330,7 @@ HRESULT DynamicStandbySettings::Copy(const PFMultiplayerServerDynamicStandbySett
         output.dynamicFloorMultiplierThresholds = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.rampDownSeconds); 
+        auto propCopyResult = buffer.CopyTo(input.rampDownSeconds);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.rampDownSeconds = propCopyResult.ExtractPayload();
     }
@@ -380,7 +380,7 @@ HRESULT Schedule::Copy(const PFMultiplayerServerSchedule& input, PFMultiplayerSe
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.description); 
+        auto propCopyResult = buffer.CopyTo(input.description);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.description = propCopyResult.ExtractPayload();
     }
@@ -526,37 +526,37 @@ HRESULT BuildRegion::Copy(const PFMultiplayerServerBuildRegion& input, PFMultipl
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<CurrentServerStats>(input.currentServerStats); 
+        auto propCopyResult = buffer.CopyTo<CurrentServerStats>(input.currentServerStats);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.currentServerStats = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<DynamicStandbySettings>(input.dynamicStandbySettings); 
+        auto propCopyResult = buffer.CopyTo<DynamicStandbySettings>(input.dynamicStandbySettings);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.dynamicStandbySettings = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.multiplayerServerCountPerVm); 
+        auto propCopyResult = buffer.CopyTo(input.multiplayerServerCountPerVm);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.multiplayerServerCountPerVm = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.region); 
+        auto propCopyResult = buffer.CopyTo(input.region);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.region = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<ScheduledStandbySettings>(input.scheduledStandbySettings); 
+        auto propCopyResult = buffer.CopyTo<ScheduledStandbySettings>(input.scheduledStandbySettings);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.scheduledStandbySettings = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.status); 
+        auto propCopyResult = buffer.CopyTo(input.status);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.status = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.vmSize); 
+        auto propCopyResult = buffer.CopyTo(input.vmSize);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.vmSize = propCopyResult.ExtractPayload();
     }
@@ -631,17 +631,17 @@ HRESULT BuildSummary::Copy(const PFMultiplayerServerBuildSummary& input, PFMulti
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.buildId); 
+        auto propCopyResult = buffer.CopyTo(input.buildId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.buildId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.buildName); 
+        auto propCopyResult = buffer.CopyTo(input.buildName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.buildName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.creationTime); 
+        auto propCopyResult = buffer.CopyTo(input.creationTime);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.creationTime = propCopyResult.ExtractPayload();
     }
@@ -707,7 +707,7 @@ HRESULT ListBuildSummariesResponse::Copy(const PFMultiplayerServerListBuildSumma
         output.buildSummaries = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.skipToken); 
+        auto propCopyResult = buffer.CopyTo(input.skipToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.skipToken = propCopyResult.ExtractPayload();
     }
@@ -721,7 +721,7 @@ JsonValue ListQosServersForTitleRequest::ToJson() const
 
 JsonValue ListQosServersForTitleRequest::ToJson(const PFMultiplayerServerListQosServersForTitleRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "IncludeAllRegions", input.includeAllRegions);
     JsonUtils::ObjectAddMember(output, "RoutingPreference", input.routingPreference);
@@ -769,12 +769,12 @@ HRESULT QosServer::Copy(const PFMultiplayerServerQosServer& input, PFMultiplayer
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.region); 
+        auto propCopyResult = buffer.CopyTo(input.region);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.region = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.serverUrl); 
+        auto propCopyResult = buffer.CopyTo(input.serverUrl);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.serverUrl = propCopyResult.ExtractPayload();
     }
@@ -830,7 +830,7 @@ HRESULT ListQosServersForTitleResponse::Copy(const PFMultiplayerServerListQosSer
         output.qosServers = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.skipToken); 
+        auto propCopyResult = buffer.CopyTo(input.skipToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.skipToken = propCopyResult.ExtractPayload();
     }
@@ -844,7 +844,7 @@ JsonValue ListSecretSummariesRequest::ToJson() const
 
 JsonValue ListSecretSummariesRequest::ToJson(const PFMultiplayerServerListSecretSummariesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
     JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
@@ -900,17 +900,17 @@ HRESULT SecretSummary::Copy(const PFMultiplayerServerSecretSummary& input, PFMul
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.expirationDate); 
+        auto propCopyResult = buffer.CopyTo(input.expirationDate);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.expirationDate = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.version); 
+        auto propCopyResult = buffer.CopyTo(input.version);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.version = propCopyResult.ExtractPayload();
     }
@@ -966,7 +966,7 @@ HRESULT ListSecretSummariesResponse::Copy(const PFMultiplayerServerListSecretSum
         output.secretSummaries = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.skipToken); 
+        auto propCopyResult = buffer.CopyTo(input.skipToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.skipToken = propCopyResult.ExtractPayload();
     }
@@ -980,7 +980,7 @@ JsonValue BuildAliasParams::ToJson() const
 
 JsonValue BuildAliasParams::ToJson(const PFMultiplayerServerBuildAliasParams& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AliasId", input.aliasId);
     return output;
 }
@@ -992,7 +992,7 @@ JsonValue RequestMultiplayerServerRequest::ToJson() const
 
 JsonValue RequestMultiplayerServerRequest::ToJson(const PFMultiplayerServerRequestMultiplayerServerRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<BuildAliasParams>(output, "BuildAliasParams", input.buildAliasParams);
     JsonUtils::ObjectAddMember(output, "BuildId", input.buildId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -1036,7 +1036,7 @@ HRESULT ConnectedPlayer::Copy(const PFMultiplayerServerConnectedPlayer& input, P
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.playerId); 
+        auto propCopyResult = buffer.CopyTo(input.playerId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.playerId = propCopyResult.ExtractPayload();
     }
@@ -1080,7 +1080,7 @@ HRESULT Port::Copy(const PFMultiplayerServerPort& input, PFMultiplayerServerPort
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
@@ -1136,17 +1136,17 @@ HRESULT PublicIpAddress::Copy(const PFMultiplayerServerPublicIpAddress& input, P
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.fQDN); 
+        auto propCopyResult = buffer.CopyTo(input.fQDN);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.fQDN = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.ipAddress); 
+        auto propCopyResult = buffer.CopyTo(input.ipAddress);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.ipAddress = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.routingType); 
+        auto propCopyResult = buffer.CopyTo(input.routingType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.routingType = propCopyResult.ExtractPayload();
     }
@@ -1277,7 +1277,7 @@ HRESULT RequestMultiplayerServerResponse::Copy(const PFMultiplayerServerRequestM
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.buildId); 
+        auto propCopyResult = buffer.CopyTo(input.buildId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.buildId = propCopyResult.ExtractPayload();
     }
@@ -1287,17 +1287,17 @@ HRESULT RequestMultiplayerServerResponse::Copy(const PFMultiplayerServerRequestM
         output.connectedPlayers = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.fQDN); 
+        auto propCopyResult = buffer.CopyTo(input.fQDN);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.fQDN = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.iPV4Address); 
+        auto propCopyResult = buffer.CopyTo(input.iPV4Address);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.iPV4Address = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.lastStateTransitionTime); 
+        auto propCopyResult = buffer.CopyTo(input.lastStateTransitionTime);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastStateTransitionTime = propCopyResult.ExtractPayload();
     }
@@ -1312,27 +1312,27 @@ HRESULT RequestMultiplayerServerResponse::Copy(const PFMultiplayerServerRequestM
         output.publicIPV4Addresses = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.region); 
+        auto propCopyResult = buffer.CopyTo(input.region);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.region = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.serverId); 
+        auto propCopyResult = buffer.CopyTo(input.serverId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.serverId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.sessionId); 
+        auto propCopyResult = buffer.CopyTo(input.sessionId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.sessionId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.state); 
+        auto propCopyResult = buffer.CopyTo(input.state);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.state = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.vmId); 
+        auto propCopyResult = buffer.CopyTo(input.vmId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.vmId = propCopyResult.ExtractPayload();
     }
@@ -1346,7 +1346,7 @@ JsonValue PartyInvitationConfiguration::ToJson() const
 
 JsonValue PartyInvitationConfiguration::ToJson(const PFMultiplayerServerPartyInvitationConfiguration& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "EntityKeys", input.entityKeys, input.entityKeysCount);
     JsonUtils::ObjectAddMember(output, "Identifier", input.identifier);
     JsonUtils::ObjectAddMember(output, "Revocability", input.revocability);
@@ -1360,7 +1360,7 @@ JsonValue PartyNetworkConfiguration::ToJson() const
 
 JsonValue PartyNetworkConfiguration::ToJson(const PFMultiplayerServerPartyNetworkConfiguration& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "DirectPeerConnectivityOptions", input.directPeerConnectivityOptions);
     JsonUtils::ObjectAddMember(output, "MaxDevices", input.maxDevices);
     JsonUtils::ObjectAddMember(output, "MaxDevicesPerUser", input.maxDevicesPerUser);
@@ -1378,7 +1378,7 @@ JsonValue RequestPartyServiceRequest::ToJson() const
 
 JsonValue RequestPartyServiceRequest::ToJson(const PFMultiplayerServerRequestPartyServiceRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<PartyNetworkConfiguration>(output, "NetworkConfiguration", input.networkConfiguration);
     JsonUtils::ObjectAddMember(output, "PartyId", input.partyId);
@@ -1435,17 +1435,17 @@ HRESULT RequestPartyServiceResponse::Copy(const PFMultiplayerServerRequestPartyS
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.invitationId); 
+        auto propCopyResult = buffer.CopyTo(input.invitationId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.invitationId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.partyId); 
+        auto propCopyResult = buffer.CopyTo(input.partyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.partyId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.serializedNetworkDescriptor); 
+        auto propCopyResult = buffer.CopyTo(input.serializedNetworkDescriptor);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.serializedNetworkDescriptor = propCopyResult.ExtractPayload();
     }
@@ -1459,7 +1459,7 @@ JsonValue Secret::ToJson() const
 
 JsonValue Secret::ToJson(const PFMultiplayerServerSecret& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberTime(output, "ExpirationDate", input.expirationDate);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
@@ -1473,7 +1473,7 @@ JsonValue UploadSecretRequest::ToJson() const
 
 JsonValue UploadSecretRequest::ToJson(const PFMultiplayerServerUploadSecretRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ForceUpdate", input.forceUpdate);
     JsonUtils::ObjectAddMember<Secret>(output, "GameSecret", input.gameSecret);

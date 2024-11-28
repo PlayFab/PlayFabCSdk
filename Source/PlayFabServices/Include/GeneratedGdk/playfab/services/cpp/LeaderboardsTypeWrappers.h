@@ -686,6 +686,11 @@ public:
         this->m_model.columnsCount =  static_cast<uint32_t>(m_columns.size());
     }
 
+    void SetEntryCount(uint32_t value)
+    {
+        this->m_model.entryCount = value;
+    }
+
     void SetRankings(ModelVector<PFLeaderboardsEntityLeaderboardEntryWrapper<Alloc>, Alloc> value)
     {
         m_rankings = std::move(value);

@@ -20,13 +20,12 @@ constexpr time_t kTestTime{ 12345u };
 
 AsyncOp<void> ServerSetTitleData(ServiceConfig serviceConfig, String secretKey, String path, bool cleanup, PlayFab::RunContext rc) noexcept
 {
-    JsonValue requestBody{ rapidjson::kObjectType };
+    JsonValue requestBody= JsonValue::object();;
     JsonUtils::ObjectAddMember(requestBody, "key", kTestKey);
 
     if (cleanup)
     {
-        JsonValue nullVal{ rapidjson::kNullType };
-        JsonUtils::ObjectAddMember(requestBody, "value", nullVal);
+        JsonUtils::ObjectAddMember(requestBody, "value", nullptr);
     }
     else
     {
@@ -59,7 +58,7 @@ AsyncOp<void> InitialAdminAddNews(ServiceConfig serviceConfig, String secretKey,
 {
     const char* path{ "/Admin/AddNews" };
 
-    JsonValue requestBody{ rapidjson::kObjectType };
+    JsonValue requestBody= JsonValue::object();;
     JsonUtils::ObjectAddMember(requestBody, "title", kTestKey);
     JsonUtils::ObjectAddMember(requestBody, "body", kTestVal);
     JsonUtils::ObjectAddMember(requestBody, "timestamp", JsonUtils::ToJsonTime(kTestTime));
@@ -98,7 +97,7 @@ AsyncOp<void> TitleDataManagementTests::Uninitialize()
 
 void TitleDataManagementTests::TestClientGetPublisherData(TestContext& tc)
 {
-    // Docs specify it may take results from SetPublisherData up to a couple of minutes to show in Get requests. 
+    // Docs specify it may take results from SetPublisherData up to a couple of minutes to show in Get requests.
     // Not adding a cleanup step here to ensure consistent results.
     ServerSetTitleData(ServiceConfig(), m_testTitleData.secretKey, "/Server/SetPublisherData", false, RunContext()).Then([&](Result<void> result) -> AsyncOp<ClientGetPublisherDataOperation::ResultType>
     {
@@ -193,7 +192,7 @@ void TitleDataManagementTests::TestClientGetTitleNews(TestContext& tc)
     ClientGetTitleNewsOperation::Run(DefaultTitlePlayer(), {}, RunContext()).Then([&](Result<ClientGetTitleNewsOperation::ResultType> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-    
+
         auto& model = result.Payload().Model();
         if (model.newsCount == 0)
         {
@@ -211,7 +210,7 @@ void TitleDataManagementTests::TestClientGetTitleNews(TestContext& tc)
     .Then([&](Result<ClientGetTitleNewsOperation::ResultType> result) -> Result<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-    
+
         auto& model = result.Payload().Model();
         tc.AssertEqual(1u, model.newsCount, "newsCount");
         tc.AssertEqual(kTestKey, model.news[0]->title, "news[0]->title");
@@ -463,7 +462,7 @@ void TitleDataManagementTests::TestServerSetTitleData(TestContext& tc)
     ServerSetTitleDataOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        
+
         ServerSetTitleDataOperation::RequestType request;
         request.SetKey(kTestKey);
         request.SetValue(kTestNullVal);

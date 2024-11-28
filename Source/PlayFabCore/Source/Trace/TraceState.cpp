@@ -8,7 +8,7 @@
 namespace PlayFab
 {
 
-static constexpr char s_configFile[] = "PlayFabTraceSettings.json";
+// static constexpr char s_configFile[] = "PlayFabTraceSettings.json";
 
 TraceSettings& GetTraceSettings()
 {
@@ -79,7 +79,7 @@ HRESULT AccessTraceState(AccessMode mode, SharedPtr<TraceState>& traceState)
     }
 }
 
-TraceState::TraceState(RunContext&& initContext, RunContext&& traceContext, LocalStorage localStorage) noexcept :
+TraceState::TraceState(RunContext&& /*initContext*/, RunContext&& traceContext, LocalStorage localStorage) noexcept :
     m_runContext{ std::move(traceContext) }
 {
     // Init LibHttpClient Tracing
@@ -92,6 +92,9 @@ TraceState::TraceState(RunContext&& initContext, RunContext&& traceContext, Loca
 #endif
     HCTraceSetClientCallback(TraceCallback);
 
+    // Removing this feature until we more fully flesh out XPlat tracing unification for merged SDK. For now, trace options
+    // are tracing to debugger, ETW (windows only), and client callbacks.
+    
     // Synchronously load trace settings. TraceSettings loaded from file override those configured via API
     // TODO document location, name, and format of TraceSettings file. It should just be a Json serialized
     // version of the TraceSettings struct:
@@ -105,14 +108,34 @@ TraceState::TraceState(RunContext&& initContext, RunContext&& traceContext, Loca
 
     TraceSettings& settings = GetTraceSettings();
 
+    /*
     Result<Vector<uint8_t>> readResult = localStorage.Read(s_configFile, initContext).Wait();
     if (SUCCEEDED(readResult.hr))
     {
         auto fileData{ readResult.ExtractPayload() };
 
-        JsonDocument fileJson{ &JsonUtils::allocator, JsonUtils::kDefaultStackCapacity, &JsonUtils::allocator };
-        fileJson.Parse(reinterpret_cast<char*>(fileData.data()), fileData.size());
-        if (!fileJson.HasParseError())
+        JsonDocument fileJson;
+        bool parseError = false;
+        String parseErrorMsg;
+
+        try
+        {
+            if (fileData.data())
+            {
+                fileJson = JsonValue::parse(fileData.data());
+            }
+            else
+            {
+                parseError = true;
+            }
+        }
+        catch (const JsonValue::parse_error& e)
+        {
+            parseErrorMsg = e.what();
+            parseError = true;
+        }
+
+        if (!parseError)
         {
             JsonUtils::ObjectGetMember(fileJson, "enableTraceToFile", settings.enableTraceToFile);
             JsonUtils::ObjectGetMember(fileJson, "traceToDebugger", settings.traceToDebugger);
@@ -123,6 +146,7 @@ TraceState::TraceState(RunContext&& initContext, RunContext&& traceContext, Loca
             }
         }
     }
+    */
 
     // Add appropriate TraceOutputs based on TraceSettings and Platform
     if (settings.enableTraceToFile)
@@ -220,7 +244,7 @@ HRESULT CALLBACK TraceState::CleanupAsyncProvider(XAsyncOp op, XAsyncProviderDat
             return E_PENDING;
         }
 
-        // Give TraceOutputs a chance to finish naturally before terminating RunContext. Terminating RunContext immediately may lead to 
+        // Give TraceOutputs a chance to finish naturally before terminating RunContext. Terminating RunContext immediately may lead to
         // lost trace messages in some cases
         for (auto& output : context->traceState->m_outputs)
         {
@@ -286,12 +310,12 @@ String FormatString(_In_z_ _Printf_format_string_ const char* format, ...)
 
     Vector<char> buffer(1 + std::vsnprintf(NULL, 0, format, args1));
     va_end(args1);
-    
+
     std::vsnprintf(buffer.data(), buffer.size(), format, args2);
     va_end(args2);
-    
+
     String strBuffer(buffer.data(), buffer.size());
-    
+
     return strBuffer;
 }
 
@@ -309,13 +333,7 @@ void CALLBACK TraceState::TraceCallback(
     {
         return;
     }
-    
-    TraceSettings& settings = GetTraceSettings();
-    if (settings.traceCallback)
-    {
-        settings.traceCallback(areaName, level, threadId, timestamp, message);
-    }
-    
+
     if (state->m_outputs.empty())
     {
         // Early out if we have no outputs
@@ -344,7 +362,7 @@ void CALLBACK TraceState::TraceCallback(
 #else
     localtime_r(&timeTInSec, &fmtTime);
 #endif
-    
+
     String formattedMessage = FormatString("[%04llX][%s][%02d:%02d:%02d.%03u][%s] %s\r\n",
         threadId,
         traceLevelNames[static_cast<size_t>(level)],
@@ -355,7 +373,7 @@ void CALLBACK TraceState::TraceCallback(
         areaName,
         message
         );
-    
+
     auto& outputs = state->m_outputs;
     for (auto& output : outputs)
     {

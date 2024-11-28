@@ -15,7 +15,7 @@ JsonValue GetEntityProfileRequest::ToJson() const
 
 JsonValue GetEntityProfileRequest::ToJson(const PFProfilesGetEntityProfileRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DataAsObject", input.dataAsObject);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -67,12 +67,12 @@ HRESULT EntityProfileFileMetadata::Copy(const PFProfilesEntityProfileFileMetadat
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.checksum); 
+        auto propCopyResult = buffer.CopyTo(input.checksum);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.checksum = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.fileName); 
+        auto propCopyResult = buffer.CopyTo(input.fileName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.fileName = propCopyResult.ExtractPayload();
     }
@@ -133,12 +133,12 @@ HRESULT EntityDataObject::Copy(const PFProfilesEntityDataObject& input, PFProfil
         output.dataObject.stringValue = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.escapedDataObject); 
+        auto propCopyResult = buffer.CopyTo(input.escapedDataObject);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.escapedDataObject = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.objectName); 
+        auto propCopyResult = buffer.CopyTo(input.objectName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.objectName = propCopyResult.ExtractPayload();
     }
@@ -152,7 +152,7 @@ JsonValue EntityPermissionStatement::ToJson() const
 
 JsonValue EntityPermissionStatement::ToJson(const PFProfilesEntityPermissionStatement& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Action", input.action);
     JsonUtils::ObjectAddMember(output, "Comment", input.comment);
     JsonUtils::ObjectAddMember(output, "Condition", input.condition);
@@ -229,12 +229,12 @@ HRESULT EntityPermissionStatement::Copy(const PFProfilesEntityPermissionStatemen
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.action); 
+        auto propCopyResult = buffer.CopyTo(input.action);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.action = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.comment); 
+        auto propCopyResult = buffer.CopyTo(input.comment);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.comment = propCopyResult.ExtractPayload();
     }
@@ -249,7 +249,7 @@ HRESULT EntityPermissionStatement::Copy(const PFProfilesEntityPermissionStatemen
         output.principal.stringValue = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.resource); 
+        auto propCopyResult = buffer.CopyTo(input.resource);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.resource = propCopyResult.ExtractPayload();
     }
@@ -308,12 +308,12 @@ HRESULT EntityStatisticValue::Copy(const PFEntityStatisticValue& input, PFEntity
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.metadata); 
+        auto propCopyResult = buffer.CopyTo(input.metadata);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.metadata = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
@@ -456,22 +456,22 @@ HRESULT EntityProfileBody::Copy(const PFProfilesEntityProfileBody& input, PFProf
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.avatarUrl); 
+        auto propCopyResult = buffer.CopyTo(input.avatarUrl);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.avatarUrl = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.displayName); 
+        auto propCopyResult = buffer.CopyTo(input.displayName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.displayName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.entityChain); 
+        auto propCopyResult = buffer.CopyTo(input.entityChain);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entityChain = propCopyResult.ExtractPayload();
     }
@@ -486,12 +486,12 @@ HRESULT EntityProfileBody::Copy(const PFProfilesEntityProfileBody& input, PFProf
         output.files = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.language); 
+        auto propCopyResult = buffer.CopyTo(input.language);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.language = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityLineage>(input.lineage); 
+        auto propCopyResult = buffer.CopyTo<EntityLineage>(input.lineage);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lineage = propCopyResult.ExtractPayload();
     }
@@ -549,7 +549,7 @@ HRESULT GetEntityProfileResponse::Copy(const PFProfilesGetEntityProfileResponse&
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<EntityProfileBody>(input.profile); 
+        auto propCopyResult = buffer.CopyTo<EntityProfileBody>(input.profile);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.profile = propCopyResult.ExtractPayload();
     }
@@ -563,7 +563,7 @@ JsonValue GetEntityProfilesRequest::ToJson() const
 
 JsonValue GetEntityProfilesRequest::ToJson(const PFProfilesGetEntityProfilesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DataAsObject", input.dataAsObject);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Entities", input.entities, input.entitiesCount);
@@ -618,7 +618,7 @@ JsonValue GetTitlePlayersFromMasterPlayerAccountIdsRequest::ToJson() const
 
 JsonValue GetTitlePlayersFromMasterPlayerAccountIdsRequest::ToJson(const PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray(output, "MasterPlayerAccountIds", input.masterPlayerAccountIds, input.masterPlayerAccountIdsCount);
     JsonUtils::ObjectAddMember(output, "TitleId", input.titleId);
@@ -668,7 +668,7 @@ HRESULT GetTitlePlayersFromMasterPlayerAccountIdsResponse::Copy(const PFProfiles
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.titleId); 
+        auto propCopyResult = buffer.CopyTo(input.titleId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.titleId = propCopyResult.ExtractPayload();
     }
@@ -687,7 +687,7 @@ JsonValue SetProfileLanguageRequest::ToJson() const
 
 JsonValue SetProfileLanguageRequest::ToJson(const PFProfilesSetProfileLanguageRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "ExpectedVersion", input.expectedVersion);
@@ -736,12 +736,12 @@ HRESULT SetProfileLanguageResponse::Copy(const PFProfilesSetProfileLanguageRespo
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.operationResult); 
+        auto propCopyResult = buffer.CopyTo(input.operationResult);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.operationResult = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.versionNumber); 
+        auto propCopyResult = buffer.CopyTo(input.versionNumber);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.versionNumber = propCopyResult.ExtractPayload();
     }
@@ -755,7 +755,7 @@ JsonValue SetEntityProfilePolicyRequest::ToJson() const
 
 JsonValue SetEntityProfilePolicyRequest::ToJson(const PFProfilesSetEntityProfilePolicyRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<EntityPermissionStatement>(output, "Statements", input.statements, input.statementsCount);

@@ -15,7 +15,7 @@ JsonValue LinkedStatisticColumn::ToJson() const
 
 JsonValue LinkedStatisticColumn::ToJson(const PFLeaderboardsLinkedStatisticColumn& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "LinkedStatisticColumnName", input.linkedStatisticColumnName);
     JsonUtils::ObjectAddMember(output, "LinkedStatisticName", input.linkedStatisticName);
     return output;
@@ -62,12 +62,12 @@ HRESULT LinkedStatisticColumn::Copy(const PFLeaderboardsLinkedStatisticColumn& i
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.linkedStatisticColumnName); 
+        auto propCopyResult = buffer.CopyTo(input.linkedStatisticColumnName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.linkedStatisticColumnName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.linkedStatisticName); 
+        auto propCopyResult = buffer.CopyTo(input.linkedStatisticName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.linkedStatisticName = propCopyResult.ExtractPayload();
     }
@@ -81,7 +81,7 @@ JsonValue LeaderboardColumn::ToJson() const
 
 JsonValue LeaderboardColumn::ToJson(const PFLeaderboardsLeaderboardColumn& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<LinkedStatisticColumn>(output, "LinkedStatisticColumn", input.linkedStatisticColumn);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "SortDirection", input.sortDirection);
@@ -134,12 +134,12 @@ HRESULT LeaderboardColumn::Copy(const PFLeaderboardsLeaderboardColumn& input, PF
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<LinkedStatisticColumn>(input.linkedStatisticColumn); 
+        auto propCopyResult = buffer.CopyTo<LinkedStatisticColumn>(input.linkedStatisticColumn);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.linkedStatisticColumn = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
@@ -153,7 +153,7 @@ JsonValue CreateLeaderboardDefinitionRequest::ToJson() const
 
 JsonValue CreateLeaderboardDefinitionRequest::ToJson(const PFLeaderboardsCreateLeaderboardDefinitionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<LeaderboardColumn>(output, "Columns", input.columns, input.columnsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "EntityType", input.entityType);
@@ -170,7 +170,7 @@ JsonValue DeleteLeaderboardDefinitionRequest::ToJson() const
 
 JsonValue DeleteLeaderboardDefinitionRequest::ToJson(const PFLeaderboardsDeleteLeaderboardDefinitionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -183,7 +183,7 @@ JsonValue DeleteLeaderboardEntriesRequest::ToJson() const
 
 JsonValue DeleteLeaderboardEntriesRequest::ToJson(const PFLeaderboardsDeleteLeaderboardEntriesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray(output, "EntityIds", input.entityIds, input.entityIdsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
@@ -197,7 +197,7 @@ JsonValue GetFriendLeaderboardForEntityRequest::ToJson() const
 
 JsonValue GetFriendLeaderboardForEntityRequest::ToJson(const PFLeaderboardsGetFriendLeaderboardForEntityRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "ExternalFriendSources", JsonUtils::ToJson(input.externalFriendSources));
@@ -272,17 +272,17 @@ HRESULT EntityLeaderboardEntry::Copy(const PFLeaderboardsEntityLeaderboardEntry&
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.displayName); 
+        auto propCopyResult = buffer.CopyTo(input.displayName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.displayName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.entity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.metadata); 
+        auto propCopyResult = buffer.CopyTo(input.metadata);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.metadata = propCopyResult.ExtractPayload();
     }
@@ -299,6 +299,8 @@ HRESULT GetEntityLeaderboardResponse::FromJson(const JsonValue& input)
     ModelVector<LeaderboardColumn> columns{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember<LeaderboardColumn>(input, "Columns", columns));
     this->SetColumns(std::move(columns));
+
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EntryCount", this->m_model.entryCount));
 
     ModelVector<EntityLeaderboardEntry> rankings{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember<EntityLeaderboardEntry>(input, "Rankings", rankings));
@@ -358,7 +360,7 @@ JsonValue GetEntityLeaderboardRequest::ToJson() const
 
 JsonValue GetEntityLeaderboardRequest::ToJson(const PFLeaderboardsGetEntityLeaderboardRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "LeaderboardName", input.leaderboardName);
     JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
@@ -374,7 +376,7 @@ JsonValue GetLeaderboardAroundEntityRequest::ToJson() const
 
 JsonValue GetLeaderboardAroundEntityRequest::ToJson(const PFLeaderboardsGetLeaderboardAroundEntityRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "LeaderboardName", input.leaderboardName);
@@ -390,7 +392,7 @@ JsonValue GetLeaderboardDefinitionRequest::ToJson() const
 
 JsonValue GetLeaderboardDefinitionRequest::ToJson(const PFLeaderboardsGetLeaderboardDefinitionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -473,22 +475,22 @@ HRESULT GetLeaderboardDefinitionResponse::Copy(const PFLeaderboardsGetLeaderboar
         output.columns = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.entityType); 
+        auto propCopyResult = buffer.CopyTo(input.entityType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entityType = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.lastResetTime); 
+        auto propCopyResult = buffer.CopyTo(input.lastResetTime);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastResetTime = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<VersionConfiguration>(input.versionConfiguration); 
+        auto propCopyResult = buffer.CopyTo<VersionConfiguration>(input.versionConfiguration);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.versionConfiguration = propCopyResult.ExtractPayload();
     }
@@ -502,7 +504,7 @@ JsonValue GetLeaderboardForEntitiesRequest::ToJson() const
 
 JsonValue GetLeaderboardForEntitiesRequest::ToJson(const PFLeaderboardsGetLeaderboardForEntitiesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray(output, "EntityIds", input.entityIds, input.entityIdsCount);
     JsonUtils::ObjectAddMember(output, "LeaderboardName", input.leaderboardName);
@@ -517,7 +519,7 @@ JsonValue IncrementLeaderboardVersionRequest::ToJson() const
 
 JsonValue IncrementLeaderboardVersionRequest::ToJson(const PFLeaderboardsIncrementLeaderboardVersionRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -560,7 +562,7 @@ JsonValue ListLeaderboardDefinitionsRequest::ToJson() const
 
 JsonValue ListLeaderboardDefinitionsRequest::ToJson(const PFLeaderboardsListLeaderboardDefinitionsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
@@ -642,22 +644,22 @@ HRESULT LeaderboardDefinition::Copy(const PFLeaderboardsLeaderboardDefinition& i
         output.columns = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.entityType); 
+        auto propCopyResult = buffer.CopyTo(input.entityType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entityType = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.lastResetTime); 
+        auto propCopyResult = buffer.CopyTo(input.lastResetTime);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastResetTime = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<VersionConfiguration>(input.versionConfiguration); 
+        auto propCopyResult = buffer.CopyTo<VersionConfiguration>(input.versionConfiguration);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.versionConfiguration = propCopyResult.ExtractPayload();
     }
@@ -712,7 +714,7 @@ JsonValue UnlinkLeaderboardFromStatisticRequest::ToJson() const
 
 JsonValue UnlinkLeaderboardFromStatisticRequest::ToJson(const PFLeaderboardsUnlinkLeaderboardFromStatisticRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "StatisticName", input.statisticName);
@@ -726,7 +728,7 @@ JsonValue LeaderboardEntryUpdate::ToJson() const
 
 JsonValue LeaderboardEntryUpdate::ToJson(const PFLeaderboardsLeaderboardEntryUpdate& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "EntityId", input.entityId);
     JsonUtils::ObjectAddMember(output, "Metadata", input.metadata);
     JsonUtils::ObjectAddMemberArray(output, "Scores", input.scores, input.scoresCount);
@@ -740,7 +742,7 @@ JsonValue UpdateLeaderboardEntriesRequest::ToJson() const
 
 JsonValue UpdateLeaderboardEntriesRequest::ToJson(const PFLeaderboardsUpdateLeaderboardEntriesRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<LeaderboardEntryUpdate>(output, "Entries", input.entries, input.entriesCount);
     JsonUtils::ObjectAddMember(output, "LeaderboardName", input.leaderboardName);
@@ -761,7 +763,7 @@ JsonValue ToJson(PFExternalFriendSources const* input)
         Stringstream ss;
         if (*input == PFExternalFriendSources::None)
         {
-            return JsonValue{ EnumName(PFExternalFriendSources::None), JsonUtils::allocator };
+            return JsonValue{ EnumName(PFExternalFriendSources::None) };
         }
         if ((*input & PFExternalFriendSources::Steam) == PFExternalFriendSources::Steam)
         {
@@ -788,11 +790,11 @@ JsonValue ToJson(PFExternalFriendSources const* input)
             ss << separator << EnumName(PFExternalFriendSources::All);
             separator = ",";
         }
-        return JsonValue{ ss.str().data(), JsonUtils::allocator };
+        return JsonValue{ ss.str().data() };
     }
     else
     {
-        return JsonValue{ rapidjson::kNullType };
+        return JsonValue{};
     }
 }
 

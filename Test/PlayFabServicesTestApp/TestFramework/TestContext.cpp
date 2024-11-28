@@ -33,6 +33,16 @@ TestFinishState TestContext::FinishState() const
     return m_finishState;
 }
 
+TestFinishState TestContext::IntermediateState() const
+{
+    return m_intermediateState;
+}
+
+Vector<Result<void>> TestContext::IntermediateResults() const
+{
+    return m_intermediateResults;
+}
+
 int64_t TestContext::StartTime() const
 {
     return m_startTime;
@@ -88,7 +98,7 @@ void TestContext::AssertTrue(bool statement, const char* errorMessage)
             RecordFlakyResult(std::move(result));
 		}
         else
-        { 
+        {
             throw Exception{ errorMessage };
         }
     }
@@ -167,6 +177,7 @@ void TestContext::EndTest(TestFinishState state, String resultMsg) noexcept
         {
             m_testResultMsg += "\n: " + resultMsg;
         }
+        m_intermediateState = m_finishState;
         m_finishState = TestFinishState::FAILED;
     }
 }

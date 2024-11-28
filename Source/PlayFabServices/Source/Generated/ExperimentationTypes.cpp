@@ -15,7 +15,7 @@ JsonValue GetTreatmentAssignmentRequest::ToJson() const
 
 JsonValue GetTreatmentAssignmentRequest::ToJson(const PFExperimentationGetTreatmentAssignmentRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -57,7 +57,7 @@ HRESULT GetTreatmentAssignmentResult::Copy(const PFExperimentationGetTreatmentAs
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<TreatmentAssignment>(input.treatmentAssignment); 
+        auto propCopyResult = buffer.CopyTo<TreatmentAssignment>(input.treatmentAssignment);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.treatmentAssignment = propCopyResult.ExtractPayload();
     }

@@ -15,7 +15,7 @@ JsonValue CatalogAlternateId::ToJson() const
 
 JsonValue CatalogAlternateId::ToJson(const PFCatalogCatalogAlternateId& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;
@@ -62,12 +62,12 @@ HRESULT CatalogAlternateId::Copy(const PFCatalogCatalogAlternateId& input, PFCat
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.type); 
+        auto propCopyResult = buffer.CopyTo(input.type);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.type = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.value); 
+        auto propCopyResult = buffer.CopyTo(input.value);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.value = propCopyResult.ExtractPayload();
     }
@@ -81,7 +81,7 @@ JsonValue Content::ToJson() const
 
 JsonValue Content::ToJson(const PFCatalogContent& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "MaxClientVersion", input.maxClientVersion);
     JsonUtils::ObjectAddMember(output, "MinClientVersion", input.minClientVersion);
@@ -165,17 +165,17 @@ HRESULT Content::Copy(const PFCatalogContent& input, PFCatalogContent& output, M
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.id); 
+        auto propCopyResult = buffer.CopyTo(input.id);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.id = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.maxClientVersion); 
+        auto propCopyResult = buffer.CopyTo(input.maxClientVersion);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.maxClientVersion = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.minClientVersion); 
+        auto propCopyResult = buffer.CopyTo(input.minClientVersion);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.minClientVersion = propCopyResult.ExtractPayload();
     }
@@ -185,12 +185,12 @@ HRESULT Content::Copy(const PFCatalogContent& input, PFCatalogContent& output, M
         output.tags = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.type); 
+        auto propCopyResult = buffer.CopyTo(input.type);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.type = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.url); 
+        auto propCopyResult = buffer.CopyTo(input.url);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.url = propCopyResult.ExtractPayload();
     }
@@ -204,7 +204,7 @@ JsonValue DeepLink::ToJson() const
 
 JsonValue DeepLink::ToJson(const PFCatalogDeepLink& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Platform", input.platform);
     JsonUtils::ObjectAddMember(output, "Url", input.url);
     return output;
@@ -251,12 +251,12 @@ HRESULT DeepLink::Copy(const PFCatalogDeepLink& input, PFCatalogDeepLink& output
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.platform); 
+        auto propCopyResult = buffer.CopyTo(input.platform);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platform = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.url); 
+        auto propCopyResult = buffer.CopyTo(input.url);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.url = propCopyResult.ExtractPayload();
     }
@@ -270,7 +270,7 @@ JsonValue Image::ToJson() const
 
 JsonValue Image::ToJson(const PFCatalogImage& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "Tag", input.tag);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
@@ -335,22 +335,22 @@ HRESULT Image::Copy(const PFCatalogImage& input, PFCatalogImage& output, ModelBu
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.id); 
+        auto propCopyResult = buffer.CopyTo(input.id);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.id = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.tag); 
+        auto propCopyResult = buffer.CopyTo(input.tag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.tag = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.type); 
+        auto propCopyResult = buffer.CopyTo(input.type);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.type = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.url); 
+        auto propCopyResult = buffer.CopyTo(input.url);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.url = propCopyResult.ExtractPayload();
     }
@@ -364,7 +364,7 @@ JsonValue CatalogPriceAmount::ToJson() const
 
 JsonValue CatalogPriceAmount::ToJson(const PFCatalogCatalogPriceAmount& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "ItemId", input.itemId);
     return output;
@@ -405,7 +405,7 @@ HRESULT CatalogPriceAmount::Copy(const PFCatalogCatalogPriceAmount& input, PFCat
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.itemId); 
+        auto propCopyResult = buffer.CopyTo(input.itemId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemId = propCopyResult.ExtractPayload();
     }
@@ -419,7 +419,7 @@ JsonValue CatalogPrice::ToJson() const
 
 JsonValue CatalogPrice::ToJson(const PFCatalogCatalogPrice& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<CatalogPriceAmount>(output, "Amounts", input.amounts, input.amountsCount);
     JsonUtils::ObjectAddMember(output, "UnitAmount", input.unitAmount);
     JsonUtils::ObjectAddMember(output, "UnitDurationInSeconds", input.unitDurationInSeconds);
@@ -481,12 +481,12 @@ HRESULT CatalogPrice::Copy(const PFCatalogCatalogPrice& input, PFCatalogCatalogP
         output.amounts = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.unitAmount); 
+        auto propCopyResult = buffer.CopyTo(input.unitAmount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.unitAmount = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.unitDurationInSeconds); 
+        auto propCopyResult = buffer.CopyTo(input.unitDurationInSeconds);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.unitDurationInSeconds = propCopyResult.ExtractPayload();
     }
@@ -500,7 +500,7 @@ JsonValue CatalogPriceOptions::ToJson() const
 
 JsonValue CatalogPriceOptions::ToJson(const PFCatalogCatalogPriceOptions& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<CatalogPrice>(output, "Prices", input.prices, input.pricesCount);
     return output;
 }
@@ -553,7 +553,7 @@ JsonValue CatalogItemReference::ToJson() const
 
 JsonValue CatalogItemReference::ToJson(const PFCatalogCatalogItemReference& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember<CatalogPriceOptions>(output, "PriceOptions", input.priceOptions);
@@ -612,17 +612,17 @@ HRESULT CatalogItemReference::Copy(const PFCatalogCatalogItemReference& input, P
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.amount); 
+        auto propCopyResult = buffer.CopyTo(input.amount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.amount = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.id); 
+        auto propCopyResult = buffer.CopyTo(input.id);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.id = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<CatalogPriceOptions>(input.priceOptions); 
+        auto propCopyResult = buffer.CopyTo<CatalogPriceOptions>(input.priceOptions);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.priceOptions = propCopyResult.ExtractPayload();
     }
@@ -636,7 +636,7 @@ JsonValue KeywordSet::ToJson() const
 
 JsonValue KeywordSet::ToJson(const PFCatalogKeywordSet& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray(output, "Values", input.values, input.valuesCount);
     return output;
 }
@@ -689,7 +689,7 @@ JsonValue ModerationState::ToJson() const
 
 JsonValue ModerationState::ToJson(const PFCatalogModerationState& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberTime(output, "LastModifiedDate", input.lastModifiedDate);
     JsonUtils::ObjectAddMember(output, "Reason", input.reason);
     JsonUtils::ObjectAddMember(output, "Status", input.status);
@@ -745,17 +745,17 @@ HRESULT ModerationState::Copy(const PFCatalogModerationState& input, PFCatalogMo
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.lastModifiedDate); 
+        auto propCopyResult = buffer.CopyTo(input.lastModifiedDate);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastModifiedDate = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.reason); 
+        auto propCopyResult = buffer.CopyTo(input.reason);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.reason = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.status); 
+        auto propCopyResult = buffer.CopyTo(input.status);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.status = propCopyResult.ExtractPayload();
     }
@@ -769,7 +769,7 @@ JsonValue Rating::ToJson() const
 
 JsonValue Rating::ToJson(const PFCatalogRating& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Average", input.average);
     JsonUtils::ObjectAddMember(output, "Count1Star", input.count1Star);
     JsonUtils::ObjectAddMember(output, "Count2Star", input.count2Star);
@@ -861,37 +861,37 @@ HRESULT Rating::Copy(const PFCatalogRating& input, PFCatalogRating& output, Mode
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.average); 
+        auto propCopyResult = buffer.CopyTo(input.average);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.average = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.count1Star); 
+        auto propCopyResult = buffer.CopyTo(input.count1Star);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.count1Star = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.count2Star); 
+        auto propCopyResult = buffer.CopyTo(input.count2Star);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.count2Star = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.count3Star); 
+        auto propCopyResult = buffer.CopyTo(input.count3Star);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.count3Star = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.count4Star); 
+        auto propCopyResult = buffer.CopyTo(input.count4Star);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.count4Star = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.count5Star); 
+        auto propCopyResult = buffer.CopyTo(input.count5Star);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.count5Star = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.totalCount); 
+        auto propCopyResult = buffer.CopyTo(input.totalCount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.totalCount = propCopyResult.ExtractPayload();
     }
@@ -905,7 +905,7 @@ JsonValue FilterOptions::ToJson() const
 
 JsonValue FilterOptions::ToJson(const PFCatalogFilterOptions& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Filter", input.filter);
     JsonUtils::ObjectAddMember(output, "IncludeAllItems", input.includeAllItems);
     return output;
@@ -952,12 +952,12 @@ HRESULT FilterOptions::Copy(const PFCatalogFilterOptions& input, PFCatalogFilter
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.filter); 
+        auto propCopyResult = buffer.CopyTo(input.filter);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.filter = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.includeAllItems); 
+        auto propCopyResult = buffer.CopyTo(input.includeAllItems);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.includeAllItems = propCopyResult.ExtractPayload();
     }
@@ -971,7 +971,7 @@ JsonValue Permissions::ToJson() const
 
 JsonValue Permissions::ToJson(const PFCatalogPermissions& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray(output, "SegmentIds", input.segmentIds, input.segmentIdsCount);
     return output;
 }
@@ -1024,7 +1024,7 @@ JsonValue CatalogPriceAmountOverride::ToJson() const
 
 JsonValue CatalogPriceAmountOverride::ToJson(const PFCatalogCatalogPriceAmountOverride& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "FixedValue", input.fixedValue);
     JsonUtils::ObjectAddMember(output, "ItemId", input.itemId);
     JsonUtils::ObjectAddMember(output, "Multiplier", input.multiplier);
@@ -1080,17 +1080,17 @@ HRESULT CatalogPriceAmountOverride::Copy(const PFCatalogCatalogPriceAmountOverri
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.fixedValue); 
+        auto propCopyResult = buffer.CopyTo(input.fixedValue);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.fixedValue = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemId); 
+        auto propCopyResult = buffer.CopyTo(input.itemId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.multiplier); 
+        auto propCopyResult = buffer.CopyTo(input.multiplier);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.multiplier = propCopyResult.ExtractPayload();
     }
@@ -1104,7 +1104,7 @@ JsonValue CatalogPriceOverride::ToJson() const
 
 JsonValue CatalogPriceOverride::ToJson(const PFCatalogCatalogPriceOverride& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<CatalogPriceAmountOverride>(output, "Amounts", input.amounts, input.amountsCount);
     return output;
 }
@@ -1157,7 +1157,7 @@ JsonValue CatalogPriceOptionsOverride::ToJson() const
 
 JsonValue CatalogPriceOptionsOverride::ToJson(const PFCatalogCatalogPriceOptionsOverride& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<CatalogPriceOverride>(output, "Prices", input.prices, input.pricesCount);
     return output;
 }
@@ -1210,7 +1210,7 @@ JsonValue StoreDetails::ToJson() const
 
 JsonValue StoreDetails::ToJson(const PFCatalogStoreDetails& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<FilterOptions>(output, "FilterOptions", input.filterOptions);
     JsonUtils::ObjectAddMember<Permissions>(output, "Permissions", input.permissions);
     JsonUtils::ObjectAddMember<CatalogPriceOptionsOverride>(output, "PriceOptionsOverride", input.priceOptionsOverride);
@@ -1275,17 +1275,17 @@ HRESULT StoreDetails::Copy(const PFCatalogStoreDetails& input, PFCatalogStoreDet
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<FilterOptions>(input.filterOptions); 
+        auto propCopyResult = buffer.CopyTo<FilterOptions>(input.filterOptions);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.filterOptions = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<Permissions>(input.permissions); 
+        auto propCopyResult = buffer.CopyTo<Permissions>(input.permissions);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.permissions = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<CatalogPriceOptionsOverride>(input.priceOptionsOverride); 
+        auto propCopyResult = buffer.CopyTo<CatalogPriceOptionsOverride>(input.priceOptionsOverride);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.priceOptionsOverride = propCopyResult.ExtractPayload();
     }
@@ -1299,7 +1299,7 @@ JsonValue CatalogItem::ToJson() const
 
 JsonValue CatalogItem::ToJson(const PFCatalogCatalogItem& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<CatalogAlternateId>(output, "AlternateIds", input.alternateIds, input.alternateIdsCount);
     JsonUtils::ObjectAddMemberArray<Content>(output, "Contents", input.contents, input.contentsCount);
     JsonUtils::ObjectAddMember(output, "ContentType", input.contentType);
@@ -1609,17 +1609,17 @@ HRESULT CatalogItem::Copy(const PFCatalogCatalogItem& input, PFCatalogCatalogIte
         output.contents = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.contentType); 
+        auto propCopyResult = buffer.CopyTo(input.contentType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.contentType = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.creationDate); 
+        auto propCopyResult = buffer.CopyTo(input.creationDate);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.creationDate = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.creatorEntity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.creatorEntity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.creatorEntity = propCopyResult.ExtractPayload();
     }
@@ -1629,7 +1629,7 @@ HRESULT CatalogItem::Copy(const PFCatalogCatalogItem& input, PFCatalogCatalogIte
         output.deepLinks = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.defaultStackId); 
+        auto propCopyResult = buffer.CopyTo(input.defaultStackId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.defaultStackId = propCopyResult.ExtractPayload();
     }
@@ -1644,22 +1644,22 @@ HRESULT CatalogItem::Copy(const PFCatalogCatalogItem& input, PFCatalogCatalogIte
         output.displayProperties.stringValue = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.displayVersion); 
+        auto propCopyResult = buffer.CopyTo(input.displayVersion);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.displayVersion = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.endDate); 
+        auto propCopyResult = buffer.CopyTo(input.endDate);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.endDate = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.eTag); 
+        auto propCopyResult = buffer.CopyTo(input.eTag);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.eTag = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.id); 
+        auto propCopyResult = buffer.CopyTo(input.id);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.id = propCopyResult.ExtractPayload();
     }
@@ -1669,7 +1669,7 @@ HRESULT CatalogItem::Copy(const PFCatalogCatalogItem& input, PFCatalogCatalogIte
         output.images = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.isHidden); 
+        auto propCopyResult = buffer.CopyTo(input.isHidden);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.isHidden = propCopyResult.ExtractPayload();
     }
@@ -1684,12 +1684,12 @@ HRESULT CatalogItem::Copy(const PFCatalogCatalogItem& input, PFCatalogCatalogIte
         output.keywords = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.lastModifiedDate); 
+        auto propCopyResult = buffer.CopyTo(input.lastModifiedDate);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastModifiedDate = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<ModerationState>(input.moderation); 
+        auto propCopyResult = buffer.CopyTo<ModerationState>(input.moderation);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.moderation = propCopyResult.ExtractPayload();
     }
@@ -1699,22 +1699,22 @@ HRESULT CatalogItem::Copy(const PFCatalogCatalogItem& input, PFCatalogCatalogIte
         output.platforms = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<CatalogPriceOptions>(input.priceOptions); 
+        auto propCopyResult = buffer.CopyTo<CatalogPriceOptions>(input.priceOptions);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.priceOptions = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<Rating>(input.rating); 
+        auto propCopyResult = buffer.CopyTo<Rating>(input.rating);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.rating = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.startDate); 
+        auto propCopyResult = buffer.CopyTo(input.startDate);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.startDate = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<StoreDetails>(input.storeDetails); 
+        auto propCopyResult = buffer.CopyTo<StoreDetails>(input.storeDetails);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.storeDetails = propCopyResult.ExtractPayload();
     }
@@ -1729,7 +1729,7 @@ HRESULT CatalogItem::Copy(const PFCatalogCatalogItem& input, PFCatalogCatalogIte
         output.title = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.type); 
+        auto propCopyResult = buffer.CopyTo(input.type);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.type = propCopyResult.ExtractPayload();
     }
@@ -1743,7 +1743,7 @@ JsonValue CreateDraftItemRequest::ToJson() const
 
 JsonValue CreateDraftItemRequest::ToJson(const PFCatalogCreateDraftItemRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<CatalogItem>(output, "Item", input.item);
     JsonUtils::ObjectAddMember(output, "Publish", input.publish);
@@ -1786,7 +1786,7 @@ HRESULT CreateDraftItemResponse::Copy(const PFCatalogCreateDraftItemResponse& in
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<CatalogItem>(input.item); 
+        auto propCopyResult = buffer.CopyTo<CatalogItem>(input.item);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.item = propCopyResult.ExtractPayload();
     }
@@ -1800,7 +1800,7 @@ JsonValue UploadInfo::ToJson() const
 
 JsonValue UploadInfo::ToJson(const PFCatalogUploadInfo& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "FileName", input.fileName);
     return output;
 }
@@ -1812,7 +1812,7 @@ JsonValue CreateUploadUrlsRequest::ToJson() const
 
 JsonValue CreateUploadUrlsRequest::ToJson(const PFCatalogCreateUploadUrlsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<UploadInfo>(output, "Files", input.files, input.filesCount);
     return output;
@@ -1867,17 +1867,17 @@ HRESULT UploadUrlMetadata::Copy(const PFCatalogUploadUrlMetadata& input, PFCatal
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.fileName); 
+        auto propCopyResult = buffer.CopyTo(input.fileName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.fileName = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.id); 
+        auto propCopyResult = buffer.CopyTo(input.id);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.id = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.url); 
+        auto propCopyResult = buffer.CopyTo(input.url);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.url = propCopyResult.ExtractPayload();
     }
@@ -1932,7 +1932,7 @@ JsonValue DeleteEntityItemReviewsRequest::ToJson() const
 
 JsonValue DeleteEntityItemReviewsRequest::ToJson(const PFCatalogDeleteEntityItemReviewsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -1945,7 +1945,7 @@ JsonValue DeleteItemRequest::ToJson() const
 
 JsonValue DeleteItemRequest::ToJson(const PFCatalogDeleteItemRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -1960,7 +1960,7 @@ JsonValue GetCatalogConfigRequest::ToJson() const
 
 JsonValue GetCatalogConfigRequest::ToJson(const PFCatalogGetCatalogConfigRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
@@ -1972,7 +1972,7 @@ JsonValue CatalogSpecificConfig::ToJson() const
 
 JsonValue CatalogSpecificConfig::ToJson(const PFCatalogCatalogSpecificConfig& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray(output, "ContentTypes", input.contentTypes, input.contentTypesCount);
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
     return output;
@@ -2040,7 +2040,7 @@ JsonValue DeepLinkFormat::ToJson() const
 
 JsonValue DeepLinkFormat::ToJson(const PFCatalogDeepLinkFormat& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Format", input.format);
     JsonUtils::ObjectAddMember(output, "Platform", input.platform);
     return output;
@@ -2087,12 +2087,12 @@ HRESULT DeepLinkFormat::Copy(const PFCatalogDeepLinkFormat& input, PFCatalogDeep
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.format); 
+        auto propCopyResult = buffer.CopyTo(input.format);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.format = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.platform); 
+        auto propCopyResult = buffer.CopyTo(input.platform);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.platform = propCopyResult.ExtractPayload();
     }
@@ -2106,7 +2106,7 @@ JsonValue DisplayPropertyIndexInfo::ToJson() const
 
 JsonValue DisplayPropertyIndexInfo::ToJson(const PFCatalogDisplayPropertyIndexInfo& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     return output;
@@ -2153,12 +2153,12 @@ HRESULT DisplayPropertyIndexInfo::Copy(const PFCatalogDisplayPropertyIndexInfo& 
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.type); 
+        auto propCopyResult = buffer.CopyTo(input.type);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.type = propCopyResult.ExtractPayload();
     }
@@ -2172,7 +2172,7 @@ JsonValue FileConfig::ToJson() const
 
 JsonValue FileConfig::ToJson(const PFCatalogFileConfig& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray(output, "ContentTypes", input.contentTypes, input.contentTypesCount);
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
     return output;
@@ -2240,7 +2240,7 @@ JsonValue ImageConfig::ToJson() const
 
 JsonValue ImageConfig::ToJson(const PFCatalogImageConfig& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
     return output;
 }
@@ -2293,7 +2293,7 @@ JsonValue CategoryRatingConfig::ToJson() const
 
 JsonValue CategoryRatingConfig::ToJson(const PFCatalogCategoryRatingConfig& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
 }
@@ -2331,7 +2331,7 @@ HRESULT CategoryRatingConfig::Copy(const PFCatalogCategoryRatingConfig& input, P
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.name); 
+        auto propCopyResult = buffer.CopyTo(input.name);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.name = propCopyResult.ExtractPayload();
     }
@@ -2345,7 +2345,7 @@ JsonValue ReviewConfig::ToJson() const
 
 JsonValue ReviewConfig::ToJson(const PFCatalogReviewConfig& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<CategoryRatingConfig>(output, "CategoryRatings", input.categoryRatings, input.categoryRatingsCount);
     return output;
 }
@@ -2398,7 +2398,7 @@ JsonValue UserGeneratedContentSpecificConfig::ToJson() const
 
 JsonValue UserGeneratedContentSpecificConfig::ToJson(const PFCatalogUserGeneratedContentSpecificConfig& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray(output, "ContentTypes", input.contentTypes, input.contentTypesCount);
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
     return output;
@@ -2466,7 +2466,7 @@ JsonValue CatalogConfig::ToJson() const
 
 JsonValue CatalogConfig::ToJson(const PFCatalogCatalogConfig& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "AdminEntities", input.adminEntities, input.adminEntitiesCount);
     JsonUtils::ObjectAddMember<CatalogSpecificConfig>(output, "Catalog", input.catalog);
     JsonUtils::ObjectAddMemberArray<DeepLinkFormat>(output, "DeepLinkFormats", input.deepLinkFormats, input.deepLinkFormatsCount);
@@ -2613,7 +2613,7 @@ HRESULT CatalogConfig::Copy(const PFCatalogCatalogConfig& input, PFCatalogCatalo
         output.adminEntities = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<CatalogSpecificConfig>(input.catalog); 
+        auto propCopyResult = buffer.CopyTo<CatalogSpecificConfig>(input.catalog);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.catalog = propCopyResult.ExtractPayload();
     }
@@ -2628,12 +2628,12 @@ HRESULT CatalogConfig::Copy(const PFCatalogCatalogConfig& input, PFCatalogCatalo
         output.displayPropertyIndexInfos = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<FileConfig>(input.file); 
+        auto propCopyResult = buffer.CopyTo<FileConfig>(input.file);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.file = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<ImageConfig>(input.image); 
+        auto propCopyResult = buffer.CopyTo<ImageConfig>(input.image);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.image = propCopyResult.ExtractPayload();
     }
@@ -2643,7 +2643,7 @@ HRESULT CatalogConfig::Copy(const PFCatalogCatalogConfig& input, PFCatalogCatalo
         output.platforms = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<ReviewConfig>(input.review); 
+        auto propCopyResult = buffer.CopyTo<ReviewConfig>(input.review);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.review = propCopyResult.ExtractPayload();
     }
@@ -2653,7 +2653,7 @@ HRESULT CatalogConfig::Copy(const PFCatalogCatalogConfig& input, PFCatalogCatalo
         output.reviewerEntities = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<UserGeneratedContentSpecificConfig>(input.userGeneratedContent); 
+        auto propCopyResult = buffer.CopyTo<UserGeneratedContentSpecificConfig>(input.userGeneratedContent);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.userGeneratedContent = propCopyResult.ExtractPayload();
     }
@@ -2696,7 +2696,7 @@ HRESULT GetCatalogConfigResponse::Copy(const PFCatalogGetCatalogConfigResponse& 
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<CatalogConfig>(input.config); 
+        auto propCopyResult = buffer.CopyTo<CatalogConfig>(input.config);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.config = propCopyResult.ExtractPayload();
     }
@@ -2710,7 +2710,7 @@ JsonValue GetDraftItemRequest::ToJson() const
 
 JsonValue GetDraftItemRequest::ToJson(const PFCatalogGetDraftItemRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2754,7 +2754,7 @@ HRESULT GetDraftItemResponse::Copy(const PFCatalogGetDraftItemResponse& input, P
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<CatalogItem>(input.item); 
+        auto propCopyResult = buffer.CopyTo<CatalogItem>(input.item);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.item = propCopyResult.ExtractPayload();
     }
@@ -2768,7 +2768,7 @@ JsonValue GetDraftItemsRequest::ToJson() const
 
 JsonValue GetDraftItemsRequest::ToJson(const PFCatalogGetDraftItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<CatalogAlternateId>(output, "AlternateIds", input.alternateIds, input.alternateIdsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2818,7 +2818,7 @@ HRESULT GetDraftItemsResponse::Copy(const PFCatalogGetDraftItemsResponse& input,
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.continuationToken); 
+        auto propCopyResult = buffer.CopyTo(input.continuationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continuationToken = propCopyResult.ExtractPayload();
     }
@@ -2837,7 +2837,7 @@ JsonValue GetEntityDraftItemsRequest::ToJson() const
 
 JsonValue GetEntityDraftItemsRequest::ToJson(const PFCatalogGetEntityDraftItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -2888,7 +2888,7 @@ HRESULT GetEntityDraftItemsResponse::Copy(const PFCatalogGetEntityDraftItemsResp
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.continuationToken); 
+        auto propCopyResult = buffer.CopyTo(input.continuationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continuationToken = propCopyResult.ExtractPayload();
     }
@@ -2907,7 +2907,7 @@ JsonValue GetEntityItemReviewRequest::ToJson() const
 
 JsonValue GetEntityItemReviewRequest::ToJson(const PFCatalogGetEntityItemReviewRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2922,7 +2922,7 @@ JsonValue Review::ToJson() const
 
 JsonValue Review::ToJson(const PFCatalogReview& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CategoryRatings", input.categoryRatings, input.categoryRatingsCount);
     JsonUtils::ObjectAddMember(output, "HelpfulNegative", input.helpfulNegative);
     JsonUtils::ObjectAddMember(output, "HelpfulPositive", input.helpfulPositive);
@@ -3056,42 +3056,42 @@ HRESULT Review::Copy(const PFCatalogReview& input, PFCatalogReview& output, Mode
         output.categoryRatings = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemId); 
+        auto propCopyResult = buffer.CopyTo(input.itemId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.itemVersion); 
+        auto propCopyResult = buffer.CopyTo(input.itemVersion);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.itemVersion = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.locale); 
+        auto propCopyResult = buffer.CopyTo(input.locale);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.locale = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<EntityKey>(input.reviewerEntity); 
+        auto propCopyResult = buffer.CopyTo<EntityKey>(input.reviewerEntity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.reviewerEntity = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.reviewerId); 
+        auto propCopyResult = buffer.CopyTo(input.reviewerId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.reviewerId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.reviewId); 
+        auto propCopyResult = buffer.CopyTo(input.reviewId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.reviewId = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.reviewText); 
+        auto propCopyResult = buffer.CopyTo(input.reviewText);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.reviewText = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.title); 
+        auto propCopyResult = buffer.CopyTo(input.title);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.title = propCopyResult.ExtractPayload();
     }
@@ -3134,7 +3134,7 @@ HRESULT GetEntityItemReviewResponse::Copy(const PFCatalogGetEntityItemReviewResp
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<Review>(input.review); 
+        auto propCopyResult = buffer.CopyTo<Review>(input.review);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.review = propCopyResult.ExtractPayload();
     }
@@ -3148,7 +3148,7 @@ JsonValue GetItemRequest::ToJson() const
 
 JsonValue GetItemRequest::ToJson(const PFCatalogGetItemRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3192,7 +3192,7 @@ HRESULT GetItemResponse::Copy(const PFCatalogGetItemResponse& input, PFCatalogGe
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<CatalogItem>(input.item); 
+        auto propCopyResult = buffer.CopyTo<CatalogItem>(input.item);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.item = propCopyResult.ExtractPayload();
     }
@@ -3206,7 +3206,7 @@ JsonValue GetItemContainersRequest::ToJson() const
 
 JsonValue GetItemContainersRequest::ToJson(const PFCatalogGetItemContainersRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
@@ -3263,7 +3263,7 @@ HRESULT GetItemContainersResponse::Copy(const PFCatalogGetItemContainersResponse
         output.containers = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.continuationToken); 
+        auto propCopyResult = buffer.CopyTo(input.continuationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continuationToken = propCopyResult.ExtractPayload();
     }
@@ -3277,7 +3277,7 @@ JsonValue GetItemModerationStateRequest::ToJson() const
 
 JsonValue GetItemModerationStateRequest::ToJson(const PFCatalogGetItemModerationStateRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
@@ -3320,7 +3320,7 @@ HRESULT GetItemModerationStateResponse::Copy(const PFCatalogGetItemModerationSta
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<ModerationState>(input.state); 
+        auto propCopyResult = buffer.CopyTo<ModerationState>(input.state);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.state = propCopyResult.ExtractPayload();
     }
@@ -3334,7 +3334,7 @@ JsonValue GetItemPublishStatusRequest::ToJson() const
 
 JsonValue GetItemPublishStatusRequest::ToJson(const PFCatalogGetItemPublishStatusRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3383,12 +3383,12 @@ HRESULT GetItemPublishStatusResponse::Copy(const PFCatalogGetItemPublishStatusRe
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.result); 
+        auto propCopyResult = buffer.CopyTo(input.result);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.result = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo(input.statusMessage); 
+        auto propCopyResult = buffer.CopyTo(input.statusMessage);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.statusMessage = propCopyResult.ExtractPayload();
     }
@@ -3402,7 +3402,7 @@ JsonValue GetItemReviewsRequest::ToJson() const
 
 JsonValue GetItemReviewsRequest::ToJson(const PFCatalogGetItemReviewsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
@@ -3454,7 +3454,7 @@ HRESULT GetItemReviewsResponse::Copy(const PFCatalogGetItemReviewsResponse& inpu
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.continuationToken); 
+        auto propCopyResult = buffer.CopyTo(input.continuationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continuationToken = propCopyResult.ExtractPayload();
     }
@@ -3473,7 +3473,7 @@ JsonValue GetItemReviewSummaryRequest::ToJson() const
 
 JsonValue GetItemReviewSummaryRequest::ToJson(const PFCatalogGetItemReviewSummaryRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
@@ -3540,17 +3540,17 @@ HRESULT GetItemReviewSummaryResponse::Copy(const PFCatalogGetItemReviewSummaryRe
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<Review>(input.leastFavorableReview); 
+        auto propCopyResult = buffer.CopyTo<Review>(input.leastFavorableReview);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.leastFavorableReview = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<Review>(input.mostFavorableReview); 
+        auto propCopyResult = buffer.CopyTo<Review>(input.mostFavorableReview);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.mostFavorableReview = propCopyResult.ExtractPayload();
     }
     {
-        auto propCopyResult = buffer.CopyTo<Rating>(input.rating); 
+        auto propCopyResult = buffer.CopyTo<Rating>(input.rating);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.rating = propCopyResult.ExtractPayload();
     }
@@ -3564,7 +3564,7 @@ JsonValue GetItemsRequest::ToJson() const
 
 JsonValue GetItemsRequest::ToJson(const PFCatalogGetItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<CatalogAlternateId>(output, "AlternateIds", input.alternateIds, input.alternateIdsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3620,7 +3620,7 @@ JsonValue PublishDraftItemRequest::ToJson() const
 
 JsonValue PublishDraftItemRequest::ToJson(const PFCatalogPublishDraftItemRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3636,7 +3636,7 @@ JsonValue ReportItemRequest::ToJson() const
 
 JsonValue ReportItemRequest::ToJson(const PFCatalogReportItemRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ConcernCategory", input.concernCategory);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -3653,7 +3653,7 @@ JsonValue ReportItemReviewRequest::ToJson() const
 
 JsonValue ReportItemReviewRequest::ToJson(const PFCatalogReportItemReviewRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ConcernCategory", input.concernCategory);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -3671,7 +3671,7 @@ JsonValue ReviewItemRequest::ToJson() const
 
 JsonValue ReviewItemRequest::ToJson(const PFCatalogReviewItemRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3687,7 +3687,7 @@ JsonValue StoreReference::ToJson() const
 
 JsonValue StoreReference::ToJson(const PFCatalogStoreReference& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     return output;
@@ -3700,7 +3700,7 @@ JsonValue SearchItemsRequest::ToJson() const
 
 JsonValue SearchItemsRequest::ToJson(const PFCatalogSearchItemsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -3756,7 +3756,7 @@ HRESULT SearchItemsResponse::Copy(const PFCatalogSearchItemsResponse& input, PFC
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo(input.continuationToken); 
+        auto propCopyResult = buffer.CopyTo(input.continuationToken);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.continuationToken = propCopyResult.ExtractPayload();
     }
@@ -3775,7 +3775,7 @@ JsonValue SetItemModerationStateRequest::ToJson() const
 
 JsonValue SetItemModerationStateRequest::ToJson(const PFCatalogSetItemModerationStateRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
@@ -3791,7 +3791,7 @@ JsonValue SubmitItemReviewVoteRequest::ToJson() const
 
 JsonValue SubmitItemReviewVoteRequest::ToJson(const PFCatalogSubmitItemReviewVoteRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3808,7 +3808,7 @@ JsonValue ReviewTakedown::ToJson() const
 
 JsonValue ReviewTakedown::ToJson(const PFCatalogReviewTakedown& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ItemId", input.itemId);
     JsonUtils::ObjectAddMember(output, "ReviewId", input.reviewId);
@@ -3822,7 +3822,7 @@ JsonValue TakedownItemReviewsRequest::ToJson() const
 
 JsonValue TakedownItemReviewsRequest::ToJson(const PFCatalogTakedownItemReviewsRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<ReviewTakedown>(output, "Reviews", input.reviews, input.reviewsCount);
     return output;
@@ -3835,7 +3835,7 @@ JsonValue UpdateCatalogConfigRequest::ToJson() const
 
 JsonValue UpdateCatalogConfigRequest::ToJson(const PFCatalogUpdateCatalogConfigRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember<CatalogConfig>(output, "Config", input.config);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
@@ -3848,7 +3848,7 @@ JsonValue UpdateDraftItemRequest::ToJson() const
 
 JsonValue UpdateDraftItemRequest::ToJson(const PFCatalogUpdateDraftItemRequest& input)
 {
-    JsonValue output{ rapidjson::kObjectType };
+    JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<CatalogItem>(output, "Item", input.item);
     JsonUtils::ObjectAddMember(output, "Publish", input.publish);
@@ -3891,7 +3891,7 @@ HRESULT UpdateDraftItemResponse::Copy(const PFCatalogUpdateDraftItemResponse& in
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyTo<CatalogItem>(input.item); 
+        auto propCopyResult = buffer.CopyTo<CatalogItem>(input.item);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.item = propCopyResult.ExtractPayload();
     }

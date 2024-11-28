@@ -38,8 +38,9 @@ String MemoryManager::Summary()
     return ss.str();
 }
 
-void* STDAPIVCALLTYPE MemoryManager::AllocHook(size_t size)
+void* STDAPIVCALLTYPE MemoryManager::AllocHook(size_t size, uint32_t memoryTypeId)
 {
+    UNREFERENCED_PARAMETER(memoryTypeId);
     auto& memoryManager = MemoryManager::Instance();
 
     std::unique_lock<std::mutex> lock{ memoryManager.m_mutex };
@@ -49,8 +50,9 @@ void* STDAPIVCALLTYPE MemoryManager::AllocHook(size_t size)
     return ptr;
 }
 
-void STDAPIVCALLTYPE MemoryManager::FreeHook(void* pointer)
+void STDAPIVCALLTYPE MemoryManager::FreeHook(void* pointer, uint32_t memoryTypeId)
 {
+    UNREFERENCED_PARAMETER(memoryTypeId);
     auto& memoryManager = MemoryManager::Instance();
 
     std::unique_lock<std::mutex> lock{ memoryManager.m_mutex };

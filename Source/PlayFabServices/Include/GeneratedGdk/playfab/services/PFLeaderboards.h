@@ -14,7 +14,7 @@ extern "C"
 {
 
 /// <summary>
-/// Get the friend leaderboard for the specified entity. A maximum of 100 friend entries are listed in
+/// Get the friend leaderboard for the specified entity. A maximum of 25 friend entries are listed in
 /// the leaderboard.
 /// </summary>
 /// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
@@ -38,8 +38,11 @@ PF_API PFLeaderboardsGetFriendLeaderboardForEntityAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_TITLE,
-/// E_PF_INVALID_ENTITY_TYPE, E_PF_LEADERBOARD_NOT_FOUND, E_PF_NO_LEADERBOARD_FOR_STATISTIC, E_PF_STATISTIC_NOT_FOUND
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
+/// E_PF_API_NOT_ENABLED_FOR_TITLE, E_PF_DOWNSTREAM_SERVICE_UNAVAILABLE, E_PF_EXPIRED_XBOX_LIVE_TOKEN,
+/// E_PF_FACEBOOK_API_ERROR, E_PF_INVALID_ENTITY_TYPE, E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME,
+/// E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_LEADERBOARD_NOT_FOUND, E_PF_NO_LEADERBOARD_FOR_STATISTIC, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_STATISTIC_NOT_FOUND, E_PF_XBOX_INACCESSIBLE, E_PF_XBOX_SERVICE_TOO_MANY_REQUESTS, E_PF_XBOX_XASS_EXCHANGE_FAILURE
 /// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
 /// on error handling.
 /// </returns>
@@ -57,8 +60,11 @@ PF_API PFLeaderboardsGetFriendLeaderboardForEntityGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_TITLE,
-/// E_PF_INVALID_ENTITY_TYPE, E_PF_LEADERBOARD_NOT_FOUND, E_PF_NO_LEADERBOARD_FOR_STATISTIC, E_PF_STATISTIC_NOT_FOUND
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
+/// E_PF_API_NOT_ENABLED_FOR_TITLE, E_PF_DOWNSTREAM_SERVICE_UNAVAILABLE, E_PF_EXPIRED_XBOX_LIVE_TOKEN,
+/// E_PF_FACEBOOK_API_ERROR, E_PF_INVALID_ENTITY_TYPE, E_PF_INVALID_SIGNATURE, E_PF_INVALID_SIGNATURE_TIME,
+/// E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_LEADERBOARD_NOT_FOUND, E_PF_NO_LEADERBOARD_FOR_STATISTIC, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_STATISTIC_NOT_FOUND, E_PF_XBOX_INACCESSIBLE, E_PF_XBOX_SERVICE_TOO_MANY_REQUESTS, E_PF_XBOX_XASS_EXCHANGE_FAILURE
 /// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
 /// on error handling.
 /// </returns>
