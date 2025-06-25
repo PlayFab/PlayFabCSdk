@@ -214,6 +214,24 @@ private:
 };
 #endif
 
+#if 0
+class UpdateLeaderboardDefinitionOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper<Allocator>;
+
+    UpdateLeaderboardDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class UpdateLeaderboardEntriesOperation : public XAsyncOperation<void>
 {

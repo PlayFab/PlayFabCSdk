@@ -385,6 +385,39 @@ AsyncOp<void> LeaderboardsAPI::UnlinkLeaderboardFromStatistic(
     });
 }
 
+AsyncOp<void> LeaderboardsAPI::UpdateLeaderboardDefinition(
+    Entity const& entity,
+    const UpdateLeaderboardDefinitionRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Leaderboard/UpdateLeaderboardDefinition" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::LeaderboardsUpdateLeaderboardDefinition,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<void> LeaderboardsAPI::UpdateLeaderboardEntries(
     Entity const& entity,
     const UpdateLeaderboardEntriesRequest& request,

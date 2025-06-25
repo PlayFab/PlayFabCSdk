@@ -439,6 +439,11 @@ typedef struct PFSegmentsPlayerProfile
     _Maybenull_ time_t const* created;
 
     /// <summary>
+    /// (Optional) Dictionary of player's custom properties.
+    /// </summary>
+    PFJsonObject customProperties;
+
+    /// <summary>
     /// (Optional) Player Display Name.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* displayName;

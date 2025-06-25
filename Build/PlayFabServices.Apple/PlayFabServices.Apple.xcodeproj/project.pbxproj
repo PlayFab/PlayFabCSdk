@@ -97,6 +97,22 @@
 		D8DD6560D620FF613635A8A6 /* PFPlatformSpecific.h in Headers */ = {isa = PBXBuildFile; fileRef = 105056200E672F77497AF76B /* PFPlatformSpecific.h */; };
 		3995F0043FEAE87A11841745 /* PFPlatformSpecific.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34E902FBB635A45AAA0D0FA5 /* PFPlatformSpecific.cpp */; };
 		BB260A4A98105A125399069C /* PFPlatformSpecific.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34E902FBB635A45AAA0D0FA5 /* PFPlatformSpecific.cpp */; };
+		B96D24A0C1DCFF03BBE8EB96 /* PFPlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 065F9125E7C1F9E8D39166F9 /* PFPlayerDataManagementTypes.h */; };
+		C9DF521F08DD253BE4DAF0CD /* PFPlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 065F9125E7C1F9E8D39166F9 /* PFPlayerDataManagementTypes.h */; };
+		CDE62F99C21211CE70E85EF2 /* PlayerDataManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B79ACA275FC9891FD9C0FFE /* PlayerDataManagementTypeWrappers.h */; };
+		34E89A34A09E56C1B6D41955 /* PlayerDataManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B79ACA275FC9891FD9C0FFE /* PlayerDataManagementTypeWrappers.h */; };
+		0BBA2D31C71F5549FB3B07A0 /* PlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D26054C1F278A7FCAE74A4B /* PlayerDataManagementTypes.h */; };
+		920FD196DF9880F033897D5C /* PlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D26054C1F278A7FCAE74A4B /* PlayerDataManagementTypes.h */; };
+		FD78A55D1494214D313D107B /* PlayerDataManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0633C7C79282979C0E8E306 /* PlayerDataManagementTypes.cpp */; };
+		710758C5ACB6C8282D5BB527 /* PlayerDataManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0633C7C79282979C0E8E306 /* PlayerDataManagementTypes.cpp */; };
+		6FF47A7920D5760C6F969B2A /* PlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF880D399AA25845F6A58C7 /* PlayerDataManagement.h */; };
+		530F1586566C2CE8508BBA15 /* PlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF880D399AA25845F6A58C7 /* PlayerDataManagement.h */; };
+		67A9C965E48C2D4900FE84AB /* PlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDDA8958151C1A4D97D811F0 /* PlayerDataManagement.cpp */; };
+		981466019ED40D26C10ED811 /* PlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDDA8958151C1A4D97D811F0 /* PlayerDataManagement.cpp */; };
+		4FB89501E19795671678212B /* PFPlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 454D78B8F4B96CD11F0FA9FE /* PFPlayerDataManagement.h */; };
+		3491E9E0045C0D02C96932DB /* PFPlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 454D78B8F4B96CD11F0FA9FE /* PFPlayerDataManagement.h */; };
+		EDA33061C07C68C4BC9715EB /* PFPlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE00274D5C8F83C8B3CC8277 /* PFPlayerDataManagement.cpp */; };
+		08D5F25468B6309E772E68E0 /* PFPlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE00274D5C8F83C8B3CC8277 /* PFPlayerDataManagement.cpp */; };
 		E5F96736AF77C54E3FD5A583 /* PFCloudScriptTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 6C4574048C51F079FF11C292 /* PFCloudScriptTypes.h */; };
 		851E029C85766510489C7CF1 /* PFCloudScriptTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 6C4574048C51F079FF11C292 /* PFCloudScriptTypes.h */; };
 		4CD6FC37C9A8B5DCA5EA5038 /* CloudScriptTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = AAEC03E16D33C9C3025262F2 /* CloudScriptTypeWrappers.h */; };
@@ -145,22 +161,6 @@
 		8791610EF039C7D0F7D7FB55 /* PFTitleDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 76F5438B94ED2EE70DC11739 /* PFTitleDataManagement.h */; };
 		18AA3066EE0DE9BAE7B49779 /* PFTitleDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6884BB7A21D633574ED48E75 /* PFTitleDataManagement.cpp */; };
 		7E581181126FF6B172FD7306 /* PFTitleDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6884BB7A21D633574ED48E75 /* PFTitleDataManagement.cpp */; };
-		B96D24A0C1DCFF03BBE8EB96 /* PFPlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 065F9125E7C1F9E8D39166F9 /* PFPlayerDataManagementTypes.h */; };
-		C9DF521F08DD253BE4DAF0CD /* PFPlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 065F9125E7C1F9E8D39166F9 /* PFPlayerDataManagementTypes.h */; };
-		CDE62F99C21211CE70E85EF2 /* PlayerDataManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B79ACA275FC9891FD9C0FFE /* PlayerDataManagementTypeWrappers.h */; };
-		34E89A34A09E56C1B6D41955 /* PlayerDataManagementTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B79ACA275FC9891FD9C0FFE /* PlayerDataManagementTypeWrappers.h */; };
-		0BBA2D31C71F5549FB3B07A0 /* PlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D26054C1F278A7FCAE74A4B /* PlayerDataManagementTypes.h */; };
-		920FD196DF9880F033897D5C /* PlayerDataManagementTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D26054C1F278A7FCAE74A4B /* PlayerDataManagementTypes.h */; };
-		FD78A55D1494214D313D107B /* PlayerDataManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0633C7C79282979C0E8E306 /* PlayerDataManagementTypes.cpp */; };
-		710758C5ACB6C8282D5BB527 /* PlayerDataManagementTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0633C7C79282979C0E8E306 /* PlayerDataManagementTypes.cpp */; };
-		6FF47A7920D5760C6F969B2A /* PlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF880D399AA25845F6A58C7 /* PlayerDataManagement.h */; };
-		530F1586566C2CE8508BBA15 /* PlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF880D399AA25845F6A58C7 /* PlayerDataManagement.h */; };
-		67A9C965E48C2D4900FE84AB /* PlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDDA8958151C1A4D97D811F0 /* PlayerDataManagement.cpp */; };
-		981466019ED40D26C10ED811 /* PlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FDDA8958151C1A4D97D811F0 /* PlayerDataManagement.cpp */; };
-		4FB89501E19795671678212B /* PFPlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 454D78B8F4B96CD11F0FA9FE /* PFPlayerDataManagement.h */; };
-		3491E9E0045C0D02C96932DB /* PFPlayerDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 454D78B8F4B96CD11F0FA9FE /* PFPlayerDataManagement.h */; };
-		EDA33061C07C68C4BC9715EB /* PFPlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE00274D5C8F83C8B3CC8277 /* PFPlayerDataManagement.cpp */; };
-		08D5F25468B6309E772E68E0 /* PFPlayerDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE00274D5C8F83C8B3CC8277 /* PFPlayerDataManagement.cpp */; };
 		CB3D51344576FB4D1B2822A5 /* PFPushNotificationsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = BAF2597424337928424C951B /* PFPushNotificationsTypes.h */; };
 		9348B9BC3B675745EA0F4DF5 /* PFPushNotificationsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = BAF2597424337928424C951B /* PFPushNotificationsTypes.h */; };
 		4A8E422C9A26BF8C5BA2AD10 /* PushNotificationsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = E051B8C2D7FD55E6AEB54F73 /* PushNotificationsTypeWrappers.h */; };
@@ -485,6 +485,14 @@
 		F7FF328E8FAFB417AF5C221E /* PlatformSpecific.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlatformSpecific.cpp; sourceTree = "<group>"; };
 		105056200E672F77497AF76B /* PFPlatformSpecific.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlatformSpecific.h; sourceTree = "<group>"; };
 		34E902FBB635A45AAA0D0FA5 /* PFPlatformSpecific.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFPlatformSpecific.cpp; sourceTree = "<group>"; };
+		065F9125E7C1F9E8D39166F9 /* PFPlayerDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayerDataManagementTypes.h; sourceTree = "<group>"; };
+		6B79ACA275FC9891FD9C0FFE /* PlayerDataManagementTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDataManagementTypeWrappers.h; sourceTree = "<group>"; };
+		9D26054C1F278A7FCAE74A4B /* PlayerDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDataManagementTypes.h; sourceTree = "<group>"; };
+		B0633C7C79282979C0E8E306 /* PlayerDataManagementTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerDataManagementTypes.cpp; sourceTree = "<group>"; };
+		5AF880D399AA25845F6A58C7 /* PlayerDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDataManagement.h; sourceTree = "<group>"; };
+		FDDA8958151C1A4D97D811F0 /* PlayerDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerDataManagement.cpp; sourceTree = "<group>"; };
+		454D78B8F4B96CD11F0FA9FE /* PFPlayerDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayerDataManagement.h; sourceTree = "<group>"; };
+		BE00274D5C8F83C8B3CC8277 /* PFPlayerDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFPlayerDataManagement.cpp; sourceTree = "<group>"; };
 		6C4574048C51F079FF11C292 /* PFCloudScriptTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFCloudScriptTypes.h; sourceTree = "<group>"; };
 		AAEC03E16D33C9C3025262F2 /* CloudScriptTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudScriptTypeWrappers.h; sourceTree = "<group>"; };
 		E06338D298CA2B391E2BA303 /* CloudScriptTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudScriptTypes.h; sourceTree = "<group>"; };
@@ -509,14 +517,6 @@
 		AC0514AC995466B11907FEA6 /* TitleDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TitleDataManagement.cpp; sourceTree = "<group>"; };
 		76F5438B94ED2EE70DC11739 /* PFTitleDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTitleDataManagement.h; sourceTree = "<group>"; };
 		6884BB7A21D633574ED48E75 /* PFTitleDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFTitleDataManagement.cpp; sourceTree = "<group>"; };
-		065F9125E7C1F9E8D39166F9 /* PFPlayerDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayerDataManagementTypes.h; sourceTree = "<group>"; };
-		6B79ACA275FC9891FD9C0FFE /* PlayerDataManagementTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDataManagementTypeWrappers.h; sourceTree = "<group>"; };
-		9D26054C1F278A7FCAE74A4B /* PlayerDataManagementTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDataManagementTypes.h; sourceTree = "<group>"; };
-		B0633C7C79282979C0E8E306 /* PlayerDataManagementTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerDataManagementTypes.cpp; sourceTree = "<group>"; };
-		5AF880D399AA25845F6A58C7 /* PlayerDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDataManagement.h; sourceTree = "<group>"; };
-		FDDA8958151C1A4D97D811F0 /* PlayerDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerDataManagement.cpp; sourceTree = "<group>"; };
-		454D78B8F4B96CD11F0FA9FE /* PFPlayerDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayerDataManagement.h; sourceTree = "<group>"; };
-		BE00274D5C8F83C8B3CC8277 /* PFPlayerDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFPlayerDataManagement.cpp; sourceTree = "<group>"; };
 		BAF2597424337928424C951B /* PFPushNotificationsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPushNotificationsTypes.h; sourceTree = "<group>"; };
 		E051B8C2D7FD55E6AEB54F73 /* PushNotificationsTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationsTypeWrappers.h; sourceTree = "<group>"; };
 		39425A414120D3EAF0031E54 /* PushNotificationsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationsTypes.h; sourceTree = "<group>"; };
@@ -794,14 +794,14 @@
 				C3C6FB55304FDA087FE7EDFC /* PFAccountManagement.h */,
 				1AFD3A5FC96437188BA7C32C /* PFPlatformSpecificTypes.h */,
 				105056200E672F77497AF76B /* PFPlatformSpecific.h */,
+				065F9125E7C1F9E8D39166F9 /* PFPlayerDataManagementTypes.h */,
+				454D78B8F4B96CD11F0FA9FE /* PFPlayerDataManagement.h */,
 				6C4574048C51F079FF11C292 /* PFCloudScriptTypes.h */,
 				8F4CA2DE3A4583A9D8390E2D /* PFCloudScript.h */,
 				B22AFECB5A3A7CE368FFC3F4 /* PFSegmentsTypes.h */,
 				1FC8185CE2C02A3A7580D753 /* PFSegments.h */,
 				023657556C849DFBD030AA93 /* PFTitleDataManagementTypes.h */,
 				76F5438B94ED2EE70DC11739 /* PFTitleDataManagement.h */,
-				065F9125E7C1F9E8D39166F9 /* PFPlayerDataManagementTypes.h */,
-				454D78B8F4B96CD11F0FA9FE /* PFPlayerDataManagement.h */,
 				BAF2597424337928424C951B /* PFPushNotificationsTypes.h */,
 				C3E476B3B15D356EA14EA34A /* PFPushNotifications.h */,
 				730DB2BC72EF4BADC439CEC5 /* PFDataTypes.h */,
@@ -835,10 +835,10 @@
 				6CE6B3476D37C58A4FFA438A /* FriendsTypeWrappers.h */,
 				C9F8B02FB25640E4D3575CA5 /* AccountManagementTypeWrappers.h */,
 				E4E15F584EC1443601E9E738 /* PlatformSpecificTypeWrappers.h */,
+				6B79ACA275FC9891FD9C0FFE /* PlayerDataManagementTypeWrappers.h */,
 				AAEC03E16D33C9C3025262F2 /* CloudScriptTypeWrappers.h */,
 				129981A3830039A8FE1F4F11 /* SegmentsTypeWrappers.h */,
 				A6A6D7AD3F44042431BDAA42 /* TitleDataManagementTypeWrappers.h */,
-				6B79ACA275FC9891FD9C0FFE /* PlayerDataManagementTypeWrappers.h */,
 				E051B8C2D7FD55E6AEB54F73 /* PushNotificationsTypeWrappers.h */,
 				B114148C755AE2568986934C /* DataTypeWrappers.h */,
 				968A846F33D3AB1FCCDDD480 /* InventoryTypeWrappers.h */,
@@ -909,6 +909,11 @@
 				0EA402587ECDDDF36E05A82A /* PlatformSpecific.h */,
 				F7FF328E8FAFB417AF5C221E /* PlatformSpecific.cpp */,
 				34E902FBB635A45AAA0D0FA5 /* PFPlatformSpecific.cpp */,
+				9D26054C1F278A7FCAE74A4B /* PlayerDataManagementTypes.h */,
+				B0633C7C79282979C0E8E306 /* PlayerDataManagementTypes.cpp */,
+				5AF880D399AA25845F6A58C7 /* PlayerDataManagement.h */,
+				FDDA8958151C1A4D97D811F0 /* PlayerDataManagement.cpp */,
+				BE00274D5C8F83C8B3CC8277 /* PFPlayerDataManagement.cpp */,
 				E06338D298CA2B391E2BA303 /* CloudScriptTypes.h */,
 				57DB97A2A199BF8B96AD3016 /* CloudScriptTypes.cpp */,
 				F18D955930AFD38F6A4671CC /* CloudScript.h */,
@@ -924,11 +929,6 @@
 				DC2F552A7595A75B18D9AFC0 /* TitleDataManagement.h */,
 				AC0514AC995466B11907FEA6 /* TitleDataManagement.cpp */,
 				6884BB7A21D633574ED48E75 /* PFTitleDataManagement.cpp */,
-				9D26054C1F278A7FCAE74A4B /* PlayerDataManagementTypes.h */,
-				B0633C7C79282979C0E8E306 /* PlayerDataManagementTypes.cpp */,
-				5AF880D399AA25845F6A58C7 /* PlayerDataManagement.h */,
-				FDDA8958151C1A4D97D811F0 /* PlayerDataManagement.cpp */,
-				BE00274D5C8F83C8B3CC8277 /* PFPlayerDataManagement.cpp */,
 				39425A414120D3EAF0031E54 /* PushNotificationsTypes.h */,
 				2162F01F8A504F5A41485BF8 /* PushNotificationsTypes.cpp */,
 				A726E33E81E65C235DEAF9D6 /* PushNotifications.h */,
@@ -1037,6 +1037,11 @@
 				81BB9CA5528855E529F0C6FF /* PlatformSpecificTypes.h in Headers */,
 				027DD359CCDB38F6E473522B /* PlatformSpecific.h in Headers */,
 				D8DD6560D620FF613635A8A6 /* PFPlatformSpecific.h in Headers */,
+				C9DF521F08DD253BE4DAF0CD /* PFPlayerDataManagementTypes.h in Headers */,
+				34E89A34A09E56C1B6D41955 /* PlayerDataManagementTypeWrappers.h in Headers */,
+				920FD196DF9880F033897D5C /* PlayerDataManagementTypes.h in Headers */,
+				530F1586566C2CE8508BBA15 /* PlayerDataManagement.h in Headers */,
+				3491E9E0045C0D02C96932DB /* PFPlayerDataManagement.h in Headers */,
 				851E029C85766510489C7CF1 /* PFCloudScriptTypes.h in Headers */,
 				19AA3E59BF4FD5AF9CF5E020 /* CloudScriptTypeWrappers.h in Headers */,
 				3D1F2ABC033DF406B45F98E1 /* CloudScriptTypes.h in Headers */,
@@ -1052,11 +1057,6 @@
 				2B94B71E20734C2559721789 /* TitleDataManagementTypes.h in Headers */,
 				538C31B483D4A53BDA58C29D /* TitleDataManagement.h in Headers */,
 				8791610EF039C7D0F7D7FB55 /* PFTitleDataManagement.h in Headers */,
-				C9DF521F08DD253BE4DAF0CD /* PFPlayerDataManagementTypes.h in Headers */,
-				34E89A34A09E56C1B6D41955 /* PlayerDataManagementTypeWrappers.h in Headers */,
-				920FD196DF9880F033897D5C /* PlayerDataManagementTypes.h in Headers */,
-				530F1586566C2CE8508BBA15 /* PlayerDataManagement.h in Headers */,
-				3491E9E0045C0D02C96932DB /* PFPlayerDataManagement.h in Headers */,
 				9348B9BC3B675745EA0F4DF5 /* PFPushNotificationsTypes.h in Headers */,
 				08C797DE21C108C730F69B91 /* PushNotificationsTypeWrappers.h in Headers */,
 				ADE472B84C332305A1F6A02C /* PushNotificationsTypes.h in Headers */,
@@ -1144,6 +1144,11 @@
 				FD91DE52F80D6D526A74FFCA /* PlatformSpecificTypes.h in Headers */,
 				CBF273D6DAA51CA2A934E6C1 /* PlatformSpecific.h in Headers */,
 				96B9DEE8A6D5AC5D94E67B52 /* PFPlatformSpecific.h in Headers */,
+				B96D24A0C1DCFF03BBE8EB96 /* PFPlayerDataManagementTypes.h in Headers */,
+				CDE62F99C21211CE70E85EF2 /* PlayerDataManagementTypeWrappers.h in Headers */,
+				0BBA2D31C71F5549FB3B07A0 /* PlayerDataManagementTypes.h in Headers */,
+				6FF47A7920D5760C6F969B2A /* PlayerDataManagement.h in Headers */,
+				4FB89501E19795671678212B /* PFPlayerDataManagement.h in Headers */,
 				E5F96736AF77C54E3FD5A583 /* PFCloudScriptTypes.h in Headers */,
 				4CD6FC37C9A8B5DCA5EA5038 /* CloudScriptTypeWrappers.h in Headers */,
 				E804084907FBC8B9361E9634 /* CloudScriptTypes.h in Headers */,
@@ -1159,11 +1164,6 @@
 				8C27CCD391FAFE580AA15214 /* TitleDataManagementTypes.h in Headers */,
 				E30057F633E7ECDE9C349DD9 /* TitleDataManagement.h in Headers */,
 				A77B14732A66F6874CE8B9B5 /* PFTitleDataManagement.h in Headers */,
-				B96D24A0C1DCFF03BBE8EB96 /* PFPlayerDataManagementTypes.h in Headers */,
-				CDE62F99C21211CE70E85EF2 /* PlayerDataManagementTypeWrappers.h in Headers */,
-				0BBA2D31C71F5549FB3B07A0 /* PlayerDataManagementTypes.h in Headers */,
-				6FF47A7920D5760C6F969B2A /* PlayerDataManagement.h in Headers */,
-				4FB89501E19795671678212B /* PFPlayerDataManagement.h in Headers */,
 				CB3D51344576FB4D1B2822A5 /* PFPushNotificationsTypes.h in Headers */,
 				4A8E422C9A26BF8C5BA2AD10 /* PushNotificationsTypeWrappers.h in Headers */,
 				9269DA1203CBD82EC9D0C5FF /* PushNotificationsTypes.h in Headers */,
@@ -1413,6 +1413,9 @@
 				6D2285451B0C4B360A8AC16E /* PlatformSpecificTypes.cpp in Sources */,
 				28A7B9C3AE37D78623BD1FE3 /* PlatformSpecific.cpp in Sources */,
 				BB260A4A98105A125399069C /* PFPlatformSpecific.cpp in Sources */,
+				710758C5ACB6C8282D5BB527 /* PlayerDataManagementTypes.cpp in Sources */,
+				981466019ED40D26C10ED811 /* PlayerDataManagement.cpp in Sources */,
+				08D5F25468B6309E772E68E0 /* PFPlayerDataManagement.cpp in Sources */,
 				14F2C64C51035EE287795277 /* CloudScriptTypes.cpp in Sources */,
 				09C8E0BE5BF087BB74C1F296 /* CloudScript.cpp in Sources */,
 				762AFF64EFF121B801CEB8EA /* PFCloudScript.cpp in Sources */,
@@ -1422,9 +1425,6 @@
 				A898AE53EA08A888E3249F35 /* TitleDataManagementTypes.cpp in Sources */,
 				A38CE26D4EE854D61F5082CC /* TitleDataManagement.cpp in Sources */,
 				7E581181126FF6B172FD7306 /* PFTitleDataManagement.cpp in Sources */,
-				710758C5ACB6C8282D5BB527 /* PlayerDataManagementTypes.cpp in Sources */,
-				981466019ED40D26C10ED811 /* PlayerDataManagement.cpp in Sources */,
-				08D5F25468B6309E772E68E0 /* PFPlayerDataManagement.cpp in Sources */,
 				DFAB7B4C5F366A690EEA75ED /* PushNotificationsTypes.cpp in Sources */,
 				7EA0F54A61CE6C7E9E678A5E /* PushNotifications.cpp in Sources */,
 				EB45413B7E9731A092238961 /* PFPushNotifications.cpp in Sources */,
@@ -1481,6 +1481,9 @@
 				2ED16B4F65A14BE3FCE90A8E /* PlatformSpecificTypes.cpp in Sources */,
 				244F7832568E44333FF56529 /* PlatformSpecific.cpp in Sources */,
 				3995F0043FEAE87A11841745 /* PFPlatformSpecific.cpp in Sources */,
+				FD78A55D1494214D313D107B /* PlayerDataManagementTypes.cpp in Sources */,
+				67A9C965E48C2D4900FE84AB /* PlayerDataManagement.cpp in Sources */,
+				EDA33061C07C68C4BC9715EB /* PFPlayerDataManagement.cpp in Sources */,
 				7EE8681FD8D9B4B8DBAD5BC2 /* CloudScriptTypes.cpp in Sources */,
 				5FF6C74C069773540930B393 /* CloudScript.cpp in Sources */,
 				0661A2F4B487946FC25256E1 /* PFCloudScript.cpp in Sources */,
@@ -1490,9 +1493,6 @@
 				0C056141E6FF71F86A0D7717 /* TitleDataManagementTypes.cpp in Sources */,
 				0C1D0E024C5A1AB4C6148807 /* TitleDataManagement.cpp in Sources */,
 				18AA3066EE0DE9BAE7B49779 /* PFTitleDataManagement.cpp in Sources */,
-				FD78A55D1494214D313D107B /* PlayerDataManagementTypes.cpp in Sources */,
-				67A9C965E48C2D4900FE84AB /* PlayerDataManagement.cpp in Sources */,
-				EDA33061C07C68C4BC9715EB /* PFPlayerDataManagement.cpp in Sources */,
 				4C38E6E67608548AE93B0BB6 /* PushNotificationsTypes.cpp in Sources */,
 				CBD1BED9E1B9D94326B3A264 /* PushNotifications.cpp in Sources */,
 				BC45AA52400B5B95126AFD62 /* PFPushNotifications.cpp in Sources */,

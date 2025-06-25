@@ -58,8 +58,19 @@ using Queue = std::queue<T, Deque<T>>;
 template<class T>
 using List = std::list<T, Allocator<T>>;
 
-using JsonDocument = nlohmann::json;
-using JsonValue = nlohmann::json;
+using JsonDocument = nlohmann::basic_json<
+    std::map, std::vector, PlayFab::String, bool, std::int64_t, std::uint64_t, double,
+    PlayFab::Allocator,
+    nlohmann::adl_serializer,
+    std::vector<uint8_t, PlayFab::Allocator<uint8_t>>
+>;
+
+using JsonValue = nlohmann::basic_json<
+    std::map, std::vector, PlayFab::String, bool, std::int64_t, std::uint64_t, double,
+    PlayFab::Allocator,
+    nlohmann::adl_serializer,
+    std::vector<uint8_t, PlayFab::Allocator<uint8_t>>
+>;
 
 using Clock = std::chrono::steady_clock;
 using SystemClock = std::chrono::system_clock;

@@ -674,6 +674,10 @@ HRESULT PlayerProfile::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "Created", created));
     this->SetCreated(std::move(created));
 
+    JsonObject customProperties{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CustomProperties", customProperties));
+    this->SetCustomProperties(std::move(customProperties));
+
     String displayName{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "DisplayName", displayName));
     this->SetDisplayName(std::move(displayName));
@@ -779,6 +783,10 @@ size_t PlayerProfile::RequiredBufferSize(const PFSegmentsPlayerProfile& model)
     if (model.created)
     {
         requiredSize += (alignof(time_t) + sizeof(time_t));
+    }
+    if (model.customProperties.stringValue)
+    {
+    requiredSize += (std::strlen(model.customProperties.stringValue) + 1);
     }
     if (model.displayName)
     {
@@ -889,6 +897,11 @@ HRESULT PlayerProfile::Copy(const PFSegmentsPlayerProfile& input, PFSegmentsPlay
         auto propCopyResult = buffer.CopyTo(input.created);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.created = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.customProperties.stringValue);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.customProperties.stringValue = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.displayName);

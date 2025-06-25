@@ -572,6 +572,35 @@ typedef struct PFStatisticsListStatisticDefinitionsResponse
 } PFStatisticsListStatisticDefinitionsResponse;
 
 /// <summary>
+/// PFStatisticsUpdateStatisticDefinitionRequest data model.
+/// </summary>
+typedef struct PFStatisticsUpdateStatisticDefinitionRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// Name of the statistic. Must be less than 150 characters. Restricted to a-Z, 0-9, '(', ')', '_',
+    /// '-' and '.'.
+    /// </summary>
+    _Null_terminated_ const char* name;
+
+    /// <summary>
+    /// (Optional) The version reset configuration for the statistic definition.
+    /// </summary>
+    _Maybenull_ PFVersionConfiguration const* versionConfiguration;
+
+} PFStatisticsUpdateStatisticDefinitionRequest;
+
+/// <summary>
 /// PFStatisticsStatisticUpdate data model.
 /// </summary>
 typedef struct PFStatisticsStatisticUpdate
@@ -639,6 +668,12 @@ typedef struct PFStatisticsUpdateStatisticsRequest
     /// Count of statistics
     /// </summary>
     uint32_t statisticsCount;
+
+    /// <summary>
+    /// (Optional) Optional transactionId of this update which can be used to ensure idempotence. Using
+    /// this field is still in testing stage.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* transactionId;
 
 } PFStatisticsUpdateStatisticsRequest;
 

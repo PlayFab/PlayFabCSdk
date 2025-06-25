@@ -69,6 +69,13 @@ void StatisticsTests::TestListStatisticDefinitions(TestContext& tc)
 }
 #endif
 
+#if 0
+void StatisticsTests::TestUpdateStatisticDefinition(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 void StatisticsTests::TestUpdateStatistics(TestContext& tc)
 {
     tc.Skip();

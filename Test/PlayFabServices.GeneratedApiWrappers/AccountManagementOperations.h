@@ -1798,7 +1798,6 @@ private:
 };
 #endif
 
-#if 0
 class SetDisplayNameOperation : public XAsyncOperation<Wrappers::PFAccountManagementSetDisplayNameResponseWrapper<Allocator>>
 {
 public:
@@ -1816,7 +1815,6 @@ private:
     Entity m_entity;
     RequestType m_request;
 };
-#endif
 
 }
 }

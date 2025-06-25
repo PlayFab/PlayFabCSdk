@@ -119,6 +119,8 @@ target_link_libraries(
     PRIVATE ${PLAYFAB_SERVICES_BINARY_PATH}
     PRIVATE ${PLAYFAB_SHARED_INTERNAL_BINARY_PATH}
     PRIVATE z # zlib
+    PRIVATE brotlidec
+    PRIVATE zstd
     ${CMAKE_DL_LIBS}
     )
 

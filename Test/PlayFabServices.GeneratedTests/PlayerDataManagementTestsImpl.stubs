@@ -17,6 +17,20 @@ AsyncOp<void> PlayerDataManagementTests::Uninitialize()
     return ServicesTestClass::Uninitialize();
 }
 
+#if 0
+void PlayerDataManagementTests::TestClientDeletePlayerCustomProperties(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestClientGetPlayerCustomProperty(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 void PlayerDataManagementTests::TestClientGetUserData(TestContext& tc)
 {
     tc.Skip();
@@ -37,6 +51,20 @@ void PlayerDataManagementTests::TestClientGetUserReadOnlyData(TestContext& tc)
     tc.Skip();
 }
 
+#if 0
+void PlayerDataManagementTests::TestClientListPlayerCustomProperties(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestClientUpdatePlayerCustomProperties(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 void PlayerDataManagementTests::TestClientUpdateUserData(TestContext& tc)
 {
     tc.Skip();
@@ -46,6 +74,20 @@ void PlayerDataManagementTests::TestClientUpdateUserPublisherData(TestContext& t
 {
     tc.Skip();
 }
+
+#if 0
+void PlayerDataManagementTests::TestServerDeletePlayerCustomProperties(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerGetPlayerCustomProperty(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerGetUserData(TestContext& tc)
@@ -84,6 +126,20 @@ void PlayerDataManagementTests::TestServerGetUserPublisherReadOnlyData(TestConte
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlayerDataManagementTests::TestServerGetUserReadOnlyData(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerListPlayerCustomProperties(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayerDataManagementTests::TestServerUpdatePlayerCustomProperties(TestContext& tc)
 {
     tc.Skip();
 }

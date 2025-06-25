@@ -23,8 +23,6 @@ extern "C"
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also LeaderboardDeleteLeaderboardDefinitionAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_API_NOT_ENABLED_FOR_TITLE, E_PF_DUPLICATE_COLUMN_NAME_FOUND, E_PF_DUPLICATE_LINKED_STATISTIC_COLUMN_NAME_FOUND,
 /// E_PF_EXTERNAL_ENTITY_NOT_ALLOWED_FOR_TIER, E_PF_INVALID_BASE_TIME_FOR_INTERVAL, E_PF_LEADERBOARD_COUNT_LIMIT_EXCEEDED,
@@ -75,8 +73,6 @@ PF_API PFLeaderboardsDeleteLeaderboardDefinitionAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also LeaderboardUpdateLeaderboardEntriesAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_API_NOT_ENABLED_FOR_TITLE, E_PF_LEADERBOARD_NOT_FOUND, E_PF_LEADERBOARD_UPDATE_NOT_ALLOWED_WHILE_LINKED
 /// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
@@ -423,9 +419,9 @@ PF_API PFLeaderboardsIncrementLeaderboardVersionAsync(
 /// <param name="result">PFLeaderboardsIncrementLeaderboardVersionResponse object that will be populated with the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_CONCURRENT_EDIT_ERROR,
-/// E_PF_LEADERBOARD_DEFINITION_MODIFICATION_NOT_ALLOWED_WHILE_LINKED, E_PF_LEADERBOARD_NOT_FOUND or any
-/// of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
-/// handling.
+/// E_PF_LEADERBOARD_DEFINITION_MODIFICATION_NOT_ALLOWED_WHILE_LINKED, E_PF_LEADERBOARD_NOT_FOUND, E_PF_VERSION_INCREMENT_RATE_EXCEEDED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFLeaderboardsIncrementLeaderboardVersionGetResult(
     _Inout_ XAsyncBlock* async,
@@ -502,8 +498,6 @@ PF_API PFLeaderboardsListLeaderboardDefinitionsGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also LeaderboardCreateLeaderboardDefinitionAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_LEADERBOARD_NOT_FOUND, E_PF_NO_LINKED_STATISTIC_TO_LEADERBOARD or any
 /// of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
@@ -512,6 +506,27 @@ PF_API PFLeaderboardsListLeaderboardDefinitionsGetResult(
 PF_API PFLeaderboardsUnlinkLeaderboardFromStatisticAsync(
     _In_ PFEntityHandle entityHandle,
     _In_ const PFLeaderboardsUnlinkLeaderboardFromStatisticRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+#endif
+
+#if 0
+/// <summary>
+/// Updates a leaderboard definition.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
+/// the async result will be E_PF_LEADERBOARD_SIZE_LIMIT_EXCEEDED, E_PF_MAX_QUERYABLE_VERSIONS_VALUE_NOT_ALLOWED_FOR_TIER,
+/// E_PF_RESET_INTERVAL_CANNOT_BE_MODIFIED or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
+/// </remarks>
+PF_API PFLeaderboardsUpdateLeaderboardDefinitionAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFLeaderboardsUpdateLeaderboardDefinitionRequest* request,
     _Inout_ XAsyncBlock* async
 ) noexcept;
 #endif
@@ -526,8 +541,6 @@ PF_API PFLeaderboardsUnlinkLeaderboardFromStatisticAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also LeaderboardDeleteLeaderboardEntriesAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS, E_PF_LEADERBOARD_COLUMN_LENGTH_MISMATCH,
 /// E_PF_LEADERBOARD_NOT_FOUND, E_PF_LEADERBOARD_UPDATE_NOT_ALLOWED_WHILE_LINKED or any of the global

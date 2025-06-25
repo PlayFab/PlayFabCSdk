@@ -302,6 +302,10 @@ HRESULT GetEntityLeaderboardResponse::FromJson(const JsonValue& input)
 
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EntryCount", this->m_model.entryCount));
 
+    std::optional<time_t> nextReset{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "NextReset", nextReset));
+    this->SetNextReset(std::move(nextReset));
+
     ModelVector<EntityLeaderboardEntry> rankings{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember<EntityLeaderboardEntry>(input, "Rankings", rankings));
     this->SetRankings(std::move(rankings));
@@ -329,6 +333,10 @@ size_t GetEntityLeaderboardResponse::RequiredBufferSize(const PFLeaderboardsGetE
     {
         requiredSize += LeaderboardColumn::RequiredBufferSize(*model.columns[i]);
     }
+    if (model.nextReset)
+    {
+        requiredSize += (alignof(time_t) + sizeof(time_t));
+    }
     requiredSize += (alignof(PFLeaderboardsEntityLeaderboardEntry*) + sizeof(PFLeaderboardsEntityLeaderboardEntry*) * model.rankingsCount);
     for (size_t i = 0; i < model.rankingsCount; ++i)
     {
@@ -344,6 +352,11 @@ HRESULT GetEntityLeaderboardResponse::Copy(const PFLeaderboardsGetEntityLeaderbo
         auto propCopyResult = buffer.CopyToArray<LeaderboardColumn>(input.columns, input.columnsCount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.columns = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.nextReset);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.nextReset = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyToArray<EntityLeaderboardEntry>(input.rankings, input.rankingsCount);
@@ -718,6 +731,21 @@ JsonValue UnlinkLeaderboardFromStatisticRequest::ToJson(const PFLeaderboardsUnli
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "StatisticName", input.statisticName);
+    return output;
+}
+
+JsonValue UpdateLeaderboardDefinitionRequest::ToJson() const
+{
+    return UpdateLeaderboardDefinitionRequest::ToJson(this->Model());
+}
+
+JsonValue UpdateLeaderboardDefinitionRequest::ToJson(const PFLeaderboardsUpdateLeaderboardDefinitionRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "Name", input.name);
+    JsonUtils::ObjectAddMember(output, "SizeLimit", input.sizeLimit);
+    JsonUtils::ObjectAddMember<VersionConfiguration>(output, "VersionConfiguration", input.versionConfiguration);
     return output;
 }
 

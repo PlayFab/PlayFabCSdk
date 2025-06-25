@@ -28,6 +28,9 @@ void StatisticsTests::AddTests()
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestListStatisticDefinitions", &StatisticsTests::TestListStatisticDefinitions);
 #endif
+#if 0
+    AddTest("TestUpdateStatisticDefinition", &StatisticsTests::TestUpdateStatisticDefinition);
+#endif
     AddTest("TestUpdateStatistics", &StatisticsTests::TestUpdateStatistics);
 
 }

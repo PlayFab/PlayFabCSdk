@@ -2,6 +2,7 @@
 #include "AccountManagementTests.h"
 #include "AccountManagementOperations.h"
 #include "Operations/Core/AuthenticationOperations.h"
+#include "ProfilesOperations.h"
 #include "TitleDataManagementOperations.h"
 #if HC_PLATFORM == HC_PLATFORM_GDK
 #include "GDK/PlatformUser_GDK.h"
@@ -1806,6 +1807,32 @@ void AccountManagementTests::TestGetTitlePlayersFromXboxLiveIDs(TestContext& tc)
     });
 }
 #endif
+
+void AccountManagementTests::TestSetDisplayName(TestContext& tc)
+{
+    SetDisplayNameOperation::RequestType request;
+    request.SetDisplayName("dummyDisplayName" + DefaultTitlePlayerId());
+    SetDisplayNameOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<SetDisplayNameOperation::ResultType> result) -> AsyncOp<GetProfileOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        GetProfileOperation::RequestType request;
+        
+        return GetProfileOperation::Run(DefaultTitlePlayer(), request, RunContext());
+    })
+    .Then([&](Result<GetProfileOperation::ResultType> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        tc.AssertEqual<String>("dummyDisplayName" + DefaultTitlePlayerId(), result.Payload().Model().profile->displayName, "displayName");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
 
 }
 }

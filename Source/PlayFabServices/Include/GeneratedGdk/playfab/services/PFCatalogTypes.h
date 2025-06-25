@@ -354,6 +354,73 @@ typedef struct PFCatalogRating
 } PFCatalogRating;
 
 /// <summary>
+/// PFCatalogRealMoneyPriceDetails data model.
+/// </summary>
+typedef struct PFCatalogRealMoneyPriceDetails
+{
+    /// <summary>
+    /// (Optional) The 'AppleAppStore' price amount per CurrencyCode. 'USD' supported only.
+    /// </summary>
+    _Maybenull_ _Field_size_(appleAppStorePricesCount) struct PFInt32DictionaryEntry const* appleAppStorePrices;
+
+    /// <summary>
+    /// Count of appleAppStorePrices
+    /// </summary>
+    uint32_t appleAppStorePricesCount;
+
+    /// <summary>
+    /// (Optional) The 'GooglePlay' price amount per CurrencyCode. 'USD' supported only.
+    /// </summary>
+    _Maybenull_ _Field_size_(googlePlayPricesCount) struct PFInt32DictionaryEntry const* googlePlayPrices;
+
+    /// <summary>
+    /// Count of googlePlayPrices
+    /// </summary>
+    uint32_t googlePlayPricesCount;
+
+    /// <summary>
+    /// (Optional) The 'MicrosoftStore' price amount per CurrencyCode. 'USD' supported only.
+    /// </summary>
+    _Maybenull_ _Field_size_(microsoftStorePricesCount) struct PFInt32DictionaryEntry const* microsoftStorePrices;
+
+    /// <summary>
+    /// Count of microsoftStorePrices
+    /// </summary>
+    uint32_t microsoftStorePricesCount;
+
+    /// <summary>
+    /// (Optional) The 'NintendoEShop' price amount per CurrencyCode. 'USD' supported only.
+    /// </summary>
+    _Maybenull_ _Field_size_(nintendoEShopPricesCount) struct PFInt32DictionaryEntry const* nintendoEShopPrices;
+
+    /// <summary>
+    /// Count of nintendoEShopPrices
+    /// </summary>
+    uint32_t nintendoEShopPricesCount;
+
+    /// <summary>
+    /// (Optional) The 'PlayStationStore' price amount per CurrencyCode. 'USD' supported only.
+    /// </summary>
+    _Maybenull_ _Field_size_(playStationStorePricesCount) struct PFInt32DictionaryEntry const* playStationStorePrices;
+
+    /// <summary>
+    /// Count of playStationStorePrices
+    /// </summary>
+    uint32_t playStationStorePricesCount;
+
+    /// <summary>
+    /// (Optional) The 'Steam' price amount per CurrencyCode. 'USD' supported only.
+    /// </summary>
+    _Maybenull_ _Field_size_(steamPricesCount) struct PFInt32DictionaryEntry const* steamPrices;
+
+    /// <summary>
+    /// Count of steamPrices
+    /// </summary>
+    uint32_t steamPricesCount;
+
+} PFCatalogRealMoneyPriceDetails;
+
+/// <summary>
 /// PFCatalogFilterOptions data model.
 /// </summary>
 typedef struct PFCatalogFilterOptions
@@ -640,6 +707,11 @@ typedef struct PFCatalogCatalogItem
     /// (Optional) Rating summary for this item.
     /// </summary>
     _Maybenull_ PFCatalogRating const* rating;
+
+    /// <summary>
+    /// (Optional) The real price the item was purchased for per marketplace.
+    /// </summary>
+    _Maybenull_ PFCatalogRealMoneyPriceDetails const* realMoneyPriceDetails;
 
     /// <summary>
     /// (Optional) The date of when the item will be available. If not provided then the product will
@@ -1408,12 +1480,6 @@ typedef struct PFCatalogReview
     /// (Optional) The ID of the author of the review.
     /// </summary>
     _Maybenull_ PFEntityKey const* reviewerEntity;
-
-    /// <summary>
-    /// (Optional) Deprecated. Use ReviewerEntity instead. This property will be removed in a future
-    /// release.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* reviewerId;
 
     /// <summary>
     /// (Optional) The ID of the review.

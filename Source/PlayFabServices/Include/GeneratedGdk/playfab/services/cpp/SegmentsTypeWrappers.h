@@ -1136,6 +1136,7 @@ public:
         m_churnPrediction{ model.churnPrediction ? std::optional<PFSegmentsChurnRiskLevel>{ *model.churnPrediction } : std::nullopt },
         m_contactEmailAddresses{ model.contactEmailAddresses, model.contactEmailAddresses + model.contactEmailAddressesCount },
         m_created{ model.created ? std::optional<time_t>{ *model.created } : std::nullopt },
+        m_customProperties{ model.customProperties },
         m_displayName{ SafeString(model.displayName) },
         m_lastLogin{ model.lastLogin ? std::optional<time_t>{ *model.lastLogin } : std::nullopt },
         m_linkedAccounts{ model.linkedAccounts, model.linkedAccounts + model.linkedAccountsCount },
@@ -1185,6 +1186,7 @@ public:
         swap(lhs.m_churnPrediction, rhs.m_churnPrediction);
         swap(lhs.m_contactEmailAddresses, rhs.m_contactEmailAddresses);
         swap(lhs.m_created, rhs.m_created);
+        swap(lhs.m_customProperties, rhs.m_customProperties);
         swap(lhs.m_displayName, rhs.m_displayName);
         swap(lhs.m_lastLogin, rhs.m_lastLogin);
         swap(lhs.m_linkedAccounts, rhs.m_linkedAccounts);
@@ -1241,6 +1243,12 @@ public:
     {
         m_created = std::move(value);
         this->m_model.created = m_created ? m_created.operator->() : nullptr;
+    }
+
+    void SetCustomProperties(JsonObject<Alloc> value)
+    {
+        m_customProperties = std::move(value);
+        this->m_model.customProperties.stringValue = m_customProperties.stringValue.empty() ? nullptr : m_customProperties.stringValue.data();
     }
 
     void SetDisplayName(String value)
@@ -1357,6 +1365,7 @@ private:
         this->m_model.churnPrediction = m_churnPrediction ? m_churnPrediction.operator->() : nullptr;
         this->m_model.contactEmailAddresses = m_contactEmailAddresses.empty() ? nullptr : m_contactEmailAddresses.data();
         this->m_model.created = m_created ? m_created.operator->() : nullptr;
+        this->m_model.customProperties.stringValue = m_customProperties.stringValue.empty() ? nullptr : m_customProperties.stringValue.data();
         this->m_model.displayName = m_displayName.empty() ? nullptr : m_displayName.data();
         this->m_model.lastLogin = m_lastLogin ? m_lastLogin.operator->() : nullptr;
         this->m_model.linkedAccounts = m_linkedAccounts.empty() ? nullptr : m_linkedAccounts.data();
@@ -1381,6 +1390,7 @@ private:
     std::optional<PFSegmentsChurnRiskLevel> m_churnPrediction;
     ModelVector<PFSegmentsContactEmailInfoWrapper<Alloc>, Alloc> m_contactEmailAddresses;
     std::optional<time_t> m_created;
+    JsonObject<Alloc> m_customProperties;
     String m_displayName;
     std::optional<time_t> m_lastLogin;
     ModelVector<PFSegmentsPlayerLinkedAccountWrapper<Alloc>, Alloc> m_linkedAccounts;

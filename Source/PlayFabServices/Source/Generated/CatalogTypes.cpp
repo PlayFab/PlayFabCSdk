@@ -898,6 +898,134 @@ HRESULT Rating::Copy(const PFCatalogRating& input, PFCatalogRating& output, Mode
     return S_OK;
 }
 
+JsonValue RealMoneyPriceDetails::ToJson() const
+{
+    return RealMoneyPriceDetails::ToJson(this->Model());
+}
+
+JsonValue RealMoneyPriceDetails::ToJson(const PFCatalogRealMoneyPriceDetails& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "AppleAppStorePrices", input.appleAppStorePrices, input.appleAppStorePricesCount);
+    JsonUtils::ObjectAddMemberDictionary(output, "GooglePlayPrices", input.googlePlayPrices, input.googlePlayPricesCount);
+    JsonUtils::ObjectAddMemberDictionary(output, "MicrosoftStorePrices", input.microsoftStorePrices, input.microsoftStorePricesCount);
+    JsonUtils::ObjectAddMemberDictionary(output, "NintendoEShopPrices", input.nintendoEShopPrices, input.nintendoEShopPricesCount);
+    JsonUtils::ObjectAddMemberDictionary(output, "PlayStationStorePrices", input.playStationStorePrices, input.playStationStorePricesCount);
+    JsonUtils::ObjectAddMemberDictionary(output, "SteamPrices", input.steamPrices, input.steamPricesCount);
+    return output;
+}
+
+HRESULT RealMoneyPriceDetails::FromJson(const JsonValue& input)
+{
+    DictionaryEntryVector<PFInt32DictionaryEntry> appleAppStorePrices{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "AppleAppStorePrices", appleAppStorePrices));
+    this->SetAppleAppStorePrices(std::move(appleAppStorePrices));
+
+    DictionaryEntryVector<PFInt32DictionaryEntry> googlePlayPrices{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "GooglePlayPrices", googlePlayPrices));
+    this->SetGooglePlayPrices(std::move(googlePlayPrices));
+
+    DictionaryEntryVector<PFInt32DictionaryEntry> microsoftStorePrices{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "MicrosoftStorePrices", microsoftStorePrices));
+    this->SetMicrosoftStorePrices(std::move(microsoftStorePrices));
+
+    DictionaryEntryVector<PFInt32DictionaryEntry> nintendoEShopPrices{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "NintendoEShopPrices", nintendoEShopPrices));
+    this->SetNintendoEShopPrices(std::move(nintendoEShopPrices));
+
+    DictionaryEntryVector<PFInt32DictionaryEntry> playStationStorePrices{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PlayStationStorePrices", playStationStorePrices));
+    this->SetPlayStationStorePrices(std::move(playStationStorePrices));
+
+    DictionaryEntryVector<PFInt32DictionaryEntry> steamPrices{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SteamPrices", steamPrices));
+    this->SetSteamPrices(std::move(steamPrices));
+
+    return S_OK;
+}
+
+size_t RealMoneyPriceDetails::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFCatalogRealMoneyPriceDetails const*> RealMoneyPriceDetails::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<RealMoneyPriceDetails>(&this->Model());
+}
+
+size_t RealMoneyPriceDetails::RequiredBufferSize(const PFCatalogRealMoneyPriceDetails& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFInt32DictionaryEntry) + sizeof(PFInt32DictionaryEntry) * model.appleAppStorePricesCount);
+    for (size_t i = 0; i < model.appleAppStorePricesCount; ++i)
+    {
+        requiredSize += (std::strlen(model.appleAppStorePrices[i].key) + 1);
+    }
+    requiredSize += (alignof(PFInt32DictionaryEntry) + sizeof(PFInt32DictionaryEntry) * model.googlePlayPricesCount);
+    for (size_t i = 0; i < model.googlePlayPricesCount; ++i)
+    {
+        requiredSize += (std::strlen(model.googlePlayPrices[i].key) + 1);
+    }
+    requiredSize += (alignof(PFInt32DictionaryEntry) + sizeof(PFInt32DictionaryEntry) * model.microsoftStorePricesCount);
+    for (size_t i = 0; i < model.microsoftStorePricesCount; ++i)
+    {
+        requiredSize += (std::strlen(model.microsoftStorePrices[i].key) + 1);
+    }
+    requiredSize += (alignof(PFInt32DictionaryEntry) + sizeof(PFInt32DictionaryEntry) * model.nintendoEShopPricesCount);
+    for (size_t i = 0; i < model.nintendoEShopPricesCount; ++i)
+    {
+        requiredSize += (std::strlen(model.nintendoEShopPrices[i].key) + 1);
+    }
+    requiredSize += (alignof(PFInt32DictionaryEntry) + sizeof(PFInt32DictionaryEntry) * model.playStationStorePricesCount);
+    for (size_t i = 0; i < model.playStationStorePricesCount; ++i)
+    {
+        requiredSize += (std::strlen(model.playStationStorePrices[i].key) + 1);
+    }
+    requiredSize += (alignof(PFInt32DictionaryEntry) + sizeof(PFInt32DictionaryEntry) * model.steamPricesCount);
+    for (size_t i = 0; i < model.steamPricesCount; ++i)
+    {
+        requiredSize += (std::strlen(model.steamPrices[i].key) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT RealMoneyPriceDetails::Copy(const PFCatalogRealMoneyPriceDetails& input, PFCatalogRealMoneyPriceDetails& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.appleAppStorePrices, input.appleAppStorePricesCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.appleAppStorePrices = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.googlePlayPrices, input.googlePlayPricesCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.googlePlayPrices = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.microsoftStorePrices, input.microsoftStorePricesCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.microsoftStorePrices = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.nintendoEShopPrices, input.nintendoEShopPricesCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.nintendoEShopPrices = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.playStationStorePrices, input.playStationStorePricesCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.playStationStorePrices = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.steamPrices, input.steamPricesCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.steamPrices = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue FilterOptions::ToJson() const
 {
     return FilterOptions::ToJson(this->Model());
@@ -1322,6 +1450,7 @@ JsonValue CatalogItem::ToJson(const PFCatalogCatalogItem& input)
     JsonUtils::ObjectAddMemberArray(output, "Platforms", input.platforms, input.platformsCount);
     JsonUtils::ObjectAddMember<CatalogPriceOptions>(output, "PriceOptions", input.priceOptions);
     JsonUtils::ObjectAddMember<Rating>(output, "Rating", input.rating);
+    JsonUtils::ObjectAddMember<RealMoneyPriceDetails>(output, "RealMoneyPriceDetails", input.realMoneyPriceDetails);
     JsonUtils::ObjectAddMemberTime(output, "StartDate", input.startDate);
     JsonUtils::ObjectAddMember<StoreDetails>(output, "StoreDetails", input.storeDetails);
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
@@ -1430,6 +1559,13 @@ HRESULT CatalogItem::FromJson(const JsonValue& input)
     if (rating)
     {
         this->SetRating(std::move(*rating));
+    }
+
+    std::optional<RealMoneyPriceDetails> realMoneyPriceDetails{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "RealMoneyPriceDetails", realMoneyPriceDetails));
+    if (realMoneyPriceDetails)
+    {
+        this->SetRealMoneyPriceDetails(std::move(*realMoneyPriceDetails));
     }
 
     std::optional<time_t> startDate{};
@@ -1569,6 +1705,10 @@ size_t CatalogItem::RequiredBufferSize(const PFCatalogCatalogItem& model)
     {
         requiredSize += Rating::RequiredBufferSize(*model.rating);
     }
+    if (model.realMoneyPriceDetails)
+    {
+        requiredSize += RealMoneyPriceDetails::RequiredBufferSize(*model.realMoneyPriceDetails);
+    }
     if (model.startDate)
     {
         requiredSize += (alignof(time_t) + sizeof(time_t));
@@ -1707,6 +1847,11 @@ HRESULT CatalogItem::Copy(const PFCatalogCatalogItem& input, PFCatalogCatalogIte
         auto propCopyResult = buffer.CopyTo<Rating>(input.rating);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.rating = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<RealMoneyPriceDetails>(input.realMoneyPriceDetails);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.realMoneyPriceDetails = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.startDate);
@@ -2932,7 +3077,6 @@ JsonValue Review::ToJson(const PFCatalogReview& input)
     JsonUtils::ObjectAddMember(output, "Locale", input.locale);
     JsonUtils::ObjectAddMember(output, "Rating", input.rating);
     JsonUtils::ObjectAddMember<EntityKey>(output, "ReviewerEntity", input.reviewerEntity);
-    JsonUtils::ObjectAddMember(output, "ReviewerId", input.reviewerId);
     JsonUtils::ObjectAddMember(output, "ReviewId", input.reviewId);
     JsonUtils::ObjectAddMember(output, "ReviewText", input.reviewText);
     JsonUtils::ObjectAddMemberTime(output, "Submitted", input.submitted);
@@ -2972,10 +3116,6 @@ HRESULT Review::FromJson(const JsonValue& input)
     {
         this->SetReviewerEntity(std::move(*reviewerEntity));
     }
-
-    String reviewerId{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ReviewerId", reviewerId));
-    this->SetReviewerId(std::move(reviewerId));
 
     String reviewId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ReviewId", reviewId));
@@ -3028,10 +3168,6 @@ size_t Review::RequiredBufferSize(const PFCatalogReview& model)
     {
         requiredSize += EntityKey::RequiredBufferSize(*model.reviewerEntity);
     }
-    if (model.reviewerId)
-    {
-        requiredSize += (std::strlen(model.reviewerId) + 1);
-    }
     if (model.reviewId)
     {
         requiredSize += (std::strlen(model.reviewId) + 1);
@@ -3074,11 +3210,6 @@ HRESULT Review::Copy(const PFCatalogReview& input, PFCatalogReview& output, Mode
         auto propCopyResult = buffer.CopyTo<EntityKey>(input.reviewerEntity);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.reviewerEntity = propCopyResult.ExtractPayload();
-    }
-    {
-        auto propCopyResult = buffer.CopyTo(input.reviewerId);
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.reviewerId = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.reviewId);

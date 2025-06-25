@@ -396,6 +396,28 @@ PF_API PFLeaderboardsUnlinkLeaderboardFromStatisticAsync(
 }
 #endif
 
+#if 0
+PF_API PFLeaderboardsUpdateLeaderboardDefinitionAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFLeaderboardsUpdateLeaderboardDefinitionRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFLeaderboardsUpdateLeaderboardDefinitionAsync),
+        std::bind(&LeaderboardsAPI::UpdateLeaderboardDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsUpdateLeaderboardEntriesAsync(
     _In_ PFEntityHandle contextHandle,

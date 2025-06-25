@@ -42,6 +42,9 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestListStatisticDefinitions(TestContext& testContext);
 #endif
+#if 0
+    void TestUpdateStatisticDefinition(TestContext& testContext);
+#endif
     void TestUpdateStatistics(TestContext& testContext);
 
 };

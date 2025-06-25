@@ -7,6 +7,66 @@ namespace PlayFab
 namespace Test
 {
 
+#if 0
+
+ClientDeletePlayerCustomPropertiesOperation::ClientDeletePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ClientDeletePlayerCustomPropertiesOperation::ResultType> ClientDeletePlayerCustomPropertiesOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ClientDeletePlayerCustomPropertiesOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ClientDeletePlayerCustomPropertiesOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFPlayerDataManagementClientDeletePlayerCustomPropertiesAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ClientDeletePlayerCustomPropertiesOperation::ResultType> ClientDeletePlayerCustomPropertiesOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFPlayerDataManagementClientDeletePlayerCustomPropertiesResult* result;
+    RETURN_IF_FAILED(PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
+#if 0
+
+ClientGetPlayerCustomPropertyOperation::ClientGetPlayerCustomPropertyOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ClientGetPlayerCustomPropertyOperation::ResultType> ClientGetPlayerCustomPropertyOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ClientGetPlayerCustomPropertyOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ClientGetPlayerCustomPropertyOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFPlayerDataManagementClientGetPlayerCustomPropertyAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ClientGetPlayerCustomPropertyOperation::ResultType> ClientGetPlayerCustomPropertyOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFPlayerDataManagementClientGetPlayerCustomPropertyGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFPlayerDataManagementClientGetPlayerCustomPropertyResult* result;
+    RETURN_IF_FAILED(PFPlayerDataManagementClientGetPlayerCustomPropertyGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
 
 ClientGetUserDataOperation::ClientGetUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -119,6 +179,62 @@ Result<ClientGetUserReadOnlyDataOperation::ResultType> ClientGetUserReadOnlyData
     return ResultType{ *result };
 }
 
+#if 0
+
+ClientListPlayerCustomPropertiesOperation::ClientListPlayerCustomPropertiesOperation(Entity entity, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) }
+{
+}
+
+AsyncOp<ClientListPlayerCustomPropertiesOperation::ResultType> ClientListPlayerCustomPropertiesOperation::Run(Entity entity, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ClientListPlayerCustomPropertiesOperation>(std::move(entity), std::move(rc)));
+}
+
+HRESULT ClientListPlayerCustomPropertiesOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFPlayerDataManagementClientListPlayerCustomPropertiesAsync(m_entity.Handle(), async);
+}
+
+Result<ClientListPlayerCustomPropertiesOperation::ResultType> ClientListPlayerCustomPropertiesOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFPlayerDataManagementClientListPlayerCustomPropertiesGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFPlayerDataManagementClientListPlayerCustomPropertiesResult* result;
+    RETURN_IF_FAILED(PFPlayerDataManagementClientListPlayerCustomPropertiesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
+#if 0
+
+ClientUpdatePlayerCustomPropertiesOperation::ClientUpdatePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ClientUpdatePlayerCustomPropertiesOperation::ResultType> ClientUpdatePlayerCustomPropertiesOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ClientUpdatePlayerCustomPropertiesOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ClientUpdatePlayerCustomPropertiesOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFPlayerDataManagementClientUpdatePlayerCustomPropertiesAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ClientUpdatePlayerCustomPropertiesOperation::ResultType> ClientUpdatePlayerCustomPropertiesOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    PFPlayerDataManagementClientUpdatePlayerCustomPropertiesResult result{};
+    RETURN_IF_FAILED(PFPlayerDataManagementClientUpdatePlayerCustomPropertiesGetResult(async, &result));
+    return ResultType{ result };
+}
+#endif
+
 
 ClientUpdateUserDataOperation::ClientUpdateUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -168,6 +284,66 @@ Result<ClientUpdateUserPublisherDataOperation::ResultType> ClientUpdateUserPubli
     RETURN_IF_FAILED(PFPlayerDataManagementClientUpdateUserPublisherDataGetResult(async, &result));
     return ResultType{ result };
 }
+
+#if 0
+
+ServerDeletePlayerCustomPropertiesOperation::ServerDeletePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ServerDeletePlayerCustomPropertiesOperation::ResultType> ServerDeletePlayerCustomPropertiesOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerDeletePlayerCustomPropertiesOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerDeletePlayerCustomPropertiesOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFPlayerDataManagementServerDeletePlayerCustomPropertiesAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ServerDeletePlayerCustomPropertiesOperation::ResultType> ServerDeletePlayerCustomPropertiesOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFPlayerDataManagementServerDeletePlayerCustomPropertiesResult* result;
+    RETURN_IF_FAILED(PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
+#if 0
+
+ServerGetPlayerCustomPropertyOperation::ServerGetPlayerCustomPropertyOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ServerGetPlayerCustomPropertyOperation::ResultType> ServerGetPlayerCustomPropertyOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerGetPlayerCustomPropertyOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerGetPlayerCustomPropertyOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFPlayerDataManagementServerGetPlayerCustomPropertyAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ServerGetPlayerCustomPropertyOperation::ResultType> ServerGetPlayerCustomPropertyOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFPlayerDataManagementServerGetPlayerCustomPropertyGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFPlayerDataManagementServerGetPlayerCustomPropertyResult* result;
+    RETURN_IF_FAILED(PFPlayerDataManagementServerGetPlayerCustomPropertyGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
@@ -345,6 +521,66 @@ Result<ServerGetUserReadOnlyDataOperation::ResultType> ServerGetUserReadOnlyData
     Vector<char> resultBuffer(resultSize);
     PFPlayerDataManagementServerGetUserDataResult* result;
     RETURN_IF_FAILED(PFPlayerDataManagementServerGetUserReadOnlyDataGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
+#if 0
+
+ServerListPlayerCustomPropertiesOperation::ServerListPlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ServerListPlayerCustomPropertiesOperation::ResultType> ServerListPlayerCustomPropertiesOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerListPlayerCustomPropertiesOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerListPlayerCustomPropertiesOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFPlayerDataManagementServerListPlayerCustomPropertiesAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ServerListPlayerCustomPropertiesOperation::ResultType> ServerListPlayerCustomPropertiesOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFPlayerDataManagementServerListPlayerCustomPropertiesGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFPlayerDataManagementServerListPlayerCustomPropertiesResult* result;
+    RETURN_IF_FAILED(PFPlayerDataManagementServerListPlayerCustomPropertiesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
+#if 0
+
+ServerUpdatePlayerCustomPropertiesOperation::ServerUpdatePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ServerUpdatePlayerCustomPropertiesOperation::ResultType> ServerUpdatePlayerCustomPropertiesOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerUpdatePlayerCustomPropertiesOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerUpdatePlayerCustomPropertiesOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFPlayerDataManagementServerUpdatePlayerCustomPropertiesAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ServerUpdatePlayerCustomPropertiesOperation::ResultType> ServerUpdatePlayerCustomPropertiesOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFPlayerDataManagementServerUpdatePlayerCustomPropertiesResult* result;
+    RETURN_IF_FAILED(PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
 #endif

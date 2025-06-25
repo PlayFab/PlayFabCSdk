@@ -875,7 +875,7 @@ template<> struct EnumRange<PFCurrency>
 
 template<> struct EnumRange<PFUserOrigination>
 {
-    static constexpr PFUserOrigination maxValue = PFUserOrigination::King;
+    static constexpr PFUserOrigination maxValue = PFUserOrigination::BattleNet;
 };
 
 template<> struct EnumRange<PFEmailVerificationStatus>

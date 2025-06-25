@@ -9,18 +9,18 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">
     <Link>
-      <AdditionalOptions>/profile /opt:ref /opt:icf %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/profile /opt:ref /opt:icf /guard:cf /DYNAMICBASE /CETCOMPAT %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
-      <AdditionalOptions>/Zi %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zi /guard:cf /Qspectre %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">
     <Link>
-      <AdditionalOptions>/profile /opt:ref /opt:icf %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/profile /opt:ref /opt:icf /guard:cf /DYNAMICBASE /CETCOMPAT %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
-      <AdditionalOptions>/Zi %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zi /guard:cf /Qspectre %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

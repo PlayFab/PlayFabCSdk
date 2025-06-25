@@ -160,6 +160,24 @@ private:
 };
 #endif
 
+#if 0
+class UpdateStatisticDefinitionOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFStatisticsUpdateStatisticDefinitionRequestWrapper<Allocator>;
+
+    UpdateStatisticDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 class UpdateStatisticsOperation : public XAsyncOperation<Wrappers::PFStatisticsUpdateStatisticsResponseWrapper<Allocator>>
 {
 public:

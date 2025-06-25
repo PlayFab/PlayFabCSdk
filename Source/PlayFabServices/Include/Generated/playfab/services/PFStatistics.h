@@ -50,8 +50,6 @@ PF_API PFStatisticsCreateStatisticDefinitionAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also StatisticCreateStatisticDefinitionAsync.
-///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_STATISTIC_DEFINITION_MODIFICATION_NOT_ALLOWED_WHILE_LINKED, E_PF_STATISTIC_NOT_FOUND,
 /// E_PF_STATISTIC_UPDATE_IN_PROGRESS or any of the global PlayFab Service errors. See doc page "Handling
@@ -73,8 +71,6 @@ PF_API PFStatisticsDeleteStatisticDefinitionAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// See also StatisticUpdateStatisticsAsync.
-///
 /// When the asynchronous task is complete, call <see cref="PFStatisticsDeleteStatisticsGetResultSize"/>
 /// and <see cref="PFStatisticsDeleteStatisticsGetResult"/> to get the result.
 /// </remarks>
@@ -131,8 +127,6 @@ PF_API PFStatisticsDeleteStatisticsGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also StatisticCreateStatisticDefinitionAsync, StatisticDeleteStatisticDefinitionAsync.
-///
 /// When the asynchronous task is complete, call <see cref="PFStatisticsGetStatisticDefinitionGetResultSize"/>
 /// and <see cref="PFStatisticsGetStatisticDefinitionGetResult"/> to get the result.
 /// </remarks>
@@ -191,8 +185,6 @@ PF_API PFStatisticsGetStatisticDefinitionGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// See also StatisticDeleteStatisticsAsync.
-///
 /// When the asynchronous task is complete, call <see cref="PFStatisticsGetStatisticsGetResultSize"/>
 /// and <see cref="PFStatisticsGetStatisticsGetResult"/> to get the result.
 /// </remarks>
@@ -251,8 +243,6 @@ PF_API PFStatisticsGetStatisticsGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also StatisticDeleteStatisticsAsync.
-///
 /// When the asynchronous task is complete, call <see cref="PFStatisticsGetStatisticsForEntitiesGetResultSize"/>
 /// and <see cref="PFStatisticsGetStatisticsForEntitiesGetResult"/> to get the result.
 /// </remarks>
@@ -330,8 +320,9 @@ PF_API PFStatisticsIncrementStatisticVersionAsync(
 /// <param name="result">PFStatisticsIncrementStatisticVersionResponse object that will be populated with the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_STATISTIC_NOT_FOUND,
-/// E_PF_STATISTIC_UPDATE_IN_PROGRESS, E_PF_STATISTIC_VERSION_INCREMENT_RATE_EXCEEDED or any of the global
-/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_STATISTIC_UPDATE_IN_PROGRESS, E_PF_STATISTIC_VERSION_INCREMENT_RATE_EXCEEDED, E_PF_VERSION_INCREMENT_RATE_EXCEEDED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFStatisticsIncrementStatisticVersionGetResult(
     _Inout_ XAsyncBlock* async,
@@ -349,8 +340,6 @@ PF_API PFStatisticsIncrementStatisticVersionGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Win32, Linux, and macOS.
-/// See also StatisticCreateStatisticDefinitionAsync, StatisticDeleteStatisticDefinitionAsync.
-///
 /// When the asynchronous task is complete, call <see cref="PFStatisticsListStatisticDefinitionsGetResultSize"/>
 /// and <see cref="PFStatisticsListStatisticDefinitionsGetResult"/> to get the result.
 /// </remarks>
@@ -400,6 +389,29 @@ PF_API PFStatisticsListStatisticDefinitionsGetResult(
 ) noexcept;
 #endif
 
+#if 0
+/// <summary>
+/// Update an existing entity statistic definition.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// See also StatisticCreateStatisticDefinitionAsync.
+///
+/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
+/// the async result will be E_PF_API_NOT_ENABLED_FOR_TITLE, E_PF_INVALID_BASE_TIME_FOR_INTERVAL, E_PF_MAX_QUERYABLE_VERSIONS_VALUE_NOT_ALLOWED_FOR_TIER,
+/// E_PF_RESET_INTERVAL_CANNOT_BE_MODIFIED, E_PF_STATISTIC_NOT_FOUND or any of the global PlayFab Service
+/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </remarks>
+PF_API PFStatisticsUpdateStatisticDefinitionAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFStatisticsUpdateStatisticDefinitionRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+#endif
+
 /// <summary>
 /// Update statistics on an entity profile. Depending on the statistic definition, this may result in
 /// entity being ranked on various leaderboards.
@@ -410,8 +422,6 @@ PF_API PFStatisticsListStatisticDefinitionsGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on all platforms.
-/// See also StatisticDeleteStatisticsAsync.
-///
 /// When the asynchronous task is complete, call <see cref="PFStatisticsUpdateStatisticsGetResultSize"/>
 /// and <see cref="PFStatisticsUpdateStatisticsGetResult"/> to get the result.
 /// </remarks>
@@ -428,9 +438,10 @@ PF_API PFStatisticsUpdateStatisticsAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS,
-/// E_PF_ENTITY_TYPE_MISMATCH_WITH_STAT_DEFINITION, E_PF_INVALID_ENTITY_TYPE, E_PF_NOT_AUTHORIZED, E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH,
-/// E_PF_STATISTIC_NOT_FOUND, E_PF_TRANSACTION_ALREADY_APPLIED or any of the global PlayFab Service errors.
-/// See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_ENTITY_TYPE_MISMATCH_WITH_STAT_DEFINITION, E_PF_INVALID_ENTITY_TYPE, E_PF_INVALID_EXTERNAL_ENTITY_ID,
+/// E_PF_NOT_AUTHORIZED, E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH, E_PF_STATISTIC_NOT_FOUND, E_PF_TRANSACTION_ALREADY_APPLIED,
+/// E_PF_UPDATING_STATISTICS_USING_TRANSACTION_ID_NOT_AVAILABLE_FOR_FREE_TIER or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFStatisticsUpdateStatisticsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -447,9 +458,10 @@ PF_API PFStatisticsUpdateStatisticsGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_API_NOT_ENABLED_FOR_GAME_CLIENT_ACCESS,
-/// E_PF_ENTITY_TYPE_MISMATCH_WITH_STAT_DEFINITION, E_PF_INVALID_ENTITY_TYPE, E_PF_NOT_AUTHORIZED, E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH,
-/// E_PF_STATISTIC_NOT_FOUND, E_PF_TRANSACTION_ALREADY_APPLIED or any of the global PlayFab Service errors.
-/// See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_ENTITY_TYPE_MISMATCH_WITH_STAT_DEFINITION, E_PF_INVALID_ENTITY_TYPE, E_PF_INVALID_EXTERNAL_ENTITY_ID,
+/// E_PF_NOT_AUTHORIZED, E_PF_STATISTIC_COLUMN_LENGTH_MISMATCH, E_PF_STATISTIC_NOT_FOUND, E_PF_TRANSACTION_ALREADY_APPLIED,
+/// E_PF_UPDATING_STATISTICS_USING_TRANSACTION_ID_NOT_AVAILABLE_FOR_FREE_TIER or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

@@ -25,6 +25,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)PlatformSpecificOperations.cpp" >
       <Filter>Source</Filter>
     </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptOperations.h" >
       <Filter>Include</Filter>
     </ClInclude>
@@ -41,12 +47,6 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClCompile Include="$(MSBuildThisFileDirectory)TitleDataManagementOperations.cpp" >
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementOperations.h" >
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementOperations.cpp" >
       <Filter>Source</Filter>
     </ClCompile>
     <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.h" >

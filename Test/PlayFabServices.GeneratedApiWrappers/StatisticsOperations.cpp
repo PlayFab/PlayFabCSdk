@@ -222,6 +222,27 @@ Result<ListStatisticDefinitionsOperation::ResultType> ListStatisticDefinitionsOp
 }
 #endif
 
+#if 0
+
+UpdateStatisticDefinitionOperation::UpdateStatisticDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<void> UpdateStatisticDefinitionOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<UpdateStatisticDefinitionOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT UpdateStatisticDefinitionOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFStatisticsUpdateStatisticDefinitionAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+#endif
+
 
 UpdateStatisticsOperation::UpdateStatisticsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

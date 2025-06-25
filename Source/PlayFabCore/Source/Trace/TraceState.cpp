@@ -82,16 +82,6 @@ HRESULT AccessTraceState(AccessMode mode, SharedPtr<TraceState>& traceState)
 TraceState::TraceState(RunContext&& /*initContext*/, RunContext&& traceContext, LocalStorage localStorage) noexcept :
     m_runContext{ std::move(traceContext) }
 {
-    // Init LibHttpClient Tracing
-    HCTraceInit();
-#ifdef _DEBUG
-    HCSettingsSetTraceLevel(HCTraceLevel::Verbose);
-#endif
-#if HC_PLATFORM_IS_MICROSOFT
-    HCTraceSetEtwEnabled(true);
-#endif
-    HCTraceSetClientCallback(TraceCallback);
-
     // Removing this feature until we more fully flesh out XPlat tracing unification for merged SDK. For now, trace options
     // are tracing to debugger, ETW (windows only), and client callbacks.
     
@@ -159,15 +149,6 @@ TraceState::TraceState(RunContext&& /*initContext*/, RunContext&& traceContext, 
     }
 }
 
-TraceState::~TraceState() noexcept
-{
-    // Intentionally skip calling HCTraceSetClientCallback(nullptr) here. If PFInitialize is called twice,
-    // the second call will fail, but not before creating a second TraceState oject. When the second TraceState
-    // object is destroyed, it will reset the static callback used by the original TraceState instance.
-
-    HCTraceCleanup();
-}
-
 HRESULT TraceState::Create(RunContext&& runContext, LocalStorage localStorage) noexcept
 {
     // Use an immediate queue during TraceState initialization so that PFInitialize can complete without the client
@@ -190,7 +171,22 @@ HRESULT TraceState::Create(RunContext&& runContext, LocalStorage localStorage) n
     Allocator<TraceState> a{};
     SharedPtr<TraceState> traceState{ new (a.allocate(1)) TraceState{ RunContext::Root(immediateQueue.handle), std::move(runContext), std::move(localStorage) }, Deleter<TraceState>{}, a };
 
-    return AccessTraceState(AccessMode::Initialize, traceState);
+    auto hr = AccessTraceState(AccessMode::Initialize, traceState);
+
+    if (SUCCEEDED(hr))
+    {
+        // Init LibHttpClient Tracing
+        HCTraceInit();
+#ifdef _DEBUG
+        HCSettingsSetTraceLevel(HCTraceLevel::Verbose);
+#endif
+#if HC_PLATFORM_IS_MICROSOFT
+        HCTraceSetEtwEnabled(true);
+#endif
+        HCTraceSetClientCallback(traceState->TraceCallback);
+    }
+
+    return hr;
 }
 
 HRESULT TraceState::Get(SharedPtr<TraceState>& state) noexcept

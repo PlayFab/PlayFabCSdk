@@ -77,26 +77,4 @@ void Free(void* pointer) noexcept
     }
 }
 
-void* JsonAllocator::Malloc(size_t size)
-{
-    return PlayFab::Alloc(size);
-}
-
-void* JsonAllocator::Realloc(void* originalPtr, size_t originalSize, size_t newSize)
-{
-    void* newPtr = nullptr;
-    if (newSize > 0)
-    {
-        newPtr = PlayFab::Alloc(newSize);
-        memcpy(newPtr, originalPtr, (originalSize < newSize ? originalSize : newSize));
-    }
-    Free(originalPtr);
-    return newPtr;
-}
-
-void JsonAllocator::Free(void* ptr)
-{
-    PlayFab::Free(ptr);
-}
-
 }

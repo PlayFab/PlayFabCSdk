@@ -2040,6 +2040,7 @@ PF_API PFAccountManagementClientUpdateUserTitleDisplayNameAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
+/// E_PF_CONCURRENT_EDIT_ERROR, E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED, E_PF_ENTITY_PROFILE_VERSION_MISMATCH,
 /// E_PF_INVALID_PARTNER_RESPONSE, E_PF_NAME_NOT_AVAILABLE, E_PF_PROFANE_DISPLAY_NAME or any of the global
 /// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
@@ -2058,6 +2059,7 @@ PF_API PFAccountManagementClientUpdateUserTitleDisplayNameGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
+/// E_PF_CONCURRENT_EDIT_ERROR, E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED, E_PF_ENTITY_PROFILE_VERSION_MISMATCH,
 /// E_PF_INVALID_PARTNER_RESPONSE, E_PF_NAME_NOT_AVAILABLE, E_PF_PROFANE_DISPLAY_NAME or any of the global
 /// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
@@ -3695,7 +3697,6 @@ PF_API PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult(
 ) noexcept;
 #endif
 
-#if 0
 /// <summary>
 /// Update the display name of the entity
 /// </summary>
@@ -3704,6 +3705,7 @@ PF_API PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on all platforms.
 /// Given an entity profile, will update its display name to the one passed in if the profile's version
 /// is equal to the specified value See also ProfileGetProfileAsync.
 ///
@@ -3722,9 +3724,10 @@ PF_API PFAccountManagementSetDisplayNameAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED,
-/// E_PF_INVALID_PARTNER_RESPONSE, E_PF_PROFANE_DISPLAY_NAME or any of the global PlayFab Service errors.
-/// See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
+/// E_PF_CONCURRENT_EDIT_ERROR, E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED, E_PF_ENTITY_PROFILE_VERSION_MISMATCH,
+/// E_PF_INVALID_PARTNER_RESPONSE, E_PF_NAME_NOT_AVAILABLE, E_PF_PROFANE_DISPLAY_NAME or any of the global
+/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFAccountManagementSetDisplayNameGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -3740,9 +3743,10 @@ PF_API PFAccountManagementSetDisplayNameGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED,
-/// E_PF_INVALID_PARTNER_RESPONSE, E_PF_PROFANE_DISPLAY_NAME or any of the global PlayFab Service errors.
-/// See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
+/// E_PF_CONCURRENT_EDIT_ERROR, E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED, E_PF_ENTITY_PROFILE_VERSION_MISMATCH,
+/// E_PF_INVALID_PARTNER_RESPONSE, E_PF_NAME_NOT_AVAILABLE, E_PF_PROFANE_DISPLAY_NAME or any of the global
+/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -3754,7 +3758,6 @@ PF_API PFAccountManagementSetDisplayNameGetResult(
     _Outptr_ PFAccountManagementSetDisplayNameResponse** result,
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
-#endif
 
 
 }

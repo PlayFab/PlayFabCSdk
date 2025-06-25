@@ -254,6 +254,28 @@ public:
     static HRESULT Copy(const PFCatalogRating& input, PFCatalogRating& output, ModelBuffer& buffer);
 };
 
+class RealMoneyPriceDetails : public Wrappers::PFCatalogRealMoneyPriceDetailsWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFCatalogRealMoneyPriceDetails>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFCatalogRealMoneyPriceDetailsWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFCatalogRealMoneyPriceDetails& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFCatalogRealMoneyPriceDetails const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFCatalogRealMoneyPriceDetails& model);
+    static HRESULT Copy(const PFCatalogRealMoneyPriceDetails& input, PFCatalogRealMoneyPriceDetails& output, ModelBuffer& buffer);
+};
+
 class FilterOptions : public Wrappers::PFCatalogFilterOptionsWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFCatalogFilterOptions>
 {
 public:

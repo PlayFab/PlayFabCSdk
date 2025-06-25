@@ -35,6 +35,15 @@
     <None Include="$(MSBuildThisFileDirectory)PlatformSpecificTestsImpl.stubs" >
       <Filter>Source\Stubs</Filter>
     </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)PlayerDataManagementTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
     <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptTests.h" >
       <Filter>Include</Filter>
     </ClInclude>
@@ -60,15 +69,6 @@
       <Filter>Source</Filter>
     </ClCompile>
     <None Include="$(MSBuildThisFileDirectory)TitleDataManagementTestsImpl.stubs" >
-      <Filter>Source\Stubs</Filter>
-    </None>
-    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.h" >
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.cpp" >
-      <Filter>Source</Filter>
-    </ClCompile>
-    <None Include="$(MSBuildThisFileDirectory)PlayerDataManagementTestsImpl.stubs" >
       <Filter>Source\Stubs</Filter>
     </None>
     <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsTests.h" >

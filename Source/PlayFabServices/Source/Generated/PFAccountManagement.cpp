@@ -3046,7 +3046,6 @@ PF_API PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult(
 }
 #endif
 
-#if 0
 PF_API PFAccountManagementSetDisplayNameAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementSetDisplayNameRequest* request,
@@ -3090,5 +3089,4 @@ PF_API PFAccountManagementSetDisplayNameGetResult(
 
     return S_OK;
 }
-#endif
 

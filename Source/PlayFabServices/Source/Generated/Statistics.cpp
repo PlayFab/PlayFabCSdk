@@ -284,6 +284,39 @@ AsyncOp<ListStatisticDefinitionsResponse> StatisticsAPI::ListStatisticDefinition
     });
 }
 
+AsyncOp<void> StatisticsAPI::UpdateStatisticDefinition(
+    Entity const& entity,
+    const UpdateStatisticDefinitionRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Statistic/UpdateStatisticDefinition" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::StatisticsUpdateStatisticDefinition,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<UpdateStatisticsResponse> StatisticsAPI::UpdateStatistics(
     Entity const& entity,
     const UpdateStatisticsRequest& request,

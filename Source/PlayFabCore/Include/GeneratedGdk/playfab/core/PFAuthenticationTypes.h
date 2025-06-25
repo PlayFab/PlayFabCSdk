@@ -135,7 +135,7 @@ typedef struct PFAuthenticationLoginResult
     _Maybenull_ time_t const* lastLoginTime;
 
     /// <summary>
-    /// True if the account was newly created on this login.
+    /// True if the master_player_account was newly created on this login.
     /// </summary>
     bool newlyCreated;
 

@@ -8,6 +8,76 @@ namespace PlayerDataManagement
 {
 
 
+AsyncOp<ClientDeletePlayerCustomPropertiesResult> PlayerDataManagementAPI::ClientDeletePlayerCustomProperties(
+    Entity const& entity,
+    const ClientDeletePlayerCustomPropertiesRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/DeletePlayerCustomProperties" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::PlayerDataManagementClientDeletePlayerCustomProperties,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ClientDeletePlayerCustomPropertiesResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ClientDeletePlayerCustomPropertiesResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ClientDeletePlayerCustomPropertiesResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<ClientGetPlayerCustomPropertyResult> PlayerDataManagementAPI::ClientGetPlayerCustomProperty(
+    Entity const& entity,
+    const ClientGetPlayerCustomPropertyRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/GetPlayerCustomProperty" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::PlayerDataManagementClientGetPlayerCustomProperty,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ClientGetPlayerCustomPropertyResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ClientGetPlayerCustomPropertyResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ClientGetPlayerCustomPropertyResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<ClientGetUserDataResult> PlayerDataManagementAPI::ClientGetUserData(
     Entity const& entity,
     const GetUserDataRequest& request,
@@ -148,6 +218,75 @@ AsyncOp<ClientGetUserDataResult> PlayerDataManagementAPI::ClientGetUserReadOnlyD
     });
 }
 
+AsyncOp<ClientListPlayerCustomPropertiesResult> PlayerDataManagementAPI::ClientListPlayerCustomProperties(
+    Entity const& entity,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/ListPlayerCustomProperties" };
+    JsonValue requestBody { JsonValue::object() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::PlayerDataManagementClientListPlayerCustomProperties,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ClientListPlayerCustomPropertiesResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ClientListPlayerCustomPropertiesResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ClientListPlayerCustomPropertiesResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<ClientUpdatePlayerCustomPropertiesResult> PlayerDataManagementAPI::ClientUpdatePlayerCustomProperties(
+    Entity const& entity,
+    const ClientUpdatePlayerCustomPropertiesRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/UpdatePlayerCustomProperties" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::PlayerDataManagementClientUpdatePlayerCustomProperties,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ClientUpdatePlayerCustomPropertiesResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ClientUpdatePlayerCustomPropertiesResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ClientUpdatePlayerCustomPropertiesResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ClientUpdateUserData(
     Entity const& entity,
     const ClientUpdateUserDataRequest& request,
@@ -214,6 +353,76 @@ AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ClientUpdateUserPublisher
         else
         {
             return Result<UpdateUserDataResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<ServerDeletePlayerCustomPropertiesResult> PlayerDataManagementAPI::ServerDeletePlayerCustomProperties(
+    Entity const& entity,
+    const ServerDeletePlayerCustomPropertiesRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/DeletePlayerCustomProperties" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::PlayerDataManagementServerDeletePlayerCustomProperties,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ServerDeletePlayerCustomPropertiesResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ServerDeletePlayerCustomPropertiesResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ServerDeletePlayerCustomPropertiesResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<ServerGetPlayerCustomPropertyResult> PlayerDataManagementAPI::ServerGetPlayerCustomProperty(
+    Entity const& entity,
+    const ServerGetPlayerCustomPropertyRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/GetPlayerCustomProperty" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::PlayerDataManagementServerGetPlayerCustomProperty,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ServerGetPlayerCustomPropertyResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ServerGetPlayerCustomPropertyResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ServerGetPlayerCustomPropertyResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }
@@ -424,6 +633,76 @@ AsyncOp<ServerGetUserDataResult> PlayerDataManagementAPI::ServerGetUserReadOnlyD
         else
         {
             return Result<ServerGetUserDataResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<ServerListPlayerCustomPropertiesResult> PlayerDataManagementAPI::ServerListPlayerCustomProperties(
+    Entity const& entity,
+    const ListPlayerCustomPropertiesRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/ListPlayerCustomProperties" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::PlayerDataManagementServerListPlayerCustomProperties,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ServerListPlayerCustomPropertiesResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ServerListPlayerCustomPropertiesResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ServerListPlayerCustomPropertiesResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<ServerUpdatePlayerCustomPropertiesResult> PlayerDataManagementAPI::ServerUpdatePlayerCustomProperties(
+    Entity const& entity,
+    const ServerUpdatePlayerCustomPropertiesRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/UpdatePlayerCustomProperties" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::PlayerDataManagementServerUpdatePlayerCustomProperties,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<ServerUpdatePlayerCustomPropertiesResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            ServerUpdatePlayerCustomPropertiesResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<ServerUpdatePlayerCustomPropertiesResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }

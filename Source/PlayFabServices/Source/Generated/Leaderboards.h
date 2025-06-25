@@ -31,6 +31,7 @@ public:
     static AsyncOp<IncrementLeaderboardVersionResponse> IncrementLeaderboardVersion(Entity const& entity, const IncrementLeaderboardVersionRequest& request, RunContext rc);
     static AsyncOp<ListLeaderboardDefinitionsResponse> ListLeaderboardDefinitions(Entity const& entity, const ListLeaderboardDefinitionsRequest& request, RunContext rc);
     static AsyncOp<void> UnlinkLeaderboardFromStatistic(Entity const& entity, const UnlinkLeaderboardFromStatisticRequest& request, RunContext rc);
+    static AsyncOp<void> UpdateLeaderboardDefinition(Entity const& entity, const UpdateLeaderboardDefinitionRequest& request, RunContext rc);
     static AsyncOp<void> UpdateLeaderboardEntries(Entity const& entity, const UpdateLeaderboardEntriesRequest& request, RunContext rc);
 };
 

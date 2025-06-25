@@ -226,7 +226,8 @@ enum class PFUserOrigination : uint32_t
     NintendoSwitchAccount,
     GooglePlayGames,
     XboxMobileStore,
-    King
+    King,
+    BattleNet
 };
 
 /// <summary>

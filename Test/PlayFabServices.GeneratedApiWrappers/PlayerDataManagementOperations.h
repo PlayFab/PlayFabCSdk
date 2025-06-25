@@ -8,6 +8,46 @@ namespace PlayFab
 namespace Test
 {
 
+#if 0
+class ClientDeletePlayerCustomPropertiesOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementClientDeletePlayerCustomPropertiesResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFPlayerDataManagementClientDeletePlayerCustomPropertiesRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFPlayerDataManagementClientDeletePlayerCustomPropertiesResultWrapper<Allocator>;
+
+    ClientDeletePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFPlayerDataManagementClientDeletePlayerCustomPropertiesResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if 0
+class ClientGetPlayerCustomPropertyOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementClientGetPlayerCustomPropertyResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFPlayerDataManagementClientGetPlayerCustomPropertyRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFPlayerDataManagementClientGetPlayerCustomPropertyResultWrapper<Allocator>;
+
+    ClientGetPlayerCustomPropertyOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFPlayerDataManagementClientGetPlayerCustomPropertyResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 class ClientGetUserDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementClientGetUserDataResultWrapper<Allocator>>
 {
 public:
@@ -80,6 +120,44 @@ private:
     RequestType m_request;
 };
 
+#if 0
+class ClientListPlayerCustomPropertiesOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementClientListPlayerCustomPropertiesResultWrapper<Allocator>>
+{
+public:
+    using ResultType = Wrappers::PFPlayerDataManagementClientListPlayerCustomPropertiesResultWrapper<Allocator>;
+
+    ClientListPlayerCustomPropertiesOperation(Entity entity, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFPlayerDataManagementClientListPlayerCustomPropertiesResultWrapper<Allocator>> Run(Entity entity, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+};
+#endif
+
+#if 0
+class ClientUpdatePlayerCustomPropertiesOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementClientUpdatePlayerCustomPropertiesResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFPlayerDataManagementClientUpdatePlayerCustomPropertiesRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFPlayerDataManagementClientUpdatePlayerCustomPropertiesResultWrapper<Allocator>;
+
+    ClientUpdatePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFPlayerDataManagementClientUpdatePlayerCustomPropertiesResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 class ClientUpdateUserDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementUpdateUserDataResultWrapper<Allocator>>
 {
 public:
@@ -115,6 +193,46 @@ private:
     Entity m_entity;
     RequestType m_request;
 };
+
+#if 0
+class ServerDeletePlayerCustomPropertiesOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerDeletePlayerCustomPropertiesResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFPlayerDataManagementServerDeletePlayerCustomPropertiesRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFPlayerDataManagementServerDeletePlayerCustomPropertiesResultWrapper<Allocator>;
+
+    ServerDeletePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFPlayerDataManagementServerDeletePlayerCustomPropertiesResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if 0
+class ServerGetPlayerCustomPropertyOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerGetPlayerCustomPropertyResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFPlayerDataManagementServerGetPlayerCustomPropertyRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFPlayerDataManagementServerGetPlayerCustomPropertyResultWrapper<Allocator>;
+
+    ServerGetPlayerCustomPropertyOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFPlayerDataManagementServerGetPlayerCustomPropertyResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerGetUserDataOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerGetUserDataResultWrapper<Allocator>>
@@ -226,6 +344,46 @@ public:
     ServerGetUserReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
 
     static AsyncOp<Wrappers::PFPlayerDataManagementServerGetUserDataResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if 0
+class ServerListPlayerCustomPropertiesOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerListPlayerCustomPropertiesResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFPlayerDataManagementListPlayerCustomPropertiesRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFPlayerDataManagementServerListPlayerCustomPropertiesResultWrapper<Allocator>;
+
+    ServerListPlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFPlayerDataManagementServerListPlayerCustomPropertiesResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if 0
+class ServerUpdatePlayerCustomPropertiesOperation : public XAsyncOperation<Wrappers::PFPlayerDataManagementServerUpdatePlayerCustomPropertiesResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFPlayerDataManagementServerUpdatePlayerCustomPropertiesRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFPlayerDataManagementServerUpdatePlayerCustomPropertiesResultWrapper<Allocator>;
+
+    ServerUpdatePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFPlayerDataManagementServerUpdatePlayerCustomPropertiesResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
 
 private:
     HRESULT OnStarted(XAsyncBlock* async) noexcept override;

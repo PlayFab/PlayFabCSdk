@@ -35,6 +35,9 @@ void LeaderboardsTests::AddTests()
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestUnlinkLeaderboardFromStatistic", &LeaderboardsTests::TestUnlinkLeaderboardFromStatistic);
 #endif
+#if 0
+    AddTest("TestUpdateLeaderboardDefinition", &LeaderboardsTests::TestUpdateLeaderboardDefinition);
+#endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestUpdateLeaderboardEntries", &LeaderboardsTests::TestUpdateLeaderboardEntries);
 #endif

@@ -23,6 +23,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)PlatformSpecificTests.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)PlatformSpecificTests.cpp" />
     <None Include="$(MSBuildThisFileDirectory)PlatformSpecificTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)PlayerDataManagementTestsImpl.stubs" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CloudScriptTests.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CloudScriptTests.cpp" />
     <None Include="$(MSBuildThisFileDirectory)CloudScriptTestsImpl.stubs" />
@@ -32,9 +35,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)TitleDataManagementTests.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)TitleDataManagementTests.cpp" />
     <None Include="$(MSBuildThisFileDirectory)TitleDataManagementTestsImpl.stubs" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.h" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)PlayerDataManagementTests.cpp" />
-    <None Include="$(MSBuildThisFileDirectory)PlayerDataManagementTestsImpl.stubs" />
     <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsTests.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)PushNotificationsTests.cpp" />
     <None Include="$(MSBuildThisFileDirectory)PushNotificationsTestsImpl.stubs" />

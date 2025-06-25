@@ -57,19 +57,6 @@ struct Deleter
 };
 
 //------------------------------------------------------------------------------
-// nlohmann Allocator
-//------------------------------------------------------------------------------
-struct JsonAllocator
-{
-public:
-    static const bool kNeedFree = true;
-
-    void* Malloc(size_t size);
-    void* Realloc(void* originalPtr, size_t originalSize, size_t newSize);
-    static void Free(void* ptr);
-};
-
-//------------------------------------------------------------------------------
 // Smart Pointers
 //------------------------------------------------------------------------------
 template<class T>

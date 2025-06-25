@@ -645,6 +645,7 @@ public:
     PFLeaderboardsGetEntityLeaderboardResponseWrapper(const PFLeaderboardsGetEntityLeaderboardResponse& model) :
         ModelWrapper<PFLeaderboardsGetEntityLeaderboardResponse, Alloc>{ model },
         m_columns{ model.columns, model.columns + model.columnsCount },
+        m_nextReset{ model.nextReset ? std::optional<time_t>{ *model.nextReset } : std::nullopt },
         m_rankings{ model.rankings, model.rankings + model.rankingsCount }
     {
         SetModelPointers();
@@ -674,6 +675,7 @@ public:
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_columns, rhs.m_columns);
+        swap(lhs.m_nextReset, rhs.m_nextReset);
         swap(lhs.m_rankings, rhs.m_rankings);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
@@ -689,6 +691,12 @@ public:
     void SetEntryCount(uint32_t value)
     {
         this->m_model.entryCount = value;
+    }
+
+    void SetNextReset(std::optional<time_t> value)
+    {
+        m_nextReset = std::move(value);
+        this->m_model.nextReset = m_nextReset ? m_nextReset.operator->() : nullptr;
     }
 
     void SetRankings(ModelVector<PFLeaderboardsEntityLeaderboardEntryWrapper<Alloc>, Alloc> value)
@@ -707,10 +715,12 @@ private:
     void SetModelPointers()
     {
         this->m_model.columns = m_columns.empty() ? nullptr : m_columns.data();
+        this->m_model.nextReset = m_nextReset ? m_nextReset.operator->() : nullptr;
         this->m_model.rankings = m_rankings.empty() ? nullptr : m_rankings.data();
     }
 
     ModelVector<PFLeaderboardsLeaderboardColumnWrapper<Alloc>, Alloc> m_columns;
+    std::optional<time_t> m_nextReset;
     ModelVector<PFLeaderboardsEntityLeaderboardEntryWrapper<Alloc>, Alloc> m_rankings;
 };
 
@@ -1591,6 +1601,97 @@ private:
     StringDictionaryEntryVector<Alloc> m_customTags;
     String m_name;
     String m_statisticName;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper : public ModelWrapper<PFLeaderboardsUpdateLeaderboardDefinitionRequest, Alloc>
+{
+public:
+    using ModelType = PFLeaderboardsUpdateLeaderboardDefinitionRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper() = default;
+
+    PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper(const PFLeaderboardsUpdateLeaderboardDefinitionRequest& model) :
+        ModelWrapper<PFLeaderboardsUpdateLeaderboardDefinitionRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_name{ SafeString(model.name) },
+        m_sizeLimit{ model.sizeLimit ? std::optional<int32_t>{ *model.sizeLimit } : std::nullopt },
+        m_versionConfiguration{ model.versionConfiguration ? std::optional<PFVersionConfigurationWrapper<Alloc>>{ *model.versionConfiguration } : std::nullopt }
+    {
+        SetModelPointers();
+    }
+
+    PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper(const PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper& src) :
+        PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper(PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper&& src) :
+        PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper& operator=(PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper() = default;
+
+    friend void swap(PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper& lhs, PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_name, rhs.m_name);
+        swap(lhs.m_sizeLimit, rhs.m_sizeLimit);
+        swap(lhs.m_versionConfiguration, rhs.m_versionConfiguration);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetName(String value)
+    {
+        m_name = std::move(value);
+        this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    void SetSizeLimit(std::optional<int32_t> value)
+    {
+        m_sizeLimit = std::move(value);
+        this->m_model.sizeLimit = m_sizeLimit ? m_sizeLimit.operator->() : nullptr;
+    }
+
+    void SetVersionConfiguration(std::optional<PFVersionConfigurationWrapper<Alloc>> value)
+    {
+        m_versionConfiguration = std::move(value);
+        this->m_model.versionConfiguration = m_versionConfiguration ? &m_versionConfiguration->Model() : nullptr;
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.name = m_name.empty() ? nullptr : m_name.data();
+        this->m_model.sizeLimit = m_sizeLimit ? m_sizeLimit.operator->() : nullptr;
+        this->m_model.versionConfiguration = m_versionConfiguration ?  &m_versionConfiguration->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_name;
+    std::optional<int32_t> m_sizeLimit;
+    std::optional<PFVersionConfigurationWrapper<Alloc>> m_versionConfiguration;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>

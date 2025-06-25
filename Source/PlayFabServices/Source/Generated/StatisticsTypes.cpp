@@ -835,6 +835,20 @@ HRESULT ListStatisticDefinitionsResponse::Copy(const PFStatisticsListStatisticDe
     return S_OK;
 }
 
+JsonValue UpdateStatisticDefinitionRequest::ToJson() const
+{
+    return UpdateStatisticDefinitionRequest::ToJson(this->Model());
+}
+
+JsonValue UpdateStatisticDefinitionRequest::ToJson(const PFStatisticsUpdateStatisticDefinitionRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "Name", input.name);
+    JsonUtils::ObjectAddMember<VersionConfiguration>(output, "VersionConfiguration", input.versionConfiguration);
+    return output;
+}
+
 JsonValue StatisticUpdate::ToJson() const
 {
     return StatisticUpdate::ToJson(this->Model());
@@ -861,6 +875,7 @@ JsonValue UpdateStatisticsRequest::ToJson(const PFStatisticsUpdateStatisticsRequ
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<StatisticUpdate>(output, "Statistics", input.statistics, input.statisticsCount);
+    JsonUtils::ObjectAddMember(output, "TransactionId", input.transactionId);
     return output;
 }
 

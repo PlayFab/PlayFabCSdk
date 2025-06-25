@@ -1510,6 +1510,87 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFStatisticsUpdateStatisticDefinitionRequestWrapper : public ModelWrapper<PFStatisticsUpdateStatisticDefinitionRequest, Alloc>
+{
+public:
+    using ModelType = PFStatisticsUpdateStatisticDefinitionRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFStatisticsUpdateStatisticDefinitionRequestWrapper() = default;
+
+    PFStatisticsUpdateStatisticDefinitionRequestWrapper(const PFStatisticsUpdateStatisticDefinitionRequest& model) :
+        ModelWrapper<PFStatisticsUpdateStatisticDefinitionRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_name{ SafeString(model.name) },
+        m_versionConfiguration{ model.versionConfiguration ? std::optional<PFVersionConfigurationWrapper<Alloc>>{ *model.versionConfiguration } : std::nullopt }
+    {
+        SetModelPointers();
+    }
+
+    PFStatisticsUpdateStatisticDefinitionRequestWrapper(const PFStatisticsUpdateStatisticDefinitionRequestWrapper& src) :
+        PFStatisticsUpdateStatisticDefinitionRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFStatisticsUpdateStatisticDefinitionRequestWrapper(PFStatisticsUpdateStatisticDefinitionRequestWrapper&& src) :
+        PFStatisticsUpdateStatisticDefinitionRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFStatisticsUpdateStatisticDefinitionRequestWrapper& operator=(PFStatisticsUpdateStatisticDefinitionRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFStatisticsUpdateStatisticDefinitionRequestWrapper() = default;
+
+    friend void swap(PFStatisticsUpdateStatisticDefinitionRequestWrapper& lhs, PFStatisticsUpdateStatisticDefinitionRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_name, rhs.m_name);
+        swap(lhs.m_versionConfiguration, rhs.m_versionConfiguration);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    void SetName(String value)
+    {
+        m_name = std::move(value);
+        this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    void SetVersionConfiguration(std::optional<PFVersionConfigurationWrapper<Alloc>> value)
+    {
+        m_versionConfiguration = std::move(value);
+        this->m_model.versionConfiguration = m_versionConfiguration ? &m_versionConfiguration->Model() : nullptr;
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.name = m_name.empty() ? nullptr : m_name.data();
+        this->m_model.versionConfiguration = m_versionConfiguration ?  &m_versionConfiguration->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_name;
+    std::optional<PFVersionConfigurationWrapper<Alloc>> m_versionConfiguration;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFStatisticsStatisticUpdateWrapper : public ModelWrapper<PFStatisticsStatisticUpdate, Alloc>
 {
 public:
@@ -1614,7 +1695,8 @@ public:
         ModelWrapper<PFStatisticsUpdateStatisticsRequest, Alloc>{ model },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_entity{ model.entity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.entity } : std::nullopt },
-        m_statistics{ model.statistics, model.statistics + model.statisticsCount }
+        m_statistics{ model.statistics, model.statistics + model.statisticsCount },
+        m_transactionId{ SafeString(model.transactionId) }
     {
         SetModelPointers();
     }
@@ -1645,6 +1727,7 @@ public:
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_entity, rhs.m_entity);
         swap(lhs.m_statistics, rhs.m_statistics);
+        swap(lhs.m_transactionId, rhs.m_transactionId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
@@ -1669,17 +1752,25 @@ public:
         this->m_model.statisticsCount =  static_cast<uint32_t>(m_statistics.size());
     }
 
+    void SetTransactionId(String value)
+    {
+        m_transactionId = std::move(value);
+        this->m_model.transactionId =  m_transactionId.empty() ? nullptr : m_transactionId.data();
+    }
+
 private:
     void SetModelPointers()
     {
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.entity = m_entity ?  &m_entity->Model() : nullptr;
         this->m_model.statistics = m_statistics.empty() ? nullptr : m_statistics.data();
+        this->m_model.transactionId = m_transactionId.empty() ? nullptr : m_transactionId.data();
     }
 
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFEntityKeyWrapper<Alloc>> m_entity;
     ModelVector<PFStatisticsStatisticUpdateWrapper<Alloc>, Alloc> m_statistics;
+    String m_transactionId;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>

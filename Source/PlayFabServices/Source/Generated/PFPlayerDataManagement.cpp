@@ -8,6 +8,98 @@
 using namespace PlayFab;
 using namespace PlayFab::PlayerDataManagement;
 
+#if 0
+PF_API PFPlayerDataManagementClientDeletePlayerCustomPropertiesAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFPlayerDataManagementClientDeletePlayerCustomPropertiesRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFPlayerDataManagementClientDeletePlayerCustomPropertiesAsync),
+        std::bind(&PlayerDataManagementAPI::ClientDeletePlayerCustomProperties, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+
+PF_API PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResultSize(
+    _In_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return XAsyncGetResultSize(async, bufferSize);
+}
+
+PF_API PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResult(
+    _In_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFPlayerDataManagementClientDeletePlayerCustomPropertiesResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(result);
+
+    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+    *result = static_cast<PFPlayerDataManagementClientDeletePlayerCustomPropertiesResult*>(buffer);
+
+    return S_OK;
+}
+#endif
+
+#if 0
+PF_API PFPlayerDataManagementClientGetPlayerCustomPropertyAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFPlayerDataManagementClientGetPlayerCustomPropertyRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFPlayerDataManagementClientGetPlayerCustomPropertyAsync),
+        std::bind(&PlayerDataManagementAPI::ClientGetPlayerCustomProperty, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+
+PF_API PFPlayerDataManagementClientGetPlayerCustomPropertyGetResultSize(
+    _In_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return XAsyncGetResultSize(async, bufferSize);
+}
+
+PF_API PFPlayerDataManagementClientGetPlayerCustomPropertyGetResult(
+    _In_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFPlayerDataManagementClientGetPlayerCustomPropertyResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(result);
+
+    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+    *result = static_cast<PFPlayerDataManagementClientGetPlayerCustomPropertyResult*>(buffer);
+
+    return S_OK;
+}
+#endif
+
 PF_API PFPlayerDataManagementClientGetUserDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementGetUserDataRequest* request,
@@ -184,6 +276,80 @@ PF_API PFPlayerDataManagementClientGetUserReadOnlyDataGetResult(
     return S_OK;
 }
 
+#if 0
+PF_API PFPlayerDataManagementClientListPlayerCustomPropertiesAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFPlayerDataManagementClientListPlayerCustomPropertiesAsync),
+        std::bind(&PlayerDataManagementAPI::ClientListPlayerCustomProperties, Entity::Duplicate(contextHandle), std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+
+PF_API PFPlayerDataManagementClientListPlayerCustomPropertiesGetResultSize(
+    _In_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return XAsyncGetResultSize(async, bufferSize);
+}
+
+PF_API PFPlayerDataManagementClientListPlayerCustomPropertiesGetResult(
+    _In_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFPlayerDataManagementClientListPlayerCustomPropertiesResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(result);
+
+    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+    *result = static_cast<PFPlayerDataManagementClientListPlayerCustomPropertiesResult*>(buffer);
+
+    return S_OK;
+}
+#endif
+
+#if 0
+PF_API PFPlayerDataManagementClientUpdatePlayerCustomPropertiesAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFPlayerDataManagementClientUpdatePlayerCustomPropertiesRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFPlayerDataManagementClientUpdatePlayerCustomPropertiesAsync),
+        std::bind(&PlayerDataManagementAPI::ClientUpdatePlayerCustomProperties, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+
+PF_API PFPlayerDataManagementClientUpdatePlayerCustomPropertiesGetResult(
+    _In_ XAsyncBlock* async,
+    _Out_ PFPlayerDataManagementClientUpdatePlayerCustomPropertiesResult* result
+) noexcept
+{
+    return XAsyncGetResult(async, nullptr, sizeof(PFPlayerDataManagementClientUpdatePlayerCustomPropertiesResult), result, nullptr);
+}
+#endif
+
 PF_API PFPlayerDataManagementClientUpdateUserDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlayerDataManagementClientUpdateUserDataRequest* request,
@@ -239,6 +405,98 @@ PF_API PFPlayerDataManagementClientUpdateUserPublisherDataGetResult(
 {
     return XAsyncGetResult(async, nullptr, sizeof(PFPlayerDataManagementUpdateUserDataResult), result, nullptr);
 }
+
+#if 0
+PF_API PFPlayerDataManagementServerDeletePlayerCustomPropertiesAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFPlayerDataManagementServerDeletePlayerCustomPropertiesRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFPlayerDataManagementServerDeletePlayerCustomPropertiesAsync),
+        std::bind(&PlayerDataManagementAPI::ServerDeletePlayerCustomProperties, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+
+PF_API PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResultSize(
+    _In_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return XAsyncGetResultSize(async, bufferSize);
+}
+
+PF_API PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResult(
+    _In_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFPlayerDataManagementServerDeletePlayerCustomPropertiesResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(result);
+
+    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+    *result = static_cast<PFPlayerDataManagementServerDeletePlayerCustomPropertiesResult*>(buffer);
+
+    return S_OK;
+}
+#endif
+
+#if 0
+PF_API PFPlayerDataManagementServerGetPlayerCustomPropertyAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFPlayerDataManagementServerGetPlayerCustomPropertyRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFPlayerDataManagementServerGetPlayerCustomPropertyAsync),
+        std::bind(&PlayerDataManagementAPI::ServerGetPlayerCustomProperty, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+
+PF_API PFPlayerDataManagementServerGetPlayerCustomPropertyGetResultSize(
+    _In_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return XAsyncGetResultSize(async, bufferSize);
+}
+
+PF_API PFPlayerDataManagementServerGetPlayerCustomPropertyGetResult(
+    _In_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFPlayerDataManagementServerGetPlayerCustomPropertyResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(result);
+
+    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+    *result = static_cast<PFPlayerDataManagementServerGetPlayerCustomPropertyResult*>(buffer);
+
+    return S_OK;
+}
+#endif
 
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFPlayerDataManagementServerGetUserDataAsync(
@@ -511,6 +769,98 @@ PF_API PFPlayerDataManagementServerGetUserReadOnlyDataGetResult(
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFPlayerDataManagementServerGetUserDataResult*>(buffer);
+
+    return S_OK;
+}
+#endif
+
+#if 0
+PF_API PFPlayerDataManagementServerListPlayerCustomPropertiesAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFPlayerDataManagementListPlayerCustomPropertiesRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFPlayerDataManagementServerListPlayerCustomPropertiesAsync),
+        std::bind(&PlayerDataManagementAPI::ServerListPlayerCustomProperties, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+
+PF_API PFPlayerDataManagementServerListPlayerCustomPropertiesGetResultSize(
+    _In_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return XAsyncGetResultSize(async, bufferSize);
+}
+
+PF_API PFPlayerDataManagementServerListPlayerCustomPropertiesGetResult(
+    _In_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFPlayerDataManagementServerListPlayerCustomPropertiesResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(result);
+
+    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+    *result = static_cast<PFPlayerDataManagementServerListPlayerCustomPropertiesResult*>(buffer);
+
+    return S_OK;
+}
+#endif
+
+#if 0
+PF_API PFPlayerDataManagementServerUpdatePlayerCustomPropertiesAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFPlayerDataManagementServerUpdatePlayerCustomPropertiesRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFPlayerDataManagementServerUpdatePlayerCustomPropertiesAsync),
+        std::bind(&PlayerDataManagementAPI::ServerUpdatePlayerCustomProperties, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+
+PF_API PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResultSize(
+    _In_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return XAsyncGetResultSize(async, bufferSize);
+}
+
+PF_API PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResult(
+    _In_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFPlayerDataManagementServerUpdatePlayerCustomPropertiesResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(result);
+
+    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+    *result = static_cast<PFPlayerDataManagementServerUpdatePlayerCustomPropertiesResult*>(buffer);
 
     return S_OK;
 }

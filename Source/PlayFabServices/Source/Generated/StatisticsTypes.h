@@ -351,6 +351,20 @@ public:
     static HRESULT Copy(const PFStatisticsListStatisticDefinitionsResponse& input, PFStatisticsListStatisticDefinitionsResponse& output, ModelBuffer& buffer);
 };
 
+class UpdateStatisticDefinitionRequest : public Wrappers::PFStatisticsUpdateStatisticDefinitionRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFStatisticsUpdateStatisticDefinitionRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFStatisticsUpdateStatisticDefinitionRequest& input);
+};
+
 class StatisticUpdate : public Wrappers::PFStatisticsStatisticUpdateWrapper<Allocator>, public InputModel
 {
 public:

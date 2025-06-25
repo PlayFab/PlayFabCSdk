@@ -906,6 +906,122 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFCatalogRealMoneyPriceDetailsWrapper : public ModelWrapper<PFCatalogRealMoneyPriceDetails, Alloc>
+{
+public:
+    using ModelType = PFCatalogRealMoneyPriceDetails;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFCatalogRealMoneyPriceDetailsWrapper() = default;
+
+    PFCatalogRealMoneyPriceDetailsWrapper(const PFCatalogRealMoneyPriceDetails& model) :
+        ModelWrapper<PFCatalogRealMoneyPriceDetails, Alloc>{ model },
+        m_appleAppStorePrices{ model.appleAppStorePrices, model.appleAppStorePrices + model.appleAppStorePricesCount },
+        m_googlePlayPrices{ model.googlePlayPrices, model.googlePlayPrices + model.googlePlayPricesCount },
+        m_microsoftStorePrices{ model.microsoftStorePrices, model.microsoftStorePrices + model.microsoftStorePricesCount },
+        m_nintendoEShopPrices{ model.nintendoEShopPrices, model.nintendoEShopPrices + model.nintendoEShopPricesCount },
+        m_playStationStorePrices{ model.playStationStorePrices, model.playStationStorePrices + model.playStationStorePricesCount },
+        m_steamPrices{ model.steamPrices, model.steamPrices + model.steamPricesCount }
+    {
+        SetModelPointers();
+    }
+
+    PFCatalogRealMoneyPriceDetailsWrapper(const PFCatalogRealMoneyPriceDetailsWrapper& src) :
+        PFCatalogRealMoneyPriceDetailsWrapper{ src.Model() }
+    {
+    }
+
+    PFCatalogRealMoneyPriceDetailsWrapper(PFCatalogRealMoneyPriceDetailsWrapper&& src) :
+        PFCatalogRealMoneyPriceDetailsWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFCatalogRealMoneyPriceDetailsWrapper& operator=(PFCatalogRealMoneyPriceDetailsWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFCatalogRealMoneyPriceDetailsWrapper() = default;
+
+    friend void swap(PFCatalogRealMoneyPriceDetailsWrapper& lhs, PFCatalogRealMoneyPriceDetailsWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_appleAppStorePrices, rhs.m_appleAppStorePrices);
+        swap(lhs.m_googlePlayPrices, rhs.m_googlePlayPrices);
+        swap(lhs.m_microsoftStorePrices, rhs.m_microsoftStorePrices);
+        swap(lhs.m_nintendoEShopPrices, rhs.m_nintendoEShopPrices);
+        swap(lhs.m_playStationStorePrices, rhs.m_playStationStorePrices);
+        swap(lhs.m_steamPrices, rhs.m_steamPrices);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    void SetAppleAppStorePrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
+    {
+        m_appleAppStorePrices = std::move(value);
+        this->m_model.appleAppStorePrices =  m_appleAppStorePrices.empty() ? nullptr : m_appleAppStorePrices.data();
+        this->m_model.appleAppStorePricesCount =  static_cast<uint32_t>(m_appleAppStorePrices.size());
+    }
+
+    void SetGooglePlayPrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
+    {
+        m_googlePlayPrices = std::move(value);
+        this->m_model.googlePlayPrices =  m_googlePlayPrices.empty() ? nullptr : m_googlePlayPrices.data();
+        this->m_model.googlePlayPricesCount =  static_cast<uint32_t>(m_googlePlayPrices.size());
+    }
+
+    void SetMicrosoftStorePrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
+    {
+        m_microsoftStorePrices = std::move(value);
+        this->m_model.microsoftStorePrices =  m_microsoftStorePrices.empty() ? nullptr : m_microsoftStorePrices.data();
+        this->m_model.microsoftStorePricesCount =  static_cast<uint32_t>(m_microsoftStorePrices.size());
+    }
+
+    void SetNintendoEShopPrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
+    {
+        m_nintendoEShopPrices = std::move(value);
+        this->m_model.nintendoEShopPrices =  m_nintendoEShopPrices.empty() ? nullptr : m_nintendoEShopPrices.data();
+        this->m_model.nintendoEShopPricesCount =  static_cast<uint32_t>(m_nintendoEShopPrices.size());
+    }
+
+    void SetPlayStationStorePrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
+    {
+        m_playStationStorePrices = std::move(value);
+        this->m_model.playStationStorePrices =  m_playStationStorePrices.empty() ? nullptr : m_playStationStorePrices.data();
+        this->m_model.playStationStorePricesCount =  static_cast<uint32_t>(m_playStationStorePrices.size());
+    }
+
+    void SetSteamPrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
+    {
+        m_steamPrices = std::move(value);
+        this->m_model.steamPrices =  m_steamPrices.empty() ? nullptr : m_steamPrices.data();
+        this->m_model.steamPricesCount =  static_cast<uint32_t>(m_steamPrices.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.appleAppStorePrices = m_appleAppStorePrices.empty() ? nullptr : m_appleAppStorePrices.data();
+        this->m_model.googlePlayPrices = m_googlePlayPrices.empty() ? nullptr : m_googlePlayPrices.data();
+        this->m_model.microsoftStorePrices = m_microsoftStorePrices.empty() ? nullptr : m_microsoftStorePrices.data();
+        this->m_model.nintendoEShopPrices = m_nintendoEShopPrices.empty() ? nullptr : m_nintendoEShopPrices.data();
+        this->m_model.playStationStorePrices = m_playStationStorePrices.empty() ? nullptr : m_playStationStorePrices.data();
+        this->m_model.steamPrices = m_steamPrices.empty() ? nullptr : m_steamPrices.data();
+    }
+
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> m_appleAppStorePrices;
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> m_googlePlayPrices;
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> m_microsoftStorePrices;
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> m_nintendoEShopPrices;
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> m_playStationStorePrices;
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> m_steamPrices;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFCatalogFilterOptionsWrapper : public ModelWrapper<PFCatalogFilterOptions, Alloc>
 {
 public:
@@ -1352,6 +1468,7 @@ public:
         m_platforms{ model.platforms, model.platforms + model.platformsCount },
         m_priceOptions{ model.priceOptions ? std::optional<PFCatalogCatalogPriceOptionsWrapper<Alloc>>{ *model.priceOptions } : std::nullopt },
         m_rating{ model.rating ? std::optional<PFCatalogRatingWrapper<Alloc>>{ *model.rating } : std::nullopt },
+        m_realMoneyPriceDetails{ model.realMoneyPriceDetails ? std::optional<PFCatalogRealMoneyPriceDetailsWrapper<Alloc>>{ *model.realMoneyPriceDetails } : std::nullopt },
         m_startDate{ model.startDate ? std::optional<time_t>{ *model.startDate } : std::nullopt },
         m_storeDetails{ model.storeDetails ? std::optional<PFCatalogStoreDetailsWrapper<Alloc>>{ *model.storeDetails } : std::nullopt },
         m_tags{ model.tags, model.tags + model.tagsCount },
@@ -1406,6 +1523,7 @@ public:
         swap(lhs.m_platforms, rhs.m_platforms);
         swap(lhs.m_priceOptions, rhs.m_priceOptions);
         swap(lhs.m_rating, rhs.m_rating);
+        swap(lhs.m_realMoneyPriceDetails, rhs.m_realMoneyPriceDetails);
         swap(lhs.m_startDate, rhs.m_startDate);
         swap(lhs.m_storeDetails, rhs.m_storeDetails);
         swap(lhs.m_tags, rhs.m_tags);
@@ -1555,6 +1673,12 @@ public:
         this->m_model.rating = m_rating ? &m_rating->Model() : nullptr;
     }
 
+    void SetRealMoneyPriceDetails(std::optional<PFCatalogRealMoneyPriceDetailsWrapper<Alloc>> value)
+    {
+        m_realMoneyPriceDetails = std::move(value);
+        this->m_model.realMoneyPriceDetails = m_realMoneyPriceDetails ? &m_realMoneyPriceDetails->Model() : nullptr;
+    }
+
     void SetStartDate(std::optional<time_t> value)
     {
         m_startDate = std::move(value);
@@ -1612,6 +1736,7 @@ private:
         this->m_model.platforms = m_platforms.empty() ? nullptr : m_platforms.data();
         this->m_model.priceOptions = m_priceOptions ?  &m_priceOptions->Model() : nullptr;
         this->m_model.rating = m_rating ?  &m_rating->Model() : nullptr;
+        this->m_model.realMoneyPriceDetails = m_realMoneyPriceDetails ?  &m_realMoneyPriceDetails->Model() : nullptr;
         this->m_model.startDate = m_startDate ? m_startDate.operator->() : nullptr;
         this->m_model.storeDetails = m_storeDetails ?  &m_storeDetails->Model() : nullptr;
         this->m_model.tags = m_tags.empty() ? nullptr : m_tags.data();
@@ -1641,6 +1766,7 @@ private:
     CStringVector<Alloc> m_platforms;
     std::optional<PFCatalogCatalogPriceOptionsWrapper<Alloc>> m_priceOptions;
     std::optional<PFCatalogRatingWrapper<Alloc>> m_rating;
+    std::optional<PFCatalogRealMoneyPriceDetailsWrapper<Alloc>> m_realMoneyPriceDetails;
     std::optional<time_t> m_startDate;
     std::optional<PFCatalogStoreDetailsWrapper<Alloc>> m_storeDetails;
     CStringVector<Alloc> m_tags;
@@ -3628,7 +3754,6 @@ public:
         m_itemVersion{ SafeString(model.itemVersion) },
         m_locale{ SafeString(model.locale) },
         m_reviewerEntity{ model.reviewerEntity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.reviewerEntity } : std::nullopt },
-        m_reviewerId{ SafeString(model.reviewerId) },
         m_reviewId{ SafeString(model.reviewId) },
         m_reviewText{ SafeString(model.reviewText) },
         m_title{ SafeString(model.title) }
@@ -3664,7 +3789,6 @@ public:
         swap(lhs.m_itemVersion, rhs.m_itemVersion);
         swap(lhs.m_locale, rhs.m_locale);
         swap(lhs.m_reviewerEntity, rhs.m_reviewerEntity);
-        swap(lhs.m_reviewerId, rhs.m_reviewerId);
         swap(lhs.m_reviewId, rhs.m_reviewId);
         swap(lhs.m_reviewText, rhs.m_reviewText);
         swap(lhs.m_title, rhs.m_title);
@@ -3723,12 +3847,6 @@ public:
         this->m_model.reviewerEntity = m_reviewerEntity ? &m_reviewerEntity->Model() : nullptr;
     }
 
-    void SetReviewerId(String value)
-    {
-        m_reviewerId = std::move(value);
-        this->m_model.reviewerId =  m_reviewerId.empty() ? nullptr : m_reviewerId.data();
-    }
-
     void SetReviewId(String value)
     {
         m_reviewId = std::move(value);
@@ -3760,7 +3878,6 @@ private:
         this->m_model.itemVersion = m_itemVersion.empty() ? nullptr : m_itemVersion.data();
         this->m_model.locale = m_locale.empty() ? nullptr : m_locale.data();
         this->m_model.reviewerEntity = m_reviewerEntity ?  &m_reviewerEntity->Model() : nullptr;
-        this->m_model.reviewerId = m_reviewerId.empty() ? nullptr : m_reviewerId.data();
         this->m_model.reviewId = m_reviewId.empty() ? nullptr : m_reviewId.data();
         this->m_model.reviewText = m_reviewText.empty() ? nullptr : m_reviewText.data();
         this->m_model.title = m_title.empty() ? nullptr : m_title.data();
@@ -3771,7 +3888,6 @@ private:
     String m_itemVersion;
     String m_locale;
     std::optional<PFEntityKeyWrapper<Alloc>> m_reviewerEntity;
-    String m_reviewerId;
     String m_reviewId;
     String m_reviewText;
     String m_title;

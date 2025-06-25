@@ -594,6 +594,9 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::UpdatingStatisticsUsingTransactionIdNotAvailableForFreeTier: return E_PF_UPDATING_STATISTICS_USING_TRANSACTION_ID_NOT_AVAILABLE_FOR_FREE_TIER;
     case ServiceErrorCode::TransactionAlreadyApplied: return E_PF_TRANSACTION_ALREADY_APPLIED;
     case ServiceErrorCode::ReportDataNotRetrievedSuccessfully: return E_PF_REPORT_DATA_NOT_RETRIEVED_SUCCESSFULLY;
+    case ServiceErrorCode::ResetIntervalCannotBeModified: return E_PF_RESET_INTERVAL_CANNOT_BE_MODIFIED;
+    case ServiceErrorCode::VersionIncrementRateExceeded: return E_PF_VERSION_INCREMENT_RATE_EXCEEDED;
+    case ServiceErrorCode::InvalidSteamUsername: return E_PF_INVALID_STEAM_USERNAME;
     case ServiceErrorCode::MatchmakingEntityInvalid: return E_PF_MATCHMAKING_ENTITY_INVALID;
     case ServiceErrorCode::MatchmakingPlayerAttributesInvalid: return E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID;
     case ServiceErrorCode::MatchmakingQueueNotFound: return E_PF_MATCHMAKING_QUEUE_NOT_FOUND;
@@ -727,6 +730,7 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::AnalyticsSegmentCountOverLimit: return E_PF_ANALYTICS_SEGMENT_COUNT_OVER_LIMIT;
     case ServiceErrorCode::SnapshotNotFound: return E_PF_SNAPSHOT_NOT_FOUND;
     case ServiceErrorCode::InventoryApiNotImplemented: return E_PF_INVENTORY_API_NOT_IMPLEMENTED;
+    case ServiceErrorCode::InventoryCollectionDeletionDisallowed: return E_PF_INVENTORY_COLLECTION_DELETION_DISALLOWED;
     case ServiceErrorCode::LobbyDoesNotExist: return E_PF_LOBBY_DOES_NOT_EXIST;
     case ServiceErrorCode::LobbyRateLimitExceeded: return E_PF_LOBBY_RATE_LIMIT_EXCEEDED;
     case ServiceErrorCode::LobbyPlayerAlreadyJoined: return E_PF_LOBBY_PLAYER_ALREADY_JOINED;
@@ -862,6 +866,8 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::TrueSkillConditionSetNotInModel: return E_PF_TRUE_SKILL_CONDITION_SET_NOT_IN_MODEL;
     case ServiceErrorCode::TrueSkillModelStateInvalidForOperation: return E_PF_TRUE_SKILL_MODEL_STATE_INVALID_FOR_OPERATION;
     case ServiceErrorCode::TrueSkillScenarioContainsActiveModel: return E_PF_TRUE_SKILL_SCENARIO_CONTAINS_ACTIVE_MODEL;
+    case ServiceErrorCode::TrueSkillInvalidConditionRank: return E_PF_TRUE_SKILL_INVALID_CONDITION_RANK;
+    case ServiceErrorCode::TrueSkillTotalScenarioLimitExceeded: return E_PF_TRUE_SKILL_TOTAL_SCENARIO_LIMIT_EXCEEDED;
     case ServiceErrorCode::GameSaveManifestNotFound: return E_PF_GAME_SAVE_MANIFEST_NOT_FOUND;
     case ServiceErrorCode::GameSaveManifestVersionAlreadyExists: return E_PF_GAME_SAVE_MANIFEST_VERSION_ALREADY_EXISTS;
     case ServiceErrorCode::GameSaveConflictUpdatingManifest: return E_PF_GAME_SAVE_CONFLICT_UPDATING_MANIFEST;
@@ -875,6 +881,8 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::GameSaveOperationNotAllowed: return E_PF_GAME_SAVE_OPERATION_NOT_ALLOWED;
     case ServiceErrorCode::GameSaveDataStorageQuotaExceeded: return E_PF_GAME_SAVE_DATA_STORAGE_QUOTA_EXCEEDED;
     case ServiceErrorCode::GameSaveNewerManifestExists: return E_PF_GAME_SAVE_NEWER_MANIFEST_EXISTS;
+    case ServiceErrorCode::GameSaveBaseVersionNotAvailable: return E_PF_GAME_SAVE_BASE_VERSION_NOT_AVAILABLE;
+    case ServiceErrorCode::GameSaveManifestVersionQuarantined: return E_PF_GAME_SAVE_MANIFEST_VERSION_QUARANTINED;
     case ServiceErrorCode::StateShareForbidden: return E_PF_STATE_SHARE_FORBIDDEN;
     case ServiceErrorCode::StateShareTitleNotInFlight: return E_PF_STATE_SHARE_TITLE_NOT_IN_FLIGHT;
     case ServiceErrorCode::StateShareStateNotFound: return E_PF_STATE_SHARE_STATE_NOT_FOUND;

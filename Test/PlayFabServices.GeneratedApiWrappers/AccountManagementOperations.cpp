@@ -2362,7 +2362,6 @@ Result<GetTitlePlayersFromXboxLiveIDsOperation::ResultType> GetTitlePlayersFromX
 }
 #endif
 
-#if 0
 
 SetDisplayNameOperation::SetDisplayNameOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2390,7 +2389,6 @@ Result<SetDisplayNameOperation::ResultType> SetDisplayNameOperation::GetResult(X
     RETURN_IF_FAILED(PFAccountManagementSetDisplayNameGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
-#endif
 
 }
 }

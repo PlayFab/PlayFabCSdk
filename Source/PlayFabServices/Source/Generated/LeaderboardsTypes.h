@@ -323,6 +323,20 @@ public:
     static JsonValue ToJson(const PFLeaderboardsUnlinkLeaderboardFromStatisticRequest& input);
 };
 
+class UpdateLeaderboardDefinitionRequest : public Wrappers::PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFLeaderboardsUpdateLeaderboardDefinitionRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFLeaderboardsUpdateLeaderboardDefinitionRequest& input);
+};
+
 class LeaderboardEntryUpdate : public Wrappers::PFLeaderboardsLeaderboardEntryUpdateWrapper<Allocator>, public InputModel
 {
 public:

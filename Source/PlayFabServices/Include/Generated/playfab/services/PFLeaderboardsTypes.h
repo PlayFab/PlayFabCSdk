@@ -295,6 +295,12 @@ typedef struct PFLeaderboardsGetEntityLeaderboardResponse
     uint32_t entryCount;
 
     /// <summary>
+    /// (Optional) The time the next scheduled reset will occur. Null if the leaderboard does not reset
+    /// on a schedule.
+    /// </summary>
+    _Maybenull_ time_t const* nextReset;
+
+    /// <summary>
     /// (Optional) Individual entity rankings in the leaderboard, in sorted order by rank.
     /// </summary>
     _Maybenull_ _Field_size_(rankingsCount) PFLeaderboardsEntityLeaderboardEntry const* const* rankings;
@@ -659,6 +665,39 @@ typedef struct PFLeaderboardsUnlinkLeaderboardFromStatisticRequest
     _Null_terminated_ const char* statisticName;
 
 } PFLeaderboardsUnlinkLeaderboardFromStatisticRequest;
+
+/// <summary>
+/// PFLeaderboardsUpdateLeaderboardDefinitionRequest data model.
+/// </summary>
+typedef struct PFLeaderboardsUpdateLeaderboardDefinitionRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// The name of the leaderboard to update the definition for.
+    /// </summary>
+    _Null_terminated_ const char* name;
+
+    /// <summary>
+    /// (Optional) Maximum number of entries on this leaderboard.
+    /// </summary>
+    _Maybenull_ int32_t const* sizeLimit;
+
+    /// <summary>
+    /// (Optional) The version reset configuration for the leaderboard definition.
+    /// </summary>
+    _Maybenull_ PFVersionConfiguration const* versionConfiguration;
+
+} PFLeaderboardsUpdateLeaderboardDefinitionRequest;
 
 /// <summary>
 /// PFLeaderboardsLeaderboardEntryUpdate data model.

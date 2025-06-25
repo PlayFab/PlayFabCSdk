@@ -8,12 +8,30 @@ namespace Test
 
 void PlayerDataManagementTests::AddTests()
 {
+#if 0
+    AddTest("TestClientDeletePlayerCustomProperties", &PlayerDataManagementTests::TestClientDeletePlayerCustomProperties);
+#endif
+#if 0
+    AddTest("TestClientGetPlayerCustomProperty", &PlayerDataManagementTests::TestClientGetPlayerCustomProperty);
+#endif
     AddTest("TestClientGetUserData", &PlayerDataManagementTests::TestClientGetUserData);
     AddTest("TestClientGetUserPublisherData", &PlayerDataManagementTests::TestClientGetUserPublisherData);
     AddTest("TestClientGetUserPublisherReadOnlyData", &PlayerDataManagementTests::TestClientGetUserPublisherReadOnlyData);
     AddTest("TestClientGetUserReadOnlyData", &PlayerDataManagementTests::TestClientGetUserReadOnlyData);
+#if 0
+    AddTest("TestClientListPlayerCustomProperties", &PlayerDataManagementTests::TestClientListPlayerCustomProperties);
+#endif
+#if 0
+    AddTest("TestClientUpdatePlayerCustomProperties", &PlayerDataManagementTests::TestClientUpdatePlayerCustomProperties);
+#endif
     AddTest("TestClientUpdateUserData", &PlayerDataManagementTests::TestClientUpdateUserData);
     AddTest("TestClientUpdateUserPublisherData", &PlayerDataManagementTests::TestClientUpdateUserPublisherData);
+#if 0
+    AddTest("TestServerDeletePlayerCustomProperties", &PlayerDataManagementTests::TestServerDeletePlayerCustomProperties);
+#endif
+#if 0
+    AddTest("TestServerGetPlayerCustomProperty", &PlayerDataManagementTests::TestServerGetPlayerCustomProperty);
+#endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerGetUserData", &PlayerDataManagementTests::TestServerGetUserData);
 #endif
@@ -31,6 +49,12 @@ void PlayerDataManagementTests::AddTests()
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerGetUserReadOnlyData", &PlayerDataManagementTests::TestServerGetUserReadOnlyData);
+#endif
+#if 0
+    AddTest("TestServerListPlayerCustomProperties", &PlayerDataManagementTests::TestServerListPlayerCustomProperties);
+#endif
+#if 0
+    AddTest("TestServerUpdatePlayerCustomProperties", &PlayerDataManagementTests::TestServerUpdatePlayerCustomProperties);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerUpdateUserData", &PlayerDataManagementTests::TestServerUpdateUserData);

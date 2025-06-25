@@ -278,9 +278,7 @@ void AccountManagementTests::AddTests()
 #if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestGetTitlePlayersFromXboxLiveIDs", &AccountManagementTests::TestGetTitlePlayersFromXboxLiveIDs);
 #endif
-#if 0
     AddTest("TestSetDisplayName", &AccountManagementTests::TestSetDisplayName);
-#endif
 
 }
 

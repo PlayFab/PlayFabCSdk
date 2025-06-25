@@ -171,10 +171,10 @@ typedef struct PFAccountManagementGetPlayerCombinedInfoRequest
     PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// PlayFabId of the user whose data will be returned. If not filled included, we return the data
-    /// for the calling player. .
+    /// (Optional) PlayFabId of the user whose data will be returned. If not filled included, we return
+    /// the data for the calling player. .
     /// </summary>
-    _Null_terminated_ const char* playFabId;
+    _Maybenull_ _Null_terminated_ const char* playFabId;
 
 } PFAccountManagementGetPlayerCombinedInfoRequest;
 
@@ -219,9 +219,9 @@ typedef struct PFAccountManagementGetPlayerProfileRequest
     uint32_t customTagsCount;
 
     /// <summary>
-    /// Unique PlayFab assigned ID of the user on whom the operation will be performed.
+    /// (Optional) Unique PlayFab assigned ID of the user on whom the operation will be performed.
     /// </summary>
-    _Null_terminated_ const char* playFabId;
+    _Maybenull_ _Null_terminated_ const char* playFabId;
 
     /// <summary>
     /// (Optional) If non-null, this determines which properties of the resulting player profiles to
@@ -2206,7 +2206,7 @@ typedef struct PFAccountManagementBanInfo
     _Maybenull_ _Null_terminated_ const char* reason;
 
     /// <summary>
-    /// (Optional) The family type of the suer that is included in the ban.
+    /// (Optional) The family type of the user that is included in the ban.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* userFamilyType;
 

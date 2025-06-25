@@ -34,7 +34,7 @@ class TraceState : public ITerminationListener
 public:
     TraceState(const TraceState&) = delete;
     TraceState& operator=(TraceState) = delete;
-    ~TraceState() noexcept;
+    ~TraceState() noexcept = default;
 
     static HRESULT Create(RunContext&& runContext, LocalStorage localStorage) noexcept;
     static HRESULT Get(SharedPtr<TraceState>& state) noexcept;

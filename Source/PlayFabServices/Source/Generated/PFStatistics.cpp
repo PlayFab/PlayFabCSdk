@@ -308,6 +308,28 @@ PF_API PFStatisticsListStatisticDefinitionsGetResult(
 }
 #endif
 
+#if 0
+PF_API PFStatisticsUpdateStatisticDefinitionAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFStatisticsUpdateStatisticDefinitionRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    SharedPtr<GlobalState> state{ nullptr };
+    RETURN_IF_FAILED(GlobalState::Get(state));
+
+    auto provider = MakeProvider(
+        state->RunContext().DeriveOnQueue(async->queue),
+        async,
+        XASYNC_IDENTITY(PFStatisticsUpdateStatisticDefinitionAsync),
+        std::bind(&StatisticsAPI::UpdateStatisticDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+    );
+    return XAsyncProviderBase::Run(std::move(provider));
+}
+#endif
+
 PF_API PFStatisticsUpdateStatisticsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFStatisticsUpdateStatisticsRequest* request,
