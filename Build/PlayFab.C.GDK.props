@@ -25,6 +25,7 @@
   <!-- Identify GDK builds for shared props conditions -->
   <PropertyGroup>
     <UseGDK>true</UseGDK>
+    <HCPlatform>GDK</HCPlatform>
   </PropertyGroup>
 
 </Project>
