@@ -14,6 +14,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Authentication\PFAuthentication_Xbox.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\LocalUser_Xbox.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Api\PFLocalUser_Xbox.cpp" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseGDK)'=='true' And '$(SteamworksAvailable)'=='true'">
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Common\LocalUser_Steam.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabCore\Source\Api\PFLocalUser_Steam.cpp" />
   </ItemGroup>

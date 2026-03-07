@@ -3,7 +3,9 @@
 #include "Platform/Generic/LocalStorage_Generic.h"
 #include <Windows.h>
 #include "Common/PFCoreGlobalState.h"
+#ifdef STEAMWORKS_AVAILABLE
 #include "LocalUser_Steam.h"
+#endif
 #if HC_PLATFORM == HC_PLATFORM_GDK
 #include <XSystem.h>
 #endif
@@ -143,6 +145,7 @@ HRESULT PlatformGetPlatformType(PlatformInfo& platformInfo, PFPlatformType& plat
         }
     }
 
+#ifdef STEAMWORKS_AVAILABLE
     if( IsRunningOnSteam() )
     {        
         if (platformInfo == PlatformInfo::GRTSAvailable)
@@ -156,6 +159,7 @@ HRESULT PlatformGetPlatformType(PlatformInfo& platformInfo, PFPlatformType& plat
             platformType = PFPlatformType::SteamDeck;
         }
     }
+#endif
 
     return S_OK;
 }
