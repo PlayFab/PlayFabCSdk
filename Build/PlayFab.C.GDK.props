@@ -28,4 +28,15 @@
     <HCPlatform>GDK</HCPlatform>
   </PropertyGroup>
 
+  <!-- When using plain x64 platform, the GDK platform toolchain no longer sets _GAMING_DESKTOP automatically
+       or links standard DirectX libraries -->
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_GAMING_DESKTOP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
 </Project>
