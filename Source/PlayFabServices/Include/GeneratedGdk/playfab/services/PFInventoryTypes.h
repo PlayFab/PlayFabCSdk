@@ -471,6 +471,11 @@ typedef struct PFInventoryInventoryItem
     _Maybenull_ _Null_terminated_ const char* stackId;
 
     /// <summary>
+    /// (Optional) Only used for subscriptions. The date of when the item started in UTC.
+    /// </summary>
+    _Maybenull_ time_t const* startDate;
+
+    /// <summary>
     /// (Optional) The type of the item. This should correspond to the item type in the catalog.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* type;
@@ -883,6 +888,11 @@ typedef struct PFInventoryGetInventoryOperationStatusRequest
     /// </summary>
     _Maybenull_ PFEntityKey const* entity;
 
+    /// <summary>
+    /// (Optional) The token to get the status of the inventory operation.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* operationToken;
+
 } PFInventoryGetInventoryOperationStatusRequest;
 
 /// <summary>
@@ -991,6 +1001,18 @@ typedef struct PFInventoryGetTransactionHistoryRequest
 } PFInventoryGetTransactionHistoryRequest;
 
 /// <summary>
+/// PFInventoryTransactionClawbackDetails data model.
+/// </summary>
+typedef struct PFInventoryTransactionClawbackDetails
+{
+    /// <summary>
+    /// (Optional) The id of the clawed back operation.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* transactionIdClawedback;
+
+} PFInventoryTransactionClawbackDetails;
+
+/// <summary>
 /// PFInventoryTransactionOperation data model.
 /// </summary>
 typedef struct PFInventoryTransactionOperation
@@ -1037,6 +1059,16 @@ typedef struct PFInventoryTransactionOperation
 /// </summary>
 typedef struct PFInventoryTransactionPurchaseDetails
 {
+    /// <summary>
+    /// (Optional) The friendly id of the item that was purchased.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* itemFriendlyId;
+
+    /// <summary>
+    /// (Optional) The id of the item that was purchased.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* itemId;
+
     /// <summary>
     /// (Optional) The friendly id of the Store the item was purchased from or null.
     /// </summary>
@@ -1112,6 +1144,21 @@ typedef struct PFInventoryTransaction
     /// (Optional) The API call that caused this transaction.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* apiName;
+
+    /// <summary>
+    /// (Optional) Additional details about the transaction. Null if it was not a clawback operation.
+    /// </summary>
+    _Maybenull_ PFInventoryTransactionClawbackDetails const* clawbackDetails;
+
+    /// <summary>
+    /// (Optional) The custom tags associated with this transactions.
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
 
     /// <summary>
     /// (Optional) The type of item that the the operation occurred on.

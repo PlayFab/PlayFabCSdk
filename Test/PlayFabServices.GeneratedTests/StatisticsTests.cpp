@@ -8,27 +8,30 @@ namespace Test
 
 void StatisticsTests::AddTests()
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestCreateStatisticDefinition", &StatisticsTests::TestCreateStatisticDefinition);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestDeleteStatisticDefinition", &StatisticsTests::TestDeleteStatisticDefinition);
 #endif
     AddTest("TestDeleteStatistics", &StatisticsTests::TestDeleteStatistics);
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestGetStatisticDefinition", &StatisticsTests::TestGetStatisticDefinition);
 #endif
     AddTest("TestGetStatistics", &StatisticsTests::TestGetStatistics);
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestGetStatisticsForEntities", &StatisticsTests::TestGetStatisticsForEntities);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestIncrementStatisticVersion", &StatisticsTests::TestIncrementStatisticVersion);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestListStatisticDefinitions", &StatisticsTests::TestListStatisticDefinitions);
 #endif
 #if 0
+    AddTest("TestUnlinkAggregationSourceFromStatistic", &StatisticsTests::TestUnlinkAggregationSourceFromStatistic);
+#endif
+#if HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestUpdateStatisticDefinition", &StatisticsTests::TestUpdateStatisticDefinition);
 #endif
     AddTest("TestUpdateStatistics", &StatisticsTests::TestUpdateStatistics);

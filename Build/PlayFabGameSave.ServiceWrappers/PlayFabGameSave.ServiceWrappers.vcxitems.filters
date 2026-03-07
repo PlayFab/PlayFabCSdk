@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source" />
+    <Filter Include="Source\Generated" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabGameSave\Source\Wrappers\CoreTypes.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabGameSave\Source\Wrappers\CoreTypes.cpp">
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabGameSave\Source\Wrappers\Types.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\CacheId.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSave.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSaveTypes.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSaveTypeWrappers.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\InternalPFGameSave.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\InternalPFGameSaveTypes.h">
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSave.cpp">
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSaveTypes.cpp">
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\InternalPFGameSave.cpp">
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

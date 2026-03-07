@@ -415,6 +415,10 @@ HRESULT ExecuteFunctionResult::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "FunctionResult", functionResult));
     this->SetFunctionResult(std::move(functionResult));
 
+    std::optional<int32_t> functionResultSize{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "FunctionResultSize", functionResultSize));
+    this->SetFunctionResultSize(std::move(functionResultSize));
+
     std::optional<bool> functionResultTooLarge{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "FunctionResultTooLarge", functionResultTooLarge));
     this->SetFunctionResultTooLarge(std::move(functionResultTooLarge));
@@ -447,6 +451,10 @@ size_t ExecuteFunctionResult::RequiredBufferSize(const PFCloudScriptExecuteFunct
     {
     requiredSize += (std::strlen(model.functionResult.stringValue) + 1);
     }
+    if (model.functionResultSize)
+    {
+        requiredSize += (alignof(int32_t) + sizeof(int32_t));
+    }
     if (model.functionResultTooLarge)
     {
         requiredSize += (alignof(bool) + sizeof(bool));
@@ -471,6 +479,11 @@ HRESULT ExecuteFunctionResult::Copy(const PFCloudScriptExecuteFunctionResult& in
         auto propCopyResult = buffer.CopyTo(input.functionResult.stringValue);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.functionResult.stringValue = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.functionResultSize);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.functionResultSize = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.functionResultTooLarge);

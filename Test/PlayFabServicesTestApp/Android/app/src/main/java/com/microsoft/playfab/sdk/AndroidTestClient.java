@@ -9,13 +9,50 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import java.io.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+
+import com.google.android.gms.games.AuthenticationResult;
+import com.google.android.gms.games.PlayGames;
+import com.google.android.gms.games.PlayGamesSdk;
+import com.google.android.gms.games.GamesSignInClient;
+import com.google.android.gms.games.PlayersClient;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 
 public class AndroidTestClient extends Activity {
     private static final String TAG = "AndroidTestClient";
+    private static Task<String> getServerAuthCodeTask;
+    private static String serverAuthToken;
 
 @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        PlayGamesSdk.initialize(this);
+
+        // This will needs to be done by the title in the onCreate(..) callback of their application class
+        // It will pop a Google Play UI prompting the user to sign in.
+        GamesSignInClient gamesSignInClient = PlayGames.getGamesSignInClient(this);
+
+        String playerId = "NonDurableAndroidPlayerId";
+        try {
+            AuthenticationResult authResult = Tasks.await(gamesSignInClient.isAuthenticated());
+            if (authResult.isAuthenticated()) {
+                Log.i(TAG, "Authentication Success");
+
+                playerId = Tasks.await(PlayGames.getPlayersClient(this).getCurrentPlayerId());
+                Log.i(TAG, "PlayerId: " + playerId);
+            }
+        }
+        catch(Exception e) {
+            Log.e(TAG, "Exception in Google Play Game authentication: " + e.getMessage());
+            Log.e(TAG, "Continuing with non-durable playerId");
+        }
+
+        String OAUTH_2_WEB_CLIENT_ID = "912588564112-etm77dodeqkqtblm5seq468icat2nng2.apps.googleusercontent.com";
+        getServerAuthCodeTask = gamesSignInClient.requestServerSideAccess(OAUTH_2_WEB_CLIENT_ID, false);
+
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null)
@@ -23,7 +60,11 @@ public class AndroidTestClient extends Activity {
             System.loadLibrary("PlayFabSDKTestApp.Android");
             Log.i(TAG, "Loaded PlayFabSDKTestApp.Android Library");
 
-            InitializeApp(getApplicationContext());
+            InitializeApp(
+                getApplicationContext(),
+                playerId,
+                gamesSignInClient
+            );
         }
         else
         {
@@ -70,7 +111,19 @@ public class AndroidTestClient extends Activity {
         return Secure.getString(getApplicationContext().getContentResolver(),Secure.ANDROID_ID);
     }
 
-    private native void InitializeApp(Context context);
+    public String GetServerAuthToken() throws ExecutionException, InterruptedException {
+        if (getServerAuthCodeTask.isComplete()) {
+            if (getServerAuthCodeTask.isSuccessful()) {
+                return getServerAuthCodeTask.getResult();
+            } else {
+                return "";
+            }
+        } else {
+            return Tasks.await(getServerAuthCodeTask);
+        }
+    }
+
+    private native void InitializeApp(Context context, String playerId, GamesSignInClient signInClient);
     private native void UpdateInstances(Context context);
 
     private native boolean RunTests();

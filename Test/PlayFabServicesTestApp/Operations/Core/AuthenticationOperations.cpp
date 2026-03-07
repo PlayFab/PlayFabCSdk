@@ -33,7 +33,7 @@ Result<LoginResult> LoginWithCustomIDOperation::GetResult(XAsyncBlock* async) no
     return LoginResult{ Entity::Wrap(entityHandle), *loginResult };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 AuthenticateGameServerWithCustomIdOperation::AuthenticateGameServerWithCustomIdOperation(
     Entity entity,
     RequestType request,
@@ -263,7 +263,7 @@ Result<Wrappers::PFAuthenticationValidateEntityTokenResponseWrapper<Allocator>> 
     Wrappers::PFAuthenticationValidateEntityTokenResponseWrapper<Allocator> resultWrapper{ std::move(*result) };
     return resultWrapper;
 }
-#endif // HC_PLATFORM == HC_PLATFORM_WIN32
+#endif
 
 }
 }

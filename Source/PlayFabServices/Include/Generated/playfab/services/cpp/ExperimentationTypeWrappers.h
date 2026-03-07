@@ -62,11 +62,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -129,6 +139,11 @@ public:
         swap(lhs.m_treatmentAssignment, rhs.m_treatmentAssignment);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<PFTreatmentAssignmentWrapper<Alloc>> const& GetTreatmentAssignment() const
+    {
+        return m_treatmentAssignment;
     }
 
     void SetTreatmentAssignment(std::optional<PFTreatmentAssignmentWrapper<Alloc>> value)

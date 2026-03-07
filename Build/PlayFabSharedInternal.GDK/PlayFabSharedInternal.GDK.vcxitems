@@ -14,9 +14,12 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\GDK\PlatformUser_GDK.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\PlayFabXUser.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\FilePAL_Generic.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\GDK\PlatformUser_GDK.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\PlayFabXUser.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\FilePAL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Microsoft\FilePAL_Microsoft.cpp" />
   </ItemGroup>
 </Project>

@@ -461,7 +461,7 @@ AsyncOp<RedeemGooglePlayInventoryItemsResponse> InventoryAPI::RedeemGooglePlayIn
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM != HC_PLATFORM_GDK // Temporary while GDK is still a separate platform
 AsyncOp<RedeemMicrosoftStoreInventoryItemsResponse> InventoryAPI::RedeemMicrosoftStoreInventoryItems(
     Entity const& entity,
     const RedeemMicrosoftStoreInventoryItemsRequest& request,
@@ -496,7 +496,7 @@ AsyncOp<RedeemMicrosoftStoreInventoryItemsResponse> InventoryAPI::RedeemMicrosof
         }
     });
 }
-#endif
+#endif // HC_PLATFORM_GDK
 
 AsyncOp<RedeemNintendoEShopInventoryItemsResponse> InventoryAPI::RedeemNintendoEShopInventoryItems(
     Entity const& entity,

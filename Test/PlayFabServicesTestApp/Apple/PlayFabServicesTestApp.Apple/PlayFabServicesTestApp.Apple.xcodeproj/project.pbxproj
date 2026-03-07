@@ -33,6 +33,8 @@
 		82658A1A2C6D430F00E9DEE0 /* LeaderboardsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A172C6D430F00E9DEE0 /* LeaderboardsOperations.cpp */; };
 		82658A1B2C6D430F00E9DEE0 /* StatisticsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */; };
 		82658A1C2C6D430F00E9DEE0 /* StatisticsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */; };
+		8291EC312DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8291EC302DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp */; };
+		8291EC322DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8291EC302DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp */; };
 		82AB6DA42B4DBB980082EDED /* AppleSignInCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB6DA32B4DBB980082EDED /* AppleSignInCoordinator.swift */; };
 		82B3CC6C2B5B04F000337232 /* EventPipelineTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB3F2B153920007BD4F5 /* EventPipelineTests.cpp */; };
 		82B3CC6D2B5B04F000337232 /* SegmentsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB452B153920007BD4F5 /* SegmentsTestsImpl.cpp */; };
@@ -363,6 +365,8 @@
 		82658A172C6D430F00E9DEE0 /* LeaderboardsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LeaderboardsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/LeaderboardsOperations.cpp; sourceTree = "<group>"; };
 		82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StatisticsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/StatisticsOperations.cpp; sourceTree = "<group>"; };
 		8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
+		8291EC2F2DD3AF4100284CA4 /* TitleLocalUser_Apple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TitleLocalUser_Apple.h; sourceTree = "<group>"; };
+		8291EC302DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TitleLocalUser_Apple.cpp; sourceTree = "<group>"; };
 		82AB6DA32B4DBB980082EDED /* AppleSignInCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInCoordinator.swift; sourceTree = "<group>"; };
 		82AB6DB72B4DE5B60082EDED /* libPlayFabSharedInternal.iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		82B3CC612B5B039800337232 /* libPlayFabSharedInternal.macOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPlayFabSharedInternal.macOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -888,6 +892,8 @@
 		82CEEB8A2B1551C8007BD4F5 /* Apple */ = {
 			isa = PBXGroup;
 			children = (
+				8291EC2F2DD3AF4100284CA4 /* TitleLocalUser_Apple.h */,
+				8291EC302DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp */,
 				82B72C882B1FF441003802AA /* MainApple.cpp */,
 				82CEEB982B156891007BD4F5 /* testTitleData.json */,
 				82CEEB8B2B1551E8007BD4F5 /* PlayFabApple.cpp */,
@@ -1141,6 +1147,7 @@
 				82B3CC802B5B04F000337232 /* TitleDataManagementTestsImpl.cpp in Sources */,
 				82B3CC812B5B04F000337232 /* GroupsOperations.cpp in Sources */,
 				82B3CC822B5B04F000337232 /* DataTestsImpl.cpp in Sources */,
+				8291EC322DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp in Sources */,
 				82B3CC832B5B04F000337232 /* AppleSignInCoordinator.swift in Sources */,
 				826589C72C6D302F00E9DEE0 /* LeaderboardsTests.cpp in Sources */,
 				82B3CC842B5B04F000337232 /* InventoryOperations.cpp in Sources */,
@@ -1222,6 +1229,7 @@
 				82CEEB6D2B153920007BD4F5 /* TitleDataManagementTestsImpl.cpp in Sources */,
 				82CEEABA2B1536C9007BD4F5 /* GroupsOperations.cpp in Sources */,
 				82CEEB7B2B153920007BD4F5 /* DataTestsImpl.cpp in Sources */,
+				8291EC312DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp in Sources */,
 				82AB6DA42B4DBB980082EDED /* AppleSignInCoordinator.swift in Sources */,
 				826589C62C6D302F00E9DEE0 /* LeaderboardsTests.cpp in Sources */,
 				82CEEAC02B1536C9007BD4F5 /* InventoryOperations.cpp in Sources */,

@@ -56,7 +56,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Operations\Core\CoreOperations.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Operations\Services\ServicesOperations.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Platform\Generic\MemoryManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\TitleLocalUser.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Platform\PlatformUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Platform\SDKUtils.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Platform\PlayFabPal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)TestAppPch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)TestFramework\CoreTestClass.h" />

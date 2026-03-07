@@ -247,13 +247,67 @@ typedef struct PFAccountManagementGetPlayerProfileResult
 } PFAccountManagementGetPlayerProfileResult;
 
 /// <summary>
+/// PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequest data model.
+/// </summary>
+typedef struct PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequest
+{
+    /// <summary>
+    /// Array of unique Battle.net account identifiers for which the title needs to get PlayFab identifiers.
+    /// The array cannot exceed 10 in length.
+    /// </summary>
+    _Field_size_(battleNetAccountIdsCount) const char* const* battleNetAccountIds;
+
+    /// <summary>
+    /// Count of battleNetAccountIds
+    /// </summary>
+    uint32_t battleNetAccountIdsCount;
+
+} PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequest;
+
+/// <summary>
+/// PFAccountManagementBattleNetAccountPlayFabIdPair data model.
+/// </summary>
+typedef struct PFAccountManagementBattleNetAccountPlayFabIdPair
+{
+    /// <summary>
+    /// (Optional) Unique Battle.net account identifier for a user.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* battleNetAccountId;
+
+    /// <summary>
+    /// (Optional) Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the
+    /// Battle.net account identifier.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* playFabId;
+
+} PFAccountManagementBattleNetAccountPlayFabIdPair;
+
+/// <summary>
+/// PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult data model. For Battle.net account
+/// identifiers which have not been linked to PlayFab accounts, null will be returned.
+/// </summary>
+typedef struct PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult
+{
+    /// <summary>
+    /// (Optional) Mapping of Battle.net account identifiers to PlayFab identifiers.
+    /// </summary>
+    _Maybenull_ _Field_size_(dataCount) PFAccountManagementBattleNetAccountPlayFabIdPair const* const* data;
+
+    /// <summary>
+    /// Count of data
+    /// </summary>
+    uint32_t dataCount;
+
+} PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult;
+
+/// <summary>
 /// PFAccountManagementGetPlayFabIDsFromFacebookIDsRequest data model.
 /// </summary>
 typedef struct PFAccountManagementGetPlayFabIDsFromFacebookIDsRequest
 {
     /// <summary>
     /// Array of unique Facebook identifiers for which the title needs to get PlayFab identifiers. The
-    /// array cannot exceed 2,000 in length.
+    /// array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(facebookIDsCount) const char* const* facebookIDs;
 
@@ -361,7 +415,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromGameCenterIDsRequest
 {
     /// <summary>
     /// Array of unique Game Center identifiers (the Player Identifier) for which the title needs to
-    /// get PlayFab identifiers. The array cannot exceed 2,000 in length.
+    /// get PlayFab identifiers. The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(gameCenterIDsCount) const char* const* gameCenterIDs;
 
@@ -415,7 +469,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromGoogleIDsRequest
 {
     /// <summary>
     /// Array of unique Google identifiers (Google+ user IDs) for which the title needs to get PlayFab
-    /// identifiers. The array cannot exceed 2,000 in length.
+    /// identifiers. The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(googleIDsCount) const char* const* googleIDs;
 
@@ -469,7 +523,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromGooglePlayGamesPlayerIDsReque
 {
     /// <summary>
     /// Array of unique Google Play Games identifiers (Google+ user IDs) for which the title needs to
-    /// get PlayFab identifiers. The array cannot exceed 2,000 in length.
+    /// get PlayFab identifiers. The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(googlePlayGamesPlayerIDsCount) const char* const* googlePlayGamesPlayerIDs;
 
@@ -523,7 +577,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromKongregateIDsRequest
 {
     /// <summary>
     /// Array of unique Kongregate identifiers (Kongregate's user_id) for which the title needs to get
-    /// PlayFab identifiers. The array cannot exceed 2,000 in length.
+    /// PlayFab identifiers. The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(kongregateIDsCount) const char* const* kongregateIDs;
 
@@ -577,7 +631,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromNintendoServiceAccountIdsRequ
 {
     /// <summary>
     /// Array of unique Nintendo Switch Account identifiers for which the title needs to get PlayFab
-    /// identifiers. The array cannot exceed 2,000 in length.
+    /// identifiers. The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(nintendoAccountIdsCount) const char* const* nintendoAccountIds;
 
@@ -631,7 +685,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsReques
 {
     /// <summary>
     /// Array of unique Nintendo Switch Device identifiers for which the title needs to get PlayFab identifiers.
-    /// The array cannot exceed 2,000 in length.
+    /// The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(nintendoSwitchDeviceIdsCount) const char* const* nintendoSwitchDeviceIds;
 
@@ -679,6 +733,77 @@ typedef struct PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsResult
 } PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsResult;
 
 /// <summary>
+/// PFAccountManagementOpenIdSubjectIdentifier data model.
+/// </summary>
+typedef struct PFAccountManagementOpenIdSubjectIdentifier
+{
+    /// <summary>
+    /// The issuer URL for the OpenId Connect provider, or the override URL if an override exists.
+    /// </summary>
+    _Null_terminated_ const char* issuer;
+
+    /// <summary>
+    /// The unique subject identifier within the context of the issuer.
+    /// </summary>
+    _Null_terminated_ const char* subject;
+
+} PFAccountManagementOpenIdSubjectIdentifier;
+
+/// <summary>
+/// PFAccountManagementGetPlayFabIDsFromOpenIdsRequest data model.
+/// </summary>
+typedef struct PFAccountManagementGetPlayFabIDsFromOpenIdsRequest
+{
+    /// <summary>
+    /// Array of unique OpenId Connect identifiers for which the title needs to get PlayFab identifiers.
+    /// The array cannot exceed 10 in length.
+    /// </summary>
+    _Field_size_(openIdSubjectIdentifiersCount) PFAccountManagementOpenIdSubjectIdentifier const* const* openIdSubjectIdentifiers;
+
+    /// <summary>
+    /// Count of openIdSubjectIdentifiers
+    /// </summary>
+    uint32_t openIdSubjectIdentifiersCount;
+
+} PFAccountManagementGetPlayFabIDsFromOpenIdsRequest;
+
+/// <summary>
+/// PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair data model.
+/// </summary>
+typedef struct PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair
+{
+    /// <summary>
+    /// (Optional) Unique OpenId Connect identifier for a user.
+    /// </summary>
+    _Maybenull_ PFAccountManagementOpenIdSubjectIdentifier const* openIdSubjectIdentifier;
+
+    /// <summary>
+    /// (Optional) Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the
+    /// OpenId Connect identifier.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* playFabId;
+
+} PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair;
+
+/// <summary>
+/// PFAccountManagementGetPlayFabIDsFromOpenIdsResult data model. For OpenId identifiers which have not
+/// been linked to PlayFab accounts, null will be returned.
+/// </summary>
+typedef struct PFAccountManagementGetPlayFabIDsFromOpenIdsResult
+{
+    /// <summary>
+    /// (Optional) Mapping of OpenId Connect identifiers to PlayFab identifiers.
+    /// </summary>
+    _Maybenull_ _Field_size_(dataCount) PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair const* const* data;
+
+    /// <summary>
+    /// Count of data
+    /// </summary>
+    uint32_t dataCount;
+
+} PFAccountManagementGetPlayFabIDsFromOpenIdsResult;
+
+/// <summary>
 /// PFAccountManagementGetPlayFabIDsFromPSNAccountIDsRequest data model.
 /// </summary>
 typedef struct PFAccountManagementGetPlayFabIDsFromPSNAccountIDsRequest
@@ -691,7 +816,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromPSNAccountIDsRequest
 
     /// <summary>
     /// Array of unique PlayStation :tm: Network identifiers for which the title needs to get PlayFab
-    /// identifiers. The array cannot exceed 2,000 in length.
+    /// identifiers. The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(PSNAccountIDsCount) const char* const* PSNAccountIDs;
 
@@ -751,7 +876,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest
 
     /// <summary>
     /// Array of unique PlayStation :tm: Network identifiers for which the title needs to get PlayFab
-    /// identifiers. The array cannot exceed 2,000 in length.
+    /// identifiers. The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(PSNOnlineIDsCount) const char* const* PSNOnlineIDs;
 
@@ -805,7 +930,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromSteamIDsRequest
 {
     /// <summary>
     /// (Optional) Array of unique Steam identifiers (Steam profile IDs) for which the title needs to
-    /// get PlayFab identifiers. The array cannot exceed 2,000 in length.
+    /// get PlayFab identifiers. The array cannot exceed 25 in length.
     /// </summary>
     _Maybenull_ _Field_size_(steamStringIDsCount) const char* const* steamStringIDs;
 
@@ -859,7 +984,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromSteamNamesRequest
 {
     /// <summary>
     /// Array of unique Steam identifiers for which the title needs to get PlayFab identifiers. The array
-    /// cannot exceed 2,000 in length.
+    /// cannot exceed 25 in length.
     /// </summary>
     _Field_size_(steamNamesCount) const char* const* steamNames;
 
@@ -913,7 +1038,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromTwitchIDsRequest
 {
     /// <summary>
     /// Array of unique Twitch identifiers (Twitch's _id) for which the title needs to get PlayFab identifiers.
-    /// The array cannot exceed 2,000 in length.
+    /// The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(twitchIdsCount) const char* const* twitchIds;
 
@@ -972,7 +1097,7 @@ typedef struct PFAccountManagementGetPlayFabIDsFromXboxLiveIDsRequest
 
     /// <summary>
     /// Array of unique Xbox Live account identifiers for which the title needs to get PlayFab identifiers.
-    /// The array cannot exceed 2,000 in length.
+    /// The array cannot exceed 25 in length.
     /// </summary>
     _Field_size_(xboxLiveAccountIDsCount) const char* const* xboxLiveAccountIDs;
 
@@ -1089,6 +1214,35 @@ typedef struct PFAccountManagementLinkAppleRequest
 } PFAccountManagementLinkAppleRequest;
 
 /// <summary>
+/// PFAccountManagementClientLinkBattleNetAccountRequest data model.
+/// </summary>
+typedef struct PFAccountManagementClientLinkBattleNetAccountRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) If another user is already linked to a specific Battle.net account, unlink the other
+    /// user and re-link.
+    /// </summary>
+    _Maybenull_ bool const* forceLink;
+
+    /// <summary>
+    /// The JSON Web Token (JWT) returned by Battle.net after login.
+    /// </summary>
+    _Null_terminated_ const char* identityToken;
+
+} PFAccountManagementClientLinkBattleNetAccountRequest;
+
+/// <summary>
 /// PFAccountManagementLinkCustomIDRequest data model.
 /// </summary>
 typedef struct PFAccountManagementLinkCustomIDRequest
@@ -1130,9 +1284,14 @@ typedef struct PFAccountManagementLinkCustomIDRequest
 typedef struct PFAccountManagementLinkFacebookAccountRequest
 {
     /// <summary>
-    /// Unique identifier from Facebook for the user.
+    /// (Optional) Unique identifier from Facebook for the user.
     /// </summary>
-    _Null_terminated_ const char* accessToken;
+    _Maybenull_ _Null_terminated_ const char* accessToken;
+
+    /// <summary>
+    /// (Optional) Token used for limited login authentication.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* authenticationToken;
 
     /// <summary>
     /// (Optional) The optional custom tags associated with the request (e.g. build number, external
@@ -1542,9 +1701,9 @@ typedef struct PFAccountManagementLinkSteamAccountRequest
 } PFAccountManagementLinkSteamAccountRequest;
 
 /// <summary>
-/// PFAccountManagementLinkTwitchAccountRequest data model.
+/// PFAccountManagementClientLinkTwitchAccountRequest data model.
 /// </summary>
-typedef struct PFAccountManagementLinkTwitchAccountRequest
+typedef struct PFAccountManagementClientLinkTwitchAccountRequest
 {
     /// <summary>
     /// Valid token issued by Twitch.
@@ -1567,7 +1726,7 @@ typedef struct PFAccountManagementLinkTwitchAccountRequest
     /// </summary>
     _Maybenull_ bool const* forceLink;
 
-} PFAccountManagementLinkTwitchAccountRequest;
+} PFAccountManagementClientLinkTwitchAccountRequest;
 
 /// <summary>
 /// PFAccountManagementClientLinkXboxAccountRequest data model.
@@ -1746,6 +1905,24 @@ typedef struct PFAccountManagementUnlinkAppleRequest
 } PFAccountManagementUnlinkAppleRequest;
 
 /// <summary>
+/// PFAccountManagementClientUnlinkBattleNetAccountRequest data model.
+/// </summary>
+typedef struct PFAccountManagementClientUnlinkBattleNetAccountRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+} PFAccountManagementClientUnlinkBattleNetAccountRequest;
+
+/// <summary>
 /// PFAccountManagementUnlinkCustomIDRequest data model.
 /// </summary>
 typedef struct PFAccountManagementUnlinkCustomIDRequest
@@ -1770,9 +1947,9 @@ typedef struct PFAccountManagementUnlinkCustomIDRequest
 } PFAccountManagementUnlinkCustomIDRequest;
 
 /// <summary>
-/// PFAccountManagementUnlinkFacebookAccountRequest data model.
+/// PFAccountManagementClientUnlinkFacebookAccountRequest data model.
 /// </summary>
-typedef struct PFAccountManagementUnlinkFacebookAccountRequest
+typedef struct PFAccountManagementClientUnlinkFacebookAccountRequest
 {
     /// <summary>
     /// (Optional) The optional custom tags associated with the request (e.g. build number, external
@@ -1785,12 +1962,12 @@ typedef struct PFAccountManagementUnlinkFacebookAccountRequest
     /// </summary>
     uint32_t customTagsCount;
 
-} PFAccountManagementUnlinkFacebookAccountRequest;
+} PFAccountManagementClientUnlinkFacebookAccountRequest;
 
 /// <summary>
-/// PFAccountManagementUnlinkFacebookInstantGamesIdRequest data model.
+/// PFAccountManagementClientUnlinkFacebookInstantGamesIdRequest data model.
 /// </summary>
-typedef struct PFAccountManagementUnlinkFacebookInstantGamesIdRequest
+typedef struct PFAccountManagementClientUnlinkFacebookInstantGamesIdRequest
 {
     /// <summary>
     /// (Optional) The optional custom tags associated with the request (e.g. build number, external
@@ -1809,7 +1986,7 @@ typedef struct PFAccountManagementUnlinkFacebookInstantGamesIdRequest
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* facebookInstantGamesId;
 
-} PFAccountManagementUnlinkFacebookInstantGamesIdRequest;
+} PFAccountManagementClientUnlinkFacebookInstantGamesIdRequest;
 
 /// <summary>
 /// PFAccountManagementUnlinkGameCenterAccountRequest data model.
@@ -2010,9 +2187,9 @@ typedef struct PFAccountManagementUnlinkSteamAccountRequest
 } PFAccountManagementUnlinkSteamAccountRequest;
 
 /// <summary>
-/// PFAccountManagementUnlinkTwitchAccountRequest data model.
+/// PFAccountManagementClientUnlinkTwitchAccountRequest data model.
 /// </summary>
-typedef struct PFAccountManagementUnlinkTwitchAccountRequest
+typedef struct PFAccountManagementClientUnlinkTwitchAccountRequest
 {
     /// <summary>
     /// (Optional) Valid token issued by Twitch. Used to specify which twitch account to unlink from
@@ -2031,7 +2208,7 @@ typedef struct PFAccountManagementUnlinkTwitchAccountRequest
     /// </summary>
     uint32_t customTagsCount;
 
-} PFAccountManagementUnlinkTwitchAccountRequest;
+} PFAccountManagementClientUnlinkTwitchAccountRequest;
 
 /// <summary>
 /// PFAccountManagementClientUnlinkXboxAccountRequest data model.
@@ -2136,8 +2313,8 @@ typedef struct PFAccountManagementBanRequest
 
 /// <summary>
 /// PFAccountManagementBanUsersRequest data model. The existence of each user will not be verified. When
-/// banning by IP or MAC address, multiple players may be affected, so use this feature with caution.
-/// Returns information about the new bans.
+/// banning by IP, multiple players may be affected, so use this feature with caution. Returns information
+/// about the new bans.
 /// </summary>
 typedef struct PFAccountManagementBanUsersRequest
 {
@@ -2360,6 +2537,40 @@ typedef struct PFAccountManagementGetUserBansResult
     uint32_t banDataCount;
 
 } PFAccountManagementGetUserBansResult;
+
+/// <summary>
+/// PFAccountManagementServerLinkBattleNetAccountRequest data model.
+/// </summary>
+typedef struct PFAccountManagementServerLinkBattleNetAccountRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) If another user is already linked to a specific Battle.net account, unlink the other
+    /// user and re-link.
+    /// </summary>
+    _Maybenull_ bool const* forceLink;
+
+    /// <summary>
+    /// The JSON Web Token (JWT) returned by Battle.net after login.
+    /// </summary>
+    _Null_terminated_ const char* identityToken;
+
+    /// <summary>
+    /// Unique PlayFab assigned ID of the user on whom the operation will be performed.
+    /// </summary>
+    _Null_terminated_ const char* playFabId;
+
+} PFAccountManagementServerLinkBattleNetAccountRequest;
 
 /// <summary>
 /// PFAccountManagementServerLinkNintendoServiceAccountRequest data model.
@@ -2602,8 +2813,7 @@ typedef struct PFAccountManagementLinkSteamIdRequest
     _Maybenull_ bool const* forceLink;
 
     /// <summary>
-    /// Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the Xbox Live
-    /// identifier.
+    /// PlayFab unique identifier of the user to link.
     /// </summary>
     _Null_terminated_ const char* playFabId;
 
@@ -2613,6 +2823,39 @@ typedef struct PFAccountManagementLinkSteamIdRequest
     _Null_terminated_ const char* steamId;
 
 } PFAccountManagementLinkSteamIdRequest;
+
+/// <summary>
+/// PFAccountManagementServerLinkTwitchAccountRequest data model.
+/// </summary>
+typedef struct PFAccountManagementServerLinkTwitchAccountRequest
+{
+    /// <summary>
+    /// Twitch access token for authentication.
+    /// </summary>
+    _Null_terminated_ const char* accessToken;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) If another user is already linked to the account, unlink the other user and re-link.
+    /// </summary>
+    _Maybenull_ bool const* forceLink;
+
+    /// <summary>
+    /// PlayFab unique identifier of the user to link.
+    /// </summary>
+    _Null_terminated_ const char* playFabId;
+
+} PFAccountManagementServerLinkTwitchAccountRequest;
 
 /// <summary>
 /// PFAccountManagementServerLinkXboxAccountRequest data model.
@@ -2636,8 +2879,7 @@ typedef struct PFAccountManagementServerLinkXboxAccountRequest
     _Maybenull_ bool const* forceLink;
 
     /// <summary>
-    /// Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the Xbox Live
-    /// identifier.
+    /// PlayFab unique identifier of the user to link.
     /// </summary>
     _Null_terminated_ const char* playFabId;
 
@@ -2648,6 +2890,44 @@ typedef struct PFAccountManagementServerLinkXboxAccountRequest
     _Null_terminated_ const char* xboxToken;
 
 } PFAccountManagementServerLinkXboxAccountRequest;
+
+/// <summary>
+/// PFAccountManagementLinkXboxIdRequest data model.
+/// </summary>
+typedef struct PFAccountManagementLinkXboxIdRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) If another user is already linked to the account, unlink the other user and re-link.
+    /// </summary>
+    _Maybenull_ bool const* forceLink;
+
+    /// <summary>
+    /// PlayFab unique identifier of the user to link.
+    /// </summary>
+    _Null_terminated_ const char* playFabId;
+
+    /// <summary>
+    /// The id of Xbox Live sandbox.
+    /// </summary>
+    _Null_terminated_ const char* sandbox;
+
+    /// <summary>
+    /// Unique Xbox identifier for a user.
+    /// </summary>
+    _Null_terminated_ const char* xboxId;
+
+} PFAccountManagementLinkXboxIdRequest;
 
 /// <summary>
 /// PFAccountManagementRevokeAllBansForUserRequest data model. Setting the active state of all non-expired
@@ -2783,6 +3063,81 @@ typedef struct PFAccountManagementSendEmailFromTemplateRequest
 } PFAccountManagementSendEmailFromTemplateRequest;
 
 /// <summary>
+/// PFAccountManagementServerUnlinkBattleNetAccountRequest data model.
+/// </summary>
+typedef struct PFAccountManagementServerUnlinkBattleNetAccountRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// Unique PlayFab assigned ID of the user on whom the operation will be performed.
+    /// </summary>
+    _Null_terminated_ const char* playFabId;
+
+} PFAccountManagementServerUnlinkBattleNetAccountRequest;
+
+/// <summary>
+/// PFAccountManagementServerUnlinkFacebookAccountRequest data model.
+/// </summary>
+typedef struct PFAccountManagementServerUnlinkFacebookAccountRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// PlayFab unique identifier of the user to unlink.
+    /// </summary>
+    _Null_terminated_ const char* playFabId;
+
+} PFAccountManagementServerUnlinkFacebookAccountRequest;
+
+/// <summary>
+/// PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest data model.
+/// </summary>
+typedef struct PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) Facebook Instant Games identifier for the user. If not specified, the most recently
+    /// linked identifier will be used.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* facebookInstantGamesId;
+
+    /// <summary>
+    /// PlayFab unique identifier of the user to unlink.
+    /// </summary>
+    _Null_terminated_ const char* playFabId;
+
+} PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest;
+
+/// <summary>
 /// PFAccountManagementServerUnlinkNintendoServiceAccountRequest data model.
 /// </summary>
 typedef struct PFAccountManagementServerUnlinkNintendoServiceAccountRequest
@@ -2909,6 +3264,35 @@ typedef struct PFAccountManagementUnlinkSteamIdRequest
 } PFAccountManagementUnlinkSteamIdRequest;
 
 /// <summary>
+/// PFAccountManagementServerUnlinkTwitchAccountRequest data model.
+/// </summary>
+typedef struct PFAccountManagementServerUnlinkTwitchAccountRequest
+{
+    /// <summary>
+    /// (Optional) Valid token issued by Twitch. Used to specify which twitch account to unlink from
+    /// the profile. By default it uses the one that is present on the profile.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* accessToken;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// PlayFab unique identifier of the user to unlink.
+    /// </summary>
+    _Null_terminated_ const char* playFabId;
+
+} PFAccountManagementServerUnlinkTwitchAccountRequest;
+
+/// <summary>
 /// PFAccountManagementServerUnlinkXboxAccountRequest data model.
 /// </summary>
 typedef struct PFAccountManagementServerUnlinkXboxAccountRequest
@@ -2925,8 +3309,7 @@ typedef struct PFAccountManagementServerUnlinkXboxAccountRequest
     uint32_t customTagsCount;
 
     /// <summary>
-    /// Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the Xbox Live
-    /// identifier.
+    /// PlayFab unique identifier of the user to unlink.
     /// </summary>
     _Null_terminated_ const char* playFabId;
 

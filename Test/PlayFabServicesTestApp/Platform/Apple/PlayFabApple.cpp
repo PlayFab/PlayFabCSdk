@@ -4,9 +4,8 @@
 #include "Platform/PlayFabPal.h"
 #include "Platform/Generic/MemoryManager.h"
 #include "Operations/Core/AuthenticationOperations.h"
-#include "PlatformUser_Apple.h"
-
-using namespace PlayFab::Platform;
+#include "Platform/Apple/TitleLocalUser_Apple.h"
+#include "PlayFabApple.h"
 
 namespace PlayFab
 {
@@ -29,36 +28,16 @@ HRESULT CoreInitialize(XTaskQueueHandle queue) noexcept
     return PFInitialize(queue);
 }
 
-AsyncOp<UserPtr> GetDefaultPlatformUser(
-    RunContext rc
-) noexcept
+AsyncOp<TitleLocalUser> GetDefaultLocalUser(ServiceConfig const& serviceConfig, RunContext rc) noexcept
 {
-    // There is no platform user for Linux
-    UNREFERENCED_PARAMETER(rc);
-    return AsyncOp<UserPtr>{ UserPtr{} };
+    auto playerContext = MakeShared<AppleLocalUserContext>(defaultPlayerCustomId);
+
+    PFLocalUserHandle handle;
+    RETURN_IF_FAILED(PFLocalUserCreateHandleWithPersistedLocalId(serviceConfig.Handle(), playerContext->customId.data(), AppleLocalUserContext::LocalUserLoginHandler, playerContext.get(), &handle));
+    return AsyncOp<TitleLocalUser>{ TitleLocalUser{ LocalUserHandleWrapper::Wrap(handle), std::move(playerContext) } };
 }
 
-class LoginWithAppleOperation : public XAsyncOperation<LoginResult>
-{
-public:
-    
-    using RequestType = Wrappers::PFAuthenticationLoginWithAppleRequestWrapper<Allocator>;
-
-    LoginWithAppleOperation(ServiceConfig serviceConfig, RequestType request, PlayFab::RunContext rc);
-
-private: // XAsyncOperation
-    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
-    Result<LoginResult> GetResult(XAsyncBlock* async) noexcept override;
-
-    ServiceConfig m_serviceConfig;
-    RequestType m_request;
-};
-
-LoginWithAppleOperation::LoginWithAppleOperation(
-    ServiceConfig serviceConfig,
-    RequestType request,
-    PlayFab::RunContext rc
-) :
+LoginWithAppleOperation::LoginWithAppleOperation(ServiceConfig serviceConfig, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
     m_serviceConfig{ std::move(serviceConfig) },
     m_request{ std::move(request) }
@@ -79,39 +58,6 @@ Result<LoginResult> LoginWithAppleOperation::GetResult(XAsyncBlock* async) noexc
     PFAuthenticationLoginResult const* loginResult;
     RETURN_IF_FAILED(PFAuthenticationLoginWithAppleGetResult(async, &entityHandle, buffer.size(), buffer.data(), &loginResult, nullptr));
     return LoginResult{ Entity::Wrap(entityHandle), *loginResult };
-}
-
-AsyncOp<LoginResult> LoginDefaultTitlePlayer(
-    ServiceConfig serviceConfig,
-    UserPtr platformUser,
-    RunContext rc
-) noexcept
-{
-    assert(!platformUser);
-    UNREFERENCED_PARAMETER(platformUser);
-
-    return platformUser->GetUserIdentityToken(rc.Derive()).Then([serviceConfig, rc](Result<String> result) -> AsyncOp<LoginResult>
-    {
-        if (result.ExtractPayload() != "")
-        {
-            RETURN_IF_FAILED_PLAYFAB(result);
-            LoginWithAppleOperation::RequestType request;
-            request.SetIdentityToken(result.ExtractPayload());
-            request.SetCreateAccount(true);
-            return RunOperation(MakeUnique<LoginWithAppleOperation>(serviceConfig, request, rc));
-        }
-        else
-        {
-            // If we weren't able to get an Apple User, fallback to LoginWithCustomId
-            Stringstream customId;
-            customId << defaultPlayerCustomId << "_" << time(nullptr);
-
-            LoginWithCustomIDOperation::RequestType request;
-            request.SetCustomId(customId.str());
-            request.SetCreateAccount(true);
-            return RunOperation(MakeUnique<LoginWithCustomIDOperation>(serviceConfig, request, rc));
-        }
-    });
 }
 
 // Platform dependent PlayFabServices wrappers

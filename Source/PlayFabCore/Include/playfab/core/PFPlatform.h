@@ -215,4 +215,37 @@ PF_API PFPlatformLocalStorageSetHandlers(
     _In_ PFLocalStorageHooks* hooks
 ) noexcept;
 
+PF_API PFPlatformIsGRTSAvailable(
+    _Out_ bool* isGRTSAvailable
+) noexcept;
+
+enum class PFPlatformType
+{
+    Unknown,
+    Windows,
+    Xbox,
+    Linux,
+    Nintendo,
+    PlayStation,
+    iOS,
+    Android,
+    SteamPc,
+    SteamDeck
+};
+
+PF_API PFPlatformGetPlatformType(
+    _Out_ PFPlatformType* platformType
+) noexcept;
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+/// <summary>
+/// For use by the GameSave API.  Titles should not call this directly.
+/// </summary>
+/// <param name="gameSaveContext">GameSave context pointer.</param>
+/// <returns>Result code for this API operation.</returns>
+PF_API PFPlatformGetGameSaveContext(
+    _Outptr_ void** gameSaveContext
+) noexcept;
+#endif
+
 }

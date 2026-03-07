@@ -84,7 +84,7 @@ PF_API PFPlatformSpecificClientRegisterForIOSPushNotificationAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Awards the specified users the specified Steam achievements
 /// </summary>
@@ -93,7 +93,7 @@ PF_API PFPlatformSpecificClientRegisterForIOSPushNotificationAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// When the asynchronous task is complete, call <see cref="PFPlatformSpecificServerAwardSteamAchievementGetResultSize"/>
 /// and <see cref="PFPlatformSpecificServerAwardSteamAchievementGetResult"/> to get the result.
 /// </remarks>

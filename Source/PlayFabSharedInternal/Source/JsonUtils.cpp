@@ -57,6 +57,12 @@ JsonValue ToJson(const InputModel& value)
 
 HRESULT FromJson(const JsonValue& input, String& output)
 {
+    if (input.is_null())
+    {
+        output = "";
+        return S_OK;
+    }
+
     if (!input.is_string())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");

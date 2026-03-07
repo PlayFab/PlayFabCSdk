@@ -1382,6 +1382,7 @@ JsonValue RequestPartyServiceRequest::ToJson(const PFMultiplayerServerRequestPar
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<PartyNetworkConfiguration>(output, "NetworkConfiguration", input.networkConfiguration);
     JsonUtils::ObjectAddMember(output, "PartyId", input.partyId);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMemberArray(output, "PreferredRegions", input.preferredRegions, input.preferredRegionsCount);
     return output;
 }

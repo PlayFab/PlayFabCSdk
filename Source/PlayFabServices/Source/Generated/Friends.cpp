@@ -43,7 +43,7 @@ AsyncOp<AddFriendResult> FriendsAPI::ClientAddFriend(
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM != HC_PLATFORM_GDK // Temporary while GDK is still a separate platform
 AsyncOp<GetFriendsListResult> FriendsAPI::ClientGetFriendsList(
     Entity const& entity,
     const ClientGetFriendsListRequest& request,
@@ -78,7 +78,7 @@ AsyncOp<GetFriendsListResult> FriendsAPI::ClientGetFriendsList(
         }
     });
 }
-#endif
+#endif // HC_PLATFORM_GDK
 
 AsyncOp<void> FriendsAPI::ClientRemoveFriend(
     Entity const& entity,

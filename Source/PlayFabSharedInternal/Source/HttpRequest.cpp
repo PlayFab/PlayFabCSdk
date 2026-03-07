@@ -53,6 +53,13 @@ HRESULT ServiceResponse::FromJson(const JsonValue& input)
     return S_OK;
 }
 
+HRESULT ServiceResponse::FromVector(const Vector<char>& input)
+{
+    ResponseBody.assign(input.begin(), input.end());
+
+    return S_OK;
+}
+
 HCHttpCall::HCHttpCall(
     String method,
     String url,
@@ -108,7 +115,20 @@ void HCHttpCall::SetHeader(String headerName, String headerValue) noexcept
     m_headers[std::move(headerName)] = std::move(headerValue);
 }
 
-HRESULT HCHttpCall::OnStarted(XAsyncBlock* async) noexcept
+void HCHttpCall::SetDynamicSize(uint64_t totalSize, uint64_t currentSize) noexcept
+{
+    m_dynamicTotalSize = totalSize;
+    m_dynamicCurrentSize = currentSize;
+}
+
+void HCHttpCall::SetProgressReportCallback(bool isUploadFunction, void* context, HCHttpCallProgressReportFunction callback) noexcept
+{
+    m_isUploadFunction = isUploadFunction;
+    m_progressReportCallback = callback;
+    m_progressReportContext = context;
+}
+
+HRESULT HCHttpCall::SetupCall() noexcept
 {
     // Set up HCHttpCallHandle
     RETURN_IF_FAILED(HCHttpCallCreate(&m_callHandle));
@@ -168,6 +188,32 @@ HRESULT HCHttpCall::OnStarted(XAsyncBlock* async) noexcept
         RETURN_IF_FAILED(HCHttpCallRequestSetRetryCacheId(m_callHandle, *m_retryCacheId));
     }
 
+    if (m_progressReportCallback)
+    {
+        RETURN_IF_FAILED(HCHttpCallRequestSetProgressReportFunction(m_callHandle, m_progressReportCallback, m_isUploadFunction, 1, m_progressReportContext));
+    }
+
+    if (m_dynamicTotalSize > 0)
+    {
+        if (m_isUploadFunction)
+        {
+            RETURN_IF_FAILED(HCHttpCallRequestSetDynamicSize(m_callHandle, m_dynamicTotalSize));
+            RETURN_IF_FAILED(HCHttpCallRequestAddDynamicBytesWritten(m_callHandle, m_dynamicCurrentSize));
+        }
+        else
+        {
+            RETURN_IF_FAILED(HCHttpCallResponseSetDynamicSize(m_callHandle, m_dynamicTotalSize));
+            RETURN_IF_FAILED(HCHttpCallResponseAddDynamicBytesWritten(m_callHandle, m_dynamicCurrentSize));
+        }
+    }
+
+    return S_OK;
+}
+
+HRESULT HCHttpCall::OnStarted(XAsyncBlock* async) noexcept
+{
+    RETURN_IF_FAILED(SetupCall());
+
     return HCHttpCallPerformAsync(m_callHandle, async);
 }
 
@@ -176,6 +222,31 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
     // By design XAsyncBlock should succeed for HttpCall Perform
     RETURN_IF_FAILED(XAsyncGetStatus(async, false));
 
+    if (m_isPlayfabCall)
+    {
+        return GetResultOfPlayfabCall();
+    }
+    else
+    {
+        // Non-PlayFab call, return the response body as is
+        ServiceResponse response{};
+        uint32_t callCount{ 1 };
+        uint32_t httpCode{};
+        HCHttpCallGetPerformCount(m_callHandle, &callCount);
+        HCHttpCallResponseGetStatusCode(m_callHandle, &httpCode);
+        HttpResult httpResult{ callCount - 1, httpCode };
+        response.HttpCode = httpCode;
+        HRESULT responseBodyHr = response.FromVector(m_responseBody);
+        if (FAILED(responseBodyHr))
+        {
+            return Result<ServiceResponse>{ responseBodyHr, std::move(httpResult) };
+        }
+        return { std::move(response), std::move(httpResult) };
+    }
+}
+
+Result<ServiceResponse> HCHttpCall::GetResultOfPlayfabCall() noexcept
+{
     // Try to parse the response body no matter what. PlayFab often returns a response body even
     // on failure and they can provide more details about what went wrong. If we are unable to parse the response
     // body correctly, fall back to returning the Http status code.
@@ -204,12 +275,33 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
         parseError = true;
     }
 
+    // Get http status and requestId response header early for telemetry
+    uint32_t callCount{ 1 };
+    uint32_t httpCode{ 0 };
+    HCHttpCallGetPerformCount(m_callHandle, &callCount);
+    HRESULT getStatusCodeHr = HCHttpCallResponseGetStatusCode(m_callHandle, &httpCode);
+    const char* requestId;
+    HRESULT getHeaderHr = HCHttpCallResponseGetHeader(m_callHandle, "X-RequestId", &requestId);
+    HttpResult httpResult{ callCount - 1, httpCode, requestId ? requestId : "" };
+
     if (parseError)
     {
+        HRESULT networkErrorCode = S_OK;
+        uint32_t platformNetworkErrorCode = 0;
+        RETURN_IF_FAILED(HCHttpCallResponseGetNetworkErrorCode(m_callHandle, &networkErrorCode, &platformNetworkErrorCode));
+        RETURN_IF_FAILED(networkErrorCode);
+
         // Couldn't parse response body, fall back to Http status code
-        uint32_t httpCode{ 0 };
-        RETURN_IF_FAILED(HCHttpCallResponseGetStatusCode(m_callHandle, &httpCode));
-        RETURN_IF_FAILED(HttpStatusToHR(httpCode));
+        if (FAILED(getStatusCodeHr))
+        {
+            return Result<ServiceResponse>{ getStatusCodeHr, std::move(httpResult) };
+        }
+
+        HRESULT httpErrorCode = HttpStatusToHR(httpCode);
+        if (FAILED(httpErrorCode))
+        {
+            return Result<ServiceResponse>{ httpErrorCode, std::move(httpResult) };
+        }
 
         // This is an unusual case. We weren't able to parse the response body, but the Http status code indicates that the
         // call was successful. Return the Json parse error in this case.
@@ -217,23 +309,34 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
         errorMessage << "Failed to parse PlayFab service response: " << parseErrorMsg;
         TRACE_ERROR(errorMessage.str().data());
 
-        return Result<ServiceResponse>{ E_FAIL, errorMessage.str() };
+        return Result<ServiceResponse>{ E_FAIL, errorMessage.str(), std::move(httpResult) };
+    }
+
+    if (FAILED(getStatusCodeHr))
+    {
+        return Result<ServiceResponse>{ getStatusCodeHr, std::move(httpResult) };
     }
 
     // Successful response from service (doesn't always indicate the call was successful, just that the service responded successfully)
     ServiceResponse response{};
-    response.FromJson(responseJson);
+    HRESULT parseHr = response.FromJson(responseJson);
+    if (FAILED(parseHr))
+    {
+        return Result<ServiceResponse>{ parseHr, std::move(httpResult) };
+    }
 
-    // Get requestId response header
-    const char* requestId;
-    RETURN_IF_FAILED(HCHttpCallResponseGetHeader(m_callHandle, "X-RequestId", &requestId));
+    // Check requestId response header
+    if (FAILED(getHeaderHr))
+    {
+        return Result<ServiceResponse>{ getHeaderHr, std::move(httpResult) };
+    }
 
     if (requestId)
     {
         response.RequestId = requestId;
     }
 
-    return response;
+    return { std::move(response), std::move(httpResult) };
 }
 
 HRESULT HCHttpCall::HCRequestBodyRead(
@@ -246,16 +349,24 @@ HRESULT HCHttpCall::HCRequestBodyRead(
 )
 {
     UNREFERENCED_PARAMETER(callHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(context);
 
+    assert(context);
     assert(destination);
     assert(bytesAvailable > 0);
     assert(bytesWritten);
+    *bytesWritten = 0;
 
     auto call{ static_cast<HCHttpCall*>(context) }; // non-owning
     assert(offset < call->m_requestBody.size());
 
     *bytesWritten = std::min(bytesAvailable, call->m_requestBody.size() - offset);
     std::memcpy(destination, call->m_requestBody.data() + offset, *bytesWritten);
+
+    if (call->m_dynamicTotalSize > 0 && call->m_isUploadFunction)
+    {
+        RETURN_IF_FAILED(HCHttpCallRequestAddDynamicBytesWritten(callHandle, *bytesWritten));
+    }
 
     return S_OK;
 }
@@ -268,12 +379,19 @@ HRESULT HCHttpCall::HCResponseBodyWrite(
 )
 {
     UNREFERENCED_PARAMETER(callHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(context);
 
+    assert(context);
     assert(source);
     assert(bytesAvailable > 0);
 
     auto call{ static_cast<HCHttpCall*>(context) }; // non-owning
     call->m_responseBody.insert(call->m_responseBody.end(), source, source + bytesAvailable);
+
+    if (call->m_dynamicTotalSize > 0 && !call->m_isUploadFunction)
+    {
+        RETURN_IF_FAILED(HCHttpCallResponseAddDynamicBytesWritten(callHandle, bytesAvailable));
+    }
 
     return S_OK;
 }

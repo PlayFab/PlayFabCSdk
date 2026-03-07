@@ -4,11 +4,15 @@
 #include "ApiXAsyncProvider.h"
 #include "GlobalState.h"
 #include <playfab/core/cpp/Entity.h>
+#include "ApiHelpers.h"
 
 using namespace PlayFab;
 using namespace PlayFab::Leaderboards;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+extern "C"
+{
+
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsCreateLeaderboardDefinitionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsCreateLeaderboardDefinitionRequest* request,
@@ -17,20 +21,20 @@ PF_API PFLeaderboardsCreateLeaderboardDefinitionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsCreateLeaderboardDefinitionAsync),
-        std::bind(&LeaderboardsAPI::CreateLeaderboardDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsCreateLeaderboardDefinitionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsCreateLeaderboardDefinitionAsync),
+            std::bind(&LeaderboardsAPI::CreateLeaderboardDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsDeleteLeaderboardDefinitionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsDeleteLeaderboardDefinitionRequest* request,
@@ -39,20 +43,20 @@ PF_API PFLeaderboardsDeleteLeaderboardDefinitionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsDeleteLeaderboardDefinitionAsync),
-        std::bind(&LeaderboardsAPI::DeleteLeaderboardDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsDeleteLeaderboardDefinitionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsDeleteLeaderboardDefinitionAsync),
+            std::bind(&LeaderboardsAPI::DeleteLeaderboardDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsDeleteLeaderboardEntriesAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsDeleteLeaderboardEntriesRequest* request,
@@ -61,16 +65,16 @@ PF_API PFLeaderboardsDeleteLeaderboardEntriesAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsDeleteLeaderboardEntriesAsync),
-        std::bind(&LeaderboardsAPI::DeleteLeaderboardEntries, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsDeleteLeaderboardEntriesAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsDeleteLeaderboardEntriesAsync),
+            std::bind(&LeaderboardsAPI::DeleteLeaderboardEntries, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -82,16 +86,16 @@ PF_API PFLeaderboardsGetFriendLeaderboardForEntityAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsGetFriendLeaderboardForEntityAsync),
-        std::bind(&LeaderboardsAPI::GetFriendLeaderboardForEntity, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsGetFriendLeaderboardForEntityAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsGetFriendLeaderboardForEntityAsync),
+            std::bind(&LeaderboardsAPI::GetFriendLeaderboardForEntity, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFLeaderboardsGetFriendLeaderboardForEntityGetResultSize(
@@ -99,7 +103,10 @@ PF_API PFLeaderboardsGetFriendLeaderboardForEntityGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetFriendLeaderboardForEntityGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFLeaderboardsGetFriendLeaderboardForEntityGetResult(
@@ -110,12 +117,15 @@ PF_API PFLeaderboardsGetFriendLeaderboardForEntityGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetFriendLeaderboardForEntityGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardAsync(
@@ -126,16 +136,16 @@ PF_API PFLeaderboardsGetLeaderboardAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardAsync),
-        std::bind(&LeaderboardsAPI::GetLeaderboard, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardAsync),
+            std::bind(&LeaderboardsAPI::GetLeaderboard, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardGetResultSize(
@@ -143,7 +153,10 @@ PF_API PFLeaderboardsGetLeaderboardGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardGetResult(
@@ -154,12 +167,15 @@ PF_API PFLeaderboardsGetLeaderboardGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardAroundEntityAsync(
@@ -170,16 +186,16 @@ PF_API PFLeaderboardsGetLeaderboardAroundEntityAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardAroundEntityAsync),
-        std::bind(&LeaderboardsAPI::GetLeaderboardAroundEntity, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardAroundEntityAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardAroundEntityAsync),
+            std::bind(&LeaderboardsAPI::GetLeaderboardAroundEntity, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardAroundEntityGetResultSize(
@@ -187,7 +203,10 @@ PF_API PFLeaderboardsGetLeaderboardAroundEntityGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardAroundEntityGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardAroundEntityGetResult(
@@ -198,15 +217,18 @@ PF_API PFLeaderboardsGetLeaderboardAroundEntityGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardAroundEntityGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsGetLeaderboardDefinitionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsGetLeaderboardDefinitionRequest* request,
@@ -215,16 +237,16 @@ PF_API PFLeaderboardsGetLeaderboardDefinitionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardDefinitionAsync),
-        std::bind(&LeaderboardsAPI::GetLeaderboardDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardDefinitionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardDefinitionAsync),
+            std::bind(&LeaderboardsAPI::GetLeaderboardDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardDefinitionGetResultSize(
@@ -232,7 +254,10 @@ PF_API PFLeaderboardsGetLeaderboardDefinitionGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardDefinitionGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardDefinitionGetResult(
@@ -243,16 +268,19 @@ PF_API PFLeaderboardsGetLeaderboardDefinitionGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardDefinitionGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFLeaderboardsGetLeaderboardDefinitionResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFLeaderboardsGetLeaderboardDefinitionResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsGetLeaderboardForEntitiesAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsGetLeaderboardForEntitiesRequest* request,
@@ -261,16 +289,16 @@ PF_API PFLeaderboardsGetLeaderboardForEntitiesAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardForEntitiesAsync),
-        std::bind(&LeaderboardsAPI::GetLeaderboardForEntities, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardForEntitiesAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardForEntitiesAsync),
+            std::bind(&LeaderboardsAPI::GetLeaderboardForEntities, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardForEntitiesGetResultSize(
@@ -278,7 +306,10 @@ PF_API PFLeaderboardsGetLeaderboardForEntitiesGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardForEntitiesGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFLeaderboardsGetLeaderboardForEntitiesGetResult(
@@ -289,16 +320,19 @@ PF_API PFLeaderboardsGetLeaderboardForEntitiesGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardForEntitiesGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsIncrementLeaderboardVersionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsIncrementLeaderboardVersionRequest* request,
@@ -307,16 +341,16 @@ PF_API PFLeaderboardsIncrementLeaderboardVersionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsIncrementLeaderboardVersionAsync),
-        std::bind(&LeaderboardsAPI::IncrementLeaderboardVersion, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsIncrementLeaderboardVersionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsIncrementLeaderboardVersionAsync),
+            std::bind(&LeaderboardsAPI::IncrementLeaderboardVersion, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFLeaderboardsIncrementLeaderboardVersionGetResult(
@@ -324,11 +358,14 @@ PF_API PFLeaderboardsIncrementLeaderboardVersionGetResult(
     _Out_ PFLeaderboardsIncrementLeaderboardVersionResponse* result
 ) noexcept
 {
-    return XAsyncGetResult(async, nullptr, sizeof(PFLeaderboardsIncrementLeaderboardVersionResponse), result, nullptr);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsIncrementLeaderboardVersionGetResult), [&]()
+    {
+        return XAsyncGetResult(async, nullptr, sizeof(PFLeaderboardsIncrementLeaderboardVersionResponse), result, nullptr);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsListLeaderboardDefinitionsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsListLeaderboardDefinitionsRequest* request,
@@ -337,16 +374,16 @@ PF_API PFLeaderboardsListLeaderboardDefinitionsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsListLeaderboardDefinitionsAsync),
-        std::bind(&LeaderboardsAPI::ListLeaderboardDefinitions, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsListLeaderboardDefinitionsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsListLeaderboardDefinitionsAsync),
+            std::bind(&LeaderboardsAPI::ListLeaderboardDefinitions, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFLeaderboardsListLeaderboardDefinitionsGetResultSize(
@@ -354,7 +391,10 @@ PF_API PFLeaderboardsListLeaderboardDefinitionsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsListLeaderboardDefinitionsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFLeaderboardsListLeaderboardDefinitionsGetResult(
@@ -365,16 +405,19 @@ PF_API PFLeaderboardsListLeaderboardDefinitionsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsListLeaderboardDefinitionsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFLeaderboardsListLeaderboardDefinitionsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFLeaderboardsListLeaderboardDefinitionsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsUnlinkLeaderboardFromStatisticAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsUnlinkLeaderboardFromStatisticRequest* request,
@@ -383,20 +426,20 @@ PF_API PFLeaderboardsUnlinkLeaderboardFromStatisticAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsUnlinkLeaderboardFromStatisticAsync),
-        std::bind(&LeaderboardsAPI::UnlinkLeaderboardFromStatistic, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsUnlinkLeaderboardFromStatisticAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsUnlinkLeaderboardFromStatisticAsync),
+            std::bind(&LeaderboardsAPI::UnlinkLeaderboardFromStatistic, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 PF_API PFLeaderboardsUpdateLeaderboardDefinitionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsUpdateLeaderboardDefinitionRequest* request,
@@ -405,20 +448,20 @@ PF_API PFLeaderboardsUpdateLeaderboardDefinitionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsUpdateLeaderboardDefinitionAsync),
-        std::bind(&LeaderboardsAPI::UpdateLeaderboardDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsUpdateLeaderboardDefinitionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsUpdateLeaderboardDefinitionAsync),
+            std::bind(&LeaderboardsAPI::UpdateLeaderboardDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFLeaderboardsUpdateLeaderboardEntriesAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFLeaderboardsUpdateLeaderboardEntriesRequest* request,
@@ -427,16 +470,17 @@ PF_API PFLeaderboardsUpdateLeaderboardEntriesAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFLeaderboardsUpdateLeaderboardEntriesAsync),
-        std::bind(&LeaderboardsAPI::UpdateLeaderboardEntries, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFLeaderboardsUpdateLeaderboardEntriesAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFLeaderboardsUpdateLeaderboardEntriesAsync),
+            std::bind(&LeaderboardsAPI::UpdateLeaderboardEntries, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
+}

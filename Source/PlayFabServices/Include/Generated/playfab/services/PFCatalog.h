@@ -136,7 +136,7 @@ PF_API PFCatalogCreateUploadUrlsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Deletes all reviews, helpfulness votes, and ratings submitted by the entity specified.
 /// </summary>
@@ -145,6 +145,7 @@ PF_API PFCatalogCreateUploadUrlsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_PROFILE_DOES_NOT_EXIST or any of the global PlayFab Service errors.
 /// See doc page "Handling PlayFab Errors" for more details on error handling.
@@ -175,7 +176,7 @@ PF_API PFCatalogDeleteItemAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Gets the configuration for the catalog. Only Title Entities can call this API. There is a limit of
 /// 100 requests in 10 seconds for this API. More information about the Catalog Config can be found here:
@@ -186,6 +187,7 @@ PF_API PFCatalogDeleteItemAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// When the asynchronous task is complete, call <see cref="PFCatalogGetCatalogConfigGetResultSize"/>
 /// and <see cref="PFCatalogGetCatalogConfigGetResult"/> to get the result.
 /// </remarks>
@@ -593,7 +595,7 @@ PF_API PFCatalogGetItemContainersGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Gets the moderation state for an item, including the concern category and string reason. More information
 /// about moderation states can be found here: https://learn.microsoft.com/en-us/gaming/playfab/features/economy-v2/ugc/moderation
@@ -603,6 +605,7 @@ PF_API PFCatalogGetItemContainersGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// When the asynchronous task is complete, call <see cref="PFCatalogGetItemModerationStateGetResultSize"/>
 /// and <see cref="PFCatalogGetItemModerationStateGetResult"/> to get the result.
 /// </remarks>
@@ -1027,7 +1030,7 @@ PF_API PFCatalogSearchItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Sets the moderation state for an item, including the concern category and string reason. More information
 /// about moderation states can be found here: https://learn.microsoft.com/en-us/gaming/playfab/features/economy-v2/ugc/moderation
@@ -1037,6 +1040,7 @@ PF_API PFCatalogSearchItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED, E_PF_ITEM_NOT_FOUND or any of the global
 /// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
@@ -1067,7 +1071,7 @@ PF_API PFCatalogSubmitItemReviewVoteAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Submit a request to takedown one or more reviews.
 /// </summary>
@@ -1076,6 +1080,7 @@ PF_API PFCatalogSubmitItemReviewVoteAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// Submit a request to takedown one or more reviews, removing them from public view. Authors will still
 /// be able to see their reviews after being taken down.
 ///
@@ -1090,7 +1095,7 @@ PF_API PFCatalogTakedownItemReviewsAsync(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Updates the configuration for the catalog. Only Title Entities can call this API. There is a limit
 /// of 10 requests in 10 seconds for this API. More information about the Catalog Config can be found
@@ -1101,6 +1106,7 @@ PF_API PFCatalogTakedownItemReviewsAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
 /// the async result will be E_PF_BILLING_INFORMATION_REQUIRED, E_PF_CATALOG_CONFIG_INVALID, E_PF_INVALID_ENTITY_TYPE
 /// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details

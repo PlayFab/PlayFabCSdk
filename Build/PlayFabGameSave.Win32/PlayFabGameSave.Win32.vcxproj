@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7FB6AFDB-89C5-44F9-8CDB-2EE1103A567B}</ProjectGuid>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <ProjectName>PlayFabGameSave.Win32</ProjectName>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove(PlayFab.C.Win32.props))" />
+  <Import Project="$(PlayFabBuildRoot)\Steam.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabCore.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.Common\PlayFabGameSave.Common.vcxitems" Label="Shared" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.ServiceWrappers\PlayFabGameSave.ServiceWrappers.vcxitems" Label="Shared" />
+  <PropertyGroup>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalProjectReference>true</CopyLocalProjectReference>
+    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
+    <CopyCppRuntimeToOutputDir>true</CopyCppRuntimeToOutputDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <Import Project="..\Shared\PlayFabGameSave.SharedFiles.props" Condition="Exists('..\Shared\PlayFabGameSave.SharedFiles.props')" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies);version.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\PlayFabGameSaveWin32VersionInfo.rc" />
+  </ItemGroup>
+</Project>

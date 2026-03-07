@@ -1,6 +1,11 @@
 # PlayFabCSdk
 Cross-Platform C/C++ PlayFab SDK.
 
+This SDK includes:
+- **PlayFabServices**: Access to PlayFab service APIs (Catalog, Economy, Multiplayer, etc.)
+- **PlayFabCore**: Core authentication and platform functionality
+- **PlayFabGameSave** (GDK): Game save file management with multi-device sync support
+
 This SDK currently supports the following platforms:
 - Windows (Win32) x64
 - GDK (Xbox and Windows)
@@ -141,6 +146,10 @@ git submodule update --init --recursive
 ### Building from source for Windows and GDK
 
 After cloning this repository and its submodules, you can build the libraries by opening the solution file PlayFab.C.vs2022.sln. That solution contains the PlayFabServices project, its dependencies, and a test app. After building, the binaries will be in a subdirectory within \Out.
+
+> __Note__: As of the 2510 release, the Win32-specific build projects have been removed. The GDK build projects (e.g. PlayFabCore.GDK, PlayFabServices.GDK) now target both Xbox and Windows desktop via the `Gaming.Desktop.x64` platform configuration.
+
+To build the PlayFabGameSave library (GDK only), open PlayFabGameSave.C.GDK.vs2022.sln. This solution contains the PlayFabGameSave project along with its dependencies (PlayFabCore, PlayFabServices, libarchive, zlib) and a GDK test app.
 
 #### Import Property Sheet (Windows and GDK)
 

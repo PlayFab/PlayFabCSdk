@@ -33,7 +33,7 @@ HRESULT TestRunner::Initialize()
 
     // LHC doesn't have a context pointer for the trace callback, so we're using a static member as a callback context
     s_hcTraceCallbackContext = this;
-    HCTraceSetClientCallback(PFHCTraceCallback);
+    HCTraceSetClientCallback(HCTraceCallback);
 
     // Init Platform hooks to be used throughout PlayFab tests
     RETURN_IF_FAILED(Platform::SetHooks());
@@ -433,7 +433,7 @@ void TestRunner::AddLog(HCTraceLevel level, _In_z_ _Printf_format_string_ const 
     Platform::TraceMessage(level, message.str());
 }
 
-void TestRunner::PFHCTraceCallback(_In_z_ const char* areaName, _In_ HCTraceLevel level, _In_ uint64_t threadId, _In_ uint64_t timestamp, _In_z_ const char* message)
+void TestRunner::HCTraceCallback(_In_z_ const char* areaName, _In_ HCTraceLevel level, _In_ uint64_t threadId, _In_ uint64_t timestamp, _In_z_ const char* message)
 {
     UNREFERENCED_PARAMETER(areaName);
     UNREFERENCED_PARAMETER(threadId);

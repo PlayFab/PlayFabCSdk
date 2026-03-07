@@ -336,6 +336,7 @@ JsonValue InventoryItem::ToJson(const PFInventoryInventoryItem& input)
     JsonUtils::ObjectAddMemberTime(output, "ExpirationDate", input.expirationDate);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "StackId", input.stackId);
+    JsonUtils::ObjectAddMemberTime(output, "StartDate", input.startDate);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     return output;
 }
@@ -361,6 +362,10 @@ HRESULT InventoryItem::FromJson(const JsonValue& input)
     String stackId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "StackId", stackId));
     this->SetStackId(std::move(stackId));
+
+    std::optional<time_t> startDate{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "StartDate", startDate));
+    this->SetStartDate(std::move(startDate));
 
     String type{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Type", type));
@@ -402,6 +407,10 @@ size_t InventoryItem::RequiredBufferSize(const PFInventoryInventoryItem& model)
     {
         requiredSize += (std::strlen(model.stackId) + 1);
     }
+    if (model.startDate)
+    {
+        requiredSize += (alignof(time_t) + sizeof(time_t));
+    }
     if (model.type)
     {
         requiredSize += (std::strlen(model.type) + 1);
@@ -436,6 +445,11 @@ HRESULT InventoryItem::Copy(const PFInventoryInventoryItem& input, PFInventoryIn
         auto propCopyResult = buffer.CopyTo(input.stackId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.stackId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.startDate);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.startDate = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.type);
@@ -861,6 +875,7 @@ JsonValue GetInventoryOperationStatusRequest::ToJson(const PFInventoryGetInvento
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
+    JsonUtils::ObjectAddMember(output, "OperationToken", input.operationToken);
     return output;
 }
 
@@ -974,6 +989,46 @@ JsonValue GetTransactionHistoryRequest::ToJson(const PFInventoryGetTransactionHi
     JsonUtils::ObjectAddMember(output, "Filter", input.filter);
     JsonUtils::ObjectAddMember(output, "OrderBy", input.orderBy);
     return output;
+}
+
+HRESULT TransactionClawbackDetails::FromJson(const JsonValue& input)
+{
+    String transactionIdClawedback{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "TransactionIdClawedback", transactionIdClawedback));
+    this->SetTransactionIdClawedback(std::move(transactionIdClawedback));
+
+    return S_OK;
+}
+
+size_t TransactionClawbackDetails::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFInventoryTransactionClawbackDetails const*> TransactionClawbackDetails::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<TransactionClawbackDetails>(&this->Model());
+}
+
+size_t TransactionClawbackDetails::RequiredBufferSize(const PFInventoryTransactionClawbackDetails& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.transactionIdClawedback)
+    {
+        requiredSize += (std::strlen(model.transactionIdClawedback) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT TransactionClawbackDetails::Copy(const PFInventoryTransactionClawbackDetails& input, PFInventoryTransactionClawbackDetails& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.transactionIdClawedback);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.transactionIdClawedback = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
 }
 
 HRESULT TransactionOperation::FromJson(const JsonValue& input)
@@ -1096,6 +1151,14 @@ HRESULT TransactionOperation::Copy(const PFInventoryTransactionOperation& input,
 
 HRESULT TransactionPurchaseDetails::FromJson(const JsonValue& input)
 {
+    String itemFriendlyId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemFriendlyId", itemFriendlyId));
+    this->SetItemFriendlyId(std::move(itemFriendlyId));
+
+    String itemId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemId", itemId));
+    this->SetItemId(std::move(itemId));
+
     String storeFriendlyId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "StoreFriendlyId", storeFriendlyId));
     this->SetStoreFriendlyId(std::move(storeFriendlyId));
@@ -1120,6 +1183,14 @@ Result<PFInventoryTransactionPurchaseDetails const*> TransactionPurchaseDetails:
 size_t TransactionPurchaseDetails::RequiredBufferSize(const PFInventoryTransactionPurchaseDetails& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.itemFriendlyId)
+    {
+        requiredSize += (std::strlen(model.itemFriendlyId) + 1);
+    }
+    if (model.itemId)
+    {
+        requiredSize += (std::strlen(model.itemId) + 1);
+    }
     if (model.storeFriendlyId)
     {
         requiredSize += (std::strlen(model.storeFriendlyId) + 1);
@@ -1134,6 +1205,16 @@ size_t TransactionPurchaseDetails::RequiredBufferSize(const PFInventoryTransacti
 HRESULT TransactionPurchaseDetails::Copy(const PFInventoryTransactionPurchaseDetails& input, PFInventoryTransactionPurchaseDetails& output, ModelBuffer& buffer)
 {
     output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.itemFriendlyId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.itemFriendlyId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.itemId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.itemId = propCopyResult.ExtractPayload();
+    }
     {
         auto propCopyResult = buffer.CopyTo(input.storeFriendlyId);
         RETURN_IF_FAILED(propCopyResult.hr);
@@ -1317,6 +1398,17 @@ HRESULT Transaction::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ApiName", apiName));
     this->SetApiName(std::move(apiName));
 
+    std::optional<TransactionClawbackDetails> clawbackDetails{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ClawbackDetails", clawbackDetails));
+    if (clawbackDetails)
+    {
+        this->SetClawbackDetails(std::move(*clawbackDetails));
+    }
+
+    StringDictionaryEntryVector customTags{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CustomTags", customTags));
+    this->SetCustomTags(std::move(customTags));
+
     String itemType{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemType", itemType));
     this->SetItemType(std::move(itemType));
@@ -1376,6 +1468,16 @@ size_t Transaction::RequiredBufferSize(const PFInventoryTransaction& model)
     {
         requiredSize += (std::strlen(model.apiName) + 1);
     }
+    if (model.clawbackDetails)
+    {
+        requiredSize += TransactionClawbackDetails::RequiredBufferSize(*model.clawbackDetails);
+    }
+    requiredSize += (alignof(PFStringDictionaryEntry) + sizeof(PFStringDictionaryEntry) * model.customTagsCount);
+    for (size_t i = 0; i < model.customTagsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.customTags[i].key) + 1);
+        requiredSize += (std::strlen(model.customTags[i].value) + 1);
+    }
     if (model.itemType)
     {
         requiredSize += (std::strlen(model.itemType) + 1);
@@ -1415,6 +1517,16 @@ HRESULT Transaction::Copy(const PFInventoryTransaction& input, PFInventoryTransa
         auto propCopyResult = buffer.CopyTo(input.apiName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.apiName = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<TransactionClawbackDetails>(input.clawbackDetails);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.clawbackDetails = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.customTags, input.customTagsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.customTags = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.itemType);

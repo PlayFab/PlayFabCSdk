@@ -4,9 +4,13 @@
 #include "ApiXAsyncProvider.h"
 #include "GlobalState.h"
 #include <playfab/core/cpp/Entity.h>
+#include "ApiHelpers.h"
 
 using namespace PlayFab;
 using namespace PlayFab::Profiles;
+
+extern "C"
+{
 
 PF_API PFProfilesGetProfileAsync(
     _In_ PFEntityHandle contextHandle,
@@ -16,16 +20,16 @@ PF_API PFProfilesGetProfileAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFProfilesGetProfileAsync),
-        std::bind(&ProfilesAPI::GetProfile, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFProfilesGetProfileAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFProfilesGetProfileAsync),
+            std::bind(&ProfilesAPI::GetProfile, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFProfilesGetProfileGetResultSize(
@@ -33,7 +37,10 @@ PF_API PFProfilesGetProfileGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesGetProfileGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFProfilesGetProfileGetResult(
@@ -44,12 +51,15 @@ PF_API PFProfilesGetProfileGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesGetProfileGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFProfilesGetEntityProfileResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFProfilesGetEntityProfileResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFProfilesGetProfilesAsync(
@@ -60,16 +70,16 @@ PF_API PFProfilesGetProfilesAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFProfilesGetProfilesAsync),
-        std::bind(&ProfilesAPI::GetProfiles, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFProfilesGetProfilesAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFProfilesGetProfilesAsync),
+            std::bind(&ProfilesAPI::GetProfiles, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFProfilesGetProfilesGetResultSize(
@@ -77,7 +87,10 @@ PF_API PFProfilesGetProfilesGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesGetProfilesGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFProfilesGetProfilesGetResult(
@@ -88,12 +101,15 @@ PF_API PFProfilesGetProfilesGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesGetProfilesGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFProfilesGetEntityProfilesResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFProfilesGetEntityProfilesResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsAsync(
@@ -104,16 +120,16 @@ PF_API PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsAsync),
-        std::bind(&ProfilesAPI::GetTitlePlayersFromMasterPlayerAccountIds, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsAsync),
+            std::bind(&ProfilesAPI::GetTitlePlayersFromMasterPlayerAccountIds, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsGetResultSize(
@@ -121,7 +137,10 @@ PF_API PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsGetResult(
@@ -132,12 +151,15 @@ PF_API PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFProfilesSetProfileLanguageAsync(
@@ -148,16 +170,16 @@ PF_API PFProfilesSetProfileLanguageAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFProfilesSetProfileLanguageAsync),
-        std::bind(&ProfilesAPI::SetProfileLanguage, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFProfilesSetProfileLanguageAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFProfilesSetProfileLanguageAsync),
+            std::bind(&ProfilesAPI::SetProfileLanguage, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFProfilesSetProfileLanguageGetResultSize(
@@ -165,7 +187,10 @@ PF_API PFProfilesSetProfileLanguageGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesSetProfileLanguageGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFProfilesSetProfileLanguageGetResult(
@@ -176,12 +201,15 @@ PF_API PFProfilesSetProfileLanguageGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesSetProfileLanguageGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFProfilesSetProfileLanguageResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFProfilesSetProfileLanguageResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFProfilesSetProfilePolicyAsync(
@@ -192,16 +220,16 @@ PF_API PFProfilesSetProfilePolicyAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFProfilesSetProfilePolicyAsync),
-        std::bind(&ProfilesAPI::SetProfilePolicy, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFProfilesSetProfilePolicyAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFProfilesSetProfilePolicyAsync),
+            std::bind(&ProfilesAPI::SetProfilePolicy, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFProfilesSetProfilePolicyGetResultSize(
@@ -209,7 +237,10 @@ PF_API PFProfilesSetProfilePolicyGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesSetProfilePolicyGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFProfilesSetProfilePolicyGetResult(
@@ -220,11 +251,15 @@ PF_API PFProfilesSetProfilePolicyGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFProfilesSetProfilePolicyGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFProfilesSetEntityProfilePolicyResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFProfilesSetEntityProfilePolicyResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
+}

@@ -9,9 +9,7 @@
 
 #include <playfab/services/PFFriendsTypes.h>
 #include <playfab/services/cpp/TypeWrappers.h>
-#if HC_PLATFORM == HC_PLATFORM_GDK
 #include <playfab/core/cpp/AuthenticationTypeWrappers.h>
-#endif
 
 namespace PlayFab
 {
@@ -69,10 +67,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFriendEmail() const
+    {
+        return m_friendEmail;
+    }
+
     void SetFriendEmail(String value)
     {
         m_friendEmail = std::move(value);
         this->m_model.friendEmail =  m_friendEmail.empty() ? nullptr : m_friendEmail.data();
+    }
+
+    String const& GetFriendPlayFabId() const
+    {
+        return m_friendPlayFabId;
     }
 
     void SetFriendPlayFabId(String value)
@@ -81,10 +89,20 @@ public:
         this->m_model.friendPlayFabId =  m_friendPlayFabId.empty() ? nullptr : m_friendPlayFabId.data();
     }
 
+    String const& GetFriendTitleDisplayName() const
+    {
+        return m_friendTitleDisplayName;
+    }
+
     void SetFriendTitleDisplayName(String value)
     {
         m_friendTitleDisplayName = std::move(value);
         this->m_model.friendTitleDisplayName =  m_friendTitleDisplayName.empty() ? nullptr : m_friendTitleDisplayName.data();
+    }
+
+    String const& GetFriendUsername() const
+    {
+        return m_friendUsername;
     }
 
     void SetFriendUsername(String value)
@@ -117,6 +135,11 @@ public:
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
     using ModelWrapper<PFFriendsAddFriendResult, Alloc>::ModelWrapper;
+
+    bool GetCreated() const
+    {
+        return this->m_model.created;
+    }
 
     void SetCreated(bool value)
     {
@@ -196,6 +219,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -203,10 +231,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFFriendsExternalFriendSources> const& GetExternalPlatformFriends() const
+    {
+        return m_externalPlatformFriends;
+    }
+
     void SetExternalPlatformFriends(std::optional<PFFriendsExternalFriendSources> value)
     {
         m_externalPlatformFriends = std::move(value);
         this->m_model.externalPlatformFriends = m_externalPlatformFriends ? m_externalPlatformFriends.operator->() : nullptr;
+    }
+
+    std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> const& GetProfileConstraints() const
+    {
+        return m_profileConstraints;
     }
 
     void SetProfileConstraints(std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> value)
@@ -222,6 +260,11 @@ public:
         this->m_model.user = m_user.Handle();
     }
 #else
+    String const& GetXboxToken() const
+    {
+        return m_xboxToken;
+    }
+
     void SetXboxToken(String value)
     {
         m_xboxToken = std::move(value);
@@ -314,10 +357,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFUserFacebookInfoWrapper<Alloc>> const& GetFacebookInfo() const
+    {
+        return m_facebookInfo;
+    }
+
     void SetFacebookInfo(std::optional<PFUserFacebookInfoWrapper<Alloc>> value)
     {
         m_facebookInfo = std::move(value);
         this->m_model.facebookInfo = m_facebookInfo ? &m_facebookInfo->Model() : nullptr;
+    }
+
+    String const& GetFriendPlayFabId() const
+    {
+        return m_friendPlayFabId;
     }
 
     void SetFriendPlayFabId(String value)
@@ -326,10 +379,20 @@ public:
         this->m_model.friendPlayFabId =  m_friendPlayFabId.empty() ? nullptr : m_friendPlayFabId.data();
     }
 
+    std::optional<PFUserGameCenterInfoWrapper<Alloc>> const& GetGameCenterInfo() const
+    {
+        return m_gameCenterInfo;
+    }
+
     void SetGameCenterInfo(std::optional<PFUserGameCenterInfoWrapper<Alloc>> value)
     {
         m_gameCenterInfo = std::move(value);
         this->m_model.gameCenterInfo = m_gameCenterInfo ? &m_gameCenterInfo->Model() : nullptr;
+    }
+
+    std::optional<PFPlayerProfileModelWrapper<Alloc>> const& GetProfile() const
+    {
+        return m_profile;
     }
 
     void SetProfile(std::optional<PFPlayerProfileModelWrapper<Alloc>> value)
@@ -338,16 +401,31 @@ public:
         this->m_model.profile = m_profile ? &m_profile->Model() : nullptr;
     }
 
+    std::optional<PFUserPsnInfoWrapper<Alloc>> const& GetPSNInfo() const
+    {
+        return m_PSNInfo;
+    }
+
     void SetPSNInfo(std::optional<PFUserPsnInfoWrapper<Alloc>> value)
     {
         m_PSNInfo = std::move(value);
         this->m_model.PSNInfo = m_PSNInfo ? &m_PSNInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserSteamInfoWrapper<Alloc>> const& GetSteamInfo() const
+    {
+        return m_steamInfo;
+    }
+
     void SetSteamInfo(std::optional<PFUserSteamInfoWrapper<Alloc>> value)
     {
         m_steamInfo = std::move(value);
         this->m_model.steamInfo = m_steamInfo ? &m_steamInfo->Model() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)
@@ -357,16 +435,31 @@ public:
         this->m_model.tagsCount =  static_cast<uint32_t>(m_tags.size());
     }
 
+    String const& GetTitleDisplayName() const
+    {
+        return m_titleDisplayName;
+    }
+
     void SetTitleDisplayName(String value)
     {
         m_titleDisplayName = std::move(value);
         this->m_model.titleDisplayName =  m_titleDisplayName.empty() ? nullptr : m_titleDisplayName.data();
     }
 
+    String const& GetUsername() const
+    {
+        return m_username;
+    }
+
     void SetUsername(String value)
     {
         m_username = std::move(value);
         this->m_model.username =  m_username.empty() ? nullptr : m_username.data();
+    }
+
+    std::optional<PFUserXboxInfoWrapper<Alloc>> const& GetXboxInfo() const
+    {
+        return m_xboxInfo;
     }
 
     void SetXboxInfo(std::optional<PFUserXboxInfoWrapper<Alloc>> value)
@@ -447,6 +540,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFFriendsFriendInfoWrapper<Alloc>, Alloc> const& GetFriends() const
+    {
+        return m_friends;
+    }
+
     void SetFriends(ModelVector<PFFriendsFriendInfoWrapper<Alloc>, Alloc> value)
     {
         m_friends = std::move(value);
@@ -506,6 +604,11 @@ public:
         swap(lhs.m_friendPlayFabId, rhs.m_friendPlayFabId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetFriendPlayFabId() const
+    {
+        return m_friendPlayFabId;
     }
 
     void SetFriendPlayFabId(String value)
@@ -570,10 +673,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFriendPlayFabId() const
+    {
+        return m_friendPlayFabId;
+    }
+
     void SetFriendPlayFabId(String value)
     {
         m_friendPlayFabId = std::move(value);
         this->m_model.friendPlayFabId =  m_friendPlayFabId.empty() ? nullptr : m_friendPlayFabId.data();
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)
@@ -647,10 +760,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFriendEmail() const
+    {
+        return m_friendEmail;
+    }
+
     void SetFriendEmail(String value)
     {
         m_friendEmail = std::move(value);
         this->m_model.friendEmail =  m_friendEmail.empty() ? nullptr : m_friendEmail.data();
+    }
+
+    String const& GetFriendPlayFabId() const
+    {
+        return m_friendPlayFabId;
     }
 
     void SetFriendPlayFabId(String value)
@@ -659,16 +782,31 @@ public:
         this->m_model.friendPlayFabId =  m_friendPlayFabId.empty() ? nullptr : m_friendPlayFabId.data();
     }
 
+    String const& GetFriendTitleDisplayName() const
+    {
+        return m_friendTitleDisplayName;
+    }
+
     void SetFriendTitleDisplayName(String value)
     {
         m_friendTitleDisplayName = std::move(value);
         this->m_model.friendTitleDisplayName =  m_friendTitleDisplayName.empty() ? nullptr : m_friendTitleDisplayName.data();
     }
 
+    String const& GetFriendUsername() const
+    {
+        return m_friendUsername;
+    }
+
     void SetFriendUsername(String value)
     {
         m_friendUsername = std::move(value);
         this->m_model.friendUsername =  m_friendUsername.empty() ? nullptr : m_friendUsername.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -747,11 +885,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFFriendsExternalFriendSources> const& GetExternalPlatformFriends() const
+    {
+        return m_externalPlatformFriends;
     }
 
     void SetExternalPlatformFriends(std::optional<PFFriendsExternalFriendSources> value)
@@ -760,16 +908,31 @@ public:
         this->m_model.externalPlatformFriends = m_externalPlatformFriends ? m_externalPlatformFriends.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
     }
 
+    std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> const& GetProfileConstraints() const
+    {
+        return m_profileConstraints;
+    }
+
     void SetProfileConstraints(std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> value)
     {
         m_profileConstraints = std::move(value);
         this->m_model.profileConstraints = m_profileConstraints ? &m_profileConstraints->Model() : nullptr;
+    }
+
+    String const& GetXboxToken() const
+    {
+        return m_xboxToken;
     }
 
     void SetXboxToken(String value)
@@ -842,10 +1005,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFriendPlayFabId() const
+    {
+        return m_friendPlayFabId;
+    }
+
     void SetFriendPlayFabId(String value)
     {
         m_friendPlayFabId = std::move(value);
         this->m_model.friendPlayFabId =  m_friendPlayFabId.empty() ? nullptr : m_friendPlayFabId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -914,16 +1087,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFriendPlayFabId() const
+    {
+        return m_friendPlayFabId;
+    }
+
     void SetFriendPlayFabId(String value)
     {
         m_friendPlayFabId = std::move(value);
         this->m_model.friendPlayFabId =  m_friendPlayFabId.empty() ? nullptr : m_friendPlayFabId.data();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)

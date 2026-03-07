@@ -4,9 +4,13 @@
 #include "ApiXAsyncProvider.h"
 #include "GlobalState.h"
 #include <playfab/core/cpp/Entity.h>
+#include "ApiHelpers.h"
 
 using namespace PlayFab;
 using namespace PlayFab::Friends;
+
+extern "C"
+{
 
 PF_API PFFriendsClientAddFriendAsync(
     _In_ PFEntityHandle contextHandle,
@@ -16,16 +20,16 @@ PF_API PFFriendsClientAddFriendAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFFriendsClientAddFriendAsync),
-        std::bind(&FriendsAPI::ClientAddFriend, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFFriendsClientAddFriendAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFFriendsClientAddFriendAsync),
+            std::bind(&FriendsAPI::ClientAddFriend, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFFriendsClientAddFriendGetResult(
@@ -33,7 +37,10 @@ PF_API PFFriendsClientAddFriendGetResult(
     _Out_ PFFriendsAddFriendResult* result
 ) noexcept
 {
-    return XAsyncGetResult(async, nullptr, sizeof(PFFriendsAddFriendResult), result, nullptr);
+    return ResultApiImpl(XASYNC_IDENTITY(PFFriendsClientAddFriendGetResult), [&]()
+    {
+        return XAsyncGetResult(async, nullptr, sizeof(PFFriendsAddFriendResult), result, nullptr);
+    });
 }
 
 PF_API PFFriendsClientGetFriendsListAsync(
@@ -44,16 +51,16 @@ PF_API PFFriendsClientGetFriendsListAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFFriendsClientGetFriendsListAsync),
-        std::bind(&FriendsAPI::ClientGetFriendsList, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFFriendsClientGetFriendsListAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFFriendsClientGetFriendsListAsync),
+            std::bind(&FriendsAPI::ClientGetFriendsList, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFFriendsClientGetFriendsListGetResultSize(
@@ -61,7 +68,10 @@ PF_API PFFriendsClientGetFriendsListGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFFriendsClientGetFriendsListGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFFriendsClientGetFriendsListGetResult(
@@ -72,12 +82,15 @@ PF_API PFFriendsClientGetFriendsListGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFFriendsClientGetFriendsListGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFFriendsGetFriendsListResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFFriendsGetFriendsListResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFFriendsClientRemoveFriendAsync(
@@ -88,16 +101,16 @@ PF_API PFFriendsClientRemoveFriendAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFFriendsClientRemoveFriendAsync),
-        std::bind(&FriendsAPI::ClientRemoveFriend, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFFriendsClientRemoveFriendAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFFriendsClientRemoveFriendAsync),
+            std::bind(&FriendsAPI::ClientRemoveFriend, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFFriendsClientSetFriendTagsAsync(
@@ -108,19 +121,19 @@ PF_API PFFriendsClientSetFriendTagsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFFriendsClientSetFriendTagsAsync),
-        std::bind(&FriendsAPI::ClientSetFriendTags, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFFriendsClientSetFriendTagsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFFriendsClientSetFriendTagsAsync),
+            std::bind(&FriendsAPI::ClientSetFriendTags, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFFriendsServerAddFriendAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFFriendsServerAddFriendRequest* request,
@@ -129,20 +142,20 @@ PF_API PFFriendsServerAddFriendAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFFriendsServerAddFriendAsync),
-        std::bind(&FriendsAPI::ServerAddFriend, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFFriendsServerAddFriendAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFFriendsServerAddFriendAsync),
+            std::bind(&FriendsAPI::ServerAddFriend, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFFriendsServerGetFriendsListAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFFriendsServerGetFriendsListRequest* request,
@@ -151,16 +164,16 @@ PF_API PFFriendsServerGetFriendsListAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFFriendsServerGetFriendsListAsync),
-        std::bind(&FriendsAPI::ServerGetFriendsList, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFFriendsServerGetFriendsListAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFFriendsServerGetFriendsListAsync),
+            std::bind(&FriendsAPI::ServerGetFriendsList, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFFriendsServerGetFriendsListGetResultSize(
@@ -168,7 +181,10 @@ PF_API PFFriendsServerGetFriendsListGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFFriendsServerGetFriendsListGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFFriendsServerGetFriendsListGetResult(
@@ -179,16 +195,19 @@ PF_API PFFriendsServerGetFriendsListGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFFriendsServerGetFriendsListGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFFriendsGetFriendsListResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFFriendsGetFriendsListResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFFriendsServerRemoveFriendAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFFriendsServerRemoveFriendRequest* request,
@@ -197,20 +216,20 @@ PF_API PFFriendsServerRemoveFriendAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFFriendsServerRemoveFriendAsync),
-        std::bind(&FriendsAPI::ServerRemoveFriend, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFFriendsServerRemoveFriendAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFFriendsServerRemoveFriendAsync),
+            std::bind(&FriendsAPI::ServerRemoveFriend, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFFriendsServerSetFriendTagsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFFriendsServerSetFriendTagsRequest* request,
@@ -219,16 +238,17 @@ PF_API PFFriendsServerSetFriendTagsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFFriendsServerSetFriendTagsAsync),
-        std::bind(&FriendsAPI::ServerSetFriendTags, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFFriendsServerSetFriendTagsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFFriendsServerSetFriendTagsAsync),
+            std::bind(&FriendsAPI::ServerSetFriendTags, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
+}

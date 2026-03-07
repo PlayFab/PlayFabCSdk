@@ -77,18 +77,13 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
     testTitleData.titleId = titleDataJson["titleId"].get<String>();
     testTitleData.secretKey = titleDataJson["secretKey"].get<String>();
     testTitleData.connectionString = titleDataJson["connectionString"].get<String>();
-    testTitleData.allowRetries = titleDataJson["allowRetries"].GetBool();
-    testTitleData.runTestList = titleDataJson["runTestList"].GetBool();
-
-    for (const auto& test : titleDataJson["testList"].GetArray())
-    {
-        testTitleData.testList.insert(test.get<String>());
-    }
-
-    for (const auto& hr : titleDataJson["retryableHRs"].GetArray())
-    {
-        testTitleData.retryableHRs.insert(hr.get<String>());
-    }
+    testTitleData.azureContainerSasKey = titleDataJson["azureContainerSasKey"].get<String>();
+	testTitleData.allowRetries = titleDataJson["allowRetries"].get<bool>();
+	testTitleData.runTestList = titleDataJson["runTestList"].get<bool>();
+    testTitleData.testList = titleDataJson["testList"].get<Set<String>>();
+    testTitleData.retryableHRs = titleDataJson["retryableHRs"].get<Set<String>>();
+    testTitleData.steamAppId = titleDataJson["steamAppId"].get<String>();
+    testTitleData.steamPublisherKey = titleDataJson["steamPublisherKey"].get<String>();
 
     return S_OK;
 }

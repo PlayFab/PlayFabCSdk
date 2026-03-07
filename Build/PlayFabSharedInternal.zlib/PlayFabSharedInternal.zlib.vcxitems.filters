@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{974957ee-ecd0-43f5-893f-8e6b1f3ca02c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(HCRoot)\External\zlib\adler32.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\compress.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\crc32.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\deflate.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\gzclose.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\gzlib.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\gzread.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\gzwrite.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\infback.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\inffast.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\inflate.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\inftrees.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\contrib\minizip\ioapi.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\contrib\minizip\iowin32.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\trees.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\uncompr.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\contrib\minizip\unzip.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(HCRoot)\External\zlib\zutil.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

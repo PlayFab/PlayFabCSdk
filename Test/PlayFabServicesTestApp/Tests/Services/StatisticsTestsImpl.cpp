@@ -13,7 +13,7 @@ struct StatisticsTestsState
     String existingStatisticName;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 AsyncOp<void> CreateStatisticDefinition(Entity entity, RunContext rc, String statisticName)
 {
     CreateStatisticDefinitionOperation::RequestType request;
@@ -26,7 +26,7 @@ AsyncOp<void> CreateStatisticDefinition(Entity entity, RunContext rc, String sta
     columns.push_back(column);
 
     request.SetColumns(columns);
-    request.SetEntityType("title");
+    request.SetEntityType("title_player_account");
 
     Wrappers::PFVersionConfigurationWrapper<Allocator> versionConfiguration;
     versionConfiguration.SetMaxQueryableVersions(1);
@@ -54,7 +54,7 @@ AsyncOp<void> StatisticsTests::Initialize()
     m_state->statisticName = statisticName.str();
     m_state->existingStatisticName = "PFCSDK_Statistic_DO_NOT_DELETE";
     
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     return ServicesTestClass::Initialize().Then([&](Result<void> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
@@ -72,7 +72,7 @@ AsyncOp<void> StatisticsTests::Initialize()
 
 AsyncOp<void> StatisticsTests::Uninitialize()
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     return DeleteStatisticDefinition(TitleEntity(), RunContext(), m_state->statisticName).Then([&](Result<void> result) -> AsyncOp<void>
     {
         UNREFERENCED_PARAMETER(result);// Continue with uninitialize regardless of success deleting statistic
@@ -85,7 +85,7 @@ AsyncOp<void> StatisticsTests::Uninitialize()
 #endif
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void StatisticsTests::TestCreateStatisticDefinition(TestContext& tc)
 {
     // Already covered in StatisticsTests::Initialize() 
@@ -93,7 +93,7 @@ void StatisticsTests::TestCreateStatisticDefinition(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void StatisticsTests::TestDeleteStatisticDefinition(TestContext& tc)
 {
     // Already covered in StatisticsTests::Uninitialize() 
@@ -203,7 +203,7 @@ void StatisticsTests::TestDeleteStatistics(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void StatisticsTests::TestGetStatisticDefinition(TestContext& tc)
 {
     GetStatisticDefinitionOperation::RequestType request;
@@ -248,7 +248,7 @@ void StatisticsTests::TestGetStatistics(TestContext& tc)
 #endif
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void StatisticsTests::TestGetStatisticsForEntities(TestContext& tc)
 {
     tc.Skip(); // TODO - Service call is returning 500 error code, need to check with service team to see why
@@ -277,7 +277,7 @@ void StatisticsTests::TestGetStatisticsForEntities(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void StatisticsTests::TestIncrementStatisticVersion(TestContext& tc)
 {
     IncrementStatisticVersionOperation::RequestType request;
@@ -299,7 +299,7 @@ void StatisticsTests::TestIncrementStatisticVersion(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void StatisticsTests::TestListStatisticDefinitions(TestContext& tc)
 {
     ListStatisticDefinitionsOperation::RequestType request;
@@ -325,6 +325,24 @@ void StatisticsTests::TestUpdateStatistics(TestContext& tc)
     // Already covered in TestDeleteStatistics
     tc.EndTest(S_OK);
 }
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void StatisticsTests::TestUpdateStatisticDefinition(TestContext& tc)
+{
+    UpdateStatisticDefinitionOperation::RequestType request;
+    request.SetName(m_state->statisticName);
+
+    return UpdateStatisticDefinitionOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
 
 }
 }

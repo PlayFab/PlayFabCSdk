@@ -51,7 +51,6 @@ private:
     Entity const m_entity;
 };
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 AsyncOp<String> CreateBuildAlias(ServiceConfig serviceConfig, Entity title, RunContext rc, TestContext& tc)
 {
     JsonValue requestBody= JsonValue::object();;
@@ -212,7 +211,6 @@ AsyncOp<void> ShutdownServerSession(ServiceConfig serviceConfig, Entity titlePla
         }
     });
 }
-#endif
 
 AsyncOp<void> MultiplayerServerTests::Initialize()
 {
@@ -226,7 +224,7 @@ AsyncOp<void> MultiplayerServerTests::Uninitialize()
 
 void MultiplayerServerTests::TestListBuildAliases(TestContext& tc)
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_GDK
     auto aliasId = MakeShared<String>();
 
     CreateBuildAlias(ServiceConfig(), TitleEntity(), RunContext(), tc)
@@ -293,7 +291,7 @@ void MultiplayerServerTests::TestListQosServersForTitle(TestContext& tc)
 
 void MultiplayerServerTests::TestRequestMultiplayerServer(TestContext& tc)
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_GDK
     // Requires manual server set up in Game Manager portal
     constexpr char kTestRegion[]{ "EastUs" };
 
@@ -345,7 +343,5 @@ void MultiplayerServerTests::TestRequestMultiplayerServer(TestContext& tc)
     tc.Skip();
 #endif
 }
-
-
 }
 }

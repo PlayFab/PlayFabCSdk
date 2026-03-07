@@ -4,8 +4,6 @@
 #include "Platform/PlatformUtils.h"
 #include "Platform/PlayFabPal.h"
 
-using namespace PlayFab::Platform;
-
 namespace PlayFab
 {
     namespace Test

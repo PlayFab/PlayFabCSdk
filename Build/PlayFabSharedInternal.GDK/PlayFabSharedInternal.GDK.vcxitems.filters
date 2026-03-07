@@ -7,21 +7,27 @@
     <Filter Include="Include">
       <UniqueIdentifier>{ca7777ee-d83e-4329-84f5-df2f708f9962}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\GDK">
-      <UniqueIdentifier>{611ed5b5-f8d7-466a-8e00-e2411ff5c944}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\GDK">
-      <UniqueIdentifier>{4614d1af-4ab0-46f1-a87c-015afc88f21d}</UniqueIdentifier>
+    <Filter Include="Source\Microsoft">
+      <UniqueIdentifier>{bf9c0926-4216-41b3-af64-dd93c5affb00}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\GDK\PlatformUser_GDK.h">
-      <Filter>Include\GDK</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\PlayFabXUser.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\FilePAL_Generic.h">
+      <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\GDK\PlatformUser_GDK.cpp">
-      <Filter>Source\GDK</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\PlayFabXUser.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\FilePAL.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Microsoft\FilePAL_Microsoft.cpp">
+      <Filter>Source\Microsoft</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

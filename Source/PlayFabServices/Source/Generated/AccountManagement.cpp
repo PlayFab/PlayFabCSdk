@@ -181,6 +181,41 @@ AsyncOp<GetPlayerProfileResult> AccountManagementAPI::ClientGetPlayerProfile(
     });
 }
 
+AsyncOp<GetPlayFabIDsFromBattleNetAccountIdsResult> AccountManagementAPI::ClientGetPlayFabIDsFromBattleNetAccountIds(
+    Entity const& entity,
+    const GetPlayFabIDsFromBattleNetAccountIdsRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/GetPlayFabIDsFromBattleNetAccountIds" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::AccountManagementClientGetPlayFabIDsFromBattleNetAccountIds,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayFabIDsFromBattleNetAccountIdsResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetPlayFabIDsFromBattleNetAccountIdsResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetPlayFabIDsFromBattleNetAccountIdsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<GetPlayFabIDsFromFacebookIDsResult> AccountManagementAPI::ClientGetPlayFabIDsFromFacebookIDs(
     Entity const& entity,
     const GetPlayFabIDsFromFacebookIDsRequest& request,
@@ -461,6 +496,41 @@ AsyncOp<GetPlayFabIDsFromNintendoSwitchDeviceIdsResult> AccountManagementAPI::Cl
     });
 }
 
+AsyncOp<GetPlayFabIDsFromOpenIdsResult> AccountManagementAPI::ClientGetPlayFabIDsFromOpenIdSubjectIdentifiers(
+    Entity const& entity,
+    const GetPlayFabIDsFromOpenIdsRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/GetPlayFabIDsFromOpenIdSubjectIdentifiers" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::AccountManagementClientGetPlayFabIDsFromOpenIdSubjectIdentifiers,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayFabIDsFromOpenIdsResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetPlayFabIDsFromOpenIdsResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetPlayFabIDsFromOpenIdsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<GetPlayFabIDsFromPSNAccountIDsResult> AccountManagementAPI::ClientGetPlayFabIDsFromPSNAccountIDs(
     Entity const& entity,
     const GetPlayFabIDsFromPSNAccountIDsRequest& request,
@@ -715,6 +785,39 @@ AsyncOp<void> AccountManagementAPI::ClientLinkApple(
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkApple,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<void> AccountManagementAPI::ClientLinkBattleNetAccount(
+    Entity const& entity,
+    const ClientLinkBattleNetAccountRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/LinkBattleNetAccount" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::AccountManagementClientLinkBattleNetAccount,
         entity,
         path,
         requestBody,
@@ -1168,7 +1271,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkSteamAccount(
 
 AsyncOp<void> AccountManagementAPI::ClientLinkTwitch(
     Entity const& entity,
-    const LinkTwitchAccountRequest& request,
+    const ClientLinkTwitchAccountRequest& request,
     RunContext rc
 )
 {
@@ -1199,7 +1302,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkTwitch(
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM != HC_PLATFORM_GDK // Temporary while GDK is still a separate platform
 AsyncOp<void> AccountManagementAPI::ClientLinkXboxAccount(
     Entity const& entity,
     const ClientLinkXboxAccountRequest& request,
@@ -1232,7 +1335,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkXboxAccount(
         }
     });
 }
-#endif
+#endif // HC_PLATFORM_GDK
 
 AsyncOp<void> AccountManagementAPI::ClientRemoveContactEmail(
     Entity const& entity,
@@ -1401,6 +1504,39 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkApple(
     });
 }
 
+AsyncOp<void> AccountManagementAPI::ClientUnlinkBattleNetAccount(
+    Entity const& entity,
+    const ClientUnlinkBattleNetAccountRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Client/UnlinkBattleNetAccount" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeEntityRequest(
+        ServicesCacheId::AccountManagementClientUnlinkBattleNetAccount,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<void> AccountManagementAPI::ClientUnlinkCustomID(
     Entity const& entity,
     const UnlinkCustomIDRequest& request,
@@ -1436,7 +1572,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkCustomID(
 
 AsyncOp<void> AccountManagementAPI::ClientUnlinkFacebookAccount(
     Entity const& entity,
-    const UnlinkFacebookAccountRequest& request,
+    const ClientUnlinkFacebookAccountRequest& request,
     RunContext rc
 )
 {
@@ -1469,7 +1605,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkFacebookAccount(
 
 AsyncOp<void> AccountManagementAPI::ClientUnlinkFacebookInstantGamesId(
     Entity const& entity,
-    const UnlinkFacebookInstantGamesIdRequest& request,
+    const ClientUnlinkFacebookInstantGamesIdRequest& request,
     RunContext rc
 )
 {
@@ -1832,7 +1968,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkSteamAccount(
 
 AsyncOp<void> AccountManagementAPI::ClientUnlinkTwitch(
     Entity const& entity,
-    const UnlinkTwitchAccountRequest& request,
+    const ClientUnlinkTwitchAccountRequest& request,
     RunContext rc
 )
 {
@@ -2102,6 +2238,41 @@ AsyncOp<GetPlayerProfileResult> AccountManagementAPI::ServerGetPlayerProfile(
     });
 }
 
+AsyncOp<GetPlayFabIDsFromBattleNetAccountIdsResult> AccountManagementAPI::ServerGetPlayFabIDsFromBattleNetAccountIds(
+    Entity const& entity,
+    const GetPlayFabIDsFromBattleNetAccountIdsRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/GetPlayFabIDsFromBattleNetAccountIds" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerGetPlayFabIDsFromBattleNetAccountIds,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayFabIDsFromBattleNetAccountIdsResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetPlayFabIDsFromBattleNetAccountIdsResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetPlayFabIDsFromBattleNetAccountIdsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<GetPlayFabIDsFromFacebookIDsResult> AccountManagementAPI::ServerGetPlayFabIDsFromFacebookIDs(
     Entity const& entity,
     const GetPlayFabIDsFromFacebookIDsRequest& request,
@@ -2238,6 +2409,41 @@ AsyncOp<GetPlayFabIDsFromNintendoSwitchDeviceIdsResult> AccountManagementAPI::Se
         else
         {
             return Result<GetPlayFabIDsFromNintendoSwitchDeviceIdsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<GetPlayFabIDsFromOpenIdsResult> AccountManagementAPI::ServerGetPlayFabIDsFromOpenIdSubjectIdentifiers(
+    Entity const& entity,
+    const GetPlayFabIDsFromOpenIdsRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/GetPlayFabIDsFromOpenIdSubjectIdentifiers" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerGetPlayFabIDsFromOpenIdSubjectIdentifiers,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayFabIDsFromOpenIdsResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetPlayFabIDsFromOpenIdsResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetPlayFabIDsFromOpenIdsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }
@@ -2557,6 +2763,39 @@ AsyncOp<GetUserBansResult> AccountManagementAPI::ServerGetUserBans(
     });
 }
 
+AsyncOp<void> AccountManagementAPI::ServerLinkBattleNetAccount(
+    Entity const& entity,
+    const ServerLinkBattleNetAccountRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/LinkBattleNetAccount" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerLinkBattleNetAccount,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<void> AccountManagementAPI::ServerLinkNintendoServiceAccount(
     Entity const& entity,
     const ServerLinkNintendoServiceAccountRequest& request,
@@ -2788,6 +3027,39 @@ AsyncOp<void> AccountManagementAPI::ServerLinkSteamId(
     });
 }
 
+AsyncOp<void> AccountManagementAPI::ServerLinkTwitchAccount(
+    Entity const& entity,
+    const ServerLinkTwitchAccountRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/LinkTwitchAccount" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerLinkTwitchAccount,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<void> AccountManagementAPI::ServerLinkXboxAccount(
     Entity const& entity,
     const ServerLinkXboxAccountRequest& request,
@@ -2799,6 +3071,39 @@ AsyncOp<void> AccountManagementAPI::ServerLinkXboxAccount(
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkXboxAccount,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<void> AccountManagementAPI::ServerLinkXboxId(
+    Entity const& entity,
+    const LinkXboxIdRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/LinkXboxId" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerLinkXboxId,
         entity,
         path,
         requestBody,
@@ -2935,6 +3240,105 @@ AsyncOp<void> AccountManagementAPI::ServerSendEmailFromTemplate(
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerSendEmailFromTemplate,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<void> AccountManagementAPI::ServerUnlinkBattleNetAccount(
+    Entity const& entity,
+    const ServerUnlinkBattleNetAccountRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/UnlinkBattleNetAccount" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerUnlinkBattleNetAccount,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<void> AccountManagementAPI::ServerUnlinkFacebookAccount(
+    Entity const& entity,
+    const ServerUnlinkFacebookAccountRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/UnlinkFacebookAccount" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerUnlinkFacebookAccount,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<void> AccountManagementAPI::ServerUnlinkFacebookInstantGamesId(
+    Entity const& entity,
+    const ServerUnlinkFacebookInstantGamesIdRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/UnlinkFacebookInstantGamesId" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerUnlinkFacebookInstantGamesId,
         entity,
         path,
         requestBody,
@@ -3100,6 +3504,39 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkSteamId(
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkSteamId,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<void> AccountManagementAPI::ServerUnlinkTwitchAccount(
+    Entity const& entity,
+    const ServerUnlinkTwitchAccountRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/UnlinkTwitchAccount" };
+    JsonValue requestBody{ request.ToJson() };
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerUnlinkTwitchAccount,
         entity,
         path,
         requestBody,

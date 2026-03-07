@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7FB6AFDB-89C5-44F9-8CDB-2EE1103A567C}</ProjectGuid>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <GDKExtLibNames>;</GDKExtLibNames>
+  </PropertyGroup>
+  <Import Project="..\Shared\PlayFabGameSave.SharedFiles.props" Condition="Exists('..\Shared\PlayFabGameSave.SharedFiles.props')" />
+  <Import Project="$([MSBuild]::GetPathOfFileAbove(PlayFab.C.GDK.props))" />
+  <Import Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabCore.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.Common\PlayFabGameSave.Common.vcxitems" Label="Shared" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.ServiceWrappers\PlayFabGameSave.ServiceWrappers.vcxitems" Label="Shared" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+
+  <!-- Disable incremental linking when /PROFILE is enabled to avoid LNK4075 warnings -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(Console_SdkLibPath)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);Appnotify.lib;version.lib</AdditionalDependencies>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">/profile /opt:ref /opt:icf /guard:cf /DYNAMICBASE /CETCOMPAT %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">/profile /opt:ref /opt:icf /guard:cf /DYNAMICBASE /CETCOMPAT %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <ClCompile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">/Zi /guard:cf /Qspectre %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">%(PreprocessorDefinitions);HC_PLATFORM_MSBUILD_GUESS=HC_PLATFORM_GDK;PF_GAMESAVE_USE_GDK_PROVIDER</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">/Zi /guard:cf /Qspectre %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">%(PreprocessorDefinitions);HC_PLATFORM_MSBUILD_GUESS=HC_PLATFORM_GDK;PF_GAMESAVE_USE_GDK_PROVIDER</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\PlayFabGameSaveGDKVersionInfo.rc" />
+  </ItemGroup>
+</Project>

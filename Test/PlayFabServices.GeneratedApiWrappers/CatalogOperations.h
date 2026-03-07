@@ -44,7 +44,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 class DeleteEntityItemReviewsOperation : public XAsyncOperation<void>
 {
 public:
@@ -78,7 +78,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 class GetCatalogConfigOperation : public XAsyncOperation<Wrappers::PFCatalogGetCatalogConfigResponseWrapper<Allocator>>
 {
 public:
@@ -206,7 +206,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 class GetItemModerationStateOperation : public XAsyncOperation<Wrappers::PFCatalogGetItemModerationStateResponseWrapper<Allocator>>
 {
 public:
@@ -380,7 +380,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 class SetItemModerationStateOperation : public XAsyncOperation<void>
 {
 public:
@@ -414,7 +414,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 class TakedownItemReviewsOperation : public XAsyncOperation<void>
 {
 public:
@@ -432,7 +432,7 @@ private:
 };
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 class UpdateCatalogConfigOperation : public XAsyncOperation<void>
 {
 public:

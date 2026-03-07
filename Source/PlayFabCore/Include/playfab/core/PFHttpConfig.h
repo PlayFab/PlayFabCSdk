@@ -42,8 +42,8 @@ struct PFHttpSettings
     /// <summary>
     /// Controls whether the SDK currently requests that incoming responses be compressed. 
     /// Response compression is enabled by specifying the Accept-Encoding Header as "application/gzip".
-    /// In order to decompress a compressed response provided by an API endpoint PFHCHttpCallResponseSetGzipCompressed 
-    /// must be called prior to calling PFHCHttpCallPerformAsync.
+    /// In order to decompress a compressed response provided by an API endpoint HCHttpCallResponseSetGzipCompressed 
+    /// must be called prior to calling HCHttpCallPerformAsync.
     /// </summary>
     bool requestResponseCompression;
 };

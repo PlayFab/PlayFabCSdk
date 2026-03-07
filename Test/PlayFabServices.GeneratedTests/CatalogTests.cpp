@@ -10,11 +10,11 @@ void CatalogTests::AddTests()
 {
     AddTest("TestCreateDraftItem", &CatalogTests::TestCreateDraftItem);
     AddTest("TestCreateUploadUrls", &CatalogTests::TestCreateUploadUrls);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestDeleteEntityItemReviews", &CatalogTests::TestDeleteEntityItemReviews);
 #endif
     AddTest("TestDeleteItem", &CatalogTests::TestDeleteItem);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestGetCatalogConfig", &CatalogTests::TestGetCatalogConfig);
 #endif
     AddTest("TestGetDraftItem", &CatalogTests::TestGetDraftItem);
@@ -23,7 +23,7 @@ void CatalogTests::AddTests()
     AddTest("TestGetEntityItemReview", &CatalogTests::TestGetEntityItemReview, true);
     AddTest("TestGetItem", &CatalogTests::TestGetItem);
     AddTest("TestGetItemContainers", &CatalogTests::TestGetItemContainers);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestGetItemModerationState", &CatalogTests::TestGetItemModerationState);
 #endif
     AddTest("TestGetItemPublishStatus", &CatalogTests::TestGetItemPublishStatus);
@@ -35,14 +35,14 @@ void CatalogTests::AddTests()
     AddTest("TestReportItemReview", &CatalogTests::TestReportItemReview);
     AddTest("TestReviewItem", &CatalogTests::TestReviewItem);
     AddTest("TestSearchItems", &CatalogTests::TestSearchItems);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestSetItemModerationState", &CatalogTests::TestSetItemModerationState);
 #endif
     AddTest("TestSubmitItemReviewVote", &CatalogTests::TestSubmitItemReviewVote);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestTakedownItemReviews", &CatalogTests::TestTakedownItemReviews);
 #endif
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestUpdateCatalogConfig", &CatalogTests::TestUpdateCatalogConfig);
 #endif
     AddTest("TestUpdateDraftItem", &CatalogTests::TestUpdateDraftItem);

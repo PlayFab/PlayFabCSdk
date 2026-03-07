@@ -48,4 +48,12 @@ HRESULT PlatformInitialize() noexcept
     return SetLocalStorageHandlers(storageHooks);
 }
 
+HRESULT PlatformGetPlatformType(PlatformInfo& platformInfo, PFPlatformType& platformType) noexcept
+{
+    UNREFERENCED_PARAMETER(platformInfo);
+    TRACE_INFORMATION("PlatformMocks::PlatformGetPlatformType");
+    platformType = PFPlatformType::Windows;
+    return S_OK;
+}
+
 }

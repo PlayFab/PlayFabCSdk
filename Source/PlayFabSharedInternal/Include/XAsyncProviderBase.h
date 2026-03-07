@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <thread>
 #include <XAsyncProvider.h>
 #include "RunContext.h"
 #include "AsyncOp.h"
@@ -86,6 +87,8 @@ private:
 
     ITerminationListener* m_terminationListener{ nullptr };
     void* m_terminationListenerContext{ nullptr };
+
+    String m_activeThreadId;
 };
 
 } // namespace PlayFab

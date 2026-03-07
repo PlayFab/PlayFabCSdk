@@ -34,6 +34,21 @@ public:
         RunContext&& runContext
     );
 
+    static AsyncOp<ServiceResponse> MakePostRequestWithFileUpload(
+        ServicesCacheId cacheId,
+        String&& endpoint,
+        const String uploadFilePath,
+        RunContext&& runContext
+    );
+
+    static AsyncOp<ServiceResponse> MakePostRequestWithFileDownload(
+        ServicesCacheId cacheId,
+        String&& endpoint,
+        JsonValue const& requestBody,
+        const String downloadFilePath,
+        RunContext&& runContext
+    );
+
 private:
     ServicesHttpClient(); // static only
 

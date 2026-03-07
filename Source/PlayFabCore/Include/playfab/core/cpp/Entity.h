@@ -85,7 +85,7 @@ public:
     {
         try
         {
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
             size_t size{ 0 };
             THROW_IF_FAILED(PFEntityGetSecretKeySize(m_handle, &size));
 

@@ -64,6 +64,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -71,10 +76,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = &m_entity.Model();
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -145,6 +160,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -152,10 +172,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -228,11 +258,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -241,11 +281,21 @@ public:
         this->m_model.group = &m_group.Model();
     }
 
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetMembers() const
+    {
+        return m_members;
+    }
+
     void SetMembers(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
     {
         m_members = std::move(value);
         this->m_model.members =  m_members.empty() ? nullptr : m_members.data();
         this->m_model.membersCount =  static_cast<uint32_t>(m_members.size());
+    }
+
+    String const& GetRoleId() const
+    {
+        return m_roleId;
     }
 
     void SetRoleId(String value)
@@ -320,10 +370,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<bool> const& GetAutoAcceptOutstandingInvite() const
+    {
+        return m_autoAcceptOutstandingInvite;
+    }
+
     void SetAutoAcceptOutstandingInvite(std::optional<bool> value)
     {
         m_autoAcceptOutstandingInvite = std::move(value);
         this->m_model.autoAcceptOutstandingInvite = m_autoAcceptOutstandingInvite ? m_autoAcceptOutstandingInvite.operator->() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -333,10 +393,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -407,10 +477,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetKey() const
+    {
+        return m_key;
+    }
+
     void SetKey(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_key = std::move(value);
         this->m_model.key = m_key ? &m_key->Model() : nullptr;
+    }
+
+    ModelDictionaryEntryVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetLineage() const
+    {
+        return m_lineage;
     }
 
     void SetLineage(ModelDictionaryEntryVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
@@ -478,15 +558,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    time_t GetExpires() const
+    {
+        return this->m_model.expires;
+    }
+
     void SetExpires(time_t value)
     {
         this->m_model.expires = value;
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -555,6 +650,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -562,10 +662,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = &m_entity.Model();
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -640,11 +750,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetDestinationRoleId() const
+    {
+        return m_destinationRoleId;
     }
 
     void SetDestinationRoleId(String value)
@@ -653,10 +773,20 @@ public:
         this->m_model.destinationRoleId =  m_destinationRoleId.empty() ? nullptr : m_destinationRoleId.data();
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
+    }
+
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
     {
         m_group = std::move(value);
         this->m_model.group = &m_group.Model();
+    }
+
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetMembers() const
+    {
+        return m_members;
     }
 
     void SetMembers(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
@@ -664,6 +794,11 @@ public:
         m_members = std::move(value);
         this->m_model.members =  m_members.empty() ? nullptr : m_members.data();
         this->m_model.membersCount =  static_cast<uint32_t>(m_members.size());
+    }
+
+    String const& GetOriginRoleId() const
+    {
+        return m_originRoleId;
     }
 
     void SetOriginRoleId(String value)
@@ -738,6 +873,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -745,10 +885,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetGroupName() const
+    {
+        return m_groupName;
     }
 
     void SetGroupName(String value)
@@ -823,15 +973,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAdminRoleId() const
+    {
+        return m_adminRoleId;
+    }
+
     void SetAdminRoleId(String value)
     {
         m_adminRoleId = std::move(value);
         this->m_model.adminRoleId =  m_adminRoleId.empty() ? nullptr : m_adminRoleId.data();
     }
 
+    time_t GetCreated() const
+    {
+        return this->m_model.created;
+    }
+
     void SetCreated(time_t value)
     {
         this->m_model.created = value;
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -840,10 +1005,20 @@ public:
         this->m_model.group = &m_group.Model();
     }
 
+    String const& GetGroupName() const
+    {
+        return m_groupName;
+    }
+
     void SetGroupName(String value)
     {
         m_groupName = std::move(value);
         this->m_model.groupName =  m_groupName.empty() ? nullptr : m_groupName.data();
+    }
+
+    String const& GetMemberRoleId() const
+    {
+        return m_memberRoleId;
     }
 
     void SetMemberRoleId(String value)
@@ -852,9 +1027,19 @@ public:
         this->m_model.memberRoleId =  m_memberRoleId.empty() ? nullptr : m_memberRoleId.data();
     }
 
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
+    }
+
     void SetProfileVersion(int32_t value)
     {
         this->m_model.profileVersion = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetRoles() const
+    {
+        return m_roles;
     }
 
     void SetRoles(StringDictionaryEntryVector<Alloc> value)
@@ -932,11 +1117,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -945,10 +1140,20 @@ public:
         this->m_model.group = &m_group.Model();
     }
 
+    String const& GetRoleId() const
+    {
+        return m_roleId;
+    }
+
     void SetRoleId(String value)
     {
         m_roleId = std::move(value);
         this->m_model.roleId =  m_roleId.empty() ? nullptr : m_roleId.data();
+    }
+
+    String const& GetRoleName() const
+    {
+        return m_roleName;
     }
 
     void SetRoleName(String value)
@@ -1019,15 +1224,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
+    }
+
     void SetProfileVersion(int32_t value)
     {
         this->m_model.profileVersion = value;
+    }
+
+    String const& GetRoleId() const
+    {
+        return m_roleId;
     }
 
     void SetRoleId(String value)
     {
         m_roleId = std::move(value);
         this->m_model.roleId =  m_roleId.empty() ? nullptr : m_roleId.data();
+    }
+
+    String const& GetRoleName() const
+    {
+        return m_roleName;
     }
 
     void SetRoleName(String value)
@@ -1094,11 +1314,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -1167,6 +1397,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -1174,10 +1409,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
+    }
+
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
     {
         m_group = std::move(value);
         this->m_model.group = &m_group.Model();
+    }
+
+    String const& GetRoleId() const
+    {
+        return m_roleId;
     }
 
     void SetRoleId(String value)
@@ -1248,6 +1493,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -1255,10 +1505,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetGroup() const
+    {
+        return m_group;
+    }
+
     void SetGroup(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_group = std::move(value);
         this->m_model.group = m_group ? &m_group->Model() : nullptr;
+    }
+
+    String const& GetGroupName() const
+    {
+        return m_groupName;
     }
 
     void SetGroupName(String value)
@@ -1333,15 +1593,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAdminRoleId() const
+    {
+        return m_adminRoleId;
+    }
+
     void SetAdminRoleId(String value)
     {
         m_adminRoleId = std::move(value);
         this->m_model.adminRoleId =  m_adminRoleId.empty() ? nullptr : m_adminRoleId.data();
     }
 
+    time_t GetCreated() const
+    {
+        return this->m_model.created;
+    }
+
     void SetCreated(time_t value)
     {
         this->m_model.created = value;
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -1350,10 +1625,20 @@ public:
         this->m_model.group = &m_group.Model();
     }
 
+    String const& GetGroupName() const
+    {
+        return m_groupName;
+    }
+
     void SetGroupName(String value)
     {
         m_groupName = std::move(value);
         this->m_model.groupName =  m_groupName.empty() ? nullptr : m_groupName.data();
+    }
+
+    String const& GetMemberRoleId() const
+    {
+        return m_memberRoleId;
     }
 
     void SetMemberRoleId(String value)
@@ -1362,9 +1647,19 @@ public:
         this->m_model.memberRoleId =  m_memberRoleId.empty() ? nullptr : m_memberRoleId.data();
     }
 
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
+    }
+
     void SetProfileVersion(int32_t value)
     {
         this->m_model.profileVersion = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetRoles() const
+    {
+        return m_roles;
     }
 
     void SetRoles(StringDictionaryEntryVector<Alloc> value)
@@ -1444,10 +1739,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<bool> const& GetAutoAcceptOutstandingApplication() const
+    {
+        return m_autoAcceptOutstandingApplication;
+    }
+
     void SetAutoAcceptOutstandingApplication(std::optional<bool> value)
     {
         m_autoAcceptOutstandingApplication = std::move(value);
         this->m_model.autoAcceptOutstandingApplication = m_autoAcceptOutstandingApplication ? m_autoAcceptOutstandingApplication.operator->() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1457,16 +1762,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = &m_entity.Model();
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
+    }
+
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
     {
         m_group = std::move(value);
         this->m_model.group = &m_group.Model();
+    }
+
+    String const& GetRoleId() const
+    {
+        return m_roleId;
     }
 
     void SetRoleId(String value)
@@ -1543,9 +1863,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    time_t GetExpires() const
+    {
+        return this->m_model.expires;
+    }
+
     void SetExpires(time_t value)
     {
         this->m_model.expires = value;
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -1554,16 +1884,31 @@ public:
         this->m_model.group = m_group ? &m_group->Model() : nullptr;
     }
 
+    std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> const& GetInvitedByEntity() const
+    {
+        return m_invitedByEntity;
+    }
+
     void SetInvitedByEntity(std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> value)
     {
         m_invitedByEntity = std::move(value);
         this->m_model.invitedByEntity = m_invitedByEntity ? &m_invitedByEntity->Model() : nullptr;
     }
 
+    std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> const& GetInvitedEntity() const
+    {
+        return m_invitedEntity;
+    }
+
     void SetInvitedEntity(std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> value)
     {
         m_invitedEntity = std::move(value);
         this->m_model.invitedEntity = m_invitedEntity ? &m_invitedEntity->Model() : nullptr;
+    }
+
+    String const& GetRoleId() const
+    {
+        return m_roleId;
     }
 
     void SetRoleId(String value)
@@ -1638,11 +1983,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
@@ -1651,10 +2006,20 @@ public:
         this->m_model.entity = &m_entity.Model();
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
+    }
+
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
     {
         m_group = std::move(value);
         this->m_model.group = &m_group.Model();
+    }
+
+    String const& GetRoleId() const
+    {
+        return m_roleId;
     }
 
     void SetRoleId(String value)
@@ -1687,6 +2052,11 @@ public:
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
     using ModelWrapper<PFGroupsIsMemberResponse, Alloc>::ModelWrapper;
+
+    bool GetIsMember() const
+    {
+        return this->m_model.isMember;
+    }
 
     void SetIsMember(bool value)
     {
@@ -1743,11 +2113,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -1814,15 +2194,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    time_t GetExpires() const
+    {
+        return this->m_model.expires;
+    }
+
     void SetExpires(time_t value)
     {
         this->m_model.expires = value;
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -1885,6 +2280,11 @@ public:
         swap(lhs.m_applications, rhs.m_applications);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFGroupsGroupApplicationWrapper<Alloc>, Alloc> const& GetApplications() const
+    {
+        return m_applications;
     }
 
     void SetApplications(ModelVector<PFGroupsGroupApplicationWrapper<Alloc>, Alloc> value)
@@ -1950,11 +2350,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -2021,10 +2431,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -2087,6 +2507,11 @@ public:
         swap(lhs.m_blockedEntities, rhs.m_blockedEntities);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFGroupsGroupBlockWrapper<Alloc>, Alloc> const& GetBlockedEntities() const
+    {
+        return m_blockedEntities;
     }
 
     void SetBlockedEntities(ModelVector<PFGroupsGroupBlockWrapper<Alloc>, Alloc> value)
@@ -2152,11 +2577,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -2227,9 +2662,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    time_t GetExpires() const
+    {
+        return this->m_model.expires;
+    }
+
     void SetExpires(time_t value)
     {
         this->m_model.expires = value;
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -2238,16 +2683,31 @@ public:
         this->m_model.group = m_group ? &m_group->Model() : nullptr;
     }
 
+    std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> const& GetInvitedByEntity() const
+    {
+        return m_invitedByEntity;
+    }
+
     void SetInvitedByEntity(std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> value)
     {
         m_invitedByEntity = std::move(value);
         this->m_model.invitedByEntity = m_invitedByEntity ? &m_invitedByEntity->Model() : nullptr;
     }
 
+    std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> const& GetInvitedEntity() const
+    {
+        return m_invitedEntity;
+    }
+
     void SetInvitedEntity(std::optional<PFGroupsEntityWithLineageWrapper<Alloc>> value)
     {
         m_invitedEntity = std::move(value);
         this->m_model.invitedEntity = m_invitedEntity ? &m_invitedEntity->Model() : nullptr;
+    }
+
+    String const& GetRoleId() const
+    {
+        return m_roleId;
     }
 
     void SetRoleId(String value)
@@ -2316,6 +2776,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFGroupsGroupInvitationWrapper<Alloc>, Alloc> const& GetInvitations() const
+    {
+        return m_invitations;
+    }
+
     void SetInvitations(ModelVector<PFGroupsGroupInvitationWrapper<Alloc>, Alloc> value)
     {
         m_invitations = std::move(value);
@@ -2379,11 +2844,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -2452,6 +2927,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFGroupsEntityWithLineageWrapper<Alloc>, Alloc> const& GetMembers() const
+    {
+        return m_members;
+    }
+
     void SetMembers(ModelVector<PFGroupsEntityWithLineageWrapper<Alloc>, Alloc> value)
     {
         m_members = std::move(value);
@@ -2459,10 +2939,20 @@ public:
         this->m_model.membersCount =  static_cast<uint32_t>(m_members.size());
     }
 
+    String const& GetRoleId() const
+    {
+        return m_roleId;
+    }
+
     void SetRoleId(String value)
     {
         m_roleId = std::move(value);
         this->m_model.roleId =  m_roleId.empty() ? nullptr : m_roleId.data();
+    }
+
+    String const& GetRoleName() const
+    {
+        return m_roleName;
     }
 
     void SetRoleName(String value)
@@ -2529,6 +3019,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFGroupsEntityMemberRoleWrapper<Alloc>, Alloc> const& GetMembers() const
+    {
+        return m_members;
+    }
+
     void SetMembers(ModelVector<PFGroupsEntityMemberRoleWrapper<Alloc>, Alloc> value)
     {
         m_members = std::move(value);
@@ -2592,11 +3087,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -2663,10 +3168,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetRoleId() const
+    {
+        return m_roleId;
+    }
+
     void SetRoleId(String value)
     {
         m_roleId = std::move(value);
         this->m_model.roleId =  m_roleId.empty() ? nullptr : m_roleId.data();
+    }
+
+    String const& GetRoleName() const
+    {
+        return m_roleName;
     }
 
     void SetRoleName(String value)
@@ -2735,10 +3250,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetGroup() const
+    {
+        return m_group;
+    }
+
     void SetGroup(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_group = std::move(value);
         this->m_model.group = m_group ? &m_group->Model() : nullptr;
+    }
+
+    String const& GetGroupName() const
+    {
+        return m_groupName;
     }
 
     void SetGroupName(String value)
@@ -2747,9 +3272,19 @@ public:
         this->m_model.groupName =  m_groupName.empty() ? nullptr : m_groupName.data();
     }
 
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
+    }
+
     void SetProfileVersion(int32_t value)
     {
         this->m_model.profileVersion = value;
+    }
+
+    ModelVector<PFGroupsGroupRoleWrapper<Alloc>, Alloc> const& GetRoles() const
+    {
+        return m_roles;
     }
 
     void SetRoles(ModelVector<PFGroupsGroupRoleWrapper<Alloc>, Alloc> value)
@@ -2817,6 +3352,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFGroupsGroupWithRolesWrapper<Alloc>, Alloc> const& GetGroups() const
+    {
+        return m_groups;
+    }
+
     void SetGroups(ModelVector<PFGroupsGroupWithRolesWrapper<Alloc>, Alloc> value)
     {
         m_groups = std::move(value);
@@ -2880,11 +3420,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -2951,11 +3501,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFGroupsGroupApplicationWrapper<Alloc>, Alloc> const& GetApplications() const
+    {
+        return m_applications;
+    }
+
     void SetApplications(ModelVector<PFGroupsGroupApplicationWrapper<Alloc>, Alloc> value)
     {
         m_applications = std::move(value);
         this->m_model.applications =  m_applications.empty() ? nullptr : m_applications.data();
         this->m_model.applicationsCount =  static_cast<uint32_t>(m_applications.size());
+    }
+
+    ModelVector<PFGroupsGroupInvitationWrapper<Alloc>, Alloc> const& GetInvitations() const
+    {
+        return m_invitations;
     }
 
     void SetInvitations(ModelVector<PFGroupsGroupInvitationWrapper<Alloc>, Alloc> value)
@@ -3025,6 +3585,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -3032,10 +3597,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = &m_entity.Model();
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -3106,6 +3681,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -3113,10 +3693,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = &m_entity.Model();
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -3189,11 +3779,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -3202,11 +3802,21 @@ public:
         this->m_model.group = &m_group.Model();
     }
 
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetMembers() const
+    {
+        return m_members;
+    }
+
     void SetMembers(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
     {
         m_members = std::move(value);
         this->m_model.members =  m_members.empty() ? nullptr : m_members.data();
         this->m_model.membersCount =  static_cast<uint32_t>(m_members.size());
+    }
+
+    String const& GetRoleId() const
+    {
+        return m_roleId;
     }
 
     void SetRoleId(String value)
@@ -3279,6 +3889,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -3286,10 +3901,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = &m_entity.Model();
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -3366,10 +3991,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAdminRoleId() const
+    {
+        return m_adminRoleId;
+    }
+
     void SetAdminRoleId(String value)
     {
         m_adminRoleId = std::move(value);
         this->m_model.adminRoleId =  m_adminRoleId.empty() ? nullptr : m_adminRoleId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -3379,10 +4014,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<int32_t> const& GetExpectedProfileVersion() const
+    {
+        return m_expectedProfileVersion;
+    }
+
     void SetExpectedProfileVersion(std::optional<int32_t> value)
     {
         m_expectedProfileVersion = std::move(value);
         this->m_model.expectedProfileVersion = m_expectedProfileVersion ? m_expectedProfileVersion.operator->() : nullptr;
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
     }
 
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
@@ -3391,10 +4036,20 @@ public:
         this->m_model.group = &m_group.Model();
     }
 
+    String const& GetGroupName() const
+    {
+        return m_groupName;
+    }
+
     void SetGroupName(String value)
     {
         m_groupName = std::move(value);
         this->m_model.groupName =  m_groupName.empty() ? nullptr : m_groupName.data();
+    }
+
+    String const& GetMemberRoleId() const
+    {
+        return m_memberRoleId;
     }
 
     void SetMemberRoleId(String value)
@@ -3469,15 +4124,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetOperationReason() const
+    {
+        return m_operationReason;
+    }
+
     void SetOperationReason(String value)
     {
         m_operationReason = std::move(value);
         this->m_model.operationReason =  m_operationReason.empty() ? nullptr : m_operationReason.data();
     }
 
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
+    }
+
     void SetProfileVersion(int32_t value)
     {
         this->m_model.profileVersion = value;
+    }
+
+    std::optional<PFOperationTypes> const& GetSetResult() const
+    {
+        return m_setResult;
     }
 
     void SetSetResult(std::optional<PFOperationTypes> value)
@@ -3550,11 +4220,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<int32_t> const& GetExpectedProfileVersion() const
+    {
+        return m_expectedProfileVersion;
     }
 
     void SetExpectedProfileVersion(std::optional<int32_t> value)
@@ -3563,16 +4243,31 @@ public:
         this->m_model.expectedProfileVersion = m_expectedProfileVersion ? m_expectedProfileVersion.operator->() : nullptr;
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetGroup() const
+    {
+        return m_group;
+    }
+
     void SetGroup(PFEntityKeyWrapper<Alloc> value)
     {
         m_group = std::move(value);
         this->m_model.group = &m_group.Model();
     }
 
+    String const& GetRoleId() const
+    {
+        return m_roleId;
+    }
+
     void SetRoleId(String value)
     {
         m_roleId = std::move(value);
         this->m_model.roleId =  m_roleId.empty() ? nullptr : m_roleId.data();
+    }
+
+    String const& GetRoleName() const
+    {
+        return m_roleName;
     }
 
     void SetRoleName(String value)
@@ -3645,15 +4340,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetOperationReason() const
+    {
+        return m_operationReason;
+    }
+
     void SetOperationReason(String value)
     {
         m_operationReason = std::move(value);
         this->m_model.operationReason =  m_operationReason.empty() ? nullptr : m_operationReason.data();
     }
 
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
+    }
+
     void SetProfileVersion(int32_t value)
     {
         this->m_model.profileVersion = value;
+    }
+
+    std::optional<PFOperationTypes> const& GetSetResult() const
+    {
+        return m_setResult;
     }
 
     void SetSetResult(std::optional<PFOperationTypes> value)

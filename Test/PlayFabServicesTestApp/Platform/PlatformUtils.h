@@ -26,6 +26,10 @@ void Sleep(
     uint64_t durationMs
 ) noexcept;
 
+HRESULT InitializeFileSystem(String const& name, Vector<char>& buffer) noexcept;
+
+void UninitializeFileSystem(String const& name) noexcept;
+
 }
 }
 }

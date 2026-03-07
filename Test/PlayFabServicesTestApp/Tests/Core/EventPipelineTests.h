@@ -85,6 +85,7 @@ private:
     void TestEmitCompressedTelemetryEvents(TestContext& testContext);
 
 private:
+    std::optional<TitleLocalUser> m_defaultLocalUser;
     std::optional<Entity> m_defaultTitlePlayer;
 
     friend class EventPipelineTestState;

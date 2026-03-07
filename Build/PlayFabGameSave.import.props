@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PlayFabGameSaveImported>true</PlayFabGameSaveImported>
+  </PropertyGroup>
+
+  <Import Condition="'$(PlayFabCoreImported)' != 'true'" Project="PlayFabCore.import.props" />
+
+  <!--Add PlayFab include directory to client include path-->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabGameSave\Include;</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <PropertyGroup>
+    <PlayFabGameSaveProjectName>PlayFabGameSave.$(HCPlatform)</PlayFabGameSaveProjectName>
+    <PlayFabGameSaveOutDir>$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabGameSaveProjectName)\</PlayFabGameSaveOutDir>
+  </PropertyGroup>
+
+  <!--Add reference to appropriate PlayFabGameSave project-->
+  <ItemGroup Condition="'$(HCPlatform)' == 'Win32' Or '$(HCPlatform)' == 'GDK'" Label="PlayFabGameSave project reference">
+    <ProjectReference Include="$(PlayFabBuildRoot)\$(PlayFabGameSaveProjectName)\$(PlayFabGameSaveProjectName).vcxproj">
+      <Project Condition="'$(HCPlatform)' == 'Win32'">{7FB6AFDB-89C5-44F9-8CDB-2EE1103A567B}</Project>
+      <Project Condition="'$(HCPlatform)' == 'GDK'">{7FB6AFDB-89C5-44F9-8CDB-2EE1103A567C}</Project>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--Copy PlayFabCore and dependencies to OutDir-->
+  <ItemGroup Label="CopyDependencies">
+    <ReferenceCopyLocalPaths Include="$(PlayFabGameSaveOutDir)\$(PlayFabGameSaveProjectName).dll" />
+    <ReferenceCopyLocalPaths Include="$(PlayFabGameSaveOutDir)\$(PlayFabGameSaveProjectName).pdb" />
+  </ItemGroup>
+
+</Project>

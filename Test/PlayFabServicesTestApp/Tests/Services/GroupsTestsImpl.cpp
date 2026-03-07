@@ -133,7 +133,7 @@ void GroupsTests::TestAcceptGroupInvitation(TestContext& tc)
 
 void GroupsTests::TestAddMembers(TestContext& tc)
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_GDK
     AddMembersOperation::RequestType request;
     request.SetGroup(m_state->group);
     ModelVector<EntityKey> members;
@@ -173,7 +173,7 @@ constexpr char testRoleName[]{ "Test Role" };
 
 void GroupsTests::TestChangeMemberRole(TestContext& tc)
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_GDK
     CreateRoleOperation::RequestType request;
     request.SetGroup(m_state->group);
     request.SetRoleId(testRoleId);
@@ -243,7 +243,7 @@ void GroupsTests::TestCreateGroup(TestContext& tc)
 
 void GroupsTests::TestCreateRole(TestContext& tc)
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_GDK
     // Covered by GroupsTests::TestChangeMemberRole
     tc.EndTest(S_OK);
 #else
@@ -260,7 +260,7 @@ void GroupsTests::TestDeleteGroup(TestContext& tc)
 
 void GroupsTests::TestDeleteRole(TestContext& tc)
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_GDK
     // Covered by GroupsTests::TestChangeMemberRole
     tc.EndTest(S_OK);
 #else

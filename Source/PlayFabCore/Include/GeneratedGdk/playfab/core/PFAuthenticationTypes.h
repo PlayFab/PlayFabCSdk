@@ -11,9 +11,7 @@
 
 #include <playfab/core/PFTypes.h>
 
-#if HC_PLATFORM == HC_PLATFORM_GDK
-#include <XUser.h>
-#endif
+#include <playfab/core/PFAuthenticationTypes_Xbox.h>
 
 extern "C"
 {
@@ -196,6 +194,44 @@ typedef struct PFAuthenticationLoginWithAppleRequest
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
 } PFAuthenticationLoginWithAppleRequest;
+
+/// <summary>
+/// PFAuthenticationLoginWithBattleNetRequest data model.
+/// </summary>
+typedef struct PFAuthenticationLoginWithBattleNetRequest
+{
+    /// <summary>
+    /// Automatically create a PlayFab account if one is not currently linked to this ID.
+    /// </summary>
+    bool createAccount;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// The JSON Web Token (JWT) returned by Battle.net after login.
+    /// </summary>
+    _Null_terminated_ const char* identityToken;
+
+    /// <summary>
+    /// (Optional) Flags for which pieces of info to return for the user.
+    /// </summary>
+    _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
+
+    /// <summary>
+    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* playerSecret;
+
+} PFAuthenticationLoginWithBattleNetRequest;
 
 /// <summary>
 /// PFAuthenticationLoginWithCustomIDRequest data model. It is highly recommended that developers ensure
@@ -1010,51 +1046,6 @@ typedef struct PFAuthenticationLoginWithXboxRequest
 
 } PFAuthenticationLoginWithXboxRequest;
 
-
-/// <summary>
-/// PFAuthenticationLoginWithXUserRequest data model. If this is the first time a user has signed in with
-/// the Xbox Live account and CreateAccount is set to true, a new PlayFab account will be created and
-/// linked to the Xbox Live account. In this case, no email or username will be associated with the PlayFab
-/// account. Otherwise, if no PlayFab account is linked to the Xbox Live account, an error indicating
-/// this will be returned, so that the title can guide the user through creation of a PlayFab account.
-/// Request object for PFAuthenticationLoginWithXUserAsync.
-/// </summary>
-typedef struct PFAuthenticationLoginWithXUserRequest
-{
-    /// <summary>
-    /// Automatically create a PlayFab account if one is not currently linked to this ID.
-    /// </summary>
-    bool createAccount;
-
-    /// <summary>
-    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
-    /// trace identifiers, etc.).
-    /// </summary>
-    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
-
-    /// <summary>
-    /// Count of customTags
-    /// </summary>
-    uint32_t customTagsCount;
-
-    /// <summary>
-    /// (Optional) Flags for which pieces of info to return for the user.
-    /// </summary>
-    _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
-
-    /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* playerSecret;
-
-    /// <summary>
-    /// XUserHandle returned from XUserAddAsync or XUserAddByIdWithUiAsync.
-    /// </summary>
-    XUserHandle user;
-
-} PFAuthenticationLoginWithXUserRequest;
-
-
 /// <summary>
 /// PFAuthenticationRegisterPlayFabUserRequest data model.
 /// </summary>
@@ -1145,6 +1136,182 @@ typedef struct PFAuthenticationRegisterPlayFabUserResult
     _Maybenull_ _Null_terminated_ const char* username;
 
 } PFAuthenticationRegisterPlayFabUserResult;
+
+/// <summary>
+/// PFAuthenticationServerLoginWithAndroidDeviceIDRequest data model. On Android devices, the recommendation
+/// is to use the Settings.Secure.ANDROID_ID as the AndroidDeviceId, as described in this blog post (http://android-developers.blogspot.com/2011/03/identifying-app-installations.html).
+/// More information on this identifier can be found in the Android documentation (http://developer.android.com/reference/android/provider/Settings.Secure.html).
+/// If this is the first time a user has signed in with the Android device and CreateAccount is set to
+/// true, a new PlayFab account will be created and linked to the Android device ID. In this case, no
+/// email or username will be associated with the PlayFab account. Otherwise, if no PlayFab account is
+/// linked to the Android device, an error indicating this will be returned, so that the title can guide
+/// the user through creation of a PlayFab account. Please note that while multiple devices of this type
+/// can be linked to a single user account, only the one most recently used to login (or most recently
+/// linked) will be reflected in the user's account information. We will be updating to show all linked
+/// devices in a future release.
+/// </summary>
+typedef struct PFAuthenticationServerLoginWithAndroidDeviceIDRequest
+{
+    /// <summary>
+    /// (Optional) Specific model of the user's device.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* androidDevice;
+
+    /// <summary>
+    /// Android device identifier for the user's device.
+    /// </summary>
+    _Null_terminated_ const char* androidDeviceId;
+
+    /// <summary>
+    /// Automatically create a PlayFab account if one is not currently linked to this ID.
+    /// </summary>
+    bool createAccount;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) Flags for which pieces of info to return for the user.
+    /// </summary>
+    _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
+
+    /// <summary>
+    /// (Optional) Specific Operating System version for the user's device.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* OS;
+
+} PFAuthenticationServerLoginWithAndroidDeviceIDRequest;
+
+/// <summary>
+/// PFAuthenticationServerLoginWithBattleNetRequest data model.
+/// </summary>
+typedef struct PFAuthenticationServerLoginWithBattleNetRequest
+{
+    /// <summary>
+    /// Automatically create a PlayFab account if one is not currently linked to this ID.
+    /// </summary>
+    bool createAccount;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// The JSON Web Token (JWT) returned by Battle.net after login.
+    /// </summary>
+    _Null_terminated_ const char* identityToken;
+
+    /// <summary>
+    /// (Optional) Flags for which pieces of info to return for the user.
+    /// </summary>
+    _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
+
+} PFAuthenticationServerLoginWithBattleNetRequest;
+
+/// <summary>
+/// PFAuthenticationServerLoginWithCustomIDRequest data model. It is highly recommended that developers
+/// ensure that it is extremely unlikely that a customer could generate an ID which is already in use
+/// by another customer. If this is the first time a user has signed in with the Custom ID and CreateAccount
+/// is set to true, a new PlayFab account will be created and linked to the Custom ID. In this case, no
+/// email or username will be associated with the PlayFab account. Otherwise, if no PlayFab account is
+/// linked to the Custom ID, an error indicating this will be returned, so that the title can guide the
+/// user through creation of a PlayFab account.
+/// </summary>
+typedef struct PFAuthenticationServerLoginWithCustomIDRequest
+{
+    /// <summary>
+    /// Automatically create a PlayFab account if one is not currently linked to this ID.
+    /// </summary>
+    bool createAccount;
+
+    /// <summary>
+    /// Custom unique identifier for the user, generated by the title.
+    /// </summary>
+    _Null_terminated_ const char* customId;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) Flags for which pieces of info to return for the user.
+    /// </summary>
+    _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
+
+} PFAuthenticationServerLoginWithCustomIDRequest;
+
+/// <summary>
+/// PFAuthenticationServerLoginWithIOSDeviceIDRequest data model. On iOS devices, the identifierForVendor
+/// (https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIDevice_Class/index.html#//apple_ref/occ/instp/UIDevice/identifierForVendor)
+/// must be used as the DeviceId, as the UIDevice uniqueIdentifier has been deprecated as of iOS 5, and
+/// use of the advertisingIdentifier for this purpose will result in failure of Apple's certification
+/// process. If this is the first time a user has signed in with the iOS device and CreateAccount is set
+/// to true, a new PlayFab account will be created and linked to the vendor-specific iOS device ID. In
+/// this case, no email or username will be associated with the PlayFab account. Otherwise, if no PlayFab
+/// account is linked to the iOS device, an error indicating this will be returned, so that the title
+/// can guide the user through creation of a PlayFab account.
+/// </summary>
+typedef struct PFAuthenticationServerLoginWithIOSDeviceIDRequest
+{
+    /// <summary>
+    /// Automatically create a PlayFab account if one is not currently linked to this ID.
+    /// </summary>
+    bool createAccount;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// Vendor-specific iOS identifier for the user's device.
+    /// </summary>
+    _Null_terminated_ const char* deviceId;
+
+    /// <summary>
+    /// (Optional) Specific model of the user's device.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* deviceModel;
+
+    /// <summary>
+    /// (Optional) Flags for which pieces of info to return for the user.
+    /// </summary>
+    _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
+
+    /// <summary>
+    /// (Optional) Specific Operating System version for the user's device.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* OS;
+
+} PFAuthenticationServerLoginWithIOSDeviceIDRequest;
 
 /// <summary>
 /// PFAuthenticationServerLoginWithPSNRequest data model. If this is the first time a user has signed
@@ -1273,6 +1440,56 @@ typedef struct PFAuthenticationLoginWithSteamIdRequest
 } PFAuthenticationLoginWithSteamIdRequest;
 
 /// <summary>
+/// PFAuthenticationServerLoginWithTwitchRequest data model. More details regarding Twitch and their
+/// authentication system can be found at https://github.com/justintv/Twitch-API/blob/master/authentication.md.
+/// Developers must provide the Twitch access token that is generated using one of the Twitch authentication
+/// flows. PlayFab will use the title's unique Twitch Client ID to authenticate the token and log in to
+/// the PlayFab system. If CreateAccount is set to true and there is not already a user matched to the
+/// Twitch username that generated the token, then PlayFab will create a new account for this user and
+/// link the ID. In this case, no email or username will be associated with the PlayFab account. If there
+/// is already a different PlayFab user linked with this account, then an error will be returned.
+/// </summary>
+typedef struct PFAuthenticationServerLoginWithTwitchRequest
+{
+    /// <summary>
+    /// Twitch access token for authentication.
+    /// </summary>
+    _Null_terminated_ const char* accessToken;
+
+    /// <summary>
+    /// If true, create a new PlayFab account if one does not exist.
+    /// </summary>
+    bool createAccount;
+
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) Parameters for requesting additional player info.
+    /// </summary>
+    _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
+
+    /// <summary>
+    /// (Optional) Player secret for additional authentication.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* playerSecret;
+
+    /// <summary>
+    /// PlayFab unique identifier of the user.
+    /// </summary>
+    _Null_terminated_ const char* playFabId;
+
+} PFAuthenticationServerLoginWithTwitchRequest;
+
+/// <summary>
 /// PFAuthenticationServerLoginWithXboxRequest data model. If this is the first time a user has signed
 /// in with the Xbox Live account and CreateAccount is set to true, a new PlayFab account will be created
 /// and linked to the Xbox Live account. In this case, no email or username will be associated with the
@@ -1352,7 +1569,6 @@ typedef struct PFAuthenticationLoginWithXboxIdRequest
 
 } PFAuthenticationLoginWithXboxIdRequest;
 
-#if HC_PLATFORM != HC_PLATFORM_GDK 
 /// <summary>
 /// PFAuthenticationAuthenticateCustomIdRequest data model. Create or return a game_server entity token.
 /// Caller must be a title entity.
@@ -1377,7 +1593,6 @@ typedef struct PFAuthenticationAuthenticateCustomIdRequest
     uint32_t customTagsCount;
 
 } PFAuthenticationAuthenticateCustomIdRequest;
-#endif
 
 /// <summary>
 /// PFAuthenticationEntityTokenResponse data model.
@@ -1401,7 +1616,6 @@ typedef struct PFAuthenticationEntityTokenResponse
 
 } PFAuthenticationEntityTokenResponse;
 
-#if HC_PLATFORM != HC_PLATFORM_GDK 
 /// <summary>
 /// PFAuthenticationAuthenticateCustomIdResult data model.
 /// </summary>
@@ -1418,7 +1632,6 @@ typedef struct PFAuthenticationAuthenticateCustomIdResult
     bool newlyCreated;
 
 } PFAuthenticationAuthenticateCustomIdResult;
-#endif
 
 /// <summary>
 /// PFAuthenticationDeleteRequest data model. Delete a game_server entity. The caller can be the game_server

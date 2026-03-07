@@ -479,6 +479,25 @@ public:
     static JsonValue ToJson(const PFInventoryGetTransactionHistoryRequest& input);
 };
 
+class TransactionClawbackDetails : public Wrappers::PFInventoryTransactionClawbackDetailsWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFInventoryTransactionClawbackDetails>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFInventoryTransactionClawbackDetailsWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFInventoryTransactionClawbackDetails const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFInventoryTransactionClawbackDetails& model);
+    static HRESULT Copy(const PFInventoryTransactionClawbackDetails& input, PFInventoryTransactionClawbackDetails& output, ModelBuffer& buffer);
+};
+
 class TransactionOperation : public Wrappers::PFInventoryTransactionOperationWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFInventoryTransactionOperation>
 {
 public:

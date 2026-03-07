@@ -1,11 +1,10 @@
 #include "TestAppPch.h"
 #include "ServicesTestClass.h"
+#include "Operations/Core/CoreOperations.h"
 #include "Operations/Core/AuthenticationOperations.h"
 #include "Operations/Services/ServicesOperations.h"
 #include "AccountManagementOperations.h"
 #include "Platform/PlayFabPal.h"
-
-using namespace PlayFab::Platform;
 
 namespace PlayFab
 {
@@ -14,17 +13,17 @@ namespace Test
 
 AsyncOp<void> ServicesTestClass::Initialize()
 {
-    auto operation = CoreTestClass::Initialize().Then([this](Result<void> result) -> AsyncOp<UserPtr>
+    auto operation = CoreTestClass::Initialize().Then([this](Result<void> result) -> AsyncOp<TitleLocalUser>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
         RETURN_IF_FAILED(Platform::ServicesInitialize());
-        return Platform::GetDefaultPlatformUser(RunContext());
+        return Platform::GetDefaultLocalUser(ServiceConfig(), RunContext());
     })
-    .Then([&](Result<UserPtr> result) -> AsyncOp<LoginResult>
+    .Then([&](Result<TitleLocalUser> result) -> AsyncOp<LoginResult>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        m_defaultPlatformUser = result.ExtractPayload();
-        return Platform::LoginDefaultTitlePlayer(ServiceConfig(), m_defaultPlatformUser, RunContext());
+        m_defaultLocalUser.emplace(result.ExtractPayload());
+        return RunOperation(MakeUnique<LocalUserLoginOperation>(*m_defaultLocalUser, RunContext()));
     })
     .Then([&](Result<LoginResult> result) -> Result<void>
     {
@@ -33,7 +32,7 @@ AsyncOp<void> ServicesTestClass::Initialize()
         return S_OK;
     });
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     return operation.Then([&](Result<void> result) -> AsyncOp<Entity>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
@@ -52,9 +51,9 @@ AsyncOp<void> ServicesTestClass::Initialize()
 
 AsyncOp<void> ServicesTestClass::Uninitialize()
 {
+    m_defaultLocalUser.reset();
     m_defaultTitlePlayer.reset();
-    m_defaultPlatformUser.reset();
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     m_titleEntity.reset();
 #endif
 
@@ -65,9 +64,10 @@ AsyncOp<void> ServicesTestClass::Uninitialize()
     });
 }
 
-UserPtr ServicesTestClass::DefaultPlatformUser() noexcept
+TitleLocalUser ServicesTestClass::DefaultLocalUser() noexcept
 {
-    return m_defaultPlatformUser;
+    assert(m_defaultLocalUser.has_value());
+    return *m_defaultLocalUser;
 }
 
 Entity ServicesTestClass::DefaultTitlePlayer() noexcept
@@ -82,7 +82,7 @@ String ServicesTestClass::DefaultTitlePlayerId() noexcept
     return m_defaultTitlePlayer->loginResult.Model().playFabId;
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 Entity ServicesTestClass::TitleEntity() noexcept
 {
     assert(m_titleEntity.has_value());

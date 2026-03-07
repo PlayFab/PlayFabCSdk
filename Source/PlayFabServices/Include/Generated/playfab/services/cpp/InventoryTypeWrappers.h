@@ -9,9 +9,7 @@
 
 #include <playfab/services/PFInventoryTypes.h>
 #include <playfab/services/cpp/TypeWrappers.h>
-#if HC_PLATFORM == HC_PLATFORM_GDK
 #include <playfab/core/cpp/AuthenticationTypeWrappers.h>
-#endif
 
 namespace PlayFab
 {
@@ -65,10 +63,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetType() const
+    {
+        return m_type;
+    }
+
     void SetType(String value)
     {
         m_type = std::move(value);
         this->m_model.type =  m_type.empty() ? nullptr : m_type.data();
+    }
+
+    String const& GetValue() const
+    {
+        return m_value;
     }
 
     void SetValue(String value)
@@ -137,16 +145,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFInventoryAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFInventoryAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    String const& GetStackId() const
+    {
+        return m_stackId;
     }
 
     void SetStackId(String value)
@@ -211,6 +234,11 @@ public:
         swap(lhs.m_displayProperties, rhs.m_displayProperties);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    JsonObject<Alloc> const& GetDisplayProperties() const
+    {
+        return m_displayProperties;
     }
 
     void SetDisplayProperties(JsonObject<Alloc> value)
@@ -289,16 +317,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -308,10 +351,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<double> const& GetDurationInSeconds() const
+    {
+        return m_durationInSeconds;
+    }
+
     void SetDurationInSeconds(std::optional<double> value)
     {
         m_durationInSeconds = std::move(value);
         this->m_model.durationInSeconds = m_durationInSeconds ? m_durationInSeconds.operator->() : nullptr;
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -320,10 +373,20 @@ public:
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetETag() const
+    {
+        return m_eTag;
+    }
+
     void SetETag(String value)
     {
         m_eTag = std::move(value);
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
+    }
+
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
     }
 
     void SetIdempotencyId(String value)
@@ -332,10 +395,20 @@ public:
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
     }
 
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
+    }
+
     void SetItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
     {
         m_item = std::move(value);
         this->m_model.item = m_item ? &m_item->Model() : nullptr;
+    }
+
+    std::optional<PFInventoryInitialValuesWrapper<Alloc>> const& GetNewStackValues() const
+    {
+        return m_newStackValues;
     }
 
     void SetNewStackValues(std::optional<PFInventoryInitialValuesWrapper<Alloc>> value)
@@ -418,16 +491,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetETag() const
+    {
+        return m_eTag;
+    }
+
     void SetETag(String value)
     {
         m_eTag = std::move(value);
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -501,10 +589,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -514,10 +612,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetETag() const
+    {
+        return m_eTag;
     }
 
     void SetETag(String value)
@@ -596,10 +704,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -609,10 +727,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetETag() const
+    {
+        return m_eTag;
     }
 
     void SetETag(String value)
@@ -621,10 +749,20 @@ public:
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
     }
 
     void SetItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
@@ -701,16 +839,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetETag() const
+    {
+        return m_eTag;
+    }
+
     void SetETag(String value)
     {
         m_eTag = std::move(value);
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -784,10 +937,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
+    }
+
+    std::optional<double> const& GetDurationInSeconds() const
+    {
+        return m_durationInSeconds;
     }
 
     void SetDurationInSeconds(std::optional<double> value)
@@ -796,10 +959,20 @@ public:
         this->m_model.durationInSeconds = m_durationInSeconds ? m_durationInSeconds.operator->() : nullptr;
     }
 
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
+    }
+
     void SetItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
     {
         m_item = std::move(value);
         this->m_model.item = m_item ? &m_item->Model() : nullptr;
+    }
+
+    std::optional<PFInventoryInitialValuesWrapper<Alloc>> const& GetNewStackValues() const
+    {
+        return m_newStackValues;
     }
 
     void SetNewStackValues(std::optional<PFInventoryInitialValuesWrapper<Alloc>> value)
@@ -868,6 +1041,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
+    }
+
     void SetItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
     {
         m_item = std::move(value);
@@ -930,15 +1108,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    int32_t GetAmount() const
+    {
+        return this->m_model.amount;
+    }
+
     void SetAmount(int32_t value)
     {
         this->m_model.amount = value;
+    }
+
+    String const& GetItemId() const
+    {
+        return m_itemId;
     }
 
     void SetItemId(String value)
     {
         m_itemId = std::move(value);
         this->m_model.itemId =  m_itemId.empty() ? nullptr : m_itemId.data();
+    }
+
+    String const& GetStackId() const
+    {
+        return m_stackId;
     }
 
     void SetStackId(String value)
@@ -1013,15 +1206,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
     }
 
+    bool GetDeleteEmptyStacks() const
+    {
+        return this->m_model.deleteEmptyStacks;
+    }
+
     void SetDeleteEmptyStacks(bool value)
     {
         this->m_model.deleteEmptyStacks = value;
+    }
+
+    std::optional<double> const& GetDurationInSeconds() const
+    {
+        return m_durationInSeconds;
     }
 
     void SetDurationInSeconds(std::optional<double> value)
@@ -1030,10 +1238,20 @@ public:
         this->m_model.durationInSeconds = m_durationInSeconds ? m_durationInSeconds.operator->() : nullptr;
     }
 
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
+    }
+
     void SetItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
     {
         m_item = std::move(value);
         this->m_model.item = m_item ? &m_item->Model() : nullptr;
+    }
+
+    std::optional<PFInventoryInitialValuesWrapper<Alloc>> const& GetNewStackValues() const
+    {
+        return m_newStackValues;
     }
 
     void SetNewStackValues(std::optional<PFInventoryInitialValuesWrapper<Alloc>> value)
@@ -1042,11 +1260,21 @@ public:
         this->m_model.newStackValues = m_newStackValues ? &m_newStackValues->Model() : nullptr;
     }
 
+    ModelVector<PFInventoryPurchasePriceAmountWrapper<Alloc>, Alloc> const& GetPriceAmounts() const
+    {
+        return m_priceAmounts;
+    }
+
     void SetPriceAmounts(ModelVector<PFInventoryPurchasePriceAmountWrapper<Alloc>, Alloc> value)
     {
         m_priceAmounts = std::move(value);
         this->m_model.priceAmounts =  m_priceAmounts.empty() ? nullptr : m_priceAmounts.data();
         this->m_model.priceAmountsCount =  static_cast<uint32_t>(m_priceAmounts.size());
+    }
+
+    String const& GetStoreId() const
+    {
+        return m_storeId;
     }
 
     void SetStoreId(String value)
@@ -1123,10 +1351,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
+    }
+
+    bool GetDeleteEmptyStacks() const
+    {
+        return this->m_model.deleteEmptyStacks;
     }
 
     void SetDeleteEmptyStacks(bool value)
@@ -1134,10 +1372,20 @@ public:
         this->m_model.deleteEmptyStacks = value;
     }
 
+    std::optional<double> const& GetDurationInSeconds() const
+    {
+        return m_durationInSeconds;
+    }
+
     void SetDurationInSeconds(std::optional<double> value)
     {
         m_durationInSeconds = std::move(value);
         this->m_model.durationInSeconds = m_durationInSeconds ? m_durationInSeconds.operator->() : nullptr;
+    }
+
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
     }
 
     void SetItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
@@ -1210,15 +1458,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
     }
 
+    bool GetDeleteEmptyStacks() const
+    {
+        return this->m_model.deleteEmptyStacks;
+    }
+
     void SetDeleteEmptyStacks(bool value)
     {
         this->m_model.deleteEmptyStacks = value;
+    }
+
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetGivingItem() const
+    {
+        return m_givingItem;
     }
 
     void SetGivingItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
@@ -1227,10 +1490,20 @@ public:
         this->m_model.givingItem = m_givingItem ? &m_givingItem->Model() : nullptr;
     }
 
+    std::optional<PFInventoryInitialValuesWrapper<Alloc>> const& GetNewStackValues() const
+    {
+        return m_newStackValues;
+    }
+
     void SetNewStackValues(std::optional<PFInventoryInitialValuesWrapper<Alloc>> value)
     {
         m_newStackValues = std::move(value);
         this->m_model.newStackValues = m_newStackValues ? &m_newStackValues->Model() : nullptr;
+    }
+
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetReceivingItem() const
+    {
+        return m_receivingItem;
     }
 
     void SetReceivingItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
@@ -1271,6 +1544,7 @@ public:
         m_expirationDate{ model.expirationDate ? std::optional<time_t>{ *model.expirationDate } : std::nullopt },
         m_id{ SafeString(model.id) },
         m_stackId{ SafeString(model.stackId) },
+        m_startDate{ model.startDate ? std::optional<time_t>{ *model.startDate } : std::nullopt },
         m_type{ SafeString(model.type) }
     {
         SetModelPointers();
@@ -1304,9 +1578,15 @@ public:
         swap(lhs.m_expirationDate, rhs.m_expirationDate);
         swap(lhs.m_id, rhs.m_id);
         swap(lhs.m_stackId, rhs.m_stackId);
+        swap(lhs.m_startDate, rhs.m_startDate);
         swap(lhs.m_type, rhs.m_type);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
     }
 
     void SetAmount(std::optional<int32_t> value)
@@ -1315,10 +1595,20 @@ public:
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
     }
 
+    JsonObject<Alloc> const& GetDisplayProperties() const
+    {
+        return m_displayProperties;
+    }
+
     void SetDisplayProperties(JsonObject<Alloc> value)
     {
         m_displayProperties = std::move(value);
         this->m_model.displayProperties.stringValue = m_displayProperties.stringValue.empty() ? nullptr : m_displayProperties.stringValue.data();
+    }
+
+    std::optional<time_t> const& GetExpirationDate() const
+    {
+        return m_expirationDate;
     }
 
     void SetExpirationDate(std::optional<time_t> value)
@@ -1327,16 +1617,42 @@ public:
         this->m_model.expirationDate = m_expirationDate ? m_expirationDate.operator->() : nullptr;
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
     }
 
+    String const& GetStackId() const
+    {
+        return m_stackId;
+    }
+
     void SetStackId(String value)
     {
         m_stackId = std::move(value);
         this->m_model.stackId =  m_stackId.empty() ? nullptr : m_stackId.data();
+    }
+
+    std::optional<time_t> const& GetStartDate() const
+    {
+        return m_startDate;
+    }
+
+    void SetStartDate(std::optional<time_t> value)
+    {
+        m_startDate = std::move(value);
+        this->m_model.startDate = m_startDate ? m_startDate.operator->() : nullptr;
+    }
+
+    String const& GetType() const
+    {
+        return m_type;
     }
 
     void SetType(String value)
@@ -1353,6 +1669,7 @@ private:
         this->m_model.expirationDate = m_expirationDate ? m_expirationDate.operator->() : nullptr;
         this->m_model.id = m_id.empty() ? nullptr : m_id.data();
         this->m_model.stackId = m_stackId.empty() ? nullptr : m_stackId.data();
+        this->m_model.startDate = m_startDate ? m_startDate.operator->() : nullptr;
         this->m_model.type = m_type.empty() ? nullptr : m_type.data();
     }
 
@@ -1361,6 +1678,7 @@ private:
     std::optional<time_t> m_expirationDate;
     String m_id;
     String m_stackId;
+    std::optional<time_t> m_startDate;
     String m_type;
 };
 
@@ -1407,6 +1725,11 @@ public:
         swap(lhs.m_item, rhs.m_item);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<PFInventoryInventoryItemWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
     }
 
     void SetItem(std::optional<PFInventoryInventoryItemWrapper<Alloc>> value)
@@ -1479,10 +1802,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFInventoryAddInventoryItemsOperationWrapper<Alloc>> const& GetAdd() const
+    {
+        return m_add;
+    }
+
     void SetAdd(std::optional<PFInventoryAddInventoryItemsOperationWrapper<Alloc>> value)
     {
         m_add = std::move(value);
         this->m_model.add = m_add ? &m_add->Model() : nullptr;
+    }
+
+    std::optional<PFInventoryDeleteInventoryItemsOperationWrapper<Alloc>> const& GetDeleteOp() const
+    {
+        return m_deleteOp;
     }
 
     void SetDeleteOp(std::optional<PFInventoryDeleteInventoryItemsOperationWrapper<Alloc>> value)
@@ -1491,10 +1824,20 @@ public:
         this->m_model.deleteOp = m_deleteOp ? &m_deleteOp->Model() : nullptr;
     }
 
+    std::optional<PFInventoryPurchaseInventoryItemsOperationWrapper<Alloc>> const& GetPurchase() const
+    {
+        return m_purchase;
+    }
+
     void SetPurchase(std::optional<PFInventoryPurchaseInventoryItemsOperationWrapper<Alloc>> value)
     {
         m_purchase = std::move(value);
         this->m_model.purchase = m_purchase ? &m_purchase->Model() : nullptr;
+    }
+
+    std::optional<PFInventorySubtractInventoryItemsOperationWrapper<Alloc>> const& GetSubtract() const
+    {
+        return m_subtract;
     }
 
     void SetSubtract(std::optional<PFInventorySubtractInventoryItemsOperationWrapper<Alloc>> value)
@@ -1503,10 +1846,20 @@ public:
         this->m_model.subtract = m_subtract ? &m_subtract->Model() : nullptr;
     }
 
+    std::optional<PFInventoryTransferInventoryItemsOperationWrapper<Alloc>> const& GetTransfer() const
+    {
+        return m_transfer;
+    }
+
     void SetTransfer(std::optional<PFInventoryTransferInventoryItemsOperationWrapper<Alloc>> value)
     {
         m_transfer = std::move(value);
         this->m_model.transfer = m_transfer ? &m_transfer->Model() : nullptr;
+    }
+
+    std::optional<PFInventoryUpdateInventoryItemsOperationWrapper<Alloc>> const& GetUpdate() const
+    {
+        return m_update;
     }
 
     void SetUpdate(std::optional<PFInventoryUpdateInventoryItemsOperationWrapper<Alloc>> value)
@@ -1589,10 +1942,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1602,10 +1965,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetETag() const
+    {
+        return m_eTag;
     }
 
     void SetETag(String value)
@@ -1614,10 +1987,20 @@ public:
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    ModelVector<PFInventoryInventoryOperationWrapper<Alloc>, Alloc> const& GetOperations() const
+    {
+        return m_operations;
     }
 
     void SetOperations(ModelVector<PFInventoryInventoryOperationWrapper<Alloc>, Alloc> value)
@@ -1695,16 +2078,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetETag() const
+    {
+        return m_eTag;
+    }
+
     void SetETag(String value)
     {
         m_eTag = std::move(value);
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -1786,11 +2184,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetGivingCollectionId() const
+    {
+        return m_givingCollectionId;
     }
 
     void SetGivingCollectionId(String value)
@@ -1799,10 +2207,20 @@ public:
         this->m_model.givingCollectionId =  m_givingCollectionId.empty() ? nullptr : m_givingCollectionId.data();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetGivingEntity() const
+    {
+        return m_givingEntity;
+    }
+
     void SetGivingEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_givingEntity = std::move(value);
         this->m_model.givingEntity = m_givingEntity ? &m_givingEntity->Model() : nullptr;
+    }
+
+    String const& GetGivingETag() const
+    {
+        return m_givingETag;
     }
 
     void SetGivingETag(String value)
@@ -1811,10 +2229,20 @@ public:
         this->m_model.givingETag =  m_givingETag.empty() ? nullptr : m_givingETag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    ModelVector<PFInventoryTransferInventoryItemsOperationWrapper<Alloc>, Alloc> const& GetOperations() const
+    {
+        return m_operations;
     }
 
     void SetOperations(ModelVector<PFInventoryTransferInventoryItemsOperationWrapper<Alloc>, Alloc> value)
@@ -1824,10 +2252,20 @@ public:
         this->m_model.operationsCount =  static_cast<uint32_t>(m_operations.size());
     }
 
+    String const& GetReceivingCollectionId() const
+    {
+        return m_receivingCollectionId;
+    }
+
     void SetReceivingCollectionId(String value)
     {
         m_receivingCollectionId = std::move(value);
         this->m_model.receivingCollectionId =  m_receivingCollectionId.empty() ? nullptr : m_receivingCollectionId.data();
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetReceivingEntity() const
+    {
+        return m_receivingEntity;
     }
 
     void SetReceivingEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -1916,10 +2354,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetGivingETag() const
+    {
+        return m_givingETag;
+    }
+
     void SetGivingETag(String value)
     {
         m_givingETag = std::move(value);
         this->m_model.givingETag =  m_givingETag.empty() ? nullptr : m_givingETag.data();
+    }
+
+    CStringVector<Alloc> const& GetGivingTransactionIds() const
+    {
+        return m_givingTransactionIds;
     }
 
     void SetGivingTransactionIds(CStringVector<Alloc> value)
@@ -1929,10 +2377,20 @@ public:
         this->m_model.givingTransactionIdsCount =  static_cast<uint32_t>(m_givingTransactionIds.size());
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    String const& GetOperationStatus() const
+    {
+        return m_operationStatus;
     }
 
     void SetOperationStatus(String value)
@@ -1941,16 +2399,31 @@ public:
         this->m_model.operationStatus =  m_operationStatus.empty() ? nullptr : m_operationStatus.data();
     }
 
+    String const& GetOperationToken() const
+    {
+        return m_operationToken;
+    }
+
     void SetOperationToken(String value)
     {
         m_operationToken = std::move(value);
         this->m_model.operationToken =  m_operationToken.empty() ? nullptr : m_operationToken.data();
     }
 
+    String const& GetReceivingETag() const
+    {
+        return m_receivingETag;
+    }
+
     void SetReceivingETag(String value)
     {
         m_receivingETag = std::move(value);
         this->m_model.receivingETag =  m_receivingETag.empty() ? nullptr : m_receivingETag.data();
+    }
+
+    CStringVector<Alloc> const& GetReceivingTransactionIds() const
+    {
+        return m_receivingTransactionIds;
     }
 
     void SetReceivingTransactionIds(CStringVector<Alloc> value)
@@ -2030,10 +2503,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+    }
+
+    int32_t GetCount() const
+    {
+        return this->m_model.count;
     }
 
     void SetCount(int32_t value)
@@ -2041,11 +2524,21 @@ public:
         this->m_model.count = value;
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -2114,11 +2607,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    CStringVector<Alloc> const& GetCollectionIds() const
+    {
+        return m_collectionIds;
+    }
+
     void SetCollectionIds(CStringVector<Alloc> value)
     {
         m_collectionIds = std::move(value);
         this->m_model.collectionIds =  m_collectionIds.empty() ? nullptr : m_collectionIds.data();
         this->m_model.collectionIdsCount =  static_cast<uint32_t>(m_collectionIds.size());
+    }
+
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
     }
 
     void SetContinuationToken(String value)
@@ -2191,10 +2694,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
     }
 
     void SetContinuationToken(String value)
@@ -2203,9 +2716,19 @@ public:
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
     }
 
+    int32_t GetCount() const
+    {
+        return this->m_model.count;
+    }
+
     void SetCount(int32_t value)
     {
         this->m_model.count = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2215,10 +2738,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetFilter() const
+    {
+        return m_filter;
     }
 
     void SetFilter(String value)
@@ -2293,16 +2826,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
     }
 
+    String const& GetETag() const
+    {
+        return m_eTag;
+    }
+
     void SetETag(String value)
     {
         m_eTag = std::move(value);
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
+    }
+
+    ModelVector<PFInventoryInventoryItemWrapper<Alloc>, Alloc> const& GetItems() const
+    {
+        return m_items;
     }
 
     void SetItems(ModelVector<PFInventoryInventoryItemWrapper<Alloc>, Alloc> value)
@@ -2339,7 +2887,8 @@ public:
         ModelWrapper<PFInventoryGetInventoryOperationStatusRequest, Alloc>{ model },
         m_collectionId{ SafeString(model.collectionId) },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
-        m_entity{ model.entity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.entity } : std::nullopt }
+        m_entity{ model.entity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.entity } : std::nullopt },
+        m_operationToken{ SafeString(model.operationToken) }
     {
         SetModelPointers();
     }
@@ -2370,14 +2919,25 @@ public:
         swap(lhs.m_collectionId, rhs.m_collectionId);
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_entity, rhs.m_entity);
+        swap(lhs.m_operationToken, rhs.m_operationToken);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
     }
 
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2387,10 +2947,26 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetOperationToken() const
+    {
+        return m_operationToken;
+    }
+
+    void SetOperationToken(String value)
+    {
+        m_operationToken = std::move(value);
+        this->m_model.operationToken =  m_operationToken.empty() ? nullptr : m_operationToken.data();
     }
 
 private:
@@ -2399,11 +2975,13 @@ private:
         this->m_model.collectionId = m_collectionId.empty() ? nullptr : m_collectionId.data();
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.entity = m_entity ?  &m_entity->Model() : nullptr;
+        this->m_model.operationToken = m_operationToken.empty() ? nullptr : m_operationToken.data();
     }
 
     String m_collectionId;
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFEntityKeyWrapper<Alloc>> m_entity;
+    String m_operationToken;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -2449,6 +3027,11 @@ public:
         swap(lhs.m_operationStatus, rhs.m_operationStatus);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetOperationStatus() const
+    {
+        return m_operationStatus;
     }
 
     void SetOperationStatus(String value)
@@ -2509,6 +3092,11 @@ public:
         swap(lhs.m_customTags, rhs.m_customTags);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2572,10 +3160,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionsAccessToken() const
+    {
+        return m_collectionsAccessToken;
+    }
+
     void SetCollectionsAccessToken(String value)
     {
         m_collectionsAccessToken = std::move(value);
         this->m_model.collectionsAccessToken =  m_collectionsAccessToken.empty() ? nullptr : m_collectionsAccessToken.data();
+    }
+
+    time_t GetCollectionsAccessTokenExpirationDate() const
+    {
+        return this->m_model.collectionsAccessTokenExpirationDate;
     }
 
     void SetCollectionsAccessTokenExpirationDate(time_t value)
@@ -2647,10 +3245,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
     }
 
     void SetContinuationToken(String value)
@@ -2659,9 +3267,19 @@ public:
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
     }
 
+    int32_t GetCount() const
+    {
+        return this->m_model.count;
+    }
+
     void SetCount(int32_t value)
     {
         this->m_model.count = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2671,16 +3289,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetFilter() const
+    {
+        return m_filter;
+    }
+
     void SetFilter(String value)
     {
         m_filter = std::move(value);
         this->m_model.filter =  m_filter.empty() ? nullptr : m_filter.data();
+    }
+
+    String const& GetOrderBy() const
+    {
+        return m_orderBy;
     }
 
     void SetOrderBy(String value)
@@ -2706,6 +3339,71 @@ private:
     std::optional<PFEntityKeyWrapper<Alloc>> m_entity;
     String m_filter;
     String m_orderBy;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFInventoryTransactionClawbackDetailsWrapper : public ModelWrapper<PFInventoryTransactionClawbackDetails, Alloc>
+{
+public:
+    using ModelType = PFInventoryTransactionClawbackDetails;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFInventoryTransactionClawbackDetailsWrapper() = default;
+
+    PFInventoryTransactionClawbackDetailsWrapper(const PFInventoryTransactionClawbackDetails& model) :
+        ModelWrapper<PFInventoryTransactionClawbackDetails, Alloc>{ model },
+        m_transactionIdClawedback{ SafeString(model.transactionIdClawedback) }
+    {
+        SetModelPointers();
+    }
+
+    PFInventoryTransactionClawbackDetailsWrapper(const PFInventoryTransactionClawbackDetailsWrapper& src) :
+        PFInventoryTransactionClawbackDetailsWrapper{ src.Model() }
+    {
+    }
+
+    PFInventoryTransactionClawbackDetailsWrapper(PFInventoryTransactionClawbackDetailsWrapper&& src) :
+        PFInventoryTransactionClawbackDetailsWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFInventoryTransactionClawbackDetailsWrapper& operator=(PFInventoryTransactionClawbackDetailsWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFInventoryTransactionClawbackDetailsWrapper() = default;
+
+    friend void swap(PFInventoryTransactionClawbackDetailsWrapper& lhs, PFInventoryTransactionClawbackDetailsWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_transactionIdClawedback, rhs.m_transactionIdClawedback);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    String const& GetTransactionIdClawedback() const
+    {
+        return m_transactionIdClawedback;
+    }
+
+    void SetTransactionIdClawedback(String value)
+    {
+        m_transactionIdClawedback = std::move(value);
+        this->m_model.transactionIdClawedback =  m_transactionIdClawedback.empty() ? nullptr : m_transactionIdClawedback.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.transactionIdClawedback = m_transactionIdClawedback.empty() ? nullptr : m_transactionIdClawedback.data();
+    }
+
+    String m_transactionIdClawedback;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -2765,10 +3463,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
+    }
+
+    std::optional<double> const& GetDurationInSeconds() const
+    {
+        return m_durationInSeconds;
     }
 
     void SetDurationInSeconds(std::optional<double> value)
@@ -2777,10 +3485,20 @@ public:
         this->m_model.durationInSeconds = m_durationInSeconds ? m_durationInSeconds.operator->() : nullptr;
     }
 
+    String const& GetItemFriendlyId() const
+    {
+        return m_itemFriendlyId;
+    }
+
     void SetItemFriendlyId(String value)
     {
         m_itemFriendlyId = std::move(value);
         this->m_model.itemFriendlyId =  m_itemFriendlyId.empty() ? nullptr : m_itemFriendlyId.data();
+    }
+
+    String const& GetItemId() const
+    {
+        return m_itemId;
     }
 
     void SetItemId(String value)
@@ -2789,16 +3507,31 @@ public:
         this->m_model.itemId =  m_itemId.empty() ? nullptr : m_itemId.data();
     }
 
+    String const& GetItemType() const
+    {
+        return m_itemType;
+    }
+
     void SetItemType(String value)
     {
         m_itemType = std::move(value);
         this->m_model.itemType =  m_itemType.empty() ? nullptr : m_itemType.data();
     }
 
+    String const& GetStackId() const
+    {
+        return m_stackId;
+    }
+
     void SetStackId(String value)
     {
         m_stackId = std::move(value);
         this->m_model.stackId =  m_stackId.empty() ? nullptr : m_stackId.data();
+    }
+
+    String const& GetType() const
+    {
+        return m_type;
     }
 
     void SetType(String value)
@@ -2840,6 +3573,8 @@ public:
 
     PFInventoryTransactionPurchaseDetailsWrapper(const PFInventoryTransactionPurchaseDetails& model) :
         ModelWrapper<PFInventoryTransactionPurchaseDetails, Alloc>{ model },
+        m_itemFriendlyId{ SafeString(model.itemFriendlyId) },
+        m_itemId{ SafeString(model.itemId) },
         m_storeFriendlyId{ SafeString(model.storeFriendlyId) },
         m_storeId{ SafeString(model.storeId) }
     {
@@ -2869,16 +3604,50 @@ public:
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_itemFriendlyId, rhs.m_itemFriendlyId);
+        swap(lhs.m_itemId, rhs.m_itemId);
         swap(lhs.m_storeFriendlyId, rhs.m_storeFriendlyId);
         swap(lhs.m_storeId, rhs.m_storeId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
 
+    String const& GetItemFriendlyId() const
+    {
+        return m_itemFriendlyId;
+    }
+
+    void SetItemFriendlyId(String value)
+    {
+        m_itemFriendlyId = std::move(value);
+        this->m_model.itemFriendlyId =  m_itemFriendlyId.empty() ? nullptr : m_itemFriendlyId.data();
+    }
+
+    String const& GetItemId() const
+    {
+        return m_itemId;
+    }
+
+    void SetItemId(String value)
+    {
+        m_itemId = std::move(value);
+        this->m_model.itemId =  m_itemId.empty() ? nullptr : m_itemId.data();
+    }
+
+    String const& GetStoreFriendlyId() const
+    {
+        return m_storeFriendlyId;
+    }
+
     void SetStoreFriendlyId(String value)
     {
         m_storeFriendlyId = std::move(value);
         this->m_model.storeFriendlyId =  m_storeFriendlyId.empty() ? nullptr : m_storeFriendlyId.data();
+    }
+
+    String const& GetStoreId() const
+    {
+        return m_storeId;
     }
 
     void SetStoreId(String value)
@@ -2890,10 +3659,14 @@ public:
 private:
     void SetModelPointers()
     {
+        this->m_model.itemFriendlyId = m_itemFriendlyId.empty() ? nullptr : m_itemFriendlyId.data();
+        this->m_model.itemId = m_itemId.empty() ? nullptr : m_itemId.data();
         this->m_model.storeFriendlyId = m_storeFriendlyId.empty() ? nullptr : m_storeFriendlyId.data();
         this->m_model.storeId = m_storeId.empty() ? nullptr : m_storeId.data();
     }
 
+    String m_itemFriendlyId;
+    String m_itemId;
     String m_storeFriendlyId;
     String m_storeId;
 };
@@ -2947,16 +3720,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetMarketplace() const
+    {
+        return m_marketplace;
+    }
+
     void SetMarketplace(String value)
     {
         m_marketplace = std::move(value);
         this->m_model.marketplace =  m_marketplace.empty() ? nullptr : m_marketplace.data();
     }
 
+    String const& GetMarketplaceTransactionId() const
+    {
+        return m_marketplaceTransactionId;
+    }
+
     void SetMarketplaceTransactionId(String value)
     {
         m_marketplaceTransactionId = std::move(value);
         this->m_model.marketplaceTransactionId =  m_marketplaceTransactionId.empty() ? nullptr : m_marketplaceTransactionId.data();
+    }
+
+    String const& GetOfferId() const
+    {
+        return m_offerId;
     }
 
     void SetOfferId(String value)
@@ -3031,10 +3819,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetGivingCollectionId() const
+    {
+        return m_givingCollectionId;
+    }
+
     void SetGivingCollectionId(String value)
     {
         m_givingCollectionId = std::move(value);
         this->m_model.givingCollectionId =  m_givingCollectionId.empty() ? nullptr : m_givingCollectionId.data();
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetGivingEntity() const
+    {
+        return m_givingEntity;
     }
 
     void SetGivingEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -3043,16 +3841,31 @@ public:
         this->m_model.givingEntity = m_givingEntity ? &m_givingEntity->Model() : nullptr;
     }
 
+    String const& GetReceivingCollectionId() const
+    {
+        return m_receivingCollectionId;
+    }
+
     void SetReceivingCollectionId(String value)
     {
         m_receivingCollectionId = std::move(value);
         this->m_model.receivingCollectionId =  m_receivingCollectionId.empty() ? nullptr : m_receivingCollectionId.data();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetReceivingEntity() const
+    {
+        return m_receivingEntity;
+    }
+
     void SetReceivingEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_receivingEntity = std::move(value);
         this->m_model.receivingEntity = m_receivingEntity ? &m_receivingEntity->Model() : nullptr;
+    }
+
+    String const& GetTransferId() const
+    {
+        return m_transferId;
     }
 
     void SetTransferId(String value)
@@ -3091,6 +3904,8 @@ public:
     PFInventoryTransactionWrapper(const PFInventoryTransaction& model) :
         ModelWrapper<PFInventoryTransaction, Alloc>{ model },
         m_apiName{ SafeString(model.apiName) },
+        m_clawbackDetails{ model.clawbackDetails ? std::optional<PFInventoryTransactionClawbackDetailsWrapper<Alloc>>{ *model.clawbackDetails } : std::nullopt },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_itemType{ SafeString(model.itemType) },
         m_operations{ model.operations, model.operations + model.operationsCount },
         m_operationType{ SafeString(model.operationType) },
@@ -3126,6 +3941,8 @@ public:
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_apiName, rhs.m_apiName);
+        swap(lhs.m_clawbackDetails, rhs.m_clawbackDetails);
+        swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_itemType, rhs.m_itemType);
         swap(lhs.m_operations, rhs.m_operations);
         swap(lhs.m_operationType, rhs.m_operationType);
@@ -3137,16 +3954,54 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetApiName() const
+    {
+        return m_apiName;
+    }
+
     void SetApiName(String value)
     {
         m_apiName = std::move(value);
         this->m_model.apiName =  m_apiName.empty() ? nullptr : m_apiName.data();
     }
 
+    std::optional<PFInventoryTransactionClawbackDetailsWrapper<Alloc>> const& GetClawbackDetails() const
+    {
+        return m_clawbackDetails;
+    }
+
+    void SetClawbackDetails(std::optional<PFInventoryTransactionClawbackDetailsWrapper<Alloc>> value)
+    {
+        m_clawbackDetails = std::move(value);
+        this->m_model.clawbackDetails = m_clawbackDetails ? &m_clawbackDetails->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetItemType() const
+    {
+        return m_itemType;
+    }
+
     void SetItemType(String value)
     {
         m_itemType = std::move(value);
         this->m_model.itemType =  m_itemType.empty() ? nullptr : m_itemType.data();
+    }
+
+    ModelVector<PFInventoryTransactionOperationWrapper<Alloc>, Alloc> const& GetOperations() const
+    {
+        return m_operations;
     }
 
     void SetOperations(ModelVector<PFInventoryTransactionOperationWrapper<Alloc>, Alloc> value)
@@ -3156,10 +4011,20 @@ public:
         this->m_model.operationsCount =  static_cast<uint32_t>(m_operations.size());
     }
 
+    String const& GetOperationType() const
+    {
+        return m_operationType;
+    }
+
     void SetOperationType(String value)
     {
         m_operationType = std::move(value);
         this->m_model.operationType =  m_operationType.empty() ? nullptr : m_operationType.data();
+    }
+
+    std::optional<PFInventoryTransactionPurchaseDetailsWrapper<Alloc>> const& GetPurchaseDetails() const
+    {
+        return m_purchaseDetails;
     }
 
     void SetPurchaseDetails(std::optional<PFInventoryTransactionPurchaseDetailsWrapper<Alloc>> value)
@@ -3168,10 +4033,20 @@ public:
         this->m_model.purchaseDetails = m_purchaseDetails ? &m_purchaseDetails->Model() : nullptr;
     }
 
+    std::optional<PFInventoryTransactionRedeemDetailsWrapper<Alloc>> const& GetRedeemDetails() const
+    {
+        return m_redeemDetails;
+    }
+
     void SetRedeemDetails(std::optional<PFInventoryTransactionRedeemDetailsWrapper<Alloc>> value)
     {
         m_redeemDetails = std::move(value);
         this->m_model.redeemDetails = m_redeemDetails ? &m_redeemDetails->Model() : nullptr;
+    }
+
+    time_t GetTimestamp() const
+    {
+        return this->m_model.timestamp;
     }
 
     void SetTimestamp(time_t value)
@@ -3179,10 +4054,20 @@ public:
         this->m_model.timestamp = value;
     }
 
+    String const& GetTransactionId() const
+    {
+        return m_transactionId;
+    }
+
     void SetTransactionId(String value)
     {
         m_transactionId = std::move(value);
         this->m_model.transactionId =  m_transactionId.empty() ? nullptr : m_transactionId.data();
+    }
+
+    std::optional<PFInventoryTransactionTransferDetailsWrapper<Alloc>> const& GetTransferDetails() const
+    {
+        return m_transferDetails;
     }
 
     void SetTransferDetails(std::optional<PFInventoryTransactionTransferDetailsWrapper<Alloc>> value)
@@ -3195,6 +4080,8 @@ private:
     void SetModelPointers()
     {
         this->m_model.apiName = m_apiName.empty() ? nullptr : m_apiName.data();
+        this->m_model.clawbackDetails = m_clawbackDetails ?  &m_clawbackDetails->Model() : nullptr;
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.itemType = m_itemType.empty() ? nullptr : m_itemType.data();
         this->m_model.operations = m_operations.empty() ? nullptr : m_operations.data();
         this->m_model.operationType = m_operationType.empty() ? nullptr : m_operationType.data();
@@ -3205,6 +4092,8 @@ private:
     }
 
     String m_apiName;
+    std::optional<PFInventoryTransactionClawbackDetailsWrapper<Alloc>> m_clawbackDetails;
+    StringDictionaryEntryVector<Alloc> m_customTags;
     String m_itemType;
     ModelVector<PFInventoryTransactionOperationWrapper<Alloc>, Alloc> m_operations;
     String m_operationType;
@@ -3261,10 +4150,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+    }
+
+    ModelVector<PFInventoryTransactionWrapper<Alloc>, Alloc> const& GetTransactions() const
+    {
+        return m_transactions;
     }
 
     void SetTransactions(ModelVector<PFInventoryTransactionWrapper<Alloc>, Alloc> value)
@@ -3350,16 +4249,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -3369,9 +4283,19 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    bool GetDeleteEmptyStacks() const
+    {
+        return this->m_model.deleteEmptyStacks;
+    }
+
     void SetDeleteEmptyStacks(bool value)
     {
         this->m_model.deleteEmptyStacks = value;
+    }
+
+    std::optional<double> const& GetDurationInSeconds() const
+    {
+        return m_durationInSeconds;
     }
 
     void SetDurationInSeconds(std::optional<double> value)
@@ -3380,10 +4304,20 @@ public:
         this->m_model.durationInSeconds = m_durationInSeconds ? m_durationInSeconds.operator->() : nullptr;
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetETag() const
+    {
+        return m_eTag;
     }
 
     void SetETag(String value)
@@ -3392,10 +4326,20 @@ public:
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
     }
 
     void SetItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
@@ -3404,10 +4348,20 @@ public:
         this->m_model.item = m_item ? &m_item->Model() : nullptr;
     }
 
+    std::optional<PFInventoryInitialValuesWrapper<Alloc>> const& GetNewStackValues() const
+    {
+        return m_newStackValues;
+    }
+
     void SetNewStackValues(std::optional<PFInventoryInitialValuesWrapper<Alloc>> value)
     {
         m_newStackValues = std::move(value);
         this->m_model.newStackValues = m_newStackValues ? &m_newStackValues->Model() : nullptr;
+    }
+
+    ModelVector<PFInventoryPurchasePriceAmountWrapper<Alloc>, Alloc> const& GetPriceAmounts() const
+    {
+        return m_priceAmounts;
     }
 
     void SetPriceAmounts(ModelVector<PFInventoryPurchasePriceAmountWrapper<Alloc>, Alloc> value)
@@ -3415,6 +4369,11 @@ public:
         m_priceAmounts = std::move(value);
         this->m_model.priceAmounts =  m_priceAmounts.empty() ? nullptr : m_priceAmounts.data();
         this->m_model.priceAmountsCount =  static_cast<uint32_t>(m_priceAmounts.size());
+    }
+
+    String const& GetStoreId() const
+    {
+        return m_storeId;
     }
 
     void SetStoreId(String value)
@@ -3501,16 +4460,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetETag() const
+    {
+        return m_eTag;
+    }
+
     void SetETag(String value)
     {
         m_eTag = std::move(value);
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -3584,10 +4558,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -3597,10 +4581,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetReceipt() const
+    {
+        return m_receipt;
     }
 
     void SetReceipt(String value)
@@ -3675,10 +4669,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFailureCode() const
+    {
+        return m_failureCode;
+    }
+
     void SetFailureCode(String value)
     {
         m_failureCode = std::move(value);
         this->m_model.failureCode =  m_failureCode.empty() ? nullptr : m_failureCode.data();
+    }
+
+    String const& GetFailureDetails() const
+    {
+        return m_failureDetails;
     }
 
     void SetFailureDetails(String value)
@@ -3687,10 +4691,20 @@ public:
         this->m_model.failureDetails =  m_failureDetails.empty() ? nullptr : m_failureDetails.data();
     }
 
+    String const& GetMarketplaceAlternateId() const
+    {
+        return m_marketplaceAlternateId;
+    }
+
     void SetMarketplaceAlternateId(String value)
     {
         m_marketplaceAlternateId = std::move(value);
         this->m_model.marketplaceAlternateId =  m_marketplaceAlternateId.empty() ? nullptr : m_marketplaceAlternateId.data();
+    }
+
+    String const& GetMarketplaceTransactionId() const
+    {
+        return m_marketplaceTransactionId;
     }
 
     void SetMarketplaceTransactionId(String value)
@@ -3761,16 +4775,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetMarketplaceAlternateId() const
+    {
+        return m_marketplaceAlternateId;
+    }
+
     void SetMarketplaceAlternateId(String value)
     {
         m_marketplaceAlternateId = std::move(value);
         this->m_model.marketplaceAlternateId =  m_marketplaceAlternateId.empty() ? nullptr : m_marketplaceAlternateId.data();
     }
 
+    String const& GetMarketplaceTransactionId() const
+    {
+        return m_marketplaceTransactionId;
+    }
+
     void SetMarketplaceTransactionId(String value)
     {
         m_marketplaceTransactionId = std::move(value);
         this->m_model.marketplaceTransactionId =  m_marketplaceTransactionId.empty() ? nullptr : m_marketplaceTransactionId.data();
+    }
+
+    time_t GetSuccessTimestamp() const
+    {
+        return this->m_model.successTimestamp;
     }
 
     void SetSuccessTimestamp(time_t value)
@@ -3838,6 +4867,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> const& GetFailed() const
+    {
+        return m_failed;
+    }
+
     void SetFailed(ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> value)
     {
         m_failed = std::move(value);
@@ -3845,11 +4879,21 @@ public:
         this->m_model.failedCount =  static_cast<uint32_t>(m_failed.size());
     }
 
+    ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> const& GetSucceeded() const
+    {
+        return m_succeeded;
+    }
+
     void SetSucceeded(ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> value)
     {
         m_succeeded = std::move(value);
         this->m_model.succeeded =  m_succeeded.empty() ? nullptr : m_succeeded.data();
         this->m_model.succeededCount =  static_cast<uint32_t>(m_succeeded.size());
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -3919,10 +4963,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetProductId() const
+    {
+        return m_productId;
+    }
+
     void SetProductId(String value)
     {
         m_productId = std::move(value);
         this->m_model.productId =  m_productId.empty() ? nullptr : m_productId.data();
+    }
+
+    String const& GetToken() const
+    {
+        return m_token;
     }
 
     void SetToken(String value)
@@ -3993,10 +5047,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4006,10 +5070,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    ModelVector<PFInventoryGooglePlayProductPurchaseWrapper<Alloc>, Alloc> const& GetPurchases() const
+    {
+        return m_purchases;
     }
 
     void SetPurchases(ModelVector<PFInventoryGooglePlayProductPurchaseWrapper<Alloc>, Alloc> value)
@@ -4083,6 +5157,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> const& GetFailed() const
+    {
+        return m_failed;
+    }
+
     void SetFailed(ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> value)
     {
         m_failed = std::move(value);
@@ -4090,11 +5169,21 @@ public:
         this->m_model.failedCount =  static_cast<uint32_t>(m_failed.size());
     }
 
+    ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> const& GetSucceeded() const
+    {
+        return m_succeeded;
+    }
+
     void SetSucceeded(ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> value)
     {
         m_succeeded = std::move(value);
         this->m_model.succeeded =  m_succeeded.empty() ? nullptr : m_succeeded.data();
         this->m_model.succeededCount =  static_cast<uint32_t>(m_succeeded.size());
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -4189,10 +5278,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    String const& GetCollectionsIdKey() const
+    {
+        return m_collectionsIdKey;
     }
 
     void SetCollectionsIdKey(String value)
@@ -4201,11 +5300,21 @@ public:
         this->m_model.collectionsIdKey =  m_collectionsIdKey.empty() ? nullptr : m_collectionsIdKey.data();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -4221,6 +5330,11 @@ public:
         this->m_model.user = m_user.Handle();
     }
 #else
+    String const& GetXboxToken() const
+    {
+        return m_xboxToken;
+    }
+
     void SetXboxToken(String value)
     {
         m_xboxToken = std::move(value);
@@ -4301,6 +5415,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> const& GetFailed() const
+    {
+        return m_failed;
+    }
+
     void SetFailed(ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> value)
     {
         m_failed = std::move(value);
@@ -4308,11 +5427,21 @@ public:
         this->m_model.failedCount =  static_cast<uint32_t>(m_failed.size());
     }
 
+    ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> const& GetSucceeded() const
+    {
+        return m_succeeded;
+    }
+
     void SetSucceeded(ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> value)
     {
         m_succeeded = std::move(value);
         this->m_model.succeeded =  m_succeeded.empty() ? nullptr : m_succeeded.data();
         this->m_model.succeededCount =  static_cast<uint32_t>(m_succeeded.size());
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -4386,10 +5515,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4399,10 +5538,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetNintendoServiceAccountIdToken() const
+    {
+        return m_nintendoServiceAccountIdToken;
     }
 
     void SetNintendoServiceAccountIdToken(String value)
@@ -4475,6 +5624,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> const& GetFailed() const
+    {
+        return m_failed;
+    }
+
     void SetFailed(ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> value)
     {
         m_failed = std::move(value);
@@ -4482,11 +5636,21 @@ public:
         this->m_model.failedCount =  static_cast<uint32_t>(m_failed.size());
     }
 
+    ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> const& GetSucceeded() const
+    {
+        return m_succeeded;
+    }
+
     void SetSucceeded(ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> value)
     {
         m_succeeded = std::move(value);
         this->m_model.succeeded =  m_succeeded.empty() ? nullptr : m_succeeded.data();
         this->m_model.succeededCount =  static_cast<uint32_t>(m_succeeded.size());
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -4564,16 +5728,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAuthorizationCode() const
+    {
+        return m_authorizationCode;
+    }
+
     void SetAuthorizationCode(String value)
     {
         m_authorizationCode = std::move(value);
         this->m_model.authorizationCode =  m_authorizationCode.empty() ? nullptr : m_authorizationCode.data();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4583,16 +5762,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetRedirectUri() const
+    {
+        return m_redirectUri;
+    }
+
     void SetRedirectUri(String value)
     {
         m_redirectUri = std::move(value);
         this->m_model.redirectUri =  m_redirectUri.empty() ? nullptr : m_redirectUri.data();
+    }
+
+    String const& GetServiceLabel() const
+    {
+        return m_serviceLabel;
     }
 
     void SetServiceLabel(String value)
@@ -4669,6 +5863,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> const& GetFailed() const
+    {
+        return m_failed;
+    }
+
     void SetFailed(ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> value)
     {
         m_failed = std::move(value);
@@ -4676,11 +5875,21 @@ public:
         this->m_model.failedCount =  static_cast<uint32_t>(m_failed.size());
     }
 
+    ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> const& GetSucceeded() const
+    {
+        return m_succeeded;
+    }
+
     void SetSucceeded(ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> value)
     {
         m_succeeded = std::move(value);
         this->m_model.succeeded =  m_succeeded.empty() ? nullptr : m_succeeded.data();
         this->m_model.succeededCount =  static_cast<uint32_t>(m_succeeded.size());
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -4752,10 +5961,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4763,6 +5982,11 @@ public:
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -4833,6 +6057,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> const& GetFailed() const
+    {
+        return m_failed;
+    }
+
     void SetFailed(ModelVector<PFInventoryRedemptionFailureWrapper<Alloc>, Alloc> value)
     {
         m_failed = std::move(value);
@@ -4840,11 +6069,21 @@ public:
         this->m_model.failedCount =  static_cast<uint32_t>(m_failed.size());
     }
 
+    ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> const& GetSucceeded() const
+    {
+        return m_succeeded;
+    }
+
     void SetSucceeded(ModelVector<PFInventoryRedemptionSuccessWrapper<Alloc>, Alloc> value)
     {
         m_succeeded = std::move(value);
         this->m_model.succeeded =  m_succeeded.empty() ? nullptr : m_succeeded.data();
         this->m_model.succeededCount =  static_cast<uint32_t>(m_succeeded.size());
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -4926,16 +6165,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4945,9 +6199,19 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    bool GetDeleteEmptyStacks() const
+    {
+        return this->m_model.deleteEmptyStacks;
+    }
+
     void SetDeleteEmptyStacks(bool value)
     {
         this->m_model.deleteEmptyStacks = value;
+    }
+
+    std::optional<double> const& GetDurationInSeconds() const
+    {
+        return m_durationInSeconds;
     }
 
     void SetDurationInSeconds(std::optional<double> value)
@@ -4956,10 +6220,20 @@ public:
         this->m_model.durationInSeconds = m_durationInSeconds ? m_durationInSeconds.operator->() : nullptr;
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetETag() const
+    {
+        return m_eTag;
     }
 
     void SetETag(String value)
@@ -4968,10 +6242,20 @@ public:
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
     }
 
     void SetItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
@@ -5052,16 +6336,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetETag() const
+    {
+        return m_eTag;
+    }
+
     void SetETag(String value)
     {
         m_eTag = std::move(value);
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)
@@ -5149,10 +6448,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5162,9 +6471,19 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    bool GetDeleteEmptyStacks() const
+    {
+        return this->m_model.deleteEmptyStacks;
+    }
+
     void SetDeleteEmptyStacks(bool value)
     {
         this->m_model.deleteEmptyStacks = value;
+    }
+
+    String const& GetGivingCollectionId() const
+    {
+        return m_givingCollectionId;
     }
 
     void SetGivingCollectionId(String value)
@@ -5173,10 +6492,20 @@ public:
         this->m_model.givingCollectionId =  m_givingCollectionId.empty() ? nullptr : m_givingCollectionId.data();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetGivingEntity() const
+    {
+        return m_givingEntity;
+    }
+
     void SetGivingEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_givingEntity = std::move(value);
         this->m_model.givingEntity = m_givingEntity ? &m_givingEntity->Model() : nullptr;
+    }
+
+    String const& GetGivingETag() const
+    {
+        return m_givingETag;
     }
 
     void SetGivingETag(String value)
@@ -5185,10 +6514,20 @@ public:
         this->m_model.givingETag =  m_givingETag.empty() ? nullptr : m_givingETag.data();
     }
 
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetGivingItem() const
+    {
+        return m_givingItem;
+    }
+
     void SetGivingItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
     {
         m_givingItem = std::move(value);
         this->m_model.givingItem = m_givingItem ? &m_givingItem->Model() : nullptr;
+    }
+
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
     }
 
     void SetIdempotencyId(String value)
@@ -5197,10 +6536,20 @@ public:
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
     }
 
+    std::optional<PFInventoryInitialValuesWrapper<Alloc>> const& GetNewStackValues() const
+    {
+        return m_newStackValues;
+    }
+
     void SetNewStackValues(std::optional<PFInventoryInitialValuesWrapper<Alloc>> value)
     {
         m_newStackValues = std::move(value);
         this->m_model.newStackValues = m_newStackValues ? &m_newStackValues->Model() : nullptr;
+    }
+
+    String const& GetReceivingCollectionId() const
+    {
+        return m_receivingCollectionId;
     }
 
     void SetReceivingCollectionId(String value)
@@ -5209,10 +6558,20 @@ public:
         this->m_model.receivingCollectionId =  m_receivingCollectionId.empty() ? nullptr : m_receivingCollectionId.data();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetReceivingEntity() const
+    {
+        return m_receivingEntity;
+    }
+
     void SetReceivingEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_receivingEntity = std::move(value);
         this->m_model.receivingEntity = m_receivingEntity ? &m_receivingEntity->Model() : nullptr;
+    }
+
+    std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> const& GetReceivingItem() const
+    {
+        return m_receivingItem;
     }
 
     void SetReceivingItem(std::optional<PFInventoryInventoryItemReferenceWrapper<Alloc>> value)
@@ -5305,10 +6664,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetGivingETag() const
+    {
+        return m_givingETag;
+    }
+
     void SetGivingETag(String value)
     {
         m_givingETag = std::move(value);
         this->m_model.givingETag =  m_givingETag.empty() ? nullptr : m_givingETag.data();
+    }
+
+    CStringVector<Alloc> const& GetGivingTransactionIds() const
+    {
+        return m_givingTransactionIds;
     }
 
     void SetGivingTransactionIds(CStringVector<Alloc> value)
@@ -5318,10 +6687,20 @@ public:
         this->m_model.givingTransactionIdsCount =  static_cast<uint32_t>(m_givingTransactionIds.size());
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    String const& GetOperationStatus() const
+    {
+        return m_operationStatus;
     }
 
     void SetOperationStatus(String value)
@@ -5330,10 +6709,20 @@ public:
         this->m_model.operationStatus =  m_operationStatus.empty() ? nullptr : m_operationStatus.data();
     }
 
+    String const& GetOperationToken() const
+    {
+        return m_operationToken;
+    }
+
     void SetOperationToken(String value)
     {
         m_operationToken = std::move(value);
         this->m_model.operationToken =  m_operationToken.empty() ? nullptr : m_operationToken.data();
+    }
+
+    CStringVector<Alloc> const& GetReceivingTransactionIds() const
+    {
+        return m_receivingTransactionIds;
     }
 
     void SetReceivingTransactionIds(CStringVector<Alloc> value)
@@ -5417,10 +6806,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCollectionId() const
+    {
+        return m_collectionId;
+    }
+
     void SetCollectionId(String value)
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5430,10 +6829,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetETag() const
+    {
+        return m_eTag;
     }
 
     void SetETag(String value)
@@ -5442,10 +6851,20 @@ public:
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    std::optional<PFInventoryInventoryItemWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
     }
 
     void SetItem(std::optional<PFInventoryInventoryItemWrapper<Alloc>> value)
@@ -5522,16 +6941,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetETag() const
+    {
+        return m_eTag;
+    }
+
     void SetETag(String value)
     {
         m_eTag = std::move(value);
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetIdempotencyId() const
+    {
+        return m_idempotencyId;
+    }
+
     void SetIdempotencyId(String value)
     {
         m_idempotencyId = std::move(value);
         this->m_model.idempotencyId =  m_idempotencyId.empty() ? nullptr : m_idempotencyId.data();
+    }
+
+    CStringVector<Alloc> const& GetTransactionIds() const
+    {
+        return m_transactionIds;
     }
 
     void SetTransactionIds(CStringVector<Alloc> value)

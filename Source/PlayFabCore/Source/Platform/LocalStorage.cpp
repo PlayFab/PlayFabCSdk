@@ -147,6 +147,7 @@ public:
 private:
     void OnStarted(UniquePtr<IOperation> self) noexcept override
     {
+        UNREFERENCED_PARAMETER(self);
         m_asyncContext->Complete(Result<void>{ S_OK });
     }
 

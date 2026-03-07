@@ -62,6 +62,9 @@
     <ClInclude Include="StepTimer.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="..\Platform\GDK\TitleLocalUser_GDK.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResourcesPC.cpp">
@@ -85,7 +88,7 @@
     <ClCompile Include="MainXbox.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\Platform\Windows\PlatfromUtilsWindows.cpp">
+    <ClCompile Include="..\Platform\Windows\PlatformUtilsWindows.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\Platform\GDK\PlayFabGDK.cpp">

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "TestTypes.h"
-#include "PlatformUser.h"
 
 namespace PlayFab
 {
@@ -17,13 +16,8 @@ HRESULT CoreInitialize(
     XTaskQueueHandle queue
 ) noexcept;
 
-AsyncOp<PlayFab::Platform::UserPtr> GetDefaultPlatformUser(
-    RunContext rc
-) noexcept;
-
-AsyncOp<LoginResult> LoginDefaultTitlePlayer(
-    ServiceConfig serviceConfig,
-    PlayFab::Platform::UserPtr platformUser,
+AsyncOp<TitleLocalUser> GetDefaultLocalUser(
+    ServiceConfig const& serviceConfig,
     RunContext rc
 ) noexcept;
 

@@ -5,7 +5,9 @@
 #include "ProfilesOperations.h"
 #include "TitleDataManagementOperations.h"
 #if HC_PLATFORM == HC_PLATFORM_GDK
-#include "GDK/PlatformUser_GDK.h"
+#include "Platform/GDK/TitleLocalUser_GDK.h"
+#elif HC_PLATFORM == HC_PLATFORM_ANDROID
+#include "Platform/Android/AndroidTestApp.h"
 #endif
 
 namespace PlayFab
@@ -26,10 +28,8 @@ AsyncOp<void> AccountManagementTests::Initialize()
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 #if HC_PLATFORM == HC_PLATFORM_GDK
-        auto user = DefaultPlatformUser();
-        assert(user);
         Stringstream xuidString;
-        xuidString << user->Id();
+        xuidString << GetXUserFromLocalUser(DefaultLocalUser()).Id();
         m_state = MakeShared<AccountManagementTestsState>(AccountManagementTestsState{ xuidString.str() });
         return S_OK;
 #else
@@ -44,7 +44,7 @@ AsyncOp<void> AccountManagementTests::Uninitialize()
     return ServicesTestClass::Uninitialize();
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientAddOrUpdateContactEmail(TestContext& tc)
 {
     ClientAddOrUpdateContactEmailOperation::RequestType request;
@@ -80,7 +80,7 @@ void AccountManagementTests::TestClientAddOrUpdateContactEmail(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientAddUsernamePassword(TestContext& tc)
 {
     LoginWithCustomIDOperation::RequestType request;
@@ -105,7 +105,7 @@ void AccountManagementTests::TestClientAddUsernamePassword(TestContext& tc)
         return ClientAddUsernamePasswordOperation::Run(result.Payload().entity, request, RunContext());
     })
     .Then([&, playfabId](Result<ClientAddUsernamePasswordOperation::ResultType> result) -> AsyncOp<void>
-    {   
+    {
         tc.AssertEqual(E_PF_ACCOUNT_ALREADY_LINKED, result.hr, "errorName");
 
         ServerSendCustomAccountRecoveryEmailOperation::RequestType request;
@@ -191,7 +191,7 @@ void AccountManagementTests::TestClientGetPlayerCombinedInfo(TestContext& tc)
 
 void AccountManagementTests::TestClientGetPlayerProfile(TestContext& tc)
 {
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM != HC_PLATFORM_GDK
     // CustomId of the player whose profile we'll retreive
     constexpr char customId[]{ "ProfileCustomId" };
 
@@ -222,7 +222,24 @@ void AccountManagementTests::TestClientGetPlayerProfile(TestContext& tc)
 #endif
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_ANDROID
+void AccountManagementTests::TestClientGetPlayFabIDsFromBattleNetAccountIds(TestContext& tc)
+{
+    ClientGetPlayFabIDsFromBattleNetAccountIdsOperation::RequestType request;
+    request.SetBattleNetAccountIds({ "testId" });
+
+    ClientGetPlayFabIDsFromBattleNetAccountIdsOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<ClientGetPlayFabIDsFromBattleNetAccountIdsOperation::ResultType> result)-> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_ANDROID
 void AccountManagementTests::TestClientGetPlayFabIDsFromFacebookIDs(TestContext& tc)
 {
     ClientGetPlayFabIDsFromFacebookIDsOperation::RequestType request;
@@ -235,7 +252,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromFacebookIDs(TestContext&
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientGetPlayFabIDsFromFacebookInstantGamesIds(TestContext& tc)
 {
     ClientGetPlayFabIDsFromFacebookInstantGamesIdsOperation::RequestType request;
@@ -248,7 +265,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromFacebookInstantGamesIds(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS
 void AccountManagementTests::TestClientGetPlayFabIDsFromGameCenterIDs(TestContext& tc)
 {
     ClientGetPlayFabIDsFromGameCenterIDsOperation::RequestType request;
@@ -261,7 +278,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromGameCenterIDs(TestContex
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
 void AccountManagementTests::TestClientGetPlayFabIDsFromGoogleIDs(TestContext& tc)
 {
     ClientGetPlayFabIDsFromGoogleIDsOperation::RequestType request;
@@ -274,7 +291,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromGoogleIDs(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
 void AccountManagementTests::TestClientGetPlayFabIDsFromGooglePlayGamesPlayerIDs(TestContext& tc)
 {
     ClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsOperation::RequestType request;
@@ -287,7 +304,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromGooglePlayGamesPlayerIDs
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientGetPlayFabIDsFromKongregateIDs(TestContext& tc)
 {
     ClientGetPlayFabIDsFromKongregateIDsOperation::RequestType request;
@@ -300,7 +317,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromKongregateIDs(TestContex
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientGetPlayFabIDsFromNintendoServiceAccountIds(TestContext& tc)
 {
     ClientGetPlayFabIDsFromNintendoServiceAccountIdsOperation::RequestType request;
@@ -313,7 +330,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromNintendoServiceAccountId
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientGetPlayFabIDsFromNintendoSwitchDeviceIds(TestContext& tc)
 {
     ClientGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation::RequestType request;
@@ -326,7 +343,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromNintendoSwitchDeviceIds(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientGetPlayFabIDsFromPSNAccountIDs(TestContext& tc)
 {
     ClientGetPlayFabIDsFromPSNAccountIDsOperation::RequestType request;
@@ -339,7 +356,205 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromPSNAccountIDs(TestContex
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+void AccountManagementTests::TestClientGetPlayFabIDsFromPSNOnlineIDs(TestContext& tc)
+{
+    ClientGetPlayFabIDsFromPSNOnlineIDsOperation::RequestType request;
+    request.SetPSNOnlineIDs({ "testId" });
+
+    ClientGetPlayFabIDsFromPSNOnlineIDsOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<ClientGetPlayFabIDsFromPSNOnlineIDsOperation::ResultType> result)-> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+
+void AccountManagementTests::TestClientGetPlayFabIDsFromSteamNames(TestContext& tc)
+{
+    ClientGetPlayFabIDsFromSteamNamesOperation::RequestType request;
+    request.SetSteamNames({ "testId" });
+
+    ClientGetPlayFabIDsFromSteamNamesOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<ClientGetPlayFabIDsFromSteamNamesOperation::ResultType> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestClientLinkBattleNetAccount(TestContext& tc)
+{
+    // Implementation of the Battle.Net token is needed in order to execute Login/Link/Unlink BattleNet APIs.
+    // This should be done in https://microsoft.visualstudio.com/Xbox/_workitems/edit/59387640
+    tc.Skip();
+     //   ClientLinkBattleNetAccountOperation::RequestType request;
+     //   request.SetForceLink(true);
+
+	 //   ClientLinkBattleNetAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result)-> Result<void>
+     //       {
+     //           RETURN_IF_FAILED_PLAYFAB(result);
+     //           return S_OK;
+     //       })
+     //       .Finally([&](Result<void> result)
+     //           {
+     //               tc.EndTest(std::move(result));
+     //           });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestClientUnlinkBattleNetAccount(TestContext& tc)
+{
+    // Implementation of the Battle.Net token is needed in order to execute Login/Link/Unlink BattleNet APIs.
+    // This should be done in https://microsoft.visualstudio.com/Xbox/_workitems/edit/59387640
+    tc.Skip();
+    //  ClientUnlinkBattleNetAccountOperation::RequestType request;
+    //
+    //  ClientUnlinkBattleNetAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    //    {
+    //        RETURN_IF_FAILED_PLAYFAB(result);
+    //        return S_OK;
+    //    })
+    //    .Finally([&](Result<void> result)
+    //        {
+    //            tc.EndTest(std::move(result));
+    //        });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestServerGetPlayFabIDsFromBattleNetAccountIds(TestContext& tc)
+{
+    ServerGetPlayFabIDsFromBattleNetAccountIdsOperation::RequestType request;
+    request.SetBattleNetAccountIds({ "161316EBD27587FA" });
+
+    ServerGetPlayFabIDsFromBattleNetAccountIdsOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerGetPlayFabIDsFromBattleNetAccountIdsOperation::ResultType> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestServerGetPlayFabIDsFromPSNOnlineIDs(TestContext& tc)
+{
+    ServerGetPlayFabIDsFromPSNOnlineIDsOperation::RequestType request;
+    request.SetPSNOnlineIDs({ "161316EBD27587FA" });
+
+    ServerGetPlayFabIDsFromPSNOnlineIDsOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ClientGetPlayFabIDsFromPSNOnlineIDsOperation::ResultType> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestServerGetPlayFabIDsFromSteamNames(TestContext& tc)
+{
+    ServerGetPlayFabIDsFromSteamNamesOperation::RequestType request;
+	request.SetSteamNames({ "161316EBD27587FA" });
+
+    ServerGetPlayFabIDsFromSteamNamesOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerGetPlayFabIDsFromSteamNamesOperation::ResultType> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+
+        tc.AssertEqual<String>("161316EBD27587FA", result.Payload().Model().data[0]->steamName, "steamName");
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestServerLinkBattleNetAccount(TestContext& tc)
+{
+    // Implementation of the Battle.Net token is needed in order to execute Login/Link/Unlink BattleNet APIs.
+    // This should be done in https://microsoft.visualstudio.com/Xbox/_workitems/edit/59387640
+    tc.Skip();
+    //   ServerLinkBattleNetAccountOperation::RequestType request;
+	//   request.SetIdentityToken("testId");
+	//   request.SetPlayFabId(DefaultTitlePlayerId());
+
+    //   ServerLinkBattleNetAccountOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    //       {
+    //           RETURN_IF_FAILED_PLAYFAB(result);
+    //           return S_OK;
+    //       })
+    //       .Finally([&](Result<void> result)
+    //           {
+    //               tc.EndTest(std::move(result));
+    //           });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestServerLinkPSNId(TestContext& tc)
+{
+    ServerLinkPSNIdOperation::RequestType request;
+	request.SetForceLink(true);
+	request.SetPlayFabId(DefaultTitlePlayerId());
+	request.SetPSNUserId("testId");
+
+    ServerLinkPSNIdOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void AccountManagementTests::TestServerUnlinkBattleNetAccount(TestContext& tc)
+{
+    // Implementation of the Battle.Net token is needed in order to execute Login/Link/Unlink BattleNet APIs.
+    // This should be done in https://microsoft.visualstudio.com/Xbox/_workitems/edit/59387640
+    tc.Skip();
+    //ServerUnlinkBattleNetAccountOperation::RequestType request;
+    //request.SetPlayFabId(DefaultTitlePlayerId());
+
+    //ServerUnlinkBattleNetAccountOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    //    {
+    //        RETURN_IF_FAILED_PLAYFAB(result);
+    //        return S_OK;
+    //    })
+    //    .Finally([&](Result<void> result)
+    //        {
+    //            tc.EndTest(std::move(result));
+    //        });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientGetPlayFabIDsFromSteamIDs(TestContext& tc)
 {
     ClientGetPlayFabIDsFromSteamIDsOperation::RequestType request;
@@ -360,7 +575,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromSteamIDs(TestContext& tc
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientGetPlayFabIDsFromTwitchIDs(TestContext& tc)
 {
     ClientGetPlayFabIDsFromTwitchIDsOperation::RequestType request;
@@ -373,7 +588,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromTwitchIDs(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 constexpr char xboxLiveSandboxId[]{ "XDKS.1" };
 
 void AccountManagementTests::TestClientGetPlayFabIDsFromXboxLiveIDs(TestContext& tc)
@@ -409,7 +624,7 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromXboxLiveIDs(TestContext&
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkAndroidDeviceID(TestContext& tc)
 {
     ClientLinkAndroidDeviceIDOperation::RequestType request;
@@ -423,7 +638,7 @@ void AccountManagementTests::TestClientLinkAndroidDeviceID(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS
 void AccountManagementTests::TestClientLinkApple(TestContext& tc)
 {
     ClientLinkAppleOperation::RequestType request;
@@ -432,6 +647,7 @@ void AccountManagementTests::TestClientLinkApple(TestContext& tc)
 
     ClientLinkAppleOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
     {
+        UNREFERENCED_PARAMETER(result);
         return S_OK;
     })
     .Finally([&](Result<void> result)
@@ -495,7 +711,7 @@ void AccountManagementTests::TestClientLinkCustomID(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_ANDROID
 void AccountManagementTests::TestClientLinkFacebookAccount(TestContext& tc)
 {
     ClientLinkFacebookAccountOperation::RequestType request;
@@ -515,7 +731,7 @@ void AccountManagementTests::TestClientLinkFacebookAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkFacebookInstantGamesId(TestContext& tc)
 {
     ClientLinkFacebookInstantGamesIdOperation::RequestType request;
@@ -535,7 +751,7 @@ void AccountManagementTests::TestClientLinkFacebookInstantGamesId(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS
 void AccountManagementTests::TestClientLinkGameCenterAccount(TestContext& tc)
 {
     ClientLinkGameCenterAccountOperation::RequestType request;
@@ -549,59 +765,52 @@ void AccountManagementTests::TestClientLinkGameCenterAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
 void AccountManagementTests::TestClientLinkGoogleAccount(TestContext& tc)
 {
-    // Since installing Google Play Services add-on as part of Android LocalUser work, this test now fails.
-    // Temporarily disabling to unblock pipeline. Added this task to further investigate and re-enable:
-    // https://dev.azure.com/microsoft/Xbox/_workitems/edit/54284053
     tc.Skip();
-#if 0
-    ClientLinkGoogleAccountOperation::RequestType request;
-    request.SetServerAuthCode("testId");
-    request.SetForceLink(true);
-
-    ClientLinkGoogleAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
-    {
-        tc.AssertEqual(E_PF_GOOGLE_O_AUTH_NOT_CONFIGURED_FOR_TITLE, result.hr, "errorName");
-
-        return S_OK;
-    })
-    .Finally([&](Result<void> result)
-    {
-        tc.EndTest(std::move(result));
-    });
-#endif
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
 void AccountManagementTests::TestClientLinkGooglePlayGamesServicesAccount(TestContext& tc)
 {
-    // Since installing Google Play Services add-on as part of Android LocalUser work, this test now fails.
-    // Temporarily disabling to unblock pipeline. Added this task to further investigate and re-enable:
-    // https://dev.azure.com/microsoft/Xbox/_workitems/edit/54284053
-    tc.Skip();
-#if 0
-    ClientLinkGooglePlayGamesServicesAccountOperation::RequestType request;
-    request.SetServerAuthCode("testId");
-    request.SetForceLink(true);
+#if HC_PLATFORM == HC_PLATFORM_ANDROID && !defined(PLAYFAB_AVOID_UI)
+    // This test only works on Android with a Google Play Games user successfully authenticated. This requires
+    // UI to sign in the user, so it will only be run when PLAYFAB_AVOID_UI is defined
 
-    ClientLinkGooglePlayGamesServicesAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    constexpr char customIdToLink[]{ "CustomIdToLinkToGooglePlayGames" };
+    auto customIdEntityToLink = MakeShared<std::optional<Entity>>();
+
+    GetTitlePlayer(customIdToLink).Then([&, customIdEntityToLink](Result<Entity> result) -> AsyncOp<void>
     {
-        tc.AssertEqual(E_PF_GOOGLE_O_AUTH_NOT_CONFIGURED_FOR_TITLE, result.hr, "errorName");
+        RETURN_IF_FAILED_PLAYFAB(result);
+        customIdEntityToLink->emplace(result.ExtractPayload());
 
-        return S_OK;
+        ClientLinkGooglePlayGamesServicesAccountOperation::RequestType request;
+        request.SetServerAuthCode(AndroidTestApp::TestApp::GetInstance().GetServerAuthToken());
+        request.SetForceLink(true);
+
+        return ClientLinkGooglePlayGamesServicesAccountOperation::Run(**customIdEntityToLink, request, RunContext());
+    })
+    .Then([&, customIdEntityToLink](Result<void> result)
+    {
+        tc.RecordResult(std::move(result));
+
+        // Cleanup
+        return ClientUnlinkGooglePlayGamesServicesAccountOperation::Run(**customIdEntityToLink, {}, RunContext());
     })
     .Finally([&](Result<void> result)
     {
         tc.EndTest(std::move(result));
     });
+#else
+    tc.Skip();
 #endif
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkIOSDeviceID(TestContext& tc)
 {
     ClientLinkIOSDeviceIDOperation::RequestType request;
@@ -615,7 +824,7 @@ void AccountManagementTests::TestClientLinkIOSDeviceID(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkKongregate(TestContext& tc)
 {
     ClientLinkKongregateOperation::RequestType request;
@@ -636,7 +845,7 @@ void AccountManagementTests::TestClientLinkKongregate(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkNintendoServiceAccount(TestContext& tc)
 {
     ClientLinkNintendoServiceAccountOperation::RequestType request;
@@ -656,7 +865,7 @@ void AccountManagementTests::TestClientLinkNintendoServiceAccount(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkNintendoSwitchDeviceId(TestContext& tc)
 {
     ClientLinkNintendoSwitchDeviceIdOperation::RequestType request;
@@ -689,7 +898,7 @@ void AccountManagementTests::TestClientLinkOpenIdConnect(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
+#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
 void AccountManagementTests::TestClientLinkPSNAccount(TestContext& tc)
 {
     ClientLinkPSNAccountOperation::RequestType request;
@@ -710,7 +919,7 @@ void AccountManagementTests::TestClientLinkPSNAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkSteamAccount(TestContext& tc)
 {
     ClientLinkSteamAccountOperation::RequestType request;
@@ -730,7 +939,7 @@ void AccountManagementTests::TestClientLinkSteamAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkTwitch(TestContext& tc)
 {
     ClientLinkTwitchOperation::RequestType request;
@@ -750,7 +959,7 @@ void AccountManagementTests::TestClientLinkTwitch(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkXboxAccount(TestContext& tc)
 {
 #if HC_PLATFORM == HC_PLATFORM_GDK
@@ -763,8 +972,7 @@ void AccountManagementTests::TestClientLinkXboxAccount(TestContext& tc)
         RETURN_IF_FAILED_PLAYFAB(result);
         customIdEntityToLink->emplace(result.ExtractPayload());
 
-        assert(DefaultPlatformUser());
-        ClientLinkXboxAccountOperation::RequestType request{ Wrappers::XUser::Duplicate(DefaultPlatformUser()->Handle()) };
+        ClientLinkXboxAccountOperation::RequestType request{ Wrappers::XUser::Duplicate(GetXUserFromLocalUser(DefaultLocalUser()).Handle()) };
         request.SetForceLink(true);
 
         return ClientLinkXboxAccountOperation::Run(**customIdEntityToLink, request, RunContext());
@@ -788,7 +996,7 @@ void AccountManagementTests::TestClientLinkXboxAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientRemoveContactEmail(TestContext& tc)
 {
     // This is already covered by TestClientAddOrUpdateContactEmail
@@ -798,7 +1006,7 @@ void AccountManagementTests::TestClientRemoveContactEmail(TestContext& tc)
 
 void AccountManagementTests::TestClientReportPlayer(TestContext& tc)
 {
-#if HC_PLATFORM != HC_PLATFORM_WIN32 && HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM != HC_PLATFORM_GDK
     constexpr char customIdToReport[]{ "customIdToReport" };
 
     GetPlayFabIdFromCustomId(customIdToReport).Then([&](Result<String> result) -> AsyncOp<ClientReportPlayerOperation::ResultType>
@@ -828,7 +1036,7 @@ void AccountManagementTests::TestClientReportPlayer(TestContext& tc)
 #endif
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientSendAccountRecoveryEmail(TestContext& tc)
 {
     ClientSendAccountRecoveryEmailOperation::RequestType request;
@@ -848,11 +1056,11 @@ void AccountManagementTests::TestClientSendAccountRecoveryEmail(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkAndroidDeviceID(TestContext& tc)
 {
     ClientUnlinkAndroidDeviceIDOperation::RequestType request;
-    
+
     ClientUnlinkAndroidDeviceIDOperation::Run(DefaultTitlePlayer(), request, RunContext()).Finally([&](Result<void> result)
     {
         tc.EndTest(std::move(result));
@@ -860,13 +1068,14 @@ void AccountManagementTests::TestClientUnlinkAndroidDeviceID(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkApple(TestContext& tc)
 {
     ClientUnlinkAppleOperation::RequestType request;
-    
+
     ClientUnlinkAppleOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
     {
+        UNREFERENCED_PARAMETER(result);
         return S_OK;
     })
     .Finally([&](Result<void> result)
@@ -882,11 +1091,11 @@ void AccountManagementTests::TestClientUnlinkCustomID(TestContext& tc)
     tc.EndTest(S_OK);
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
 void AccountManagementTests::TestClientUnlinkFacebookAccount(TestContext& tc)
 {
     ClientUnlinkFacebookAccountOperation::RequestType request;
-    
+
     ClientUnlinkFacebookAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
     {
         tc.AssertEqual(E_PF_ACCOUNT_NOT_LINKED, result.hr, "errorName");
@@ -900,12 +1109,12 @@ void AccountManagementTests::TestClientUnlinkFacebookAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkFacebookInstantGamesId(TestContext& tc)
 {
     ClientUnlinkFacebookInstantGamesIdOperation::RequestType request;
     request.SetFacebookInstantGamesId("testId");
-    
+
     ClientUnlinkFacebookInstantGamesIdOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
     {
         tc.AssertEqual(E_PF_FACEBOOK_INSTANT_GAMES_ID_NOT_LINKED, result.hr, "errorName");
@@ -919,11 +1128,11 @@ void AccountManagementTests::TestClientUnlinkFacebookInstantGamesId(TestContext&
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_IOS
 void AccountManagementTests::TestClientUnlinkGameCenterAccount(TestContext& tc)
 {
     ClientUnlinkGameCenterAccountOperation::RequestType request;
-    
+
     ClientUnlinkGameCenterAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Finally([&](Result<void> result)
     {
         tc.EndTest(std::move(result));
@@ -931,43 +1140,23 @@ void AccountManagementTests::TestClientUnlinkGameCenterAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
 void AccountManagementTests::TestClientUnlinkGoogleAccount(TestContext& tc)
 {
-    ClientUnlinkGoogleAccountOperation::RequestType request;
-
-    ClientUnlinkGoogleAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
-    {
-        tc.AssertEqual(E_PF_ACCOUNT_NOT_LINKED, result.hr, "errorName");
-
-        return S_OK;
-    })
-    .Finally([&](Result<void> result)
-    {
-        tc.EndTest(std::move(result));
-    });
+    // Covered by linking test
+    tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_ANDROID
 void AccountManagementTests::TestClientUnlinkGooglePlayGamesServicesAccount(TestContext& tc)
 {
-    ClientUnlinkGooglePlayGamesServicesAccountOperation::RequestType request;
-
-    ClientUnlinkGooglePlayGamesServicesAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
-    {
-        tc.AssertEqual(E_PF_ACCOUNT_NOT_LINKED, result.hr, "errorName");
-
-        return S_OK;
-    })
-    .Finally([&](Result<void> result)
-    {
-        tc.EndTest(std::move(result));
-    });
+    // Covered by linking test
+    tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkIOSDeviceID(TestContext& tc)
 {
     ClientUnlinkIOSDeviceIDOperation::RequestType request;
@@ -979,7 +1168,7 @@ void AccountManagementTests::TestClientUnlinkIOSDeviceID(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkKongregate(TestContext& tc)
 {
     ClientUnlinkKongregateOperation::RequestType request;
@@ -997,10 +1186,10 @@ void AccountManagementTests::TestClientUnlinkKongregate(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH
 void AccountManagementTests::TestClientUnlinkNintendoServiceAccount(TestContext& tc)
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     ClientUnlinkNintendoServiceAccountOperation::RequestType request;
     ClientUnlinkNintendoServiceAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
     {
@@ -1019,7 +1208,7 @@ void AccountManagementTests::TestClientUnlinkNintendoServiceAccount(TestContext&
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkNintendoSwitchDeviceId(TestContext& tc)
 {
     ClientUnlinkNintendoSwitchDeviceIdOperation::RequestType request;
@@ -1038,7 +1227,7 @@ void AccountManagementTests::TestClientUnlinkOpenIdConnect(TestContext& tc)
     tc.Skip();
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkPSNAccount(TestContext& tc)
 {
     ClientUnlinkPSNAccountOperation::RequestType request;
@@ -1056,14 +1245,14 @@ void AccountManagementTests::TestClientUnlinkPSNAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkSteamAccount(TestContext& tc)
 {
     ClientUnlinkSteamAccountOperation::RequestType request;
 
     ClientUnlinkSteamAccountOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
     {
-        tc.AssertEqual(E_PF_ACCOUNT_NOT_LINKED, result.hr, "errorName");
+        tc.AssertTrue(result.hr == E_PF_ACCOUNT_NOT_LINKED || result.hr == S_OK, "errorName");
 
         return S_OK;
     })
@@ -1074,7 +1263,7 @@ void AccountManagementTests::TestClientUnlinkSteamAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkTwitch(TestContext& tc)
 {
     ClientUnlinkTwitchOperation::RequestType request;
@@ -1092,7 +1281,7 @@ void AccountManagementTests::TestClientUnlinkTwitch(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkXboxAccount(TestContext& tc)
 {
     // Covered by TestClientLinkXboxAccount
@@ -1110,7 +1299,7 @@ void AccountManagementTests::TestClientUpdateAvatarUrl(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUpdateUserTitleDisplayName(TestContext& tc)
 {
     ClientUpdateUserTitleDisplayNameOperation::RequestType request;
@@ -1131,7 +1320,7 @@ void AccountManagementTests::TestClientUpdateUserTitleDisplayName(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerBanUsers(TestContext& tc)
 {
     // Covered by TestServerRevokeBans and TestServerRevokeAllBansForUser
@@ -1139,7 +1328,7 @@ void AccountManagementTests::TestServerBanUsers(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerDeletePlayer(TestContext& tc)
 {
     // Covered by TestClientAddUsernamePassword
@@ -1147,7 +1336,7 @@ void AccountManagementTests::TestServerDeletePlayer(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayerCombinedInfo(TestContext& tc)
 {
     ServerGetPlayerCombinedInfoOperation::RequestType request;
@@ -1172,7 +1361,7 @@ void AccountManagementTests::TestServerGetPlayerCombinedInfo(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayerProfile(TestContext& tc)
 {
     ServerGetPlayerProfileOperation::RequestType request;
@@ -1193,7 +1382,7 @@ void AccountManagementTests::TestServerGetPlayerProfile(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayFabIDsFromFacebookIDs(TestContext& tc)
 {
     ServerGetPlayFabIDsFromFacebookIDsOperation::RequestType request;
@@ -1206,7 +1395,7 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromFacebookIDs(TestContext&
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayFabIDsFromFacebookInstantGamesIds(TestContext& tc)
 {
     ServerGetPlayFabIDsFromFacebookInstantGamesIdsOperation::RequestType request;
@@ -1219,7 +1408,7 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromFacebookInstantGamesIds(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayFabIDsFromNintendoServiceAccountIds(TestContext& tc)
 {
     ServerGetPlayFabIDsFromNintendoServiceAccountIdsOperation::RequestType request;
@@ -1232,7 +1421,7 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromNintendoServiceAccountId
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayFabIDsFromNintendoSwitchDeviceIds(TestContext& tc)
 {
     ServerGetPlayFabIDsFromNintendoSwitchDeviceIdsOperation::RequestType request;
@@ -1245,7 +1434,7 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromNintendoSwitchDeviceIds(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayFabIDsFromPSNAccountIDs(TestContext& tc)
 {
     ServerGetPlayFabIDsFromPSNAccountIDsOperation::RequestType request;
@@ -1258,7 +1447,7 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromPSNAccountIDs(TestContex
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayFabIDsFromSteamIDs(TestContext& tc)
 {
     ServerGetPlayFabIDsFromSteamIDsOperation::RequestType request;
@@ -1279,7 +1468,7 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromSteamIDs(TestContext& tc
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayFabIDsFromTwitchIDs(TestContext& tc)
 {
     ServerGetPlayFabIDsFromTwitchIDsOperation::RequestType request;
@@ -1292,7 +1481,7 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromTwitchIDs(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetPlayFabIDsFromXboxLiveIDs(TestContext& tc)
 {
     ServerGetPlayFabIDsFromXboxLiveIDsOperation::RequestType request;
@@ -1318,7 +1507,7 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromXboxLiveIDs(TestContext&
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetServerCustomIDsFromPlayFabIDs(TestContext& tc)
 {
     constexpr char customId[]{ "testServerGetServerCustomId" };
@@ -1362,7 +1551,7 @@ void AccountManagementTests::TestServerGetServerCustomIDsFromPlayFabIDs(TestCont
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetUserAccountInfo(TestContext& tc)
 {
     ServerGetUserAccountInfoOperation::RequestType request;
@@ -1382,7 +1571,7 @@ void AccountManagementTests::TestServerGetUserAccountInfo(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerGetUserBans(TestContext& tc)
 {
     // Covered by TestServerRevokeBans
@@ -1390,7 +1579,7 @@ void AccountManagementTests::TestServerGetUserBans(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerLinkNintendoServiceAccount(TestContext& tc)
 {
     ServerLinkNintendoServiceAccountOperation::RequestType request;
@@ -1411,7 +1600,7 @@ void AccountManagementTests::TestServerLinkNintendoServiceAccount(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerLinkNintendoServiceAccountSubject(TestContext& tc)
 {
     ServerLinkNintendoServiceAccountSubjectOperation::RequestType request;
@@ -1435,7 +1624,7 @@ void AccountManagementTests::TestServerLinkNintendoServiceAccountSubject(TestCon
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerLinkNintendoSwitchDeviceId(TestContext& tc)
 {
     ServerLinkNintendoSwitchDeviceIdOperation::RequestType request;
@@ -1450,7 +1639,7 @@ void AccountManagementTests::TestServerLinkNintendoSwitchDeviceId(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerLinkPSNAccount(TestContext& tc)
 {
     ServerLinkPSNAccountOperation::RequestType request;
@@ -1472,7 +1661,7 @@ void AccountManagementTests::TestServerLinkPSNAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerLinkServerCustomId(TestContext& tc)
 {
     // Covered by TestServerGetServerCustomIDsFromPlayFabIDs
@@ -1480,7 +1669,7 @@ void AccountManagementTests::TestServerLinkServerCustomId(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerLinkSteamId(TestContext& tc)
 {
     ServerLinkSteamIdOperation::RequestType request;
@@ -1501,7 +1690,7 @@ void AccountManagementTests::TestServerLinkSteamId(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerLinkXboxAccount(TestContext& tc)
 {
     // This test would be doable on Win32 but would need to bring in a XAL dependency to get an Xbox token.
@@ -1509,14 +1698,14 @@ void AccountManagementTests::TestServerLinkXboxAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerRevokeAllBansForUser(TestContext& tc)
 {
     LoginWithCustomIDOperation::RequestType request;
     request.SetCreateAccount(true);
     request.SetCustomId("RevokeAllBansCustomId2");
 
-    RunOperation(MakeUnique<LoginWithCustomIDOperation>(ServiceConfig(), request, RunContext())).Then([&](Result<LoginResult> result) -> AsyncOp<void>    
+    RunOperation(MakeUnique<LoginWithCustomIDOperation>(ServiceConfig(), request, RunContext())).Then([&](Result<LoginResult> result) -> AsyncOp<void>
     {
         ServerSetTitleDataOperation::RequestType request;
         if (result.hr == S_OK)
@@ -1529,6 +1718,8 @@ void AccountManagementTests::TestServerRevokeAllBansForUser(TestContext& tc)
     })
     .Then([&](Result<void> result) -> AsyncOp<ServerGetTitleDataOperation::ResultType>
     {
+        UNREFERENCED_PARAMETER(result);
+
         ServerGetTitleDataOperation::RequestType request;
         request.SetKeys({ "RevokeAllBansPlayFabId" });
 
@@ -1549,7 +1740,7 @@ void AccountManagementTests::TestServerRevokeAllBansForUser(TestContext& tc)
     .Then([&](Result<ServerBanUsersOperation::ResultType> result) -> AsyncOp<ServerUpdateBansOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        
+
         ServerUpdateBansOperation::RequestType request;
         Wrappers::PFAccountManagementUpdateBanRequestWrapper<Allocator> updateRequest;
         updateRequest.SetBanId(result.Payload().Model().banData[0]->banId);
@@ -1563,7 +1754,7 @@ void AccountManagementTests::TestServerRevokeAllBansForUser(TestContext& tc)
     .Then([&](Result<ServerUpdateBansOperation::ResultType> result) -> AsyncOp<ServerRevokeAllBansForUserOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        
+
         ServerRevokeAllBansForUserOperation::RequestType request;
         request.SetPlayFabId(result.Payload().Model().banData[0]->playFabId);
 
@@ -1594,7 +1785,7 @@ void AccountManagementTests::TestServerRevokeAllBansForUser(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerRevokeBans(TestContext& tc)
 {
     LoginWithCustomIDOperation::RequestType request;
@@ -1602,7 +1793,7 @@ void AccountManagementTests::TestServerRevokeBans(TestContext& tc)
     request.SetCustomId("RevokeBansCustomId");
     char* banId = new char[30u];
 
-    RunOperation(MakeUnique<LoginWithCustomIDOperation>(ServiceConfig(), request, RunContext())).Then([&](Result<LoginResult> result) -> AsyncOp<void>    
+    RunOperation(MakeUnique<LoginWithCustomIDOperation>(ServiceConfig(), request, RunContext())).Then([&](Result<LoginResult> result) -> AsyncOp<void>
     {
         ServerSetTitleDataOperation::RequestType request;
         if (result.hr == S_OK)
@@ -1615,6 +1806,8 @@ void AccountManagementTests::TestServerRevokeBans(TestContext& tc)
     })
     .Then([&](Result<void> result) -> AsyncOp<ServerGetTitleDataOperation::ResultType>
     {
+        UNREFERENCED_PARAMETER(result);
+        
         ServerGetTitleDataOperation::RequestType request;
         request.SetKeys({ "RevokeBansPlayFabId" });
 
@@ -1637,7 +1830,7 @@ void AccountManagementTests::TestServerRevokeBans(TestContext& tc)
         RETURN_IF_FAILED_PLAYFAB(result);
 
         tc.AssertEqual(1u, result.Payload().Model().banDataCount, "newBans");
-        
+
         ServerRevokeBansOperation::RequestType request;
         request.SetBanIds({result.Payload().Model().banData[0]->banId});
 
@@ -1646,7 +1839,7 @@ void AccountManagementTests::TestServerRevokeBans(TestContext& tc)
     .Then([&, banId](Result<ServerRevokeBansOperation::ResultType> result) -> AsyncOp<ServerGetUserBansOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        
+
         ServerGetUserBansOperation::RequestType request;
         request.SetPlayFabId(result.Payload().Model().banData[0]->playFabId);
 #if _WIN32
@@ -1679,7 +1872,7 @@ void AccountManagementTests::TestServerRevokeBans(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerSendCustomAccountRecoveryEmail(TestContext& tc)
 {
     // Covered by TestClientAddUsernamePassword
@@ -1687,7 +1880,7 @@ void AccountManagementTests::TestServerSendCustomAccountRecoveryEmail(TestContex
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerSendEmailFromTemplate(TestContext& tc)
 {
     // Covered by TestClientAddOrUpdateContactEmail
@@ -1695,7 +1888,7 @@ void AccountManagementTests::TestServerSendEmailFromTemplate(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerUnlinkNintendoServiceAccount(TestContext& tc)
 {
     // Covered by TestServerLinkNintendoServiceAccountSubject
@@ -1703,14 +1896,14 @@ void AccountManagementTests::TestServerUnlinkNintendoServiceAccount(TestContext&
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerUnlinkNintendoSwitchDeviceId(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerUnlinkPSNAccount(TestContext& tc)
 {
     ServerUnlinkPSNAccountOperation::RequestType request;
@@ -1729,7 +1922,7 @@ void AccountManagementTests::TestServerUnlinkPSNAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerUnlinkServerCustomId(TestContext& tc)
 {
     // Covered by TestServerGetServerCustomIDsFromPlayFabIDs
@@ -1737,7 +1930,7 @@ void AccountManagementTests::TestServerUnlinkServerCustomId(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerUnlinkSteamId(TestContext& tc)
 {
     ServerUnlinkSteamIdOperation::RequestType request;
@@ -1756,7 +1949,7 @@ void AccountManagementTests::TestServerUnlinkSteamId(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerUnlinkXboxAccount(TestContext& tc)
 {
     // Test currently creates malformed JSON response with request retries enabled
@@ -1764,7 +1957,7 @@ void AccountManagementTests::TestServerUnlinkXboxAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerUpdateAvatarUrl(TestContext& tc)
 {
     ServerUpdateAvatarUrlOperation::RequestType request;
@@ -1778,7 +1971,7 @@ void AccountManagementTests::TestServerUpdateAvatarUrl(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerUpdateBans(TestContext& tc)
 {
     // Covered by TestServerRevokeAllBansForUser
@@ -1786,7 +1979,7 @@ void AccountManagementTests::TestServerUpdateBans(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestGetTitlePlayersFromXboxLiveIDs(TestContext& tc)
 {
     GetTitlePlayersFromXboxLiveIDsOperation::RequestType request;

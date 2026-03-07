@@ -9,9 +9,7 @@
 
 #include <playfab/services/PFAccountManagementTypes.h>
 #include <playfab/services/cpp/TypeWrappers.h>
-#if HC_PLATFORM == HC_PLATFORM_GDK
 #include <playfab/core/cpp/AuthenticationTypeWrappers.h>
-#endif
 
 namespace PlayFab
 {
@@ -65,11 +63,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetEmailAddress() const
+    {
+        return m_emailAddress;
     }
 
     void SetEmailAddress(String value)
@@ -140,11 +148,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetEmail() const
+    {
+        return m_email;
     }
 
     void SetEmail(String value)
@@ -153,10 +171,20 @@ public:
         this->m_model.email =  m_email.empty() ? nullptr : m_email.data();
     }
 
+    String const& GetPassword() const
+    {
+        return m_password;
+    }
+
     void SetPassword(String value)
     {
         m_password = std::move(value);
         this->m_model.password =  m_password.empty() ? nullptr : m_password.data();
+    }
+
+    String const& GetUsername() const
+    {
+        return m_username;
     }
 
     void SetUsername(String value)
@@ -225,6 +253,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetUsername() const
+    {
+        return m_username;
+    }
+
     void SetUsername(String value)
     {
         m_username = std::move(value);
@@ -291,10 +324,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetEmail() const
+    {
+        return m_email;
+    }
+
     void SetEmail(String value)
     {
         m_email = std::move(value);
         this->m_model.email =  m_email.empty() ? nullptr : m_email.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -303,10 +346,20 @@ public:
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
     }
 
+    String const& GetTitleDisplayName() const
+    {
+        return m_titleDisplayName;
+    }
+
     void SetTitleDisplayName(String value)
     {
         m_titleDisplayName = std::move(value);
         this->m_model.titleDisplayName =  m_titleDisplayName.empty() ? nullptr : m_titleDisplayName.data();
+    }
+
+    String const& GetUsername() const
+    {
+        return m_username;
     }
 
     void SetUsername(String value)
@@ -375,6 +428,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFUserAccountInfoWrapper<Alloc>> const& GetAccountInfo() const
+    {
+        return m_accountInfo;
+    }
+
     void SetAccountInfo(std::optional<PFUserAccountInfoWrapper<Alloc>> value)
     {
         m_accountInfo = std::move(value);
@@ -439,6 +497,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -446,10 +509,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = &m_infoRequestParameters.Model();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -518,10 +591,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFGetPlayerCombinedInfoResultPayloadWrapper<Alloc>> const& GetInfoResultPayload() const
+    {
+        return m_infoResultPayload;
+    }
+
     void SetInfoResultPayload(std::optional<PFGetPlayerCombinedInfoResultPayloadWrapper<Alloc>> value)
     {
         m_infoResultPayload = std::move(value);
         this->m_model.infoResultPayload = m_infoResultPayload ? &m_infoResultPayload->Model() : nullptr;
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -590,6 +673,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -597,10 +685,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> const& GetProfileConstraints() const
+    {
+        return m_profileConstraints;
     }
 
     void SetProfileConstraints(std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> value)
@@ -667,6 +765,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFPlayerProfileModelWrapper<Alloc>> const& GetPlayerProfile() const
+    {
+        return m_playerProfile;
+    }
+
     void SetPlayerProfile(std::optional<PFPlayerProfileModelWrapper<Alloc>> value)
     {
         m_playerProfile = std::move(value);
@@ -680,6 +783,218 @@ private:
     }
 
     std::optional<PFPlayerProfileModelWrapper<Alloc>> m_playerProfile;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper() = default;
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequest& model) :
+        ModelWrapper<PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequest, Alloc>{ model },
+        m_battleNetAccountIds{ model.battleNetAccountIds, model.battleNetAccountIds + model.battleNetAccountIdsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper& src) :
+        PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper(PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper&& src) :
+        PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper& operator=(PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper& lhs, PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_battleNetAccountIds, rhs.m_battleNetAccountIds);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetBattleNetAccountIds() const
+    {
+        return m_battleNetAccountIds;
+    }
+
+    void SetBattleNetAccountIds(CStringVector<Alloc> value)
+    {
+        m_battleNetAccountIds = std::move(value);
+        this->m_model.battleNetAccountIds =  m_battleNetAccountIds.empty() ? nullptr : m_battleNetAccountIds.data();
+        this->m_model.battleNetAccountIdsCount =  static_cast<uint32_t>(m_battleNetAccountIds.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.battleNetAccountIds = m_battleNetAccountIds.empty() ? nullptr : m_battleNetAccountIds.data();
+    }
+
+    CStringVector<Alloc> m_battleNetAccountIds;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementBattleNetAccountPlayFabIdPairWrapper : public ModelWrapper<PFAccountManagementBattleNetAccountPlayFabIdPair, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementBattleNetAccountPlayFabIdPair;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementBattleNetAccountPlayFabIdPairWrapper() = default;
+
+    PFAccountManagementBattleNetAccountPlayFabIdPairWrapper(const PFAccountManagementBattleNetAccountPlayFabIdPair& model) :
+        ModelWrapper<PFAccountManagementBattleNetAccountPlayFabIdPair, Alloc>{ model },
+        m_battleNetAccountId{ SafeString(model.battleNetAccountId) },
+        m_playFabId{ SafeString(model.playFabId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementBattleNetAccountPlayFabIdPairWrapper(const PFAccountManagementBattleNetAccountPlayFabIdPairWrapper& src) :
+        PFAccountManagementBattleNetAccountPlayFabIdPairWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementBattleNetAccountPlayFabIdPairWrapper(PFAccountManagementBattleNetAccountPlayFabIdPairWrapper&& src) :
+        PFAccountManagementBattleNetAccountPlayFabIdPairWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementBattleNetAccountPlayFabIdPairWrapper& operator=(PFAccountManagementBattleNetAccountPlayFabIdPairWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementBattleNetAccountPlayFabIdPairWrapper() = default;
+
+    friend void swap(PFAccountManagementBattleNetAccountPlayFabIdPairWrapper& lhs, PFAccountManagementBattleNetAccountPlayFabIdPairWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_battleNetAccountId, rhs.m_battleNetAccountId);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    String const& GetBattleNetAccountId() const
+    {
+        return m_battleNetAccountId;
+    }
+
+    void SetBattleNetAccountId(String value)
+    {
+        m_battleNetAccountId = std::move(value);
+        this->m_model.battleNetAccountId =  m_battleNetAccountId.empty() ? nullptr : m_battleNetAccountId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.battleNetAccountId = m_battleNetAccountId.empty() ? nullptr : m_battleNetAccountId.data();
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String m_battleNetAccountId;
+    String m_playFabId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper() = default;
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult& model) :
+        ModelWrapper<PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult, Alloc>{ model },
+        m_data{ model.data, model.data + model.dataCount }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper& src) :
+        PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper(PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper&& src) :
+        PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper& operator=(PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper() = default;
+
+    friend void swap(PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper& lhs, PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_data, rhs.m_data);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    ModelVector<PFAccountManagementBattleNetAccountPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
+    void SetData(ModelVector<PFAccountManagementBattleNetAccountPlayFabIdPairWrapper<Alloc>, Alloc> value)
+    {
+        m_data = std::move(value);
+        this->m_model.data =  m_data.empty() ? nullptr : m_data.data();
+        this->m_model.dataCount =  static_cast<uint32_t>(m_data.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.data = m_data.empty() ? nullptr : m_data.data();
+    }
+
+    ModelVector<PFAccountManagementBattleNetAccountPlayFabIdPairWrapper<Alloc>, Alloc> m_data;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -725,6 +1040,11 @@ public:
         swap(lhs.m_facebookIDs, rhs.m_facebookIDs);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetFacebookIDs() const
+    {
+        return m_facebookIDs;
     }
 
     void SetFacebookIDs(CStringVector<Alloc> value)
@@ -790,10 +1110,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFacebookId() const
+    {
+        return m_facebookId;
+    }
+
     void SetFacebookId(String value)
     {
         m_facebookId = std::move(value);
         this->m_model.facebookId =  m_facebookId.empty() ? nullptr : m_facebookId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -858,6 +1188,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementFacebookPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementFacebookPlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -917,6 +1252,11 @@ public:
         swap(lhs.m_facebookInstantGamesIds, rhs.m_facebookInstantGamesIds);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetFacebookInstantGamesIds() const
+    {
+        return m_facebookInstantGamesIds;
     }
 
     void SetFacebookInstantGamesIds(CStringVector<Alloc> value)
@@ -982,10 +1322,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFacebookInstantGamesId() const
+    {
+        return m_facebookInstantGamesId;
+    }
+
     void SetFacebookInstantGamesId(String value)
     {
         m_facebookInstantGamesId = std::move(value);
         this->m_model.facebookInstantGamesId =  m_facebookInstantGamesId.empty() ? nullptr : m_facebookInstantGamesId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -1050,6 +1400,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementFacebookInstantGamesPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementFacebookInstantGamesPlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -1109,6 +1464,11 @@ public:
         swap(lhs.m_gameCenterIDs, rhs.m_gameCenterIDs);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetGameCenterIDs() const
+    {
+        return m_gameCenterIDs;
     }
 
     void SetGameCenterIDs(CStringVector<Alloc> value)
@@ -1174,10 +1534,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetGameCenterId() const
+    {
+        return m_gameCenterId;
+    }
+
     void SetGameCenterId(String value)
     {
         m_gameCenterId = std::move(value);
         this->m_model.gameCenterId =  m_gameCenterId.empty() ? nullptr : m_gameCenterId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -1242,6 +1612,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementGameCenterPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementGameCenterPlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -1301,6 +1676,11 @@ public:
         swap(lhs.m_googleIDs, rhs.m_googleIDs);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetGoogleIDs() const
+    {
+        return m_googleIDs;
     }
 
     void SetGoogleIDs(CStringVector<Alloc> value)
@@ -1366,10 +1746,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetGoogleId() const
+    {
+        return m_googleId;
+    }
+
     void SetGoogleId(String value)
     {
         m_googleId = std::move(value);
         this->m_model.googleId =  m_googleId.empty() ? nullptr : m_googleId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -1434,6 +1824,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementGooglePlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementGooglePlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -1493,6 +1888,11 @@ public:
         swap(lhs.m_googlePlayGamesPlayerIDs, rhs.m_googlePlayGamesPlayerIDs);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetGooglePlayGamesPlayerIDs() const
+    {
+        return m_googlePlayGamesPlayerIDs;
     }
 
     void SetGooglePlayGamesPlayerIDs(CStringVector<Alloc> value)
@@ -1558,10 +1958,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetGooglePlayGamesPlayerId() const
+    {
+        return m_googlePlayGamesPlayerId;
+    }
+
     void SetGooglePlayGamesPlayerId(String value)
     {
         m_googlePlayGamesPlayerId = std::move(value);
         this->m_model.googlePlayGamesPlayerId =  m_googlePlayGamesPlayerId.empty() ? nullptr : m_googlePlayGamesPlayerId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -1626,6 +2036,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementGooglePlayGamesPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementGooglePlayGamesPlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -1685,6 +2100,11 @@ public:
         swap(lhs.m_kongregateIDs, rhs.m_kongregateIDs);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetKongregateIDs() const
+    {
+        return m_kongregateIDs;
     }
 
     void SetKongregateIDs(CStringVector<Alloc> value)
@@ -1750,10 +2170,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetKongregateId() const
+    {
+        return m_kongregateId;
+    }
+
     void SetKongregateId(String value)
     {
         m_kongregateId = std::move(value);
         this->m_model.kongregateId =  m_kongregateId.empty() ? nullptr : m_kongregateId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -1818,6 +2248,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementKongregatePlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementKongregatePlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -1877,6 +2312,11 @@ public:
         swap(lhs.m_nintendoAccountIds, rhs.m_nintendoAccountIds);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetNintendoAccountIds() const
+    {
+        return m_nintendoAccountIds;
     }
 
     void SetNintendoAccountIds(CStringVector<Alloc> value)
@@ -1942,10 +2382,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetNintendoServiceAccountId() const
+    {
+        return m_nintendoServiceAccountId;
+    }
+
     void SetNintendoServiceAccountId(String value)
     {
         m_nintendoServiceAccountId = std::move(value);
         this->m_model.nintendoServiceAccountId =  m_nintendoServiceAccountId.empty() ? nullptr : m_nintendoServiceAccountId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -2010,6 +2460,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementNintendoServiceAccountPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementNintendoServiceAccountPlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -2069,6 +2524,11 @@ public:
         swap(lhs.m_nintendoSwitchDeviceIds, rhs.m_nintendoSwitchDeviceIds);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetNintendoSwitchDeviceIds() const
+    {
+        return m_nintendoSwitchDeviceIds;
     }
 
     void SetNintendoSwitchDeviceIds(CStringVector<Alloc> value)
@@ -2134,10 +2594,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetNintendoSwitchDeviceId() const
+    {
+        return m_nintendoSwitchDeviceId;
+    }
+
     void SetNintendoSwitchDeviceId(String value)
     {
         m_nintendoSwitchDeviceId = std::move(value);
         this->m_model.nintendoSwitchDeviceId =  m_nintendoSwitchDeviceId.empty() ? nullptr : m_nintendoSwitchDeviceId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -2202,6 +2672,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementNintendoSwitchPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementNintendoSwitchPlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -2216,6 +2691,298 @@ private:
     }
 
     ModelVector<PFAccountManagementNintendoSwitchPlayFabIdPairWrapper<Alloc>, Alloc> m_data;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementOpenIdSubjectIdentifierWrapper : public ModelWrapper<PFAccountManagementOpenIdSubjectIdentifier, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementOpenIdSubjectIdentifier;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementOpenIdSubjectIdentifierWrapper() = default;
+
+    PFAccountManagementOpenIdSubjectIdentifierWrapper(const PFAccountManagementOpenIdSubjectIdentifier& model) :
+        ModelWrapper<PFAccountManagementOpenIdSubjectIdentifier, Alloc>{ model },
+        m_issuer{ SafeString(model.issuer) },
+        m_subject{ SafeString(model.subject) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementOpenIdSubjectIdentifierWrapper(const PFAccountManagementOpenIdSubjectIdentifierWrapper& src) :
+        PFAccountManagementOpenIdSubjectIdentifierWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementOpenIdSubjectIdentifierWrapper(PFAccountManagementOpenIdSubjectIdentifierWrapper&& src) :
+        PFAccountManagementOpenIdSubjectIdentifierWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementOpenIdSubjectIdentifierWrapper& operator=(PFAccountManagementOpenIdSubjectIdentifierWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementOpenIdSubjectIdentifierWrapper() = default;
+
+    friend void swap(PFAccountManagementOpenIdSubjectIdentifierWrapper& lhs, PFAccountManagementOpenIdSubjectIdentifierWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_issuer, rhs.m_issuer);
+        swap(lhs.m_subject, rhs.m_subject);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    String const& GetIssuer() const
+    {
+        return m_issuer;
+    }
+
+    void SetIssuer(String value)
+    {
+        m_issuer = std::move(value);
+        this->m_model.issuer =  m_issuer.empty() ? nullptr : m_issuer.data();
+    }
+
+    String const& GetSubject() const
+    {
+        return m_subject;
+    }
+
+    void SetSubject(String value)
+    {
+        m_subject = std::move(value);
+        this->m_model.subject =  m_subject.empty() ? nullptr : m_subject.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.issuer = m_issuer.empty() ? nullptr : m_issuer.data();
+        this->m_model.subject = m_subject.empty() ? nullptr : m_subject.data();
+    }
+
+    String m_issuer;
+    String m_subject;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromOpenIdsRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementGetPlayFabIDsFromOpenIdsRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper() = default;
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper(const PFAccountManagementGetPlayFabIDsFromOpenIdsRequest& model) :
+        ModelWrapper<PFAccountManagementGetPlayFabIDsFromOpenIdsRequest, Alloc>{ model },
+        m_openIdSubjectIdentifiers{ model.openIdSubjectIdentifiers, model.openIdSubjectIdentifiers + model.openIdSubjectIdentifiersCount }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper(const PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper& src) :
+        PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper(PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper&& src) :
+        PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper& operator=(PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper& lhs, PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_openIdSubjectIdentifiers, rhs.m_openIdSubjectIdentifiers);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    ModelVector<PFAccountManagementOpenIdSubjectIdentifierWrapper<Alloc>, Alloc> const& GetOpenIdSubjectIdentifiers() const
+    {
+        return m_openIdSubjectIdentifiers;
+    }
+
+    void SetOpenIdSubjectIdentifiers(ModelVector<PFAccountManagementOpenIdSubjectIdentifierWrapper<Alloc>, Alloc> value)
+    {
+        m_openIdSubjectIdentifiers = std::move(value);
+        this->m_model.openIdSubjectIdentifiers =  m_openIdSubjectIdentifiers.empty() ? nullptr : m_openIdSubjectIdentifiers.data();
+        this->m_model.openIdSubjectIdentifiersCount =  static_cast<uint32_t>(m_openIdSubjectIdentifiers.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.openIdSubjectIdentifiers = m_openIdSubjectIdentifiers.empty() ? nullptr : m_openIdSubjectIdentifiers.data();
+    }
+
+    ModelVector<PFAccountManagementOpenIdSubjectIdentifierWrapper<Alloc>, Alloc> m_openIdSubjectIdentifiers;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper : public ModelWrapper<PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper() = default;
+
+    PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper(const PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair& model) :
+        ModelWrapper<PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair, Alloc>{ model },
+        m_openIdSubjectIdentifier{ model.openIdSubjectIdentifier ? std::optional<PFAccountManagementOpenIdSubjectIdentifierWrapper<Alloc>>{ *model.openIdSubjectIdentifier } : std::nullopt },
+        m_playFabId{ SafeString(model.playFabId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper(const PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper& src) :
+        PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper(PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper&& src) :
+        PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper& operator=(PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper() = default;
+
+    friend void swap(PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper& lhs, PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_openIdSubjectIdentifier, rhs.m_openIdSubjectIdentifier);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    std::optional<PFAccountManagementOpenIdSubjectIdentifierWrapper<Alloc>> const& GetOpenIdSubjectIdentifier() const
+    {
+        return m_openIdSubjectIdentifier;
+    }
+
+    void SetOpenIdSubjectIdentifier(std::optional<PFAccountManagementOpenIdSubjectIdentifierWrapper<Alloc>> value)
+    {
+        m_openIdSubjectIdentifier = std::move(value);
+        this->m_model.openIdSubjectIdentifier = m_openIdSubjectIdentifier ? &m_openIdSubjectIdentifier->Model() : nullptr;
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.openIdSubjectIdentifier = m_openIdSubjectIdentifier ?  &m_openIdSubjectIdentifier->Model() : nullptr;
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    std::optional<PFAccountManagementOpenIdSubjectIdentifierWrapper<Alloc>> m_openIdSubjectIdentifier;
+    String m_playFabId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper : public ModelWrapper<PFAccountManagementGetPlayFabIDsFromOpenIdsResult, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementGetPlayFabIDsFromOpenIdsResult;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper() = default;
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper(const PFAccountManagementGetPlayFabIDsFromOpenIdsResult& model) :
+        ModelWrapper<PFAccountManagementGetPlayFabIDsFromOpenIdsResult, Alloc>{ model },
+        m_data{ model.data, model.data + model.dataCount }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper(const PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper& src) :
+        PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper(PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper&& src) :
+        PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper& operator=(PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper() = default;
+
+    friend void swap(PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper& lhs, PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_data, rhs.m_data);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    ModelVector<PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
+    void SetData(ModelVector<PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper<Alloc>, Alloc> value)
+    {
+        m_data = std::move(value);
+        this->m_model.data =  m_data.empty() ? nullptr : m_data.data();
+        this->m_model.dataCount =  static_cast<uint32_t>(m_data.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.data = m_data.empty() ? nullptr : m_data.data();
+    }
+
+    ModelVector<PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper<Alloc>, Alloc> m_data;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -2265,10 +3032,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetIssuerId() const
+    {
+        return m_issuerId;
+    }
+
     void SetIssuerId(std::optional<int32_t> value)
     {
         m_issuerId = std::move(value);
         this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetPSNAccountIDs() const
+    {
+        return m_PSNAccountIDs;
     }
 
     void SetPSNAccountIDs(CStringVector<Alloc> value)
@@ -2336,10 +3113,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetPSNAccountId() const
+    {
+        return m_PSNAccountId;
     }
 
     void SetPSNAccountId(String value)
@@ -2402,6 +3189,11 @@ public:
         swap(lhs.m_data, rhs.m_data);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFAccountManagementPSNAccountPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
     }
 
     void SetData(ModelVector<PFAccountManagementPSNAccountPlayFabIdPairWrapper<Alloc>, Alloc> value)
@@ -2467,10 +3259,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetIssuerId() const
+    {
+        return m_issuerId;
+    }
+
     void SetIssuerId(std::optional<int32_t> value)
     {
         m_issuerId = std::move(value);
         this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetPSNOnlineIDs() const
+    {
+        return m_PSNOnlineIDs;
     }
 
     void SetPSNOnlineIDs(CStringVector<Alloc> value)
@@ -2538,10 +3340,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetPSNOnlineId() const
+    {
+        return m_PSNOnlineId;
     }
 
     void SetPSNOnlineId(String value)
@@ -2606,6 +3418,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementPSNOnlinePlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementPSNOnlinePlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -2665,6 +3482,11 @@ public:
         swap(lhs.m_steamStringIDs, rhs.m_steamStringIDs);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetSteamStringIDs() const
+    {
+        return m_steamStringIDs;
     }
 
     void SetSteamStringIDs(CStringVector<Alloc> value)
@@ -2730,10 +3552,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetSteamStringId() const
+    {
+        return m_steamStringId;
     }
 
     void SetSteamStringId(String value)
@@ -2798,6 +3630,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementSteamPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementSteamPlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -2857,6 +3694,11 @@ public:
         swap(lhs.m_steamNames, rhs.m_steamNames);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetSteamNames() const
+    {
+        return m_steamNames;
     }
 
     void SetSteamNames(CStringVector<Alloc> value)
@@ -2922,10 +3764,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetSteamName() const
+    {
+        return m_steamName;
     }
 
     void SetSteamName(String value)
@@ -2990,6 +3842,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementSteamNamePlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementSteamNamePlayFabIdPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -3049,6 +3906,11 @@ public:
         swap(lhs.m_twitchIds, rhs.m_twitchIds);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetTwitchIds() const
+    {
+        return m_twitchIds;
     }
 
     void SetTwitchIds(CStringVector<Alloc> value)
@@ -3114,10 +3976,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetTwitchId() const
+    {
+        return m_twitchId;
     }
 
     void SetTwitchId(String value)
@@ -3180,6 +4052,11 @@ public:
         swap(lhs.m_data, rhs.m_data);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFAccountManagementTwitchPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
     }
 
     void SetData(ModelVector<PFAccountManagementTwitchPlayFabIdPairWrapper<Alloc>, Alloc> value)
@@ -3245,10 +4122,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetSandbox() const
+    {
+        return m_sandbox;
+    }
+
     void SetSandbox(String value)
     {
         m_sandbox = std::move(value);
         this->m_model.sandbox =  m_sandbox.empty() ? nullptr : m_sandbox.data();
+    }
+
+    CStringVector<Alloc> const& GetXboxLiveAccountIDs() const
+    {
+        return m_xboxLiveAccountIDs;
     }
 
     void SetXboxLiveAccountIDs(CStringVector<Alloc> value)
@@ -3316,10 +4203,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetXboxLiveAccountId() const
+    {
+        return m_xboxLiveAccountId;
     }
 
     void SetXboxLiveAccountId(String value)
@@ -3382,6 +4279,11 @@ public:
         swap(lhs.m_data, rhs.m_data);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFAccountManagementXboxLiveAccountPlayFabIdPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
     }
 
     void SetData(ModelVector<PFAccountManagementXboxLiveAccountPlayFabIdPairWrapper<Alloc>, Alloc> value)
@@ -3453,16 +4355,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAndroidDevice() const
+    {
+        return m_androidDevice;
+    }
+
     void SetAndroidDevice(String value)
     {
         m_androidDevice = std::move(value);
         this->m_model.androidDevice =  m_androidDevice.empty() ? nullptr : m_androidDevice.data();
     }
 
+    String const& GetAndroidDeviceId() const
+    {
+        return m_androidDeviceId;
+    }
+
     void SetAndroidDeviceId(String value)
     {
         m_androidDeviceId = std::move(value);
         this->m_model.androidDeviceId =  m_androidDeviceId.empty() ? nullptr : m_androidDeviceId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -3472,10 +4389,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetOS() const
+    {
+        return m_OS;
     }
 
     void SetOS(String value)
@@ -3550,6 +4477,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -3557,10 +4489,116 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetIdentityToken() const
+    {
+        return m_identityToken;
+    }
+
+    void SetIdentityToken(String value)
+    {
+        m_identityToken = std::move(value);
+        this->m_model.identityToken =  m_identityToken.empty() ? nullptr : m_identityToken.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+        this->m_model.identityToken = m_identityToken.empty() ? nullptr : m_identityToken.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<bool> m_forceLink;
+    String m_identityToken;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementClientLinkBattleNetAccountRequestWrapper : public ModelWrapper<PFAccountManagementClientLinkBattleNetAccountRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementClientLinkBattleNetAccountRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementClientLinkBattleNetAccountRequestWrapper() = default;
+
+    PFAccountManagementClientLinkBattleNetAccountRequestWrapper(const PFAccountManagementClientLinkBattleNetAccountRequest& model) :
+        ModelWrapper<PFAccountManagementClientLinkBattleNetAccountRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_forceLink{ model.forceLink ? std::optional<bool>{ *model.forceLink } : std::nullopt },
+        m_identityToken{ SafeString(model.identityToken) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementClientLinkBattleNetAccountRequestWrapper(const PFAccountManagementClientLinkBattleNetAccountRequestWrapper& src) :
+        PFAccountManagementClientLinkBattleNetAccountRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementClientLinkBattleNetAccountRequestWrapper(PFAccountManagementClientLinkBattleNetAccountRequestWrapper&& src) :
+        PFAccountManagementClientLinkBattleNetAccountRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementClientLinkBattleNetAccountRequestWrapper& operator=(PFAccountManagementClientLinkBattleNetAccountRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementClientLinkBattleNetAccountRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementClientLinkBattleNetAccountRequestWrapper& lhs, PFAccountManagementClientLinkBattleNetAccountRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_forceLink, rhs.m_forceLink);
+        swap(lhs.m_identityToken, rhs.m_identityToken);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
+    void SetForceLink(std::optional<bool> value)
+    {
+        m_forceLink = std::move(value);
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetIdentityToken() const
+    {
+        return m_identityToken;
     }
 
     void SetIdentityToken(String value)
@@ -3631,10 +4669,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCustomId() const
+    {
+        return m_customId;
+    }
+
     void SetCustomId(String value)
     {
         m_customId = std::move(value);
         this->m_model.customId =  m_customId.empty() ? nullptr : m_customId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -3642,6 +4690,11 @@ public:
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -3676,6 +4729,7 @@ public:
     PFAccountManagementLinkFacebookAccountRequestWrapper(const PFAccountManagementLinkFacebookAccountRequest& model) :
         ModelWrapper<PFAccountManagementLinkFacebookAccountRequest, Alloc>{ model },
         m_accessToken{ SafeString(model.accessToken) },
+        m_authenticationToken{ SafeString(model.authenticationToken) },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_forceLink{ model.forceLink ? std::optional<bool>{ *model.forceLink } : std::nullopt }
     {
@@ -3706,10 +4760,16 @@ public:
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_accessToken, rhs.m_accessToken);
+        swap(lhs.m_authenticationToken, rhs.m_authenticationToken);
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_forceLink, rhs.m_forceLink);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetAccessToken() const
+    {
+        return m_accessToken;
     }
 
     void SetAccessToken(String value)
@@ -3718,11 +4778,32 @@ public:
         this->m_model.accessToken =  m_accessToken.empty() ? nullptr : m_accessToken.data();
     }
 
+    String const& GetAuthenticationToken() const
+    {
+        return m_authenticationToken;
+    }
+
+    void SetAuthenticationToken(String value)
+    {
+        m_authenticationToken = std::move(value);
+        this->m_model.authenticationToken =  m_authenticationToken.empty() ? nullptr : m_authenticationToken.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -3735,11 +4816,13 @@ private:
     void SetModelPointers()
     {
         this->m_model.accessToken = m_accessToken.empty() ? nullptr : m_accessToken.data();
+        this->m_model.authenticationToken = m_authenticationToken.empty() ? nullptr : m_authenticationToken.data();
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
     String m_accessToken;
+    String m_authenticationToken;
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<bool> m_forceLink;
 };
@@ -3793,6 +4876,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -3800,10 +4888,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetFacebookInstantGamesSignature() const
+    {
+        return m_facebookInstantGamesSignature;
+    }
+
     void SetFacebookInstantGamesSignature(String value)
     {
         m_facebookInstantGamesSignature = std::move(value);
         this->m_model.facebookInstantGamesSignature =  m_facebookInstantGamesSignature.empty() ? nullptr : m_facebookInstantGamesSignature.data();
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -3882,11 +4980,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -3895,10 +5003,20 @@ public:
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    String const& GetGameCenterId() const
+    {
+        return m_gameCenterId;
+    }
+
     void SetGameCenterId(String value)
     {
         m_gameCenterId = std::move(value);
         this->m_model.gameCenterId =  m_gameCenterId.empty() ? nullptr : m_gameCenterId.data();
+    }
+
+    String const& GetPublicKeyUrl() const
+    {
+        return m_publicKeyUrl;
     }
 
     void SetPublicKeyUrl(String value)
@@ -3907,16 +5025,31 @@ public:
         this->m_model.publicKeyUrl =  m_publicKeyUrl.empty() ? nullptr : m_publicKeyUrl.data();
     }
 
+    String const& GetSalt() const
+    {
+        return m_salt;
+    }
+
     void SetSalt(String value)
     {
         m_salt = std::move(value);
         this->m_model.salt =  m_salt.empty() ? nullptr : m_salt.data();
     }
 
+    String const& GetSignature() const
+    {
+        return m_signature;
+    }
+
     void SetSignature(String value)
     {
         m_signature = std::move(value);
         this->m_model.signature =  m_signature.empty() ? nullptr : m_signature.data();
+    }
+
+    String const& GetTimestamp() const
+    {
+        return m_timestamp;
     }
 
     void SetTimestamp(String value)
@@ -3995,6 +5128,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -4002,10 +5140,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetServerAuthCode() const
+    {
+        return m_serverAuthCode;
     }
 
     void SetServerAuthCode(String value)
@@ -4076,6 +5224,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -4083,10 +5236,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetServerAuthCode() const
+    {
+        return m_serverAuthCode;
     }
 
     void SetServerAuthCode(String value)
@@ -4161,11 +5324,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetDeviceId() const
+    {
+        return m_deviceId;
     }
 
     void SetDeviceId(String value)
@@ -4174,16 +5347,31 @@ public:
         this->m_model.deviceId =  m_deviceId.empty() ? nullptr : m_deviceId.data();
     }
 
+    String const& GetDeviceModel() const
+    {
+        return m_deviceModel;
+    }
+
     void SetDeviceModel(String value)
     {
         m_deviceModel = std::move(value);
         this->m_model.deviceModel =  m_deviceModel.empty() ? nullptr : m_deviceModel.data();
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetOS() const
+    {
+        return m_OS;
     }
 
     void SetOS(String value)
@@ -4260,10 +5448,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAuthTicket() const
+    {
+        return m_authTicket;
+    }
+
     void SetAuthTicket(String value)
     {
         m_authTicket = std::move(value);
         this->m_model.authTicket =  m_authTicket.empty() ? nullptr : m_authTicket.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4273,10 +5471,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetKongregateId() const
+    {
+        return m_kongregateId;
     }
 
     void SetKongregateId(String value)
@@ -4349,6 +5557,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -4356,10 +5569,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetIdentityToken() const
+    {
+        return m_identityToken;
     }
 
     void SetIdentityToken(String value)
@@ -4430,6 +5653,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -4437,10 +5665,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetNintendoSwitchDeviceId() const
+    {
+        return m_nintendoSwitchDeviceId;
     }
 
     void SetNintendoSwitchDeviceId(String value)
@@ -4513,10 +5751,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetConnectionId() const
+    {
+        return m_connectionId;
+    }
+
     void SetConnectionId(String value)
     {
         m_connectionId = std::move(value);
         this->m_model.connectionId =  m_connectionId.empty() ? nullptr : m_connectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4526,10 +5774,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetIdToken() const
+    {
+        return m_idToken;
     }
 
     void SetIdToken(String value)
@@ -4606,10 +5864,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAuthCode() const
+    {
+        return m_authCode;
+    }
+
     void SetAuthCode(String value)
     {
         m_authCode = std::move(value);
         this->m_model.authCode =  m_authCode.empty() ? nullptr : m_authCode.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4619,16 +5887,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    std::optional<int32_t> const& GetIssuerId() const
+    {
+        return m_issuerId;
+    }
+
     void SetIssuerId(std::optional<int32_t> value)
     {
         m_issuerId = std::move(value);
         this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
+    }
+
+    String const& GetRedirectUri() const
+    {
+        return m_redirectUri;
     }
 
     void SetRedirectUri(String value)
@@ -4705,11 +5988,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -4718,10 +6011,20 @@ public:
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    String const& GetSteamTicket() const
+    {
+        return m_steamTicket;
+    }
+
     void SetSteamTicket(String value)
     {
         m_steamTicket = std::move(value);
         this->m_model.steamTicket =  m_steamTicket.empty() ? nullptr : m_steamTicket.data();
+    }
+
+    std::optional<bool> const& GetTicketIsServiceSpecific() const
+    {
+        return m_ticketIsServiceSpecific;
     }
 
     void SetTicketIsServiceSpecific(std::optional<bool> value)
@@ -4746,17 +6049,17 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
-class PFAccountManagementLinkTwitchAccountRequestWrapper : public ModelWrapper<PFAccountManagementLinkTwitchAccountRequest, Alloc>
+class PFAccountManagementClientLinkTwitchAccountRequestWrapper : public ModelWrapper<PFAccountManagementClientLinkTwitchAccountRequest, Alloc>
 {
 public:
-    using ModelType = PFAccountManagementLinkTwitchAccountRequest;
+    using ModelType = PFAccountManagementClientLinkTwitchAccountRequest;
     using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
-    PFAccountManagementLinkTwitchAccountRequestWrapper() = default;
+    PFAccountManagementClientLinkTwitchAccountRequestWrapper() = default;
 
-    PFAccountManagementLinkTwitchAccountRequestWrapper(const PFAccountManagementLinkTwitchAccountRequest& model) :
-        ModelWrapper<PFAccountManagementLinkTwitchAccountRequest, Alloc>{ model },
+    PFAccountManagementClientLinkTwitchAccountRequestWrapper(const PFAccountManagementClientLinkTwitchAccountRequest& model) :
+        ModelWrapper<PFAccountManagementClientLinkTwitchAccountRequest, Alloc>{ model },
         m_accessToken{ SafeString(model.accessToken) },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_forceLink{ model.forceLink ? std::optional<bool>{ *model.forceLink } : std::nullopt }
@@ -4764,26 +6067,26 @@ public:
         SetModelPointers();
     }
 
-    PFAccountManagementLinkTwitchAccountRequestWrapper(const PFAccountManagementLinkTwitchAccountRequestWrapper& src) :
-        PFAccountManagementLinkTwitchAccountRequestWrapper{ src.Model() }
+    PFAccountManagementClientLinkTwitchAccountRequestWrapper(const PFAccountManagementClientLinkTwitchAccountRequestWrapper& src) :
+        PFAccountManagementClientLinkTwitchAccountRequestWrapper{ src.Model() }
     {
     }
 
-    PFAccountManagementLinkTwitchAccountRequestWrapper(PFAccountManagementLinkTwitchAccountRequestWrapper&& src) :
-        PFAccountManagementLinkTwitchAccountRequestWrapper{}
+    PFAccountManagementClientLinkTwitchAccountRequestWrapper(PFAccountManagementClientLinkTwitchAccountRequestWrapper&& src) :
+        PFAccountManagementClientLinkTwitchAccountRequestWrapper{}
     {
         swap(*this, src);
     }
 
-    PFAccountManagementLinkTwitchAccountRequestWrapper& operator=(PFAccountManagementLinkTwitchAccountRequestWrapper src) 
+    PFAccountManagementClientLinkTwitchAccountRequestWrapper& operator=(PFAccountManagementClientLinkTwitchAccountRequestWrapper src) 
     {
         swap(*this, src);
         return *this;
     }
 
-    virtual ~PFAccountManagementLinkTwitchAccountRequestWrapper() = default;
+    virtual ~PFAccountManagementClientLinkTwitchAccountRequestWrapper() = default;
 
-    friend void swap(PFAccountManagementLinkTwitchAccountRequestWrapper& lhs, PFAccountManagementLinkTwitchAccountRequestWrapper& rhs)
+    friend void swap(PFAccountManagementClientLinkTwitchAccountRequestWrapper& lhs, PFAccountManagementClientLinkTwitchAccountRequestWrapper& rhs)
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
@@ -4794,10 +6097,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAccessToken() const
+    {
+        return m_accessToken;
+    }
+
     void SetAccessToken(String value)
     {
         m_accessToken = std::move(value);
         this->m_model.accessToken =  m_accessToken.empty() ? nullptr : m_accessToken.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4805,6 +6118,11 @@ public:
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -4894,11 +6212,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -4914,6 +6242,11 @@ public:
         this->m_model.user = m_user.Handle();
     }
 #else
+    String const& GetXboxToken() const
+    {
+        return m_xboxToken;
+    }
+
     void SetXboxToken(String value)
     {
         m_xboxToken = std::move(value);
@@ -4986,6 +6319,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -5051,10 +6389,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetComment() const
+    {
+        return m_comment;
+    }
+
     void SetComment(String value)
     {
         m_comment = std::move(value);
         this->m_model.comment =  m_comment.empty() ? nullptr : m_comment.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5062,6 +6410,11 @@ public:
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetReporteeId() const
+    {
+        return m_reporteeId;
     }
 
     void SetReporteeId(String value)
@@ -5092,6 +6445,11 @@ public:
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
     using ModelWrapper<PFAccountManagementReportPlayerClientResult, Alloc>::ModelWrapper;
+
+    int32_t GetSubmissionsRemaining() const
+    {
+        return this->m_model.submissionsRemaining;
+    }
 
     void SetSubmissionsRemaining(int32_t value)
     {
@@ -5152,11 +6510,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetEmail() const
+    {
+        return m_email;
     }
 
     void SetEmail(String value)
@@ -5165,10 +6533,20 @@ public:
         this->m_model.email =  m_email.empty() ? nullptr : m_email.data();
     }
 
+    String const& GetEmailTemplateId() const
+    {
+        return m_emailTemplateId;
+    }
+
     void SetEmailTemplateId(String value)
     {
         m_emailTemplateId = std::move(value);
         this->m_model.emailTemplateId =  m_emailTemplateId.empty() ? nullptr : m_emailTemplateId.data();
+    }
+
+    String const& GetTitleId() const
+    {
+        return m_titleId;
     }
 
     void SetTitleId(String value)
@@ -5239,10 +6617,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAndroidDeviceId() const
+    {
+        return m_androidDeviceId;
+    }
+
     void SetAndroidDeviceId(String value)
     {
         m_androidDeviceId = std::move(value);
         this->m_model.androidDeviceId =  m_androidDeviceId.empty() ? nullptr : m_androidDeviceId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5308,6 +6696,77 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper : public ModelWrapper<PFAccountManagementClientUnlinkBattleNetAccountRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementClientUnlinkBattleNetAccountRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper() = default;
+
+    PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper(const PFAccountManagementClientUnlinkBattleNetAccountRequest& model) :
+        ModelWrapper<PFAccountManagementClientUnlinkBattleNetAccountRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper(const PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper& src) :
+        PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper(PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper&& src) :
+        PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper& operator=(PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper& lhs, PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -5371,10 +6830,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCustomId() const
+    {
+        return m_customId;
+    }
+
     void SetCustomId(String value)
     {
         m_customId = std::move(value);
         this->m_model.customId =  m_customId.empty() ? nullptr : m_customId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5396,48 +6865,53 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
-class PFAccountManagementUnlinkFacebookAccountRequestWrapper : public ModelWrapper<PFAccountManagementUnlinkFacebookAccountRequest, Alloc>
+class PFAccountManagementClientUnlinkFacebookAccountRequestWrapper : public ModelWrapper<PFAccountManagementClientUnlinkFacebookAccountRequest, Alloc>
 {
 public:
-    using ModelType = PFAccountManagementUnlinkFacebookAccountRequest;
+    using ModelType = PFAccountManagementClientUnlinkFacebookAccountRequest;
     using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
-    PFAccountManagementUnlinkFacebookAccountRequestWrapper() = default;
+    PFAccountManagementClientUnlinkFacebookAccountRequestWrapper() = default;
 
-    PFAccountManagementUnlinkFacebookAccountRequestWrapper(const PFAccountManagementUnlinkFacebookAccountRequest& model) :
-        ModelWrapper<PFAccountManagementUnlinkFacebookAccountRequest, Alloc>{ model },
+    PFAccountManagementClientUnlinkFacebookAccountRequestWrapper(const PFAccountManagementClientUnlinkFacebookAccountRequest& model) :
+        ModelWrapper<PFAccountManagementClientUnlinkFacebookAccountRequest, Alloc>{ model },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount }
     {
         SetModelPointers();
     }
 
-    PFAccountManagementUnlinkFacebookAccountRequestWrapper(const PFAccountManagementUnlinkFacebookAccountRequestWrapper& src) :
-        PFAccountManagementUnlinkFacebookAccountRequestWrapper{ src.Model() }
+    PFAccountManagementClientUnlinkFacebookAccountRequestWrapper(const PFAccountManagementClientUnlinkFacebookAccountRequestWrapper& src) :
+        PFAccountManagementClientUnlinkFacebookAccountRequestWrapper{ src.Model() }
     {
     }
 
-    PFAccountManagementUnlinkFacebookAccountRequestWrapper(PFAccountManagementUnlinkFacebookAccountRequestWrapper&& src) :
-        PFAccountManagementUnlinkFacebookAccountRequestWrapper{}
+    PFAccountManagementClientUnlinkFacebookAccountRequestWrapper(PFAccountManagementClientUnlinkFacebookAccountRequestWrapper&& src) :
+        PFAccountManagementClientUnlinkFacebookAccountRequestWrapper{}
     {
         swap(*this, src);
     }
 
-    PFAccountManagementUnlinkFacebookAccountRequestWrapper& operator=(PFAccountManagementUnlinkFacebookAccountRequestWrapper src) 
+    PFAccountManagementClientUnlinkFacebookAccountRequestWrapper& operator=(PFAccountManagementClientUnlinkFacebookAccountRequestWrapper src) 
     {
         swap(*this, src);
         return *this;
     }
 
-    virtual ~PFAccountManagementUnlinkFacebookAccountRequestWrapper() = default;
+    virtual ~PFAccountManagementClientUnlinkFacebookAccountRequestWrapper() = default;
 
-    friend void swap(PFAccountManagementUnlinkFacebookAccountRequestWrapper& lhs, PFAccountManagementUnlinkFacebookAccountRequestWrapper& rhs)
+    friend void swap(PFAccountManagementClientUnlinkFacebookAccountRequestWrapper& lhs, PFAccountManagementClientUnlinkFacebookAccountRequestWrapper& rhs)
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_customTags, rhs.m_customTags);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5457,43 +6931,43 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
-class PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper : public ModelWrapper<PFAccountManagementUnlinkFacebookInstantGamesIdRequest, Alloc>
+class PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper : public ModelWrapper<PFAccountManagementClientUnlinkFacebookInstantGamesIdRequest, Alloc>
 {
 public:
-    using ModelType = PFAccountManagementUnlinkFacebookInstantGamesIdRequest;
+    using ModelType = PFAccountManagementClientUnlinkFacebookInstantGamesIdRequest;
     using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
-    PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper() = default;
+    PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper() = default;
 
-    PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper(const PFAccountManagementUnlinkFacebookInstantGamesIdRequest& model) :
-        ModelWrapper<PFAccountManagementUnlinkFacebookInstantGamesIdRequest, Alloc>{ model },
+    PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper(const PFAccountManagementClientUnlinkFacebookInstantGamesIdRequest& model) :
+        ModelWrapper<PFAccountManagementClientUnlinkFacebookInstantGamesIdRequest, Alloc>{ model },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_facebookInstantGamesId{ SafeString(model.facebookInstantGamesId) }
     {
         SetModelPointers();
     }
 
-    PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper(const PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper& src) :
-        PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper{ src.Model() }
+    PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper(const PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper& src) :
+        PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper{ src.Model() }
     {
     }
 
-    PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper(PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper&& src) :
-        PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper{}
+    PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper(PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper&& src) :
+        PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper{}
     {
         swap(*this, src);
     }
 
-    PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper& operator=(PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper src) 
+    PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper& operator=(PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper src) 
     {
         swap(*this, src);
         return *this;
     }
 
-    virtual ~PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper() = default;
+    virtual ~PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper() = default;
 
-    friend void swap(PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper& lhs, PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper& rhs)
+    friend void swap(PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper& lhs, PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper& rhs)
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
@@ -5503,11 +6977,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetFacebookInstantGamesId() const
+    {
+        return m_facebookInstantGamesId;
     }
 
     void SetFacebookInstantGamesId(String value)
@@ -5572,6 +7056,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -5633,6 +7122,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -5692,6 +7186,11 @@ public:
         swap(lhs.m_customTags, rhs.m_customTags);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5757,11 +7256,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetDeviceId() const
+    {
+        return m_deviceId;
     }
 
     void SetDeviceId(String value)
@@ -5826,6 +7335,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -5885,6 +7399,11 @@ public:
         swap(lhs.m_customTags, rhs.m_customTags);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5950,11 +7469,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetNintendoSwitchDeviceId() const
+    {
+        return m_nintendoSwitchDeviceId;
     }
 
     void SetNintendoSwitchDeviceId(String value)
@@ -6021,10 +7550,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetConnectionId() const
+    {
+        return m_connectionId;
+    }
+
     void SetConnectionId(String value)
     {
         m_connectionId = std::move(value);
         this->m_model.connectionId =  m_connectionId.empty() ? nullptr : m_connectionId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -6090,6 +7629,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -6151,6 +7695,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -6168,43 +7717,43 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
-class PFAccountManagementUnlinkTwitchAccountRequestWrapper : public ModelWrapper<PFAccountManagementUnlinkTwitchAccountRequest, Alloc>
+class PFAccountManagementClientUnlinkTwitchAccountRequestWrapper : public ModelWrapper<PFAccountManagementClientUnlinkTwitchAccountRequest, Alloc>
 {
 public:
-    using ModelType = PFAccountManagementUnlinkTwitchAccountRequest;
+    using ModelType = PFAccountManagementClientUnlinkTwitchAccountRequest;
     using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
-    PFAccountManagementUnlinkTwitchAccountRequestWrapper() = default;
+    PFAccountManagementClientUnlinkTwitchAccountRequestWrapper() = default;
 
-    PFAccountManagementUnlinkTwitchAccountRequestWrapper(const PFAccountManagementUnlinkTwitchAccountRequest& model) :
-        ModelWrapper<PFAccountManagementUnlinkTwitchAccountRequest, Alloc>{ model },
+    PFAccountManagementClientUnlinkTwitchAccountRequestWrapper(const PFAccountManagementClientUnlinkTwitchAccountRequest& model) :
+        ModelWrapper<PFAccountManagementClientUnlinkTwitchAccountRequest, Alloc>{ model },
         m_accessToken{ SafeString(model.accessToken) },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount }
     {
         SetModelPointers();
     }
 
-    PFAccountManagementUnlinkTwitchAccountRequestWrapper(const PFAccountManagementUnlinkTwitchAccountRequestWrapper& src) :
-        PFAccountManagementUnlinkTwitchAccountRequestWrapper{ src.Model() }
+    PFAccountManagementClientUnlinkTwitchAccountRequestWrapper(const PFAccountManagementClientUnlinkTwitchAccountRequestWrapper& src) :
+        PFAccountManagementClientUnlinkTwitchAccountRequestWrapper{ src.Model() }
     {
     }
 
-    PFAccountManagementUnlinkTwitchAccountRequestWrapper(PFAccountManagementUnlinkTwitchAccountRequestWrapper&& src) :
-        PFAccountManagementUnlinkTwitchAccountRequestWrapper{}
+    PFAccountManagementClientUnlinkTwitchAccountRequestWrapper(PFAccountManagementClientUnlinkTwitchAccountRequestWrapper&& src) :
+        PFAccountManagementClientUnlinkTwitchAccountRequestWrapper{}
     {
         swap(*this, src);
     }
 
-    PFAccountManagementUnlinkTwitchAccountRequestWrapper& operator=(PFAccountManagementUnlinkTwitchAccountRequestWrapper src) 
+    PFAccountManagementClientUnlinkTwitchAccountRequestWrapper& operator=(PFAccountManagementClientUnlinkTwitchAccountRequestWrapper src) 
     {
         swap(*this, src);
         return *this;
     }
 
-    virtual ~PFAccountManagementUnlinkTwitchAccountRequestWrapper() = default;
+    virtual ~PFAccountManagementClientUnlinkTwitchAccountRequestWrapper() = default;
 
-    friend void swap(PFAccountManagementUnlinkTwitchAccountRequestWrapper& lhs, PFAccountManagementUnlinkTwitchAccountRequestWrapper& rhs)
+    friend void swap(PFAccountManagementClientUnlinkTwitchAccountRequestWrapper& lhs, PFAccountManagementClientUnlinkTwitchAccountRequestWrapper& rhs)
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
@@ -6214,10 +7763,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAccessToken() const
+    {
+        return m_accessToken;
+    }
+
     void SetAccessToken(String value)
     {
         m_accessToken = std::move(value);
         this->m_model.accessToken =  m_accessToken.empty() ? nullptr : m_accessToken.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -6283,6 +7842,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -6342,6 +7906,11 @@ public:
         swap(lhs.m_imageUrl, rhs.m_imageUrl);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetImageUrl() const
+    {
+        return m_imageUrl;
     }
 
     void SetImageUrl(String value)
@@ -6406,11 +7975,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetDisplayName() const
+    {
+        return m_displayName;
     }
 
     void SetDisplayName(String value)
@@ -6473,6 +8052,11 @@ public:
         swap(lhs.m_displayName, rhs.m_displayName);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetDisplayName() const
+    {
+        return m_displayName;
     }
 
     void SetDisplayName(String value)
@@ -6543,10 +8127,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<uint32_t> const& GetDurationInHours() const
+    {
+        return m_durationInHours;
+    }
+
     void SetDurationInHours(std::optional<uint32_t> value)
     {
         m_durationInHours = std::move(value);
         this->m_model.durationInHours = m_durationInHours ? m_durationInHours.operator->() : nullptr;
+    }
+
+    String const& GetIPAddress() const
+    {
+        return m_IPAddress;
     }
 
     void SetIPAddress(String value)
@@ -6555,16 +8149,31 @@ public:
         this->m_model.IPAddress =  m_IPAddress.empty() ? nullptr : m_IPAddress.data();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
     }
 
+    String const& GetReason() const
+    {
+        return m_reason;
+    }
+
     void SetReason(String value)
     {
         m_reason = std::move(value);
         this->m_model.reason =  m_reason.empty() ? nullptr : m_reason.data();
+    }
+
+    std::optional<PFAccountManagementUserFamilyType> const& GetUserFamilyType() const
+    {
+        return m_userFamilyType;
     }
 
     void SetUserFamilyType(std::optional<PFAccountManagementUserFamilyType> value)
@@ -6637,11 +8246,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementBanRequestWrapper<Alloc>, Alloc> const& GetBans() const
+    {
+        return m_bans;
+    }
+
     void SetBans(ModelVector<PFAccountManagementBanRequestWrapper<Alloc>, Alloc> value)
     {
         m_bans = std::move(value);
         this->m_model.bans =  m_bans.empty() ? nullptr : m_bans.data();
         this->m_model.bansCount =  static_cast<uint32_t>(m_bans.size());
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -6719,9 +8338,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetActive() const
+    {
+        return this->m_model.active;
+    }
+
     void SetActive(bool value)
     {
         this->m_model.active = value;
+    }
+
+    String const& GetBanId() const
+    {
+        return m_banId;
     }
 
     void SetBanId(String value)
@@ -6730,10 +8359,20 @@ public:
         this->m_model.banId =  m_banId.empty() ? nullptr : m_banId.data();
     }
 
+    std::optional<time_t> const& GetCreated() const
+    {
+        return m_created;
+    }
+
     void SetCreated(std::optional<time_t> value)
     {
         m_created = std::move(value);
         this->m_model.created = m_created ? m_created.operator->() : nullptr;
+    }
+
+    std::optional<time_t> const& GetExpires() const
+    {
+        return m_expires;
     }
 
     void SetExpires(std::optional<time_t> value)
@@ -6742,10 +8381,20 @@ public:
         this->m_model.expires = m_expires ? m_expires.operator->() : nullptr;
     }
 
+    String const& GetIPAddress() const
+    {
+        return m_IPAddress;
+    }
+
     void SetIPAddress(String value)
     {
         m_IPAddress = std::move(value);
         this->m_model.IPAddress =  m_IPAddress.empty() ? nullptr : m_IPAddress.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -6754,10 +8403,20 @@ public:
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
     }
 
+    String const& GetReason() const
+    {
+        return m_reason;
+    }
+
     void SetReason(String value)
     {
         m_reason = std::move(value);
         this->m_model.reason =  m_reason.empty() ? nullptr : m_reason.data();
+    }
+
+    String const& GetUserFamilyType() const
+    {
+        return m_userFamilyType;
     }
 
     void SetUserFamilyType(String value)
@@ -6832,6 +8491,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> const& GetBanData() const
+    {
+        return m_banData;
+    }
+
     void SetBanData(ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> value)
     {
         m_banData = std::move(value);
@@ -6893,6 +8557,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
@@ -6951,6 +8620,11 @@ public:
         swap(lhs.m_playFabIDs, rhs.m_playFabIDs);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetPlayFabIDs() const
+    {
+        return m_playFabIDs;
     }
 
     void SetPlayFabIDs(CStringVector<Alloc> value)
@@ -7016,10 +8690,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetServerCustomId() const
+    {
+        return m_serverCustomId;
     }
 
     void SetServerCustomId(String value)
@@ -7084,6 +8768,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementServerCustomIDPlayFabIDPairWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelVector<PFAccountManagementServerCustomIDPlayFabIDPairWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -7143,6 +8832,11 @@ public:
         swap(lhs.m_playFabId, rhs.m_playFabId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -7205,6 +8899,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFUserAccountInfoWrapper<Alloc>> const& GetUserInfo() const
+    {
+        return m_userInfo;
+    }
+
     void SetUserInfo(std::optional<PFUserAccountInfoWrapper<Alloc>> value)
     {
         m_userInfo = std::move(value);
@@ -7263,6 +8962,11 @@ public:
         swap(lhs.m_playFabId, rhs.m_playFabId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -7325,6 +9029,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> const& GetBanData() const
+    {
+        return m_banData;
+    }
+
     void SetBanData(ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> value)
     {
         m_banData = std::move(value);
@@ -7339,6 +9048,117 @@ private:
     }
 
     ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> m_banData;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementServerLinkBattleNetAccountRequestWrapper : public ModelWrapper<PFAccountManagementServerLinkBattleNetAccountRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementServerLinkBattleNetAccountRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementServerLinkBattleNetAccountRequestWrapper() = default;
+
+    PFAccountManagementServerLinkBattleNetAccountRequestWrapper(const PFAccountManagementServerLinkBattleNetAccountRequest& model) :
+        ModelWrapper<PFAccountManagementServerLinkBattleNetAccountRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_forceLink{ model.forceLink ? std::optional<bool>{ *model.forceLink } : std::nullopt },
+        m_identityToken{ SafeString(model.identityToken) },
+        m_playFabId{ SafeString(model.playFabId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementServerLinkBattleNetAccountRequestWrapper(const PFAccountManagementServerLinkBattleNetAccountRequestWrapper& src) :
+        PFAccountManagementServerLinkBattleNetAccountRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementServerLinkBattleNetAccountRequestWrapper(PFAccountManagementServerLinkBattleNetAccountRequestWrapper&& src) :
+        PFAccountManagementServerLinkBattleNetAccountRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementServerLinkBattleNetAccountRequestWrapper& operator=(PFAccountManagementServerLinkBattleNetAccountRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementServerLinkBattleNetAccountRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementServerLinkBattleNetAccountRequestWrapper& lhs, PFAccountManagementServerLinkBattleNetAccountRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_forceLink, rhs.m_forceLink);
+        swap(lhs.m_identityToken, rhs.m_identityToken);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
+    void SetForceLink(std::optional<bool> value)
+    {
+        m_forceLink = std::move(value);
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetIdentityToken() const
+    {
+        return m_identityToken;
+    }
+
+    void SetIdentityToken(String value)
+    {
+        m_identityToken = std::move(value);
+        this->m_model.identityToken =  m_identityToken.empty() ? nullptr : m_identityToken.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+        this->m_model.identityToken = m_identityToken.empty() ? nullptr : m_identityToken.data();
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<bool> m_forceLink;
+    String m_identityToken;
+    String m_playFabId;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -7392,11 +9212,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -7405,10 +9235,20 @@ public:
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    String const& GetIdentityToken() const
+    {
+        return m_identityToken;
+    }
+
     void SetIdentityToken(String value)
     {
         m_identityToken = std::move(value);
         this->m_model.identityToken =  m_identityToken.empty() ? nullptr : m_identityToken.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -7483,11 +9323,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -7496,10 +9346,20 @@ public:
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetSubject() const
+    {
+        return m_subject;
     }
 
     void SetSubject(String value)
@@ -7574,11 +9434,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -7587,10 +9457,20 @@ public:
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    String const& GetNintendoSwitchDeviceId() const
+    {
+        return m_nintendoSwitchDeviceId;
+    }
+
     void SetNintendoSwitchDeviceId(String value)
     {
         m_nintendoSwitchDeviceId = std::move(value);
         this->m_model.nintendoSwitchDeviceId =  m_nintendoSwitchDeviceId.empty() ? nullptr : m_nintendoSwitchDeviceId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -7669,10 +9549,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAuthCode() const
+    {
+        return m_authCode;
+    }
+
     void SetAuthCode(String value)
     {
         m_authCode = std::move(value);
         this->m_model.authCode =  m_authCode.empty() ? nullptr : m_authCode.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -7682,10 +9572,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
     void SetForceLink(std::optional<bool> value)
     {
         m_forceLink = std::move(value);
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetIssuerId() const
+    {
+        return m_issuerId;
     }
 
     void SetIssuerId(std::optional<int32_t> value)
@@ -7694,10 +9594,20 @@ public:
         this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetRedirectUri() const
+    {
+        return m_redirectUri;
     }
 
     void SetRedirectUri(String value)
@@ -7778,11 +9688,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -7791,16 +9711,31 @@ public:
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    std::optional<int32_t> const& GetIssuerId() const
+    {
+        return m_issuerId;
+    }
+
     void SetIssuerId(std::optional<int32_t> value)
     {
         m_issuerId = std::move(value);
         this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetPSNUserId() const
+    {
+        return m_PSNUserId;
     }
 
     void SetPSNUserId(String value)
@@ -7877,11 +9812,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -7890,10 +9835,20 @@ public:
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetServerCustomId() const
+    {
+        return m_serverCustomId;
     }
 
     void SetServerCustomId(String value)
@@ -7968,11 +9923,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -7981,10 +9946,20 @@ public:
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetSteamId() const
+    {
+        return m_steamId;
     }
 
     void SetSteamId(String value)
@@ -8006,6 +9981,117 @@ private:
     std::optional<bool> m_forceLink;
     String m_playFabId;
     String m_steamId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementServerLinkTwitchAccountRequestWrapper : public ModelWrapper<PFAccountManagementServerLinkTwitchAccountRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementServerLinkTwitchAccountRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementServerLinkTwitchAccountRequestWrapper() = default;
+
+    PFAccountManagementServerLinkTwitchAccountRequestWrapper(const PFAccountManagementServerLinkTwitchAccountRequest& model) :
+        ModelWrapper<PFAccountManagementServerLinkTwitchAccountRequest, Alloc>{ model },
+        m_accessToken{ SafeString(model.accessToken) },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_forceLink{ model.forceLink ? std::optional<bool>{ *model.forceLink } : std::nullopt },
+        m_playFabId{ SafeString(model.playFabId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementServerLinkTwitchAccountRequestWrapper(const PFAccountManagementServerLinkTwitchAccountRequestWrapper& src) :
+        PFAccountManagementServerLinkTwitchAccountRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementServerLinkTwitchAccountRequestWrapper(PFAccountManagementServerLinkTwitchAccountRequestWrapper&& src) :
+        PFAccountManagementServerLinkTwitchAccountRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementServerLinkTwitchAccountRequestWrapper& operator=(PFAccountManagementServerLinkTwitchAccountRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementServerLinkTwitchAccountRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementServerLinkTwitchAccountRequestWrapper& lhs, PFAccountManagementServerLinkTwitchAccountRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_accessToken, rhs.m_accessToken);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_forceLink, rhs.m_forceLink);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    String const& GetAccessToken() const
+    {
+        return m_accessToken;
+    }
+
+    void SetAccessToken(String value)
+    {
+        m_accessToken = std::move(value);
+        this->m_model.accessToken =  m_accessToken.empty() ? nullptr : m_accessToken.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
+    void SetForceLink(std::optional<bool> value)
+    {
+        m_forceLink = std::move(value);
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.accessToken = m_accessToken.empty() ? nullptr : m_accessToken.data();
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String m_accessToken;
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<bool> m_forceLink;
+    String m_playFabId;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -8059,11 +10145,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
     }
 
     void SetForceLink(std::optional<bool> value)
@@ -8072,10 +10168,20 @@ public:
         this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetXboxToken() const
+    {
+        return m_xboxToken;
     }
 
     void SetXboxToken(String value)
@@ -8097,6 +10203,132 @@ private:
     std::optional<bool> m_forceLink;
     String m_playFabId;
     String m_xboxToken;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementLinkXboxIdRequestWrapper : public ModelWrapper<PFAccountManagementLinkXboxIdRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementLinkXboxIdRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementLinkXboxIdRequestWrapper() = default;
+
+    PFAccountManagementLinkXboxIdRequestWrapper(const PFAccountManagementLinkXboxIdRequest& model) :
+        ModelWrapper<PFAccountManagementLinkXboxIdRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_forceLink{ model.forceLink ? std::optional<bool>{ *model.forceLink } : std::nullopt },
+        m_playFabId{ SafeString(model.playFabId) },
+        m_sandbox{ SafeString(model.sandbox) },
+        m_xboxId{ SafeString(model.xboxId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementLinkXboxIdRequestWrapper(const PFAccountManagementLinkXboxIdRequestWrapper& src) :
+        PFAccountManagementLinkXboxIdRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementLinkXboxIdRequestWrapper(PFAccountManagementLinkXboxIdRequestWrapper&& src) :
+        PFAccountManagementLinkXboxIdRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementLinkXboxIdRequestWrapper& operator=(PFAccountManagementLinkXboxIdRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementLinkXboxIdRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementLinkXboxIdRequestWrapper& lhs, PFAccountManagementLinkXboxIdRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_forceLink, rhs.m_forceLink);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        swap(lhs.m_sandbox, rhs.m_sandbox);
+        swap(lhs.m_xboxId, rhs.m_xboxId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<bool> const& GetForceLink() const
+    {
+        return m_forceLink;
+    }
+
+    void SetForceLink(std::optional<bool> value)
+    {
+        m_forceLink = std::move(value);
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetSandbox() const
+    {
+        return m_sandbox;
+    }
+
+    void SetSandbox(String value)
+    {
+        m_sandbox = std::move(value);
+        this->m_model.sandbox =  m_sandbox.empty() ? nullptr : m_sandbox.data();
+    }
+
+    String const& GetXboxId() const
+    {
+        return m_xboxId;
+    }
+
+    void SetXboxId(String value)
+    {
+        m_xboxId = std::move(value);
+        this->m_model.xboxId =  m_xboxId.empty() ? nullptr : m_xboxId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.forceLink = m_forceLink ? m_forceLink.operator->() : nullptr;
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+        this->m_model.sandbox = m_sandbox.empty() ? nullptr : m_sandbox.data();
+        this->m_model.xboxId = m_xboxId.empty() ? nullptr : m_xboxId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<bool> m_forceLink;
+    String m_playFabId;
+    String m_sandbox;
+    String m_xboxId;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -8142,6 +10374,11 @@ public:
         swap(lhs.m_playFabId, rhs.m_playFabId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -8202,6 +10439,11 @@ public:
         swap(lhs.m_banData, rhs.m_banData);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> const& GetBanData() const
+    {
+        return m_banData;
     }
 
     void SetBanData(ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> value)
@@ -8265,6 +10507,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    CStringVector<Alloc> const& GetBanIds() const
+    {
+        return m_banIds;
+    }
+
     void SetBanIds(CStringVector<Alloc> value)
     {
         m_banIds = std::move(value);
@@ -8324,6 +10571,11 @@ public:
         swap(lhs.m_banData, rhs.m_banData);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> const& GetBanData() const
+    {
+        return m_banData;
     }
 
     void SetBanData(ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> value)
@@ -8393,11 +10645,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetEmail() const
+    {
+        return m_email;
     }
 
     void SetEmail(String value)
@@ -8406,10 +10668,20 @@ public:
         this->m_model.email =  m_email.empty() ? nullptr : m_email.data();
     }
 
+    String const& GetEmailTemplateId() const
+    {
+        return m_emailTemplateId;
+    }
+
     void SetEmailTemplateId(String value)
     {
         m_emailTemplateId = std::move(value);
         this->m_model.emailTemplateId =  m_emailTemplateId.empty() ? nullptr : m_emailTemplateId.data();
+    }
+
+    String const& GetUsername() const
+    {
+        return m_username;
     }
 
     void SetUsername(String value)
@@ -8482,6 +10754,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -8489,10 +10766,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetEmailTemplateId() const
+    {
+        return m_emailTemplateId;
+    }
+
     void SetEmailTemplateId(String value)
     {
         m_emailTemplateId = std::move(value);
         this->m_model.emailTemplateId =  m_emailTemplateId.empty() ? nullptr : m_emailTemplateId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -8511,6 +10798,264 @@ private:
 
     StringDictionaryEntryVector<Alloc> m_customTags;
     String m_emailTemplateId;
+    String m_playFabId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper : public ModelWrapper<PFAccountManagementServerUnlinkBattleNetAccountRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementServerUnlinkBattleNetAccountRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper() = default;
+
+    PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper(const PFAccountManagementServerUnlinkBattleNetAccountRequest& model) :
+        ModelWrapper<PFAccountManagementServerUnlinkBattleNetAccountRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_playFabId{ SafeString(model.playFabId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper(const PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper& src) :
+        PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper(PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper&& src) :
+        PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper& operator=(PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper& lhs, PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_playFabId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementServerUnlinkFacebookAccountRequestWrapper : public ModelWrapper<PFAccountManagementServerUnlinkFacebookAccountRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementServerUnlinkFacebookAccountRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementServerUnlinkFacebookAccountRequestWrapper() = default;
+
+    PFAccountManagementServerUnlinkFacebookAccountRequestWrapper(const PFAccountManagementServerUnlinkFacebookAccountRequest& model) :
+        ModelWrapper<PFAccountManagementServerUnlinkFacebookAccountRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_playFabId{ SafeString(model.playFabId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementServerUnlinkFacebookAccountRequestWrapper(const PFAccountManagementServerUnlinkFacebookAccountRequestWrapper& src) :
+        PFAccountManagementServerUnlinkFacebookAccountRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementServerUnlinkFacebookAccountRequestWrapper(PFAccountManagementServerUnlinkFacebookAccountRequestWrapper&& src) :
+        PFAccountManagementServerUnlinkFacebookAccountRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementServerUnlinkFacebookAccountRequestWrapper& operator=(PFAccountManagementServerUnlinkFacebookAccountRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementServerUnlinkFacebookAccountRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementServerUnlinkFacebookAccountRequestWrapper& lhs, PFAccountManagementServerUnlinkFacebookAccountRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_playFabId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper : public ModelWrapper<PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper() = default;
+
+    PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper(const PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest& model) :
+        ModelWrapper<PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_facebookInstantGamesId{ SafeString(model.facebookInstantGamesId) },
+        m_playFabId{ SafeString(model.playFabId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper(const PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper& src) :
+        PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper(PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper&& src) :
+        PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper& operator=(PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper& lhs, PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_facebookInstantGamesId, rhs.m_facebookInstantGamesId);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetFacebookInstantGamesId() const
+    {
+        return m_facebookInstantGamesId;
+    }
+
+    void SetFacebookInstantGamesId(String value)
+    {
+        m_facebookInstantGamesId = std::move(value);
+        this->m_model.facebookInstantGamesId =  m_facebookInstantGamesId.empty() ? nullptr : m_facebookInstantGamesId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.facebookInstantGamesId = m_facebookInstantGamesId.empty() ? nullptr : m_facebookInstantGamesId.data();
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_facebookInstantGamesId;
     String m_playFabId;
 };
 
@@ -8561,11 +11106,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -8634,6 +11189,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -8641,10 +11201,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetNintendoSwitchDeviceId() const
+    {
+        return m_nintendoSwitchDeviceId;
+    }
+
     void SetNintendoSwitchDeviceId(String value)
     {
         m_nintendoSwitchDeviceId = std::move(value);
         this->m_model.nintendoSwitchDeviceId =  m_nintendoSwitchDeviceId.empty() ? nullptr : m_nintendoSwitchDeviceId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -8713,11 +11283,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -8786,6 +11366,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -8793,10 +11378,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetServerCustomId() const
+    {
+        return m_serverCustomId;
     }
 
     void SetServerCustomId(String value)
@@ -8865,11 +11460,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -8885,6 +11490,102 @@ private:
         this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
     }
 
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_playFabId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAccountManagementServerUnlinkTwitchAccountRequestWrapper : public ModelWrapper<PFAccountManagementServerUnlinkTwitchAccountRequest, Alloc>
+{
+public:
+    using ModelType = PFAccountManagementServerUnlinkTwitchAccountRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAccountManagementServerUnlinkTwitchAccountRequestWrapper() = default;
+
+    PFAccountManagementServerUnlinkTwitchAccountRequestWrapper(const PFAccountManagementServerUnlinkTwitchAccountRequest& model) :
+        ModelWrapper<PFAccountManagementServerUnlinkTwitchAccountRequest, Alloc>{ model },
+        m_accessToken{ SafeString(model.accessToken) },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_playFabId{ SafeString(model.playFabId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAccountManagementServerUnlinkTwitchAccountRequestWrapper(const PFAccountManagementServerUnlinkTwitchAccountRequestWrapper& src) :
+        PFAccountManagementServerUnlinkTwitchAccountRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAccountManagementServerUnlinkTwitchAccountRequestWrapper(PFAccountManagementServerUnlinkTwitchAccountRequestWrapper&& src) :
+        PFAccountManagementServerUnlinkTwitchAccountRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAccountManagementServerUnlinkTwitchAccountRequestWrapper& operator=(PFAccountManagementServerUnlinkTwitchAccountRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAccountManagementServerUnlinkTwitchAccountRequestWrapper() = default;
+
+    friend void swap(PFAccountManagementServerUnlinkTwitchAccountRequestWrapper& lhs, PFAccountManagementServerUnlinkTwitchAccountRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_accessToken, rhs.m_accessToken);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    String const& GetAccessToken() const
+    {
+        return m_accessToken;
+    }
+
+    void SetAccessToken(String value)
+    {
+        m_accessToken = std::move(value);
+        this->m_model.accessToken =  m_accessToken.empty() ? nullptr : m_accessToken.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.accessToken = m_accessToken.empty() ? nullptr : m_accessToken.data();
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String m_accessToken;
     StringDictionaryEntryVector<Alloc> m_customTags;
     String m_playFabId;
 };
@@ -8936,11 +11637,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -9007,10 +11718,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetImageUrl() const
+    {
+        return m_imageUrl;
+    }
+
     void SetImageUrl(String value)
     {
         m_imageUrl = std::move(value);
         this->m_model.imageUrl =  m_imageUrl.empty() ? nullptr : m_imageUrl.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -9087,10 +11808,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<bool> const& GetActive() const
+    {
+        return m_active;
+    }
+
     void SetActive(std::optional<bool> value)
     {
         m_active = std::move(value);
         this->m_model.active = m_active ? m_active.operator->() : nullptr;
+    }
+
+    String const& GetBanId() const
+    {
+        return m_banId;
     }
 
     void SetBanId(String value)
@@ -9099,10 +11830,20 @@ public:
         this->m_model.banId =  m_banId.empty() ? nullptr : m_banId.data();
     }
 
+    std::optional<time_t> const& GetExpires() const
+    {
+        return m_expires;
+    }
+
     void SetExpires(std::optional<time_t> value)
     {
         m_expires = std::move(value);
         this->m_model.expires = m_expires ? m_expires.operator->() : nullptr;
+    }
+
+    String const& GetIPAddress() const
+    {
+        return m_IPAddress;
     }
 
     void SetIPAddress(String value)
@@ -9111,16 +11852,31 @@ public:
         this->m_model.IPAddress =  m_IPAddress.empty() ? nullptr : m_IPAddress.data();
     }
 
+    std::optional<bool> const& GetPermanent() const
+    {
+        return m_permanent;
+    }
+
     void SetPermanent(std::optional<bool> value)
     {
         m_permanent = std::move(value);
         this->m_model.permanent = m_permanent ? m_permanent.operator->() : nullptr;
     }
 
+    String const& GetReason() const
+    {
+        return m_reason;
+    }
+
     void SetReason(String value)
     {
         m_reason = std::move(value);
         this->m_model.reason =  m_reason.empty() ? nullptr : m_reason.data();
+    }
+
+    std::optional<PFAccountManagementUserFamilyType> const& GetUserFamilyType() const
+    {
+        return m_userFamilyType;
     }
 
     void SetUserFamilyType(std::optional<PFAccountManagementUserFamilyType> value)
@@ -9195,6 +11951,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAccountManagementUpdateBanRequestWrapper<Alloc>, Alloc> const& GetBans() const
+    {
+        return m_bans;
+    }
+
     void SetBans(ModelVector<PFAccountManagementUpdateBanRequestWrapper<Alloc>, Alloc> value)
     {
         m_bans = std::move(value);
@@ -9254,6 +12015,11 @@ public:
         swap(lhs.m_banData, rhs.m_banData);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> const& GetBanData() const
+    {
+        return m_banData;
     }
 
     void SetBanData(ModelVector<PFAccountManagementBanInfoWrapper<Alloc>, Alloc> value)
@@ -9323,11 +12089,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetSandbox() const
+    {
+        return m_sandbox;
     }
 
     void SetSandbox(String value)
@@ -9336,10 +12112,20 @@ public:
         this->m_model.sandbox =  m_sandbox.empty() ? nullptr : m_sandbox.data();
     }
 
+    String const& GetTitleId() const
+    {
+        return m_titleId;
+    }
+
     void SetTitleId(String value)
     {
         m_titleId = std::move(value);
         this->m_model.titleId =  m_titleId.empty() ? nullptr : m_titleId.data();
+    }
+
+    CStringVector<Alloc> const& GetXboxLiveIds() const
+    {
+        return m_xboxLiveIds;
     }
 
     void SetXboxLiveIds(CStringVector<Alloc> value)
@@ -9409,6 +12195,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelDictionaryEntryVector<PFEntityLineageWrapper<Alloc>, Alloc> const& GetTitlePlayerAccounts() const
+    {
+        return m_titlePlayerAccounts;
+    }
+
     void SetTitlePlayerAccounts(ModelDictionaryEntryVector<PFEntityLineageWrapper<Alloc>, Alloc> value)
     {
         m_titlePlayerAccounts = std::move(value);
@@ -9476,11 +12267,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetDisplayName() const
+    {
+        return m_displayName;
     }
 
     void SetDisplayName(String value)
@@ -9489,10 +12290,20 @@ public:
         this->m_model.displayName =  m_displayName.empty() ? nullptr : m_displayName.data();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetExpectedVersion() const
+    {
+        return m_expectedVersion;
     }
 
     void SetExpectedVersion(std::optional<int32_t> value)
@@ -9563,10 +12374,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFOperationTypes> const& GetOperationResult() const
+    {
+        return m_operationResult;
+    }
+
     void SetOperationResult(std::optional<PFOperationTypes> value)
     {
         m_operationResult = std::move(value);
         this->m_model.operationResult = m_operationResult ? m_operationResult.operator->() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetVersionNumber() const
+    {
+        return m_versionNumber;
     }
 
     void SetVersionNumber(std::optional<int32_t> value)

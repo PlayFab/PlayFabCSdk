@@ -6,6 +6,10 @@ import android.os.SystemClock;
 import android.util.Log;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import com.google.android.gms.games.GamesSignInClient;
+import com.google.android.gms.games.PlayGames;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +31,7 @@ public class AndroidAutomatedTest {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                activity.onActivity(a -> {
+               activity.onActivity(a -> {
                         testsPassed = a.StartTests();
                     }
                 );

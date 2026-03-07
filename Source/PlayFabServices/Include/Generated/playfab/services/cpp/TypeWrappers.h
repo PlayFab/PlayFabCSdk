@@ -25,9 +25,19 @@ public:
 
     using ModelWrapper<PFVersionConfiguration, Alloc>::ModelWrapper;
 
+    int32_t GetMaxQueryableVersions() const
+    {
+        return this->m_model.maxQueryableVersions;
+    }
+
     void SetMaxQueryableVersions(int32_t value)
     {
         this->m_model.maxQueryableVersions = value;
+    }
+
+    PFResetInterval GetResetInterval() const
+    {
+        return this->m_model.resetInterval;
     }
 
     void SetResetInterval(PFResetInterval value)

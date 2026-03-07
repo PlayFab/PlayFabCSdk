@@ -44,7 +44,7 @@ const uint32_t PFTelemetryEventPipelineMaxWaitTimeInSecondsDefault = 3;
 /// <summary>
 /// Default value for poll delay time for a Telemetry Event pipeline if none is provided.
 /// </summary>
-const uint32_t PFTelemetryEventPipelinePollDelayInMsDefault = 10;
+const uint32_t PFTelemetryEventPipelinePollDelayInMsDefault = 3000;
 
 /// <summary>
 /// Default value for attempting a retry of event emission when losing connection.

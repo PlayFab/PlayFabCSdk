@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Centralized file list for PlayFabGameSave projects in Windows. -->
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Platform\Windows\PFGameSaveFilesAPIProvider_Win32.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Platform\Windows\PFGameSaveFilesAPIProvider_Win32.h" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseGDK)'=='true'">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Platform\GDK\Platform_GDK.cpp" />
+  <!-- GRTS provider is for GDK builds -->
+  <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Platform\Windows\PFGameSaveFilesAPIProvider_GRTS.cpp" />
+  <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Platform\Windows\PFGameSaveFilesAPIProvider_GRTS.h" />
+    <!-- No Windows provider sources for GDK builds. -->
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseGDK)'!='true'">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Platform\Windows\Platform_Win32.cpp" />
+  </ItemGroup>
+</Project>

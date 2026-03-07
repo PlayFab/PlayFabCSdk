@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <httpClient/config.h>
 #include <httpClient/pal.h>
 
 #if !HC_PLATFORM_IS_MICROSOFT

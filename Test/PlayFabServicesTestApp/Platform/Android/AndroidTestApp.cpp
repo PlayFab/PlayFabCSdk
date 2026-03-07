@@ -22,7 +22,9 @@ namespace AndroidTestApp
 void TestApp::AppInitialize(
     JNIEnv* env,
     jobject activityInstance,
-    jobject context
+    jobject context,
+    jstring currentPlayerId,
+    jobject signInClient
 )
 {
     auto lock = Lock();
@@ -34,6 +36,11 @@ void TestApp::AppInitialize(
 
     m_activityInstance = env->NewGlobalRef(activityInstance);
     m_context = env->NewGlobalRef(context);
+    m_signInClient = env->NewGlobalRef(signInClient);
+
+    char const* nativePlayerId = env->GetStringUTFChars(currentPlayerId, nullptr);
+    m_currentPlayerId = nativePlayerId;
+    env->ReleaseStringUTFChars(currentPlayerId, nativePlayerId);
 
     jclass testAppClass = env->FindClass("com/microsoft/playfab/sdk/AndroidTestClient");
     if (testAppClass == nullptr)
@@ -56,6 +63,12 @@ void TestApp::AppInitialize(
     m_getDeviceTokenMethod = env->GetMethodID(
         m_testAppClass,
         "GetDeviceToken",
+        "()Ljava/lang/String;"
+    );
+
+    m_getServerAuthTokenMethod = env->GetMethodID(
+        m_testAppClass,
+        "GetServerAuthToken",
         "()Ljava/lang/String;"
     );
 
@@ -124,6 +137,16 @@ jobject TestApp::GetAppContext()
     return m_activityInstance;
 }
 
+std::string const& TestApp::GetCurrentPlayerId()
+{
+    return m_currentPlayerId;
+}
+
+jobject TestApp::GetSignInClient()
+{
+    return m_signInClient;
+}
+
 void TestApp::GetBufferFromFile(const char* filename, std::vector<char>& fileBuffer)
 {
     JNIEnv* env = JniEnvFromJavaVm(m_javaVm);
@@ -144,6 +167,14 @@ const char* TestApp::GetDeviceToken()
 {
     JNIEnv* env = JniEnvFromJavaVm(m_javaVm);
     jstring result = (jstring) env->CallObjectMethod(m_activityInstance, m_getDeviceTokenMethod);
+
+    return env->GetStringUTFChars(result, 0);
+}
+
+const char* TestApp::GetServerAuthToken()
+{
+    JNIEnv* env = JniEnvFromJavaVm(m_javaVm);
+    jstring result = (jstring) env->CallObjectMethod(m_activityInstance, m_getServerAuthTokenMethod);
 
     return env->GetStringUTFChars(result, 0);
 }

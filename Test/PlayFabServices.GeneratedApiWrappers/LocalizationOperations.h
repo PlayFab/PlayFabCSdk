@@ -1,8 +1,6 @@
 #pragma once
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 #include <playfab/services/cpp/LocalizationTypeWrappers.h>
-#endif
 #include "TestContext.h"
 
 namespace PlayFab
@@ -10,7 +8,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class GetLanguageListOperation : public XAsyncOperation<Wrappers::PFLocalizationGetLanguageListResponseWrapper<Allocator>>
 {
 public:

@@ -7,7 +7,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 CreateStatisticDefinitionOperation::CreateStatisticDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -28,7 +28,7 @@ HRESULT CreateStatisticDefinitionOperation::OnStarted(XAsyncBlock* async) noexce
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 DeleteStatisticDefinitionOperation::DeleteStatisticDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -77,7 +77,7 @@ Result<DeleteStatisticsOperation::ResultType> DeleteStatisticsOperation::GetResu
     return ResultType{ *result };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 GetStatisticDefinitionOperation::GetStatisticDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -135,7 +135,7 @@ Result<GetStatisticsOperation::ResultType> GetStatisticsOperation::GetResult(XAs
     return ResultType{ *result };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 GetStatisticsForEntitiesOperation::GetStatisticsForEntitiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -165,7 +165,7 @@ Result<GetStatisticsForEntitiesOperation::ResultType> GetStatisticsForEntitiesOp
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 IncrementStatisticVersionOperation::IncrementStatisticVersionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -192,7 +192,7 @@ Result<IncrementStatisticVersionOperation::ResultType> IncrementStatisticVersion
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ListStatisticDefinitionsOperation::ListStatisticDefinitionsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -223,6 +223,27 @@ Result<ListStatisticDefinitionsOperation::ResultType> ListStatisticDefinitionsOp
 #endif
 
 #if 0
+
+UnlinkAggregationSourceFromStatisticOperation::UnlinkAggregationSourceFromStatisticOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<void> UnlinkAggregationSourceFromStatisticOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<UnlinkAggregationSourceFromStatisticOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT UnlinkAggregationSourceFromStatisticOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFStatisticsUnlinkAggregationSourceFromStatisticAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 UpdateStatisticDefinitionOperation::UpdateStatisticDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

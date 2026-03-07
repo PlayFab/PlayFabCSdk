@@ -64,16 +64,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetABTestParent() const
+    {
+        return m_aBTestParent;
+    }
+
     void SetABTestParent(String value)
     {
         m_aBTestParent = std::move(value);
         this->m_model.aBTestParent =  m_aBTestParent.empty() ? nullptr : m_aBTestParent.data();
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    String const& GetName() const
+    {
+        return m_name;
     }
 
     void SetName(String value)
@@ -138,6 +153,11 @@ public:
         swap(lhs.m_segments, rhs.m_segments);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFSegmentsGetSegmentResultWrapper<Alloc>, Alloc> const& GetSegments() const
+    {
+        return m_segments;
     }
 
     void SetSegments(ModelVector<PFSegmentsGetSegmentResultWrapper<Alloc>, Alloc> value)
@@ -205,6 +225,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -212,10 +237,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetplayfabNamespace() const
+    {
+        return m_playfabNamespace;
+    }
+
     void SetplayfabNamespace(String value)
     {
         m_playfabNamespace = std::move(value);
         this->m_model.playfabNamespace =  m_playfabNamespace.empty() ? nullptr : m_playfabNamespace.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -284,10 +319,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)
@@ -357,6 +402,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -364,10 +414,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetTagName() const
+    {
+        return m_tagName;
     }
 
     void SetTagName(String value)
@@ -434,6 +494,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFSegmentsGetSegmentResultWrapper<Alloc>, Alloc> const& GetSegments() const
+    {
+        return m_segments;
+    }
+
     void SetSegments(ModelVector<PFSegmentsGetSegmentResultWrapper<Alloc>, Alloc> value)
     {
         m_segments = std::move(value);
@@ -497,11 +562,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -576,10 +651,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -589,10 +674,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetGetProfilesAsync() const
+    {
+        return m_getProfilesAsync;
+    }
+
     void SetGetProfilesAsync(std::optional<bool> value)
     {
         m_getProfilesAsync = std::move(value);
         this->m_model.getProfilesAsync = m_getProfilesAsync ? m_getProfilesAsync.operator->() : nullptr;
+    }
+
+    std::optional<uint32_t> const& GetMaxBatchSize() const
+    {
+        return m_maxBatchSize;
     }
 
     void SetMaxBatchSize(std::optional<uint32_t> value)
@@ -601,10 +696,20 @@ public:
         this->m_model.maxBatchSize = m_maxBatchSize ? m_maxBatchSize.operator->() : nullptr;
     }
 
+    std::optional<uint32_t> const& GetSecondsToLive() const
+    {
+        return m_secondsToLive;
+    }
+
     void SetSecondsToLive(std::optional<uint32_t> value)
     {
         m_secondsToLive = std::move(value);
         this->m_model.secondsToLive = m_secondsToLive ? m_secondsToLive.operator->() : nullptr;
+    }
+
+    String const& GetSegmentId() const
+    {
+        return m_segmentId;
     }
 
     void SetSegmentId(String value)
@@ -679,15 +784,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    time_t GetAttributedAt() const
+    {
+        return this->m_model.attributedAt;
+    }
+
     void SetAttributedAt(time_t value)
     {
         this->m_model.attributedAt = value;
+    }
+
+    String const& GetCampaignId() const
+    {
+        return m_campaignId;
     }
 
     void SetCampaignId(String value)
     {
         m_campaignId = std::move(value);
         this->m_model.campaignId =  m_campaignId.empty() ? nullptr : m_campaignId.data();
+    }
+
+    String const& GetPlatform() const
+    {
+        return m_platform;
     }
 
     void SetPlatform(String value)
@@ -756,16 +876,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetEmailAddress() const
+    {
+        return m_emailAddress;
+    }
+
     void SetEmailAddress(String value)
     {
         m_emailAddress = std::move(value);
         this->m_model.emailAddress =  m_emailAddress.empty() ? nullptr : m_emailAddress.data();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    std::optional<PFEmailVerificationStatus> const& GetVerificationStatus() const
+    {
+        return m_verificationStatus;
     }
 
     void SetVerificationStatus(std::optional<PFEmailVerificationStatus> value)
@@ -838,10 +973,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetEmail() const
+    {
+        return m_email;
+    }
+
     void SetEmail(String value)
     {
         m_email = std::move(value);
         this->m_model.email =  m_email.empty() ? nullptr : m_email.data();
+    }
+
+    std::optional<PFLoginIdentityProvider> const& GetPlatform() const
+    {
+        return m_platform;
     }
 
     void SetPlatform(std::optional<PFLoginIdentityProvider> value)
@@ -850,10 +995,20 @@ public:
         this->m_model.platform = m_platform ? m_platform.operator->() : nullptr;
     }
 
+    String const& GetPlatformUserId() const
+    {
+        return m_platformUserId;
+    }
+
     void SetPlatformUserId(String value)
     {
         m_platformUserId = std::move(value);
         this->m_model.platformUserId =  m_platformUserId.empty() ? nullptr : m_platformUserId.data();
+    }
+
+    String const& GetUsername() const
+    {
+        return m_username;
     }
 
     void SetUsername(String value)
@@ -927,10 +1082,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCity() const
+    {
+        return m_city;
+    }
+
     void SetCity(String value)
     {
         m_city = std::move(value);
         this->m_model.city =  m_city.empty() ? nullptr : m_city.data();
+    }
+
+    PFContinentCode GetContinentCode() const
+    {
+        return this->m_model.continentCode;
     }
 
     void SetContinentCode(PFContinentCode value)
@@ -938,15 +1103,30 @@ public:
         this->m_model.continentCode = value;
     }
 
+    PFCountryCode GetCountryCode() const
+    {
+        return this->m_model.countryCode;
+    }
+
     void SetCountryCode(PFCountryCode value)
     {
         this->m_model.countryCode = value;
+    }
+
+    std::optional<double> const& GetLatitude() const
+    {
+        return m_latitude;
     }
 
     void SetLatitude(std::optional<double> value)
     {
         m_latitude = std::move(value);
         this->m_model.latitude = m_latitude ? m_latitude.operator->() : nullptr;
+    }
+
+    std::optional<double> const& GetLongitude() const
+    {
+        return m_longitude;
     }
 
     void SetLongitude(std::optional<double> value)
@@ -1015,10 +1195,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    String const& GetName() const
+    {
+        return m_name;
     }
 
     void SetName(String value)
@@ -1027,9 +1217,19 @@ public:
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
     }
 
+    int32_t GetStatisticValue() const
+    {
+        return this->m_model.statisticValue;
+    }
+
     void SetStatisticValue(int32_t value)
     {
         this->m_model.statisticValue = value;
+    }
+
+    int32_t GetStatisticVersion() const
+    {
+        return this->m_model.statisticVersion;
     }
 
     void SetStatisticVersion(int32_t value)
@@ -1095,10 +1295,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetNotificationEndpointARN() const
+    {
+        return m_notificationEndpointARN;
+    }
+
     void SetNotificationEndpointARN(String value)
     {
         m_notificationEndpointARN = std::move(value);
         this->m_model.notificationEndpointARN =  m_notificationEndpointARN.empty() ? nullptr : m_notificationEndpointARN.data();
+    }
+
+    std::optional<PFPushNotificationPlatform> const& GetPlatform() const
+    {
+        return m_platform;
     }
 
     void SetPlatform(std::optional<PFPushNotificationPlatform> value)
@@ -1207,11 +1417,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFSegmentsAdCampaignAttributionWrapper<Alloc>, Alloc> const& GetAdCampaignAttributions() const
+    {
+        return m_adCampaignAttributions;
+    }
+
     void SetAdCampaignAttributions(ModelVector<PFSegmentsAdCampaignAttributionWrapper<Alloc>, Alloc> value)
     {
         m_adCampaignAttributions = std::move(value);
         this->m_model.adCampaignAttributions =  m_adCampaignAttributions.empty() ? nullptr : m_adCampaignAttributions.data();
         this->m_model.adCampaignAttributionsCount =  static_cast<uint32_t>(m_adCampaignAttributions.size());
+    }
+
+    String const& GetAvatarUrl() const
+    {
+        return m_avatarUrl;
     }
 
     void SetAvatarUrl(String value)
@@ -1220,16 +1440,31 @@ public:
         this->m_model.avatarUrl =  m_avatarUrl.empty() ? nullptr : m_avatarUrl.data();
     }
 
+    std::optional<time_t> const& GetBannedUntil() const
+    {
+        return m_bannedUntil;
+    }
+
     void SetBannedUntil(std::optional<time_t> value)
     {
         m_bannedUntil = std::move(value);
         this->m_model.bannedUntil = m_bannedUntil ? m_bannedUntil.operator->() : nullptr;
     }
 
+    std::optional<PFSegmentsChurnRiskLevel> const& GetChurnPrediction() const
+    {
+        return m_churnPrediction;
+    }
+
     void SetChurnPrediction(std::optional<PFSegmentsChurnRiskLevel> value)
     {
         m_churnPrediction = std::move(value);
         this->m_model.churnPrediction = m_churnPrediction ? m_churnPrediction.operator->() : nullptr;
+    }
+
+    ModelVector<PFSegmentsContactEmailInfoWrapper<Alloc>, Alloc> const& GetContactEmailAddresses() const
+    {
+        return m_contactEmailAddresses;
     }
 
     void SetContactEmailAddresses(ModelVector<PFSegmentsContactEmailInfoWrapper<Alloc>, Alloc> value)
@@ -1239,10 +1474,20 @@ public:
         this->m_model.contactEmailAddressesCount =  static_cast<uint32_t>(m_contactEmailAddresses.size());
     }
 
+    std::optional<time_t> const& GetCreated() const
+    {
+        return m_created;
+    }
+
     void SetCreated(std::optional<time_t> value)
     {
         m_created = std::move(value);
         this->m_model.created = m_created ? m_created.operator->() : nullptr;
+    }
+
+    JsonObject<Alloc> const& GetCustomProperties() const
+    {
+        return m_customProperties;
     }
 
     void SetCustomProperties(JsonObject<Alloc> value)
@@ -1251,16 +1496,31 @@ public:
         this->m_model.customProperties.stringValue = m_customProperties.stringValue.empty() ? nullptr : m_customProperties.stringValue.data();
     }
 
+    String const& GetDisplayName() const
+    {
+        return m_displayName;
+    }
+
     void SetDisplayName(String value)
     {
         m_displayName = std::move(value);
         this->m_model.displayName =  m_displayName.empty() ? nullptr : m_displayName.data();
     }
 
+    std::optional<time_t> const& GetLastLogin() const
+    {
+        return m_lastLogin;
+    }
+
     void SetLastLogin(std::optional<time_t> value)
     {
         m_lastLogin = std::move(value);
         this->m_model.lastLogin = m_lastLogin ? m_lastLogin.operator->() : nullptr;
+    }
+
+    ModelVector<PFSegmentsPlayerLinkedAccountWrapper<Alloc>, Alloc> const& GetLinkedAccounts() const
+    {
+        return m_linkedAccounts;
     }
 
     void SetLinkedAccounts(ModelVector<PFSegmentsPlayerLinkedAccountWrapper<Alloc>, Alloc> value)
@@ -1270,6 +1530,11 @@ public:
         this->m_model.linkedAccountsCount =  static_cast<uint32_t>(m_linkedAccounts.size());
     }
 
+    ModelDictionaryEntryVector<PFSegmentsPlayerLocationWrapper<Alloc>, Alloc> const& GetLocations() const
+    {
+        return m_locations;
+    }
+
     void SetLocations(ModelDictionaryEntryVector<PFSegmentsPlayerLocationWrapper<Alloc>, Alloc> value)
     {
         m_locations = std::move(value);
@@ -1277,10 +1542,20 @@ public:
         this->m_model.locationsCount =  static_cast<uint32_t>(m_locations.size());
     }
 
+    std::optional<PFLoginIdentityProvider> const& GetOrigination() const
+    {
+        return m_origination;
+    }
+
     void SetOrigination(std::optional<PFLoginIdentityProvider> value)
     {
         m_origination = std::move(value);
         this->m_model.origination = m_origination ? m_origination.operator->() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetPlayerExperimentVariants() const
+    {
+        return m_playerExperimentVariants;
     }
 
     void SetPlayerExperimentVariants(CStringVector<Alloc> value)
@@ -1290,10 +1565,20 @@ public:
         this->m_model.playerExperimentVariantsCount =  static_cast<uint32_t>(m_playerExperimentVariants.size());
     }
 
+    String const& GetPlayerId() const
+    {
+        return m_playerId;
+    }
+
     void SetPlayerId(String value)
     {
         m_playerId = std::move(value);
         this->m_model.playerId =  m_playerId.empty() ? nullptr : m_playerId.data();
+    }
+
+    ModelVector<PFSegmentsPlayerStatisticWrapper<Alloc>, Alloc> const& GetPlayerStatistics() const
+    {
+        return m_playerStatistics;
     }
 
     void SetPlayerStatistics(ModelVector<PFSegmentsPlayerStatisticWrapper<Alloc>, Alloc> value)
@@ -1303,10 +1588,20 @@ public:
         this->m_model.playerStatisticsCount =  static_cast<uint32_t>(m_playerStatistics.size());
     }
 
+    String const& GetPublisherId() const
+    {
+        return m_publisherId;
+    }
+
     void SetPublisherId(String value)
     {
         m_publisherId = std::move(value);
         this->m_model.publisherId =  m_publisherId.empty() ? nullptr : m_publisherId.data();
+    }
+
+    ModelVector<PFSegmentsPushNotificationRegistrationWrapper<Alloc>, Alloc> const& GetPushNotificationRegistrations() const
+    {
+        return m_pushNotificationRegistrations;
     }
 
     void SetPushNotificationRegistrations(ModelVector<PFSegmentsPushNotificationRegistrationWrapper<Alloc>, Alloc> value)
@@ -1316,11 +1611,21 @@ public:
         this->m_model.pushNotificationRegistrationsCount =  static_cast<uint32_t>(m_pushNotificationRegistrations.size());
     }
 
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetStatistics() const
+    {
+        return m_statistics;
+    }
+
     void SetStatistics(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
     {
         m_statistics = std::move(value);
         this->m_model.statistics =  m_statistics.empty() ? nullptr : m_statistics.data();
         this->m_model.statisticsCount =  static_cast<uint32_t>(m_statistics.size());
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)
@@ -1330,10 +1635,20 @@ public:
         this->m_model.tagsCount =  static_cast<uint32_t>(m_tags.size());
     }
 
+    String const& GetTitleId() const
+    {
+        return m_titleId;
+    }
+
     void SetTitleId(String value)
     {
         m_titleId = std::move(value);
         this->m_model.titleId =  m_titleId.empty() ? nullptr : m_titleId.data();
+    }
+
+    std::optional<uint32_t> const& GetTotalValueToDateInUSD() const
+    {
+        return m_totalValueToDateInUSD;
     }
 
     void SetTotalValueToDateInUSD(std::optional<uint32_t> value)
@@ -1342,11 +1657,21 @@ public:
         this->m_model.totalValueToDateInUSD = m_totalValueToDateInUSD ? m_totalValueToDateInUSD.operator->() : nullptr;
     }
 
+    DictionaryEntryVector<PFUint32DictionaryEntry, Alloc> const& GetValuesToDate() const
+    {
+        return m_valuesToDate;
+    }
+
     void SetValuesToDate(DictionaryEntryVector<PFUint32DictionaryEntry, Alloc> value)
     {
         m_valuesToDate = std::move(value);
         this->m_model.valuesToDate =  m_valuesToDate.empty() ? nullptr : m_valuesToDate.data();
         this->m_model.valuesToDateCount =  static_cast<uint32_t>(m_valuesToDate.size());
+    }
+
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetVirtualCurrencyBalances() const
+    {
+        return m_virtualCurrencyBalances;
     }
 
     void SetVirtualCurrencyBalances(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
@@ -1456,10 +1781,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+    }
+
+    ModelVector<PFSegmentsPlayerProfileWrapper<Alloc>, Alloc> const& GetPlayerProfiles() const
+    {
+        return m_playerProfiles;
     }
 
     void SetPlayerProfiles(ModelVector<PFSegmentsPlayerProfileWrapper<Alloc>, Alloc> value)
@@ -1467,6 +1802,11 @@ public:
         m_playerProfiles = std::move(value);
         this->m_model.playerProfiles =  m_playerProfiles.empty() ? nullptr : m_playerProfiles.data();
         this->m_model.playerProfilesCount =  static_cast<uint32_t>(m_playerProfiles.size());
+    }
+
+    int32_t GetProfilesInSegment() const
+    {
+        return this->m_model.profilesInSegment;
     }
 
     void SetProfilesInSegment(int32_t value)
@@ -1534,6 +1874,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -1541,10 +1886,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetTagName() const
+    {
+        return m_tagName;
     }
 
     void SetTagName(String value)

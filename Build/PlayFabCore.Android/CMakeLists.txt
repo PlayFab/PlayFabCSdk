@@ -26,14 +26,17 @@ set(CMAKE_C_FLAGS_RELEASE "-gdwarf-5")
 # Set final shared libraries output folder
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Debug/${PROJECT_NAME})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Release/${PROJECT_NAME})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/RelWithDebInfo/${PROJECT_NAME})
 
 # Set final static libraries output folder
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Debug/${PROJECT_NAME})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Release/${PROJECT_NAME})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/RelWithDebInfo/${PROJECT_NAME})
 
 # Set final runtime output folder
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Debug/${PROJECT_NAME})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/Release/${PROJECT_NAME})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/RelWithDebInfo/${PROJECT_NAME})
 
 ###########################################
 ### Set up paths for source and include ###
@@ -69,14 +72,26 @@ set(COMMON_INCLUDE_DIRS
 set(PlayFabSharedInternal.Android ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/${CMAKE_BUILD_TYPE}/PlayFabSharedInternal.Android/PlayFabSharedInternal.Android.a)
 
 # libHttpClient Shared Lib
-string(TOLOWER "${CMAKE_BUILD_TYPE}" PATH_FLAVOR)
-set(libHttpClient ${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${PATH_FLAVOR}/obj/${ANDROID_ABI}/libHttpClient.Android.so)
+# AGP 7.4.2+ uses cxx/<hash> instead of cmake directory for intermediates
+file(GLOB_RECURSE libHttpClient_FOUND 
+    "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cxx/${CMAKE_BUILD_TYPE}/*/obj/${ANDROID_ABI}/libHttpClient.Android.so"
+    "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI}/libHttpClient.Android.so"
+)
+if(libHttpClient_FOUND)
+    list(GET libHttpClient_FOUND 0 libHttpClient)
+else()
+    message(WARNING "Could not find libHttpClient.Android.so, it will need to be built first")
+    set(libHttpClient "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI}/libHttpClient.Android.so")
+endif()
 
 add_library(
     "PlayFabCore.Android"
     SHARED
     "${SERVICE_WRAPPER_SOURCE_FILES}"
     "${COMMON_SOURCE_FILES}"
+    "${PATH_TO_SOURCE}/PlayFabCore/Include/PlayFab/core/PFPlatformAndroid.h"
+    "${PATH_TO_SOURCE}/PlayFabCore/Source/Platform/Android/LocalUser_Android.cpp"
+    "${PATH_TO_SOURCE}/PlayFabCore/Source/Platform/Android/PlatformComponents_Android.cpp"
 )
 
 target_include_directories(

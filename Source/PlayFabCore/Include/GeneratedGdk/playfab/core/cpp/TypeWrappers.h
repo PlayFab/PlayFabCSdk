@@ -87,10 +87,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAnnotation() const
+    {
+        return m_annotation;
+    }
+
     void SetAnnotation(String value)
     {
         m_annotation = std::move(value);
         this->m_model.annotation =  m_annotation.empty() ? nullptr : m_annotation.data();
+    }
+
+    CStringVector<Alloc> const& GetBundleContents() const
+    {
+        return m_bundleContents;
     }
 
     void SetBundleContents(CStringVector<Alloc> value)
@@ -100,16 +110,31 @@ public:
         this->m_model.bundleContentsCount =  static_cast<uint32_t>(m_bundleContents.size());
     }
 
+    String const& GetBundleParent() const
+    {
+        return m_bundleParent;
+    }
+
     void SetBundleParent(String value)
     {
         m_bundleParent = std::move(value);
         this->m_model.bundleParent =  m_bundleParent.empty() ? nullptr : m_bundleParent.data();
     }
 
+    String const& GetCatalogVersion() const
+    {
+        return m_catalogVersion;
+    }
+
     void SetCatalogVersion(String value)
     {
         m_catalogVersion = std::move(value);
         this->m_model.catalogVersion =  m_catalogVersion.empty() ? nullptr : m_catalogVersion.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomData() const
+    {
+        return m_customData;
     }
 
     void SetCustomData(StringDictionaryEntryVector<Alloc> value)
@@ -119,10 +144,20 @@ public:
         this->m_model.customDataCount =  static_cast<uint32_t>(m_customData.size());
     }
 
+    String const& GetDisplayName() const
+    {
+        return m_displayName;
+    }
+
     void SetDisplayName(String value)
     {
         m_displayName = std::move(value);
         this->m_model.displayName =  m_displayName.empty() ? nullptr : m_displayName.data();
+    }
+
+    std::optional<time_t> const& GetExpiration() const
+    {
+        return m_expiration;
     }
 
     void SetExpiration(std::optional<time_t> value)
@@ -131,10 +166,20 @@ public:
         this->m_model.expiration = m_expiration ? m_expiration.operator->() : nullptr;
     }
 
+    String const& GetItemClass() const
+    {
+        return m_itemClass;
+    }
+
     void SetItemClass(String value)
     {
         m_itemClass = std::move(value);
         this->m_model.itemClass =  m_itemClass.empty() ? nullptr : m_itemClass.data();
+    }
+
+    String const& GetItemId() const
+    {
+        return m_itemId;
     }
 
     void SetItemId(String value)
@@ -143,10 +188,20 @@ public:
         this->m_model.itemId =  m_itemId.empty() ? nullptr : m_itemId.data();
     }
 
+    String const& GetItemInstanceId() const
+    {
+        return m_itemInstanceId;
+    }
+
     void SetItemInstanceId(String value)
     {
         m_itemInstanceId = std::move(value);
         this->m_model.itemInstanceId =  m_itemInstanceId.empty() ? nullptr : m_itemInstanceId.data();
+    }
+
+    std::optional<time_t> const& GetPurchaseDate() const
+    {
+        return m_purchaseDate;
     }
 
     void SetPurchaseDate(std::optional<time_t> value)
@@ -155,10 +210,20 @@ public:
         this->m_model.purchaseDate = m_purchaseDate ? m_purchaseDate.operator->() : nullptr;
     }
 
+    std::optional<int32_t> const& GetRemainingUses() const
+    {
+        return m_remainingUses;
+    }
+
     void SetRemainingUses(std::optional<int32_t> value)
     {
         m_remainingUses = std::move(value);
         this->m_model.remainingUses = m_remainingUses ? m_remainingUses.operator->() : nullptr;
+    }
+
+    String const& GetUnitCurrency() const
+    {
+        return m_unitCurrency;
     }
 
     void SetUnitCurrency(String value)
@@ -167,9 +232,19 @@ public:
         this->m_model.unitCurrency =  m_unitCurrency.empty() ? nullptr : m_unitCurrency.data();
     }
 
+    uint32_t GetUnitPrice() const
+    {
+        return this->m_model.unitPrice;
+    }
+
     void SetUnitPrice(uint32_t value)
     {
         this->m_model.unitPrice = value;
+    }
+
+    std::optional<int32_t> const& GetUsesIncrementedBy() const
+    {
+        return m_usesIncrementedBy;
     }
 
     void SetUsesIncrementedBy(std::optional<int32_t> value)
@@ -258,6 +333,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAndroidDeviceId() const
+    {
+        return m_androidDeviceId;
+    }
+
     void SetAndroidDeviceId(String value)
     {
         m_androidDeviceId = std::move(value);
@@ -318,6 +398,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAppleSubjectId() const
+    {
+        return m_appleSubjectId;
+    }
+
     void SetAppleSubjectId(String value)
     {
         m_appleSubjectId = std::move(value);
@@ -331,6 +416,86 @@ private:
     }
 
     String m_appleSubjectId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFUserBattleNetInfoWrapper : public ModelWrapper<PFUserBattleNetInfo, Alloc>
+{
+public:
+    using ModelType = PFUserBattleNetInfo;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFUserBattleNetInfoWrapper() = default;
+
+    PFUserBattleNetInfoWrapper(const PFUserBattleNetInfo& model) :
+        ModelWrapper<PFUserBattleNetInfo, Alloc>{ model },
+        m_battleNetAccountId{ SafeString(model.battleNetAccountId) },
+        m_battleNetBattleTag{ SafeString(model.battleNetBattleTag) }
+    {
+        SetModelPointers();
+    }
+
+    PFUserBattleNetInfoWrapper(const PFUserBattleNetInfoWrapper& src) :
+        PFUserBattleNetInfoWrapper{ src.Model() }
+    {
+    }
+
+    PFUserBattleNetInfoWrapper(PFUserBattleNetInfoWrapper&& src) :
+        PFUserBattleNetInfoWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFUserBattleNetInfoWrapper& operator=(PFUserBattleNetInfoWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFUserBattleNetInfoWrapper() = default;
+
+    friend void swap(PFUserBattleNetInfoWrapper& lhs, PFUserBattleNetInfoWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_battleNetAccountId, rhs.m_battleNetAccountId);
+        swap(lhs.m_battleNetBattleTag, rhs.m_battleNetBattleTag);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    String const& GetBattleNetAccountId() const
+    {
+        return m_battleNetAccountId;
+    }
+
+    void SetBattleNetAccountId(String value)
+    {
+        m_battleNetAccountId = std::move(value);
+        this->m_model.battleNetAccountId =  m_battleNetAccountId.empty() ? nullptr : m_battleNetAccountId.data();
+    }
+
+    String const& GetBattleNetBattleTag() const
+    {
+        return m_battleNetBattleTag;
+    }
+
+    void SetBattleNetBattleTag(String value)
+    {
+        m_battleNetBattleTag = std::move(value);
+        this->m_model.battleNetBattleTag =  m_battleNetBattleTag.empty() ? nullptr : m_battleNetBattleTag.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.battleNetAccountId = m_battleNetAccountId.empty() ? nullptr : m_battleNetAccountId.data();
+        this->m_model.battleNetBattleTag = m_battleNetBattleTag.empty() ? nullptr : m_battleNetBattleTag.data();
+    }
+
+    String m_battleNetAccountId;
+    String m_battleNetBattleTag;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -376,6 +541,11 @@ public:
         swap(lhs.m_customId, rhs.m_customId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetCustomId() const
+    {
+        return m_customId;
     }
 
     void SetCustomId(String value)
@@ -440,10 +610,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFacebookId() const
+    {
+        return m_facebookId;
+    }
+
     void SetFacebookId(String value)
     {
         m_facebookId = std::move(value);
         this->m_model.facebookId =  m_facebookId.empty() ? nullptr : m_facebookId.data();
+    }
+
+    String const& GetFullName() const
+    {
+        return m_fullName;
     }
 
     void SetFullName(String value)
@@ -508,6 +688,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFacebookInstantGamesId() const
+    {
+        return m_facebookInstantGamesId;
+    }
+
     void SetFacebookInstantGamesId(String value)
     {
         m_facebookInstantGamesId = std::move(value);
@@ -566,6 +751,11 @@ public:
         swap(lhs.m_gameCenterId, rhs.m_gameCenterId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetGameCenterId() const
+    {
+        return m_gameCenterId;
     }
 
     void SetGameCenterId(String value)
@@ -636,10 +826,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetGoogleEmail() const
+    {
+        return m_googleEmail;
+    }
+
     void SetGoogleEmail(String value)
     {
         m_googleEmail = std::move(value);
         this->m_model.googleEmail =  m_googleEmail.empty() ? nullptr : m_googleEmail.data();
+    }
+
+    String const& GetGoogleGender() const
+    {
+        return m_googleGender;
     }
 
     void SetGoogleGender(String value)
@@ -648,16 +848,31 @@ public:
         this->m_model.googleGender =  m_googleGender.empty() ? nullptr : m_googleGender.data();
     }
 
+    String const& GetGoogleId() const
+    {
+        return m_googleId;
+    }
+
     void SetGoogleId(String value)
     {
         m_googleId = std::move(value);
         this->m_model.googleId =  m_googleId.empty() ? nullptr : m_googleId.data();
     }
 
+    String const& GetGoogleLocale() const
+    {
+        return m_googleLocale;
+    }
+
     void SetGoogleLocale(String value)
     {
         m_googleLocale = std::move(value);
         this->m_model.googleLocale =  m_googleLocale.empty() ? nullptr : m_googleLocale.data();
+    }
+
+    String const& GetGoogleName() const
+    {
+        return m_googleName;
     }
 
     void SetGoogleName(String value)
@@ -732,16 +947,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetGooglePlayGamesPlayerAvatarImageUrl() const
+    {
+        return m_googlePlayGamesPlayerAvatarImageUrl;
+    }
+
     void SetGooglePlayGamesPlayerAvatarImageUrl(String value)
     {
         m_googlePlayGamesPlayerAvatarImageUrl = std::move(value);
         this->m_model.googlePlayGamesPlayerAvatarImageUrl =  m_googlePlayGamesPlayerAvatarImageUrl.empty() ? nullptr : m_googlePlayGamesPlayerAvatarImageUrl.data();
     }
 
+    String const& GetGooglePlayGamesPlayerDisplayName() const
+    {
+        return m_googlePlayGamesPlayerDisplayName;
+    }
+
     void SetGooglePlayGamesPlayerDisplayName(String value)
     {
         m_googlePlayGamesPlayerDisplayName = std::move(value);
         this->m_model.googlePlayGamesPlayerDisplayName =  m_googlePlayGamesPlayerDisplayName.empty() ? nullptr : m_googlePlayGamesPlayerDisplayName.data();
+    }
+
+    String const& GetGooglePlayGamesPlayerId() const
+    {
+        return m_googlePlayGamesPlayerId;
     }
 
     void SetGooglePlayGamesPlayerId(String value)
@@ -808,6 +1038,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetIosDeviceId() const
+    {
+        return m_iosDeviceId;
+    }
+
     void SetIosDeviceId(String value)
     {
         m_iosDeviceId = std::move(value);
@@ -870,10 +1105,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetKongregateId() const
+    {
+        return m_kongregateId;
+    }
+
     void SetKongregateId(String value)
     {
         m_kongregateId = std::move(value);
         this->m_model.kongregateId =  m_kongregateId.empty() ? nullptr : m_kongregateId.data();
+    }
+
+    String const& GetKongregateName() const
+    {
+        return m_kongregateName;
     }
 
     void SetKongregateName(String value)
@@ -938,6 +1183,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetNintendoSwitchAccountSubjectId() const
+    {
+        return m_nintendoSwitchAccountSubjectId;
+    }
+
     void SetNintendoSwitchAccountSubjectId(String value)
     {
         m_nintendoSwitchAccountSubjectId = std::move(value);
@@ -996,6 +1246,11 @@ public:
         swap(lhs.m_nintendoSwitchDeviceId, rhs.m_nintendoSwitchDeviceId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetNintendoSwitchDeviceId() const
+    {
+        return m_nintendoSwitchDeviceId;
     }
 
     void SetNintendoSwitchDeviceId(String value)
@@ -1062,16 +1317,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetConnectionId() const
+    {
+        return m_connectionId;
+    }
+
     void SetConnectionId(String value)
     {
         m_connectionId = std::move(value);
         this->m_model.connectionId =  m_connectionId.empty() ? nullptr : m_connectionId.data();
     }
 
+    String const& GetIssuer() const
+    {
+        return m_issuer;
+    }
+
     void SetIssuer(String value)
     {
         m_issuer = std::move(value);
         this->m_model.issuer =  m_issuer.empty() ? nullptr : m_issuer.data();
+    }
+
+    String const& GetSubject() const
+    {
+        return m_subject;
     }
 
     void SetSubject(String value)
@@ -1138,6 +1408,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetEmail() const
+    {
+        return m_email;
+    }
+
     void SetEmail(String value)
     {
         m_email = std::move(value);
@@ -1200,10 +1475,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPsnAccountId() const
+    {
+        return m_psnAccountId;
+    }
+
     void SetPsnAccountId(String value)
     {
         m_psnAccountId = std::move(value);
         this->m_model.psnAccountId =  m_psnAccountId.empty() ? nullptr : m_psnAccountId.data();
+    }
+
+    String const& GetPsnOnlineId() const
+    {
+        return m_psnOnlineId;
     }
 
     void SetPsnOnlineId(String value)
@@ -1266,6 +1551,11 @@ public:
         swap(lhs.m_customId, rhs.m_customId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetCustomId() const
+    {
+        return m_customId;
     }
 
     void SetCustomId(String value)
@@ -1336,10 +1626,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFTitleActivationStatus> const& GetSteamActivationStatus() const
+    {
+        return m_steamActivationStatus;
+    }
+
     void SetSteamActivationStatus(std::optional<PFTitleActivationStatus> value)
     {
         m_steamActivationStatus = std::move(value);
         this->m_model.steamActivationStatus = m_steamActivationStatus ? m_steamActivationStatus.operator->() : nullptr;
+    }
+
+    String const& GetSteamCountry() const
+    {
+        return m_steamCountry;
     }
 
     void SetSteamCountry(String value)
@@ -1348,16 +1648,31 @@ public:
         this->m_model.steamCountry =  m_steamCountry.empty() ? nullptr : m_steamCountry.data();
     }
 
+    std::optional<PFCurrency> const& GetSteamCurrency() const
+    {
+        return m_steamCurrency;
+    }
+
     void SetSteamCurrency(std::optional<PFCurrency> value)
     {
         m_steamCurrency = std::move(value);
         this->m_model.steamCurrency = m_steamCurrency ? m_steamCurrency.operator->() : nullptr;
     }
 
+    String const& GetSteamId() const
+    {
+        return m_steamId;
+    }
+
     void SetSteamId(String value)
     {
         m_steamId = std::move(value);
         this->m_model.steamId =  m_steamId.empty() ? nullptr : m_steamId.data();
+    }
+
+    String const& GetSteamName() const
+    {
+        return m_steamName;
     }
 
     void SetSteamName(String value)
@@ -1431,10 +1746,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    String const& GetType() const
+    {
+        return m_type;
     }
 
     void SetType(String value)
@@ -1511,15 +1836,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAvatarUrl() const
+    {
+        return m_avatarUrl;
+    }
+
     void SetAvatarUrl(String value)
     {
         m_avatarUrl = std::move(value);
         this->m_model.avatarUrl =  m_avatarUrl.empty() ? nullptr : m_avatarUrl.data();
     }
 
+    time_t GetCreated() const
+    {
+        return this->m_model.created;
+    }
+
     void SetCreated(time_t value)
     {
         this->m_model.created = value;
+    }
+
+    String const& GetDisplayName() const
+    {
+        return m_displayName;
     }
 
     void SetDisplayName(String value)
@@ -1528,10 +1868,20 @@ public:
         this->m_model.displayName =  m_displayName.empty() ? nullptr : m_displayName.data();
     }
 
+    std::optional<time_t> const& GetFirstLogin() const
+    {
+        return m_firstLogin;
+    }
+
     void SetFirstLogin(std::optional<time_t> value)
     {
         m_firstLogin = std::move(value);
         this->m_model.firstLogin = m_firstLogin ? m_firstLogin.operator->() : nullptr;
+    }
+
+    std::optional<bool> const& GetisBanned() const
+    {
+        return m_isBanned;
     }
 
     void SetisBanned(std::optional<bool> value)
@@ -1540,16 +1890,31 @@ public:
         this->m_model.isBanned = m_isBanned ? m_isBanned.operator->() : nullptr;
     }
 
+    std::optional<time_t> const& GetLastLogin() const
+    {
+        return m_lastLogin;
+    }
+
     void SetLastLogin(std::optional<time_t> value)
     {
         m_lastLogin = std::move(value);
         this->m_model.lastLogin = m_lastLogin ? m_lastLogin.operator->() : nullptr;
     }
 
+    std::optional<PFUserOrigination> const& GetOrigination() const
+    {
+        return m_origination;
+    }
+
     void SetOrigination(std::optional<PFUserOrigination> value)
     {
         m_origination = std::move(value);
         this->m_model.origination = m_origination ? m_origination.operator->() : nullptr;
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetTitlePlayerAccount() const
+    {
+        return m_titlePlayerAccount;
     }
 
     void SetTitlePlayerAccount(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -1626,10 +1991,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetTwitchId() const
+    {
+        return m_twitchId;
+    }
+
     void SetTwitchId(String value)
     {
         m_twitchId = std::move(value);
         this->m_model.twitchId =  m_twitchId.empty() ? nullptr : m_twitchId.data();
+    }
+
+    String const& GetTwitchUserName() const
+    {
+        return m_twitchUserName;
     }
 
     void SetTwitchUserName(String value)
@@ -1696,10 +2071,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetXboxUserId() const
+    {
+        return m_xboxUserId;
+    }
+
     void SetXboxUserId(String value)
     {
         m_xboxUserId = std::move(value);
         this->m_model.xboxUserId =  m_xboxUserId.empty() ? nullptr : m_xboxUserId.data();
+    }
+
+    String const& GetXboxUserSandbox() const
+    {
+        return m_xboxUserSandbox;
     }
 
     void SetXboxUserSandbox(String value)
@@ -1733,6 +2118,7 @@ public:
         ModelWrapper<PFUserAccountInfo, Alloc>{ model },
         m_androidDeviceInfo{ model.androidDeviceInfo ? std::optional<PFUserAndroidDeviceInfoWrapper<Alloc>>{ *model.androidDeviceInfo } : std::nullopt },
         m_appleAccountInfo{ model.appleAccountInfo ? std::optional<PFUserAppleIdInfoWrapper<Alloc>>{ *model.appleAccountInfo } : std::nullopt },
+        m_battleNetAccountInfo{ model.battleNetAccountInfo ? std::optional<PFUserBattleNetInfoWrapper<Alloc>>{ *model.battleNetAccountInfo } : std::nullopt },
         m_customIdInfo{ model.customIdInfo ? std::optional<PFUserCustomIdInfoWrapper<Alloc>>{ *model.customIdInfo } : std::nullopt },
         m_facebookInfo{ model.facebookInfo ? std::optional<PFUserFacebookInfoWrapper<Alloc>>{ *model.facebookInfo } : std::nullopt },
         m_facebookInstantGamesIdInfo{ model.facebookInstantGamesIdInfo ? std::optional<PFUserFacebookInstantGamesIdInfoWrapper<Alloc>>{ *model.facebookInstantGamesIdInfo } : std::nullopt },
@@ -1782,6 +2168,7 @@ public:
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_androidDeviceInfo, rhs.m_androidDeviceInfo);
         swap(lhs.m_appleAccountInfo, rhs.m_appleAccountInfo);
+        swap(lhs.m_battleNetAccountInfo, rhs.m_battleNetAccountInfo);
         swap(lhs.m_customIdInfo, rhs.m_customIdInfo);
         swap(lhs.m_facebookInfo, rhs.m_facebookInfo);
         swap(lhs.m_facebookInstantGamesIdInfo, rhs.m_facebookInstantGamesIdInfo);
@@ -1806,10 +2193,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFUserAndroidDeviceInfoWrapper<Alloc>> const& GetAndroidDeviceInfo() const
+    {
+        return m_androidDeviceInfo;
+    }
+
     void SetAndroidDeviceInfo(std::optional<PFUserAndroidDeviceInfoWrapper<Alloc>> value)
     {
         m_androidDeviceInfo = std::move(value);
         this->m_model.androidDeviceInfo = m_androidDeviceInfo ? &m_androidDeviceInfo->Model() : nullptr;
+    }
+
+    std::optional<PFUserAppleIdInfoWrapper<Alloc>> const& GetAppleAccountInfo() const
+    {
+        return m_appleAccountInfo;
     }
 
     void SetAppleAccountInfo(std::optional<PFUserAppleIdInfoWrapper<Alloc>> value)
@@ -1818,9 +2215,30 @@ public:
         this->m_model.appleAccountInfo = m_appleAccountInfo ? &m_appleAccountInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserBattleNetInfoWrapper<Alloc>> const& GetBattleNetAccountInfo() const
+    {
+        return m_battleNetAccountInfo;
+    }
+
+    void SetBattleNetAccountInfo(std::optional<PFUserBattleNetInfoWrapper<Alloc>> value)
+    {
+        m_battleNetAccountInfo = std::move(value);
+        this->m_model.battleNetAccountInfo = m_battleNetAccountInfo ? &m_battleNetAccountInfo->Model() : nullptr;
+    }
+
+    time_t GetCreated() const
+    {
+        return this->m_model.created;
+    }
+
     void SetCreated(time_t value)
     {
         this->m_model.created = value;
+    }
+
+    std::optional<PFUserCustomIdInfoWrapper<Alloc>> const& GetCustomIdInfo() const
+    {
+        return m_customIdInfo;
     }
 
     void SetCustomIdInfo(std::optional<PFUserCustomIdInfoWrapper<Alloc>> value)
@@ -1829,10 +2247,20 @@ public:
         this->m_model.customIdInfo = m_customIdInfo ? &m_customIdInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserFacebookInfoWrapper<Alloc>> const& GetFacebookInfo() const
+    {
+        return m_facebookInfo;
+    }
+
     void SetFacebookInfo(std::optional<PFUserFacebookInfoWrapper<Alloc>> value)
     {
         m_facebookInfo = std::move(value);
         this->m_model.facebookInfo = m_facebookInfo ? &m_facebookInfo->Model() : nullptr;
+    }
+
+    std::optional<PFUserFacebookInstantGamesIdInfoWrapper<Alloc>> const& GetFacebookInstantGamesIdInfo() const
+    {
+        return m_facebookInstantGamesIdInfo;
     }
 
     void SetFacebookInstantGamesIdInfo(std::optional<PFUserFacebookInstantGamesIdInfoWrapper<Alloc>> value)
@@ -1841,10 +2269,20 @@ public:
         this->m_model.facebookInstantGamesIdInfo = m_facebookInstantGamesIdInfo ? &m_facebookInstantGamesIdInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserGameCenterInfoWrapper<Alloc>> const& GetGameCenterInfo() const
+    {
+        return m_gameCenterInfo;
+    }
+
     void SetGameCenterInfo(std::optional<PFUserGameCenterInfoWrapper<Alloc>> value)
     {
         m_gameCenterInfo = std::move(value);
         this->m_model.gameCenterInfo = m_gameCenterInfo ? &m_gameCenterInfo->Model() : nullptr;
+    }
+
+    std::optional<PFUserGoogleInfoWrapper<Alloc>> const& GetGoogleInfo() const
+    {
+        return m_googleInfo;
     }
 
     void SetGoogleInfo(std::optional<PFUserGoogleInfoWrapper<Alloc>> value)
@@ -1853,10 +2291,20 @@ public:
         this->m_model.googleInfo = m_googleInfo ? &m_googleInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserGooglePlayGamesInfoWrapper<Alloc>> const& GetGooglePlayGamesInfo() const
+    {
+        return m_googlePlayGamesInfo;
+    }
+
     void SetGooglePlayGamesInfo(std::optional<PFUserGooglePlayGamesInfoWrapper<Alloc>> value)
     {
         m_googlePlayGamesInfo = std::move(value);
         this->m_model.googlePlayGamesInfo = m_googlePlayGamesInfo ? &m_googlePlayGamesInfo->Model() : nullptr;
+    }
+
+    std::optional<PFUserIosDeviceInfoWrapper<Alloc>> const& GetIosDeviceInfo() const
+    {
+        return m_iosDeviceInfo;
     }
 
     void SetIosDeviceInfo(std::optional<PFUserIosDeviceInfoWrapper<Alloc>> value)
@@ -1865,10 +2313,20 @@ public:
         this->m_model.iosDeviceInfo = m_iosDeviceInfo ? &m_iosDeviceInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserKongregateInfoWrapper<Alloc>> const& GetKongregateInfo() const
+    {
+        return m_kongregateInfo;
+    }
+
     void SetKongregateInfo(std::optional<PFUserKongregateInfoWrapper<Alloc>> value)
     {
         m_kongregateInfo = std::move(value);
         this->m_model.kongregateInfo = m_kongregateInfo ? &m_kongregateInfo->Model() : nullptr;
+    }
+
+    std::optional<PFUserNintendoSwitchAccountIdInfoWrapper<Alloc>> const& GetNintendoSwitchAccountInfo() const
+    {
+        return m_nintendoSwitchAccountInfo;
     }
 
     void SetNintendoSwitchAccountInfo(std::optional<PFUserNintendoSwitchAccountIdInfoWrapper<Alloc>> value)
@@ -1877,10 +2335,20 @@ public:
         this->m_model.nintendoSwitchAccountInfo = m_nintendoSwitchAccountInfo ? &m_nintendoSwitchAccountInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserNintendoSwitchDeviceIdInfoWrapper<Alloc>> const& GetNintendoSwitchDeviceIdInfo() const
+    {
+        return m_nintendoSwitchDeviceIdInfo;
+    }
+
     void SetNintendoSwitchDeviceIdInfo(std::optional<PFUserNintendoSwitchDeviceIdInfoWrapper<Alloc>> value)
     {
         m_nintendoSwitchDeviceIdInfo = std::move(value);
         this->m_model.nintendoSwitchDeviceIdInfo = m_nintendoSwitchDeviceIdInfo ? &m_nintendoSwitchDeviceIdInfo->Model() : nullptr;
+    }
+
+    ModelVector<PFUserOpenIdInfoWrapper<Alloc>, Alloc> const& GetOpenIdInfo() const
+    {
+        return m_openIdInfo;
     }
 
     void SetOpenIdInfo(ModelVector<PFUserOpenIdInfoWrapper<Alloc>, Alloc> value)
@@ -1890,10 +2358,20 @@ public:
         this->m_model.openIdInfoCount =  static_cast<uint32_t>(m_openIdInfo.size());
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    std::optional<PFUserPrivateAccountInfoWrapper<Alloc>> const& GetPrivateInfo() const
+    {
+        return m_privateInfo;
     }
 
     void SetPrivateInfo(std::optional<PFUserPrivateAccountInfoWrapper<Alloc>> value)
@@ -1902,10 +2380,20 @@ public:
         this->m_model.privateInfo = m_privateInfo ? &m_privateInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserPsnInfoWrapper<Alloc>> const& GetPsnInfo() const
+    {
+        return m_psnInfo;
+    }
+
     void SetPsnInfo(std::optional<PFUserPsnInfoWrapper<Alloc>> value)
     {
         m_psnInfo = std::move(value);
         this->m_model.psnInfo = m_psnInfo ? &m_psnInfo->Model() : nullptr;
+    }
+
+    std::optional<PFUserServerCustomIdInfoWrapper<Alloc>> const& GetServerCustomIdInfo() const
+    {
+        return m_serverCustomIdInfo;
     }
 
     void SetServerCustomIdInfo(std::optional<PFUserServerCustomIdInfoWrapper<Alloc>> value)
@@ -1914,10 +2402,20 @@ public:
         this->m_model.serverCustomIdInfo = m_serverCustomIdInfo ? &m_serverCustomIdInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserSteamInfoWrapper<Alloc>> const& GetSteamInfo() const
+    {
+        return m_steamInfo;
+    }
+
     void SetSteamInfo(std::optional<PFUserSteamInfoWrapper<Alloc>> value)
     {
         m_steamInfo = std::move(value);
         this->m_model.steamInfo = m_steamInfo ? &m_steamInfo->Model() : nullptr;
+    }
+
+    std::optional<PFUserTitleInfoWrapper<Alloc>> const& GetTitleInfo() const
+    {
+        return m_titleInfo;
     }
 
     void SetTitleInfo(std::optional<PFUserTitleInfoWrapper<Alloc>> value)
@@ -1926,16 +2424,31 @@ public:
         this->m_model.titleInfo = m_titleInfo ? &m_titleInfo->Model() : nullptr;
     }
 
+    std::optional<PFUserTwitchInfoWrapper<Alloc>> const& GetTwitchInfo() const
+    {
+        return m_twitchInfo;
+    }
+
     void SetTwitchInfo(std::optional<PFUserTwitchInfoWrapper<Alloc>> value)
     {
         m_twitchInfo = std::move(value);
         this->m_model.twitchInfo = m_twitchInfo ? &m_twitchInfo->Model() : nullptr;
     }
 
+    String const& GetUsername() const
+    {
+        return m_username;
+    }
+
     void SetUsername(String value)
     {
         m_username = std::move(value);
         this->m_model.username =  m_username.empty() ? nullptr : m_username.data();
+    }
+
+    std::optional<PFUserXboxInfoWrapper<Alloc>> const& GetXboxInfo() const
+    {
+        return m_xboxInfo;
     }
 
     void SetXboxInfo(std::optional<PFUserXboxInfoWrapper<Alloc>> value)
@@ -1949,6 +2462,7 @@ private:
     {
         this->m_model.androidDeviceInfo = m_androidDeviceInfo ?  &m_androidDeviceInfo->Model() : nullptr;
         this->m_model.appleAccountInfo = m_appleAccountInfo ?  &m_appleAccountInfo->Model() : nullptr;
+        this->m_model.battleNetAccountInfo = m_battleNetAccountInfo ?  &m_battleNetAccountInfo->Model() : nullptr;
         this->m_model.customIdInfo = m_customIdInfo ?  &m_customIdInfo->Model() : nullptr;
         this->m_model.facebookInfo = m_facebookInfo ?  &m_facebookInfo->Model() : nullptr;
         this->m_model.facebookInstantGamesIdInfo = m_facebookInstantGamesIdInfo ?  &m_facebookInstantGamesIdInfo->Model() : nullptr;
@@ -1973,6 +2487,7 @@ private:
 
     std::optional<PFUserAndroidDeviceInfoWrapper<Alloc>> m_androidDeviceInfo;
     std::optional<PFUserAppleIdInfoWrapper<Alloc>> m_appleAccountInfo;
+    std::optional<PFUserBattleNetInfoWrapper<Alloc>> m_battleNetAccountInfo;
     std::optional<PFUserCustomIdInfoWrapper<Alloc>> m_customIdInfo;
     std::optional<PFUserFacebookInfoWrapper<Alloc>> m_facebookInfo;
     std::optional<PFUserFacebookInstantGamesIdInfoWrapper<Alloc>> m_facebookInstantGamesIdInfo;
@@ -2044,16 +2559,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCharacterId() const
+    {
+        return m_characterId;
+    }
+
     void SetCharacterId(String value)
     {
         m_characterId = std::move(value);
         this->m_model.characterId =  m_characterId.empty() ? nullptr : m_characterId.data();
     }
 
+    String const& GetCharacterName() const
+    {
+        return m_characterName;
+    }
+
     void SetCharacterName(String value)
     {
         m_characterName = std::move(value);
         this->m_model.characterName =  m_characterName.empty() ? nullptr : m_characterName.data();
+    }
+
+    String const& GetCharacterType() const
+    {
+        return m_characterType;
     }
 
     void SetCharacterType(String value)
@@ -2123,15 +2653,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    time_t GetLastUpdated() const
+    {
+        return this->m_model.lastUpdated;
+    }
+
     void SetLastUpdated(time_t value)
     {
         this->m_model.lastUpdated = value;
+    }
+
+    std::optional<PFUserDataPermission> const& GetPermission() const
+    {
+        return m_permission;
     }
 
     void SetPermission(std::optional<PFUserDataPermission> value)
     {
         m_permission = std::move(value);
         this->m_model.permission = m_permission ? m_permission.operator->() : nullptr;
+    }
+
+    String const& GetValue() const
+    {
+        return m_value;
     }
 
     void SetValue(String value)
@@ -2162,14 +2707,29 @@ public:
 
     using ModelWrapper<PFVirtualCurrencyRechargeTime, Alloc>::ModelWrapper;
 
+    int32_t GetRechargeMax() const
+    {
+        return this->m_model.rechargeMax;
+    }
+
     void SetRechargeMax(int32_t value)
     {
         this->m_model.rechargeMax = value;
     }
 
+    time_t GetRechargeTime() const
+    {
+        return this->m_model.rechargeTime;
+    }
+
     void SetRechargeTime(time_t value)
     {
         this->m_model.rechargeTime = value;
+    }
+
+    int32_t GetSecondsToRecharge() const
+    {
+        return this->m_model.secondsToRecharge;
     }
 
     void SetSecondsToRecharge(int32_t value)
@@ -2190,9 +2750,19 @@ public:
 
     using ModelWrapper<PFPlayerProfileViewConstraints, Alloc>::ModelWrapper;
 
+    bool GetShowAvatarUrl() const
+    {
+        return this->m_model.showAvatarUrl;
+    }
+
     void SetShowAvatarUrl(bool value)
     {
         this->m_model.showAvatarUrl = value;
+    }
+
+    bool GetShowBannedUntil() const
+    {
+        return this->m_model.showBannedUntil;
     }
 
     void SetShowBannedUntil(bool value)
@@ -2200,9 +2770,19 @@ public:
         this->m_model.showBannedUntil = value;
     }
 
+    bool GetShowCampaignAttributions() const
+    {
+        return this->m_model.showCampaignAttributions;
+    }
+
     void SetShowCampaignAttributions(bool value)
     {
         this->m_model.showCampaignAttributions = value;
+    }
+
+    bool GetShowContactEmailAddresses() const
+    {
+        return this->m_model.showContactEmailAddresses;
     }
 
     void SetShowContactEmailAddresses(bool value)
@@ -2210,9 +2790,19 @@ public:
         this->m_model.showContactEmailAddresses = value;
     }
 
+    bool GetShowCreated() const
+    {
+        return this->m_model.showCreated;
+    }
+
     void SetShowCreated(bool value)
     {
         this->m_model.showCreated = value;
+    }
+
+    bool GetShowDisplayName() const
+    {
+        return this->m_model.showDisplayName;
     }
 
     void SetShowDisplayName(bool value)
@@ -2220,9 +2810,19 @@ public:
         this->m_model.showDisplayName = value;
     }
 
+    bool GetShowExperimentVariants() const
+    {
+        return this->m_model.showExperimentVariants;
+    }
+
     void SetShowExperimentVariants(bool value)
     {
         this->m_model.showExperimentVariants = value;
+    }
+
+    bool GetShowLastLogin() const
+    {
+        return this->m_model.showLastLogin;
     }
 
     void SetShowLastLogin(bool value)
@@ -2230,9 +2830,19 @@ public:
         this->m_model.showLastLogin = value;
     }
 
+    bool GetShowLinkedAccounts() const
+    {
+        return this->m_model.showLinkedAccounts;
+    }
+
     void SetShowLinkedAccounts(bool value)
     {
         this->m_model.showLinkedAccounts = value;
+    }
+
+    bool GetShowLocations() const
+    {
+        return this->m_model.showLocations;
     }
 
     void SetShowLocations(bool value)
@@ -2240,9 +2850,19 @@ public:
         this->m_model.showLocations = value;
     }
 
+    bool GetShowMemberships() const
+    {
+        return this->m_model.showMemberships;
+    }
+
     void SetShowMemberships(bool value)
     {
         this->m_model.showMemberships = value;
+    }
+
+    bool GetShowOrigination() const
+    {
+        return this->m_model.showOrigination;
     }
 
     void SetShowOrigination(bool value)
@@ -2250,9 +2870,19 @@ public:
         this->m_model.showOrigination = value;
     }
 
+    bool GetShowPushNotificationRegistrations() const
+    {
+        return this->m_model.showPushNotificationRegistrations;
+    }
+
     void SetShowPushNotificationRegistrations(bool value)
     {
         this->m_model.showPushNotificationRegistrations = value;
+    }
+
+    bool GetShowStatistics() const
+    {
+        return this->m_model.showStatistics;
     }
 
     void SetShowStatistics(bool value)
@@ -2260,14 +2890,29 @@ public:
         this->m_model.showStatistics = value;
     }
 
+    bool GetShowTags() const
+    {
+        return this->m_model.showTags;
+    }
+
     void SetShowTags(bool value)
     {
         this->m_model.showTags = value;
     }
 
+    bool GetShowTotalValueToDateInUsd() const
+    {
+        return this->m_model.showTotalValueToDateInUsd;
+    }
+
     void SetShowTotalValueToDateInUsd(bool value)
     {
         this->m_model.showTotalValueToDateInUsd = value;
+    }
+
+    bool GetShowValuesToDate() const
+    {
+        return this->m_model.showValuesToDate;
     }
 
     void SetShowValuesToDate(bool value)
@@ -2325,15 +2970,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    time_t GetAttributedAt() const
+    {
+        return this->m_model.attributedAt;
+    }
+
     void SetAttributedAt(time_t value)
     {
         this->m_model.attributedAt = value;
+    }
+
+    String const& GetCampaignId() const
+    {
+        return m_campaignId;
     }
 
     void SetCampaignId(String value)
     {
         m_campaignId = std::move(value);
         this->m_model.campaignId =  m_campaignId.empty() ? nullptr : m_campaignId.data();
+    }
+
+    String const& GetPlatform() const
+    {
+        return m_platform;
     }
 
     void SetPlatform(String value)
@@ -2402,16 +3062,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetEmailAddress() const
+    {
+        return m_emailAddress;
+    }
+
     void SetEmailAddress(String value)
     {
         m_emailAddress = std::move(value);
         this->m_model.emailAddress =  m_emailAddress.empty() ? nullptr : m_emailAddress.data();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    std::optional<PFEmailVerificationStatus> const& GetVerificationStatus() const
+    {
+        return m_verificationStatus;
     }
 
     void SetVerificationStatus(std::optional<PFEmailVerificationStatus> value)
@@ -2484,10 +3159,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetEmail() const
+    {
+        return m_email;
+    }
+
     void SetEmail(String value)
     {
         m_email = std::move(value);
         this->m_model.email =  m_email.empty() ? nullptr : m_email.data();
+    }
+
+    std::optional<PFLoginIdentityProvider> const& GetPlatform() const
+    {
+        return m_platform;
     }
 
     void SetPlatform(std::optional<PFLoginIdentityProvider> value)
@@ -2496,10 +3181,20 @@ public:
         this->m_model.platform = m_platform ? m_platform.operator->() : nullptr;
     }
 
+    String const& GetPlatformUserId() const
+    {
+        return m_platformUserId;
+    }
+
     void SetPlatformUserId(String value)
     {
         m_platformUserId = std::move(value);
         this->m_model.platformUserId =  m_platformUserId.empty() ? nullptr : m_platformUserId.data();
+    }
+
+    String const& GetUsername() const
+    {
+        return m_username;
     }
 
     void SetUsername(String value)
@@ -2576,10 +3271,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCity() const
+    {
+        return m_city;
+    }
+
     void SetCity(String value)
     {
         m_city = std::move(value);
         this->m_model.city =  m_city.empty() ? nullptr : m_city.data();
+    }
+
+    std::optional<PFContinentCode> const& GetContinentCode() const
+    {
+        return m_continentCode;
     }
 
     void SetContinentCode(std::optional<PFContinentCode> value)
@@ -2588,16 +3293,31 @@ public:
         this->m_model.continentCode = m_continentCode ? m_continentCode.operator->() : nullptr;
     }
 
+    std::optional<PFCountryCode> const& GetCountryCode() const
+    {
+        return m_countryCode;
+    }
+
     void SetCountryCode(std::optional<PFCountryCode> value)
     {
         m_countryCode = std::move(value);
         this->m_model.countryCode = m_countryCode ? m_countryCode.operator->() : nullptr;
     }
 
+    std::optional<double> const& GetLatitude() const
+    {
+        return m_latitude;
+    }
+
     void SetLatitude(std::optional<double> value)
     {
         m_latitude = std::move(value);
         this->m_model.latitude = m_latitude ? m_latitude.operator->() : nullptr;
+    }
+
+    std::optional<double> const& GetLongitude() const
+    {
+        return m_longitude;
     }
 
     void SetLongitude(std::optional<double> value)
@@ -2674,9 +3394,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    time_t GetExpiration() const
+    {
+        return this->m_model.expiration;
+    }
+
     void SetExpiration(time_t value)
     {
         this->m_model.expiration = value;
+    }
+
+    time_t GetInitialSubscriptionTime() const
+    {
+        return this->m_model.initialSubscriptionTime;
     }
 
     void SetInitialSubscriptionTime(time_t value)
@@ -2684,9 +3414,19 @@ public:
         this->m_model.initialSubscriptionTime = value;
     }
 
+    bool GetIsActive() const
+    {
+        return this->m_model.isActive;
+    }
+
     void SetIsActive(bool value)
     {
         this->m_model.isActive = value;
+    }
+
+    std::optional<PFSubscriptionProviderStatus> const& GetStatus() const
+    {
+        return m_status;
     }
 
     void SetStatus(std::optional<PFSubscriptionProviderStatus> value)
@@ -2695,16 +3435,31 @@ public:
         this->m_model.status = m_status ? m_status.operator->() : nullptr;
     }
 
+    String const& GetSubscriptionId() const
+    {
+        return m_subscriptionId;
+    }
+
     void SetSubscriptionId(String value)
     {
         m_subscriptionId = std::move(value);
         this->m_model.subscriptionId =  m_subscriptionId.empty() ? nullptr : m_subscriptionId.data();
     }
 
+    String const& GetSubscriptionItemId() const
+    {
+        return m_subscriptionItemId;
+    }
+
     void SetSubscriptionItemId(String value)
     {
         m_subscriptionItemId = std::move(value);
         this->m_model.subscriptionItemId =  m_subscriptionItemId.empty() ? nullptr : m_subscriptionItemId.data();
+    }
+
+    String const& GetSubscriptionProvider() const
+    {
+        return m_subscriptionProvider;
     }
 
     void SetSubscriptionProvider(String value)
@@ -2777,14 +3532,29 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetIsActive() const
+    {
+        return this->m_model.isActive;
+    }
+
     void SetIsActive(bool value)
     {
         this->m_model.isActive = value;
     }
 
+    time_t GetMembershipExpiration() const
+    {
+        return this->m_model.membershipExpiration;
+    }
+
     void SetMembershipExpiration(time_t value)
     {
         this->m_model.membershipExpiration = value;
+    }
+
+    String const& GetMembershipId() const
+    {
+        return m_membershipId;
     }
 
     void SetMembershipId(String value)
@@ -2793,10 +3563,20 @@ public:
         this->m_model.membershipId =  m_membershipId.empty() ? nullptr : m_membershipId.data();
     }
 
+    std::optional<time_t> const& GetOverrideExpiration() const
+    {
+        return m_overrideExpiration;
+    }
+
     void SetOverrideExpiration(std::optional<time_t> value)
     {
         m_overrideExpiration = std::move(value);
         this->m_model.overrideExpiration = m_overrideExpiration ? m_overrideExpiration.operator->() : nullptr;
+    }
+
+    ModelVector<PFSubscriptionModelWrapper<Alloc>, Alloc> const& GetSubscriptions() const
+    {
+        return m_subscriptions;
     }
 
     void SetSubscriptions(ModelVector<PFSubscriptionModelWrapper<Alloc>, Alloc> value)
@@ -2866,10 +3646,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetNotificationEndpointARN() const
+    {
+        return m_notificationEndpointARN;
+    }
+
     void SetNotificationEndpointARN(String value)
     {
         m_notificationEndpointARN = std::move(value);
         this->m_model.notificationEndpointARN =  m_notificationEndpointARN.empty() ? nullptr : m_notificationEndpointARN.data();
+    }
+
+    std::optional<PFPushNotificationPlatform> const& GetPlatform() const
+    {
+        return m_platform;
     }
 
     void SetPlatform(std::optional<PFPushNotificationPlatform> value)
@@ -2934,15 +3724,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
     }
 
+    int32_t GetValue() const
+    {
+        return this->m_model.value;
+    }
+
     void SetValue(int32_t value)
     {
         this->m_model.value = value;
+    }
+
+    int32_t GetVersion() const
+    {
+        return this->m_model.version;
     }
 
     void SetVersion(int32_t value)
@@ -3002,6 +3807,11 @@ public:
         swap(lhs.m_tagValue, rhs.m_tagValue);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetTagValue() const
+    {
+        return m_tagValue;
     }
 
     void SetTagValue(String value)
@@ -3066,15 +3876,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCurrency() const
+    {
+        return m_currency;
+    }
+
     void SetCurrency(String value)
     {
         m_currency = std::move(value);
         this->m_model.currency =  m_currency.empty() ? nullptr : m_currency.data();
     }
 
+    uint32_t GetTotalValue() const
+    {
+        return this->m_model.totalValue;
+    }
+
     void SetTotalValue(uint32_t value)
     {
         this->m_model.totalValue = value;
+    }
+
+    String const& GetTotalValueAsDecimal() const
+    {
+        return m_totalValueAsDecimal;
     }
 
     void SetTotalValueAsDecimal(String value)
@@ -3177,11 +4002,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFAdCampaignAttributionModelWrapper<Alloc>, Alloc> const& GetAdCampaignAttributions() const
+    {
+        return m_adCampaignAttributions;
+    }
+
     void SetAdCampaignAttributions(ModelVector<PFAdCampaignAttributionModelWrapper<Alloc>, Alloc> value)
     {
         m_adCampaignAttributions = std::move(value);
         this->m_model.adCampaignAttributions =  m_adCampaignAttributions.empty() ? nullptr : m_adCampaignAttributions.data();
         this->m_model.adCampaignAttributionsCount =  static_cast<uint32_t>(m_adCampaignAttributions.size());
+    }
+
+    String const& GetAvatarUrl() const
+    {
+        return m_avatarUrl;
     }
 
     void SetAvatarUrl(String value)
@@ -3190,10 +4025,20 @@ public:
         this->m_model.avatarUrl =  m_avatarUrl.empty() ? nullptr : m_avatarUrl.data();
     }
 
+    std::optional<time_t> const& GetBannedUntil() const
+    {
+        return m_bannedUntil;
+    }
+
     void SetBannedUntil(std::optional<time_t> value)
     {
         m_bannedUntil = std::move(value);
         this->m_model.bannedUntil = m_bannedUntil ? m_bannedUntil.operator->() : nullptr;
+    }
+
+    ModelVector<PFContactEmailInfoModelWrapper<Alloc>, Alloc> const& GetContactEmailAddresses() const
+    {
+        return m_contactEmailAddresses;
     }
 
     void SetContactEmailAddresses(ModelVector<PFContactEmailInfoModelWrapper<Alloc>, Alloc> value)
@@ -3203,16 +4048,31 @@ public:
         this->m_model.contactEmailAddressesCount =  static_cast<uint32_t>(m_contactEmailAddresses.size());
     }
 
+    std::optional<time_t> const& GetCreated() const
+    {
+        return m_created;
+    }
+
     void SetCreated(std::optional<time_t> value)
     {
         m_created = std::move(value);
         this->m_model.created = m_created ? m_created.operator->() : nullptr;
     }
 
+    String const& GetDisplayName() const
+    {
+        return m_displayName;
+    }
+
     void SetDisplayName(String value)
     {
         m_displayName = std::move(value);
         this->m_model.displayName =  m_displayName.empty() ? nullptr : m_displayName.data();
+    }
+
+    CStringVector<Alloc> const& GetExperimentVariants() const
+    {
+        return m_experimentVariants;
     }
 
     void SetExperimentVariants(CStringVector<Alloc> value)
@@ -3222,10 +4082,20 @@ public:
         this->m_model.experimentVariantsCount =  static_cast<uint32_t>(m_experimentVariants.size());
     }
 
+    std::optional<time_t> const& GetLastLogin() const
+    {
+        return m_lastLogin;
+    }
+
     void SetLastLogin(std::optional<time_t> value)
     {
         m_lastLogin = std::move(value);
         this->m_model.lastLogin = m_lastLogin ? m_lastLogin.operator->() : nullptr;
+    }
+
+    ModelVector<PFLinkedPlatformAccountModelWrapper<Alloc>, Alloc> const& GetLinkedAccounts() const
+    {
+        return m_linkedAccounts;
     }
 
     void SetLinkedAccounts(ModelVector<PFLinkedPlatformAccountModelWrapper<Alloc>, Alloc> value)
@@ -3235,11 +4105,21 @@ public:
         this->m_model.linkedAccountsCount =  static_cast<uint32_t>(m_linkedAccounts.size());
     }
 
+    ModelVector<PFLocationModelWrapper<Alloc>, Alloc> const& GetLocations() const
+    {
+        return m_locations;
+    }
+
     void SetLocations(ModelVector<PFLocationModelWrapper<Alloc>, Alloc> value)
     {
         m_locations = std::move(value);
         this->m_model.locations =  m_locations.empty() ? nullptr : m_locations.data();
         this->m_model.locationsCount =  static_cast<uint32_t>(m_locations.size());
+    }
+
+    ModelVector<PFMembershipModelWrapper<Alloc>, Alloc> const& GetMemberships() const
+    {
+        return m_memberships;
     }
 
     void SetMemberships(ModelVector<PFMembershipModelWrapper<Alloc>, Alloc> value)
@@ -3249,10 +4129,20 @@ public:
         this->m_model.membershipsCount =  static_cast<uint32_t>(m_memberships.size());
     }
 
+    std::optional<PFLoginIdentityProvider> const& GetOrigination() const
+    {
+        return m_origination;
+    }
+
     void SetOrigination(std::optional<PFLoginIdentityProvider> value)
     {
         m_origination = std::move(value);
         this->m_model.origination = m_origination ? m_origination.operator->() : nullptr;
+    }
+
+    String const& GetPlayerId() const
+    {
+        return m_playerId;
     }
 
     void SetPlayerId(String value)
@@ -3261,10 +4151,20 @@ public:
         this->m_model.playerId =  m_playerId.empty() ? nullptr : m_playerId.data();
     }
 
+    String const& GetPublisherId() const
+    {
+        return m_publisherId;
+    }
+
     void SetPublisherId(String value)
     {
         m_publisherId = std::move(value);
         this->m_model.publisherId =  m_publisherId.empty() ? nullptr : m_publisherId.data();
+    }
+
+    ModelVector<PFPushNotificationRegistrationModelWrapper<Alloc>, Alloc> const& GetPushNotificationRegistrations() const
+    {
+        return m_pushNotificationRegistrations;
     }
 
     void SetPushNotificationRegistrations(ModelVector<PFPushNotificationRegistrationModelWrapper<Alloc>, Alloc> value)
@@ -3274,11 +4174,21 @@ public:
         this->m_model.pushNotificationRegistrationsCount =  static_cast<uint32_t>(m_pushNotificationRegistrations.size());
     }
 
+    ModelVector<PFStatisticModelWrapper<Alloc>, Alloc> const& GetStatistics() const
+    {
+        return m_statistics;
+    }
+
     void SetStatistics(ModelVector<PFStatisticModelWrapper<Alloc>, Alloc> value)
     {
         m_statistics = std::move(value);
         this->m_model.statistics =  m_statistics.empty() ? nullptr : m_statistics.data();
         this->m_model.statisticsCount =  static_cast<uint32_t>(m_statistics.size());
+    }
+
+    ModelVector<PFTagModelWrapper<Alloc>, Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(ModelVector<PFTagModelWrapper<Alloc>, Alloc> value)
@@ -3288,16 +4198,31 @@ public:
         this->m_model.tagsCount =  static_cast<uint32_t>(m_tags.size());
     }
 
+    String const& GetTitleId() const
+    {
+        return m_titleId;
+    }
+
     void SetTitleId(String value)
     {
         m_titleId = std::move(value);
         this->m_model.titleId =  m_titleId.empty() ? nullptr : m_titleId.data();
     }
 
+    std::optional<uint32_t> const& GetTotalValueToDateInUSD() const
+    {
+        return m_totalValueToDateInUSD;
+    }
+
     void SetTotalValueToDateInUSD(std::optional<uint32_t> value)
     {
         m_totalValueToDateInUSD = std::move(value);
         this->m_model.totalValueToDateInUSD = m_totalValueToDateInUSD ? m_totalValueToDateInUSD.operator->() : nullptr;
+    }
+
+    ModelVector<PFValueToDateModelWrapper<Alloc>, Alloc> const& GetValuesToDate() const
+    {
+        return m_valuesToDate;
     }
 
     void SetValuesToDate(ModelVector<PFValueToDateModelWrapper<Alloc>, Alloc> value)
@@ -3407,9 +4332,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetGetCharacterInventories() const
+    {
+        return this->m_model.getCharacterInventories;
+    }
+
     void SetGetCharacterInventories(bool value)
     {
         this->m_model.getCharacterInventories = value;
+    }
+
+    bool GetGetCharacterList() const
+    {
+        return this->m_model.getCharacterList;
     }
 
     void SetGetCharacterList(bool value)
@@ -3417,9 +4352,19 @@ public:
         this->m_model.getCharacterList = value;
     }
 
+    bool GetGetPlayerProfile() const
+    {
+        return this->m_model.getPlayerProfile;
+    }
+
     void SetGetPlayerProfile(bool value)
     {
         this->m_model.getPlayerProfile = value;
+    }
+
+    bool GetGetPlayerStatistics() const
+    {
+        return this->m_model.getPlayerStatistics;
     }
 
     void SetGetPlayerStatistics(bool value)
@@ -3427,9 +4372,19 @@ public:
         this->m_model.getPlayerStatistics = value;
     }
 
+    bool GetGetTitleData() const
+    {
+        return this->m_model.getTitleData;
+    }
+
     void SetGetTitleData(bool value)
     {
         this->m_model.getTitleData = value;
+    }
+
+    bool GetGetUserAccountInfo() const
+    {
+        return this->m_model.getUserAccountInfo;
     }
 
     void SetGetUserAccountInfo(bool value)
@@ -3437,9 +4392,19 @@ public:
         this->m_model.getUserAccountInfo = value;
     }
 
+    bool GetGetUserData() const
+    {
+        return this->m_model.getUserData;
+    }
+
     void SetGetUserData(bool value)
     {
         this->m_model.getUserData = value;
+    }
+
+    bool GetGetUserInventory() const
+    {
+        return this->m_model.getUserInventory;
     }
 
     void SetGetUserInventory(bool value)
@@ -3447,14 +4412,29 @@ public:
         this->m_model.getUserInventory = value;
     }
 
+    bool GetGetUserReadOnlyData() const
+    {
+        return this->m_model.getUserReadOnlyData;
+    }
+
     void SetGetUserReadOnlyData(bool value)
     {
         this->m_model.getUserReadOnlyData = value;
     }
 
+    bool GetGetUserVirtualCurrency() const
+    {
+        return this->m_model.getUserVirtualCurrency;
+    }
+
     void SetGetUserVirtualCurrency(bool value)
     {
         this->m_model.getUserVirtualCurrency = value;
+    }
+
+    CStringVector<Alloc> const& GetPlayerStatisticNames() const
+    {
+        return m_playerStatisticNames;
     }
 
     void SetPlayerStatisticNames(CStringVector<Alloc> value)
@@ -3464,10 +4444,20 @@ public:
         this->m_model.playerStatisticNamesCount =  static_cast<uint32_t>(m_playerStatisticNames.size());
     }
 
+    std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> const& GetProfileConstraints() const
+    {
+        return m_profileConstraints;
+    }
+
     void SetProfileConstraints(std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> value)
     {
         m_profileConstraints = std::move(value);
         this->m_model.profileConstraints = m_profileConstraints ? &m_profileConstraints->Model() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetTitleDataKeys() const
+    {
+        return m_titleDataKeys;
     }
 
     void SetTitleDataKeys(CStringVector<Alloc> value)
@@ -3477,11 +4467,21 @@ public:
         this->m_model.titleDataKeysCount =  static_cast<uint32_t>(m_titleDataKeys.size());
     }
 
+    CStringVector<Alloc> const& GetUserDataKeys() const
+    {
+        return m_userDataKeys;
+    }
+
     void SetUserDataKeys(CStringVector<Alloc> value)
     {
         m_userDataKeys = std::move(value);
         this->m_model.userDataKeys =  m_userDataKeys.empty() ? nullptr : m_userDataKeys.data();
         this->m_model.userDataKeysCount =  static_cast<uint32_t>(m_userDataKeys.size());
+    }
+
+    CStringVector<Alloc> const& GetUserReadOnlyDataKeys() const
+    {
+        return m_userReadOnlyDataKeys;
     }
 
     void SetUserReadOnlyDataKeys(CStringVector<Alloc> value)
@@ -3555,10 +4555,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCharacterId() const
+    {
+        return m_characterId;
+    }
+
     void SetCharacterId(String value)
     {
         m_characterId = std::move(value);
         this->m_model.characterId =  m_characterId.empty() ? nullptr : m_characterId.data();
+    }
+
+    ModelVector<PFItemInstanceWrapper<Alloc>, Alloc> const& GetInventory() const
+    {
+        return m_inventory;
     }
 
     void SetInventory(ModelVector<PFItemInstanceWrapper<Alloc>, Alloc> value)
@@ -3624,15 +4634,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetStatisticName() const
+    {
+        return m_statisticName;
+    }
+
     void SetStatisticName(String value)
     {
         m_statisticName = std::move(value);
         this->m_model.statisticName =  m_statisticName.empty() ? nullptr : m_statisticName.data();
     }
 
+    int32_t GetValue() const
+    {
+        return this->m_model.value;
+    }
+
     void SetValue(int32_t value)
     {
         this->m_model.value = value;
+    }
+
+    uint32_t GetVersion() const
+    {
+        return this->m_model.version;
     }
 
     void SetVersion(uint32_t value)
@@ -3714,10 +4739,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFUserAccountInfoWrapper<Alloc>> const& GetAccountInfo() const
+    {
+        return m_accountInfo;
+    }
+
     void SetAccountInfo(std::optional<PFUserAccountInfoWrapper<Alloc>> value)
     {
         m_accountInfo = std::move(value);
         this->m_model.accountInfo = m_accountInfo ? &m_accountInfo->Model() : nullptr;
+    }
+
+    ModelVector<PFCharacterInventoryWrapper<Alloc>, Alloc> const& GetCharacterInventories() const
+    {
+        return m_characterInventories;
     }
 
     void SetCharacterInventories(ModelVector<PFCharacterInventoryWrapper<Alloc>, Alloc> value)
@@ -3727,6 +4762,11 @@ public:
         this->m_model.characterInventoriesCount =  static_cast<uint32_t>(m_characterInventories.size());
     }
 
+    ModelVector<PFCharacterResultWrapper<Alloc>, Alloc> const& GetCharacterList() const
+    {
+        return m_characterList;
+    }
+
     void SetCharacterList(ModelVector<PFCharacterResultWrapper<Alloc>, Alloc> value)
     {
         m_characterList = std::move(value);
@@ -3734,10 +4774,20 @@ public:
         this->m_model.characterListCount =  static_cast<uint32_t>(m_characterList.size());
     }
 
+    std::optional<PFPlayerProfileModelWrapper<Alloc>> const& GetPlayerProfile() const
+    {
+        return m_playerProfile;
+    }
+
     void SetPlayerProfile(std::optional<PFPlayerProfileModelWrapper<Alloc>> value)
     {
         m_playerProfile = std::move(value);
         this->m_model.playerProfile = m_playerProfile ? &m_playerProfile->Model() : nullptr;
+    }
+
+    ModelVector<PFStatisticValueWrapper<Alloc>, Alloc> const& GetPlayerStatistics() const
+    {
+        return m_playerStatistics;
     }
 
     void SetPlayerStatistics(ModelVector<PFStatisticValueWrapper<Alloc>, Alloc> value)
@@ -3747,11 +4797,21 @@ public:
         this->m_model.playerStatisticsCount =  static_cast<uint32_t>(m_playerStatistics.size());
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetTitleData() const
+    {
+        return m_titleData;
+    }
+
     void SetTitleData(StringDictionaryEntryVector<Alloc> value)
     {
         m_titleData = std::move(value);
         this->m_model.titleData =  m_titleData.empty() ? nullptr : m_titleData.data();
         this->m_model.titleDataCount =  static_cast<uint32_t>(m_titleData.size());
+    }
+
+    ModelDictionaryEntryVector<PFUserDataRecordWrapper<Alloc>, Alloc> const& GetUserData() const
+    {
+        return m_userData;
     }
 
     void SetUserData(ModelDictionaryEntryVector<PFUserDataRecordWrapper<Alloc>, Alloc> value)
@@ -3761,9 +4821,19 @@ public:
         this->m_model.userDataCount =  static_cast<uint32_t>(m_userData.size());
     }
 
+    uint32_t GetUserDataVersion() const
+    {
+        return this->m_model.userDataVersion;
+    }
+
     void SetUserDataVersion(uint32_t value)
     {
         this->m_model.userDataVersion = value;
+    }
+
+    ModelVector<PFItemInstanceWrapper<Alloc>, Alloc> const& GetUserInventory() const
+    {
+        return m_userInventory;
     }
 
     void SetUserInventory(ModelVector<PFItemInstanceWrapper<Alloc>, Alloc> value)
@@ -3773,6 +4843,11 @@ public:
         this->m_model.userInventoryCount =  static_cast<uint32_t>(m_userInventory.size());
     }
 
+    ModelDictionaryEntryVector<PFUserDataRecordWrapper<Alloc>, Alloc> const& GetUserReadOnlyData() const
+    {
+        return m_userReadOnlyData;
+    }
+
     void SetUserReadOnlyData(ModelDictionaryEntryVector<PFUserDataRecordWrapper<Alloc>, Alloc> value)
     {
         m_userReadOnlyData = std::move(value);
@@ -3780,9 +4855,19 @@ public:
         this->m_model.userReadOnlyDataCount =  static_cast<uint32_t>(m_userReadOnlyData.size());
     }
 
+    uint32_t GetUserReadOnlyDataVersion() const
+    {
+        return this->m_model.userReadOnlyDataVersion;
+    }
+
     void SetUserReadOnlyDataVersion(uint32_t value)
     {
         this->m_model.userReadOnlyDataVersion = value;
+    }
+
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetUserVirtualCurrency() const
+    {
+        return m_userVirtualCurrency;
     }
 
     void SetUserVirtualCurrency(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
@@ -3790,6 +4875,11 @@ public:
         m_userVirtualCurrency = std::move(value);
         this->m_model.userVirtualCurrency =  m_userVirtualCurrency.empty() ? nullptr : m_userVirtualCurrency.data();
         this->m_model.userVirtualCurrencyCount =  static_cast<uint32_t>(m_userVirtualCurrency.size());
+    }
+
+    ModelDictionaryEntryVector<PFVirtualCurrencyRechargeTimeWrapper<Alloc>, Alloc> const& GetUserVirtualCurrencyRechargeTimes() const
+    {
+        return m_userVirtualCurrencyRechargeTimes;
     }
 
     void SetUserVirtualCurrencyRechargeTimes(ModelDictionaryEntryVector<PFVirtualCurrencyRechargeTimeWrapper<Alloc>, Alloc> value)
@@ -3875,10 +4965,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    String const& GetValue() const
+    {
+        return m_value;
     }
 
     void SetValue(String value)
@@ -3945,11 +5045,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFVariableWrapper<Alloc>, Alloc> const& GetVariables() const
+    {
+        return m_variables;
+    }
+
     void SetVariables(ModelVector<PFVariableWrapper<Alloc>, Alloc> value)
     {
         m_variables = std::move(value);
         this->m_model.variables =  m_variables.empty() ? nullptr : m_variables.data();
         this->m_model.variablesCount =  static_cast<uint32_t>(m_variables.size());
+    }
+
+    CStringVector<Alloc> const& GetVariants() const
+    {
+        return m_variants;
     }
 
     void SetVariants(CStringVector<Alloc> value)
@@ -4026,10 +5136,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCharacterId() const
+    {
+        return m_characterId;
+    }
+
     void SetCharacterId(String value)
     {
         m_characterId = std::move(value);
         this->m_model.characterId =  m_characterId.empty() ? nullptr : m_characterId.data();
+    }
+
+    String const& GetGroupId() const
+    {
+        return m_groupId;
     }
 
     void SetGroupId(String value)
@@ -4038,10 +5158,20 @@ public:
         this->m_model.groupId =  m_groupId.empty() ? nullptr : m_groupId.data();
     }
 
+    String const& GetMasterPlayerAccountId() const
+    {
+        return m_masterPlayerAccountId;
+    }
+
     void SetMasterPlayerAccountId(String value)
     {
         m_masterPlayerAccountId = std::move(value);
         this->m_model.masterPlayerAccountId =  m_masterPlayerAccountId.empty() ? nullptr : m_masterPlayerAccountId.data();
+    }
+
+    String const& GetNamespaceId() const
+    {
+        return m_namespaceId;
     }
 
     void SetNamespaceId(String value)
@@ -4050,10 +5180,20 @@ public:
         this->m_model.namespaceId =  m_namespaceId.empty() ? nullptr : m_namespaceId.data();
     }
 
+    String const& GetTitleId() const
+    {
+        return m_titleId;
+    }
+
     void SetTitleId(String value)
     {
         m_titleId = std::move(value);
         this->m_model.titleId =  m_titleId.empty() ? nullptr : m_titleId.data();
+    }
+
+    String const& GetTitlePlayerAccountId() const
+    {
+        return m_titlePlayerAccountId;
     }
 
     void SetTitlePlayerAccountId(String value)

@@ -4,9 +4,13 @@
 #include "ApiXAsyncProvider.h"
 #include "GlobalState.h"
 #include <playfab/core/cpp/Entity.h>
+#include "ApiHelpers.h"
 
 using namespace PlayFab;
 using namespace PlayFab::MultiplayerServer;
+
+extern "C"
+{
 
 #if 0
 PF_API PFMultiplayerServerDeleteSecretAsync(
@@ -17,16 +21,16 @@ PF_API PFMultiplayerServerDeleteSecretAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFMultiplayerServerDeleteSecretAsync),
-        std::bind(&MultiplayerServerAPI::DeleteSecret, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFMultiplayerServerDeleteSecretAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFMultiplayerServerDeleteSecretAsync),
+            std::bind(&MultiplayerServerAPI::DeleteSecret, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -38,16 +42,16 @@ PF_API PFMultiplayerServerListBuildAliasesAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFMultiplayerServerListBuildAliasesAsync),
-        std::bind(&MultiplayerServerAPI::ListBuildAliases, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFMultiplayerServerListBuildAliasesAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFMultiplayerServerListBuildAliasesAsync),
+            std::bind(&MultiplayerServerAPI::ListBuildAliases, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFMultiplayerServerListBuildAliasesGetResultSize(
@@ -55,7 +59,10 @@ PF_API PFMultiplayerServerListBuildAliasesGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListBuildAliasesGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFMultiplayerServerListBuildAliasesGetResult(
@@ -66,12 +73,15 @@ PF_API PFMultiplayerServerListBuildAliasesGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListBuildAliasesGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFMultiplayerServerListBuildAliasesResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFMultiplayerServerListBuildAliasesResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFMultiplayerServerListBuildSummariesV2Async(
@@ -82,16 +92,16 @@ PF_API PFMultiplayerServerListBuildSummariesV2Async(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFMultiplayerServerListBuildSummariesV2Async),
-        std::bind(&MultiplayerServerAPI::ListBuildSummariesV2, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFMultiplayerServerListBuildSummariesV2Async), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFMultiplayerServerListBuildSummariesV2Async),
+            std::bind(&MultiplayerServerAPI::ListBuildSummariesV2, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFMultiplayerServerListBuildSummariesV2GetResultSize(
@@ -99,7 +109,10 @@ PF_API PFMultiplayerServerListBuildSummariesV2GetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListBuildSummariesV2GetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFMultiplayerServerListBuildSummariesV2GetResult(
@@ -110,12 +123,15 @@ PF_API PFMultiplayerServerListBuildSummariesV2GetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListBuildSummariesV2GetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFMultiplayerServerListBuildSummariesResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFMultiplayerServerListBuildSummariesResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFMultiplayerServerListQosServersForTitleAsync(
@@ -126,16 +142,16 @@ PF_API PFMultiplayerServerListQosServersForTitleAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFMultiplayerServerListQosServersForTitleAsync),
-        std::bind(&MultiplayerServerAPI::ListQosServersForTitle, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFMultiplayerServerListQosServersForTitleAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFMultiplayerServerListQosServersForTitleAsync),
+            std::bind(&MultiplayerServerAPI::ListQosServersForTitle, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFMultiplayerServerListQosServersForTitleGetResultSize(
@@ -143,7 +159,10 @@ PF_API PFMultiplayerServerListQosServersForTitleGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListQosServersForTitleGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFMultiplayerServerListQosServersForTitleGetResult(
@@ -154,12 +173,15 @@ PF_API PFMultiplayerServerListQosServersForTitleGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListQosServersForTitleGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFMultiplayerServerListQosServersForTitleResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFMultiplayerServerListQosServersForTitleResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 #if 0
@@ -171,16 +193,16 @@ PF_API PFMultiplayerServerListSecretSummariesAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFMultiplayerServerListSecretSummariesAsync),
-        std::bind(&MultiplayerServerAPI::ListSecretSummaries, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFMultiplayerServerListSecretSummariesAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFMultiplayerServerListSecretSummariesAsync),
+            std::bind(&MultiplayerServerAPI::ListSecretSummaries, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFMultiplayerServerListSecretSummariesGetResultSize(
@@ -188,7 +210,10 @@ PF_API PFMultiplayerServerListSecretSummariesGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListSecretSummariesGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFMultiplayerServerListSecretSummariesGetResult(
@@ -199,12 +224,15 @@ PF_API PFMultiplayerServerListSecretSummariesGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListSecretSummariesGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFMultiplayerServerListSecretSummariesResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFMultiplayerServerListSecretSummariesResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
@@ -216,16 +244,16 @@ PF_API PFMultiplayerServerRequestMultiplayerServerAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFMultiplayerServerRequestMultiplayerServerAsync),
-        std::bind(&MultiplayerServerAPI::RequestMultiplayerServer, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFMultiplayerServerRequestMultiplayerServerAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFMultiplayerServerRequestMultiplayerServerAsync),
+            std::bind(&MultiplayerServerAPI::RequestMultiplayerServer, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFMultiplayerServerRequestMultiplayerServerGetResultSize(
@@ -233,7 +261,10 @@ PF_API PFMultiplayerServerRequestMultiplayerServerGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerRequestMultiplayerServerGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFMultiplayerServerRequestMultiplayerServerGetResult(
@@ -244,12 +275,15 @@ PF_API PFMultiplayerServerRequestMultiplayerServerGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerRequestMultiplayerServerGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFMultiplayerServerRequestMultiplayerServerResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFMultiplayerServerRequestMultiplayerServerResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 #if 0
@@ -261,16 +295,16 @@ PF_API PFMultiplayerServerRequestPartyServiceAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFMultiplayerServerRequestPartyServiceAsync),
-        std::bind(&MultiplayerServerAPI::RequestPartyService, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFMultiplayerServerRequestPartyServiceAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFMultiplayerServerRequestPartyServiceAsync),
+            std::bind(&MultiplayerServerAPI::RequestPartyService, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFMultiplayerServerRequestPartyServiceGetResultSize(
@@ -278,7 +312,10 @@ PF_API PFMultiplayerServerRequestPartyServiceGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerRequestPartyServiceGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFMultiplayerServerRequestPartyServiceGetResult(
@@ -289,12 +326,15 @@ PF_API PFMultiplayerServerRequestPartyServiceGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerRequestPartyServiceGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFMultiplayerServerRequestPartyServiceResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFMultiplayerServerRequestPartyServiceResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
@@ -307,16 +347,17 @@ PF_API PFMultiplayerServerUploadSecretAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFMultiplayerServerUploadSecretAsync),
-        std::bind(&MultiplayerServerAPI::UploadSecret, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFMultiplayerServerUploadSecretAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFMultiplayerServerUploadSecretAsync),
+            std::bind(&MultiplayerServerAPI::UploadSecret, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
+}

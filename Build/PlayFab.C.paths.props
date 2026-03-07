@@ -4,8 +4,15 @@
     <PlayFabPathsImported>true</PlayFabPathsImported>
   </PropertyGroup>
 
-  <!-- Pull in PlayFabSDKCommonProperties.props. It will define $(HCRoot) which defines the root directory of the LHC repo. -->
-  <!-- If this props file can't be found, assume libHttpClient repo is cloned alongside PlayFab.C repo.-->
+  <!--
+    Pull in PlayFabSDKCommonProperties.props. It will define $(HCRoot) which defines the root directory of the LHC repo.
+    It may also define $(SteamworksSDKRoot) which defines the root directory of the Steamworks SDK if it exists.
+  -->
+  <!--
+    If this props file can't be found, assume libHttpClient repo is cloned alongside PlayFab.C repo.
+    Also assume the Steamworks SDK exists alongside the PlayFab.C repo and named steamworks_sdk instead of a version specific eg steamworks_sdk_160.
+    If the Steamworks SDK is not downloaded or the root path is not given, PlayFab*.Steam projects will not compile.
+  -->
   <PropertyGroup>
     <PlayFabSDKCommonPropertiesFile>$([MSBuild]::GetPathOfFileAbove(PlayFabSDKCommonProperties.props))</PlayFabSDKCommonPropertiesFile>
   </PropertyGroup>
@@ -18,6 +25,11 @@
     <PlayFabSourceDir>$(PlayFabRoot)\Source</PlayFabSourceDir>
     <PlayFabOutRoot>$(PlayFabRoot)\Out</PlayFabOutRoot>
     <PlayFabIntRoot>$(PlayFabRoot)\Int</PlayFabIntRoot>
+  </PropertyGroup>
+
+  <!-- Steamworks SDK Path -->
+  <PropertyGroup>
+    <SteamworksSDKRoot Condition="'$(SteamworksSDKRoot)' == ''">$(PlayFabExternalDir)\steamworks_sdk</SteamworksSDKRoot>
   </PropertyGroup>
 
   <!-- LHC paths -->

@@ -7,7 +7,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 CreateLeaderboardDefinitionOperation::CreateLeaderboardDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -28,7 +28,7 @@ HRESULT CreateLeaderboardDefinitionOperation::OnStarted(XAsyncBlock* async) noex
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 DeleteLeaderboardDefinitionOperation::DeleteLeaderboardDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -49,7 +49,7 @@ HRESULT DeleteLeaderboardDefinitionOperation::OnStarted(XAsyncBlock* async) noex
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 DeleteLeaderboardEntriesOperation::DeleteLeaderboardEntriesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -154,7 +154,7 @@ Result<GetLeaderboardAroundEntityOperation::ResultType> GetLeaderboardAroundEnti
     return ResultType{ *result };
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 GetLeaderboardDefinitionOperation::GetLeaderboardDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -184,7 +184,7 @@ Result<GetLeaderboardDefinitionOperation::ResultType> GetLeaderboardDefinitionOp
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 GetLeaderboardForEntitiesOperation::GetLeaderboardForEntitiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -214,7 +214,7 @@ Result<GetLeaderboardForEntitiesOperation::ResultType> GetLeaderboardForEntities
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 IncrementLeaderboardVersionOperation::IncrementLeaderboardVersionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -241,7 +241,7 @@ Result<IncrementLeaderboardVersionOperation::ResultType> IncrementLeaderboardVer
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ListLeaderboardDefinitionsOperation::ListLeaderboardDefinitionsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -271,7 +271,7 @@ Result<ListLeaderboardDefinitionsOperation::ResultType> ListLeaderboardDefinitio
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 UnlinkLeaderboardFromStatisticOperation::UnlinkLeaderboardFromStatisticOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -292,7 +292,7 @@ HRESULT UnlinkLeaderboardFromStatisticOperation::OnStarted(XAsyncBlock* async) n
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 UpdateLeaderboardDefinitionOperation::UpdateLeaderboardDefinitionOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -313,7 +313,7 @@ HRESULT UpdateLeaderboardDefinitionOperation::OnStarted(XAsyncBlock* async) noex
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 UpdateLeaderboardEntriesOperation::UpdateLeaderboardEntriesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

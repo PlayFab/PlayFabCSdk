@@ -4,9 +4,13 @@
 #include "ApiXAsyncProvider.h"
 #include "GlobalState.h"
 #include <playfab/core/cpp/Entity.h>
+#include "ApiHelpers.h"
 
 using namespace PlayFab;
 using namespace PlayFab::PlatformSpecific;
+
+extern "C"
+{
 
 #if HC_PLATFORM == HC_PLATFORM_ANDROID
 PF_API PFPlatformSpecificClientAndroidDevicePushNotificationRegistrationAsync(
@@ -17,16 +21,16 @@ PF_API PFPlatformSpecificClientAndroidDevicePushNotificationRegistrationAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFPlatformSpecificClientAndroidDevicePushNotificationRegistrationAsync),
-        std::bind(&PlatformSpecificAPI::ClientAndroidDevicePushNotificationRegistration, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFPlatformSpecificClientAndroidDevicePushNotificationRegistrationAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFPlatformSpecificClientAndroidDevicePushNotificationRegistrationAsync),
+            std::bind(&PlatformSpecificAPI::ClientAndroidDevicePushNotificationRegistration, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -39,16 +43,16 @@ PF_API PFPlatformSpecificClientRefreshPSNAuthTokenAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFPlatformSpecificClientRefreshPSNAuthTokenAsync),
-        std::bind(&PlatformSpecificAPI::ClientRefreshPSNAuthToken, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFPlatformSpecificClientRefreshPSNAuthTokenAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFPlatformSpecificClientRefreshPSNAuthTokenAsync),
+            std::bind(&PlatformSpecificAPI::ClientRefreshPSNAuthToken, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -61,20 +65,20 @@ PF_API PFPlatformSpecificClientRegisterForIOSPushNotificationAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFPlatformSpecificClientRegisterForIOSPushNotificationAsync),
-        std::bind(&PlatformSpecificAPI::ClientRegisterForIOSPushNotification, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFPlatformSpecificClientRegisterForIOSPushNotificationAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFPlatformSpecificClientRegisterForIOSPushNotificationAsync),
+            std::bind(&PlatformSpecificAPI::ClientRegisterForIOSPushNotification, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFPlatformSpecificServerAwardSteamAchievementAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFPlatformSpecificAwardSteamAchievementRequest* request,
@@ -83,16 +87,16 @@ PF_API PFPlatformSpecificServerAwardSteamAchievementAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFPlatformSpecificServerAwardSteamAchievementAsync),
-        std::bind(&PlatformSpecificAPI::ServerAwardSteamAchievement, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFPlatformSpecificServerAwardSteamAchievementAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFPlatformSpecificServerAwardSteamAchievementAsync),
+            std::bind(&PlatformSpecificAPI::ServerAwardSteamAchievement, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFPlatformSpecificServerAwardSteamAchievementGetResultSize(
@@ -100,7 +104,10 @@ PF_API PFPlatformSpecificServerAwardSteamAchievementGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFPlatformSpecificServerAwardSteamAchievementGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFPlatformSpecificServerAwardSteamAchievementGetResult(
@@ -111,12 +118,16 @@ PF_API PFPlatformSpecificServerAwardSteamAchievementGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFPlatformSpecificServerAwardSteamAchievementGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFPlatformSpecificAwardSteamAchievementResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFPlatformSpecificAwardSteamAchievementResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
+}

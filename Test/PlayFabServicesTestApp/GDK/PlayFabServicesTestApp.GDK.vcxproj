@@ -22,7 +22,7 @@
     <ProjectGuid>{2298c785-c226-4ed7-8bd6-305c4d73bd1c}</ProjectGuid>
     <ConfigurationType>Application</ConfigurationType>
     <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
-    <GDKExtLibNames>;</GDKExtLibNames>
+    <GDKExtLibNames>Xbox.XCurl.API</GDKExtLibNames>
   </PropertyGroup>
   <Import Project="..\..\..\Build\PlayFab.C.GDK.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabServices.import.props" />
@@ -42,6 +42,7 @@
     <Image Include="Assets\Unmounted.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Platform\GDK\TitleLocalUser_GDK.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DeviceResourcesPC.h" />
     <ClInclude Include="DeviceResourcesXbox.h" />
@@ -53,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Platform\GDK\PlayFabGDK.cpp" />
-    <ClCompile Include="..\Platform\Windows\PlatfromUtilsWindows.cpp" />
+    <ClCompile Include="..\Platform\Windows\PlatformUtilsWindows.cpp" />
     <ClCompile Include="DeviceResourcesPC.cpp" />
     <ClCompile Include="DeviceResourcesXbox.cpp" />
     <ClCompile Include="GamePC.cpp" />

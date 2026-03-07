@@ -66,11 +66,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
@@ -79,11 +89,21 @@ public:
         this->m_model.entity = &m_entity.Model();
     }
 
+    CStringVector<Alloc> const& GetFileNames() const
+    {
+        return m_fileNames;
+    }
+
     void SetFileNames(CStringVector<Alloc> value)
     {
         m_fileNames = std::move(value);
         this->m_model.fileNames =  m_fileNames.empty() ? nullptr : m_fileNames.data();
         this->m_model.fileNamesCount =  static_cast<uint32_t>(m_fileNames.size());
+    }
+
+    std::optional<int32_t> const& GetProfileVersion() const
+    {
+        return m_profileVersion;
     }
 
     void SetProfileVersion(std::optional<int32_t> value)
@@ -152,10 +172,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
     }
 
     void SetProfileVersion(int32_t value)
@@ -223,11 +253,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
@@ -236,11 +276,21 @@ public:
         this->m_model.entity = &m_entity.Model();
     }
 
+    CStringVector<Alloc> const& GetFileNames() const
+    {
+        return m_fileNames;
+    }
+
     void SetFileNames(CStringVector<Alloc> value)
     {
         m_fileNames = std::move(value);
         this->m_model.fileNames =  m_fileNames.empty() ? nullptr : m_fileNames.data();
         this->m_model.fileNamesCount =  static_cast<uint32_t>(m_fileNames.size());
+    }
+
+    std::optional<int32_t> const& GetProfileVersion() const
+    {
+        return m_profileVersion;
     }
 
     void SetProfileVersion(std::optional<int32_t> value)
@@ -309,10 +359,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
     }
 
     void SetProfileVersion(int32_t value)
@@ -378,11 +438,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
@@ -391,11 +461,21 @@ public:
         this->m_model.entity = &m_entity.Model();
     }
 
+    CStringVector<Alloc> const& GetFileNames() const
+    {
+        return m_fileNames;
+    }
+
     void SetFileNames(CStringVector<Alloc> value)
     {
         m_fileNames = std::move(value);
         this->m_model.fileNames =  m_fileNames.empty() ? nullptr : m_fileNames.data();
         this->m_model.fileNamesCount =  static_cast<uint32_t>(m_fileNames.size());
+    }
+
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
     }
 
     void SetProfileVersion(int32_t value)
@@ -466,10 +546,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetChecksum() const
+    {
+        return m_checksum;
+    }
+
     void SetChecksum(String value)
     {
         m_checksum = std::move(value);
         this->m_model.checksum =  m_checksum.empty() ? nullptr : m_checksum.data();
+    }
+
+    String const& GetDownloadUrl() const
+    {
+        return m_downloadUrl;
     }
 
     void SetDownloadUrl(String value)
@@ -478,15 +568,30 @@ public:
         this->m_model.downloadUrl =  m_downloadUrl.empty() ? nullptr : m_downloadUrl.data();
     }
 
+    String const& GetFileName() const
+    {
+        return m_fileName;
+    }
+
     void SetFileName(String value)
     {
         m_fileName = std::move(value);
         this->m_model.fileName =  m_fileName.empty() ? nullptr : m_fileName.data();
     }
 
+    time_t GetLastModified() const
+    {
+        return this->m_model.lastModified;
+    }
+
     void SetLastModified(time_t value)
     {
         this->m_model.lastModified = value;
+    }
+
+    int32_t GetSize() const
+    {
+        return this->m_model.size;
     }
 
     void SetSize(int32_t value)
@@ -554,10 +659,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    ModelDictionaryEntryVector<PFDataGetFileMetadataWrapper<Alloc>, Alloc> const& GetMetadata() const
+    {
+        return m_metadata;
     }
 
     void SetMetadata(ModelDictionaryEntryVector<PFDataGetFileMetadataWrapper<Alloc>, Alloc> value)
@@ -565,6 +680,11 @@ public:
         m_metadata = std::move(value);
         this->m_model.metadata =  m_metadata.empty() ? nullptr : m_metadata.data();
         this->m_model.metadataCount =  static_cast<uint32_t>(m_metadata.size());
+    }
+
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
     }
 
     void SetProfileVersion(int32_t value)
@@ -630,11 +750,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
@@ -701,10 +831,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    ModelDictionaryEntryVector<PFDataGetFileMetadataWrapper<Alloc>, Alloc> const& GetMetadata() const
+    {
+        return m_metadata;
     }
 
     void SetMetadata(ModelDictionaryEntryVector<PFDataGetFileMetadataWrapper<Alloc>, Alloc> value)
@@ -712,6 +852,11 @@ public:
         m_metadata = std::move(value);
         this->m_model.metadata =  m_metadata.empty() ? nullptr : m_metadata.data();
         this->m_model.metadataCount =  static_cast<uint32_t>(m_metadata.size());
+    }
+
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
     }
 
     void SetProfileVersion(int32_t value)
@@ -779,6 +924,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -786,10 +936,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = &m_entity.Model();
+    }
+
+    std::optional<bool> const& GetEscapeObject() const
+    {
+        return m_escapeObject;
     }
 
     void SetEscapeObject(std::optional<bool> value)
@@ -861,16 +1021,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    JsonObject<Alloc> const& GetDataObject() const
+    {
+        return m_dataObject;
+    }
+
     void SetDataObject(JsonObject<Alloc> value)
     {
         m_dataObject = std::move(value);
         this->m_model.dataObject.stringValue = m_dataObject.stringValue.empty() ? nullptr : m_dataObject.stringValue.data();
     }
 
+    String const& GetEscapedDataObject() const
+    {
+        return m_escapedDataObject;
+    }
+
     void SetEscapedDataObject(String value)
     {
         m_escapedDataObject = std::move(value);
         this->m_model.escapedDataObject =  m_escapedDataObject.empty() ? nullptr : m_escapedDataObject.data();
+    }
+
+    String const& GetObjectName() const
+    {
+        return m_objectName;
     }
 
     void SetObjectName(String value)
@@ -939,10 +1114,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    ModelDictionaryEntryVector<PFDataObjectResultWrapper<Alloc>, Alloc> const& GetObjects() const
+    {
+        return m_objects;
     }
 
     void SetObjects(ModelDictionaryEntryVector<PFDataObjectResultWrapper<Alloc>, Alloc> value)
@@ -950,6 +1135,11 @@ public:
         m_objects = std::move(value);
         this->m_model.objects =  m_objects.empty() ? nullptr : m_objects.data();
         this->m_model.objectsCount =  static_cast<uint32_t>(m_objects.size());
+    }
+
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
     }
 
     void SetProfileVersion(int32_t value)
@@ -1019,11 +1209,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
@@ -1032,11 +1232,21 @@ public:
         this->m_model.entity = &m_entity.Model();
     }
 
+    CStringVector<Alloc> const& GetFileNames() const
+    {
+        return m_fileNames;
+    }
+
     void SetFileNames(CStringVector<Alloc> value)
     {
         m_fileNames = std::move(value);
         this->m_model.fileNames =  m_fileNames.empty() ? nullptr : m_fileNames.data();
         this->m_model.fileNamesCount =  static_cast<uint32_t>(m_fileNames.size());
+    }
+
+    std::optional<int32_t> const& GetProfileVersion() const
+    {
+        return m_profileVersion;
     }
 
     void SetProfileVersion(std::optional<int32_t> value)
@@ -1107,10 +1317,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFileName() const
+    {
+        return m_fileName;
+    }
+
     void SetFileName(String value)
     {
         m_fileName = std::move(value);
         this->m_model.fileName =  m_fileName.empty() ? nullptr : m_fileName.data();
+    }
+
+    String const& GetUploadUrl() const
+    {
+        return m_uploadUrl;
     }
 
     void SetUploadUrl(String value)
@@ -1177,15 +1397,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
+    }
+
     void SetProfileVersion(int32_t value)
     {
         this->m_model.profileVersion = value;
+    }
+
+    ModelVector<PFDataInitiateFileUploadMetadataWrapper<Alloc>, Alloc> const& GetUploadDetails() const
+    {
+        return m_uploadDetails;
     }
 
     void SetUploadDetails(ModelVector<PFDataInitiateFileUploadMetadataWrapper<Alloc>, Alloc> value)
@@ -1257,10 +1492,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    JsonObject<Alloc> const& GetDataObject() const
+    {
+        return m_dataObject;
+    }
+
     void SetDataObject(JsonObject<Alloc> value)
     {
         m_dataObject = std::move(value);
         this->m_model.dataObject.stringValue = m_dataObject.stringValue.empty() ? nullptr : m_dataObject.stringValue.data();
+    }
+
+    std::optional<bool> const& GetDeleteObject() const
+    {
+        return m_deleteObject;
     }
 
     void SetDeleteObject(std::optional<bool> value)
@@ -1269,10 +1514,20 @@ public:
         this->m_model.deleteObject = m_deleteObject ? m_deleteObject.operator->() : nullptr;
     }
 
+    String const& GetEscapedDataObject() const
+    {
+        return m_escapedDataObject;
+    }
+
     void SetEscapedDataObject(String value)
     {
         m_escapedDataObject = std::move(value);
         this->m_model.escapedDataObject =  m_escapedDataObject.empty() ? nullptr : m_escapedDataObject.data();
+    }
+
+    String const& GetObjectName() const
+    {
+        return m_objectName;
     }
 
     void SetObjectName(String value)
@@ -1347,11 +1602,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
@@ -1360,10 +1625,20 @@ public:
         this->m_model.entity = &m_entity.Model();
     }
 
+    std::optional<int32_t> const& GetExpectedProfileVersion() const
+    {
+        return m_expectedProfileVersion;
+    }
+
     void SetExpectedProfileVersion(std::optional<int32_t> value)
     {
         m_expectedProfileVersion = std::move(value);
         this->m_model.expectedProfileVersion = m_expectedProfileVersion ? m_expectedProfileVersion.operator->() : nullptr;
+    }
+
+    ModelVector<PFDataSetObjectWrapper<Alloc>, Alloc> const& GetObjects() const
+    {
+        return m_objects;
     }
 
     void SetObjects(ModelVector<PFDataSetObjectWrapper<Alloc>, Alloc> value)
@@ -1437,16 +1712,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetObjectName() const
+    {
+        return m_objectName;
+    }
+
     void SetObjectName(String value)
     {
         m_objectName = std::move(value);
         this->m_model.objectName =  m_objectName.empty() ? nullptr : m_objectName.data();
     }
 
+    String const& GetOperationReason() const
+    {
+        return m_operationReason;
+    }
+
     void SetOperationReason(String value)
     {
         m_operationReason = std::move(value);
         this->m_model.operationReason =  m_operationReason.empty() ? nullptr : m_operationReason.data();
+    }
+
+    std::optional<PFOperationTypes> const& GetSetResult() const
+    {
+        return m_setResult;
     }
 
     void SetSetResult(std::optional<PFOperationTypes> value)
@@ -1513,9 +1803,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    int32_t GetProfileVersion() const
+    {
+        return this->m_model.profileVersion;
+    }
+
     void SetProfileVersion(int32_t value)
     {
         this->m_model.profileVersion = value;
+    }
+
+    ModelVector<PFDataSetObjectInfoWrapper<Alloc>, Alloc> const& GetSetResults() const
+    {
+        return m_setResults;
     }
 
     void SetSetResults(ModelVector<PFDataSetObjectInfoWrapper<Alloc>, Alloc> value)

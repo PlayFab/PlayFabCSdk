@@ -3,10 +3,14 @@
 #include "Authentication.h"
 #include "ApiXAsyncProvider.h"
 #include "ApiHelpers.h"
+#include "Authentication/LoginHandler.h"
 #include "Authentication/GetEntityAsyncProvider.h"
 
 using namespace PlayFab;
 using namespace PlayFab::Authentication;
+
+extern "C"
+{
 
 HRESULT PFAuthenticationLoginGetResult(
     _Inout_ XAsyncBlock* async,
@@ -77,19 +81,23 @@ PF_API PFAuthenticationLoginWithAndroidDeviceIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithAndroidDeviceIDAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithAndroidDeviceID",
+            LoginWithAndroidDeviceIDRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithAndroidDeviceID
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithAndroidDeviceIDAsync),
-        std::bind(&AuthenticationAPI::LoginWithAndroidDeviceID, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithAndroidDeviceIDAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithAndroidDeviceIDGetResultSize(
@@ -97,7 +105,10 @@ PF_API PFAuthenticationLoginWithAndroidDeviceIDGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithAndroidDeviceIDGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithAndroidDeviceIDGetResult(
@@ -109,7 +120,10 @@ PF_API PFAuthenticationLoginWithAndroidDeviceIDGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithAndroidDeviceIDGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithAndroidDeviceIDAsync(
@@ -121,14 +135,22 @@ PF_API PFAuthenticationReLoginWithAndroidDeviceIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithAndroidDeviceIDAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithAndroidDeviceID",
+            LoginWithAndroidDeviceIDRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithAndroidDeviceID
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithAndroidDeviceID, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithAndroidDeviceIDAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -142,19 +164,23 @@ PF_API PFAuthenticationLoginWithAppleAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithAppleAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithApple",
+            LoginWithAppleRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithApple
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithAppleAsync),
-        std::bind(&AuthenticationAPI::LoginWithApple, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithAppleAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithAppleGetResultSize(
@@ -162,7 +188,10 @@ PF_API PFAuthenticationLoginWithAppleGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithAppleGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithAppleGetResult(
@@ -174,7 +203,10 @@ PF_API PFAuthenticationLoginWithAppleGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithAppleGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithAppleAsync(
@@ -186,14 +218,105 @@ PF_API PFAuthenticationReLoginWithAppleAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithAppleAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithApple",
+            LoginWithAppleRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithApple
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithAppleAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+#endif
 
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithApple, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+#if HC_PLATFORM == HC_PLATFORM_GDK
+PF_API PFAuthenticationLoginWithBattleNetAsync(
+    _In_ PFServiceConfigHandle contextHandle,
+    _In_ const PFAuthenticationLoginWithBattleNetRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithBattleNetAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
+
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithBattleNet",
+            LoginWithBattleNetRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithBattleNet
+        );
+
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithBattleNetAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+
+PF_API PFAuthenticationLoginWithBattleNetGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithBattleNetGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
+}
+
+PF_API PFAuthenticationLoginWithBattleNetGetResult(
+    _Inout_ XAsyncBlock* async,
+    _Out_ PFEntityHandle* entityHandle,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_opt_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_opt_ PFAuthenticationLoginResult const** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithBattleNetGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
+}
+
+PF_API PFAuthenticationReLoginWithBattleNetAsync(
+    _In_ PFEntityHandle entityHandle,
+    _In_ const PFAuthenticationLoginWithBattleNetRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithBattleNetAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithBattleNet",
+            LoginWithBattleNetRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithBattleNet
+        );
+
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithBattleNetAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -206,19 +329,23 @@ PF_API PFAuthenticationLoginWithCustomIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithCustomIDAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithCustomID",
+            LoginWithCustomIDRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithCustomID
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithCustomIDAsync),
-        std::bind(&AuthenticationAPI::LoginWithCustomID, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithCustomIDAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithCustomIDGetResultSize(
@@ -226,7 +353,10 @@ PF_API PFAuthenticationLoginWithCustomIDGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithCustomIDGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithCustomIDGetResult(
@@ -238,7 +368,10 @@ PF_API PFAuthenticationLoginWithCustomIDGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithCustomIDGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithCustomIDAsync(
@@ -250,14 +383,22 @@ PF_API PFAuthenticationReLoginWithCustomIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithCustomIDAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithCustomID",
+            LoginWithCustomIDRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithCustomID
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithCustomID, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithCustomIDAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 #if 0
@@ -270,19 +411,23 @@ PF_API PFAuthenticationLoginWithEmailAddressAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithEmailAddressAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithEmailAddress",
+            LoginWithEmailAddressRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithEmailAddress
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithEmailAddressAsync),
-        std::bind(&AuthenticationAPI::LoginWithEmailAddress, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithEmailAddressAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithEmailAddressGetResultSize(
@@ -290,7 +435,10 @@ PF_API PFAuthenticationLoginWithEmailAddressGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithEmailAddressGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithEmailAddressGetResult(
@@ -302,7 +450,10 @@ PF_API PFAuthenticationLoginWithEmailAddressGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithEmailAddressGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithEmailAddressAsync(
@@ -314,14 +465,22 @@ PF_API PFAuthenticationReLoginWithEmailAddressAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithEmailAddressAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithEmailAddress",
+            LoginWithEmailAddressRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithEmailAddress
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithEmailAddress, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithEmailAddressAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -335,19 +494,23 @@ PF_API PFAuthenticationLoginWithFacebookAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithFacebook",
+            LoginWithFacebookRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithFacebook
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookAsync),
-        std::bind(&AuthenticationAPI::LoginWithFacebook, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithFacebookGetResultSize(
@@ -355,7 +518,10 @@ PF_API PFAuthenticationLoginWithFacebookGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithFacebookGetResult(
@@ -367,7 +533,10 @@ PF_API PFAuthenticationLoginWithFacebookGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithFacebookAsync(
@@ -379,14 +548,22 @@ PF_API PFAuthenticationReLoginWithFacebookAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithFacebookAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithFacebook",
+            LoginWithFacebookRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithFacebook
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithFacebook, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithFacebookAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -400,19 +577,23 @@ PF_API PFAuthenticationLoginWithFacebookInstantGamesIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookInstantGamesIdAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithFacebookInstantGamesId",
+            LoginWithFacebookInstantGamesIdRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithFacebookInstantGamesId
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookInstantGamesIdAsync),
-        std::bind(&AuthenticationAPI::LoginWithFacebookInstantGamesId, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookInstantGamesIdAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithFacebookInstantGamesIdGetResultSize(
@@ -420,7 +601,10 @@ PF_API PFAuthenticationLoginWithFacebookInstantGamesIdGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookInstantGamesIdGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithFacebookInstantGamesIdGetResult(
@@ -432,7 +616,10 @@ PF_API PFAuthenticationLoginWithFacebookInstantGamesIdGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithFacebookInstantGamesIdGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithFacebookInstantGamesIdAsync(
@@ -444,14 +631,22 @@ PF_API PFAuthenticationReLoginWithFacebookInstantGamesIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithFacebookInstantGamesIdAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithFacebookInstantGamesId",
+            LoginWithFacebookInstantGamesIdRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithFacebookInstantGamesId
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithFacebookInstantGamesId, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithFacebookInstantGamesIdAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -465,19 +660,23 @@ PF_API PFAuthenticationLoginWithGameCenterAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithGameCenterAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithGameCenter",
+            LoginWithGameCenterRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithGameCenter
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithGameCenterAsync),
-        std::bind(&AuthenticationAPI::LoginWithGameCenter, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithGameCenterAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithGameCenterGetResultSize(
@@ -485,7 +684,10 @@ PF_API PFAuthenticationLoginWithGameCenterGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithGameCenterGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithGameCenterGetResult(
@@ -497,7 +699,10 @@ PF_API PFAuthenticationLoginWithGameCenterGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithGameCenterGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithGameCenterAsync(
@@ -509,14 +714,22 @@ PF_API PFAuthenticationReLoginWithGameCenterAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithGameCenterAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithGameCenter",
+            LoginWithGameCenterRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithGameCenter
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithGameCenter, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithGameCenterAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -530,19 +743,23 @@ PF_API PFAuthenticationLoginWithGoogleAccountAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithGoogleAccountAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithGoogleAccount",
+            LoginWithGoogleAccountRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithGoogleAccount
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithGoogleAccountAsync),
-        std::bind(&AuthenticationAPI::LoginWithGoogleAccount, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithGoogleAccountAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithGoogleAccountGetResultSize(
@@ -550,7 +767,10 @@ PF_API PFAuthenticationLoginWithGoogleAccountGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithGoogleAccountGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithGoogleAccountGetResult(
@@ -562,7 +782,10 @@ PF_API PFAuthenticationLoginWithGoogleAccountGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithGoogleAccountGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithGoogleAccountAsync(
@@ -574,14 +797,22 @@ PF_API PFAuthenticationReLoginWithGoogleAccountAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithGoogleAccountAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithGoogleAccount",
+            LoginWithGoogleAccountRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithGoogleAccount
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithGoogleAccount, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithGoogleAccountAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -595,19 +826,23 @@ PF_API PFAuthenticationLoginWithGooglePlayGamesServicesAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithGooglePlayGamesServicesAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithGooglePlayGamesServices",
+            LoginWithGooglePlayGamesServicesRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithGooglePlayGamesServices
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithGooglePlayGamesServicesAsync),
-        std::bind(&AuthenticationAPI::LoginWithGooglePlayGamesServices, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithGooglePlayGamesServicesAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithGooglePlayGamesServicesGetResultSize(
@@ -615,7 +850,10 @@ PF_API PFAuthenticationLoginWithGooglePlayGamesServicesGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithGooglePlayGamesServicesGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithGooglePlayGamesServicesGetResult(
@@ -627,7 +865,10 @@ PF_API PFAuthenticationLoginWithGooglePlayGamesServicesGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithGooglePlayGamesServicesGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithGooglePlayGamesServicesAsync(
@@ -639,14 +880,22 @@ PF_API PFAuthenticationReLoginWithGooglePlayGamesServicesAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithGooglePlayGamesServicesAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithGooglePlayGamesServices",
+            LoginWithGooglePlayGamesServicesRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithGooglePlayGamesServices
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithGooglePlayGamesServices, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithGooglePlayGamesServicesAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -660,19 +909,23 @@ PF_API PFAuthenticationLoginWithIOSDeviceIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithIOSDeviceIDAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithIOSDeviceID",
+            LoginWithIOSDeviceIDRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithIOSDeviceID
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithIOSDeviceIDAsync),
-        std::bind(&AuthenticationAPI::LoginWithIOSDeviceID, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithIOSDeviceIDAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithIOSDeviceIDGetResultSize(
@@ -680,7 +933,10 @@ PF_API PFAuthenticationLoginWithIOSDeviceIDGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithIOSDeviceIDGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithIOSDeviceIDGetResult(
@@ -692,7 +948,10 @@ PF_API PFAuthenticationLoginWithIOSDeviceIDGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithIOSDeviceIDGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithIOSDeviceIDAsync(
@@ -704,14 +963,22 @@ PF_API PFAuthenticationReLoginWithIOSDeviceIDAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithIOSDeviceIDAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithIOSDeviceID",
+            LoginWithIOSDeviceIDRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithIOSDeviceID
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithIOSDeviceID, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithIOSDeviceIDAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -725,19 +992,23 @@ PF_API PFAuthenticationLoginWithKongregateAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithKongregateAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithKongregate",
+            LoginWithKongregateRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithKongregate
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithKongregateAsync),
-        std::bind(&AuthenticationAPI::LoginWithKongregate, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithKongregateAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithKongregateGetResultSize(
@@ -745,7 +1016,10 @@ PF_API PFAuthenticationLoginWithKongregateGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithKongregateGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithKongregateGetResult(
@@ -757,7 +1031,10 @@ PF_API PFAuthenticationLoginWithKongregateGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithKongregateGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithKongregateAsync(
@@ -769,14 +1046,22 @@ PF_API PFAuthenticationReLoginWithKongregateAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithKongregateAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithKongregate",
+            LoginWithKongregateRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithKongregate
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithKongregate, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithKongregateAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -790,19 +1075,23 @@ PF_API PFAuthenticationLoginWithNintendoServiceAccountAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoServiceAccountAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithNintendoServiceAccount",
+            LoginWithNintendoServiceAccountRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithNintendoServiceAccount
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoServiceAccountAsync),
-        std::bind(&AuthenticationAPI::LoginWithNintendoServiceAccount, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoServiceAccountAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithNintendoServiceAccountGetResultSize(
@@ -810,7 +1099,10 @@ PF_API PFAuthenticationLoginWithNintendoServiceAccountGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoServiceAccountGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithNintendoServiceAccountGetResult(
@@ -822,7 +1114,10 @@ PF_API PFAuthenticationLoginWithNintendoServiceAccountGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoServiceAccountGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithNintendoServiceAccountAsync(
@@ -834,14 +1129,22 @@ PF_API PFAuthenticationReLoginWithNintendoServiceAccountAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithNintendoServiceAccountAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithNintendoServiceAccount",
+            LoginWithNintendoServiceAccountRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithNintendoServiceAccount
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithNintendoServiceAccount, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithNintendoServiceAccountAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -855,19 +1158,23 @@ PF_API PFAuthenticationLoginWithNintendoSwitchDeviceIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoSwitchDeviceIdAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithNintendoSwitchDeviceId",
+            LoginWithNintendoSwitchDeviceIdRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithNintendoSwitchDeviceId
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoSwitchDeviceIdAsync),
-        std::bind(&AuthenticationAPI::LoginWithNintendoSwitchDeviceId, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoSwitchDeviceIdAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithNintendoSwitchDeviceIdGetResultSize(
@@ -875,7 +1182,10 @@ PF_API PFAuthenticationLoginWithNintendoSwitchDeviceIdGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoSwitchDeviceIdGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithNintendoSwitchDeviceIdGetResult(
@@ -887,7 +1197,10 @@ PF_API PFAuthenticationLoginWithNintendoSwitchDeviceIdGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithNintendoSwitchDeviceIdGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithNintendoSwitchDeviceIdAsync(
@@ -899,14 +1212,22 @@ PF_API PFAuthenticationReLoginWithNintendoSwitchDeviceIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithNintendoSwitchDeviceIdAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithNintendoSwitchDeviceId",
+            LoginWithNintendoSwitchDeviceIdRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithNintendoSwitchDeviceId
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithNintendoSwitchDeviceId, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithNintendoSwitchDeviceIdAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -919,19 +1240,23 @@ PF_API PFAuthenticationLoginWithOpenIdConnectAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithOpenIdConnectAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithOpenIdConnect",
+            LoginWithOpenIdConnectRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithOpenIdConnect
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithOpenIdConnectAsync),
-        std::bind(&AuthenticationAPI::LoginWithOpenIdConnect, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithOpenIdConnectAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithOpenIdConnectGetResultSize(
@@ -939,7 +1264,10 @@ PF_API PFAuthenticationLoginWithOpenIdConnectGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithOpenIdConnectGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithOpenIdConnectGetResult(
@@ -951,7 +1279,10 @@ PF_API PFAuthenticationLoginWithOpenIdConnectGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithOpenIdConnectGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithOpenIdConnectAsync(
@@ -963,14 +1294,22 @@ PF_API PFAuthenticationReLoginWithOpenIdConnectAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithOpenIdConnectAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithOpenIdConnect",
+            LoginWithOpenIdConnectRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithOpenIdConnect
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithOpenIdConnect, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithOpenIdConnectAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 #if 0
@@ -983,19 +1322,23 @@ PF_API PFAuthenticationLoginWithPlayFabAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithPlayFabAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithPlayFab",
+            LoginWithPlayFabRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithPlayFab
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithPlayFabAsync),
-        std::bind(&AuthenticationAPI::LoginWithPlayFab, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithPlayFabAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithPlayFabGetResultSize(
@@ -1003,7 +1346,10 @@ PF_API PFAuthenticationLoginWithPlayFabGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithPlayFabGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithPlayFabGetResult(
@@ -1015,7 +1361,10 @@ PF_API PFAuthenticationLoginWithPlayFabGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithPlayFabGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithPlayFabAsync(
@@ -1027,14 +1376,22 @@ PF_API PFAuthenticationReLoginWithPlayFabAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithPlayFabAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithPlayFab",
+            LoginWithPlayFabRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithPlayFab
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithPlayFab, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithPlayFabAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -1048,19 +1405,23 @@ PF_API PFAuthenticationLoginWithPSNAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithPSNAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithPSN",
+            LoginWithPSNRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithPSN
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithPSNAsync),
-        std::bind(&AuthenticationAPI::LoginWithPSN, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithPSNAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithPSNGetResultSize(
@@ -1068,7 +1429,10 @@ PF_API PFAuthenticationLoginWithPSNGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithPSNGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithPSNGetResult(
@@ -1080,7 +1444,10 @@ PF_API PFAuthenticationLoginWithPSNGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithPSNGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithPSNAsync(
@@ -1092,18 +1459,26 @@ PF_API PFAuthenticationReLoginWithPSNAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithPSNAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithPSN",
+            LoginWithPSNRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithPSN
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithPSN, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithPSNAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationLoginWithSteamAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithSteamRequest* request,
@@ -1113,19 +1488,23 @@ PF_API PFAuthenticationLoginWithSteamAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithSteamAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithSteam",
+            LoginWithSteamRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithSteam
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithSteamAsync),
-        std::bind(&AuthenticationAPI::LoginWithSteam, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithSteamAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithSteamGetResultSize(
@@ -1133,7 +1512,10 @@ PF_API PFAuthenticationLoginWithSteamGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithSteamGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithSteamGetResult(
@@ -1145,7 +1527,10 @@ PF_API PFAuthenticationLoginWithSteamGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithSteamGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithSteamAsync(
@@ -1157,14 +1542,22 @@ PF_API PFAuthenticationReLoginWithSteamAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithSteamAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithSteam",
+            LoginWithSteamRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithSteam
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithSteam, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithSteamAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -1178,19 +1571,23 @@ PF_API PFAuthenticationLoginWithTwitchAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithTwitchAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithTwitch",
+            LoginWithTwitchRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithTwitch
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithTwitchAsync),
-        std::bind(&AuthenticationAPI::LoginWithTwitch, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithTwitchAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithTwitchGetResultSize(
@@ -1198,7 +1595,10 @@ PF_API PFAuthenticationLoginWithTwitchGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithTwitchGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithTwitchGetResult(
@@ -1210,7 +1610,10 @@ PF_API PFAuthenticationLoginWithTwitchGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithTwitchGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithTwitchAsync(
@@ -1222,18 +1625,26 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithTwitchAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithTwitch",
+            LoginWithTwitchRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithTwitch
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithTwitch, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithTwitchAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationLoginWithXboxAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithXboxRequest* request,
@@ -1243,19 +1654,23 @@ PF_API PFAuthenticationLoginWithXboxAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationLoginWithXboxAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithXbox",
+            LoginWithXboxRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithXbox
+        );
 
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithXboxAsync),
-        std::bind(&AuthenticationAPI::LoginWithXbox, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationLoginWithXboxAsync),
+            std::bind(&ILoginHandler::LoginHelper, std::move(loginHandler), state, std::move(context), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationLoginWithXboxGetResultSize(
@@ -1263,7 +1678,10 @@ PF_API PFAuthenticationLoginWithXboxGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithXboxGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationLoginWithXboxGetResult(
@@ -1275,7 +1693,10 @@ PF_API PFAuthenticationLoginWithXboxGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationLoginWithXboxGetResult), [&]()
+    {
+        return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
+    });
 }
 
 PF_API PFAuthenticationReLoginWithXboxAsync(
@@ -1287,79 +1708,22 @@ PF_API PFAuthenticationReLoginWithXboxAsync(
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationReLoginWithXboxAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
+    {
+        SharedPtr<ILoginHandler> loginHandler = MakeShared<LoginWithRequestHandler>(
+            "/Client/LoginWithXbox",
+            LoginWithXboxRequest{ *request }.ToJson(),
+            CacheId::AuthenticationLoginWithXbox
+        );
 
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithXbox, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
-}
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK
-PF_API PFAuthenticationLoginWithXUserAsync(
-    _In_ PFServiceConfigHandle contextHandle,
-    _In_ const PFAuthenticationLoginWithXUserRequest* request,
-    _Inout_ XAsyncBlock* async
-) noexcept
-{
-    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
-    RETURN_HR_INVALIDARG_IF_NULL(request);
-
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
-
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationLoginWithXUserAsync),
-        std::bind(&AuthenticationAPI::LoginWithXUser, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
-}
-
-PF_API PFAuthenticationLoginWithXUserGetResultSize(
-    _Inout_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept
-{
-    return XAsyncGetResultSize(async, bufferSize);
-}
-
-PF_API PFAuthenticationLoginWithXUserGetResult(
-    _Inout_ XAsyncBlock* async,
-    _Out_ PFEntityHandle* entityHandle,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_opt_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_opt_ PFAuthenticationLoginResult const** result,
-    _Out_opt_ size_t* bufferUsed
-) noexcept
-{
-    return PFAuthenticationLoginGetResult(async, entityHandle, bufferSize, buffer, result, bufferUsed);
-}
-
-PF_API PFAuthenticationReLoginWithXUserAsync(
-    _In_ PFEntityHandle entityHandle,
-    _In_ const PFAuthenticationLoginWithXUserRequest* request,
-    _Inout_ XAsyncBlock* async
-) noexcept
-{
-    RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
-    RETURN_HR_INVALIDARG_IF_NULL(request);
-
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
-
-    SharedPtr<Entity> entity;
-    RETURN_IF_FAILED(state->Entities().FromHandle(entityHandle, entity));
-
-    auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, __FUNCTION__, std::bind(&AuthenticationAPI::ReLoginWithXUser, std::move(entity), *request, std::placeholders::_1));
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAuthenticationReLoginWithXboxAsync), 
+            std::bind(&ILoginHandler::ReLoginHelper, std::move(loginHandler), std::move(entity), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -1373,19 +1737,17 @@ PF_API PFAuthenticationRegisterPlayFabUserAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationRegisterPlayFabUserAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationRegisterPlayFabUserAsync),
-        std::bind(&AuthenticationAPI::RegisterPlayFabUser, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationRegisterPlayFabUserAsync),
+            std::bind(&AuthenticationAPI::RegisterPlayFabUser, std::move(context), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationRegisterPlayFabUserGetResultSize(
@@ -1393,7 +1755,10 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationRegisterPlayFabUserGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationRegisterPlayFabUserGetResult(
@@ -1404,16 +1769,223 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationRegisterPlayFabUserGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFAuthenticationRegisterPlayFabUserResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFAuthenticationRegisterPlayFabUserResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
+PF_API PFAuthenticationServerLoginWithAndroidDeviceIDAsync(
+    _In_ PFServiceConfigHandle contextHandle,
+    _In_z_ const char* secretKey,
+    _In_ const PFAuthenticationServerLoginWithAndroidDeviceIDRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithAndroidDeviceIDAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
+
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithAndroidDeviceIDAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithAndroidDeviceID, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithAndroidDeviceIDGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithAndroidDeviceIDGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithAndroidDeviceIDGetResult(
+    _Inout_ XAsyncBlock* async,
+    _Outptr_ PFAuthenticationEntityTokenResponse const** entityTokenResponse,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_opt_ PFAuthenticationLoginResult const** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithAndroidDeviceIDGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+PF_API PFAuthenticationServerLoginWithBattleNetAsync(
+    _In_ PFServiceConfigHandle contextHandle,
+    _In_z_ const char* secretKey,
+    _In_ const PFAuthenticationServerLoginWithBattleNetRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithBattleNetAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
+
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithBattleNetAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithBattleNet, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithBattleNetGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithBattleNetGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithBattleNetGetResult(
+    _Inout_ XAsyncBlock* async,
+    _Outptr_ PFAuthenticationEntityTokenResponse const** entityTokenResponse,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_opt_ PFAuthenticationLoginResult const** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithBattleNetGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+PF_API PFAuthenticationServerLoginWithCustomIDAsync(
+    _In_ PFServiceConfigHandle contextHandle,
+    _In_z_ const char* secretKey,
+    _In_ const PFAuthenticationServerLoginWithCustomIDRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithCustomIDAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
+
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithCustomIDAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithCustomID, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithCustomIDGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithCustomIDGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithCustomIDGetResult(
+    _Inout_ XAsyncBlock* async,
+    _Outptr_ PFAuthenticationEntityTokenResponse const** entityTokenResponse,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_opt_ PFAuthenticationLoginResult const** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithCustomIDGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+PF_API PFAuthenticationServerLoginWithIOSDeviceIDAsync(
+    _In_ PFServiceConfigHandle contextHandle,
+    _In_z_ const char* secretKey,
+    _In_ const PFAuthenticationServerLoginWithIOSDeviceIDRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithIOSDeviceIDAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
+
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithIOSDeviceIDAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithIOSDeviceID, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithIOSDeviceIDGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithIOSDeviceIDGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithIOSDeviceIDGetResult(
+    _Inout_ XAsyncBlock* async,
+    _Outptr_ PFAuthenticationEntityTokenResponse const** entityTokenResponse,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_opt_ PFAuthenticationLoginResult const** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithIOSDeviceIDGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
 PF_API PFAuthenticationServerLoginWithPSNAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1424,19 +1996,17 @@ PF_API PFAuthenticationServerLoginWithPSNAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithPSNAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationServerLoginWithPSNAsync),
-        std::bind(&AuthenticationAPI::ServerLoginWithPSN, state, std::move(context), secretKey, *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithPSNAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithPSN, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithPSNGetResultSize(
@@ -1444,7 +2014,10 @@ PF_API PFAuthenticationServerLoginWithPSNGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithPSNGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithPSNGetResult(
@@ -1456,11 +2029,14 @@ PF_API PFAuthenticationServerLoginWithPSNGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithPSNGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationServerLoginWithServerCustomIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1471,19 +2047,17 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithServerCustomIdAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationServerLoginWithServerCustomIdAsync),
-        std::bind(&AuthenticationAPI::ServerLoginWithServerCustomId, state, std::move(context), secretKey, *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithServerCustomIdAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithServerCustomId, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithServerCustomIdGetResultSize(
@@ -1491,7 +2065,10 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithServerCustomIdGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithServerCustomIdGetResult(
@@ -1503,11 +2080,14 @@ PF_API PFAuthenticationServerLoginWithServerCustomIdGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithServerCustomIdGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationServerLoginWithSteamIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1518,19 +2098,17 @@ PF_API PFAuthenticationServerLoginWithSteamIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithSteamIdAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationServerLoginWithSteamIdAsync),
-        std::bind(&AuthenticationAPI::ServerLoginWithSteamId, state, std::move(context), secretKey, *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithSteamIdAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithSteamId, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithSteamIdGetResultSize(
@@ -1538,7 +2116,10 @@ PF_API PFAuthenticationServerLoginWithSteamIdGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithSteamIdGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithSteamIdGetResult(
@@ -1550,11 +2131,65 @@ PF_API PFAuthenticationServerLoginWithSteamIdGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithSteamIdGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if 0
+PF_API PFAuthenticationServerLoginWithTwitchAsync(
+    _In_ PFServiceConfigHandle contextHandle,
+    _In_z_ const char* secretKey,
+    _In_ const PFAuthenticationServerLoginWithTwitchRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithTwitchAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
+
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithTwitchAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithTwitch, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithTwitchGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithTwitchGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
+}
+
+PF_API PFAuthenticationServerLoginWithTwitchGetResult(
+    _Inout_ XAsyncBlock* async,
+    _Outptr_ PFAuthenticationEntityTokenResponse const** entityTokenResponse,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_opt_ PFAuthenticationLoginResult const** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithTwitchGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationServerLoginWithXboxAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1565,19 +2200,17 @@ PF_API PFAuthenticationServerLoginWithXboxAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxAsync),
-        std::bind(&AuthenticationAPI::ServerLoginWithXbox, state, std::move(context), secretKey, *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithXbox, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithXboxGetResultSize(
@@ -1585,7 +2218,10 @@ PF_API PFAuthenticationServerLoginWithXboxGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithXboxGetResult(
@@ -1597,11 +2233,14 @@ PF_API PFAuthenticationServerLoginWithXboxGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationServerLoginWithXboxIdAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1612,19 +2251,17 @@ PF_API PFAuthenticationServerLoginWithXboxIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxIdAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxIdAsync),
-        std::bind(&AuthenticationAPI::ServerLoginWithXboxId, state, std::move(context), secretKey, *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxIdAsync),
+            std::bind(&AuthenticationAPI::ServerLoginWithXboxId, state, std::move(context), secretKey, *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithXboxIdGetResultSize(
@@ -1632,7 +2269,10 @@ PF_API PFAuthenticationServerLoginWithXboxIdGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxIdGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationServerLoginWithXboxIdGetResult(
@@ -1644,11 +2284,14 @@ PF_API PFAuthenticationServerLoginWithXboxIdGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationServerLoginWithXboxIdGetResult), [&]()
+    {
+        return PFAuthenticationServerLoginGetResult(async, entityTokenResponse, bufferSize, buffer, result, bufferUsed);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationAuthenticateGameServerWithCustomIdAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationAuthenticateCustomIdRequest* request,
@@ -1658,19 +2301,17 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationAuthenticateGameServerWithCustomIdAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> context)
+    {
 
-    SharedPtr<Entity> context;
-    RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationAuthenticateGameServerWithCustomIdAsync),
-        std::bind(&AuthenticationAPI::AuthenticateGameServerWithCustomId, state, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationAuthenticateGameServerWithCustomIdAsync),
+            std::bind(&AuthenticationAPI::AuthenticateGameServerWithCustomId, state, std::move(context), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
@@ -1679,21 +2320,24 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
     _Out_opt_ bool* newlyCreated
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
-
-    PFAuthenticationAuthenticateGameServerResult result{};
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, sizeof(PFAuthenticationAuthenticateGameServerResult), &result, nullptr));
-
-    *entityHandle = result.entityHandle;
-    if (newlyCreated)
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationAuthenticateGameServerWithCustomIdGetResult), [&]()
     {
-        *newlyCreated = result.newlyCreated;
-    }
-    return S_OK;
+        RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
+
+        PFAuthenticationAuthenticateGameServerResult result{};
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, sizeof(PFAuthenticationAuthenticateGameServerResult), &result, nullptr));
+
+        *entityHandle = result.entityHandle;
+        if (newlyCreated)
+        {
+            *newlyCreated = result.newlyCreated;
+        }
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationDeleteAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationDeleteRequest* request,
@@ -1703,23 +2347,21 @@ PF_API PFAuthenticationDeleteAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationDeleteAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> context)
+    {
 
-    SharedPtr<Entity> context;
-    RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationDeleteAsync),
-        std::bind(&AuthenticationAPI::Delete, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationDeleteAsync),
+            std::bind(&AuthenticationAPI::Delete, std::move(context), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationGetEntityAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationGetEntityRequest* request,
@@ -1729,20 +2371,18 @@ PF_API PFAuthenticationGetEntityAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationGetEntityAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> context)
+    {
 
-    SharedPtr<Entity> context;
-    RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
-
-    auto provider = MakeGetEntityProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationGetEntityAsync),
-        std::bind(&AuthenticationAPI::GetEntity, state, std::move(context), *request, std::placeholders::_1),
+        auto provider = MakeGetEntityProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationGetEntityAsync),
+            std::bind(&AuthenticationAPI::GetEntity, state, std::move(context), *request, std::placeholders::_1),
         state
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationGetEntityGetResult(
@@ -1750,11 +2390,14 @@ PF_API PFAuthenticationGetEntityGetResult(
     _Out_ PFEntityHandle* entityHandle
 ) noexcept
 {
-    return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), entityHandle, nullptr);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationGetEntityGetResult), [&]()
+    {
+        return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), entityHandle, nullptr);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationGetEntityWithSecretKeyAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_z_ const char* secretKey,
@@ -1765,20 +2408,18 @@ PF_API PFAuthenticationGetEntityWithSecretKeyAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return ServiceConfigAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationGetEntityWithSecretKeyAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<ServiceConfig> context)
+    {
 
-    SharedPtr<ServiceConfig> context;
-    RETURN_IF_FAILED(state->ServiceConfigs().FromHandle(contextHandle, context));
-
-    auto provider = MakeGetEntityProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationGetEntityWithSecretKeyAsync),
-        std::bind(&AuthenticationAPI::GetEntityWithSecretKey, state, std::move(context), secretKey, *request, std::placeholders::_1),
+        auto provider = MakeGetEntityProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationGetEntityWithSecretKeyAsync),
+            std::bind(&AuthenticationAPI::GetEntityWithSecretKey, state, std::move(context), secretKey, *request, std::placeholders::_1),
         state
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
@@ -1786,11 +2427,14 @@ PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
     _Out_ PFEntityHandle* entityHandle
 ) noexcept
 {
-    return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), entityHandle, nullptr);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationGetEntityWithSecretKeyGetResult), [&]()
+    {
+        return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), entityHandle, nullptr);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationValidateEntityTokenAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAuthenticationValidateEntityTokenRequest* request,
@@ -1800,19 +2444,17 @@ PF_API PFAuthenticationValidateEntityTokenAsync(
     RETURN_HR_INVALIDARG_IF_NULL(contextHandle);
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<PFCoreGlobalState> state{ nullptr };
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFAuthenticationValidateEntityTokenAsync), contextHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> context)
+    {
 
-    SharedPtr<Entity> context;
-    RETURN_IF_FAILED(state->Entities().FromHandle(contextHandle, context));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async, 
-        XASYNC_IDENTITY(PFAuthenticationValidateEntityTokenAsync),
-        std::bind(&AuthenticationAPI::ValidateEntityToken, std::move(context), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async, 
+            XASYNC_IDENTITY(PFAuthenticationValidateEntityTokenAsync),
+            std::bind(&AuthenticationAPI::ValidateEntityToken, std::move(context), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFAuthenticationValidateEntityTokenGetResultSize(
@@ -1820,7 +2462,10 @@ PF_API PFAuthenticationValidateEntityTokenGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationValidateEntityTokenGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFAuthenticationValidateEntityTokenGetResult(
@@ -1831,12 +2476,16 @@ PF_API PFAuthenticationValidateEntityTokenGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationValidateEntityTokenGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFAuthenticationValidateEntityTokenResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFAuthenticationValidateEntityTokenResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
+}

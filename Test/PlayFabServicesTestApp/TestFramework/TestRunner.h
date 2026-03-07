@@ -37,7 +37,7 @@ public:
 private:
     String GenerateTestSummary();
     void AddLog(HCTraceLevel level, _In_z_ _Printf_format_string_ const char* format, ...);
-    static void CALLBACK PFHCTraceCallback(_In_z_ const char* areaName, _In_ HCTraceLevel level, _In_ uint64_t threadId, _In_ uint64_t timestamp, _In_z_ const char* message);
+    static void CALLBACK HCTraceCallback(_In_z_ const char* areaName, _In_ HCTraceLevel level, _In_ uint64_t threadId, _In_ uint64_t timestamp, _In_z_ const char* message);
     void ProcessRetries();
     void SetretryableHRs(Set<String> retryableHRs);
 
@@ -64,7 +64,7 @@ private:
     Set<String> m_testList;
     Set<String> m_testRetryList;
     Set<HRESULT> m_retryableHRs;
-	bool m_allowRetries{ true };
+    bool m_allowRetries{ true };
 
     static std::atomic<TestRunner*> s_hcTraceCallbackContext;
 };

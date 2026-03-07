@@ -64,6 +64,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -71,10 +76,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<int32_t> const& GetExpectedPropertiesVersion() const
+    {
+        return m_expectedPropertiesVersion;
+    }
+
     void SetExpectedPropertiesVersion(std::optional<int32_t> value)
     {
         m_expectedPropertiesVersion = std::move(value);
         this->m_model.expectedPropertiesVersion = m_expectedPropertiesVersion ? m_expectedPropertiesVersion.operator->() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetPropertyNames() const
+    {
+        return m_propertyNames;
     }
 
     void SetPropertyNames(CStringVector<Alloc> value)
@@ -142,10 +157,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    bool GetWasDeleted() const
+    {
+        return this->m_model.wasDeleted;
     }
 
     void SetWasDeleted(bool value)
@@ -207,11 +232,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFPlayerDataManagementDeletedPropertyDetailsWrapper<Alloc>, Alloc> const& GetDeletedProperties() const
+    {
+        return m_deletedProperties;
+    }
+
     void SetDeletedProperties(ModelVector<PFPlayerDataManagementDeletedPropertyDetailsWrapper<Alloc>, Alloc> value)
     {
         m_deletedProperties = std::move(value);
         this->m_model.deletedProperties =  m_deletedProperties.empty() ? nullptr : m_deletedProperties.data();
         this->m_model.deletedPropertiesCount =  static_cast<uint32_t>(m_deletedProperties.size());
+    }
+
+    int32_t GetPropertiesVersion() const
+    {
+        return this->m_model.propertiesVersion;
     }
 
     void SetPropertiesVersion(int32_t value)
@@ -271,6 +306,11 @@ public:
         swap(lhs.m_propertyName, rhs.m_propertyName);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetPropertyName() const
+    {
+        return m_propertyName;
     }
 
     void SetPropertyName(String value)
@@ -335,10 +375,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    JsonObject<Alloc> const& GetValue() const
+    {
+        return m_value;
     }
 
     void SetValue(JsonObject<Alloc> value)
@@ -403,9 +453,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    int32_t GetPropertiesVersion() const
+    {
+        return this->m_model.propertiesVersion;
+    }
+
     void SetPropertiesVersion(int32_t value)
     {
         this->m_model.propertiesVersion = value;
+    }
+
+    std::optional<PFPlayerDataManagementCustomPropertyDetailsWrapper<Alloc>> const& GetProperty() const
+    {
+        return m_property;
     }
 
     void SetProperty(std::optional<PFPlayerDataManagementCustomPropertyDetailsWrapper<Alloc>> value)
@@ -472,10 +532,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<uint32_t> const& GetIfChangedFromDataVersion() const
+    {
+        return m_ifChangedFromDataVersion;
+    }
+
     void SetIfChangedFromDataVersion(std::optional<uint32_t> value)
     {
         m_ifChangedFromDataVersion = std::move(value);
         this->m_model.ifChangedFromDataVersion = m_ifChangedFromDataVersion ? m_ifChangedFromDataVersion.operator->() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetKeys() const
+    {
+        return m_keys;
     }
 
     void SetKeys(CStringVector<Alloc> value)
@@ -483,6 +553,11 @@ public:
         m_keys = std::move(value);
         this->m_model.keys =  m_keys.empty() ? nullptr : m_keys.data();
         this->m_model.keysCount =  static_cast<uint32_t>(m_keys.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -549,11 +624,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelDictionaryEntryVector<PFUserDataRecordWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelDictionaryEntryVector<PFUserDataRecordWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
         this->m_model.data =  m_data.empty() ? nullptr : m_data.data();
         this->m_model.dataCount =  static_cast<uint32_t>(m_data.size());
+    }
+
+    uint32_t GetDataVersion() const
+    {
+        return this->m_model.dataVersion;
     }
 
     void SetDataVersion(uint32_t value)
@@ -615,11 +700,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFPlayerDataManagementCustomPropertyDetailsWrapper<Alloc>, Alloc> const& GetProperties() const
+    {
+        return m_properties;
+    }
+
     void SetProperties(ModelVector<PFPlayerDataManagementCustomPropertyDetailsWrapper<Alloc>, Alloc> value)
     {
         m_properties = std::move(value);
         this->m_model.properties =  m_properties.empty() ? nullptr : m_properties.data();
         this->m_model.propertiesCount =  static_cast<uint32_t>(m_properties.size());
+    }
+
+    int32_t GetPropertiesVersion() const
+    {
+        return this->m_model.propertiesVersion;
     }
 
     void SetPropertiesVersion(int32_t value)
@@ -683,10 +778,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    JsonObject<Alloc> const& GetValue() const
+    {
+        return m_value;
     }
 
     void SetValue(JsonObject<Alloc> value)
@@ -755,6 +860,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -762,10 +872,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<int32_t> const& GetExpectedPropertiesVersion() const
+    {
+        return m_expectedPropertiesVersion;
+    }
+
     void SetExpectedPropertiesVersion(std::optional<int32_t> value)
     {
         m_expectedPropertiesVersion = std::move(value);
         this->m_model.expectedPropertiesVersion = m_expectedPropertiesVersion ? m_expectedPropertiesVersion.operator->() : nullptr;
+    }
+
+    ModelVector<PFPlayerDataManagementUpdatePropertyWrapper<Alloc>, Alloc> const& GetProperties() const
+    {
+        return m_properties;
     }
 
     void SetProperties(ModelVector<PFPlayerDataManagementUpdatePropertyWrapper<Alloc>, Alloc> value)
@@ -797,6 +917,11 @@ public:
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
     using ModelWrapper<PFPlayerDataManagementClientUpdatePlayerCustomPropertiesResult, Alloc>::ModelWrapper;
+
+    int32_t GetPropertiesVersion() const
+    {
+        return this->m_model.propertiesVersion;
+    }
 
     void SetPropertiesVersion(int32_t value)
     {
@@ -857,11 +982,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetData() const
+    {
+        return m_data;
     }
 
     void SetData(StringDictionaryEntryVector<Alloc> value)
@@ -871,11 +1006,21 @@ public:
         this->m_model.dataCount =  static_cast<uint32_t>(m_data.size());
     }
 
+    CStringVector<Alloc> const& GetKeysToRemove() const
+    {
+        return m_keysToRemove;
+    }
+
     void SetKeysToRemove(CStringVector<Alloc> value)
     {
         m_keysToRemove = std::move(value);
         this->m_model.keysToRemove =  m_keysToRemove.empty() ? nullptr : m_keysToRemove.data();
         this->m_model.keysToRemoveCount =  static_cast<uint32_t>(m_keysToRemove.size());
+    }
+
+    std::optional<PFUserDataPermission> const& GetPermission() const
+    {
+        return m_permission;
     }
 
     void SetPermission(std::optional<PFUserDataPermission> value)
@@ -908,6 +1053,11 @@ public:
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
     using ModelWrapper<PFPlayerDataManagementUpdateUserDataResult, Alloc>::ModelWrapper;
+
+    uint32_t GetDataVersion() const
+    {
+        return this->m_model.dataVersion;
+    }
 
     void SetDataVersion(uint32_t value)
     {
@@ -968,11 +1118,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<int32_t> const& GetExpectedPropertiesVersion() const
+    {
+        return m_expectedPropertiesVersion;
     }
 
     void SetExpectedPropertiesVersion(std::optional<int32_t> value)
@@ -981,10 +1141,20 @@ public:
         this->m_model.expectedPropertiesVersion = m_expectedPropertiesVersion ? m_expectedPropertiesVersion.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    CStringVector<Alloc> const& GetPropertyNames() const
+    {
+        return m_propertyNames;
     }
 
     void SetPropertyNames(CStringVector<Alloc> value)
@@ -1056,6 +1226,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFPlayerDataManagementDeletedPropertyDetailsWrapper<Alloc>, Alloc> const& GetDeletedProperties() const
+    {
+        return m_deletedProperties;
+    }
+
     void SetDeletedProperties(ModelVector<PFPlayerDataManagementDeletedPropertyDetailsWrapper<Alloc>, Alloc> value)
     {
         m_deletedProperties = std::move(value);
@@ -1063,10 +1238,20 @@ public:
         this->m_model.deletedPropertiesCount =  static_cast<uint32_t>(m_deletedProperties.size());
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    int32_t GetPropertiesVersion() const
+    {
+        return this->m_model.propertiesVersion;
     }
 
     void SetPropertiesVersion(int32_t value)
@@ -1132,10 +1317,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String const& GetPropertyName() const
+    {
+        return m_propertyName;
     }
 
     void SetPropertyName(String value)
@@ -1202,15 +1397,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
     }
 
+    int32_t GetPropertiesVersion() const
+    {
+        return this->m_model.propertiesVersion;
+    }
+
     void SetPropertiesVersion(int32_t value)
     {
         this->m_model.propertiesVersion = value;
+    }
+
+    std::optional<PFPlayerDataManagementCustomPropertyDetailsWrapper<Alloc>> const& GetProperty() const
+    {
+        return m_property;
     }
 
     void SetProperty(std::optional<PFPlayerDataManagementCustomPropertyDetailsWrapper<Alloc>> value)
@@ -1277,6 +1487,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelDictionaryEntryVector<PFUserDataRecordWrapper<Alloc>, Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(ModelDictionaryEntryVector<PFUserDataRecordWrapper<Alloc>, Alloc> value)
     {
         m_data = std::move(value);
@@ -1284,9 +1499,19 @@ public:
         this->m_model.dataCount =  static_cast<uint32_t>(m_data.size());
     }
 
+    uint32_t GetDataVersion() const
+    {
+        return this->m_model.dataVersion;
+    }
+
     void SetDataVersion(uint32_t value)
     {
         this->m_model.dataVersion = value;
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -1351,6 +1576,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
@@ -1413,10 +1643,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    ModelVector<PFPlayerDataManagementCustomPropertyDetailsWrapper<Alloc>, Alloc> const& GetProperties() const
+    {
+        return m_properties;
     }
 
     void SetProperties(ModelVector<PFPlayerDataManagementCustomPropertyDetailsWrapper<Alloc>, Alloc> value)
@@ -1424,6 +1664,11 @@ public:
         m_properties = std::move(value);
         this->m_model.properties =  m_properties.empty() ? nullptr : m_properties.data();
         this->m_model.propertiesCount =  static_cast<uint32_t>(m_properties.size());
+    }
+
+    int32_t GetPropertiesVersion() const
+    {
+        return this->m_model.propertiesVersion;
     }
 
     void SetPropertiesVersion(int32_t value)
@@ -1493,11 +1738,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<int32_t> const& GetExpectedPropertiesVersion() const
+    {
+        return m_expectedPropertiesVersion;
     }
 
     void SetExpectedPropertiesVersion(std::optional<int32_t> value)
@@ -1506,10 +1761,20 @@ public:
         this->m_model.expectedPropertiesVersion = m_expectedPropertiesVersion ? m_expectedPropertiesVersion.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    ModelVector<PFPlayerDataManagementUpdatePropertyWrapper<Alloc>, Alloc> const& GetProperties() const
+    {
+        return m_properties;
     }
 
     void SetProperties(ModelVector<PFPlayerDataManagementUpdatePropertyWrapper<Alloc>, Alloc> value)
@@ -1579,10 +1844,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    int32_t GetPropertiesVersion() const
+    {
+        return this->m_model.propertiesVersion;
     }
 
     void SetPropertiesVersion(int32_t value)
@@ -1652,11 +1927,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetData() const
+    {
+        return m_data;
     }
 
     void SetData(StringDictionaryEntryVector<Alloc> value)
@@ -1666,6 +1951,11 @@ public:
         this->m_model.dataCount =  static_cast<uint32_t>(m_data.size());
     }
 
+    CStringVector<Alloc> const& GetKeysToRemove() const
+    {
+        return m_keysToRemove;
+    }
+
     void SetKeysToRemove(CStringVector<Alloc> value)
     {
         m_keysToRemove = std::move(value);
@@ -1673,10 +1963,20 @@ public:
         this->m_model.keysToRemoveCount =  static_cast<uint32_t>(m_keysToRemove.size());
     }
 
+    std::optional<PFUserDataPermission> const& GetPermission() const
+    {
+        return m_permission;
+    }
+
     void SetPermission(std::optional<PFUserDataPermission> value)
     {
         m_permission = std::move(value);
         this->m_model.permission = m_permission ? m_permission.operator->() : nullptr;
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -1753,11 +2053,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetData() const
+    {
+        return m_data;
     }
 
     void SetData(StringDictionaryEntryVector<Alloc> value)
@@ -1767,11 +2077,21 @@ public:
         this->m_model.dataCount =  static_cast<uint32_t>(m_data.size());
     }
 
+    CStringVector<Alloc> const& GetKeysToRemove() const
+    {
+        return m_keysToRemove;
+    }
+
     void SetKeysToRemove(CStringVector<Alloc> value)
     {
         m_keysToRemove = std::move(value);
         this->m_model.keysToRemove =  m_keysToRemove.empty() ? nullptr : m_keysToRemove.data();
         this->m_model.keysToRemoveCount =  static_cast<uint32_t>(m_keysToRemove.size());
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)

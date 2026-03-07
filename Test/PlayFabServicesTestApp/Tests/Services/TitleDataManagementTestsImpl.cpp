@@ -13,7 +13,7 @@ namespace Test
 
 constexpr char kTestKey[]{ "testKey" };
 constexpr char kTestVal[]{ "testVal" };
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
 constexpr char kTestNullVal[]{ 0 };
 #endif
 constexpr time_t kTestTime{ 12345u };
@@ -225,7 +225,7 @@ void TitleDataManagementTests::TestClientGetTitleNews(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetPublisherData(TestContext& tc)
 {
    ServerSetPublisherDataOperation::RequestType request;
@@ -266,7 +266,7 @@ void TitleDataManagementTests::TestServerGetPublisherData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetTime(TestContext& tc)
 {
     ServerGetTimeOperation::Run(TitleEntity(), RunContext()).Then([&](Result<ServerGetTimeOperation::ResultType> result) -> Result<void>
@@ -289,7 +289,7 @@ void TitleDataManagementTests::TestServerGetTime(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetTitleData(TestContext& tc)
 {
     ServerSetTitleDataOperation::RequestType request;
@@ -339,7 +339,7 @@ void TitleDataManagementTests::TestServerGetTitleData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetTitleInternalData(TestContext& tc)
 {
     ServerSetTitleInternalDataOperation::RequestType request;
@@ -380,7 +380,7 @@ void TitleDataManagementTests::TestServerGetTitleInternalData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerGetTitleNews(TestContext& tc)
 {
     // Deleting news can only be done manually through the portal, and there is a very low limit (about 10) for news entries.
@@ -422,7 +422,7 @@ void TitleDataManagementTests::TestServerGetTitleNews(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerSetPublisherData(TestContext& tc)
 {
     ServerSetPublisherDataOperation::RequestType request;
@@ -452,7 +452,7 @@ void TitleDataManagementTests::TestServerSetPublisherData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerSetTitleData(TestContext& tc)
 {
     ServerSetTitleDataOperation::RequestType request;
@@ -482,7 +482,7 @@ void TitleDataManagementTests::TestServerSetTitleData(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void TitleDataManagementTests::TestServerSetTitleInternalData(TestContext& tc)
 {
     ServerSetTitleInternalDataOperation::RequestType request;

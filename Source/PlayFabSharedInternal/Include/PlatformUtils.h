@@ -112,6 +112,7 @@ inline void StrCpy(char* destination, size_t destinationSize, char const* source
     strcpy_s(destination, destinationSize, source);
 #else
     std::strncpy(destination, source, destinationSize);
+    destination[destinationSize - 1] = '\0';  // Ensure null-termination
 #endif
 }
 
@@ -122,6 +123,25 @@ inline char* StrTok(char* str, char const* delimiters, char** context)
 #else
     return strtok_r(str, delimiters, context);
 #endif
+}
+
+inline String FormatString(_In_z_ _Printf_format_string_ const char* format, ...)
+{
+    va_list args1;
+    va_start(args1, format);
+
+    va_list args2;
+    va_copy(args2, args1);
+
+    Vector<char> buffer(1 + std::vsnprintf(NULL, 0, format, args1));
+    va_end(args1);
+
+    std::vsnprintf(buffer.data(), buffer.size(), format, args2);
+    va_end(args2);
+
+    String strBuffer(buffer.data(), buffer.size() - 1);
+
+    return strBuffer;
 }
 
 }

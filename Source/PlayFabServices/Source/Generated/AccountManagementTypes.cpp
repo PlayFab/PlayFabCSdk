@@ -261,6 +261,112 @@ HRESULT GetPlayerProfileResult::Copy(const PFAccountManagementGetPlayerProfileRe
     return S_OK;
 }
 
+JsonValue GetPlayFabIDsFromBattleNetAccountIdsRequest::ToJson() const
+{
+    return GetPlayFabIDsFromBattleNetAccountIdsRequest::ToJson(this->Model());
+}
+
+JsonValue GetPlayFabIDsFromBattleNetAccountIdsRequest::ToJson(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberArray(output, "BattleNetAccountIds", input.battleNetAccountIds, input.battleNetAccountIdsCount);
+    return output;
+}
+
+HRESULT BattleNetAccountPlayFabIdPair::FromJson(const JsonValue& input)
+{
+    String battleNetAccountId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "BattleNetAccountId", battleNetAccountId));
+    this->SetBattleNetAccountId(std::move(battleNetAccountId));
+
+    String playFabId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PlayFabId", playFabId));
+    this->SetPlayFabId(std::move(playFabId));
+
+    return S_OK;
+}
+
+size_t BattleNetAccountPlayFabIdPair::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFAccountManagementBattleNetAccountPlayFabIdPair const*> BattleNetAccountPlayFabIdPair::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<BattleNetAccountPlayFabIdPair>(&this->Model());
+}
+
+size_t BattleNetAccountPlayFabIdPair::RequiredBufferSize(const PFAccountManagementBattleNetAccountPlayFabIdPair& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.battleNetAccountId)
+    {
+        requiredSize += (std::strlen(model.battleNetAccountId) + 1);
+    }
+    if (model.playFabId)
+    {
+        requiredSize += (std::strlen(model.playFabId) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT BattleNetAccountPlayFabIdPair::Copy(const PFAccountManagementBattleNetAccountPlayFabIdPair& input, PFAccountManagementBattleNetAccountPlayFabIdPair& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.battleNetAccountId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.battleNetAccountId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.playFabId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.playFabId = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+HRESULT GetPlayFabIDsFromBattleNetAccountIdsResult::FromJson(const JsonValue& input)
+{
+    ModelVector<BattleNetAccountPlayFabIdPair> data{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<BattleNetAccountPlayFabIdPair>(input, "Data", data));
+    this->SetData(std::move(data));
+
+    return S_OK;
+}
+
+size_t GetPlayFabIDsFromBattleNetAccountIdsResult::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult const*> GetPlayFabIDsFromBattleNetAccountIdsResult::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<GetPlayFabIDsFromBattleNetAccountIdsResult>(&this->Model());
+}
+
+size_t GetPlayFabIDsFromBattleNetAccountIdsResult::RequiredBufferSize(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFAccountManagementBattleNetAccountPlayFabIdPair*) + sizeof(PFAccountManagementBattleNetAccountPlayFabIdPair*) * model.dataCount);
+    for (size_t i = 0; i < model.dataCount; ++i)
+    {
+        requiredSize += BattleNetAccountPlayFabIdPair::RequiredBufferSize(*model.data[i]);
+    }
+    return requiredSize;
+}
+
+HRESULT GetPlayFabIDsFromBattleNetAccountIdsResult::Copy(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult& input, PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyToArray<BattleNetAccountPlayFabIdPair>(input.data, input.dataCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.data = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue GetPlayFabIDsFromFacebookIDsRequest::ToJson() const
 {
     return GetPlayFabIDsFromFacebookIDsRequest::ToJson(this->Model());
@@ -1109,6 +1215,181 @@ HRESULT GetPlayFabIDsFromNintendoSwitchDeviceIdsResult::Copy(const PFAccountMana
     return S_OK;
 }
 
+JsonValue OpenIdSubjectIdentifier::ToJson() const
+{
+    return OpenIdSubjectIdentifier::ToJson(this->Model());
+}
+
+JsonValue OpenIdSubjectIdentifier::ToJson(const PFAccountManagementOpenIdSubjectIdentifier& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMember(output, "Issuer", input.issuer);
+    JsonUtils::ObjectAddMember(output, "Subject", input.subject);
+    return output;
+}
+
+HRESULT OpenIdSubjectIdentifier::FromJson(const JsonValue& input)
+{
+    String issuer{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Issuer", issuer));
+    this->SetIssuer(std::move(issuer));
+
+    String subject{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Subject", subject));
+    this->SetSubject(std::move(subject));
+
+    return S_OK;
+}
+
+size_t OpenIdSubjectIdentifier::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFAccountManagementOpenIdSubjectIdentifier const*> OpenIdSubjectIdentifier::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<OpenIdSubjectIdentifier>(&this->Model());
+}
+
+size_t OpenIdSubjectIdentifier::RequiredBufferSize(const PFAccountManagementOpenIdSubjectIdentifier& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.issuer)
+    {
+        requiredSize += (std::strlen(model.issuer) + 1);
+    }
+    if (model.subject)
+    {
+        requiredSize += (std::strlen(model.subject) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT OpenIdSubjectIdentifier::Copy(const PFAccountManagementOpenIdSubjectIdentifier& input, PFAccountManagementOpenIdSubjectIdentifier& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.issuer);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.issuer = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.subject);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.subject = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+JsonValue GetPlayFabIDsFromOpenIdsRequest::ToJson() const
+{
+    return GetPlayFabIDsFromOpenIdsRequest::ToJson(this->Model());
+}
+
+JsonValue GetPlayFabIDsFromOpenIdsRequest::ToJson(const PFAccountManagementGetPlayFabIDsFromOpenIdsRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberArray<OpenIdSubjectIdentifier>(output, "OpenIdSubjectIdentifiers", input.openIdSubjectIdentifiers, input.openIdSubjectIdentifiersCount);
+    return output;
+}
+
+HRESULT OpenIdSubjectIdentifierPlayFabIdPair::FromJson(const JsonValue& input)
+{
+    std::optional<OpenIdSubjectIdentifier> openIdSubjectIdentifier{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "OpenIdSubjectIdentifier", openIdSubjectIdentifier));
+    if (openIdSubjectIdentifier)
+    {
+        this->SetOpenIdSubjectIdentifier(std::move(*openIdSubjectIdentifier));
+    }
+
+    String playFabId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PlayFabId", playFabId));
+    this->SetPlayFabId(std::move(playFabId));
+
+    return S_OK;
+}
+
+size_t OpenIdSubjectIdentifierPlayFabIdPair::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair const*> OpenIdSubjectIdentifierPlayFabIdPair::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<OpenIdSubjectIdentifierPlayFabIdPair>(&this->Model());
+}
+
+size_t OpenIdSubjectIdentifierPlayFabIdPair::RequiredBufferSize(const PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.openIdSubjectIdentifier)
+    {
+        requiredSize += OpenIdSubjectIdentifier::RequiredBufferSize(*model.openIdSubjectIdentifier);
+    }
+    if (model.playFabId)
+    {
+        requiredSize += (std::strlen(model.playFabId) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT OpenIdSubjectIdentifierPlayFabIdPair::Copy(const PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair& input, PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo<OpenIdSubjectIdentifier>(input.openIdSubjectIdentifier);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.openIdSubjectIdentifier = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.playFabId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.playFabId = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+HRESULT GetPlayFabIDsFromOpenIdsResult::FromJson(const JsonValue& input)
+{
+    ModelVector<OpenIdSubjectIdentifierPlayFabIdPair> data{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<OpenIdSubjectIdentifierPlayFabIdPair>(input, "Data", data));
+    this->SetData(std::move(data));
+
+    return S_OK;
+}
+
+size_t GetPlayFabIDsFromOpenIdsResult::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFAccountManagementGetPlayFabIDsFromOpenIdsResult const*> GetPlayFabIDsFromOpenIdsResult::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<GetPlayFabIDsFromOpenIdsResult>(&this->Model());
+}
+
+size_t GetPlayFabIDsFromOpenIdsResult::RequiredBufferSize(const PFAccountManagementGetPlayFabIDsFromOpenIdsResult& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair*) + sizeof(PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair*) * model.dataCount);
+    for (size_t i = 0; i < model.dataCount; ++i)
+    {
+        requiredSize += OpenIdSubjectIdentifierPlayFabIdPair::RequiredBufferSize(*model.data[i]);
+    }
+    return requiredSize;
+}
+
+HRESULT GetPlayFabIDsFromOpenIdsResult::Copy(const PFAccountManagementGetPlayFabIDsFromOpenIdsResult& input, PFAccountManagementGetPlayFabIDsFromOpenIdsResult& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyToArray<OpenIdSubjectIdentifierPlayFabIdPair>(input.data, input.dataCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.data = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue GetPlayFabIDsFromPSNAccountIDsRequest::ToJson() const
 {
     return GetPlayFabIDsFromPSNAccountIDsRequest::ToJson(this->Model());
@@ -1778,6 +2059,20 @@ JsonValue LinkAppleRequest::ToJson(const PFAccountManagementLinkAppleRequest& in
     return output;
 }
 
+JsonValue ClientLinkBattleNetAccountRequest::ToJson() const
+{
+    return ClientLinkBattleNetAccountRequest::ToJson(this->Model());
+}
+
+JsonValue ClientLinkBattleNetAccountRequest::ToJson(const PFAccountManagementClientLinkBattleNetAccountRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "ForceLink", input.forceLink);
+    JsonUtils::ObjectAddMember(output, "IdentityToken", input.identityToken);
+    return output;
+}
+
 JsonValue LinkCustomIDRequest::ToJson() const
 {
     return LinkCustomIDRequest::ToJson(this->Model());
@@ -1801,6 +2096,7 @@ JsonValue LinkFacebookAccountRequest::ToJson(const PFAccountManagementLinkFacebo
 {
     JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
+    JsonUtils::ObjectAddMember(output, "AuthenticationToken", input.authenticationToken);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ForceLink", input.forceLink);
     return output;
@@ -1971,12 +2267,12 @@ JsonValue LinkSteamAccountRequest::ToJson(const PFAccountManagementLinkSteamAcco
     return output;
 }
 
-JsonValue LinkTwitchAccountRequest::ToJson() const
+JsonValue ClientLinkTwitchAccountRequest::ToJson() const
 {
-    return LinkTwitchAccountRequest::ToJson(this->Model());
+    return ClientLinkTwitchAccountRequest::ToJson(this->Model());
 }
 
-JsonValue LinkTwitchAccountRequest::ToJson(const PFAccountManagementLinkTwitchAccountRequest& input)
+JsonValue ClientLinkTwitchAccountRequest::ToJson(const PFAccountManagementClientLinkTwitchAccountRequest& input)
 {
     JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
@@ -2097,6 +2393,18 @@ JsonValue UnlinkAppleRequest::ToJson(const PFAccountManagementUnlinkAppleRequest
     return output;
 }
 
+JsonValue ClientUnlinkBattleNetAccountRequest::ToJson() const
+{
+    return ClientUnlinkBattleNetAccountRequest::ToJson(this->Model());
+}
+
+JsonValue ClientUnlinkBattleNetAccountRequest::ToJson(const PFAccountManagementClientUnlinkBattleNetAccountRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    return output;
+}
+
 JsonValue UnlinkCustomIDRequest::ToJson() const
 {
     return UnlinkCustomIDRequest::ToJson(this->Model());
@@ -2110,24 +2418,24 @@ JsonValue UnlinkCustomIDRequest::ToJson(const PFAccountManagementUnlinkCustomIDR
     return output;
 }
 
-JsonValue UnlinkFacebookAccountRequest::ToJson() const
+JsonValue ClientUnlinkFacebookAccountRequest::ToJson() const
 {
-    return UnlinkFacebookAccountRequest::ToJson(this->Model());
+    return ClientUnlinkFacebookAccountRequest::ToJson(this->Model());
 }
 
-JsonValue UnlinkFacebookAccountRequest::ToJson(const PFAccountManagementUnlinkFacebookAccountRequest& input)
+JsonValue ClientUnlinkFacebookAccountRequest::ToJson(const PFAccountManagementClientUnlinkFacebookAccountRequest& input)
 {
     JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
 
-JsonValue UnlinkFacebookInstantGamesIdRequest::ToJson() const
+JsonValue ClientUnlinkFacebookInstantGamesIdRequest::ToJson() const
 {
-    return UnlinkFacebookInstantGamesIdRequest::ToJson(this->Model());
+    return ClientUnlinkFacebookInstantGamesIdRequest::ToJson(this->Model());
 }
 
-JsonValue UnlinkFacebookInstantGamesIdRequest::ToJson(const PFAccountManagementUnlinkFacebookInstantGamesIdRequest& input)
+JsonValue ClientUnlinkFacebookInstantGamesIdRequest::ToJson(const PFAccountManagementClientUnlinkFacebookInstantGamesIdRequest& input)
 {
     JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -2258,12 +2566,12 @@ JsonValue UnlinkSteamAccountRequest::ToJson(const PFAccountManagementUnlinkSteam
     return output;
 }
 
-JsonValue UnlinkTwitchAccountRequest::ToJson() const
+JsonValue ClientUnlinkTwitchAccountRequest::ToJson() const
 {
-    return UnlinkTwitchAccountRequest::ToJson(this->Model());
+    return ClientUnlinkTwitchAccountRequest::ToJson(this->Model());
 }
 
-JsonValue UnlinkTwitchAccountRequest::ToJson(const PFAccountManagementUnlinkTwitchAccountRequest& input)
+JsonValue ClientUnlinkTwitchAccountRequest::ToJson(const PFAccountManagementClientUnlinkTwitchAccountRequest& input)
 {
     JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
@@ -2764,6 +3072,21 @@ HRESULT GetUserBansResult::Copy(const PFAccountManagementGetUserBansResult& inpu
     return S_OK;
 }
 
+JsonValue ServerLinkBattleNetAccountRequest::ToJson() const
+{
+    return ServerLinkBattleNetAccountRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLinkBattleNetAccountRequest::ToJson(const PFAccountManagementServerLinkBattleNetAccountRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "ForceLink", input.forceLink);
+    JsonUtils::ObjectAddMember(output, "IdentityToken", input.identityToken);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
+    return output;
+}
+
 JsonValue ServerLinkNintendoServiceAccountRequest::ToJson() const
 {
     return ServerLinkNintendoServiceAccountRequest::ToJson(this->Model());
@@ -2872,6 +3195,21 @@ JsonValue LinkSteamIdRequest::ToJson(const PFAccountManagementLinkSteamIdRequest
     return output;
 }
 
+JsonValue ServerLinkTwitchAccountRequest::ToJson() const
+{
+    return ServerLinkTwitchAccountRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLinkTwitchAccountRequest::ToJson(const PFAccountManagementServerLinkTwitchAccountRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "ForceLink", input.forceLink);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
+    return output;
+}
+
 JsonValue ServerLinkXboxAccountRequest::ToJson() const
 {
     return ServerLinkXboxAccountRequest::ToJson(this->Model());
@@ -2884,6 +3222,22 @@ JsonValue ServerLinkXboxAccountRequest::ToJson(const PFAccountManagementServerLi
     JsonUtils::ObjectAddMember(output, "ForceLink", input.forceLink);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember(output, "XboxToken", input.xboxToken);
+    return output;
+}
+
+JsonValue LinkXboxIdRequest::ToJson() const
+{
+    return LinkXboxIdRequest::ToJson(this->Model());
+}
+
+JsonValue LinkXboxIdRequest::ToJson(const PFAccountManagementLinkXboxIdRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "ForceLink", input.forceLink);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
+    JsonUtils::ObjectAddMember(output, "Sandbox", input.sandbox);
+    JsonUtils::ObjectAddMember(output, "XboxId", input.xboxId);
     return output;
 }
 
@@ -3022,6 +3376,46 @@ JsonValue SendEmailFromTemplateRequest::ToJson(const PFAccountManagementSendEmai
     return output;
 }
 
+JsonValue ServerUnlinkBattleNetAccountRequest::ToJson() const
+{
+    return ServerUnlinkBattleNetAccountRequest::ToJson(this->Model());
+}
+
+JsonValue ServerUnlinkBattleNetAccountRequest::ToJson(const PFAccountManagementServerUnlinkBattleNetAccountRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
+    return output;
+}
+
+JsonValue ServerUnlinkFacebookAccountRequest::ToJson() const
+{
+    return ServerUnlinkFacebookAccountRequest::ToJson(this->Model());
+}
+
+JsonValue ServerUnlinkFacebookAccountRequest::ToJson(const PFAccountManagementServerUnlinkFacebookAccountRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
+    return output;
+}
+
+JsonValue ServerUnlinkFacebookInstantGamesIdRequest::ToJson() const
+{
+    return ServerUnlinkFacebookInstantGamesIdRequest::ToJson(this->Model());
+}
+
+JsonValue ServerUnlinkFacebookInstantGamesIdRequest::ToJson(const PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "FacebookInstantGamesId", input.facebookInstantGamesId);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
+    return output;
+}
+
 JsonValue ServerUnlinkNintendoServiceAccountRequest::ToJson() const
 {
     return ServerUnlinkNintendoServiceAccountRequest::ToJson(this->Model());
@@ -3084,6 +3478,20 @@ JsonValue UnlinkSteamIdRequest::ToJson() const
 JsonValue UnlinkSteamIdRequest::ToJson(const PFAccountManagementUnlinkSteamIdRequest& input)
 {
     JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
+    return output;
+}
+
+JsonValue ServerUnlinkTwitchAccountRequest::ToJson() const
+{
+    return ServerUnlinkTwitchAccountRequest::ToJson(this->Model());
+}
+
+JsonValue ServerUnlinkTwitchAccountRequest::ToJson(const PFAccountManagementServerUnlinkTwitchAccountRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     return output;

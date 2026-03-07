@@ -43,7 +43,7 @@ public:
     RunContext Derive() noexcept;
 
     // Derive a new RunContext from another, but use an independent TaskQueue rather than a derived one. This is typically used when a client has
-    // specifed a specific queue for a given piece of work (ex. a public XAsync API call or a client callback that was registered with a queue)
+    // specified a specific queue for a given piece of work (ex. a public XAsync API call or a client callback that was registered with a queue)
     RunContext DeriveOnQueue(XTaskQueueHandle queueHandle) noexcept;
 
     RunContext(RunContext const&) noexcept = default;
@@ -53,7 +53,7 @@ public:
     ~RunContext() noexcept = default;
 
 public: // XTaskQueue shims
-    // Retreive an XTaskQueueHandle to be passed to XAsyncAsync APIs
+    // Retrieve an XTaskQueueHandle to be passed to XAsyncAsync APIs
     XTaskQueueHandle TaskQueueHandle() const noexcept;
 
     // Submits an ITaskQueueWork object to the TaskQueue work port

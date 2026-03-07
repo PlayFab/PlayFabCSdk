@@ -12,6 +12,7 @@ namespace Test
 
 constexpr char kPermanentItemId[]{ "PermanentItemId" };
 constexpr char kPermanentBundleId[]{ "PermanentBundleId" };
+constexpr char PermanentItemUUID[]{ "a2c55924-01be-437a-8ac4-5580fe7f18a1" };
 
 namespace
 {
@@ -99,6 +100,8 @@ AsyncOp<void> DeleteDraftItem(Result<void> result, String itemId, Entity entity,
 
     return PublishDraftItemOperation::Run(entity, request, rc).Then([&, itemId, entity, rc](Result<void> result) -> AsyncOp<void>
     {
+        UNREFERENCED_PARAMETER(result);
+
         DeleteItemOperation::RequestType request;
         request.SetEntity(entity.EntityKey());
         request.SetAlternateId(AltId(itemId));
@@ -111,8 +114,10 @@ struct CatalogTestsState
 {
     String permanentItemId;
     String permanentBundleId;
+	String PermanentItemUUID;
     Wrappers::PFCatalogCatalogItemWrapper<Allocator> permanentItem;
     Wrappers::PFCatalogCatalogItemWrapper<Allocator> permanentBundle;
+	Wrappers::PFCatalogCatalogItemWrapper<Allocator> PermanentUUID;
 };
 
 AsyncOp<void> CatalogTests::Initialize()
@@ -129,6 +134,7 @@ AsyncOp<void> CatalogTests::Initialize()
         m_state->permanentItemId = kPermanentItemId + DefaultTitlePlayerId();
         m_state->permanentBundleId = kPermanentBundleId + DefaultTitlePlayerId();
         m_state->permanentItem = MakeItem(DefaultTitlePlayer().EntityKey(), m_state->permanentItemId);
+		m_state->PermanentItemUUID = PermanentItemUUID;
 
         // Create a permanent item since the catalog publishing has possibly long processing times that can and do cause intermittent test failures
         CreateDraftItemOperation::RequestType request;
@@ -139,6 +145,8 @@ AsyncOp<void> CatalogTests::Initialize()
     })
     .Then([&, initResult](Result<CreateDraftItemOperation::ResultType> result) -> Result<void>
     {
+        UNREFERENCED_PARAMETER(result);
+        
         // Waiting a few seconds before continuing to ensure that item will be ready for other operations.
         Platform::Sleep(5000);
 
@@ -188,25 +196,11 @@ void CatalogTests::TestCreateUploadUrls(TestContext& tc)
     });
 }
 
-#if 0
-void CatalogTests::TestDeleteEntityItemReviews(TestContext& tc)
-{
-    tc.Skip();
-}
-#endif
-
 void CatalogTests::TestDeleteItem(TestContext& tc)
 {
     // Already covered in TestGetDraftItem
     tc.EndTest(S_OK);
 }
-
-#if 0
-void CatalogTests::TestGetCatalogConfig(TestContext& tc)
-{
-    tc.Skip();
-}
-#endif
 
 void CatalogTests::TestGetDraftItem(TestContext& tc)
 {
@@ -396,16 +390,9 @@ void CatalogTests::TestGetItemContainers(TestContext& tc)
 #endif
 }
 
-#if 0
-void CatalogTests::TestGetItemModerationState(TestContext& tc)
-{
-    tc.Skip();
-}
-#endif
-
 void CatalogTests::TestGetItemPublishStatus(TestContext& tc)
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32
+#if HC_PLATFORM == HC_PLATFORM_GDK
     GetItemPublishStatusOperation::RequestType request;
     request.SetAlternateId(AltId(m_state->permanentItemId));
     request.SetEntity(TitleEntity().EntityKey());
@@ -470,28 +457,26 @@ void CatalogTests::TestGetItemReviewSummary(TestContext& tc)
 
 void CatalogTests::TestGetItems(TestContext& tc)
 {
-    // TODO: reenable once fixed economy team resolves Task 50644464 Allow empty lists in GetItemsRequest https://dev.azure.com/microsoft/Xbox/_workitems/edit/50644464
-    tc.Skip();
-    // GetItemsOperation::RequestType request;
-    // ModelVector<Wrappers::PFCatalogCatalogAlternateIdWrapper<Allocator>> altIds;
-    // altIds.push_back(AltId(m_state->permanentItemId));
-    // request.SetAlternateIds(altIds);
-    // request.SetEntity(DefaultTitlePlayer().EntityKey());
+     GetItemsOperation::RequestType request;
+     ModelVector<Wrappers::PFCatalogCatalogAlternateIdWrapper<Allocator>> altIds;
+     altIds.push_back(AltId(m_state->permanentItemId));
+     request.SetAlternateIds(altIds);
+     request.SetEntity(DefaultTitlePlayer().EntityKey());
 
-    // GetItemsOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<GetItemsOperation::ResultType> result) -> Result<void>
-    // {
-    //     RETURN_IF_FAILED_PLAYFAB(result);
+     GetItemsOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<GetItemsOperation::ResultType> result) -> Result<void>
+     {
+         RETURN_IF_FAILED_PLAYFAB(result);
 
-    //     auto& model = result.Payload().Model();
-    //     tc.AssertEqual(1u, model.itemsCount, "itemsCount");
-    //     ValidateItem(m_state->permanentItem.Model(), *model.items[0], tc);
+         auto& model = result.Payload().Model();
+         tc.AssertEqual(1u, model.itemsCount, "itemsCount");
+         ValidateItem(m_state->permanentItem.Model(), *model.items[0], tc);
 
-    //     return S_OK;
-    // })
-    // .Finally([&](Result<void> result)
-    // {
-    //     tc.EndTest(std::move(result));
-    // });
+         return S_OK;
+     })
+     .Finally([&](Result<void> result)
+     {
+         tc.EndTest(std::move(result));
+     });
 }
 
 void CatalogTests::TestPublishDraftItem(TestContext& tc)
@@ -591,32 +576,11 @@ void CatalogTests::TestSearchItems(TestContext& tc)
     });
 }
 
-#if 0
-void CatalogTests::TestSetItemModerationState(TestContext& tc)
-{
-    tc.Skip();
-}
-#endif
-
 void CatalogTests::TestSubmitItemReviewVote(TestContext& tc)
 {
     // Already covered in TestGetItemReviewSummary
     tc.EndTest(S_OK);
 }
-
-#if 0
-void CatalogTests::TestTakedownItemReviews(TestContext& tc)
-{
-    tc.Skip();
-}
-#endif
-
-#if 0
-void CatalogTests::TestUpdateCatalogConfig(TestContext& tc)
-{
-    tc.Skip();
-}
-#endif
 
 void CatalogTests::TestUpdateDraftItem(TestContext& tc)
 {
@@ -653,6 +617,140 @@ void CatalogTests::TestUpdateDraftItem(TestContext& tc)
     });
 }
 
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void CatalogTests::TestDeleteEntityItemReviews(TestContext& tc)
+{
+    DeleteEntityItemReviewsOperation::RequestType request;
+    request.SetEntity(DefaultTitlePlayer().EntityKey());
+
+    DeleteEntityItemReviewsOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void CatalogTests::TestGetCatalogConfig(TestContext& tc)
+{
+    GetCatalogConfigOperation::RequestType request;
+
+    GetCatalogConfigOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<GetCatalogConfigOperation::ResultType> result)-> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void CatalogTests::TestGetItemModerationState(TestContext& tc)
+{
+    GetItemModerationStateOperation::RequestType request;
+    request.SetId(m_state->PermanentItemUUID);
+
+    GetItemModerationStateOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<GetItemModerationStateOperation::ResultType> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void CatalogTests::TestSetItemModerationState(TestContext& tc)
+{
+    SetItemModerationStateOperation::RequestType request;
+    request.SetId(m_state->PermanentItemUUID);
+    request.SetStatus(PFCatalogModerationStatus::Approved);
+	request.SetReason("reason");
+
+    SetItemModerationStateOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void CatalogTests::TestTakedownItemReviews(TestContext& tc)
+{
+	// The takeDown operation is currently not working due to a service-side issue. Skipping for now.
+    // This is under investigation on bug https://dev.azure.com/microsoft/Xbox/_workitems/edit/59645467
+	tc.Skip();
+
+ //  ReviewItemOperation::RequestType reviewRequest;
+ //     Wrappers::PFCatalogReviewWrapper<Allocator> review;
+ //review.SetRating(1);
+ //   review.SetReviewId("800b057a-2af7-ae02-de36-d9570e1e8fea");
+	//reviewRequest.SetAlternateId(AltId("FriendlyIDForTest01"));
+ //   reviewRequest.SetReview(review);
+
+ //   ReviewItemOperation::Run(DefaultTitlePlayer(), reviewRequest, RunContext()).Then([&](Result<void> result) -> AsyncOp<void>
+ //       {
+ //           RETURN_IF_FAILED_PLAYFAB(result);
+ //           Platform::Sleep(2000); // Wait for the vote to be processed before attempting the takedown
+ //           return S_OK;
+ //       })    .Finally([&](Result<void> result)
+ //   {
+ //       tc.EndTest(std::move(result));
+ //   });
+
+ //   TakedownItemReviewsOperation::RequestType request;
+ //   ModelVector<Wrappers::PFCatalogReviewTakedownWrapper<Allocator>> reviews;
+ //   Wrappers::PFCatalogReviewTakedownWrapper<Allocator> reviewTakedown;
+ //   reviewTakedown.SetReviewId("800b057a-2af7-ae02-de36-d9570e1e8fea");
+ //   reviewTakedown.SetAlternateId(AltId("FriendlyIDForTest01"));
+ //   reviews.push_back(reviewTakedown);
+ //   request.SetReviews(reviews);
+
+ //   TakedownItemReviewsOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+ //   {
+ //       RETURN_IF_FAILED_PLAYFAB(result);
+ //       return S_OK;
+ //   })
+ //   .Finally([&](Result<void> result)
+ //   {
+ //       tc.EndTest(std::move(result));
+ //   });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void CatalogTests::TestUpdateCatalogConfig(TestContext& tc)
+{
+    UpdateCatalogConfigOperation::RequestType request;
+	request.SetConfig(Wrappers::PFCatalogCatalogConfigWrapper<Allocator>());
+
+    UpdateCatalogConfigOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
 
 }
 }

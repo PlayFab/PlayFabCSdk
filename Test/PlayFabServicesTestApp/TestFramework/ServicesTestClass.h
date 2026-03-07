@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreTestClass.h"
-#include "PlatformUser.h"
 
 namespace PlayFab
 {
@@ -17,8 +16,8 @@ public:
     AsyncOp<void> Uninitialize() override;
 
 protected:
-    // Default Platform user. May be null on some platforms
-    PlayFab::Platform::UserPtr DefaultPlatformUser() noexcept;
+    // Default LocalUser.
+    TitleLocalUser DefaultLocalUser() noexcept;
 
     // Default TitlePlayer. Implementation may vary by platform.
     // On GDK this will be a TitlePlayer associated with the default XUser.
@@ -27,7 +26,7 @@ protected:
     // PlayFabId for DefaultTitlePlayer
     String DefaultTitlePlayerId() noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     // Title Entity, need to call certain APIs
     Entity TitleEntity() noexcept;
 #endif
@@ -39,10 +38,10 @@ protected:
     AsyncOp<String> GetPlayFabIdFromCustomId(String customId) noexcept;
 
 private:
-    PlayFab::Platform::UserPtr m_defaultPlatformUser;
+    std::optional<TitleLocalUser> m_defaultLocalUser;
     std::optional<LoginResult> m_defaultTitlePlayer;
     Map<String, LoginResult> m_playersByCustomId;
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     std::optional<Entity> m_titleEntity;
 #endif
 };

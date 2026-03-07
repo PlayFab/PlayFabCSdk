@@ -82,9 +82,16 @@ HRESULT AccessTraceState(AccessMode mode, SharedPtr<TraceState>& traceState)
 TraceState::TraceState(RunContext&& /*initContext*/, RunContext&& traceContext, LocalStorage localStorage) noexcept :
     m_runContext{ std::move(traceContext) }
 {
-    // Removing this feature until we more fully flesh out XPlat tracing unification for merged SDK. For now, trace options
-    // are tracing to debugger, ETW (windows only), and client callbacks.
-    
+    // Init LibHttpClient Tracing
+    HCTraceInit();
+#ifdef _DEBUG
+    HCSettingsSetTraceLevel(HCTraceLevel::Verbose);
+#endif
+#if HC_PLATFORM_IS_MICROSOFT
+    HCTraceSetEtwEnabled(true);
+#endif
+    HCTraceSetClientCallback(TraceCallback);
+
     // Synchronously load trace settings. TraceSettings loaded from file override those configured via API
     // TODO document location, name, and format of TraceSettings file. It should just be a Json serialized
     // version of the TraceSettings struct:
@@ -296,25 +303,6 @@ int vstprintf_s(char(&buffer)[SIZE], _Printf_format_string_ char const* format, 
     return vsnprintf(buffer, SIZE, format, varArgs);
 }
 
-String FormatString(_In_z_ _Printf_format_string_ const char* format, ...)
-{
-    va_list args1;
-    va_start(args1, format);
-
-    va_list args2;
-    va_copy(args2, args1);
-
-    Vector<char> buffer(1 + std::vsnprintf(NULL, 0, format, args1));
-    va_end(args1);
-
-    std::vsnprintf(buffer.data(), buffer.size(), format, args2);
-    va_end(args2);
-
-    String strBuffer(buffer.data(), buffer.size());
-
-    return strBuffer;
-}
-
 void CALLBACK TraceState::TraceCallback(
     _In_z_ const char* areaName,
     _In_ HCTraceLevel level,
@@ -359,7 +347,7 @@ void CALLBACK TraceState::TraceCallback(
     localtime_r(&timeTInSec, &fmtTime);
 #endif
 
-    String formattedMessage = FormatString("[%04llX][%s][%02d:%02d:%02d.%03u][%s] %s\r\n",
+    String formattedMessage = FormatString("[%04llX][%s][%02d:%02d:%02d.%03u][%s] %s",
         threadId,
         traceLevelNames[static_cast<size_t>(level)],
         fmtTime.tm_hour,

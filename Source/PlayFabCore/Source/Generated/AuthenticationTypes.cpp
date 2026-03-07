@@ -178,6 +178,22 @@ JsonValue LoginWithAppleRequest::ToJson(const PFAuthenticationLoginWithAppleRequ
     return output;
 }
 
+JsonValue LoginWithBattleNetRequest::ToJson() const
+{
+    return LoginWithBattleNetRequest::ToJson(this->Model());
+}
+
+JsonValue LoginWithBattleNetRequest::ToJson(const PFAuthenticationLoginWithBattleNetRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "IdentityToken", input.identityToken);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    JsonUtils::ObjectAddMember(output, "PlayerSecret", input.playerSecret);
+    return output;
+}
+
 JsonValue LoginWithCustomIDRequest::ToJson() const
 {
     return LoginWithCustomIDRequest::ToJson(this->Model());
@@ -568,6 +584,70 @@ HRESULT RegisterPlayFabUserResult::Copy(const PFAuthenticationRegisterPlayFabUse
     return S_OK;
 }
 
+JsonValue ServerLoginWithAndroidDeviceIDRequest::ToJson() const
+{
+    return ServerLoginWithAndroidDeviceIDRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithAndroidDeviceIDRequest::ToJson(const PFAuthenticationServerLoginWithAndroidDeviceIDRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMember(output, "AndroidDevice", input.androidDevice);
+    JsonUtils::ObjectAddMember(output, "AndroidDeviceId", input.androidDeviceId);
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    JsonUtils::ObjectAddMember(output, "OS", input.OS);
+    return output;
+}
+
+JsonValue ServerLoginWithBattleNetRequest::ToJson() const
+{
+    return ServerLoginWithBattleNetRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithBattleNetRequest::ToJson(const PFAuthenticationServerLoginWithBattleNetRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "IdentityToken", input.identityToken);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    return output;
+}
+
+JsonValue ServerLoginWithCustomIDRequest::ToJson() const
+{
+    return ServerLoginWithCustomIDRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithCustomIDRequest::ToJson(const PFAuthenticationServerLoginWithCustomIDRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMember(output, "CustomId", input.customId);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    return output;
+}
+
+JsonValue ServerLoginWithIOSDeviceIDRequest::ToJson() const
+{
+    return ServerLoginWithIOSDeviceIDRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithIOSDeviceIDRequest::ToJson(const PFAuthenticationServerLoginWithIOSDeviceIDRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "DeviceId", input.deviceId);
+    JsonUtils::ObjectAddMember(output, "DeviceModel", input.deviceModel);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    JsonUtils::ObjectAddMember(output, "OS", input.OS);
+    return output;
+}
+
 JsonValue ServerLoginWithPSNRequest::ToJson() const
 {
     return ServerLoginWithPSNRequest::ToJson(this->Model());
@@ -616,6 +696,23 @@ JsonValue LoginWithSteamIdRequest::ToJson(const PFAuthenticationLoginWithSteamId
     return output;
 }
 
+JsonValue ServerLoginWithTwitchRequest::ToJson() const
+{
+    return ServerLoginWithTwitchRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithTwitchRequest::ToJson(const PFAuthenticationServerLoginWithTwitchRequest& input)
+{
+    JsonValue output { JsonValue::object() };
+    JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    JsonUtils::ObjectAddMember(output, "PlayerSecret", input.playerSecret);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
+    return output;
+}
+
 JsonValue ServerLoginWithXboxRequest::ToJson() const
 {
     return ServerLoginWithXboxRequest::ToJson(this->Model());
@@ -647,7 +744,6 @@ JsonValue LoginWithXboxIdRequest::ToJson(const PFAuthenticationLoginWithXboxIdRe
     return output;
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 JsonValue AuthenticateCustomIdRequest::ToJson() const
 {
     return AuthenticateCustomIdRequest::ToJson(this->Model());
@@ -661,7 +757,6 @@ JsonValue AuthenticateCustomIdRequest::ToJson(const PFAuthenticationAuthenticate
     return output;
 }
 
-#endif
 HRESULT EntityTokenResponse::FromJson(const JsonValue& input)
 {
     std::optional<EntityKey> entity{};
@@ -731,7 +826,6 @@ HRESULT EntityTokenResponse::Copy(const PFAuthenticationEntityTokenResponse& inp
     return S_OK;
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 HRESULT AuthenticateCustomIdResult::FromJson(const JsonValue& input)
 {
     std::optional<EntityTokenResponse> entityToken{};
@@ -777,7 +871,6 @@ HRESULT AuthenticateCustomIdResult::Copy(const PFAuthenticationAuthenticateCusto
     return S_OK;
 }
 
-#endif
 JsonValue DeleteRequest::ToJson() const
 {
     return DeleteRequest::ToJson(this->Model());

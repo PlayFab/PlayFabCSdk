@@ -6,6 +6,7 @@
 #include <playfab/core/cpp/ServiceConfig.h>
 #include <playfab/core/cpp/EventPipeline.h>
 #include <playfab/core/cpp/AuthenticationTypeWrappers.h>
+#include "Platform/TitleLocalUser.h"
 #include "Types.h"
 
 namespace PlayFab
@@ -25,11 +26,12 @@ struct TestTitleData
     String titleId;
     String secretKey;
     String connectionString;
+    String azureContainerSasKey;
     bool allowRetries;
     bool runTestList;
     Set<String> testList;
     Set<String> retryableHRs;
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
     String steamAppId;
     String steamPublisherKey;
 #endif

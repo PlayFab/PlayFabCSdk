@@ -64,6 +64,25 @@ public:
     static HRESULT Copy(const PFUserAppleIdInfo& input, PFUserAppleIdInfo& output, ModelBuffer& buffer);
 };
 
+class UserBattleNetInfo : public Wrappers::PFUserBattleNetInfoWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFUserBattleNetInfo>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFUserBattleNetInfoWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFUserBattleNetInfo const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFUserBattleNetInfo& model);
+    static HRESULT Copy(const PFUserBattleNetInfo& input, PFUserBattleNetInfo& output, ModelBuffer& buffer);
+};
+
 class UserCustomIdInfo : public Wrappers::PFUserCustomIdInfoWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFUserCustomIdInfo>
 {
 public:
@@ -926,7 +945,7 @@ template<> struct EnumRange<PFEmailVerificationStatus>
 
 template<> struct EnumRange<PFLoginIdentityProvider>
 {
-    static constexpr PFLoginIdentityProvider maxValue = PFLoginIdentityProvider::King;
+    static constexpr PFLoginIdentityProvider maxValue = PFLoginIdentityProvider::BattleNet;
 };
 
 template<> struct EnumRange<PFContinentCode>

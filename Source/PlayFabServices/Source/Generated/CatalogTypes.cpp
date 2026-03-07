@@ -2915,6 +2915,8 @@ JsonValue GetDraftItemsRequest::ToJson(const PFCatalogGetDraftItemsRequest& inpu
 {
     JsonValue output { JsonValue::object() };
     JsonUtils::ObjectAddMemberArray<CatalogAlternateId>(output, "AlternateIds", input.alternateIds, input.alternateIdsCount);
+    JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
+    JsonUtils::ObjectAddMember(output, "Count", input.count);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "Ids", input.ids, input.idsCount);

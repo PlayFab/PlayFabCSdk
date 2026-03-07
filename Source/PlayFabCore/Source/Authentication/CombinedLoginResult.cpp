@@ -8,6 +8,17 @@ namespace PlayFab
 namespace Authentication
 {
 
+CombinedLoginResult::CombinedLoginResult(
+    SharedPtr<PFCoreGlobalState> PFCoreGlobalState,
+    LoginResult _loginResult,
+    SharedPtr<Entity> _entity
+) :
+    loginResult{ std::move(_loginResult) },
+    entity{ std::move(_entity) },
+    m_PFCoreGlobalState{ std::move(PFCoreGlobalState) }
+{
+}
+
 CombinedLoginResult::CombinedLoginResult(SharedPtr<PFCoreGlobalState> PFCoreGlobalState) noexcept
     : m_PFCoreGlobalState{ std::move(PFCoreGlobalState) }
 {
@@ -17,7 +28,7 @@ Result<CombinedLoginResult> CombinedLoginResult::FromJson(
     const JsonValue& loginResponse,
     SharedPtr<PFCoreGlobalState> PFCoreGlobalState,
     SharedPtr<ServiceConfig const> serviceConfig,
-    SharedPtr<LoginContext> loginContext
+    SharedPtr<ILoginHandler> loginHandler
 ) noexcept
 {
     CombinedLoginResult result{ std::move(PFCoreGlobalState) };
@@ -31,7 +42,7 @@ Result<CombinedLoginResult> CombinedLoginResult::FromJson(
         std::move(entityToken),
         std::move(serviceConfig),
         result.m_PFCoreGlobalState->RunContext().Derive(),
-        std::move(loginContext),
+        std::move(loginHandler),
         result.m_PFCoreGlobalState->TokenExpiredHandler(),
         result.m_PFCoreGlobalState->TokenRefreshedHandler()
     );

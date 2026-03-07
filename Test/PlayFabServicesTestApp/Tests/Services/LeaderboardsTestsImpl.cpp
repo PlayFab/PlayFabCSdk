@@ -15,7 +15,7 @@ struct LeaderboardsTestsState
     String existingLeaderboardName;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 AsyncOp<void> CreateStatisticDefinitionFromLeaderboardsTests(Entity entity, RunContext rc, String statisticName)
 {
     CreateStatisticDefinitionOperation::RequestType request;
@@ -97,7 +97,7 @@ AsyncOp<void> LeaderboardsTests::Initialize()
     m_state->leaderboardName = leaderboardName.str();
     m_state->existingLeaderboardName = "PFCSDK_Leaderboard_DO_NOT_DELETE";
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     return ServicesTestClass::Initialize().Then([&](Result<void> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
@@ -138,7 +138,7 @@ AsyncOp<void> LeaderboardsTests::Initialize()
 
 AsyncOp<void> LeaderboardsTests::Uninitialize()
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     return DeleteLeaderboardDefinition(TitleEntity(), RunContext(), m_state->leaderboardName).Then([&](Result<void> result) -> AsyncOp<void>
     {
         UNREFERENCED_PARAMETER(result);// Continue with uninitialize regardless of success deleting leaderboard
@@ -151,7 +151,7 @@ AsyncOp<void> LeaderboardsTests::Uninitialize()
 #endif
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LeaderboardsTests::TestCreateLeaderboardDefinition(TestContext& tc)
 {
     // Already covered in LeaderboardsTests::Initialize() 
@@ -159,7 +159,7 @@ void LeaderboardsTests::TestCreateLeaderboardDefinition(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LeaderboardsTests::TestDeleteLeaderboardDefinition(TestContext& tc)
 {
     // Already covered in LeaderboardsTests::Uninitialize() 
@@ -167,7 +167,7 @@ void LeaderboardsTests::TestDeleteLeaderboardDefinition(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LeaderboardsTests::TestDeleteLeaderboardEntries(TestContext& tc)
 {
     UpdateLeaderboardEntriesOperation::RequestType request;
@@ -301,7 +301,7 @@ void LeaderboardsTests::TestGetLeaderboardAroundEntity(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LeaderboardsTests::TestGetLeaderboardDefinition(TestContext& tc)
 {
     GetLeaderboardDefinitionOperation::RequestType request;
@@ -324,7 +324,7 @@ void LeaderboardsTests::TestGetLeaderboardDefinition(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LeaderboardsTests::TestGetLeaderboardForEntities(TestContext& tc)
 {
     tc.Skip(); // TODO - Service call is returning 500 error code, need to check with service team to see why
@@ -350,7 +350,7 @@ void LeaderboardsTests::TestGetLeaderboardForEntities(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LeaderboardsTests::TestIncrementLeaderboardVersion(TestContext& tc)
 {
     IncrementLeaderboardVersionOperation::RequestType request;
@@ -372,7 +372,7 @@ void LeaderboardsTests::TestIncrementLeaderboardVersion(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LeaderboardsTests::TestListLeaderboardDefinitions(TestContext& tc)
 {
     ListLeaderboardDefinitionsOperation::RequestType request;
@@ -393,7 +393,7 @@ void LeaderboardsTests::TestListLeaderboardDefinitions(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LeaderboardsTests::TestUnlinkLeaderboardFromStatistic(TestContext& tc)
 {
     Stringstream leaderboardName;
@@ -472,7 +472,7 @@ void LeaderboardsTests::TestUnlinkLeaderboardFromStatistic(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void LeaderboardsTests::TestUpdateLeaderboardEntries(TestContext& tc)
 {
     // Already covered in TestDeleteLeaderboardEntries
@@ -480,6 +480,23 @@ void LeaderboardsTests::TestUpdateLeaderboardEntries(TestContext& tc)
 }
 #endif
 
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void LeaderboardsTests::TestUpdateLeaderboardDefinition(TestContext& tc)
+{
+	UpdateLeaderboardDefinitionOperation::RequestType request;
+	request.SetName(m_state->leaderboardName);
+
+    return UpdateLeaderboardDefinitionOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+	});
+}
+#endif
 
 }
 }

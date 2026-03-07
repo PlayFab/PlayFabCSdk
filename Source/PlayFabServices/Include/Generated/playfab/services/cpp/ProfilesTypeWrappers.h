@@ -64,6 +64,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -71,10 +76,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetDataAsObject() const
+    {
+        return m_dataAsObject;
+    }
+
     void SetDataAsObject(std::optional<bool> value)
     {
         m_dataAsObject = std::move(value);
         this->m_model.dataAsObject = m_dataAsObject ? m_dataAsObject.operator->() : nullptr;
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -144,10 +159,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetChecksum() const
+    {
+        return m_checksum;
+    }
+
     void SetChecksum(String value)
     {
         m_checksum = std::move(value);
         this->m_model.checksum =  m_checksum.empty() ? nullptr : m_checksum.data();
+    }
+
+    String const& GetFileName() const
+    {
+        return m_fileName;
     }
 
     void SetFileName(String value)
@@ -156,9 +181,19 @@ public:
         this->m_model.fileName =  m_fileName.empty() ? nullptr : m_fileName.data();
     }
 
+    time_t GetLastModified() const
+    {
+        return this->m_model.lastModified;
+    }
+
     void SetLastModified(time_t value)
     {
         this->m_model.lastModified = value;
+    }
+
+    int32_t GetSize() const
+    {
+        return this->m_model.size;
     }
 
     void SetSize(int32_t value)
@@ -227,16 +262,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    JsonObject<Alloc> const& GetDataObject() const
+    {
+        return m_dataObject;
+    }
+
     void SetDataObject(JsonObject<Alloc> value)
     {
         m_dataObject = std::move(value);
         this->m_model.dataObject.stringValue = m_dataObject.stringValue.empty() ? nullptr : m_dataObject.stringValue.data();
     }
 
+    String const& GetEscapedDataObject() const
+    {
+        return m_escapedDataObject;
+    }
+
     void SetEscapedDataObject(String value)
     {
         m_escapedDataObject = std::move(value);
         this->m_model.escapedDataObject =  m_escapedDataObject.empty() ? nullptr : m_escapedDataObject.data();
+    }
+
+    String const& GetObjectName() const
+    {
+        return m_objectName;
     }
 
     void SetObjectName(String value)
@@ -311,10 +361,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAction() const
+    {
+        return m_action;
+    }
+
     void SetAction(String value)
     {
         m_action = std::move(value);
         this->m_model.action =  m_action.empty() ? nullptr : m_action.data();
+    }
+
+    String const& GetComment() const
+    {
+        return m_comment;
     }
 
     void SetComment(String value)
@@ -323,10 +383,20 @@ public:
         this->m_model.comment =  m_comment.empty() ? nullptr : m_comment.data();
     }
 
+    JsonObject<Alloc> const& GetCondition() const
+    {
+        return m_condition;
+    }
+
     void SetCondition(JsonObject<Alloc> value)
     {
         m_condition = std::move(value);
         this->m_model.condition.stringValue = m_condition.stringValue.empty() ? nullptr : m_condition.stringValue.data();
+    }
+
+    PFProfilesEffectType GetEffect() const
+    {
+        return this->m_model.effect;
     }
 
     void SetEffect(PFProfilesEffectType value)
@@ -334,10 +404,20 @@ public:
         this->m_model.effect = value;
     }
 
+    JsonObject<Alloc> const& GetPrincipal() const
+    {
+        return m_principal;
+    }
+
     void SetPrincipal(JsonObject<Alloc> value)
     {
         m_principal = std::move(value);
         this->m_model.principal.stringValue = m_principal.stringValue.empty() ? nullptr : m_principal.stringValue.data();
+    }
+
+    String const& GetResource() const
+    {
+        return m_resource;
     }
 
     void SetResource(String value)
@@ -413,10 +493,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetMetadata() const
+    {
+        return m_metadata;
+    }
+
     void SetMetadata(String value)
     {
         m_metadata = std::move(value);
         this->m_model.metadata =  m_metadata.empty() ? nullptr : m_metadata.data();
+    }
+
+    String const& GetName() const
+    {
+        return m_name;
     }
 
     void SetName(String value)
@@ -425,11 +515,21 @@ public:
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
     }
 
+    CStringVector<Alloc> const& GetScores() const
+    {
+        return m_scores;
+    }
+
     void SetScores(CStringVector<Alloc> value)
     {
         m_scores = std::move(value);
         this->m_model.scores =  m_scores.empty() ? nullptr : m_scores.data();
         this->m_model.scoresCount =  static_cast<uint32_t>(m_scores.size());
+    }
+
+    int32_t GetVersion() const
+    {
+        return this->m_model.version;
     }
 
     void SetVersion(int32_t value)
@@ -515,15 +615,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAvatarUrl() const
+    {
+        return m_avatarUrl;
+    }
+
     void SetAvatarUrl(String value)
     {
         m_avatarUrl = std::move(value);
         this->m_model.avatarUrl =  m_avatarUrl.empty() ? nullptr : m_avatarUrl.data();
     }
 
+    time_t GetCreated() const
+    {
+        return this->m_model.created;
+    }
+
     void SetCreated(time_t value)
     {
         this->m_model.created = value;
+    }
+
+    String const& GetDisplayName() const
+    {
+        return m_displayName;
     }
 
     void SetDisplayName(String value)
@@ -532,16 +647,31 @@ public:
         this->m_model.displayName =  m_displayName.empty() ? nullptr : m_displayName.data();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetEntityChain() const
+    {
+        return m_entityChain;
+    }
+
     void SetEntityChain(String value)
     {
         m_entityChain = std::move(value);
         this->m_model.entityChain =  m_entityChain.empty() ? nullptr : m_entityChain.data();
+    }
+
+    CStringVector<Alloc> const& GetExperimentVariants() const
+    {
+        return m_experimentVariants;
     }
 
     void SetExperimentVariants(CStringVector<Alloc> value)
@@ -551,11 +681,21 @@ public:
         this->m_model.experimentVariantsCount =  static_cast<uint32_t>(m_experimentVariants.size());
     }
 
+    ModelDictionaryEntryVector<PFProfilesEntityProfileFileMetadataWrapper<Alloc>, Alloc> const& GetFiles() const
+    {
+        return m_files;
+    }
+
     void SetFiles(ModelDictionaryEntryVector<PFProfilesEntityProfileFileMetadataWrapper<Alloc>, Alloc> value)
     {
         m_files = std::move(value);
         this->m_model.files =  m_files.empty() ? nullptr : m_files.data();
         this->m_model.filesCount =  static_cast<uint32_t>(m_files.size());
+    }
+
+    String const& GetLanguage() const
+    {
+        return m_language;
     }
 
     void SetLanguage(String value)
@@ -564,10 +704,20 @@ public:
         this->m_model.language =  m_language.empty() ? nullptr : m_language.data();
     }
 
+    std::optional<PFEntityLineageWrapper<Alloc>> const& GetLineage() const
+    {
+        return m_lineage;
+    }
+
     void SetLineage(std::optional<PFEntityLineageWrapper<Alloc>> value)
     {
         m_lineage = std::move(value);
         this->m_model.lineage = m_lineage ? &m_lineage->Model() : nullptr;
+    }
+
+    ModelDictionaryEntryVector<PFProfilesEntityDataObjectWrapper<Alloc>, Alloc> const& GetObjects() const
+    {
+        return m_objects;
     }
 
     void SetObjects(ModelDictionaryEntryVector<PFProfilesEntityDataObjectWrapper<Alloc>, Alloc> value)
@@ -577,6 +727,11 @@ public:
         this->m_model.objectsCount =  static_cast<uint32_t>(m_objects.size());
     }
 
+    ModelVector<PFProfilesEntityPermissionStatementWrapper<Alloc>, Alloc> const& GetPermissions() const
+    {
+        return m_permissions;
+    }
+
     void SetPermissions(ModelVector<PFProfilesEntityPermissionStatementWrapper<Alloc>, Alloc> value)
     {
         m_permissions = std::move(value);
@@ -584,11 +739,21 @@ public:
         this->m_model.permissionsCount =  static_cast<uint32_t>(m_permissions.size());
     }
 
+    ModelDictionaryEntryVector<PFEntityStatisticValueWrapper<Alloc>, Alloc> const& GetStatistics() const
+    {
+        return m_statistics;
+    }
+
     void SetStatistics(ModelDictionaryEntryVector<PFEntityStatisticValueWrapper<Alloc>, Alloc> value)
     {
         m_statistics = std::move(value);
         this->m_model.statistics =  m_statistics.empty() ? nullptr : m_statistics.data();
         this->m_model.statisticsCount =  static_cast<uint32_t>(m_statistics.size());
+    }
+
+    int32_t GetVersionNumber() const
+    {
+        return this->m_model.versionNumber;
     }
 
     void SetVersionNumber(int32_t value)
@@ -670,6 +835,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFProfilesEntityProfileBodyWrapper<Alloc>> const& GetProfile() const
+    {
+        return m_profile;
+    }
+
     void SetProfile(std::optional<PFProfilesEntityProfileBodyWrapper<Alloc>> value)
     {
         m_profile = std::move(value);
@@ -734,6 +904,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -741,10 +916,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetDataAsObject() const
+    {
+        return m_dataAsObject;
+    }
+
     void SetDataAsObject(std::optional<bool> value)
     {
         m_dataAsObject = std::move(value);
         this->m_model.dataAsObject = m_dataAsObject ? m_dataAsObject.operator->() : nullptr;
+    }
+
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetEntities() const
+    {
+        return m_entities;
     }
 
     void SetEntities(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
@@ -812,6 +997,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFProfilesEntityProfileBodyWrapper<Alloc>, Alloc> const& GetProfiles() const
+    {
+        return m_profiles;
+    }
+
     void SetProfiles(ModelVector<PFProfilesEntityProfileBodyWrapper<Alloc>, Alloc> value)
     {
         m_profiles = std::move(value);
@@ -877,6 +1067,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -884,11 +1079,21 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    CStringVector<Alloc> const& GetMasterPlayerAccountIds() const
+    {
+        return m_masterPlayerAccountIds;
+    }
+
     void SetMasterPlayerAccountIds(CStringVector<Alloc> value)
     {
         m_masterPlayerAccountIds = std::move(value);
         this->m_model.masterPlayerAccountIds =  m_masterPlayerAccountIds.empty() ? nullptr : m_masterPlayerAccountIds.data();
         this->m_model.masterPlayerAccountIdsCount =  static_cast<uint32_t>(m_masterPlayerAccountIds.size());
+    }
+
+    String const& GetTitleId() const
+    {
+        return m_titleId;
     }
 
     void SetTitleId(String value)
@@ -957,10 +1162,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetTitleId() const
+    {
+        return m_titleId;
+    }
+
     void SetTitleId(String value)
     {
         m_titleId = std::move(value);
         this->m_model.titleId =  m_titleId.empty() ? nullptr : m_titleId.data();
+    }
+
+    ModelDictionaryEntryVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetTitlePlayerAccounts() const
+    {
+        return m_titlePlayerAccounts;
     }
 
     void SetTitlePlayerAccounts(ModelDictionaryEntryVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
@@ -1032,11 +1247,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -1045,10 +1270,20 @@ public:
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    std::optional<int32_t> const& GetExpectedVersion() const
+    {
+        return m_expectedVersion;
+    }
+
     void SetExpectedVersion(std::optional<int32_t> value)
     {
         m_expectedVersion = std::move(value);
         this->m_model.expectedVersion = m_expectedVersion ? m_expectedVersion.operator->() : nullptr;
+    }
+
+    String const& GetLanguage() const
+    {
+        return m_language;
     }
 
     void SetLanguage(String value)
@@ -1119,10 +1354,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFOperationTypes> const& GetOperationResult() const
+    {
+        return m_operationResult;
+    }
+
     void SetOperationResult(std::optional<PFOperationTypes> value)
     {
         m_operationResult = std::move(value);
         this->m_model.operationResult = m_operationResult ? m_operationResult.operator->() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetVersionNumber() const
+    {
+        return m_versionNumber;
     }
 
     void SetVersionNumber(std::optional<int32_t> value)
@@ -1191,6 +1436,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -1198,10 +1448,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = &m_entity.Model();
+    }
+
+    ModelVector<PFProfilesEntityPermissionStatementWrapper<Alloc>, Alloc> const& GetStatements() const
+    {
+        return m_statements;
     }
 
     void SetStatements(ModelVector<PFProfilesEntityPermissionStatementWrapper<Alloc>, Alloc> value)
@@ -1267,6 +1527,11 @@ public:
         swap(lhs.m_permissions, rhs.m_permissions);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFProfilesEntityPermissionStatementWrapper<Alloc>, Alloc> const& GetPermissions() const
+    {
+        return m_permissions;
     }
 
     void SetPermissions(ModelVector<PFProfilesEntityPermissionStatementWrapper<Alloc>, Alloc> value)

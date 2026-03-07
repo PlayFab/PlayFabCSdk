@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Condition="'$(PlayFabSteamPathsImported)' == 'true'" Project="Error attempting to import PlayFabSteamPaths twice. Condition all imports on ('ProjectName'Imported) != true." />
+  <PropertyGroup>
+    <PlayFabSteamPathsImported>true</PlayFabSteamPathsImported>
+  </PropertyGroup>
+
+  <!-- Check path to Steamworks SDK -->
+  <!-- Download at https://partner.steamgames.com/downloads/list -->
+  <!-- Set in PlayFab.C.paths.props -->
+  <PropertyGroup Condition="Exists('$(SteamworksSDKRoot)')">
+    <SteamworksAvailable>true</SteamworksAvailable>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(SteamworksAvailable)' == 'true'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SteamworksSDKRoot)\public;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);STEAMWORKS_AVAILABLE;_CRT_SECURE_NO_WARNINGS;_EXTERNAL_DLL_EXT=.dll;VPCGAMECAPS=VALVE;VPCGAME=valve;</PreprocessorDefinitions>
+    </ClCompile>
+    <!--<Link>
+      <AdditionalDependencies>sdkencryptedappticket64.lib;steam_api64.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies);</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SteamworksSDKRoot)\public\steam\lib\win64;$(SteamworksSDKRoot)\redistributable_bin\win64;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
+    </Link>-->
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(SteamworksAvailable)' == 'true' And '$(Configuration)'=='Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);_DEBUG;</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

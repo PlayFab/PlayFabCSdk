@@ -1,9 +1,8 @@
 #include "TestAppPch.h"
 #include "AuthenticationTests.h"
+#include "Operations/Core/CoreOperations.h"
 #include "Operations/Core/AuthenticationOperations.h"
 #include "Platform/PlayFabPal.h"
-
-using namespace PlayFab::Platform;
 
 namespace PlayFab
 {
@@ -12,7 +11,7 @@ namespace Test
 
 void AuthenticationTests::AddTests()
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestAuthenticateGameServerWithCustomId", &AuthenticationTests::TestAuthenticateGameServerWithCustomId);
     AddTest("TestDelete", &AuthenticationTests::TestDelete);
     AddTest("TestGetEntity", &AuthenticationTests::TestGetEntity);
@@ -28,14 +27,14 @@ void AuthenticationTests::AddTests()
 
 AsyncOp<LoginResult> AuthenticationTests::LoginDefaultTitlePlayer()
 {
-    return Platform::GetDefaultPlatformUser(RunContext()).Then([&](Result<UserPtr> result) -> AsyncOp<LoginResult>
+    return Platform::GetDefaultLocalUser(ServiceConfig(), RunContext()).Then([&](Result<TitleLocalUser> result) -> AsyncOp<LoginResult>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        return Platform::LoginDefaultTitlePlayer(ServiceConfig(), result.ExtractPayload(), RunContext());
+        return RunOperation(MakeUnique<LocalUserLoginOperation>(result.ExtractPayload(), RunContext()));
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AuthenticationTests::TestAuthenticateGameServerWithCustomId(TestContext& tc)
 {
     SharedPtr<std::optional<Entity>> titleEntity = MakeShared<std::optional<Entity>>();
@@ -72,7 +71,7 @@ void AuthenticationTests::TestAuthenticateGameServerWithCustomId(TestContext& tc
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AuthenticationTests::TestDelete(TestContext& tc)
 {
     // Covered by TestAuthenticateGameServerWithCustomId
@@ -80,7 +79,7 @@ void AuthenticationTests::TestDelete(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AuthenticationTests::TestGetEntity(TestContext& tc)
 {
     SharedPtr<std::optional<LoginResult>> defaultTitlePlayer = MakeShared<std::optional<LoginResult>>();
@@ -106,7 +105,7 @@ void AuthenticationTests::TestGetEntity(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 constexpr char kMasterAccountType[]{ "master_player_account" };
 
 void AuthenticationTests::TestGetEntityMasterPlayerAccount(TestContext& tc)
@@ -138,7 +137,7 @@ void AuthenticationTests::TestGetEntityMasterPlayerAccount(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 constexpr char kTitleType[]{ "title" };
 
 void AuthenticationTests::TestGetEntityWithSecretKey(TestContext& tc)
@@ -158,7 +157,7 @@ void AuthenticationTests::TestGetEntityWithSecretKey(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AuthenticationTests::TestServerLoginWithServerCustomId(TestContext& tc)
 {
     ServerLoginWithServerCustomIdOperation::RequestType request;
@@ -179,7 +178,7 @@ void AuthenticationTests::TestServerLoginWithServerCustomId(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AuthenticationTests::TestServerLoginWithSteamId(TestContext& tc)
 {
     ServerLoginWithSteamIdOperation::RequestType request;
@@ -200,7 +199,7 @@ void AuthenticationTests::TestServerLoginWithSteamId(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AuthenticationTests::TestServerLoginWithXbox(TestContext& tc)
 {
     ServerLoginWithXboxOperation::RequestType request;
@@ -219,7 +218,7 @@ void AuthenticationTests::TestServerLoginWithXbox(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AuthenticationTests::TestServerLoginWithXboxId(TestContext& tc)
 {
     ServerLoginWithXboxIdOperation::RequestType request;
@@ -241,7 +240,7 @@ void AuthenticationTests::TestServerLoginWithXboxId(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AuthenticationTests::TestValidateEntityToken(TestContext& tc)
 {
     // Covered by TestAuthenticateGameServerWithCustomId

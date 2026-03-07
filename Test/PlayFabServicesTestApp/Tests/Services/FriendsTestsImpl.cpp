@@ -2,7 +2,7 @@
 #include "FriendsTests.h"
 #include "FriendsOperations.h"
 #if HC_PLATFORM == HC_PLATFORM_GDK
-#include "GDK/PlatformUser_GDK.h"
+#include "Platform/GDK/TitleLocalUser_GDK.h"
 #endif
 
 namespace PlayFab
@@ -86,7 +86,7 @@ void FriendsTests::TestClientGetFriendsList(TestContext& tc)
         tc.EndTest(std::move(result));
     });
 #else
-    ClientGetFriendsListOperation::RequestType request{ Wrappers::XUser::Duplicate(DefaultPlatformUser()->Handle()) };
+    ClientGetFriendsListOperation::RequestType request{ Wrappers::XUser::Duplicate(GetXUserFromLocalUser(DefaultLocalUser()).Handle()) };
 
     return ClientGetFriendsListOperation::Run(DefaultTitlePlayer(), request, RunContext())
     .Finally([&](Result<ClientGetFriendsListOperation::ResultType> result)
@@ -146,7 +146,7 @@ void FriendsTests::TestClientSetFriendTags(TestContext& tc)
 #endif
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC 
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC 
 void FriendsTests::TestServerAddFriend(TestContext& tc)
 {
     // Already covered by TestServerGetFriendsList
@@ -154,7 +154,7 @@ void FriendsTests::TestServerAddFriend(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void FriendsTests::TestServerGetFriendsList(TestContext& tc)
 {
     SharedPtr<String> friendId = MakeShared<String>();
@@ -204,7 +204,7 @@ void FriendsTests::TestServerGetFriendsList(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void FriendsTests::TestServerRemoveFriend(TestContext& tc)
 {
     // Already covered by TestServerSetFriendTags
@@ -212,7 +212,7 @@ void FriendsTests::TestServerRemoveFriend(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void FriendsTests::TestServerSetFriendTags(TestContext& tc)
 {
     SharedPtr<String> friendId = MakeShared<String>();

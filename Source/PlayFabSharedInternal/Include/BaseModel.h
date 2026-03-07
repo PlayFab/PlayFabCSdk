@@ -38,6 +38,11 @@ class ServiceOutputModel
 public:
     virtual ~ServiceOutputModel() = default;
     virtual HRESULT FromJson(const JsonValue& input) = 0;
+
+    uint32_t GetHttpCode() const { return m_httpCode; }
+
+private:
+    uint32_t m_httpCode{};
 };
 
 // Base class for all Model Wrappers that are returned from public client APIs

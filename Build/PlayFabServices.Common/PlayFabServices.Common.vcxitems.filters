@@ -39,6 +39,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\Platform.cpp">
       <Filter>Source\Common</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\ApiHelpers.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\stdafx.h">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Include\Generated\playfab\services\PFServices.h">
       <Filter>Include\Generated\playfab\services</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\ApiHelpers.h">
+      <Filter>Source\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Generated/AccountManagement.h"
 #include "JsonUtils.h"
-#include "GDK/PlatformUser_GDK.h"
+#include "PlayFabXUser.h"
 
 namespace PlayFab
 {
@@ -17,7 +17,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkXboxAccount(
     auto duplicateUserResult = XUser::Duplicate(request.Model().user);
     RETURN_IF_FAILED(duplicateUserResult.hr);
 
-    return duplicateUserResult.Payload().GetTokenAndSignature(rc).Then([entity, request, rc](Result<Platform::TokenAndSignature> result) mutable -> AsyncOp<ServiceResponse>
+    return duplicateUserResult.Payload().GetTokenAndSignature(rc).Then([entity, request, rc](Result<TokenAndSignature> result) mutable -> AsyncOp<ServiceResponse>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 

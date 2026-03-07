@@ -27,7 +27,7 @@ void CatalogTests::TestCreateUploadUrls(TestContext& tc)
     tc.Skip();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 void CatalogTests::TestDeleteEntityItemReviews(TestContext& tc)
 {
     tc.Skip();
@@ -39,7 +39,7 @@ void CatalogTests::TestDeleteItem(TestContext& tc)
     tc.Skip();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 void CatalogTests::TestGetCatalogConfig(TestContext& tc)
 {
     tc.Skip();
@@ -76,7 +76,7 @@ void CatalogTests::TestGetItemContainers(TestContext& tc)
     tc.Skip();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 void CatalogTests::TestGetItemModerationState(TestContext& tc)
 {
     tc.Skip();
@@ -128,7 +128,7 @@ void CatalogTests::TestSearchItems(TestContext& tc)
     tc.Skip();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 void CatalogTests::TestSetItemModerationState(TestContext& tc)
 {
     tc.Skip();
@@ -140,14 +140,14 @@ void CatalogTests::TestSubmitItemReviewVote(TestContext& tc)
     tc.Skip();
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 void CatalogTests::TestTakedownItemReviews(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 void CatalogTests::TestUpdateCatalogConfig(TestContext& tc)
 {
     tc.Skip();

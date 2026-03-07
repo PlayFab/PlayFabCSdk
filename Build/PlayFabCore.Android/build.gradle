@@ -2,7 +2,7 @@ apply plugin: "com.android.library"
 
 android {
     compileSdk 34
-    ndkVersion "25.1.8937393"
+    ndkVersion "26.1.10909125"
 
     defaultConfig {
         targetSdkVersion 34
@@ -74,4 +74,6 @@ android {
 dependencies {
     implementation project(":libHttpClient.Android")
     implementation project(":PlayFabSharedInternal.Android")
+
+    implementation "com.google.android.gms:play-services-games-v2:+"
 }

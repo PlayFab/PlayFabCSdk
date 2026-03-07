@@ -62,11 +62,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetName() const
+    {
+        return m_name;
     }
 
     void SetName(String value)
@@ -135,6 +145,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -142,10 +157,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<int32_t> const& GetPageSize() const
+    {
+        return m_pageSize;
+    }
+
     void SetPageSize(std::optional<int32_t> value)
     {
         m_pageSize = std::move(value);
         this->m_model.pageSize = m_pageSize ? m_pageSize.operator->() : nullptr;
+    }
+
+    String const& GetSkipToken() const
+    {
+        return m_skipToken;
     }
 
     void SetSkipToken(String value)
@@ -210,6 +235,11 @@ public:
         swap(lhs.m_buildWeightDistribution, rhs.m_buildWeightDistribution);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    DictionaryEntryVector<PFUint32DictionaryEntry, Alloc> const& GetBuildWeightDistribution() const
+    {
+        return m_buildWeightDistribution;
     }
 
     void SetBuildWeightDistribution(DictionaryEntryVector<PFUint32DictionaryEntry, Alloc> value)
@@ -277,16 +307,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAliasId() const
+    {
+        return m_aliasId;
+    }
+
     void SetAliasId(String value)
     {
         m_aliasId = std::move(value);
         this->m_model.aliasId =  m_aliasId.empty() ? nullptr : m_aliasId.data();
     }
 
+    String const& GetAliasName() const
+    {
+        return m_aliasName;
+    }
+
     void SetAliasName(String value)
     {
         m_aliasName = std::move(value);
         this->m_model.aliasName =  m_aliasName.empty() ? nullptr : m_aliasName.data();
+    }
+
+    ModelVector<PFMultiplayerServerBuildSelectionCriterionWrapper<Alloc>, Alloc> const& GetBuildSelectionCriteria() const
+    {
+        return m_buildSelectionCriteria;
     }
 
     void SetBuildSelectionCriteria(ModelVector<PFMultiplayerServerBuildSelectionCriterionWrapper<Alloc>, Alloc> value)
@@ -356,6 +401,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFMultiplayerServerBuildAliasDetailsResponseWrapper<Alloc>, Alloc> const& GetBuildAliases() const
+    {
+        return m_buildAliases;
+    }
+
     void SetBuildAliases(ModelVector<PFMultiplayerServerBuildAliasDetailsResponseWrapper<Alloc>, Alloc> value)
     {
         m_buildAliases = std::move(value);
@@ -363,9 +413,19 @@ public:
         this->m_model.buildAliasesCount =  static_cast<uint32_t>(m_buildAliases.size());
     }
 
+    int32_t GetPageSize() const
+    {
+        return this->m_model.pageSize;
+    }
+
     void SetPageSize(int32_t value)
     {
         this->m_model.pageSize = value;
+    }
+
+    String const& GetSkipToken() const
+    {
+        return m_skipToken;
     }
 
     void SetSkipToken(String value)
@@ -434,6 +494,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -441,10 +506,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<int32_t> const& GetPageSize() const
+    {
+        return m_pageSize;
+    }
+
     void SetPageSize(std::optional<int32_t> value)
     {
         m_pageSize = std::move(value);
         this->m_model.pageSize = m_pageSize ? m_pageSize.operator->() : nullptr;
+    }
+
+    String const& GetSkipToken() const
+    {
+        return m_skipToken;
     }
 
     void SetSkipToken(String value)
@@ -476,9 +551,19 @@ public:
 
     using ModelWrapper<PFMultiplayerServerCurrentServerStats, Alloc>::ModelWrapper;
 
+    int32_t GetActive() const
+    {
+        return this->m_model.active;
+    }
+
     void SetActive(int32_t value)
     {
         this->m_model.active = value;
+    }
+
+    int32_t GetPropping() const
+    {
+        return this->m_model.propping;
     }
 
     void SetPropping(int32_t value)
@@ -486,9 +571,19 @@ public:
         this->m_model.propping = value;
     }
 
+    int32_t GetStandingBy() const
+    {
+        return this->m_model.standingBy;
+    }
+
     void SetStandingBy(int32_t value)
     {
         this->m_model.standingBy = value;
+    }
+
+    int32_t GetTotal() const
+    {
+        return this->m_model.total;
     }
 
     void SetTotal(int32_t value)
@@ -509,9 +604,19 @@ public:
 
     using ModelWrapper<PFMultiplayerServerDynamicStandbyThreshold, Alloc>::ModelWrapper;
 
+    double GetMultiplier() const
+    {
+        return this->m_model.multiplier;
+    }
+
     void SetMultiplier(double value)
     {
         this->m_model.multiplier = value;
+    }
+
+    double GetTriggerThresholdPercentage() const
+    {
+        return this->m_model.triggerThresholdPercentage;
     }
 
     void SetTriggerThresholdPercentage(double value)
@@ -569,6 +674,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFMultiplayerServerDynamicStandbyThresholdWrapper<Alloc>, Alloc> const& GetDynamicFloorMultiplierThresholds() const
+    {
+        return m_dynamicFloorMultiplierThresholds;
+    }
+
     void SetDynamicFloorMultiplierThresholds(ModelVector<PFMultiplayerServerDynamicStandbyThresholdWrapper<Alloc>, Alloc> value)
     {
         m_dynamicFloorMultiplierThresholds = std::move(value);
@@ -576,9 +686,19 @@ public:
         this->m_model.dynamicFloorMultiplierThresholdsCount =  static_cast<uint32_t>(m_dynamicFloorMultiplierThresholds.size());
     }
 
+    bool GetIsEnabled() const
+    {
+        return this->m_model.isEnabled;
+    }
+
     void SetIsEnabled(bool value)
     {
         this->m_model.isEnabled = value;
+    }
+
+    std::optional<int32_t> const& GetRampDownSeconds() const
+    {
+        return m_rampDownSeconds;
     }
 
     void SetRampDownSeconds(std::optional<int32_t> value)
@@ -643,10 +763,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetDescription() const
+    {
+        return m_description;
+    }
+
     void SetDescription(String value)
     {
         m_description = std::move(value);
         this->m_model.description =  m_description.empty() ? nullptr : m_description.data();
+    }
+
+    time_t GetEndTime() const
+    {
+        return this->m_model.endTime;
     }
 
     void SetEndTime(time_t value)
@@ -654,9 +784,19 @@ public:
         this->m_model.endTime = value;
     }
 
+    bool GetIsDisabled() const
+    {
+        return this->m_model.isDisabled;
+    }
+
     void SetIsDisabled(bool value)
     {
         this->m_model.isDisabled = value;
+    }
+
+    bool GetIsRecurringWeekly() const
+    {
+        return this->m_model.isRecurringWeekly;
     }
 
     void SetIsRecurringWeekly(bool value)
@@ -664,9 +804,19 @@ public:
         this->m_model.isRecurringWeekly = value;
     }
 
+    time_t GetStartTime() const
+    {
+        return this->m_model.startTime;
+    }
+
     void SetStartTime(time_t value)
     {
         this->m_model.startTime = value;
+    }
+
+    int32_t GetTargetStandby() const
+    {
+        return this->m_model.targetStandby;
     }
 
     void SetTargetStandby(int32_t value)
@@ -728,9 +878,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetIsEnabled() const
+    {
+        return this->m_model.isEnabled;
+    }
+
     void SetIsEnabled(bool value)
     {
         this->m_model.isEnabled = value;
+    }
+
+    ModelVector<PFMultiplayerServerScheduleWrapper<Alloc>, Alloc> const& GetScheduleList() const
+    {
+        return m_scheduleList;
     }
 
     void SetScheduleList(ModelVector<PFMultiplayerServerScheduleWrapper<Alloc>, Alloc> value)
@@ -806,10 +966,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFMultiplayerServerCurrentServerStatsWrapper<Alloc>> const& GetCurrentServerStats() const
+    {
+        return m_currentServerStats;
+    }
+
     void SetCurrentServerStats(std::optional<PFMultiplayerServerCurrentServerStatsWrapper<Alloc>> value)
     {
         m_currentServerStats = std::move(value);
         this->m_model.currentServerStats = m_currentServerStats ? &m_currentServerStats->Model() : nullptr;
+    }
+
+    std::optional<PFMultiplayerServerDynamicStandbySettingsWrapper<Alloc>> const& GetDynamicStandbySettings() const
+    {
+        return m_dynamicStandbySettings;
     }
 
     void SetDynamicStandbySettings(std::optional<PFMultiplayerServerDynamicStandbySettingsWrapper<Alloc>> value)
@@ -818,14 +988,29 @@ public:
         this->m_model.dynamicStandbySettings = m_dynamicStandbySettings ? &m_dynamicStandbySettings->Model() : nullptr;
     }
 
+    bool GetIsAssetReplicationComplete() const
+    {
+        return this->m_model.isAssetReplicationComplete;
+    }
+
     void SetIsAssetReplicationComplete(bool value)
     {
         this->m_model.isAssetReplicationComplete = value;
     }
 
+    int32_t GetMaxServers() const
+    {
+        return this->m_model.maxServers;
+    }
+
     void SetMaxServers(int32_t value)
     {
         this->m_model.maxServers = value;
+    }
+
+    std::optional<int32_t> const& GetMultiplayerServerCountPerVm() const
+    {
+        return m_multiplayerServerCountPerVm;
     }
 
     void SetMultiplayerServerCountPerVm(std::optional<int32_t> value)
@@ -834,10 +1019,20 @@ public:
         this->m_model.multiplayerServerCountPerVm = m_multiplayerServerCountPerVm ? m_multiplayerServerCountPerVm.operator->() : nullptr;
     }
 
+    String const& GetRegion() const
+    {
+        return m_region;
+    }
+
     void SetRegion(String value)
     {
         m_region = std::move(value);
         this->m_model.region =  m_region.empty() ? nullptr : m_region.data();
+    }
+
+    std::optional<PFMultiplayerServerScheduledStandbySettingsWrapper<Alloc>> const& GetScheduledStandbySettings() const
+    {
+        return m_scheduledStandbySettings;
     }
 
     void SetScheduledStandbySettings(std::optional<PFMultiplayerServerScheduledStandbySettingsWrapper<Alloc>> value)
@@ -846,15 +1041,30 @@ public:
         this->m_model.scheduledStandbySettings = m_scheduledStandbySettings ? &m_scheduledStandbySettings->Model() : nullptr;
     }
 
+    int32_t GetStandbyServers() const
+    {
+        return this->m_model.standbyServers;
+    }
+
     void SetStandbyServers(int32_t value)
     {
         this->m_model.standbyServers = value;
+    }
+
+    String const& GetStatus() const
+    {
+        return m_status;
     }
 
     void SetStatus(String value)
     {
         m_status = std::move(value);
         this->m_model.status =  m_status.empty() ? nullptr : m_status.data();
+    }
+
+    std::optional<PFMultiplayerServerAzureVmSize> const& GetVmSize() const
+    {
+        return m_vmSize;
     }
 
     void SetVmSize(std::optional<PFMultiplayerServerAzureVmSize> value)
@@ -937,10 +1147,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetBuildId() const
+    {
+        return m_buildId;
+    }
+
     void SetBuildId(String value)
     {
         m_buildId = std::move(value);
         this->m_model.buildId =  m_buildId.empty() ? nullptr : m_buildId.data();
+    }
+
+    String const& GetBuildName() const
+    {
+        return m_buildName;
     }
 
     void SetBuildName(String value)
@@ -949,10 +1169,20 @@ public:
         this->m_model.buildName =  m_buildName.empty() ? nullptr : m_buildName.data();
     }
 
+    std::optional<time_t> const& GetCreationTime() const
+    {
+        return m_creationTime;
+    }
+
     void SetCreationTime(std::optional<time_t> value)
     {
         m_creationTime = std::move(value);
         this->m_model.creationTime = m_creationTime ? m_creationTime.operator->() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetMetadata() const
+    {
+        return m_metadata;
     }
 
     void SetMetadata(StringDictionaryEntryVector<Alloc> value)
@@ -960,6 +1190,11 @@ public:
         m_metadata = std::move(value);
         this->m_model.metadata =  m_metadata.empty() ? nullptr : m_metadata.data();
         this->m_model.metadataCount =  static_cast<uint32_t>(m_metadata.size());
+    }
+
+    ModelVector<PFMultiplayerServerBuildRegionWrapper<Alloc>, Alloc> const& GetRegionConfigurations() const
+    {
+        return m_regionConfigurations;
     }
 
     void SetRegionConfigurations(ModelVector<PFMultiplayerServerBuildRegionWrapper<Alloc>, Alloc> value)
@@ -1033,6 +1268,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFMultiplayerServerBuildSummaryWrapper<Alloc>, Alloc> const& GetBuildSummaries() const
+    {
+        return m_buildSummaries;
+    }
+
     void SetBuildSummaries(ModelVector<PFMultiplayerServerBuildSummaryWrapper<Alloc>, Alloc> value)
     {
         m_buildSummaries = std::move(value);
@@ -1040,9 +1280,19 @@ public:
         this->m_model.buildSummariesCount =  static_cast<uint32_t>(m_buildSummaries.size());
     }
 
+    int32_t GetPageSize() const
+    {
+        return this->m_model.pageSize;
+    }
+
     void SetPageSize(int32_t value)
     {
         this->m_model.pageSize = value;
+    }
+
+    String const& GetSkipToken() const
+    {
+        return m_skipToken;
     }
 
     void SetSkipToken(String value)
@@ -1111,6 +1361,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -1118,10 +1373,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetIncludeAllRegions() const
+    {
+        return m_includeAllRegions;
+    }
+
     void SetIncludeAllRegions(std::optional<bool> value)
     {
         m_includeAllRegions = std::move(value);
         this->m_model.includeAllRegions = m_includeAllRegions ? m_includeAllRegions.operator->() : nullptr;
+    }
+
+    String const& GetRoutingPreference() const
+    {
+        return m_routingPreference;
     }
 
     void SetRoutingPreference(String value)
@@ -1190,10 +1455,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetRegion() const
+    {
+        return m_region;
+    }
+
     void SetRegion(String value)
     {
         m_region = std::move(value);
         this->m_model.region =  m_region.empty() ? nullptr : m_region.data();
+    }
+
+    String const& GetServerUrl() const
+    {
+        return m_serverUrl;
     }
 
     void SetServerUrl(String value)
@@ -1260,9 +1535,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    int32_t GetPageSize() const
+    {
+        return this->m_model.pageSize;
+    }
+
     void SetPageSize(int32_t value)
     {
         this->m_model.pageSize = value;
+    }
+
+    ModelVector<PFMultiplayerServerQosServerWrapper<Alloc>, Alloc> const& GetQosServers() const
+    {
+        return m_qosServers;
     }
 
     void SetQosServers(ModelVector<PFMultiplayerServerQosServerWrapper<Alloc>, Alloc> value)
@@ -1270,6 +1555,11 @@ public:
         m_qosServers = std::move(value);
         this->m_model.qosServers =  m_qosServers.empty() ? nullptr : m_qosServers.data();
         this->m_model.qosServersCount =  static_cast<uint32_t>(m_qosServers.size());
+    }
+
+    String const& GetSkipToken() const
+    {
+        return m_skipToken;
     }
 
     void SetSkipToken(String value)
@@ -1338,6 +1628,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -1345,10 +1640,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<int32_t> const& GetPageSize() const
+    {
+        return m_pageSize;
+    }
+
     void SetPageSize(std::optional<int32_t> value)
     {
         m_pageSize = std::move(value);
         this->m_model.pageSize = m_pageSize ? m_pageSize.operator->() : nullptr;
+    }
+
+    String const& GetSkipToken() const
+    {
+        return m_skipToken;
     }
 
     void SetSkipToken(String value)
@@ -1419,16 +1724,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<time_t> const& GetExpirationDate() const
+    {
+        return m_expirationDate;
+    }
+
     void SetExpirationDate(std::optional<time_t> value)
     {
         m_expirationDate = std::move(value);
         this->m_model.expirationDate = m_expirationDate ? m_expirationDate.operator->() : nullptr;
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    String const& GetVersion() const
+    {
+        return m_version;
     }
 
     void SetVersion(String value)
@@ -1497,9 +1817,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    int32_t GetPageSize() const
+    {
+        return this->m_model.pageSize;
+    }
+
     void SetPageSize(int32_t value)
     {
         this->m_model.pageSize = value;
+    }
+
+    ModelVector<PFMultiplayerServerSecretSummaryWrapper<Alloc>, Alloc> const& GetSecretSummaries() const
+    {
+        return m_secretSummaries;
     }
 
     void SetSecretSummaries(ModelVector<PFMultiplayerServerSecretSummaryWrapper<Alloc>, Alloc> value)
@@ -1507,6 +1837,11 @@ public:
         m_secretSummaries = std::move(value);
         this->m_model.secretSummaries =  m_secretSummaries.empty() ? nullptr : m_secretSummaries.data();
         this->m_model.secretSummariesCount =  static_cast<uint32_t>(m_secretSummaries.size());
+    }
+
+    String const& GetSkipToken() const
+    {
+        return m_skipToken;
     }
 
     void SetSkipToken(String value)
@@ -1569,6 +1904,11 @@ public:
         swap(lhs.m_aliasId, rhs.m_aliasId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetAliasId() const
+    {
+        return m_aliasId;
     }
 
     void SetAliasId(String value)
@@ -1643,16 +1983,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFMultiplayerServerBuildAliasParamsWrapper<Alloc>> const& GetBuildAliasParams() const
+    {
+        return m_buildAliasParams;
+    }
+
     void SetBuildAliasParams(std::optional<PFMultiplayerServerBuildAliasParamsWrapper<Alloc>> value)
     {
         m_buildAliasParams = std::move(value);
         this->m_model.buildAliasParams = m_buildAliasParams ? &m_buildAliasParams->Model() : nullptr;
     }
 
+    String const& GetBuildId() const
+    {
+        return m_buildId;
+    }
+
     void SetBuildId(String value)
     {
         m_buildId = std::move(value);
         this->m_model.buildId =  m_buildId.empty() ? nullptr : m_buildId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1662,11 +2017,21 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    CStringVector<Alloc> const& GetInitialPlayers() const
+    {
+        return m_initialPlayers;
+    }
+
     void SetInitialPlayers(CStringVector<Alloc> value)
     {
         m_initialPlayers = std::move(value);
         this->m_model.initialPlayers =  m_initialPlayers.empty() ? nullptr : m_initialPlayers.data();
         this->m_model.initialPlayersCount =  static_cast<uint32_t>(m_initialPlayers.size());
+    }
+
+    CStringVector<Alloc> const& GetPreferredRegions() const
+    {
+        return m_preferredRegions;
     }
 
     void SetPreferredRegions(CStringVector<Alloc> value)
@@ -1676,10 +2041,20 @@ public:
         this->m_model.preferredRegionsCount =  static_cast<uint32_t>(m_preferredRegions.size());
     }
 
+    String const& GetSessionCookie() const
+    {
+        return m_sessionCookie;
+    }
+
     void SetSessionCookie(String value)
     {
         m_sessionCookie = std::move(value);
         this->m_model.sessionCookie =  m_sessionCookie.empty() ? nullptr : m_sessionCookie.data();
+    }
+
+    String const& GetSessionId() const
+    {
+        return m_sessionId;
     }
 
     void SetSessionId(String value)
@@ -1754,6 +2129,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayerId() const
+    {
+        return m_playerId;
+    }
+
     void SetPlayerId(String value)
     {
         m_playerId = std::move(value);
@@ -1814,15 +2194,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
     }
 
+    int32_t GetNum() const
+    {
+        return this->m_model.num;
+    }
+
     void SetNum(int32_t value)
     {
         this->m_model.num = value;
+    }
+
+    PFMultiplayerServerProtocolType GetProtocol() const
+    {
+        return this->m_model.protocol;
     }
 
     void SetProtocol(PFMultiplayerServerProtocolType value)
@@ -1888,16 +2283,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFQDN() const
+    {
+        return m_fQDN;
+    }
+
     void SetFQDN(String value)
     {
         m_fQDN = std::move(value);
         this->m_model.fQDN =  m_fQDN.empty() ? nullptr : m_fQDN.data();
     }
 
+    String const& GetIpAddress() const
+    {
+        return m_ipAddress;
+    }
+
     void SetIpAddress(String value)
     {
         m_ipAddress = std::move(value);
         this->m_model.ipAddress =  m_ipAddress.empty() ? nullptr : m_ipAddress.data();
+    }
+
+    String const& GetRoutingType() const
+    {
+        return m_routingType;
     }
 
     void SetRoutingType(String value)
@@ -1986,10 +2396,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetBuildId() const
+    {
+        return m_buildId;
+    }
+
     void SetBuildId(String value)
     {
         m_buildId = std::move(value);
         this->m_model.buildId =  m_buildId.empty() ? nullptr : m_buildId.data();
+    }
+
+    ModelVector<PFMultiplayerServerConnectedPlayerWrapper<Alloc>, Alloc> const& GetConnectedPlayers() const
+    {
+        return m_connectedPlayers;
     }
 
     void SetConnectedPlayers(ModelVector<PFMultiplayerServerConnectedPlayerWrapper<Alloc>, Alloc> value)
@@ -1999,10 +2419,20 @@ public:
         this->m_model.connectedPlayersCount =  static_cast<uint32_t>(m_connectedPlayers.size());
     }
 
+    String const& GetFQDN() const
+    {
+        return m_fQDN;
+    }
+
     void SetFQDN(String value)
     {
         m_fQDN = std::move(value);
         this->m_model.fQDN =  m_fQDN.empty() ? nullptr : m_fQDN.data();
+    }
+
+    String const& GetIPV4Address() const
+    {
+        return m_iPV4Address;
     }
 
     void SetIPV4Address(String value)
@@ -2011,10 +2441,20 @@ public:
         this->m_model.iPV4Address =  m_iPV4Address.empty() ? nullptr : m_iPV4Address.data();
     }
 
+    std::optional<time_t> const& GetLastStateTransitionTime() const
+    {
+        return m_lastStateTransitionTime;
+    }
+
     void SetLastStateTransitionTime(std::optional<time_t> value)
     {
         m_lastStateTransitionTime = std::move(value);
         this->m_model.lastStateTransitionTime = m_lastStateTransitionTime ? m_lastStateTransitionTime.operator->() : nullptr;
+    }
+
+    ModelVector<PFMultiplayerServerPortWrapper<Alloc>, Alloc> const& GetPorts() const
+    {
+        return m_ports;
     }
 
     void SetPorts(ModelVector<PFMultiplayerServerPortWrapper<Alloc>, Alloc> value)
@@ -2024,11 +2464,21 @@ public:
         this->m_model.portsCount =  static_cast<uint32_t>(m_ports.size());
     }
 
+    ModelVector<PFMultiplayerServerPublicIpAddressWrapper<Alloc>, Alloc> const& GetPublicIPV4Addresses() const
+    {
+        return m_publicIPV4Addresses;
+    }
+
     void SetPublicIPV4Addresses(ModelVector<PFMultiplayerServerPublicIpAddressWrapper<Alloc>, Alloc> value)
     {
         m_publicIPV4Addresses = std::move(value);
         this->m_model.publicIPV4Addresses =  m_publicIPV4Addresses.empty() ? nullptr : m_publicIPV4Addresses.data();
         this->m_model.publicIPV4AddressesCount =  static_cast<uint32_t>(m_publicIPV4Addresses.size());
+    }
+
+    String const& GetRegion() const
+    {
+        return m_region;
     }
 
     void SetRegion(String value)
@@ -2037,10 +2487,20 @@ public:
         this->m_model.region =  m_region.empty() ? nullptr : m_region.data();
     }
 
+    String const& GetServerId() const
+    {
+        return m_serverId;
+    }
+
     void SetServerId(String value)
     {
         m_serverId = std::move(value);
         this->m_model.serverId =  m_serverId.empty() ? nullptr : m_serverId.data();
+    }
+
+    String const& GetSessionId() const
+    {
+        return m_sessionId;
     }
 
     void SetSessionId(String value)
@@ -2049,10 +2509,20 @@ public:
         this->m_model.sessionId =  m_sessionId.empty() ? nullptr : m_sessionId.data();
     }
 
+    String const& GetState() const
+    {
+        return m_state;
+    }
+
     void SetState(String value)
     {
         m_state = std::move(value);
         this->m_model.state =  m_state.empty() ? nullptr : m_state.data();
+    }
+
+    String const& GetVmId() const
+    {
+        return m_vmId;
     }
 
     void SetVmId(String value)
@@ -2141,6 +2611,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetEntityKeys() const
+    {
+        return m_entityKeys;
+    }
+
     void SetEntityKeys(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
     {
         m_entityKeys = std::move(value);
@@ -2148,10 +2623,20 @@ public:
         this->m_model.entityKeysCount =  static_cast<uint32_t>(m_entityKeys.size());
     }
 
+    String const& GetIdentifier() const
+    {
+        return m_identifier;
+    }
+
     void SetIdentifier(String value)
     {
         m_identifier = std::move(value);
         this->m_model.identifier =  m_identifier.empty() ? nullptr : m_identifier.data();
+    }
+
+    String const& GetRevocability() const
+    {
+        return m_revocability;
     }
 
     void SetRevocability(String value)
@@ -2220,10 +2705,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetDirectPeerConnectivityOptions() const
+    {
+        return m_directPeerConnectivityOptions;
+    }
+
     void SetDirectPeerConnectivityOptions(String value)
     {
         m_directPeerConnectivityOptions = std::move(value);
         this->m_model.directPeerConnectivityOptions =  m_directPeerConnectivityOptions.empty() ? nullptr : m_directPeerConnectivityOptions.data();
+    }
+
+    uint32_t GetMaxDevices() const
+    {
+        return this->m_model.maxDevices;
     }
 
     void SetMaxDevices(uint32_t value)
@@ -2231,9 +2726,19 @@ public:
         this->m_model.maxDevices = value;
     }
 
+    uint32_t GetMaxDevicesPerUser() const
+    {
+        return this->m_model.maxDevicesPerUser;
+    }
+
     void SetMaxDevicesPerUser(uint32_t value)
     {
         this->m_model.maxDevicesPerUser = value;
+    }
+
+    uint32_t GetMaxEndpointsPerDevice() const
+    {
+        return this->m_model.maxEndpointsPerDevice;
     }
 
     void SetMaxEndpointsPerDevice(uint32_t value)
@@ -2241,14 +2746,29 @@ public:
         this->m_model.maxEndpointsPerDevice = value;
     }
 
+    uint32_t GetMaxUsers() const
+    {
+        return this->m_model.maxUsers;
+    }
+
     void SetMaxUsers(uint32_t value)
     {
         this->m_model.maxUsers = value;
     }
 
+    uint32_t GetMaxUsersPerDevice() const
+    {
+        return this->m_model.maxUsersPerDevice;
+    }
+
     void SetMaxUsersPerDevice(uint32_t value)
     {
         this->m_model.maxUsersPerDevice = value;
+    }
+
+    std::optional<PFMultiplayerServerPartyInvitationConfigurationWrapper<Alloc>> const& GetPartyInvitationConfiguration() const
+    {
+        return m_partyInvitationConfiguration;
     }
 
     void SetPartyInvitationConfiguration(std::optional<PFMultiplayerServerPartyInvitationConfigurationWrapper<Alloc>> value)
@@ -2283,6 +2803,7 @@ public:
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_networkConfiguration{ model.networkConfiguration ? *model.networkConfiguration : decltype(*model.networkConfiguration){} },
         m_partyId{ SafeString(model.partyId) },
+        m_playFabId{ SafeString(model.playFabId) },
         m_preferredRegions{ model.preferredRegions, model.preferredRegions + model.preferredRegionsCount }
     {
         SetModelPointers();
@@ -2314,9 +2835,15 @@ public:
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_networkConfiguration, rhs.m_networkConfiguration);
         swap(lhs.m_partyId, rhs.m_partyId);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
         swap(lhs.m_preferredRegions, rhs.m_preferredRegions);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2326,16 +2853,42 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    PFMultiplayerServerPartyNetworkConfigurationWrapper<Alloc> const& GetNetworkConfiguration() const
+    {
+        return m_networkConfiguration;
+    }
+
     void SetNetworkConfiguration(PFMultiplayerServerPartyNetworkConfigurationWrapper<Alloc> value)
     {
         m_networkConfiguration = std::move(value);
         this->m_model.networkConfiguration = &m_networkConfiguration.Model();
     }
 
+    String const& GetPartyId() const
+    {
+        return m_partyId;
+    }
+
     void SetPartyId(String value)
     {
         m_partyId = std::move(value);
         this->m_model.partyId =  m_partyId.empty() ? nullptr : m_partyId.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    CStringVector<Alloc> const& GetPreferredRegions() const
+    {
+        return m_preferredRegions;
     }
 
     void SetPreferredRegions(CStringVector<Alloc> value)
@@ -2351,12 +2904,14 @@ private:
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.networkConfiguration = &m_networkConfiguration.Model();
         this->m_model.partyId = m_partyId.empty() ? nullptr : m_partyId.data();
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
         this->m_model.preferredRegions = m_preferredRegions.empty() ? nullptr : m_preferredRegions.data();
     }
 
     StringDictionaryEntryVector<Alloc> m_customTags;
     PFMultiplayerServerPartyNetworkConfigurationWrapper<Alloc> m_networkConfiguration;
     String m_partyId;
+    String m_playFabId;
     CStringVector<Alloc> m_preferredRegions;
 };
 
@@ -2409,16 +2964,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetInvitationId() const
+    {
+        return m_invitationId;
+    }
+
     void SetInvitationId(String value)
     {
         m_invitationId = std::move(value);
         this->m_model.invitationId =  m_invitationId.empty() ? nullptr : m_invitationId.data();
     }
 
+    String const& GetPartyId() const
+    {
+        return m_partyId;
+    }
+
     void SetPartyId(String value)
     {
         m_partyId = std::move(value);
         this->m_model.partyId =  m_partyId.empty() ? nullptr : m_partyId.data();
+    }
+
+    String const& GetSerializedNetworkDescriptor() const
+    {
+        return m_serializedNetworkDescriptor;
     }
 
     void SetSerializedNetworkDescriptor(String value)
@@ -2489,16 +3059,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<time_t> const& GetExpirationDate() const
+    {
+        return m_expirationDate;
+    }
+
     void SetExpirationDate(std::optional<time_t> value)
     {
         m_expirationDate = std::move(value);
         this->m_model.expirationDate = m_expirationDate ? m_expirationDate.operator->() : nullptr;
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    String const& GetValue() const
+    {
+        return m_value;
     }
 
     void SetValue(String value)
@@ -2569,6 +3154,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -2576,10 +3166,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<bool> const& GetForceUpdate() const
+    {
+        return m_forceUpdate;
+    }
+
     void SetForceUpdate(std::optional<bool> value)
     {
         m_forceUpdate = std::move(value);
         this->m_model.forceUpdate = m_forceUpdate ? m_forceUpdate.operator->() : nullptr;
+    }
+
+    PFMultiplayerServerSecretWrapper<Alloc> const& GetGameSecret() const
+    {
+        return m_gameSecret;
     }
 
     void SetGameSecret(PFMultiplayerServerSecretWrapper<Alloc> value)

@@ -60,6 +60,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    CStringVector<Alloc> const& GetKeys() const
+    {
+        return m_keys;
+    }
+
     void SetKeys(CStringVector<Alloc> value)
     {
         m_keys = std::move(value);
@@ -121,6 +126,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(StringDictionaryEntryVector<Alloc> value)
     {
         m_data = std::move(value);
@@ -146,6 +156,11 @@ public:
     template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
 
     using ModelWrapper<PFTitleDataManagementGetTimeResult, Alloc>::ModelWrapper;
+
+    time_t GetTime() const
+    {
+        return this->m_model.time;
+    }
 
     void SetTime(time_t value)
     {
@@ -202,11 +217,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    CStringVector<Alloc> const& GetKeys() const
+    {
+        return m_keys;
+    }
+
     void SetKeys(CStringVector<Alloc> value)
     {
         m_keys = std::move(value);
         this->m_model.keys =  m_keys.empty() ? nullptr : m_keys.data();
         this->m_model.keysCount =  static_cast<uint32_t>(m_keys.size());
+    }
+
+    String const& GetOverrideLabel() const
+    {
+        return m_overrideLabel;
     }
 
     void SetOverrideLabel(String value)
@@ -271,6 +296,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(StringDictionaryEntryVector<Alloc> value)
     {
         m_data = std::move(value);
@@ -330,6 +360,11 @@ public:
         swap(lhs.m_count, rhs.m_count);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<int32_t> const& GetCount() const
+    {
+        return m_count;
     }
 
     void SetCount(std::optional<int32_t> value)
@@ -396,10 +431,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetBody() const
+    {
+        return m_body;
+    }
+
     void SetBody(String value)
     {
         m_body = std::move(value);
         this->m_model.body =  m_body.empty() ? nullptr : m_body.data();
+    }
+
+    String const& GetNewsId() const
+    {
+        return m_newsId;
     }
 
     void SetNewsId(String value)
@@ -408,9 +453,19 @@ public:
         this->m_model.newsId =  m_newsId.empty() ? nullptr : m_newsId.data();
     }
 
+    time_t GetTimestamp() const
+    {
+        return this->m_model.timestamp;
+    }
+
     void SetTimestamp(time_t value)
     {
         this->m_model.timestamp = value;
+    }
+
+    String const& GetTitle() const
+    {
+        return m_title;
     }
 
     void SetTitle(String value)
@@ -477,6 +532,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFTitleDataManagementTitleNewsItemWrapper<Alloc>, Alloc> const& GetNews() const
+    {
+        return m_news;
+    }
+
     void SetNews(ModelVector<PFTitleDataManagementTitleNewsItemWrapper<Alloc>, Alloc> value)
     {
         m_news = std::move(value);
@@ -540,10 +600,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetKey() const
+    {
+        return m_key;
+    }
+
     void SetKey(String value)
     {
         m_key = std::move(value);
         this->m_model.key =  m_key.empty() ? nullptr : m_key.data();
+    }
+
+    String const& GetValue() const
+    {
+        return m_value;
     }
 
     void SetValue(String value)
@@ -610,10 +680,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetKey() const
+    {
+        return m_key;
+    }
+
     void SetKey(String value)
     {
         m_key = std::move(value);
         this->m_model.key =  m_key.empty() ? nullptr : m_key.data();
+    }
+
+    String const& GetValue() const
+    {
+        return m_value;
     }
 
     void SetValue(String value)

@@ -84,6 +84,7 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
     testTitleData.titleId = titleDataJson["titleId"].get<String>();
     testTitleData.secretKey = titleDataJson["secretKey"].get<String>();
     testTitleData.connectionString = titleDataJson["connectionString"].get<String>();
+    testTitleData.azureContainerSasKey = titleDataJson["azureContainerSasKey"].get<String>();
     testTitleData.allowRetries = titleDataJson["allowRetries"].get<bool>();
     testTitleData.runTestList = titleDataJson["runTestList"].get<bool>();
     testTitleData.testList = titleDataJson["testList"].get<Set<String>>();
@@ -135,6 +136,18 @@ void TraceMessage(HCTraceLevel level, String const& message) noexcept
 void Sleep(uint64_t durationMs) noexcept
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(durationMs));
+}
+
+HRESULT InitializeFileSystem(String const& name, Vector<char>& buffer) noexcept
+{
+    UNREFERENCED_PARAMETER(name);
+    UNREFERENCED_PARAMETER(buffer);
+    return S_OK;
+}
+
+void UninitializeFileSystem(String const& name) noexcept
+{
+    UNREFERENCED_PARAMETER(name);
 }
 
 }

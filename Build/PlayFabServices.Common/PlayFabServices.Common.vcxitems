@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Api\PFServices.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\ApiHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\GlobalState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\HttpClient.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\Platform.cpp" />
@@ -25,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Include\Generated\playfab\services\PFServices.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\ApiHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\GlobalState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\HttpClient.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\Platform.h" />

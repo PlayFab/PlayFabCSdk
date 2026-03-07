@@ -33,6 +33,16 @@ enum class PFOperationTypes : uint32_t
 };
 
 /// <summary>
+/// EventType enum.
+/// </summary>
+enum class PFEventType : uint32_t
+{
+    None,
+    Telemetry,
+    PlayStream
+};
+
+/// <summary>
 /// ResetInterval enum.
 /// </summary>
 enum class PFResetInterval : uint32_t

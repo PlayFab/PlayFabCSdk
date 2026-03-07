@@ -26,37 +26,37 @@ private:
     void TestDeleteInventoryCollection(TestContext& testContext);
     void TestDeleteInventoryItems(TestContext& testContext);
     void TestExecuteInventoryOperations(TestContext& testContext);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
     void TestExecuteTransferOperations(TestContext& testContext);
 #endif
     void TestGetInventoryCollectionIds(TestContext& testContext);
     void TestGetInventoryItems(TestContext& testContext);
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
     void TestGetInventoryOperationStatus(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestGetMicrosoftStoreAccessTokens(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestGetTransactionHistory(TestContext& testContext);
 #endif
     void TestPurchaseInventoryItems(TestContext& testContext);
-#if HC_PLATFORM == HC_PLATFORM_IOS
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_IOS
     void TestRedeemAppleAppStoreInventoryItems(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_ANDROID
     void TestRedeemGooglePlayInventoryItems(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestRedeemMicrosoftStoreInventoryItems(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestRedeemNintendoEShopInventoryItems(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestRedeemPlayStationStoreInventoryItems(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestRedeemSteamInventoryItems(TestContext& testContext);
 #endif
     void TestSubtractInventoryItems(TestContext& testContext);

@@ -157,6 +157,58 @@ public:
     static HRESULT Copy(const PFAccountManagementGetPlayerProfileResult& input, PFAccountManagementGetPlayerProfileResult& output, ModelBuffer& buffer);
 };
 
+class GetPlayFabIDsFromBattleNetAccountIdsRequest : public Wrappers::PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsRequest& input);
+};
+
+class BattleNetAccountPlayFabIdPair : public Wrappers::PFAccountManagementBattleNetAccountPlayFabIdPairWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementBattleNetAccountPlayFabIdPair>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementBattleNetAccountPlayFabIdPairWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementBattleNetAccountPlayFabIdPair const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementBattleNetAccountPlayFabIdPair& model);
+    static HRESULT Copy(const PFAccountManagementBattleNetAccountPlayFabIdPair& input, PFAccountManagementBattleNetAccountPlayFabIdPair& output, ModelBuffer& buffer);
+};
+
+class GetPlayFabIDsFromBattleNetAccountIdsResult : public Wrappers::PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResultWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult& model);
+    static HRESULT Copy(const PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult& input, PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult& output, ModelBuffer& buffer);
+};
+
 class GetPlayFabIDsFromFacebookIDsRequest : public Wrappers::PFAccountManagementGetPlayFabIDsFromFacebookIDsRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -573,6 +625,80 @@ public:
     static HRESULT Copy(const PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsResult& input, PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsResult& output, ModelBuffer& buffer);
 };
 
+class OpenIdSubjectIdentifier : public Wrappers::PFAccountManagementOpenIdSubjectIdentifierWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementOpenIdSubjectIdentifier>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementOpenIdSubjectIdentifierWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementOpenIdSubjectIdentifier& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementOpenIdSubjectIdentifier const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementOpenIdSubjectIdentifier& model);
+    static HRESULT Copy(const PFAccountManagementOpenIdSubjectIdentifier& input, PFAccountManagementOpenIdSubjectIdentifier& output, ModelBuffer& buffer);
+};
+
+class GetPlayFabIDsFromOpenIdsRequest : public Wrappers::PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementGetPlayFabIDsFromOpenIdsRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementGetPlayFabIDsFromOpenIdsRequest& input);
+};
+
+class OpenIdSubjectIdentifierPlayFabIdPair : public Wrappers::PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPairWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair& model);
+    static HRESULT Copy(const PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair& input, PFAccountManagementOpenIdSubjectIdentifierPlayFabIdPair& output, ModelBuffer& buffer);
+};
+
+class GetPlayFabIDsFromOpenIdsResult : public Wrappers::PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAccountManagementGetPlayFabIDsFromOpenIdsResult>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementGetPlayFabIDsFromOpenIdsResultWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFAccountManagementGetPlayFabIDsFromOpenIdsResult const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFAccountManagementGetPlayFabIDsFromOpenIdsResult& model);
+    static HRESULT Copy(const PFAccountManagementGetPlayFabIDsFromOpenIdsResult& input, PFAccountManagementGetPlayFabIDsFromOpenIdsResult& output, ModelBuffer& buffer);
+};
+
 class GetPlayFabIDsFromPSNAccountIDsRequest : public Wrappers::PFAccountManagementGetPlayFabIDsFromPSNAccountIDsRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -913,6 +1039,20 @@ public:
     static JsonValue ToJson(const PFAccountManagementLinkAppleRequest& input);
 };
 
+class ClientLinkBattleNetAccountRequest : public Wrappers::PFAccountManagementClientLinkBattleNetAccountRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementClientLinkBattleNetAccountRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementClientLinkBattleNetAccountRequest& input);
+};
+
 class LinkCustomIDRequest : public Wrappers::PFAccountManagementLinkCustomIDRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -1095,10 +1235,10 @@ public:
     static JsonValue ToJson(const PFAccountManagementLinkSteamAccountRequest& input);
 };
 
-class LinkTwitchAccountRequest : public Wrappers::PFAccountManagementLinkTwitchAccountRequestWrapper<Allocator>, public InputModel
+class ClientLinkTwitchAccountRequest : public Wrappers::PFAccountManagementClientLinkTwitchAccountRequestWrapper<Allocator>, public InputModel
 {
 public:
-    using ModelWrapperType = typename Wrappers::PFAccountManagementLinkTwitchAccountRequestWrapper<Allocator>;
+    using ModelWrapperType = typename Wrappers::PFAccountManagementClientLinkTwitchAccountRequestWrapper<Allocator>;
     using ModelWrapperType::ModelType;
 
     // Constructors
@@ -1106,7 +1246,7 @@ public:
 
     // InputModel
     JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFAccountManagementLinkTwitchAccountRequest& input);
+    static JsonValue ToJson(const PFAccountManagementClientLinkTwitchAccountRequest& input);
 };
 
 class ClientLinkXboxAccountRequest : public Wrappers::PFAccountManagementClientLinkXboxAccountRequestWrapper<Allocator>, public InputModel
@@ -1212,6 +1352,20 @@ public:
     static JsonValue ToJson(const PFAccountManagementUnlinkAppleRequest& input);
 };
 
+class ClientUnlinkBattleNetAccountRequest : public Wrappers::PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementClientUnlinkBattleNetAccountRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementClientUnlinkBattleNetAccountRequest& input);
+};
+
 class UnlinkCustomIDRequest : public Wrappers::PFAccountManagementUnlinkCustomIDRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -1226,10 +1380,10 @@ public:
     static JsonValue ToJson(const PFAccountManagementUnlinkCustomIDRequest& input);
 };
 
-class UnlinkFacebookAccountRequest : public Wrappers::PFAccountManagementUnlinkFacebookAccountRequestWrapper<Allocator>, public InputModel
+class ClientUnlinkFacebookAccountRequest : public Wrappers::PFAccountManagementClientUnlinkFacebookAccountRequestWrapper<Allocator>, public InputModel
 {
 public:
-    using ModelWrapperType = typename Wrappers::PFAccountManagementUnlinkFacebookAccountRequestWrapper<Allocator>;
+    using ModelWrapperType = typename Wrappers::PFAccountManagementClientUnlinkFacebookAccountRequestWrapper<Allocator>;
     using ModelWrapperType::ModelType;
 
     // Constructors
@@ -1237,13 +1391,13 @@ public:
 
     // InputModel
     JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFAccountManagementUnlinkFacebookAccountRequest& input);
+    static JsonValue ToJson(const PFAccountManagementClientUnlinkFacebookAccountRequest& input);
 };
 
-class UnlinkFacebookInstantGamesIdRequest : public Wrappers::PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper<Allocator>, public InputModel
+class ClientUnlinkFacebookInstantGamesIdRequest : public Wrappers::PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper<Allocator>, public InputModel
 {
 public:
-    using ModelWrapperType = typename Wrappers::PFAccountManagementUnlinkFacebookInstantGamesIdRequestWrapper<Allocator>;
+    using ModelWrapperType = typename Wrappers::PFAccountManagementClientUnlinkFacebookInstantGamesIdRequestWrapper<Allocator>;
     using ModelWrapperType::ModelType;
 
     // Constructors
@@ -1251,7 +1405,7 @@ public:
 
     // InputModel
     JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFAccountManagementUnlinkFacebookInstantGamesIdRequest& input);
+    static JsonValue ToJson(const PFAccountManagementClientUnlinkFacebookInstantGamesIdRequest& input);
 };
 
 class UnlinkGameCenterAccountRequest : public Wrappers::PFAccountManagementUnlinkGameCenterAccountRequestWrapper<Allocator>, public InputModel
@@ -1394,10 +1548,10 @@ public:
     static JsonValue ToJson(const PFAccountManagementUnlinkSteamAccountRequest& input);
 };
 
-class UnlinkTwitchAccountRequest : public Wrappers::PFAccountManagementUnlinkTwitchAccountRequestWrapper<Allocator>, public InputModel
+class ClientUnlinkTwitchAccountRequest : public Wrappers::PFAccountManagementClientUnlinkTwitchAccountRequestWrapper<Allocator>, public InputModel
 {
 public:
-    using ModelWrapperType = typename Wrappers::PFAccountManagementUnlinkTwitchAccountRequestWrapper<Allocator>;
+    using ModelWrapperType = typename Wrappers::PFAccountManagementClientUnlinkTwitchAccountRequestWrapper<Allocator>;
     using ModelWrapperType::ModelType;
 
     // Constructors
@@ -1405,7 +1559,7 @@ public:
 
     // InputModel
     JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFAccountManagementUnlinkTwitchAccountRequest& input);
+    static JsonValue ToJson(const PFAccountManagementClientUnlinkTwitchAccountRequest& input);
 };
 
 class ClientUnlinkXboxAccountRequest : public Wrappers::PFAccountManagementClientUnlinkXboxAccountRequestWrapper<Allocator>, public InputModel
@@ -1667,6 +1821,20 @@ public:
     static HRESULT Copy(const PFAccountManagementGetUserBansResult& input, PFAccountManagementGetUserBansResult& output, ModelBuffer& buffer);
 };
 
+class ServerLinkBattleNetAccountRequest : public Wrappers::PFAccountManagementServerLinkBattleNetAccountRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementServerLinkBattleNetAccountRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementServerLinkBattleNetAccountRequest& input);
+};
+
 class ServerLinkNintendoServiceAccountRequest : public Wrappers::PFAccountManagementServerLinkNintendoServiceAccountRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -1765,6 +1933,20 @@ public:
     static JsonValue ToJson(const PFAccountManagementLinkSteamIdRequest& input);
 };
 
+class ServerLinkTwitchAccountRequest : public Wrappers::PFAccountManagementServerLinkTwitchAccountRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementServerLinkTwitchAccountRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementServerLinkTwitchAccountRequest& input);
+};
+
 class ServerLinkXboxAccountRequest : public Wrappers::PFAccountManagementServerLinkXboxAccountRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -1777,6 +1959,20 @@ public:
     // InputModel
     JsonValue ToJson() const override;
     static JsonValue ToJson(const PFAccountManagementServerLinkXboxAccountRequest& input);
+};
+
+class LinkXboxIdRequest : public Wrappers::PFAccountManagementLinkXboxIdRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementLinkXboxIdRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementLinkXboxIdRequest& input);
 };
 
 class RevokeAllBansForUserRequest : public Wrappers::PFAccountManagementRevokeAllBansForUserRequestWrapper<Allocator>, public InputModel
@@ -1873,6 +2069,48 @@ public:
     static JsonValue ToJson(const PFAccountManagementSendEmailFromTemplateRequest& input);
 };
 
+class ServerUnlinkBattleNetAccountRequest : public Wrappers::PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementServerUnlinkBattleNetAccountRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementServerUnlinkBattleNetAccountRequest& input);
+};
+
+class ServerUnlinkFacebookAccountRequest : public Wrappers::PFAccountManagementServerUnlinkFacebookAccountRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementServerUnlinkFacebookAccountRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementServerUnlinkFacebookAccountRequest& input);
+};
+
+class ServerUnlinkFacebookInstantGamesIdRequest : public Wrappers::PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest& input);
+};
+
 class ServerUnlinkNintendoServiceAccountRequest : public Wrappers::PFAccountManagementServerUnlinkNintendoServiceAccountRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -1941,6 +2179,20 @@ public:
     // InputModel
     JsonValue ToJson() const override;
     static JsonValue ToJson(const PFAccountManagementUnlinkSteamIdRequest& input);
+};
+
+class ServerUnlinkTwitchAccountRequest : public Wrappers::PFAccountManagementServerUnlinkTwitchAccountRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAccountManagementServerUnlinkTwitchAccountRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAccountManagementServerUnlinkTwitchAccountRequest& input);
 };
 
 class ServerUnlinkXboxAccountRequest : public Wrappers::PFAccountManagementServerUnlinkXboxAccountRequestWrapper<Allocator>, public InputModel
