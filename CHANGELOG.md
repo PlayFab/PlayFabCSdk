@@ -2,6 +2,12 @@
 
 ## 2510 Release
 
+### March 2026
+
+#### Build Improvements
+- Added `_GAMING_DESKTOP` preprocessor define and DirectX link libraries (`d3d12.lib`, `dxgi.lib`, `dxguid.lib`) to `PlayFab.C.GDK.props` for the x64 platform, since the GDK toolchain no longer provides these automatically after the migration from `Gaming.Desktop.x64` to `x64`
+- Excluded PlayFabCore.UnitTests from x64 solution build configuration (Win32-only project incompatible with GDK-mapped x64 platform)
+
 ### November 2025
 
 #### Build Improvements

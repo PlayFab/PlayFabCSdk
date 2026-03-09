@@ -147,7 +147,7 @@ git submodule update --init --recursive
 
 After cloning this repository and its submodules, you can build the libraries by opening the solution file PlayFab.C.vs2022.sln. That solution contains the PlayFabServices project, its dependencies, and a test app. After building, the binaries will be in a subdirectory within \Out.
 
-> __Note__: As of the 2510 release, the Win32-specific build projects have been removed. The GDK build projects (e.g. PlayFabCore.GDK, PlayFabServices.GDK) now target both Xbox and Windows desktop via the `Gaming.Desktop.x64` platform configuration.
+> __Note__: As of the 2510 release, the Win32-specific build projects have been removed. The GDK build projects (e.g. PlayFabCore.GDK, PlayFabServices.GDK) now target both Xbox and Windows desktop via the `x64` platform configuration. The `_GAMING_DESKTOP` define and DirectX link libraries are added automatically by `PlayFab.C.GDK.props`. Note that PlayFabCore.UnitTests is excluded from the x64 solution build since it is a Win32-only project.
 
 To build the PlayFabGameSave library (GDK only), open PlayFabGameSave.C.GDK.vs2022.sln. This solution contains the PlayFabGameSave project along with its dependencies (PlayFabCore, PlayFabServices, libarchive, zlib) and a GDK test app.
 
