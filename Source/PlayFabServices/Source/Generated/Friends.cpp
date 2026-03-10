@@ -15,7 +15,7 @@ AsyncOp<AddFriendResult> FriendsAPI::ClientAddFriend(
 )
 {
     const char* path{ "/Client/AddFriend" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::FriendsClientAddFriend,
@@ -51,7 +51,7 @@ AsyncOp<GetFriendsListResult> FriendsAPI::ClientGetFriendsList(
 )
 {
     const char* path{ "/Client/GetFriendsList" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::FriendsClientGetFriendsList,
@@ -87,7 +87,7 @@ AsyncOp<void> FriendsAPI::ClientRemoveFriend(
 )
 {
     const char* path{ "/Client/RemoveFriend" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::FriendsClientRemoveFriend,
@@ -120,7 +120,7 @@ AsyncOp<void> FriendsAPI::ClientSetFriendTags(
 )
 {
     const char* path{ "/Client/SetFriendTags" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::FriendsClientSetFriendTags,
@@ -153,7 +153,7 @@ AsyncOp<void> FriendsAPI::ServerAddFriend(
 )
 {
     const char* path{ "/Server/AddFriend" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::FriendsServerAddFriend,
@@ -186,7 +186,7 @@ AsyncOp<GetFriendsListResult> FriendsAPI::ServerGetFriendsList(
 )
 {
     const char* path{ "/Server/GetFriendsList" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::FriendsServerGetFriendsList,
@@ -221,7 +221,7 @@ AsyncOp<void> FriendsAPI::ServerRemoveFriend(
 )
 {
     const char* path{ "/Server/RemoveFriend" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::FriendsServerRemoveFriend,
@@ -254,7 +254,7 @@ AsyncOp<void> FriendsAPI::ServerSetFriendTags(
 )
 {
     const char* path{ "/Server/SetFriendTags" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::FriendsServerSetFriendTags,

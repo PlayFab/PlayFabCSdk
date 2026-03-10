@@ -15,6 +15,12 @@ HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestByte
 {
     Clear();
 
+    if (manifestBytes.empty())
+    {
+        TRACE_ERROR("[GAME SAVE] InitWithExtendedManifest: manifestBytes is empty");
+        return E_INVALIDARG;
+    }
+
     JsonValue jsonBase;
     bool parseError = false;
     String parseErrorMsg;
@@ -23,15 +29,33 @@ HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestByte
     {
         String manifestString(manifestBytes.data(), manifestBytes.size());
         bool isEmpty = (std::all_of(manifestString.begin(), manifestString.end(), [](char c) { return c == '\0'; }));
-        jsonBase = !isEmpty ? JsonValue::parse(manifestString) : "";
+        if (isEmpty)
+        {
+            TRACE_ERROR("[GAME SAVE] InitWithExtendedManifest: manifest content is all null bytes");
+            return E_INVALIDARG;
+        }
+        
+        jsonBase = JsonValue::parse(manifestString);
     }
     catch (const JsonValue::parse_error& e)
     {
         parseErrorMsg = e.what();
         parseError = true;
+        TRACE_ERROR("[GAME SAVE] InitWithExtendedManifest: JSON parse error: %s", parseErrorMsg.c_str());
     }
 
-    if (!parseError && jsonBase.contains("v1"))
+    if (parseError)
+    {
+        return E_FAIL;
+    }
+
+    if (!jsonBase.contains("v1"))
+    {
+        TRACE_ERROR("[GAME SAVE] InitWithExtendedManifest: JSON does not contain 'v1' key");
+        return E_FAIL;
+    }
+
+    if (jsonBase.contains("v1"))
     {
         auto& json = jsonBase["v1"];
 
@@ -157,7 +181,7 @@ void ExtendedManifest::CreateNestedStructure(const SharedPtr<FileFolderSet>& loc
 
 JsonValue ExtendedManifest::CreateNestedFolderJson(const SharedPtr<FileFolderSet>& localFileFolderSet, const String& parentPath, const String& folderName, ExtendedManifestNestedFolder& nestedFolder)
 {
-    JsonValue foldersJson{ JsonValue::object() };
+    JsonValue foldersJson = JsonValue::object();
     if (!folderName.empty())
     {
         JoinPathHelper(parentPath, folderName, nestedFolder.relFolderPath);
@@ -185,7 +209,7 @@ JsonValue ExtendedManifest::CreateNestedFolderJson(const SharedPtr<FileFolderSet
     JsonUtils::ObjectAddMember(foldersJson, "Name", folderName);
     JsonUtils::ObjectAddMember(foldersJson, "Id", nestedFolder.folderId);
 
-    JsonValue subfoldersJsonArray{ JsonValue::array() };
+    JsonValue subfoldersJsonArray = JsonValue::array();
     for (auto& subfolder : nestedFolder.subfolders)
     {
         JsonValue subfolderJson = CreateNestedFolderJson(localFileFolderSet, nestedFolder.relFolderPath, subfolder.first, subfolder.second);
@@ -249,7 +273,7 @@ Result<String> ExtendedManifest::WriteExtendedManifest(
 
     Set<String> folderIdsInFiles;
 
-    JsonValue fileJsonArray{ JsonValue::array() };
+    JsonValue fileJsonArray = JsonValue::array();
     int32_t numCompressedFiles = (int32_t)compressedFilesToUpload.size();
     if (compressedIncludesExtendedManifest)
     {
@@ -258,19 +282,19 @@ Result<String> ExtendedManifest::WriteExtendedManifest(
     for (int32_t i = 0; i < (int32_t)numCompressedFiles; ++i)
     {
         const ExtendedManifestCompressedFileDetail& compressedFile = compressedFilesToUpload[i];
-        JsonValue jsonObj{ JsonValue::object() };
+        JsonValue jsonObj = JsonValue::object();
         WriteCompressedFileJson(jsonObj, compressedFile, nested, folderIdsInFiles);
         fileJsonArray.push_back(jsonObj);
     }
 
     for (size_t compressedFileIndex : compressedFilesToKeep)
     {
-        JsonValue jsonObj{ JsonValue::object() };
+        JsonValue jsonObj = JsonValue::object();
         WriteCompressedFileIndexJson(jsonObj, compressedFileIndex, remoteFileFolderSet, nested, folderIdsInFiles);
         fileJsonArray.push_back(jsonObj);
     }
 
-    JsonValue v1Json{ JsonValue::object() };
+    JsonValue v1Json = JsonValue::object();
     JsonUtils::ObjectAddMember(v1Json, "Files", std::move(fileJsonArray));
     if (foldersRootJson.contains("Folders")) // Don't write out root folder into ext manifest, just the subfolders
     {
@@ -301,7 +325,7 @@ Result<String> ExtendedManifest::WriteExtendedManifest(
         }
     }
 
-    JsonValue rootJson{ JsonValue::object() };
+    JsonValue rootJson = JsonValue::object();
     JsonUtils::ObjectAddMember(rootJson, "v1", std::move(v1Json));
 
     return JsonUtils::WriteToString(rootJson);
@@ -342,14 +366,14 @@ void ExtendedManifest::WriteCompressedFileIndexJson(JsonValue& jsonObj, size_t c
     JsonUtils::ObjectAddMember(jsonObj, "Compression", ConvertCompressionToString(compressedFile.compression));
 
     const Vector<FileDetail>& files = remoteFileFolderSet->GetFiles();
-    JsonValue extractedFilesJsonArray{ JsonValue::array() };
+    JsonValue extractedFilesJsonArray = JsonValue::array();
     for (const FileDetail& file : files)
     {
         if (file.compressedFileIndex != compressedFileIndex)
         {
             continue; // skip any files that aren't part of this zip
         }
-        JsonValue jsonFileObj{ JsonValue::object() };
+        JsonValue jsonFileObj = JsonValue::object();
         JsonUtils::ObjectAddMember(jsonFileObj, "Name", file.fileName);
         JsonUtils::ObjectAddMember(jsonFileObj, "FileId", file.fileId);
         const FolderDetail& folderDetail = remoteFileFolderSet->GetFileFolder(&file);
@@ -384,10 +408,10 @@ void ExtendedManifest::WriteCompressedFileJson(JsonValue& jsonObj, const Extende
     JsonUtils::ObjectAddMember(jsonObj, "LastModified", TimeTToIso8601String(compressedFile.timeLastModified));
     JsonUtils::ObjectAddMember(jsonObj, "Compression", ConvertCompressionToString(compressedFile.compression));
 
-    JsonValue extractedFilesJsonArray{ JsonValue::array() };
+    JsonValue extractedFilesJsonArray = JsonValue::array();
     for (const ExtendedManifestExtractedFileDetail& extractedFileDetail : compressedFile.extractedFiles)
     {
-        JsonValue jsonFileObj{ JsonValue::object() };
+        JsonValue jsonFileObj = JsonValue::object();
         JsonUtils::ObjectAddMember(jsonFileObj, "Name", extractedFileDetail.fileName);
         JsonUtils::ObjectAddMember(jsonFileObj, "FileId", extractedFileDetail.fileId);
         String folderId = GetFolderId(nested, extractedFileDetail.relFolderPath);

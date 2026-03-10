@@ -15,7 +15,7 @@ AsyncOp<GetLanguageListResponse> LocalizationAPI::GetLanguageList(
 )
 {
     const char* path{ "/Locale/GetLanguageList" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LocalizationGetLanguageList,

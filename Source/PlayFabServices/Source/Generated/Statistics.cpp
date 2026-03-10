@@ -15,7 +15,7 @@ AsyncOp<void> StatisticsAPI::CreateStatisticDefinition(
 )
 {
     const char* path{ "/Statistic/CreateStatisticDefinition" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsCreateStatisticDefinition,
@@ -48,7 +48,7 @@ AsyncOp<void> StatisticsAPI::DeleteStatisticDefinition(
 )
 {
     const char* path{ "/Statistic/DeleteStatisticDefinition" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsDeleteStatisticDefinition,
@@ -81,7 +81,7 @@ AsyncOp<DeleteStatisticsResponse> StatisticsAPI::DeleteStatistics(
 )
 {
     const char* path{ "/Statistic/DeleteStatistics" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsDeleteStatistics,
@@ -116,7 +116,7 @@ AsyncOp<GetStatisticDefinitionResponse> StatisticsAPI::GetStatisticDefinition(
 )
 {
     const char* path{ "/Statistic/GetStatisticDefinition" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsGetStatisticDefinition,
@@ -151,7 +151,7 @@ AsyncOp<GetStatisticsResponse> StatisticsAPI::GetStatistics(
 )
 {
     const char* path{ "/Statistic/GetStatistics" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsGetStatistics,
@@ -186,7 +186,7 @@ AsyncOp<GetStatisticsForEntitiesResponse> StatisticsAPI::GetStatisticsForEntitie
 )
 {
     const char* path{ "/Statistic/GetStatisticsForEntities" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsGetStatisticsForEntities,
@@ -221,7 +221,7 @@ AsyncOp<IncrementStatisticVersionResponse> StatisticsAPI::IncrementStatisticVers
 )
 {
     const char* path{ "/Statistic/IncrementStatisticVersion" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsIncrementStatisticVersion,
@@ -256,7 +256,7 @@ AsyncOp<ListStatisticDefinitionsResponse> StatisticsAPI::ListStatisticDefinition
 )
 {
     const char* path{ "/Statistic/ListStatisticDefinitions" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsListStatisticDefinitions,
@@ -291,7 +291,7 @@ AsyncOp<void> StatisticsAPI::UnlinkAggregationSourceFromStatistic(
 )
 {
     const char* path{ "/Statistic/UnlinkAggregationSourceFromStatistic" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsUnlinkAggregationSourceFromStatistic,
@@ -324,7 +324,7 @@ AsyncOp<void> StatisticsAPI::UpdateStatisticDefinition(
 )
 {
     const char* path{ "/Statistic/UpdateStatisticDefinition" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsUpdateStatisticDefinition,
@@ -357,7 +357,7 @@ AsyncOp<UpdateStatisticsResponse> StatisticsAPI::UpdateStatistics(
 )
 {
     const char* path{ "/Statistic/UpdateStatistics" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::StatisticsUpdateStatistics,

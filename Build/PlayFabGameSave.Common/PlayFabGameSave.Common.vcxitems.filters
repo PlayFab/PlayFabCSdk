@@ -135,12 +135,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\SetSaveDescriptionStep.cpp">
       <Filter>Source\SyncManager</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\Metadata_Win32.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\Metadata_GDK.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\stdafx.h">

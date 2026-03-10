@@ -18,6 +18,37 @@ PF_API PFServiceConfigCreateHandle(
         RETURN_HR_INVALIDARG_IF_NULL(titleId);
         RETURN_HR_INVALIDARG_IF_NULL(serviceConfigHandle);
 
+        // Additional validation of apiEndpoint
+        // 1. Must start with "http://" or "https://" (case-insensitive for scheme)
+        // 2. Basic minimum length (scheme + 1 char) => 8 for "http://" + 'a'
+        // If any requirement fails, return E_INVALIDARG.
+        {
+            const char* endpoint = apiEndpoint;
+            size_t endpointLen = strlen(endpoint);
+            constexpr size_t schemeHttpLen = sizeof("http://") - 1;   // 7
+            // Minimum length: shortest scheme + 1 host char
+            constexpr size_t kMinLength = schemeHttpLen + 1; 
+            RETURN_HR_IF(E_INVALIDARG, endpointLen < kMinLength);
+
+            auto istartsWith = [&](const char* prefix)
+            {
+                size_t prefixLen = strlen(prefix);
+                    if (endpointLen < prefixLen) return false;
+                for (size_t i = 0; i < prefixLen; ++i)
+                {
+                    char a = endpoint[i];
+                    char b = prefix[i];
+                    if (a >= 'A' && a <= 'Z') a = static_cast<char>(a - 'A' + 'a');
+                    // prefix is already lowercase
+                    if (a != b) return false;
+                }
+                return true;
+            };
+
+            bool hasValidScheme = istartsWith("http://") || istartsWith("https://");
+            RETURN_HR_IF(E_INVALIDARG, !hasValidScheme);
+        }
+
         auto serviceConfig = MakeShared<PlayFab::ServiceConfig>(apiEndpoint, titleId, state.HttpRetrySettings(), state.HttpSettings());
         return state.ServiceConfigs().MakeHandle(std::move(serviceConfig), *serviceConfigHandle);
     });

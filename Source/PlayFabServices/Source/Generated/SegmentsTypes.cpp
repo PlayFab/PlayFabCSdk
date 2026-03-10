@@ -122,7 +122,7 @@ JsonValue GetPlayerTagsRequest::ToJson() const
 
 JsonValue GetPlayerTagsRequest::ToJson(const PFSegmentsGetPlayerTagsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Namespace", input.playfabNamespace);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
@@ -190,7 +190,7 @@ JsonValue AddPlayerTagRequest::ToJson() const
 
 JsonValue AddPlayerTagRequest::ToJson(const PFSegmentsAddPlayerTagRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember(output, "TagName", input.tagName);
@@ -245,7 +245,7 @@ JsonValue GetPlayersSegmentsRequest::ToJson() const
 
 JsonValue GetPlayersSegmentsRequest::ToJson(const PFSegmentsGetPlayersSegmentsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     return output;
@@ -258,7 +258,7 @@ JsonValue GetPlayersInSegmentRequest::ToJson() const
 
 JsonValue GetPlayersInSegmentRequest::ToJson(const PFSegmentsGetPlayersInSegmentRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "GetProfilesAsync", input.getProfilesAsync);
@@ -1049,7 +1049,7 @@ JsonValue RemovePlayerTagRequest::ToJson() const
 
 JsonValue RemovePlayerTagRequest::ToJson(const PFSegmentsRemovePlayerTagRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember(output, "TagName", input.tagName);

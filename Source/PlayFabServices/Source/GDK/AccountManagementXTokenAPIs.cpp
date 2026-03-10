@@ -22,7 +22,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkXboxAccount(
         RETURN_IF_FAILED_PLAYFAB(result);
 
         const char* path{ "/Client/LinkXboxAccount" };
-        JsonValue requestBody{ request.ToJson() };
+        JsonValue requestBody = request.ToJson();
         JsonUtils::ObjectAddMember(requestBody, "XboxToken", result.ExtractPayload().token);
 
         return ServicesHttpClient::MakeEntityRequest(

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{3e794b0d-a722-463c-909e-080d0130f2c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{5de2a984-6a2d-4e8c-afb5-f26dbbd0ae84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Api">
+      <UniqueIdentifier>{86f10500-7bbf-41f6-9360-0579bf511929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common">
+      <UniqueIdentifier>{cf44a0dc-3f6e-45d6-bfbc-8b687dadd7c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\playfab">
+      <UniqueIdentifier>{3883be85-6cec-4adf-9816-40a0f7a3f126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\playfab\gamesave">
+      <UniqueIdentifier>{7ce864de-b580-485b-a5de-959cb7c3be1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Types">
+      <UniqueIdentifier>{4c974d71-207d-44bd-bbdd-19ab4386e967}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{1acb61fe-cec6-47d4-8baf-5d757f70f52b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform\GDK">
+      <UniqueIdentifier>{99788148-70cc-4879-a70c-894483d425b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform\Windows">
+      <UniqueIdentifier>{0831644c-85c7-47fa-ad40-8eca5d250c6e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Platform\GDK\Metadata_GDK.cpp">
+      <Filter>Source\Common</Filter>
+  </ClCompile>
+  </ItemGroup>
+</Project>

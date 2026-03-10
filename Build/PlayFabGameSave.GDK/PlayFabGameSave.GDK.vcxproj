@@ -13,6 +13,7 @@
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.import.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.Common\PlayFabGameSave.Common.vcxitems" Label="Shared" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.GDK\PlayFabGameSave.GDK.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.ServiceWrappers\PlayFabGameSave.ServiceWrappers.vcxitems" Label="Shared" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 

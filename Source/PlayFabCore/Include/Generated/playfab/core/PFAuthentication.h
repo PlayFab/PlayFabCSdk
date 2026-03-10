@@ -1783,7 +1783,6 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Signs the user in using a Xbox Live Token, returning a session identifier that can subsequently be
 /// used for API calls which require an authenticated user. If possible, PFAuthenticationLoginWithXUserAsync
@@ -1794,7 +1793,7 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Windows, Linux, and macOS.
+/// This API is available on all platforms.
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationLoginWithXboxGetResult"/>
 /// to get the result.
 /// </remarks>
@@ -1868,7 +1867,6 @@ PF_API PFAuthenticationReLoginWithXboxAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept;
 
-#endif
 
 #if 0
 /// <summary>

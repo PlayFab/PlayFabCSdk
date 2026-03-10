@@ -8,6 +8,42 @@
 - Added `_GAMING_DESKTOP` preprocessor define and DirectX link libraries (`d3d12.lib`, `dxgi.lib`, `dxguid.lib`) to `PlayFab.C.GDK.props` for the x64 platform, since the GDK toolchain no longer provides these automatically after the migration from `Gaming.Desktop.x64` to `x64`
 - Excluded PlayFabCore.UnitTests from x64 solution build configuration (Win32-only project incompatible with GDK-mapped x64 platform)
 
+### February 2026 (QFE2)
+
+#### GameSave Bug Fixes
+- Fixed save conflict where local `PFGameSaveDescriptor.time` was often incorrect
+- Fixed `PFGameSaveFilesSetSaveDescriptionResult` returning `E_FAIL` when called offline on SteamDeck
+- Fixed `PFGameSaveFilesAddUserWithUiAsync` returning `E_PF_GAMESAVE_USER_ALREADY_ADDED` when reconnecting from offline mode
+- Fixed crash after clicking Continue Offline with disconnected network on SteamDeck
+- Fixed `PFGameSaveFilesSetSaveDescriptionAsync` hang when called offline on SteamDeck
+- Fixed incorrect timestamps when syncing between inproc and GRTS-based devices
+- Fixed LockStep reusing stale pending manifest when finalized version has advanced
+- Fixed GRTS save folder initialization failure when directory doesn't exist or path lacks trailing backslash
+- Fixed `PFGameSaveDescriptor.shortSaveDescription` contents being garbage on SteamDeck
+- Fixed download of many small files not working with inproc provider
+- Fixed upload progress reports using uncompressed sizes, which could cause corruption
+- Fixed inproc cancel from progress dialog causing assert failure
+- Fixed cleanup not happening properly if init fails with invalid argument
+- Fixed unexpected device-contention callback invocation
+
+#### GameSave Improvements
+- Added better error handling throughout PFGameSaves
+- Added logging to GRTS provider for better debugging
+- Hooked up rollback flags for inproc client
+- Made Steam SDK optional for Game Save sample
+- Updated SDK sample to show thumbnails during UI conflict dialog
+- Cleaned up platform-dependent code in common folder
+
+#### API Updates
+- Extended `PFAuthenticationLoginWithXboxAsync` and other Xbox-related authentication functions to all client platforms
+- Updated to latest service API definitions (Inventory, Catalog, AccountManagement, and others)
+
+#### Build Improvements
+- Fixed nlohmann JSON brace initialization issue
+- Fixed compiler warnings and improved build compatibility for new platforms
+- Updated Android build dependencies
+- Updated SDK version to 2510.2.0
+
 ### November 2025
 
 #### Build Improvements

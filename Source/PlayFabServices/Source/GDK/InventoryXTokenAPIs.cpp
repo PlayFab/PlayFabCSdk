@@ -22,7 +22,7 @@ AsyncOp<RedeemMicrosoftStoreInventoryItemsResponse> InventoryAPI::RedeemMicrosof
         RETURN_IF_FAILED_PLAYFAB(result);
 
         const char* path{ "/Inventory/RedeemMicrosoftStoreInventoryItems" };
-        JsonValue requestBody{ request.ToJson() };
+        JsonValue requestBody = request.ToJson();
         JsonUtils::ObjectAddMember(requestBody, "XboxToken", result.ExtractPayload().token);
         
         return ServicesHttpClient::MakeEntityRequest(

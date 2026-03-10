@@ -43,10 +43,6 @@ public:
     Result<PFStringDictionaryEntry const*> CopyToDictionary(PFStringDictionaryEntry const* input, size_t inputCount);
 
 private:
-#if _DEBUG
-    char* const m_buffer;
-    size_t const m_bufferSize;
-#endif
     void* m_bufferPtr;
     size_t m_remaining;
 };

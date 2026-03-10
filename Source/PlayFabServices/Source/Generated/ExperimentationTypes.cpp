@@ -15,7 +15,7 @@ JsonValue GetTreatmentAssignmentRequest::ToJson() const
 
 JsonValue GetTreatmentAssignmentRequest::ToJson(const PFExperimentationGetTreatmentAssignmentRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;

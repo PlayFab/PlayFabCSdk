@@ -33,8 +33,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\GameSavePlatform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\GameSaveTelemetryManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\GameSaveUICallbackInfo.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\Metadata_Win32.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\Metadata_GDK.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\ProgressHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\UICallbackManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Common\Utils.cpp" />

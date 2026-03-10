@@ -15,7 +15,7 @@ JsonValue ExecuteCloudScriptRequest::ToJson() const
 
 JsonValue ExecuteCloudScriptRequest::ToJson(const PFCloudScriptExecuteCloudScriptRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "FunctionName", input.functionName);
     JsonUtils::ObjectAddMember(output, "FunctionParameter", input.functionParameter);
@@ -285,7 +285,7 @@ JsonValue ExecuteCloudScriptServerRequest::ToJson() const
 
 JsonValue ExecuteCloudScriptServerRequest::ToJson(const PFCloudScriptExecuteCloudScriptServerRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "FunctionName", input.functionName);
     JsonUtils::ObjectAddMember(output, "FunctionParameter", input.functionParameter);
@@ -303,7 +303,7 @@ JsonValue ExecuteEntityCloudScriptRequest::ToJson() const
 
 JsonValue ExecuteEntityCloudScriptRequest::ToJson(const PFCloudScriptExecuteEntityCloudScriptRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "FunctionName", input.functionName);
@@ -321,7 +321,7 @@ JsonValue ExecuteFunctionRequest::ToJson() const
 
 JsonValue ExecuteFunctionRequest::ToJson(const PFCloudScriptExecuteFunctionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "FunctionName", input.functionName);
@@ -500,7 +500,7 @@ JsonValue ListFunctionsRequest::ToJson() const
 
 JsonValue ListFunctionsRequest::ToJson(const PFCloudScriptListFunctionsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
@@ -619,7 +619,7 @@ JsonValue RegisterEventHubFunctionRequest::ToJson() const
 
 JsonValue RegisterEventHubFunctionRequest::ToJson(const PFCloudScriptRegisterEventHubFunctionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ConnectionString", input.connectionString);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "EventHubName", input.eventHubName);

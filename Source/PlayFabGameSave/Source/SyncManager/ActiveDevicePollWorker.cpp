@@ -17,14 +17,27 @@ bool ActiveDevicePollWorker::s_debugForceChange = false;
 #if _DEBUG 
 extern "C" PF_API_ATTRIBUTES HRESULT PFGameSaveFilesSetActiveDevicePollForceChangeForDebug()
 {
+    TRACE_INFORMATION("[GAME SAVE] PFGameSaveFilesSetActiveDevicePollForceChangeForDebug called");
     ActiveDevicePollWorker::SetActiveDevicePollForceChange(true);
     return S_OK;
 }
 
 extern "C" PF_API_ATTRIBUTES HRESULT PFGameSaveFilesSetActiveDevicePollIntervalForDebug(uint32_t interval)
 {
+    TRACE_INFORMATION("[GAME SAVE] PFGameSaveFilesSetActiveDevicePollIntervalForDebug called with interval=%ums", interval);
     ActiveDevicePollWorker::SetInterval(interval);
     return S_OK;
+}
+#else
+extern "C" PF_API_ATTRIBUTES HRESULT PFGameSaveFilesSetActiveDevicePollForceChangeForDebug()
+{
+    return E_NOTIMPL;
+}
+
+extern "C" PF_API_ATTRIBUTES HRESULT PFGameSaveFilesSetActiveDevicePollIntervalForDebug(uint32_t interval)
+{
+    UNREFERENCED_PARAMETER(interval);
+    return E_NOTIMPL;
 }
 #endif
 
@@ -48,6 +61,7 @@ SharedPtr<ActiveDevicePollWorker> ActiveDevicePollWorker::MakeAndStart(
     _In_ RunContext&& rc
 ) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] ActiveDevicePollWorker::MakeAndStart - starting with interval=%ums", s_interval);
     Allocator<ActiveDevicePollWorker> a;
     SharedPtr<ActiveDevicePollWorker> worker{ new (a.allocate(1)) ActiveDevicePollWorker{ entity, localUser, std::move(rc) }, Deleter<ActiveDevicePollWorker>{}, a };
 
@@ -112,9 +126,22 @@ HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
             }
             else
             {
-                // no latestPendingManifest means another device has taken the active device, uploaded and released the active device
-                deviceIdChanged = true;
-                latestPendingManifest = &latestFinalizedPFManifest; // treat the latestFinalizedPFManifest as the last pending for purposes of this function
+                // no latestPendingManifest means either:
+                // 1. Local device finalized and released (voluntarily) - no callback needed
+                // 2. Another device took active, finalized, and released within polling period - callback needed
+                // 3. No sync has ever happened (empty state) - no callback needed
+                //
+                // Distinguish by checking who finalized the latest manifest
+                if (latestFinalizedPFManifest.GetMetadata().has_value())
+                {
+                    const String& latestFinalizedDeviceId = latestFinalizedPFManifest.GetMetadata()->GetDeviceId();
+                    if (!latestFinalizedDeviceId.empty() && latestFinalizedDeviceId != localDeviceId)
+                    {
+                        // Another device took over and finalized - our lock was broken
+                        deviceIdChanged = true;
+                    }
+                }
+                latestPendingManifest = &latestFinalizedPFManifest;
             }
 
             if (deviceIdChanged || ActiveDevicePollWorker::s_debugForceChange)
@@ -133,6 +160,7 @@ HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
 
         // Reschedule ourselves.
         // Note that with this implementation the TokenExpiredHandler will be invoked every s_interval until TODO
+        TRACE_VERBOSE("[GAME SAVE] ActiveDevicePollWorker rescheduling with interval=%ums", s_interval);
         pThis->m_rc.TaskQueueSubmitWork(pThis, s_interval);
     });
 

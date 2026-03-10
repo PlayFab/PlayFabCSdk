@@ -22,6 +22,19 @@ public:
     ~DownloadAsyncProvider()
     {
         TRACE_TASK("DownloadAsyncProvider dtor");
+        // If provider is destroyed without completing (e.g., app suspend/crash),
+        // reset sync state to prevent E_PF_GAMESAVE_DOWNLOAD_IN_PROGRESS on next attempt.
+        // Only reset if still in download states to avoid clobbering valid states.
+        if (m_folderSync)
+        {
+            FolderSyncManagerProgress progress = m_folderSync->GetSyncProgress();
+            if (progress.syncState == PFGameSaveFilesSyncState::PreparingForDownload ||
+                progress.syncState == PFGameSaveFilesSyncState::Downloading)
+            {
+                TRACE_WARNING("DownloadAsyncProvider destroyed while in download state, resetting to NotStarted");
+                m_folderSync->SetSyncStateProgress(PFGameSaveFilesSyncState::NotStarted, 0, 0);
+            }
+        }
     }
 
     void ScheduleNow() override

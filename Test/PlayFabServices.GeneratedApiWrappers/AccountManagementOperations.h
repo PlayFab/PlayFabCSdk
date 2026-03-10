@@ -394,7 +394,6 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ClientGetPlayFabIDsFromXboxLiveIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromXboxLiveIDsResultWrapper<Allocator>>
 {
 public:
@@ -412,7 +411,6 @@ private:
     Entity m_entity;
     RequestType m_request;
 };
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ClientLinkAndroidDeviceIDOperation : public XAsyncOperation<void>
@@ -716,7 +714,6 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ClientLinkXboxAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -732,7 +729,6 @@ private:
     Entity m_entity;
     RequestType m_request;
 };
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ClientRemoveContactEmailOperation : public XAsyncOperation<void>
@@ -1090,7 +1086,6 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ClientUnlinkXboxAccountOperation : public XAsyncOperation<void>
 {
 public:
@@ -1106,7 +1101,6 @@ private:
     Entity m_entity;
     RequestType m_request;
 };
-#endif
 
 class ClientUpdateAvatarUrlOperation : public XAsyncOperation<void>
 {
@@ -2014,7 +2008,6 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class GetTitlePlayersFromXboxLiveIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetTitlePlayersFromProviderIDsResponseWrapper<Allocator>>
 {
 public:
@@ -2032,7 +2025,6 @@ private:
     Entity m_entity;
     RequestType m_request;
 };
-#endif
 
 class SetDisplayNameOperation : public XAsyncOperation<Wrappers::PFAccountManagementSetDisplayNameResponseWrapper<Allocator>>
 {

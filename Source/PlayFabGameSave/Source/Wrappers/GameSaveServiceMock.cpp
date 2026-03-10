@@ -20,8 +20,8 @@ public:
     template<size_t n>
     ArchiveUploadMockProvider(RunContext&& rc, XAsyncBlock* async, const char(&identityName)[n], SharedPtr<ArchiveContext> archiveContext, const String filePath) :
         XAsyncProviderBase{ std::move(rc), async, identityName },
-        m_archiveContext{ archiveContext },
-        m_filePath{ std::move(filePath) }
+        m_filePath{ std::move(filePath) },
+        m_archiveContext{ archiveContext }
     {
     }
 
@@ -95,14 +95,14 @@ private:
 class HttpArchiveUploadMockOp : public XAsyncOperation<void>
 {
 public:
-    HttpArchiveUploadMockOp::HttpArchiveUploadMockOp(
+    HttpArchiveUploadMockOp(
         SharedPtr<ArchiveContext> archiveContext,
         const String filePath,
         PlayFab::RunContext runContext
     ) noexcept :
         XAsyncOperation<void>{ std::move(runContext) },
-        m_archiveContext{ archiveContext },
-        m_filePath{ filePath }
+        m_filePath{ filePath },
+        m_archiveContext{ archiveContext }
     {
     }
 
@@ -616,10 +616,10 @@ ListManifestsResponse GameSaveServiceMock::ReadManifestsFile(const String& manif
 
 void GameSaveServiceMock::WriteManifestsFile(const String& manifestsPath, const Vector<ManifestWrap>& manifests)
 {
-    JsonValue fileJsonArray{ JsonValue::array() };
+    JsonValue fileJsonArray = JsonValue::array();
     for (const ManifestWrap& manifest : manifests)
     {
-        JsonValue jsonObj{ JsonValue::object() };
+        JsonValue jsonObj = JsonValue::object();
         JsonUtils::ObjectAddMember(jsonObj, "Version", manifest.GetVersion());
         JsonUtils::ObjectAddMember(jsonObj, "DeviceId", (manifest.GetMetadata().has_value()) ? manifest.GetMetadata().value().GetDeviceId() : "Unknown");
         JsonUtils::ObjectAddMember(jsonObj, "DeviceName", (manifest.GetMetadata().has_value()) ? manifest.GetMetadata().value().GetDeviceName() : "Unknown");
@@ -629,11 +629,11 @@ void GameSaveServiceMock::WriteManifestsFile(const String& manifestsPath, const 
         JsonUtils::ObjectAddMember(jsonObj, "UploadProgressTotalBytes", (manifest.GetUploadProgress().has_value()) ? manifest.GetUploadProgress().value().GetTotalBytes() : "0");
         JsonUtils::ObjectAddMember(jsonObj, "CreationTimestamp", TimeTToIso8601String(manifest.GetCreationTimestamp()));
         JsonUtils::ObjectAddMember(jsonObj, "FinalizationTimestamp", TimeTToIso8601String((manifest.GetFinalizationTimestamp().has_value()) ? manifest.GetFinalizationTimestamp().value() : 0));
-        JsonValue fileListJsonArray{ JsonValue::array() };
+        JsonValue fileListJsonArray = JsonValue::array();
         for (size_t iFile = 0; iFile < manifest.GetFiles().size(); iFile++)
         {
             const FileMetadataWrap& file = manifest.GetFiles()[iFile];
-            JsonValue jsonFileObj{ JsonValue::object() };
+            JsonValue jsonFileObj = JsonValue::object();
             JsonUtils::ObjectAddMember(jsonFileObj, "FileName", file.GetFileName());
             fileListJsonArray.push_back(jsonFileObj);
         }
@@ -641,7 +641,7 @@ void GameSaveServiceMock::WriteManifestsFile(const String& manifestsPath, const 
 
         fileJsonArray.push_back(jsonObj);
     }
-    JsonValue lsJson{ JsonValue::object() };
+    JsonValue lsJson = JsonValue::object();
     JsonUtils::ObjectAddMember(lsJson, "Manifests", std::move(fileJsonArray));
 
     String str = JsonUtils::WriteToString(lsJson);
@@ -731,8 +731,8 @@ AsyncOp<void> GameSaveServiceMock::CompressAndUploadFileToCloud(RunContext runCo
     );
 
     Vector<AsyncOp<void>> operations;
-    operations.push_back(std::move(RunOperation(std::move(subRequestOp))));
-    operations.push_back(std::move(RunOperation(std::move(compressionOp))));
+    operations.push_back(RunOperation(std::move(subRequestOp)));
+    operations.push_back(RunOperation(std::move(compressionOp)));
 
     // Combine the operations to run them in parallel and continue after they both complete
     return CombinedOp::MakeCombinedWithHttpResult(std::move(operations), runContext).Then([fileName = fileDetail.fileName, filePath = fileDetail.fullFilePath, runContext](Result<void> result) -> AsyncOp<void>

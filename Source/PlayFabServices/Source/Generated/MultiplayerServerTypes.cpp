@@ -15,7 +15,7 @@ JsonValue DeleteSecretRequest::ToJson() const
 
 JsonValue DeleteSecretRequest::ToJson(const PFMultiplayerServerDeleteSecretRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -28,7 +28,7 @@ JsonValue ListBuildAliasesRequest::ToJson() const
 
 JsonValue ListBuildAliasesRequest::ToJson(const PFMultiplayerServerListBuildAliasesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
     JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
@@ -206,7 +206,7 @@ JsonValue ListBuildSummariesRequest::ToJson() const
 
 JsonValue ListBuildSummariesRequest::ToJson(const PFMultiplayerServerListBuildSummariesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
     JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
@@ -721,7 +721,7 @@ JsonValue ListQosServersForTitleRequest::ToJson() const
 
 JsonValue ListQosServersForTitleRequest::ToJson(const PFMultiplayerServerListQosServersForTitleRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "IncludeAllRegions", input.includeAllRegions);
     JsonUtils::ObjectAddMember(output, "RoutingPreference", input.routingPreference);
@@ -844,7 +844,7 @@ JsonValue ListSecretSummariesRequest::ToJson() const
 
 JsonValue ListSecretSummariesRequest::ToJson(const PFMultiplayerServerListSecretSummariesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
     JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
@@ -980,7 +980,7 @@ JsonValue BuildAliasParams::ToJson() const
 
 JsonValue BuildAliasParams::ToJson(const PFMultiplayerServerBuildAliasParams& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AliasId", input.aliasId);
     return output;
 }
@@ -992,7 +992,7 @@ JsonValue RequestMultiplayerServerRequest::ToJson() const
 
 JsonValue RequestMultiplayerServerRequest::ToJson(const PFMultiplayerServerRequestMultiplayerServerRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<BuildAliasParams>(output, "BuildAliasParams", input.buildAliasParams);
     JsonUtils::ObjectAddMember(output, "BuildId", input.buildId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -1346,7 +1346,7 @@ JsonValue PartyInvitationConfiguration::ToJson() const
 
 JsonValue PartyInvitationConfiguration::ToJson(const PFMultiplayerServerPartyInvitationConfiguration& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "EntityKeys", input.entityKeys, input.entityKeysCount);
     JsonUtils::ObjectAddMember(output, "Identifier", input.identifier);
     JsonUtils::ObjectAddMember(output, "Revocability", input.revocability);
@@ -1360,7 +1360,7 @@ JsonValue PartyNetworkConfiguration::ToJson() const
 
 JsonValue PartyNetworkConfiguration::ToJson(const PFMultiplayerServerPartyNetworkConfiguration& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "DirectPeerConnectivityOptions", input.directPeerConnectivityOptions);
     JsonUtils::ObjectAddMember(output, "MaxDevices", input.maxDevices);
     JsonUtils::ObjectAddMember(output, "MaxDevicesPerUser", input.maxDevicesPerUser);
@@ -1378,7 +1378,7 @@ JsonValue RequestPartyServiceRequest::ToJson() const
 
 JsonValue RequestPartyServiceRequest::ToJson(const PFMultiplayerServerRequestPartyServiceRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<PartyNetworkConfiguration>(output, "NetworkConfiguration", input.networkConfiguration);
     JsonUtils::ObjectAddMember(output, "PartyId", input.partyId);
@@ -1460,7 +1460,7 @@ JsonValue Secret::ToJson() const
 
 JsonValue Secret::ToJson(const PFMultiplayerServerSecret& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberTime(output, "ExpirationDate", input.expirationDate);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
@@ -1474,7 +1474,7 @@ JsonValue UploadSecretRequest::ToJson() const
 
 JsonValue UploadSecretRequest::ToJson(const PFMultiplayerServerUploadSecretRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ForceUpdate", input.forceUpdate);
     JsonUtils::ObjectAddMember<Secret>(output, "GameSecret", input.gameSecret);

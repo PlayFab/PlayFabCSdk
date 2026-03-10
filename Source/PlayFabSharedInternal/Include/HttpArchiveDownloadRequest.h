@@ -3,7 +3,7 @@
 #include "HttpRequest.h"
 #include "Compression.h"
 
-#if HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && !HC_PLATFORM_IS_PLAYSTATION
+#if HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH
 
 namespace PlayFab
 {

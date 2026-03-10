@@ -153,8 +153,8 @@ Result<T>::Result(HRESULT hr_, String&& errorMessage_) :
 template<typename T>
 Result<T>::Result(HRESULT hr_, String&& errorMessage_, const std::optional<HttpResult>&& httpResult_) :
     hr{ hr_ },
-    httpResult{ std::move(httpResult_) },
-    errorMessage{ std::move(errorMessage_) }
+    errorMessage{ std::move(errorMessage_) },
+    httpResult{ std::move(httpResult_) }
 {
     assert(FAILED(hr));
 }

@@ -54,18 +54,23 @@ HRESULT InfoManifestData::ReadInfoManifest(_In_ const String& filePath, _Out_ In
 
 HRESULT InfoManifestData::WriteInfoManifest(_In_ const String& filePath, _Out_ InfoManifestData& infoManifestData)
 {
-    JsonValue jsonData{ JsonValue::object() };
+    JsonValue jsonData = JsonValue::object();
     JsonUtils::ObjectAddMember(jsonData, "DeviceID", infoManifestData.deviceId);
 
-    JsonValue jsonObj{ JsonValue::object() };
+    JsonValue jsonObj = JsonValue::object();
     JsonUtils::ObjectAddMember(jsonObj, "Data", std::move(jsonData));
 
     String str = JsonUtils::WriteToString(jsonObj);
     Vector<char> vData;
     std::copy(str.begin(), str.end(), std::back_inserter(vData));
-    WriteEntireFile(filePath, vData);
-
-    return S_OK;
+    HRESULT hr = WriteEntireFile(filePath, vData);
+    
+    if (FAILED(hr))
+    {
+        TRACE_ERROR("[GAME SAVE] WriteInfoManifest: WriteEntireFile FAILED hr=0x%08X", hr);
+    }
+    
+    return hr;
 }
 
 } // namespace GameSave

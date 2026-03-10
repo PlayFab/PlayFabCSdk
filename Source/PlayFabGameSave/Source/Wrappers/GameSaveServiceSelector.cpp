@@ -242,7 +242,7 @@ AsyncOp<void> GameSaveServiceSelector::DownloadFileFromCloud(
                 return Result<void>{ result.hr, std::move(result.httpResult) };
             });
             operations.push_back(std::move(requestOp));
-            operations.push_back(std::move(RunOperation(std::move(compressionOp))));
+            operations.push_back(RunOperation(std::move(compressionOp)));
 
             // Combine the operations to run them in parallel and continue after they both complete
             return CombinedOp::MakeCombinedWithHttpResult(std::move(operations), runContext).Then([archiveContext = fileDetail.archiveContext](Result<void> result) -> AsyncOp<void>

@@ -16,7 +16,7 @@ AsyncOp<RegisterPlayFabUserResult> AuthenticationAPI::RegisterPlayFabUser(
 )
 {
     const char* path{ "/Client/RegisterPlayFabUser" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::AuthenticationRegisterPlayFabUser;
 
     auto requestOp = serviceConfig->HttpClient()->MakePostRequest(
@@ -54,7 +54,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithAndroidDevi
 )
 {
     const char* path{ "/Server/LoginWithAndroidDeviceID" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithAndroidDeviceID;
 
@@ -92,7 +92,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithBattleNet(
 )
 {
     const char* path{ "/Server/LoginWithBattleNet" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithBattleNet;
 
@@ -130,7 +130,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithCustomID(
 )
 {
     const char* path{ "/Server/LoginWithCustomID" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithCustomID;
 
@@ -168,7 +168,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithIOSDeviceID
 )
 {
     const char* path{ "/Server/LoginWithIOSDeviceID" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithIOSDeviceID;
 
@@ -206,7 +206,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithPSN(
 )
 {
     const char* path{ "/Server/LoginWithPSN" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithPSN;
 
@@ -244,7 +244,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithServerCusto
 )
 {
     const char* path{ "/Server/LoginWithServerCustomId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithServerCustomId;
 
@@ -282,7 +282,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithSteamId(
 )
 {
     const char* path{ "/Server/LoginWithSteamId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithSteamId;
 
@@ -320,7 +320,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithTwitch(
 )
 {
     const char* path{ "/Server/LoginWithTwitch" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithTwitch;
 
@@ -358,7 +358,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithXbox(
 )
 {
     const char* path{ "/Server/LoginWithXbox" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithXbox;
 
@@ -396,7 +396,7 @@ AsyncOp<ServerCombinedLoginResult> AuthenticationAPI::ServerLoginWithXboxId(
 )
 {
     const char* path{ "/Server/LoginWithXboxId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
     CacheId retryCacheId = CacheId::AuthenticationServerLoginWithXboxId;
 
@@ -433,7 +433,7 @@ AsyncOp<AuthenticateGameServerResult> AuthenticationAPI::AuthenticateGameServerW
 )
 {
     const char* path{ "/GameServerIdentity/AuthenticateGameServerWithCustomId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::AuthenticationAuthenticateGameServerWithCustomId;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
@@ -467,7 +467,7 @@ AsyncOp<void> AuthenticationAPI::Delete(
 )
 {
     const char* path{ "/GameServerIdentity/Delete" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::AuthenticationDelete;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
@@ -502,7 +502,7 @@ AsyncOp<SharedPtr<Entity>> AuthenticationAPI::GetEntity(
 )
 {
     const char* path{ "/Authentication/GetEntityToken" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::AuthenticationGetEntity;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
@@ -540,7 +540,7 @@ AsyncOp<SharedPtr<Entity>> AuthenticationAPI::GetEntityWithSecretKey(
 )
 {
     const char* path{ "/Authentication/GetEntityToken" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::AuthenticationGetEntityWithSecretKey;
 
     auto requestOp = serviceConfig->HttpClient()->MakeSecretKeyRequest(
@@ -577,7 +577,7 @@ AsyncOp<ValidateEntityTokenResponse> AuthenticationAPI::ValidateEntityToken(
 )
 {
     const char* path{ "/Authentication/ValidateEntityToken" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::AuthenticationValidateEntityToken;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(

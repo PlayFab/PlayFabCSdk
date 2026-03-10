@@ -596,7 +596,7 @@ AsyncOp<Authentication::CombinedLoginResult> SteamLocalUserLoginHandler::Login(
         request.SetSteamTicket(ticketHandle->steamTicket);
         request.SetTicketIsServiceSpecific(true);
 
-        JsonValue requestBody{ request.ToJson() };
+        JsonValue requestBody = request.ToJson();
         RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
 
         return serviceConfig->HttpClient()->MakePostRequest(
@@ -647,7 +647,7 @@ AsyncOp<void> SteamLocalUserLoginHandler::ReLogin(
         request.SetSteamTicket(ticketHandle->steamTicket);
         request.SetTicketIsServiceSpecific(true);
 
-        JsonValue requestBody{ request.ToJson() };
+        JsonValue requestBody = request.ToJson();
         RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", entity->ServiceConfig()->TitleId()));
 
         return entity->ServiceConfig()->HttpClient()->MakePostRequest(

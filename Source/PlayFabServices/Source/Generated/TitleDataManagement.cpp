@@ -15,7 +15,7 @@ AsyncOp<GetPublisherDataResult> TitleDataManagementAPI::ClientGetPublisherData(
 )
 {
     const char* path{ "/Client/GetPublisherData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::TitleDataManagementClientGetPublisherData,
@@ -49,7 +49,7 @@ AsyncOp<GetTimeResult> TitleDataManagementAPI::ClientGetTime(
 )
 {
     const char* path{ "/Client/GetTime" };
-    JsonValue requestBody { JsonValue::object() };
+    JsonValue requestBody = JsonValue::object();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::TitleDataManagementClientGetTime,
@@ -84,7 +84,7 @@ AsyncOp<GetTitleDataResult> TitleDataManagementAPI::ClientGetTitleData(
 )
 {
     const char* path{ "/Client/GetTitleData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::TitleDataManagementClientGetTitleData,
@@ -119,7 +119,7 @@ AsyncOp<GetTitleNewsResult> TitleDataManagementAPI::ClientGetTitleNews(
 )
 {
     const char* path{ "/Client/GetTitleNews" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::TitleDataManagementClientGetTitleNews,
@@ -154,7 +154,7 @@ AsyncOp<GetPublisherDataResult> TitleDataManagementAPI::ServerGetPublisherData(
 )
 {
     const char* path{ "/Server/GetPublisherData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::TitleDataManagementServerGetPublisherData,
@@ -188,7 +188,7 @@ AsyncOp<GetTimeResult> TitleDataManagementAPI::ServerGetTime(
 )
 {
     const char* path{ "/Server/GetTime" };
-    JsonValue requestBody { JsonValue::object() };
+    JsonValue requestBody = JsonValue::object();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::TitleDataManagementServerGetTime,
@@ -223,7 +223,7 @@ AsyncOp<GetTitleDataResult> TitleDataManagementAPI::ServerGetTitleData(
 )
 {
     const char* path{ "/Server/GetTitleData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::TitleDataManagementServerGetTitleData,
@@ -258,7 +258,7 @@ AsyncOp<GetTitleDataResult> TitleDataManagementAPI::ServerGetTitleInternalData(
 )
 {
     const char* path{ "/Server/GetTitleInternalData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::TitleDataManagementServerGetTitleInternalData,
@@ -293,7 +293,7 @@ AsyncOp<GetTitleNewsResult> TitleDataManagementAPI::ServerGetTitleNews(
 )
 {
     const char* path{ "/Server/GetTitleNews" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::TitleDataManagementServerGetTitleNews,
@@ -328,7 +328,7 @@ AsyncOp<void> TitleDataManagementAPI::ServerSetPublisherData(
 )
 {
     const char* path{ "/Server/SetPublisherData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::TitleDataManagementServerSetPublisherData,
@@ -361,7 +361,7 @@ AsyncOp<void> TitleDataManagementAPI::ServerSetTitleData(
 )
 {
     const char* path{ "/Server/SetTitleData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::TitleDataManagementServerSetTitleData,
@@ -394,7 +394,7 @@ AsyncOp<void> TitleDataManagementAPI::ServerSetTitleInternalData(
 )
 {
     const char* path{ "/Server/SetTitleInternalData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::TitleDataManagementServerSetTitleInternalData,

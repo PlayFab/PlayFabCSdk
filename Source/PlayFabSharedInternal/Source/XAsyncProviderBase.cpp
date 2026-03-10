@@ -68,7 +68,7 @@ void XAsyncProviderBase::Fail(HRESULT hr)
 {
     Stringstream threadIdStream;
     threadIdStream << std::this_thread::get_id();
-    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase::Fail", threadIdStream.str().c_str());
+    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase::Fail HR:0x%08x", threadIdStream.str().c_str(), static_cast<uint32_t>(hr));
     XAsyncComplete(m_async, hr, 0);
 }
 

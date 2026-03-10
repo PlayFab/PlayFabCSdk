@@ -15,7 +15,7 @@ AsyncOp<void> PlatformSpecificAPI::ClientAndroidDevicePushNotificationRegistrati
 )
 {
     const char* path{ "/Client/AndroidDevicePushNotificationRegistration" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlatformSpecificClientAndroidDevicePushNotificationRegistration,
@@ -48,7 +48,7 @@ AsyncOp<void> PlatformSpecificAPI::ClientRefreshPSNAuthToken(
 )
 {
     const char* path{ "/Client/RefreshPSNAuthToken" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlatformSpecificClientRefreshPSNAuthToken,
@@ -81,7 +81,7 @@ AsyncOp<void> PlatformSpecificAPI::ClientRegisterForIOSPushNotification(
 )
 {
     const char* path{ "/Client/RegisterForIOSPushNotification" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlatformSpecificClientRegisterForIOSPushNotification,
@@ -114,7 +114,7 @@ AsyncOp<AwardSteamAchievementResult> PlatformSpecificAPI::ServerAwardSteamAchiev
 )
 {
     const char* path{ "/Server/AwardSteamAchievement" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlatformSpecificServerAwardSteamAchievement,

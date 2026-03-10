@@ -1022,7 +1022,6 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromTwitchIDsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of XboxLive identifiers.
 /// </summary>
@@ -1031,7 +1030,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromTwitchIDsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Windows, Linux, and macOS.
+/// This API is available on all platforms.
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResultSize"/>
 /// and <see cref="PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult"/> to get the result.
 /// </remarks>
@@ -1077,7 +1076,6 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
     _Outptr_ PFAccountManagementGetPlayFabIDsFromXboxLiveIDsResult** result,
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
@@ -1179,7 +1177,6 @@ PF_API PFAccountManagementClientLinkSteamAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Links the Xbox Live account associated with the provided access code to the user's PlayFab account
 /// </summary>
@@ -1188,7 +1185,7 @@ PF_API PFAccountManagementClientLinkSteamAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Windows, Linux, and macOS.
+/// This API is available on all platforms.
 /// See also ClientLoginWithXboxAsync, ClientUnlinkXboxAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1201,7 +1198,6 @@ PF_API PFAccountManagementClientLinkXboxAccountAsync(
     _In_ const PFAccountManagementClientLinkXboxAccountRequest* request,
     _Inout_ XAsyncBlock* async
 ) noexcept;
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
@@ -1349,7 +1345,6 @@ PF_API PFAccountManagementClientUnlinkSteamAccountAsync(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Unlinks the related Xbox Live account from the user's PlayFab account
 /// </summary>
@@ -1358,7 +1353,7 @@ PF_API PFAccountManagementClientUnlinkSteamAccountAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Windows, Linux, and macOS.
+/// This API is available on all platforms.
 /// See also ClientLinkXboxAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
@@ -1370,7 +1365,6 @@ PF_API PFAccountManagementClientUnlinkXboxAccountAsync(
     _In_ const PFAccountManagementClientUnlinkXboxAccountRequest* request,
     _Inout_ XAsyncBlock* async
 ) noexcept;
-#endif
 
 /// <summary>
 /// Update the avatar URL of the player
@@ -3128,7 +3122,6 @@ PF_API PFAccountManagementServerUpdateBansGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the title player accounts associated with the given XUIDs.
 /// </summary>
@@ -3137,7 +3130,7 @@ PF_API PFAccountManagementServerUpdateBansGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Windows, Linux, and macOS.
+/// This API is available on all platforms.
 /// Given a collection of Xbox IDs (XUIDs), returns all title player accounts.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResultSize"/>
@@ -3185,7 +3178,6 @@ PF_API PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult(
     _Outptr_ PFAccountManagementGetTitlePlayersFromProviderIDsResponse** result,
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
-#endif
 
 /// <summary>
 /// Update the display name of the entity

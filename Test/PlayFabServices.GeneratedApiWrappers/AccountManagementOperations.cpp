@@ -586,7 +586,6 @@ Result<ClientGetPlayFabIDsFromTwitchIDsOperation::ResultType> ClientGetPlayFabID
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ClientGetPlayFabIDsFromXboxLiveIDsOperation::ClientGetPlayFabIDsFromXboxLiveIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -614,7 +613,6 @@ Result<ClientGetPlayFabIDsFromXboxLiveIDsOperation::ResultType> ClientGetPlayFab
     RETURN_IF_FAILED(PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
@@ -969,7 +967,6 @@ HRESULT ClientLinkTwitchOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ClientLinkXboxAccountOperation::ClientLinkXboxAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -988,7 +985,6 @@ HRESULT ClientLinkXboxAccountOperation::OnStarted(XAsyncBlock* async) noexcept
     return PFAccountManagementClientLinkXboxAccountAsync(m_entity.Handle(), &m_request.Model(), async);
 }
 
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
@@ -1410,7 +1406,6 @@ HRESULT ClientUnlinkTwitchOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ClientUnlinkXboxAccountOperation::ClientUnlinkXboxAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -1429,7 +1424,6 @@ HRESULT ClientUnlinkXboxAccountOperation::OnStarted(XAsyncBlock* async) noexcept
     return PFAccountManagementClientUnlinkXboxAccountAsync(m_entity.Handle(), &m_request.Model(), async);
 }
 
-#endif
 
 
 ClientUpdateAvatarUrlOperation::ClientUpdateAvatarUrlOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
@@ -2635,7 +2629,6 @@ Result<ServerUpdateBansOperation::ResultType> ServerUpdateBansOperation::GetResu
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 GetTitlePlayersFromXboxLiveIDsOperation::GetTitlePlayersFromXboxLiveIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -2663,7 +2656,6 @@ Result<GetTitlePlayersFromXboxLiveIDsOperation::ResultType> GetTitlePlayersFromX
     RETURN_IF_FAILED(PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
-#endif
 
 
 SetDisplayNameOperation::SetDisplayNameOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :

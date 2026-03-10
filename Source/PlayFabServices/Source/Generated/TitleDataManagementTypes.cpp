@@ -15,7 +15,7 @@ JsonValue GetPublisherDataRequest::ToJson() const
 
 JsonValue GetPublisherDataRequest::ToJson(const PFTitleDataManagementGetPublisherDataRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray(output, "Keys", input.keys, input.keysCount);
     return output;
 }
@@ -99,7 +99,7 @@ JsonValue GetTitleDataRequest::ToJson() const
 
 JsonValue GetTitleDataRequest::ToJson(const PFTitleDataManagementGetTitleDataRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray(output, "Keys", input.keys, input.keysCount);
     JsonUtils::ObjectAddMember(output, "OverrideLabel", input.overrideLabel);
     return output;
@@ -154,7 +154,7 @@ JsonValue GetTitleNewsRequest::ToJson() const
 
 JsonValue GetTitleNewsRequest::ToJson(const PFTitleDataManagementGetTitleNewsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Count", input.count);
     return output;
 }
@@ -275,7 +275,7 @@ JsonValue SetPublisherDataRequest::ToJson() const
 
 JsonValue SetPublisherDataRequest::ToJson(const PFTitleDataManagementSetPublisherDataRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Key", input.key);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;
@@ -288,7 +288,7 @@ JsonValue SetTitleDataRequest::ToJson() const
 
 JsonValue SetTitleDataRequest::ToJson(const PFTitleDataManagementSetTitleDataRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Key", input.key);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;

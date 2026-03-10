@@ -8,13 +8,23 @@ namespace PlayFab
 namespace GameSave
 {
 
-HRESULT FileFolderSet::InitWithLocalFilesAndFolders(const String& saveFolder, _Out_opt_ String* shortSaveDescription)
+HRESULT FileFolderSet::InitWithLocalFilesAndFolders(const String& saveFolder, _Out_opt_ String* shortSaveDescription, _Out_opt_ bool* descriptionDirty)
 {
     Clear();
+
+    if (shortSaveDescription != nullptr)
+    {
+        shortSaveDescription->clear();
+    }
+    if (descriptionDirty != nullptr)
+    {
+        *descriptionDirty = false;
+    }
 
     String folderPath, filePath;
     RETURN_IF_FAILED(JoinPathHelper(saveFolder, "cloudsync", folderPath));
     RETURN_IF_FAILED(JoinPathHelper(folderPath, "localstate.json", filePath));
+    
     Vector<char> fileData;
     RETURN_IF_FAILED(ReadEntireFile(filePath, fileData));
 
@@ -32,6 +42,7 @@ HRESULT FileFolderSet::InitWithLocalFilesAndFolders(const String& saveFolder, _O
     {
         parseErrorMsg = e.what();
         parseError = true;
+        TRACE_ERROR("[GAME SAVE] InitWithLocalFilesAndFolders: JSON parse error: %s", parseErrorMsg.c_str());
     }
 
     if (!parseError && json.contains("Folders"))
@@ -50,7 +61,6 @@ HRESULT FileFolderSet::InitWithLocalFilesAndFolders(const String& saveFolder, _O
                 folder.existsLocally = FilePAL::DoesDirectoryExist(fullPath);
                 folder.hasLastSync = true;
                 folder.existsOnRemote = false;
-                TRACE_INFORMATION("[GAME SAVE] InitWithExtManifest AddFolderDetail: %s", folder.relFolderPath.c_str());
                 bool isRootFolder = folder.folderName.empty();
                 size_t folderIndex = AddFolderDetail(std::move(folder));
 
@@ -86,6 +96,10 @@ HRESULT FileFolderSet::InitWithLocalFilesAndFolders(const String& saveFolder, _O
         if (shortSaveDescription != nullptr)
         {
             JsonUtils::ObjectGetMember(metadataJson, "shortSaveDescription", *shortSaveDescription);
+        }
+        if (descriptionDirty != nullptr)
+        {
+            JsonUtils::ObjectGetMember(metadataJson, "descriptionDirty", *descriptionDirty);
         }
     }
 
@@ -133,7 +147,6 @@ HRESULT FileFolderSet::MergeLocalFolders(const String& rootPath, const String& f
         }
         folder.existsLocally = FilePAL::DoesDirectoryExist(fullFolderPath);
         folder.existsOnRemote = false;
-        TRACE_INFORMATION("[GAME SAVE] MergeLocal AddFolderDetail: %s", folder.relFolderPath.c_str());
         size_t folderIndex = AddFolderDetail(std::move(folder));
 
         MergeLocalFiles(rootPath, fullFolderPath, folderIndex);
@@ -208,22 +221,23 @@ HRESULT FileFolderSet::MergeLocalFiles(const String& rootPath, const String& ful
 HRESULT LocalStateManifest::WriteLocalManifest(
     const String& rootPath, 
     const SharedPtr<FileFolderSet>& localFileFolderSet, 
-    const String& shortSaveDescription)
+    const String& shortSaveDescription,
+    bool descriptionDirty)
 {
     const Vector<FolderDetail>& folders = localFileFolderSet->GetFolders();
     const Vector<FileDetail>& files = localFileFolderSet->GetFiles();
 
-    JsonValue fileJsonArray{ JsonValue::array() };
+    JsonValue fileJsonArray = JsonValue::array();
     for (size_t folderIndex = 0; folderIndex < folders.size(); folderIndex++)
     {
         const FolderDetail& folderDetail = folders[folderIndex];
 
-        JsonValue jsonObj{ JsonValue::object() };
+        JsonValue jsonObj = JsonValue::object();
         JsonUtils::ObjectAddMember(jsonObj, "relFolderPath", folderDetail.relFolderPath);
         JsonUtils::ObjectAddMember(jsonObj, "folderName", folderDetail.folderName);
         JsonUtils::ObjectAddMember(jsonObj, "folderId", folderDetail.folderId);
 
-        JsonValue filesJsonArray{ JsonValue::array() };
+        JsonValue filesJsonArray = JsonValue::array();
         for (const FileDetail& fileDetail : files)
         {
             if (fileDetail.folderIndex != folderIndex) // skip files not in this folder
@@ -232,7 +246,7 @@ HRESULT LocalStateManifest::WriteLocalManifest(
             if( fileDetail.fileSizeBytes == 0 && fileDetail.lastSyncFileSize == 0 ) // don't bother keep track files deleted locally and deleted in last sync
                 continue;
 
-            JsonValue fileDetailObj{ JsonValue::object() };
+            JsonValue fileDetailObj = JsonValue::object();
             //String relFilePath;
             //RETURN_IF_FAILED(JoinPathHelper(folderDetail.relFolderPath, fileDetail.fileName, relFilePath));
             JsonUtils::ObjectAddMember(fileDetailObj, "fileName", fileDetail.fileName);
@@ -246,21 +260,29 @@ HRESULT LocalStateManifest::WriteLocalManifest(
         fileJsonArray.push_back(jsonObj);
     }
 
-    JsonValue outerJson{ JsonValue::object() };
+    JsonValue outerJson = JsonValue::object();
     JsonUtils::ObjectAddMember(outerJson, "Folders", std::move(fileJsonArray));
 
-    JsonValue jsonMetadata{ JsonValue::object() };
+    JsonValue jsonMetadata = JsonValue::object();
     JsonUtils::ObjectAddMember(jsonMetadata, "shortSaveDescription", shortSaveDescription);
+    JsonUtils::ObjectAddMember(jsonMetadata, "descriptionDirty", descriptionDirty);
     JsonUtils::ObjectAddMember(outerJson, "Metadata", std::move(jsonMetadata));
 
     String str = JsonUtils::WriteToString(outerJson);
     Vector<char> vData;
     std::copy(str.begin(), str.end(), std::back_inserter(vData));
+    
     String folderPath, filePath;
     RETURN_IF_FAILED(JoinPathHelper(rootPath, "cloudsync", folderPath));
     FilePAL::CreatePath(folderPath);
     RETURN_IF_FAILED(JoinPathHelper(folderPath, "localstate.json", filePath));
-    WriteEntireFile(filePath, vData);
+    
+    HRESULT writeHr = WriteEntireFile(filePath, vData);
+    if (FAILED(writeHr))
+    {
+        TRACE_ERROR("[GAME SAVE] WriteLocalManifest: WriteEntireFile FAILED hr=0x%08X", writeHr);
+        return writeHr;
+    }
 
     return S_OK;
 }

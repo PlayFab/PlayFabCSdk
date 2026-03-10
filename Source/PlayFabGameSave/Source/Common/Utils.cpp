@@ -83,26 +83,48 @@ HRESULT ReadEntireFile(_In_ const String& filePath, _Out_ Vector<char>& fileBuff
     if (FAILED(fileSizeResult.hr))
     {
         // Ignore missing/empty files
+        fileBuffer.resize(0);
+        return S_OK;
+    }
+    
+    uint64_t fileSize = fileSizeResult.Payload();
+    if (fileSize == 0)
+    {
+        fileBuffer.resize(0);
         return S_OK;
     }
     
     Result<FileHandle> fileResult = FilePAL::OpenFile(filePath, FileOpenMode::Read);
-    RETURN_IF_FAILED(fileResult.hr);
+    if (FAILED(fileResult.hr))
+    {
+        TRACE_ERROR("[GAME SAVE] ReadEntireFile: OpenFile FAILED hr=0x%08X path=%s", fileResult.hr, filePath.c_str());
+        return fileResult.hr;
+    }
     
     FileHandle file = fileResult.ExtractPayload();
-    uint64_t fileSize = fileSizeResult.Payload();
     fileBuffer.resize(fileSize);
 
     uint64_t bytesWrittenTotal{ 0 };
     while (bytesWrittenTotal < fileSize)
     {
         uint64_t bytesWritten{ 0 };
-        HRESULT hr = FilePAL::ReadFileBytes(file, fileSize, &fileBuffer[bytesWrittenTotal], &bytesWritten);
+        uint64_t bytesRemaining = fileSize - bytesWrittenTotal;
+        HRESULT hr = FilePAL::ReadFileBytes(file, bytesRemaining, &fileBuffer[bytesWrittenTotal], &bytesWritten);
         if (FAILED(hr))
         {
+            TRACE_ERROR("[GAME SAVE] ReadEntireFile: ReadFileBytes FAILED hr=0x%08X after reading %llu bytes", hr, bytesWrittenTotal);
             FilePAL::CloseFile(file);
             return hr;
         }
+        
+        if (bytesWritten == 0)
+        {
+            TRACE_ERROR("[GAME SAVE] ReadEntireFile: ReadFileBytes returned 0 bytes unexpectedly. bytesWrittenTotal=%llu fileSize=%llu", 
+                bytesWrittenTotal, fileSize);
+            FilePAL::CloseFile(file);
+            return E_FAIL; // Return an error code indicating a partial read failure
+        }
+        
         bytesWrittenTotal += bytesWritten;
     }
     FilePAL::CloseFile(file);
@@ -113,12 +135,20 @@ HRESULT ReadEntireFile(_In_ const String& filePath, _Out_ Vector<char>& fileBuff
 HRESULT WriteEntireFile(_In_ const String& filePath, _In_ const Vector<char>& fileBuffer)
 {
     Result<FileHandle> fileResult = FilePAL::OpenFile(filePath, FileOpenMode::Write);
-    RETURN_IF_FAILED(fileResult.hr);
+    if (FAILED(fileResult.hr))
+    {
+        TRACE_ERROR("[GAME SAVE] WriteEntireFile: OpenFile FAILED hr=0x%08X path=%s", fileResult.hr, filePath.c_str());
+        return fileResult.hr;
+    }
 
     FileHandle file = fileResult.ExtractPayload();
     uint64_t fileSize = fileBuffer.size();
     
     HRESULT hr = FilePAL::WriteFileBytes(file, fileBuffer.data(), fileSize);
+    if (FAILED(hr))
+    {
+        TRACE_ERROR("[GAME SAVE] WriteEntireFile: WriteFileBytes FAILED hr=0x%08X path=%s", hr, filePath.c_str());
+    }
     FilePAL::CloseFile(file);
 
     return hr;

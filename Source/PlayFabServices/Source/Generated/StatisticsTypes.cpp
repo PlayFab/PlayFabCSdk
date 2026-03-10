@@ -15,7 +15,7 @@ JsonValue StatisticColumn::ToJson() const
 
 JsonValue StatisticColumn::ToJson(const PFStatisticsStatisticColumn& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AggregationMethod", input.aggregationMethod);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -70,7 +70,7 @@ JsonValue StatisticsUpdateEventConfig::ToJson() const
 
 JsonValue StatisticsUpdateEventConfig::ToJson(const PFStatisticsStatisticsUpdateEventConfig& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "EventType", input.eventType);
     return output;
 }
@@ -112,7 +112,7 @@ JsonValue StatisticsEventEmissionConfig::ToJson() const
 
 JsonValue StatisticsEventEmissionConfig::ToJson(const PFStatisticsStatisticsEventEmissionConfig& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<StatisticsUpdateEventConfig>(output, "UpdateEventConfig", input.updateEventConfig);
     return output;
 }
@@ -167,7 +167,7 @@ JsonValue CreateStatisticDefinitionRequest::ToJson() const
 
 JsonValue CreateStatisticDefinitionRequest::ToJson(const PFStatisticsCreateStatisticDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray(output, "AggregationSources", input.aggregationSources, input.aggregationSourcesCount);
     JsonUtils::ObjectAddMemberArray<StatisticColumn>(output, "Columns", input.columns, input.columnsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -185,7 +185,7 @@ JsonValue DeleteStatisticDefinitionRequest::ToJson() const
 
 JsonValue DeleteStatisticDefinitionRequest::ToJson(const PFStatisticsDeleteStatisticDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -198,7 +198,7 @@ JsonValue StatisticDelete::ToJson() const
 
 JsonValue StatisticDelete::ToJson(const PFStatisticsStatisticDelete& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
 }
@@ -210,7 +210,7 @@ JsonValue DeleteStatisticsRequest::ToJson() const
 
 JsonValue DeleteStatisticsRequest::ToJson(const PFStatisticsDeleteStatisticsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<StatisticDelete>(output, "Statistics", input.statistics, input.statisticsCount);
@@ -267,7 +267,7 @@ JsonValue GetStatisticDefinitionRequest::ToJson() const
 
 JsonValue GetStatisticDefinitionRequest::ToJson(const PFStatisticsGetStatisticDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -438,7 +438,7 @@ JsonValue GetStatisticsRequest::ToJson() const
 
 JsonValue GetStatisticsRequest::ToJson(const PFStatisticsGetStatisticsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "StatisticNames", input.statisticNames, input.statisticNamesCount);
@@ -635,7 +635,7 @@ JsonValue GetStatisticsForEntitiesRequest::ToJson() const
 
 JsonValue GetStatisticsForEntitiesRequest::ToJson(const PFStatisticsGetStatisticsForEntitiesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Entities", input.entities, input.entitiesCount);
     JsonUtils::ObjectAddMemberArray(output, "StatisticNames", input.statisticNames, input.statisticNamesCount);
@@ -762,7 +762,7 @@ JsonValue IncrementStatisticVersionRequest::ToJson() const
 
 JsonValue IncrementStatisticVersionRequest::ToJson(const PFStatisticsIncrementStatisticVersionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -805,7 +805,7 @@ JsonValue ListStatisticDefinitionsRequest::ToJson() const
 
 JsonValue ListStatisticDefinitionsRequest::ToJson(const PFStatisticsListStatisticDefinitionsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
     JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
@@ -1033,7 +1033,7 @@ JsonValue UnlinkAggregationSourceFromStatisticRequest::ToJson() const
 
 JsonValue UnlinkAggregationSourceFromStatisticRequest::ToJson(const PFStatisticsUnlinkAggregationSourceFromStatisticRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "SourceStatisticName", input.sourceStatisticName);
@@ -1047,7 +1047,7 @@ JsonValue UpdateStatisticDefinitionRequest::ToJson() const
 
 JsonValue UpdateStatisticDefinitionRequest::ToJson(const PFStatisticsUpdateStatisticDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<StatisticsEventEmissionConfig>(output, "EventEmissionConfig", input.eventEmissionConfig);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
@@ -1062,7 +1062,7 @@ JsonValue StatisticUpdate::ToJson() const
 
 JsonValue StatisticUpdate::ToJson(const PFStatisticsStatisticUpdate& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Metadata", input.metadata);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMemberArray(output, "Scores", input.scores, input.scoresCount);
@@ -1077,7 +1077,7 @@ JsonValue UpdateStatisticsRequest::ToJson() const
 
 JsonValue UpdateStatisticsRequest::ToJson(const PFStatisticsUpdateStatisticsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<StatisticUpdate>(output, "Statistics", input.statistics, input.statisticsCount);

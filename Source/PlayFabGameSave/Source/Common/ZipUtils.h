@@ -11,7 +11,7 @@ namespace GameSave
 class ZipUtils
 {
 public:    
-    static HRESULT ZipUtils::ZipFilesIntoSingleZip(
+    static HRESULT ZipFilesIntoSingleZip(
         _In_ const SharedPtr<ArchiveContext>& archiveContext,
         _In_ const String& fullCompressedFilePath) noexcept;
 

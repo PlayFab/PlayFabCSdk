@@ -693,44 +693,23 @@ void CatalogTests::TestSetItemModerationState(TestContext& tc)
 #if HC_PLATFORM == HC_PLATFORM_GDK
 void CatalogTests::TestTakedownItemReviews(TestContext& tc)
 {
-	// The takeDown operation is currently not working due to a service-side issue. Skipping for now.
-    // This is under investigation on bug https://dev.azure.com/microsoft/Xbox/_workitems/edit/59645467
-	tc.Skip();
+    TakedownItemReviewsOperation::RequestType request;
+    ModelVector<Wrappers::PFCatalogReviewTakedownWrapper<Allocator>> reviews;
+    Wrappers::PFCatalogReviewTakedownWrapper<Allocator> reviewTakedown;
+    reviewTakedown.SetReviewId("800b057a-2af7-ae02-de36-d9570e1e8fea");
+    reviewTakedown.SetItemId("8999d4aa-a5c9-4b32-8a23-896af0b2ed51");
+    reviews.push_back(reviewTakedown);
+    request.SetReviews(reviews);
 
- //  ReviewItemOperation::RequestType reviewRequest;
- //     Wrappers::PFCatalogReviewWrapper<Allocator> review;
- //review.SetRating(1);
- //   review.SetReviewId("800b057a-2af7-ae02-de36-d9570e1e8fea");
-	//reviewRequest.SetAlternateId(AltId("FriendlyIDForTest01"));
- //   reviewRequest.SetReview(review);
-
- //   ReviewItemOperation::Run(DefaultTitlePlayer(), reviewRequest, RunContext()).Then([&](Result<void> result) -> AsyncOp<void>
- //       {
- //           RETURN_IF_FAILED_PLAYFAB(result);
- //           Platform::Sleep(2000); // Wait for the vote to be processed before attempting the takedown
- //           return S_OK;
- //       })    .Finally([&](Result<void> result)
- //   {
- //       tc.EndTest(std::move(result));
- //   });
-
- //   TakedownItemReviewsOperation::RequestType request;
- //   ModelVector<Wrappers::PFCatalogReviewTakedownWrapper<Allocator>> reviews;
- //   Wrappers::PFCatalogReviewTakedownWrapper<Allocator> reviewTakedown;
- //   reviewTakedown.SetReviewId("800b057a-2af7-ae02-de36-d9570e1e8fea");
- //   reviewTakedown.SetAlternateId(AltId("FriendlyIDForTest01"));
- //   reviews.push_back(reviewTakedown);
- //   request.SetReviews(reviews);
-
- //   TakedownItemReviewsOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
- //   {
- //       RETURN_IF_FAILED_PLAYFAB(result);
- //       return S_OK;
- //   })
- //   .Finally([&](Result<void> result)
- //   {
- //       tc.EndTest(std::move(result));
- //   });
+    TakedownItemReviewsOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
 }
 #endif
 
@@ -738,7 +717,10 @@ void CatalogTests::TestTakedownItemReviews(TestContext& tc)
 void CatalogTests::TestUpdateCatalogConfig(TestContext& tc)
 {
     UpdateCatalogConfigOperation::RequestType request;
-	request.SetConfig(Wrappers::PFCatalogCatalogConfigWrapper<Allocator>());
+    Wrappers::PFCatalogCatalogConfigWrapper<Allocator> catalogConfig;
+    catalogConfig.SetIsCatalogEnabled(true);
+
+	request.SetConfig(catalogConfig);
 
     UpdateCatalogConfigOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
     {

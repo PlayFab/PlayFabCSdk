@@ -588,7 +588,6 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromTwitchIDs(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 constexpr char xboxLiveSandboxId[]{ "XDKS.1" };
 
 void AccountManagementTests::TestClientGetPlayFabIDsFromXboxLiveIDs(TestContext& tc)
@@ -622,7 +621,6 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromXboxLiveIDs(TestContext&
         tc.EndTest(std::move(result));
     });
 }
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkAndroidDeviceID(TestContext& tc)
@@ -959,7 +957,6 @@ void AccountManagementTests::TestClientLinkTwitch(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkXboxAccount(TestContext& tc)
 {
 #if HC_PLATFORM == HC_PLATFORM_GDK
@@ -994,7 +991,6 @@ void AccountManagementTests::TestClientLinkXboxAccount(TestContext& tc)
     tc.Skip();
 #endif
 }
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientRemoveContactEmail(TestContext& tc)
@@ -1281,13 +1277,11 @@ void AccountManagementTests::TestClientUnlinkTwitch(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkXboxAccount(TestContext& tc)
 {
     // Covered by TestClientLinkXboxAccount
     tc.EndTest(S_OK);
 }
-#endif
 
 void AccountManagementTests::TestClientUpdateAvatarUrl(TestContext& tc)
 {
@@ -1979,14 +1973,13 @@ void AccountManagementTests::TestServerUpdateBans(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestGetTitlePlayersFromXboxLiveIDs(TestContext& tc)
 {
     GetTitlePlayersFromXboxLiveIDsOperation::RequestType request;
     request.SetSandbox(xboxLiveSandboxId);
     request.SetXboxLiveIds({ "2814639779201810" });
 
-    GetTitlePlayersFromXboxLiveIDsOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<GetTitlePlayersFromXboxLiveIDsOperation::ResultType> result) -> Result<void>
+    GetTitlePlayersFromXboxLiveIDsOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<GetTitlePlayersFromXboxLiveIDsOperation::ResultType> result) -> Result<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
@@ -1999,7 +1992,6 @@ void AccountManagementTests::TestGetTitlePlayersFromXboxLiveIDs(TestContext& tc)
         tc.EndTest(std::move(result));
     });
 }
-#endif
 
 void AccountManagementTests::TestSetDisplayName(TestContext& tc)
 {

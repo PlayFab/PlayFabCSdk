@@ -279,6 +279,10 @@ HRESULT Sample_GameSave_Cleanup(Sample_GameSaveState* state)
     HC_TRACE_WARNING_HR(Sample, hr, "PFUninitializeAsync");
     RETURN_IF_FAILED(hr);
 
+    hr = XAsyncGetStatus(&async3, true);
+    HC_TRACE_WARNING_HR(Sample, hr, "PFUninitializeAsync XAsyncGetStatus");
+    RETURN_IF_FAILED(hr);
+
     if (state->taskQueue)
     {
         XTaskQueueCloseHandle(state->taskQueue);

@@ -1,7 +1,6 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 #pragma once
 #include "FolderSyncManager.h"
-#include "Platform/PFGameSaveFilesAPIProvider.h"
 
 // Forward declaration of HCInitArgs
 struct HCInitArgs;
@@ -10,6 +9,8 @@ namespace PlayFab
 {
 namespace GameSave
 {
+
+class GameSaveAPIProvider;
 
 class GameSaveGlobalState : public ITerminationListener
 {
@@ -51,6 +52,10 @@ public:
 public:
     RunContext RunContext() const noexcept;
     GameSaveAPIProvider& ApiProvider() noexcept;
+    
+    // Cancel any pending UI waits across all FolderSyncManagers.
+    // Must be called before termination to prevent hangs when providers are waiting for UI callbacks.
+    void CancelAllPendingUIWaits() noexcept;
 
 private:
     GameSaveGlobalState(bool uninitPlayFabCore, _In_opt_ XTaskQueueHandle backgroundQueue) noexcept;

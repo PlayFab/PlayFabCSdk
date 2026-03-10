@@ -38,9 +38,18 @@ public:
 
     HRESULT HandleFailedUI(ISchedulableTask& task, const std::function <void(void)>& retryAction, const std::function <void(void)>& useOfflineAction);
 
+    // Progress cancel support - uses atomic flag instead of SetAction/ScheduleNow to avoid race conditions
+    void RequestProgressCancel();
+    bool IsProgressCancelRequested() const;
+    void ClearProgressCancel();
+
+    // Cancel any pending UI wait (for use during shutdown/termination)
+    void CancelPendingUIWait();
+
 private:
     UIAction m_action{ UIAction::UINone };
     ISchedulableTask* m_activeTask{ nullptr };
+    std::atomic<bool> m_progressCancelRequested{ false };
 };
 
 } // namespace GameSave

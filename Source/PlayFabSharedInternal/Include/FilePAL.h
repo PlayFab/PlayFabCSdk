@@ -4,7 +4,6 @@
 
 namespace PlayFab
 {
-
 #define FILEPAL_MAX_BYTES_AVAILABLE 64 * 1024
 
 enum class FileOpenMode

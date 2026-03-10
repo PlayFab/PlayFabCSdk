@@ -67,7 +67,7 @@ AsyncOp<CombinedLoginResult> LoginWithXUserHandler::Login(
         request.SetCreateAccount(createAccount);
         request.SetXboxToken(getTokenResult.Payload().token);
 
-        JsonValue requestBody{ request.ToJson() };
+        JsonValue requestBody = request.ToJson();
         RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
 
         return serviceConfig->HttpClient()->MakePostRequest(
@@ -108,7 +108,7 @@ AsyncOp<void> LoginWithXUserHandler::ReLogin(
         Authentication::LoginWithXboxRequest request;
         request.SetXboxToken(getTokenResult.Payload().token);
 
-        JsonValue requestBody{ request.ToJson() };
+        JsonValue requestBody = request.ToJson();
         RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", entity->ServiceConfig()->TitleId()));
 
         return entity->ServiceConfig()->HttpClient()->MakePostRequest(

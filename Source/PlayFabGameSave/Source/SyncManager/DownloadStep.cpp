@@ -29,6 +29,8 @@ void DownloadStep::Reset()
     m_isLocalOperationsDone = false;
     m_totalUncompressedSizeBytes = 0;
     m_currentUncompressedSizeBytes = 0;
+    m_totalCompressedSizeBytes = 0;
+    m_currentCompressedSizeBytes = 0;
 }
 
 bool DownloadStep::IsDownloadDone() const
@@ -104,16 +106,20 @@ HRESULT DownloadStep::Download(
     _In_ const String& shortSaveDescription
     )
 {
+    UNREFERENCED_PARAMETER(syncProgress);
     ScopeTracer scopeTracer(FormatString("DownloadStep - %s", EnumName(m_stage)));
 
     switch (m_stage)
     {
         case DownloadStage::DownloadStart:
         {
+            uiCallbackManager.ClearProgressCancel(); // Clear any stale cancel request from previous operation
             m_telemetryManager->SetContextSyncStartTime();
             m_telemetryManager->SetContextSyncSyncDownload(true);
             m_telemetryManager->SetContextSyncSyncErrorSource(SyncErrorSource::SER_DownloadData);
-            syncProgress.syncState = PFGameSaveFilesSyncState::Downloading;
+            // Use progress callback to set sync state with proper mutex protection
+            // This fixes a thread-safety bug where direct assignment could race with GetSyncProgress()
+            progressCallback(PFGameSaveFilesSyncState::Downloading, 0, 0, progressCallbackContext);
             uiCallbackManager.ShowProgressUI(task, m_localUser, PFGameSaveFilesSyncState::Downloading); // no issue if callback not set
             this->m_stage = DownloadStage::QueryStorage;
             task.ScheduleNow();
@@ -151,6 +157,7 @@ HRESULT DownloadStep::Download(
             }
             
             m_totalUncompressedSizeBytes = 0;
+            m_totalCompressedSizeBytes = 0;
             const Vector<size_t>& remoteFileIndexToDownload = remoteFileFolderSet->GetCompressedFilesToDownload();
             const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
             for (int iRemoteFile = 0; iRemoteFile < remoteFileIndexToDownload.size(); iRemoteFile++)
@@ -161,6 +168,7 @@ HRESULT DownloadStep::Download(
                 if (!remoteCompressedFile.hasDownloadedLocally)
                 {
                     m_totalUncompressedSizeBytes += remoteCompressedFile.uncompressedSizeBytes;
+                    m_totalCompressedSizeBytes += remoteCompressedFile.compressedSizeBytes;
                 }
             }
 
@@ -176,7 +184,7 @@ HRESULT DownloadStep::Download(
                 if (false == uiCallbackManager.ShowOutOfStorageUI(task, m_localUser, m_totalUncompressedSizeBytes))
                 {
                     // No fail callback set, so just fail API
-                    m_stage = DownloadStage::LockStepFailure;
+                    m_stage = DownloadStage::DownloadStepFailure;
                     m_failureHR = E_PF_GAMESAVE_DISK_FULL;
                     task.ScheduleNow();
                 }
@@ -184,7 +192,7 @@ HRESULT DownloadStep::Download(
             else
             {
                 this->m_stage = DownloadStage::Download;
-                progressCallback(PFGameSaveFilesSyncState::Downloading, 0, m_totalUncompressedSizeBytes, progressCallbackContext);
+                progressCallback(PFGameSaveFilesSyncState::Downloading, 0, m_totalCompressedSizeBytes, progressCallbackContext);
                 task.ScheduleNow();
             }
 
@@ -193,7 +201,14 @@ HRESULT DownloadStep::Download(
 
         case DownloadStage::Download:
         {
-            // TODO: Task 50948316: PFGameSave: hook up cancel from progression dialog
+            // Check for cancel request from progress UI
+            if (uiCallbackManager.IsProgressCancelRequested())
+            {
+                TRACE_INFORMATION("[GAME SAVE] DownloadStep: Cancel requested by user");
+                uiCallbackManager.ClearProgressCancel();
+                return E_PF_GAMESAVE_USER_CANCELLED;
+            }
+
             bool downloadNeeded = false;
             const Vector<size_t>& remoteFileIndexToDownload = remoteFileFolderSet->GetCompressedFilesToDownload();
             const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
@@ -221,7 +236,8 @@ HRESULT DownloadStep::Download(
 
                     auto innerProgressContext = MakeShared<InnerProgressContext>(progressCallback, progressCallbackContext, task, m_localUser, PFGameSaveFilesSyncState::Downloading);
                     
-                    GameSaveServiceSelector::DownloadFileFromCloud(runContext, downloadDetail, remoteCompressedFile.downloadUrl, InnerProgressCallback, innerProgressContext.get(), m_totalUncompressedSizeBytes, m_currentUncompressedSizeBytes)
+                    // Use compressed totals for dynamic size to accurately reflect transfer progress
+                    GameSaveServiceSelector::DownloadFileFromCloud(runContext, downloadDetail, remoteCompressedFile.downloadUrl, InnerProgressCallback, innerProgressContext.get(), m_totalCompressedSizeBytes, m_currentCompressedSizeBytes)
                     .Finally([this, &task, &remoteCompressedFile, filePath, saveFolder, remoteFileFolderSet, &uiCallbackManager, &folderSyncMutex, innerProgressContext](Result<void> result)
                     {
                         std::lock_guard<std::recursive_mutex> lock(folderSyncMutex); // Prevent any of the Finally blocks from changing the state while DoWork thread is active
@@ -236,17 +252,21 @@ HRESULT DownloadStep::Download(
                             if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Downloading))
                             {
                                 // No fail callback set, so just fail API
-                                m_stage = DownloadStage::LockStepFailure;
+                                m_stage = DownloadStage::DownloadStepFailure;
                                 m_failureHR = result.hr;
                                 task.ScheduleNow();
                             }
                         }
                         else
                         {
+                            // Always accumulate progress for both uncompressed (telemetry) and compressed (actual transfer) sizes
+                            m_currentUncompressedSizeBytes += remoteCompressedFile.uncompressedSizeBytes;
+                            m_currentCompressedSizeBytes += remoteCompressedFile.compressedSizeBytes;
+                            
                             if (remoteCompressedFile.archiveContext)
                             {
-                                m_currentUncompressedSizeBytes += remoteCompressedFile.uncompressedSizeBytes;
-                                innerProgressContext->callback(PFGameSaveFilesSyncState::Downloading, m_currentUncompressedSizeBytes, m_totalUncompressedSizeBytes, innerProgressContext->callbackContext);
+                                // Report progress using compressed byte counts (actual transfer units)
+                                innerProgressContext->callback(PFGameSaveFilesSyncState::Downloading, m_currentCompressedSizeBytes, m_totalCompressedSizeBytes, innerProgressContext->callbackContext);
                             }
 
                             remoteCompressedFile.hasDownloadedLocally = true; // loop until nothing left to download
@@ -298,7 +318,7 @@ HRESULT DownloadStep::Download(
                         m_telemetryManager->SetContextSyncHResult(hr);
                         m_telemetryManager->EmitContextSyncErrorEvent();
                         this->m_failureHR = hr;
-                        this->m_stage = DownloadStage::LockStepFailure;
+                        this->m_stage = DownloadStage::DownloadStepFailure;
                         task.ScheduleNow();
                         return S_OK;
                     }
@@ -312,7 +332,12 @@ HRESULT DownloadStep::Download(
         
         case DownloadStage::UpdateLocalManifest:
         {
-            localFileFolderSet->InitWithLocalFilesAndFolders(saveFolder, nullptr);
+            HRESULT initHr = localFileFolderSet->InitWithLocalFilesAndFolders(saveFolder, nullptr, nullptr);
+            if (FAILED(initHr))
+            {
+                TRACE_ERROR("[GAME SAVE] DownloadStep: InitWithLocalFilesAndFolders FAILED hr=0x%08X", initHr);
+                return initHr;
+            }
 
             const Vector<size_t>& remoteFileIndexToDownload = remoteFileFolderSet->GetCompressedFilesToDownload();
             const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
@@ -329,12 +354,17 @@ HRESULT DownloadStep::Download(
                         if (remoteFile.compressedFileIndex == remoteCompressedFile.compressedFileIndex)
                         {
                             String relFilePath = remoteFileFolderSet->GetRelFilePath(&remoteFile);
-                            localFileFolderSet->UpdateFilesWithDownloadData(remoteFile, relFilePath);
+                            localFileFolderSet->UpdateFilesWithDownloadData(remoteFile, relFilePath, saveFolder);
                         }
                     }
                 }
             }
-            LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, shortSaveDescription);
+            HRESULT writeManifestHr = LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, shortSaveDescription);
+            if (FAILED(writeManifestHr))
+            {
+                TRACE_ERROR("[GAME SAVE] DownloadStep: WriteLocalManifest FAILED hr=0x%08X", writeManifestHr);
+                return writeManifestHr;
+            }
             this->m_stage = DownloadStage::DownloadDone;
             task.ScheduleNow();
             return S_OK;
@@ -342,32 +372,46 @@ HRESULT DownloadStep::Download(
 
         case DownloadStage::WaitForFailedUI_Download:
         {
-            // TODO: what exactly to do if download fails? What about UISyncFailedUseOffline here in UiActionHelper()
+            TRACE_INFORMATION("[GAME SAVE] DownloadStep - WaitForFailedUI_Download: waiting for user response to download failure");
             return uiCallbackManager.HandleFailedUI(task,
-                [this]() { m_stage = DownloadStage::Download; },
-                [this]() { m_stage = DownloadStage::DownloadDone; }
+                [this]() { 
+                    TRACE_INFORMATION("[GAME SAVE] DownloadStep - WaitForFailedUI_Download: user chose RETRY");
+                    m_stage = DownloadStage::Download; 
+                },
+                [this]() { 
+                    TRACE_WARNING("[GAME SAVE] DownloadStep - WaitForFailedUI_Download: user chose OFFLINE MODE. Download will be skipped.");
+                    m_stage = DownloadStage::DownloadDone; 
+                }
             );
         }
 
         case DownloadStage::WaitForOutOfStorageUI:
         {
-            TRACE_TASK("WaitForOutOfStorageUI");
+            TRACE_INFORMATION("[GAME SAVE] DownloadStep - WaitForOutOfStorageUI: waiting for user to free storage space");
             UIAction uiAction = uiCallbackManager.GetAction();
 
             if (uiAction == UIAction::UIOutOfStorageSpaceCleared)
             {
+                TRACE_INFORMATION("[GAME SAVE] DownloadStep - WaitForOutOfStorageUI: user cleared storage space, retrying download");
                 m_stage = DownloadStage::Download;
                 task.ScheduleNow();
             }
             else if (uiAction == UIAction::UIOutOfStorageCancel)
             {
+                TRACE_WARNING("[GAME SAVE] DownloadStep - WaitForOutOfStorageUI: user CANCELLED due to insufficient storage");
                 return E_PF_GAMESAVE_USER_CANCELLED;
+            }
+            else
+            {
+                // No action set yet - user hasn't responded to the outOfStorageCallback.
+                // Return E_PENDING to keep the async operation alive.
+                return E_PENDING;
             }
 
             return S_OK;
         }
 
-        case DownloadStage::LockStepFailure:
+        case DownloadStage::DownloadStepFailure:
         {
             return m_failureHR;
         }

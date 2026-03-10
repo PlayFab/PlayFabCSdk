@@ -15,7 +15,7 @@ AsyncOp<GetEntityProfileResponse> ProfilesAPI::GetProfile(
 )
 {
     const char* path{ "/Profile/GetProfile" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::ProfilesGetProfile,
@@ -50,7 +50,7 @@ AsyncOp<GetEntityProfilesResponse> ProfilesAPI::GetProfiles(
 )
 {
     const char* path{ "/Profile/GetProfiles" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::ProfilesGetProfiles,
@@ -85,7 +85,7 @@ AsyncOp<GetTitlePlayersFromMasterPlayerAccountIdsResponse> ProfilesAPI::GetTitle
 )
 {
     const char* path{ "/Profile/GetTitlePlayersFromMasterPlayerAccountIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::ProfilesGetTitlePlayersFromMasterPlayerAccountIds,
@@ -120,7 +120,7 @@ AsyncOp<SetProfileLanguageResponse> ProfilesAPI::SetProfileLanguage(
 )
 {
     const char* path{ "/Profile/SetProfileLanguage" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::ProfilesSetProfileLanguage,
@@ -155,7 +155,7 @@ AsyncOp<SetEntityProfilePolicyResponse> ProfilesAPI::SetProfilePolicy(
 )
 {
     const char* path{ "/Profile/SetProfilePolicy" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::ProfilesSetProfilePolicy,

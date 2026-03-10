@@ -17,7 +17,7 @@ AsyncOp<void> GameSaveAPI::DeleteManifest(
 )
 {
     const char* path{ "/GameSave/DeleteManifest" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveDeleteManifest,
@@ -53,7 +53,7 @@ AsyncOp<FinalizeManifestResponse> GameSaveAPI::FinalizeManifest(
 )
 {
     const char* path{ "/GameSave/FinalizeManifest" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveFinalizeManifest,
@@ -96,7 +96,7 @@ AsyncOp<GetConfigForTitleResponse> GameSaveAPI::GetConfigForTitle(
 )
 {
     const char* path{ "/GameSave/GetConfigForTitle" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveGetConfigForTitle,
@@ -139,7 +139,7 @@ AsyncOp<GetManifestDownloadDetailsResponse> GameSaveAPI::GetManifestDownloadDeta
 )
 {
     const char* path{ "/GameSave/GetManifestDownloadDetails" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveGetManifestDownloadDetails,
@@ -182,7 +182,7 @@ AsyncOp<GetQuotaForPlayerResponse> GameSaveAPI::GetQuotaForPlayer(
 )
 {
     const char* path{ "/GameSave/GetQuotaForPlayer" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveGetQuotaForPlayer,
@@ -225,7 +225,7 @@ AsyncOp<InitializeManifestResponse> GameSaveAPI::InitializeManifest(
 )
 {
     const char* path{ "/GameSave/InitializeManifest" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveInitializeManifest,
@@ -268,7 +268,7 @@ AsyncOp<InitiateUploadResponse> GameSaveAPI::InitiateUpload(
 )
 {
     const char* path{ "/GameSave/InitiateUpload" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveInitiateUpload,
@@ -311,7 +311,7 @@ AsyncOp<ListManifestsResponse> GameSaveAPI::ListManifests(
 )
 {
     const char* path{ "/GameSave/ListManifests" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveListManifests,
@@ -354,7 +354,7 @@ AsyncOp<void> GameSaveAPI::RequestOnboarding(
 )
 {
     const char* path{ "/GameSave/RequestOnboarding" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveRequestOnboarding,
@@ -390,7 +390,7 @@ AsyncOp<RollbackToManifestResponse> GameSaveAPI::RollbackToManifest(
 )
 {
     const char* path{ "/GameSave/RollbackToManifest" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveRollbackToManifest,
@@ -433,7 +433,7 @@ AsyncOp<UpdateConfigForTitleResponse> GameSaveAPI::UpdateConfigForTitle(
 )
 {
     const char* path{ "/GameSave/UpdateConfigForTitle" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveUpdateConfigForTitle,
@@ -476,7 +476,7 @@ AsyncOp<UpdateManifestResponse> GameSaveAPI::UpdateManifest(
 )
 {
     const char* path{ "/GameSave/UpdateManifest" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = GameSaveHttpClient::MakeEntityRequest(
         ServicesCacheId::GameSaveUpdateManifest,

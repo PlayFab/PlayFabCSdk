@@ -20,14 +20,16 @@ enum class UploadStage
     UploadFile,
     FinalizeManifest,
     ListManifestsAfterUpload,
-    TakeLockAfterUpload,
+    PromoteIfNeeded, 
+    TakeLock,        
     ForceDisconnectFromCloud,
     WaitForFailedUI_InitiateUpload,
     WaitForFailedUI_UploadFile,
     WaitForFailedUI_FinalizeManifest,
     WaitForFailedUI_ListManifestsAfterUpload,
-    WaitForFailedUI_TakeLockAfterUpload,
-    LockStepFailure,
+    WaitForFailedUI_PromoteIfNeeded, 
+    WaitForFailedUI_TakeLock,
+    UploadStepFailure,
     UploadDone
 };
 
@@ -37,11 +39,23 @@ enum class DeleteManifestStage
     DeleteDone
 };
 
+// Structure to hold conflict metadata for FinalizeManifest
+struct ConflictMetadata
+{
+    bool hasConflict = false;
+    bool isWinner = false;
+    String conflictingVersion;
+    
+    ConflictMetadata() = default;
+    ConflictMetadata(bool winner, const String& conflictingVer) 
+        : hasConflict(true), isWinner(winner), conflictingVersion(conflictingVer) {}
+};
+
 class UploadStep
 {
 public:
     UploadStep(_In_ LocalUser const& localUser, _In_ SharedPtr<GameSaveTelemetryManager> telemetryManager);
-    void SetEntity(const Entity& entity);
+    void SetEntity(_In_ const Entity& entity);
     void Reset();
 
     bool IsUploadDone() const;
@@ -53,6 +67,8 @@ public:
     size_t GetNumFilesInFinalizedManifest() const { return m_numFilesInFinalizedManifest; }
 #endif
     const FileDetail* PopThumbnail(_In_ Vector<const FileDetail*>& filesToUpload);
+    void SetOriginalActivationBaselineVersion(uint64_t v) { m_originalActivationBaselineVersion = v; }
+    uint64_t GetOriginalActivationBaselineVersion() const { return m_originalActivationBaselineVersion; }
 
     HRESULT Upload(
         _In_ const RunContext& runContext,
@@ -67,7 +83,8 @@ public:
         _In_ std::recursive_mutex& folderSyncMutex,
         _In_ ProgressCallback progressCallback,
         _In_ void* progressCallbackContext,
-        _In_ const String& shortSaveDescription
+        _In_ const String& shortSaveDescription,
+        _In_ const ConflictMetadata& conflictMetadata = ConflictMetadata()
     );
 
     // Returns true once we have first entered the FinalizeManifest stage for the current upload sequence.
@@ -92,7 +109,7 @@ private:
     static Vector<Vector<const FileDetail*>> SplitUploadsIntoZipBatches(
         _In_ Vector<const FileDetail*> filesToUpload);
 
-    static const FileDetail* UploadStep::PopFileDetailBelowSize(
+    static const FileDetail* PopFileDetailBelowSize(
         _In_ Vector<const FileDetail*>& filesToUpload, 
         _In_ uint64_t sizeLimit);
 
@@ -115,6 +132,15 @@ private:
         _In_ const SharedPtr<InnerProgressContext>& innerProgressContext,
         _In_ HRESULT hr);
 
+    enum class KnownGoodPromotionResult
+    {
+        NotApplicable,     // No baseline / no successor yet
+        AlreadyKnownGood,  // Baseline already marked (or previously promoted)
+        NeedsUpdateCall    // Eligible: issue UpdateManifest(IsKnownGood=true)
+    };
+
+    KnownGoodPromotionResult EvaluateKnownGoodPromotionEligibility();
+
     LocalUser m_localUser;
     std::optional<Entity> m_entity;
     uint32_t m_compressedFilesToUploadCurIndex{ 0 };
@@ -127,12 +153,17 @@ private:
     uint64_t m_totalUncompressedSizeBytes{};
     uint64_t m_currentUncompressedSizeBytes{};
     uint64_t m_totalCompressedSizeBytes{};
+    // Cumulative compressed bytes successfully uploaded so far. Used for accurate dynamic progress.
+    uint64_t m_currentCompressedSizeBytes{};
     uint64_t m_manifestVersionOffset{ 0 };
     uint64_t m_uploadFullSetRetryCount{ 0 };
     ManifestWrapVector m_manifests;
     ManifestWrap m_postUploadPendingPFManifest;
     ManifestWrap m_postUploadLatestFinalizedPFManifest;
     SharedPtr<GameSaveTelemetryManager> m_telemetryManager;
+    uint64_t m_originalActivationBaselineVersion{ 0 }; // Tracks the finalized manifest version that was chosen as the baseline when AddUser/activation began.
+    bool m_originalBaselinePromoted{ false };
+    ConflictMetadata m_conflictMetadata; // Conflict metadata for FinalizeManifest
 
     // Becomes true the first time we transition into UploadStage::FinalizeManifest for a given upload run.
     bool m_hasStartedFinalizeManifest{ false };

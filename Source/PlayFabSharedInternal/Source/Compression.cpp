@@ -1,9 +1,10 @@
 #include "pch.h"
 
-#if HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && !HC_PLATFORM_IS_PLAYSTATION
-
 #include "Compression.h"
 #include <algorithm>
+
+#if HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH
+
 #include <sys/stat.h>
 #include "archive.h"
 #include "archive_entry.h"
@@ -16,7 +17,7 @@ static int ArchiveEmptyCallback(archive*, void*)
     return ARCHIVE_OK;
 }
 
-static SSIZE_T ArchiveReadFromFileCallback(archive* archive, void* clientData, const void** buffer) noexcept
+static la_ssize_t ArchiveReadFromFileCallback(archive* archive, void* clientData, const void** buffer) noexcept
 {
     UNREFERENCED_PARAMETER(archive);
     auto context = static_cast<ArchiveContext*>(clientData);
@@ -34,7 +35,7 @@ static SSIZE_T ArchiveReadFromFileCallback(archive* archive, void* clientData, c
     return bytesRead;
 }
 
-static SSIZE_T ArchiveReadCallback(archive* archive, void* clientData, const void** buffer) noexcept
+static la_ssize_t ArchiveReadCallback(archive* archive, void* clientData, const void** buffer) noexcept
 {
     auto context = static_cast<ArchiveContext*>(clientData);
 
@@ -173,7 +174,7 @@ HRESULT ArchiveContext::Initialize(ArchiveOpenMode mode, ArchiveSource source, S
         internalArchive = archive_read_new();
         ar = archive_read_support_format_zip(internalArchive);
         RETURN_IF_FAILED(ConvertLibarchiveResult(ar, "Failed to set archive format"));
-        ar = archive_read_support_compression_gzip(internalArchive);
+        ar = archive_read_support_filter_gzip(internalArchive);
         RETURN_IF_FAILED(ConvertLibarchiveResult(ar, "Failed to set archive compression"));
 
         if (source == ArchiveSource::File)
@@ -453,6 +454,45 @@ HRESULT ArchiveContext::CompressBytes() noexcept
         archive_entry_set_pathname(internalEntry, relativePath.c_str());
         archive_entry_set_mode(internalEntry, S_IFREG);
         archive_entry_set_size(internalEntry, file.uncompressedSize);
+        
+        // Convert local time to UTC for archive mtime.
+        // GRTS extracts ZIP files treating mtime as UTC, so we must offset by timezone.
+        struct tm utcTm{};
+        time_t adjustedTime{};
+#ifdef _WIN32
+        if (gmtime_s(&utcTm, &file.timeLastModified) == 0)
+        {
+            adjustedTime = _mkgmtime(&utcTm);
+        }
+        else
+        {
+            TRACE_WARNING("Failed to convert time to UTC using gmtime_s");
+        }
+#else
+        // Non-GNU platforms use gmtime_s with POSIX signature: struct tm* gmtime_s(const time_t*, struct tm*)
+        if (gmtime_s(&file.timeLastModified, &utcTm) != nullptr)
+        {
+            // timegm is a GNU extension not available on PlayStation; use portable equivalent
+            time_t localTime = mktime(&utcTm);
+            struct tm localTm{};
+            gmtime_s(&localTime, &localTm);
+            time_t utcOffset = mktime(&localTm) - localTime;
+            adjustedTime = localTime - utcOffset;
+        }
+        else
+        {
+            TRACE_WARNING("Failed to convert time to UTC using gmtime_s");
+        }
+#endif
+        if (adjustedTime != static_cast<time_t>(-1))
+        {
+            archive_entry_set_mtime(internalEntry, adjustedTime, 0);
+        }
+        else
+        {
+            TRACE_WARNING("Failed to convert UTC time for archive mtime, using original time");
+            archive_entry_set_mtime(internalEntry, file.timeLastModified, 0);
+        }
 
         //auto before = archive_filter_bytes(internalArchive, 0);
         ar = archive_write_header(internalArchive, internalEntry);

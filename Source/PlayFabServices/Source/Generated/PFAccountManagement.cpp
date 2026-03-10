@@ -1010,7 +1010,6 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromTwitchIDsGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetPlayFabIDsFromXboxLiveIDsRequest* request,
@@ -1060,7 +1059,6 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
         return S_OK;
     });
 }
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientLinkAndroidDeviceIDAsync(
@@ -1432,7 +1430,6 @@ PF_API PFAccountManagementClientLinkTwitchAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientLinkXboxAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementClientLinkXboxAccountRequest* request,
@@ -1452,7 +1449,6 @@ PF_API PFAccountManagementClientLinkXboxAccountAsync(
         return XAsyncProviderBase::Run(std::move(provider));
     });
 }
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientRemoveContactEmailAsync(
@@ -1899,7 +1895,6 @@ PF_API PFAccountManagementClientUnlinkTwitchAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientUnlinkXboxAccountAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementClientUnlinkXboxAccountRequest* request,
@@ -1919,7 +1914,6 @@ PF_API PFAccountManagementClientUnlinkXboxAccountAsync(
         return XAsyncProviderBase::Run(std::move(provider));
     });
 }
-#endif
 
 PF_API PFAccountManagementClientUpdateAvatarUrlAsync(
     _In_ PFEntityHandle contextHandle,
@@ -3635,7 +3629,6 @@ PF_API PFAccountManagementServerUpdateBansGetResult(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementGetTitlePlayersFromXboxLiveIDsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFAccountManagementGetTitlePlayersFromXboxLiveIDsRequest* request,
@@ -3685,7 +3678,6 @@ PF_API PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult(
         return S_OK;
     });
 }
-#endif
 
 PF_API PFAccountManagementSetDisplayNameAsync(
     _In_ PFEntityHandle contextHandle,

@@ -4,6 +4,7 @@
 #include "ApiHelpers.h"
 #include "FileFolderSet.h"
 #include "Metadata.h"
+#include "LockStep.h" // for ManifestWrap forward usage in conflict helpers
 
 using namespace PlayFab::GameSaveWrapper;
 
@@ -153,9 +154,24 @@ HRESULT CompareStep::CompareWithCloud(
                         const Vector<char>& manifestBytes = result.ExtractPayload();
                         if (GetWriteManifestsToDisk())
                         {
-                            WriteEntireFile(manifestFilePath, manifestBytes);
+                            HRESULT writeHr = WriteEntireFile(manifestFilePath, manifestBytes);
+                            if (FAILED(writeHr))
+                            {
+                                TRACE_WARNING("[GAME SAVE] Failed to write debug manifest to disk: 0x%0.8x", writeHr);
+                            }
                         }
-                        remoteFileFolderSet->InitWithExtendedManifest(manifestBytes, latestFinalizedManifest->GetRemoteFileDetails(), saveFolder);
+                        HRESULT initHr = remoteFileFolderSet->InitWithExtendedManifest(manifestBytes, latestFinalizedManifest->GetRemoteFileDetails(), saveFolder);
+                        if (FAILED(initHr))
+                        {
+                            TRACE_ERROR("[GAME SAVE] CompareStep: InitWithExtendedManifest failed hr=0x%08X", initHr);
+                            m_telemetryManager->SetContextActivationHResult(initHr);
+                            m_telemetryManager->EmitContextActivationFailureEvent();
+                            m_stage = CompareStage::CompareStepFailure;
+                            m_failureHR = initHr;
+                            remoteFileFolderSet->Clear(); // Ensure remoteFileFolderSet is in a known state
+                            task.ScheduleNow();
+                            return;
+                        }
                         m_stage = CompareStage::ReadLocalManifest;
                         task.ScheduleNow();
                     }
@@ -168,7 +184,19 @@ HRESULT CompareStep::CompareWithCloud(
         case CompareStage::ReadLocalManifest:
         {
             String shortSaveDescription;
-            localFileFolderSet->InitWithLocalFilesAndFolders(saveFolder, &shortSaveDescription);
+            bool descriptionDirty = false;
+            HRESULT initHr = localFileFolderSet->InitWithLocalFilesAndFolders(saveFolder, &shortSaveDescription, &descriptionDirty);
+            if (FAILED(initHr))
+            {
+                TRACE_WARNING("[GAME SAVE] CompareStep: InitWithLocalFilesAndFolders failed hr=0x%08X (may be expected for new saves)", initHr);
+                // Don't fail here - continue with empty manifest (this is expected for new saves)
+                localFileFolderSet->Clear(); // Ensure localFileFolderSet is in a valid empty state
+            }
+            
+            // Store the loaded description so FolderSyncManager can restore it
+            m_loadedShortSaveDescription = shortSaveDescription;
+            m_loadedDescriptionDirty = descriptionDirty;
+            
             bool conflictFound = false;
             MarkFilesToSync(localFileFolderSet, remoteFileFolderSet, saveFolder, conflictFound);
 
@@ -198,12 +226,16 @@ HRESULT CompareStep::CompareWithCloud(
 
         case CompareStage::WaitForConflictUI:
         {
+            TRACE_INFORMATION("[GAME SAVE] CompareStep - WaitForConflictUI: waiting for user to resolve conflict between local and cloud saves");
             UIAction uiAction = uiCallbackManager.GetAction();
 
             if (uiAction == UIAction::UIConflictTakeLocal)
             {
                 m_telemetryManager->SetContextActivationConflictResolution(ConflictResolution::CR_KeepLocal);
                 m_takeUIChoice = TakeUIChoice::TakeLocal;
+                TRACE_INFORMATION("[GAME SAVE] CompareStep - WaitForConflictUI: user chose KEEP LOCAL save");
+                m_conflictOccurred = true;
+                m_conflictRequiresUpload = true; // Always upload local branch once
                 m_stage = CompareStage::ReadLocalManifest;
                 task.ScheduleNow();
             }
@@ -211,30 +243,56 @@ HRESULT CompareStep::CompareWithCloud(
             {
                 m_telemetryManager->SetContextActivationConflictResolution(ConflictResolution::CR_TakeRemote);
                 m_takeUIChoice = TakeUIChoice::TakeRemote;
+                TRACE_INFORMATION("[GAME SAVE] CompareStep - WaitForConflictUI: user chose KEEP CLOUD save");
+                m_conflictOccurred = true;
+                m_conflictRequiresUpload = true; // still upload local divergent branch for rollback path
                 m_stage = CompareStage::ReadLocalManifest;
                 task.ScheduleNow();
             }
             else if (uiAction == UIAction::UIConflictCancel)
             {
                 m_telemetryManager->SetContextActivationConflictResolution(ConflictResolution::CR_NoResolutionChosen);
+                TRACE_WARNING("[GAME SAVE] CompareStep - WaitForConflictUI: user CANCELLED conflict resolution");
                 return E_PF_GAMESAVE_USER_CANCELLED;
+            }
+            else
+            {
+                // No action set yet - user hasn't responded to the conflictCallback.
+                // Return E_PENDING to keep the async operation alive.
+                return E_PENDING;
             }
             return S_OK;
         }
 
         case CompareStage::WaitForFailedUI_GetManifestDownloadDetails:
         {
+            TRACE_INFORMATION("[GAME SAVE] CompareStep - WaitForFailedUI_GetManifestDownloadDetails: waiting for user response");
             return uiCallbackManager.HandleFailedUI(task, 
-                [this]() { m_stage = CompareStage::GetManifestDownloadDetails; },
-                [this]() { m_forceDisconnectFromCloud = true; m_stage = CompareStage::CompareDone; }
+                [this]() { 
+                    TRACE_INFORMATION("[GAME SAVE] CompareStep - WaitForFailedUI_GetManifestDownloadDetails: user chose RETRY");
+                    m_stage = CompareStage::GetManifestDownloadDetails; 
+                },
+                [this]() { 
+                    TRACE_WARNING("[GAME SAVE] CompareStep - WaitForFailedUI_GetManifestDownloadDetails: user chose OFFLINE MODE. Cloud sync will be skipped.");
+                    m_forceDisconnectFromCloud = true; 
+                    m_stage = CompareStage::CompareDone; 
+                }
             );
         }
 
         case CompareStage::WaitForFailedUI_GetExtendedManifest:
         {
+            TRACE_INFORMATION("[GAME SAVE] CompareStep - WaitForFailedUI_GetExtendedManifest: waiting for user response");
             return uiCallbackManager.HandleFailedUI(task, 
-                [this]() { m_stage = CompareStage::GetExtendedManifest; },
-                [this]() { m_forceDisconnectFromCloud = true; m_stage = CompareStage::CompareDone; }
+                [this]() { 
+                    TRACE_INFORMATION("[GAME SAVE] CompareStep - WaitForFailedUI_GetExtendedManifest: user chose RETRY");
+                    m_stage = CompareStage::GetExtendedManifest; 
+                },
+                [this]() { 
+                    TRACE_WARNING("[GAME SAVE] CompareStep - WaitForFailedUI_GetExtendedManifest: user chose OFFLINE MODE. Cloud sync will be skipped.");
+                    m_forceDisconnectFromCloud = true; 
+                    m_stage = CompareStage::CompareDone; 
+                }
             );
         }
 
@@ -269,12 +327,19 @@ HRESULT CompareStep::HandleConflict(
             m_stage = CompareStage::WaitForConflictUI;
 
             PFGameSaveDescriptor localGameSave{};
-            localGameSave.time = GetTimeTNow();
+            // Find the most recent modification time from local files
+            time_t mostRecentTime = 0;
             localGameSave.totalBytes = 0;
             for (const FileDetail& localFile : localFileFolderSet->GetFiles())
             {
                 localGameSave.totalBytes += localFile.fileSizeBytes;
+                if (localFile.timeLastModified > mostRecentTime)
+                {
+                    mostRecentTime = localFile.timeLastModified;
+                }
             }
+            // Use most recent file time if available, otherwise fall back to current time
+            localGameSave.time = (mostRecentTime > 0) ? mostRecentTime : GetTimeTNow();
             localGameSave.uploadedBytes = localGameSave.totalBytes;
             String deviceId = GetLocalDeviceID(saveFolder);
             String deviceType = GetDeviceType();
@@ -302,6 +367,22 @@ HRESULT CompareStep::HandleConflict(
             if (remoteThumbnail)
             {
                 StrCpy(remoteGameSave.thumbnailUri, sizeof(remoteGameSave.thumbnailUri), remoteThumbnail->downloadUrl.c_str());
+            }
+
+            // Log conflict UI descriptions for diagnostics
+            TRACE_INFORMATION("[GAME SAVE] CompareStep: ShowConflictUI - localDesc='%s' remoteDesc='%s' localTime=%lld remoteTime=%lld",
+                localGameSave.shortSaveDescription,
+                remoteGameSave.shortSaveDescription,
+                static_cast<long long>(localGameSave.time),
+                static_cast<long long>(remoteGameSave.time));
+            if (localGameSave.shortSaveDescription[0] == '\0')
+            {
+                TRACE_WARNING("[GAME SAVE] CompareStep: Local save description is EMPTY for conflict UI");
+            }
+            if (remoteGameSave.shortSaveDescription[0] == '\0')
+            {
+                TRACE_WARNING("[GAME SAVE] CompareStep: Remote save description is EMPTY for conflict UI (manifest v:%s)", 
+                    latestFinalizedManifest->VersionString().c_str());
             }
 
             if (false == uiCallbackManager.ShowConflictUI(task, m_localUser, localGameSave, remoteGameSave))
@@ -340,6 +421,8 @@ void CompareStep::Reset()
     m_stage = CompareStage::GetManifestDownloadDetails;
     m_takeUIChoice = TakeUIChoice::NoChoiceYet;
     m_forceDisconnectFromCloud = false;
+    m_conflictOccurred = false;
+    m_conflictRequiresUpload = false;
 }
 
 bool IsFileQueuedForUpload(const FileDetail* localFile, const SharedPtr<FileFolderSet>& localFileFolderSet)
@@ -662,7 +745,7 @@ void CompareStep::MarkFoldersToDeleteUponUpload(
         }
         else
         {
-            TRACE_INFORMATION("[GAME SAVE] CompareStep: MarkFoldersToDeleteUponUpload %s: existsLocally: %d", remoteFolder.relFolderPath.c_str());
+            TRACE_INFORMATION("[GAME SAVE] CompareStep: MarkFoldersToDeleteUponUpload %s: existsLocally: %d", remoteFolder.relFolderPath.c_str(), localFolder->existsLocally);
             if (!localFolder->existsLocally)
             {
                 foldersToDeleteUponUpload.push_back(&remoteFolder);
@@ -767,6 +850,7 @@ void CompareStep::MarkCompressedFilesToKeep(
     TRACE_INFORMATION("[GAME SAVE] CompareStep: CompressedFilesToKeep: %zd", compressedFilesToKeep.size());
     remoteFileFolderSet->SetCompressedFilesToKeep(std::move(compressedFilesToKeep));
 }
+
 
 } // namespace GameSave
 } // namespace PlayFab

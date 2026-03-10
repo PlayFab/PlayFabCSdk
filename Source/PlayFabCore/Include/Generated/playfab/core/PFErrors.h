@@ -628,8 +628,8 @@ extern "C"
 #define E_PF_PRECONDITION_FAILED                                                MAKE_E_HC(0x57ccL) // 0x892357cc
 #define E_PF_CANNOT_ENABLE_ANONYMOUS_PLAYER_CREATION                            MAKE_E_HC(0x57d4L) // 0x892357d4
 #define E_PF_PARENT_CUSTOMER_ACCOUNT_NOT_FOUND                                  MAKE_E_HC(0x57d5L) // 0x892357d5
-#define E_PF_ACCOUNT_LINKED_TO_A_BANNED_PLAYER                                  MAKE_E_HC(0x57d6L) // 0x892357d6
-#define E_PF_AZURE_SUBSCRIPTION_NOT_ELIGIBLE_FOR_LINKING                        MAKE_E_HC(0x57d7L) // 0x892357d7
+#define E_PF_ACCOUNT_LINKED_TO_A_BANNED_PLAYER                                  MAKE_E_HC(0x57d7L) // 0x892357d7
+#define E_PF_AZURE_SUBSCRIPTION_NOT_ELIGIBLE_FOR_LINKING                        MAKE_E_HC(0x57d8L) // 0x892357d8
 #define E_PF_MATCHMAKING_ENTITY_INVALID                                         MAKE_E_HC(0x5646L) // 0x89235646
 #define E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID                              MAKE_E_HC(0x5647L) // 0x89235647
 #define E_PF_MATCHMAKING_QUEUE_NOT_FOUND                                        MAKE_E_HC(0x5648L) // 0x89235648
@@ -745,7 +745,7 @@ extern "C"
 #define E_PF_EXPERIMENTATION_EXCLUSION_GROUP_INVALID_TRAFFIC_ALLOCATION         MAKE_E_HC(0x56b5L) // 0x892356b5
 #define E_PF_EXPERIMENTATION_EXCLUSION_GROUP_INVALID_NAME                       MAKE_E_HC(0x56b6L) // 0x892356b6
 #define E_PF_EXPERIMENTATION_LEGACY_EXPERIMENT_INVALID_OPERATION                MAKE_E_HC(0x57a0L) // 0x892357a0
-#define E_PF_EXPERIMENTATION_EXPERIMENT_STOP_FAILED                             MAKE_E_HC(0x57d8L) // 0x892357d8
+#define E_PF_EXPERIMENTATION_EXPERIMENT_STOP_FAILED                             MAKE_E_HC(0x57d9L) // 0x892357d9
 #define E_PF_MAX_ACTION_DEPTH_EXCEEDED                                          MAKE_E_HC(0x56b7L) // 0x892356b7
 #define E_PF_TITLE_NOT_ON_UPDATED_PRICING_PLAN                                  MAKE_E_HC(0x56b8L) // 0x892356b8
 #define E_PF_SEGMENT_MANAGEMENT_TITLE_NOT_IN_FLIGHT                             MAKE_E_HC(0x56b9L) // 0x892356b9
@@ -942,7 +942,7 @@ extern "C"
 #define E_PF_GAME_SAVE_SERVICE_UNAVAILABLE                                      MAKE_E_HC(0x57c5L) // 0x892357c5
 #define E_PF_GAME_SAVE_CONFLICT                                                 MAKE_E_HC(0x57c6L) // 0x892357c6
 #define E_PF_GAME_SAVE_MANIFEST_NOT_ELIGIBLE_FOR_ROLLBACK                       MAKE_E_HC(0x57c7L) // 0x892357c7
-#define E_PF_GAME_SAVE_TITLE_CLIENT_ANONYMOUS_ACCOUNT_CREATION_NOT_DISABLED     MAKE_E_HC(0x57d9L) // 0x892357d9
+#define E_PF_GAME_SAVE_TITLE_CLIENT_ANONYMOUS_ACCOUNT_CREATION_NOT_DISABLED     MAKE_E_HC(0x57d6L) // 0x892357d6
 #define E_PF_STATE_SHARE_FORBIDDEN                                              MAKE_E_HC(0x5769L) // 0x89235769
 #define E_PF_STATE_SHARE_TITLE_NOT_IN_FLIGHT                                    MAKE_E_HC(0x576aL) // 0x8923576a
 #define E_PF_STATE_SHARE_STATE_NOT_FOUND                                        MAKE_E_HC(0x5723L) // 0x89235723

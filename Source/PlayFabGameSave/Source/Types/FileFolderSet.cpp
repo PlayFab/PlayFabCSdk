@@ -82,13 +82,34 @@ void FileFolderSet::UpdateFilesWithUploadData()
     }
 }
 
-void FileFolderSet::UpdateFilesWithDownloadData(const FileDetail& remoteFile, const String& relFilePath)
+void FileFolderSet::UpdateFilesWithDownloadData(const FileDetail& remoteFile, const String& relFilePath, const String& saveFolder)
 {
     const FileDetail* localFile = GetFileDetailFromRelFilePath(relFilePath);
     if (localFile)
     {
         localFile->lastSyncFileSize = remoteFile.fileSizeBytes;
-        localFile->lastSyncTimeLastModified = remoteFile.timeLastModified;
+
+        // Get actual file times from disk in case they differ from what was expected.  This is required on some 
+        // platform(s) that do not support setting the modified time on files differently than the actual modified time.
+        String fullFilePath;
+        if (SUCCEEDED(JoinPathHelper(saveFolder, relFilePath, fullFilePath)))
+        {
+            time_t actualCreated = 0;
+            time_t actualModified = 0;
+            if (SUCCEEDED(FilePAL::GetFileTimes(fullFilePath, actualCreated, actualModified)))
+            {
+                localFile->lastSyncTimeLastModified = actualModified; // Store ACTUAL modified time
+            }
+            else
+            {
+                localFile->lastSyncTimeLastModified = remoteFile.timeLastModified; // Fallback
+            }
+        }
+        else
+        {
+            // Handle error in path joining, fallback to remote file's modified time
+            localFile->lastSyncTimeLastModified = remoteFile.timeLastModified;
+        }
     }
 }
 

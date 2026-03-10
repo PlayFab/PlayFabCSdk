@@ -3,6 +3,7 @@
 #include "Manifest.h"
 #include "ApiHelpers.h"
 #include "FileFolderSet.h"
+#include "PlatformUtils.h"
 
 using namespace PlayFab::GameSaveWrapper;
 
@@ -29,6 +30,16 @@ const String& ManifestInternal::VersionString() const
 bool ManifestInternal::HasVersion() const
 {
     return !m_manifest.GetVersion().empty();
+}
+
+String ManifestInternal::GetDecodedManifestDescription() const
+{
+    const String& encodedDescription = m_manifest.GetManifestDescription();
+    if (encodedDescription.empty())
+    {
+        return encodedDescription;
+    }
+    return Base64Decode(encodedDescription);
 }
 
 String ManifestInternal::GetDownloadUrlForFile(const String& fileName, const DownloadDetailsWrapVector& remoteFileDetails)

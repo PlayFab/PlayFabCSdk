@@ -14,7 +14,7 @@ class FolderSyncManager;
 enum class SetSaveDescriptionStage
 {
     Start = 0,
-    LockStepFailure,
+    SetSaveDescStepFailure,
     Done
 };
 

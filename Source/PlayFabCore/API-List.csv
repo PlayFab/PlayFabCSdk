@@ -18,7 +18,7 @@ PF Core,Authentication,PFAuthenticationLoginWithPlayFabAsync,None,Authentication
 PF Core,Authentication,PFAuthenticationLoginWithPSNAsync,None,Authentication,LoginWithPSN,false,No,No,Yes,No,No,No,No
 PF Core,Authentication,PFAuthenticationLoginWithSteamAsync,None,Authentication,LoginWithSteam,false,Yes,No,No,Yes,No,No,Yes
 PF Core,Authentication,PFAuthenticationLoginWithTwitchAsync,None,Authentication,LoginWithTwitch,false,No,No,No,No,No,No,No
-PF Core,Authentication,PFAuthenticationLoginWithXboxAsync,None,Authentication,LoginWithXbox,false,Yes,No,No,Yes,No,No,Yes
+PF Core,Authentication,PFAuthenticationLoginWithXboxAsync,None,Authentication,LoginWithXbox,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Core,Authentication,PFAuthenticationRegisterPlayFabUserAsync,None,Authentication,RegisterPlayFabUser,false,No,No,No,No,No,No,No
 PF Core,Authentication,PFAuthenticationServerLoginWithAndroidDeviceIDAsync,SecretKey,Authentication,ServerLoginWithAndroidDeviceID,false,Yes,No,No,No,No,No,No
 PF Core,Authentication,PFAuthenticationServerLoginWithBattleNetAsync,SecretKey,Authentication,ServerLoginWithBattleNet,false,Yes,No,No,No,No,No,No

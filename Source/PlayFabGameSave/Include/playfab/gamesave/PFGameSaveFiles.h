@@ -216,7 +216,7 @@ PF_API PFGameSaveFilesSetSaveDescriptionAsync(
 /// </summary>
 /// <param name="async">The XAsyncBlock that we pass to PFGameSaveFilesSetSaveDescriptionAsync.</param>
 /// <returns>Result code for this API operation.</returns>
-PF_API PFGameSaveFilesSetSaveDescriptionResult(_In_ XAsyncBlock* async) noexcept;
+PF_API PFGameSaveFilesSetSaveDescriptionResult(_Inout_ XAsyncBlock* async) noexcept;
 
 /// <summary>
 /// This resets the cloud game save state for this user.
@@ -236,7 +236,7 @@ PF_API PFGameSaveFilesResetCloudAsync(
 /// </summary>
 /// <param name="async">The XAsyncBlock that we pass to PFGameSaveFilesResetCloudAsync.</param>
 /// <returns>Result code for this API operation.</returns>
-PF_API PFGameSaveFilesResetCloudResult(_In_ XAsyncBlock* async) noexcept;
+PF_API PFGameSaveFilesResetCloudResult(_Inout_ XAsyncBlock* async) noexcept;
 
 /// <summary>
 /// Cleanup PlayFab Game Save library instance.

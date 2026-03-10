@@ -60,7 +60,13 @@ HRESULT SetSaveDescriptionProvider::DoWork(RunContext runContext)
 
         if (SUCCEEDED(hr))
         {
-            m_folderSync->SetLastShortSaveDescription(m_shortSaveDescription);
+            // Only update description if online AND the step completed normally (not fallback)
+            // If IsForcedDisconnectFromCloud() or if network failed (step was reset), description 
+            // was already stored with dirty=true in DoWorkSetSaveDescription
+            if (!m_folderSync->IsForcedDisconnectFromCloud() && m_folderSync->IsSetSaveDescriptionStepDone())
+            {
+                m_folderSync->SetLastShortSaveDescription(m_shortSaveDescription);
+            }
             this->Complete(0);
         }
         else

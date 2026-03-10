@@ -67,7 +67,7 @@ HRESULT ResetCloudStep::ResetCloud(
                     }
                     else
                     {
-                        m_stage = ResetCloudStage::LockStepFailure;
+                        m_stage = ResetCloudStage::ResetCloudStepFailure;
                         m_resetHR = result.hr;
                         task.ScheduleNow();
                     }
@@ -77,7 +77,7 @@ HRESULT ResetCloudStep::ResetCloud(
             return S_OK;
         }
 
-        case ResetCloudStage::LockStepFailure:
+        case ResetCloudStage::ResetCloudStepFailure:
         {
             return m_resetHR;
         }
@@ -106,7 +106,7 @@ HRESULT ResetCloudStep::ResetCloud(
                 }
                 else
                 {
-                    m_stage = ResetCloudStage::LockStepFailure;
+                    m_stage = ResetCloudStage::ResetCloudStepFailure;
                     m_resetHR = result.hr;
                     task.ScheduleNow();
                 }

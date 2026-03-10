@@ -1493,7 +1493,7 @@ public:
     {
     }
 
-    PFGameSaveGetManifestDownloadDetailsResponseWrapper(PFGameSaveGetManifestDownloadDetailsResponseWrapper&& src) :
+    PFGameSaveGetManifestDownloadDetailsResponseWrapper(PFGameSaveGetManifestDownloadDetailsResponseWrapper&& src) : 
         PFGameSaveGetManifestDownloadDetailsResponseWrapper{}
     {
         swap(*this, src);

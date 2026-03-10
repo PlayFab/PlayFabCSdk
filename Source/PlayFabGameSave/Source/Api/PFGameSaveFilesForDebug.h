@@ -41,4 +41,7 @@ PF_API PFGameSaveFilesSetMockForceOfflineForDebug(_In_ GameSaveServiceMockForced
 PF_API PFGameSaveFilesGetStatsJsonSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* jsonSize) noexcept;
 PF_API PFGameSaveFilesGetStatsJsonForDebug(_In_ PFLocalUserHandle localUserHandle, _In_ size_t jsonSize, _Out_writes_(jsonSize) char* jsonBuffer, _Out_opt_ size_t* jsonSizeUsed);
 
+PF_API PFGameSaveFilesGetSaveDescriptionSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* descriptionSize) noexcept;
+PF_API PFGameSaveFilesGetSaveDescriptionForDebug(_In_ PFLocalUserHandle localUserHandle, _In_ size_t descriptionSize, _Out_writes_(descriptionSize) char* descriptionBuffer, _Out_opt_ size_t* descriptionSizeUsed) noexcept;
+
 }

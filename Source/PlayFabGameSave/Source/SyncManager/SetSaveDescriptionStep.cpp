@@ -3,6 +3,7 @@
 #include "LocalStateManifest.h"
 #include "SetSaveDescriptionStep.h"
 #include "LocalUserLoginOperation.h"
+#include "PlatformUtils.h"
 
 using namespace PlayFab::GameSaveWrapper;
 
@@ -47,8 +48,29 @@ HRESULT SetSaveDescriptionStep::SetSaveDescription(
     {
         case SetSaveDescriptionStage::Start:
         {
+            if (!m_entity.has_value())
+            {
+                TRACE_ERROR("[GAME SAVE] SetSaveDescriptionStep: m_entity not set");
+                return E_UNEXPECTED;
+            }
+            if (m_entity.value().Handle() == nullptr)
+            {
+                TRACE_ERROR("[GAME SAVE] SetSaveDescriptionStep: m_entity has null handle");
+                return E_UNEXPECTED;
+            }
+            if (!latestPendingManifest)
+            {
+                TRACE_ERROR("[GAME SAVE] SetSaveDescriptionStep: latestPendingManifest is null");
+                return E_UNEXPECTED;
+            }
+
+            String encodedDescription = Base64Encode(shortSaveDescription);
+
+            TRACE_INFORMATION("[GAME SAVE] SetSaveDescriptionStep: setting description on manifest v:%s",
+                latestPendingManifest->VersionString().c_str());
+
             UpdateManifestRequest request{};
-            request.SetManifestDescription(shortSaveDescription);
+            request.SetManifestDescription(encodedDescription);
             request.SetVersion(latestPendingManifest->VersionString());
 
             TRACE_TASK("SetSaveDescription");
@@ -66,7 +88,7 @@ HRESULT SetSaveDescriptionStep::SetSaveDescription(
                 else
                 {
                     m_setHR = result.hr;
-                    m_stage = SetSaveDescriptionStage::LockStepFailure;
+                    m_stage = SetSaveDescriptionStage::SetSaveDescStepFailure;
                     task.ScheduleNow();
                 }
             });
@@ -74,7 +96,7 @@ HRESULT SetSaveDescriptionStep::SetSaveDescription(
             return S_OK;
         }
 
-        case SetSaveDescriptionStage::LockStepFailure:
+        case SetSaveDescriptionStage::SetSaveDescStepFailure:
         {
             return m_setHR;
         }

@@ -70,9 +70,7 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientGetPlayFabIDsFromTwitchIDs(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientGetPlayFabIDsFromXboxLiveIDs(TestContext& testContext);
-#endif
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientLinkAndroidDeviceID(TestContext& testContext);
 #endif
@@ -120,9 +118,7 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientLinkTwitch(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientLinkXboxAccount(TestContext& testContext);
-#endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientRemoveContactEmail(TestContext& testContext);
 #endif
@@ -177,9 +173,7 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientUnlinkTwitch(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientUnlinkXboxAccount(TestContext& testContext);
-#endif
     void TestClientUpdateAvatarUrl(TestContext& testContext);
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientUpdateUserTitleDisplayName(TestContext& testContext);
@@ -322,9 +316,7 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestServerUpdateBans(TestContext& testContext);
 #endif
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestGetTitlePlayersFromXboxLiveIDs(TestContext& testContext);
-#endif
     void TestSetDisplayName(TestContext& testContext);
 
 };

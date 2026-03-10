@@ -39,7 +39,7 @@ JsonValue ToJson(const PFJsonObject& jsonObject)
     // By design, map empty jsonObject to null JsonValue
     if (!jsonObject.stringValue)
     {
-        return JsonValue{};
+        return JsonValue();
     }
 
     return JsonValue::parse(jsonObject.stringValue);
@@ -242,7 +242,7 @@ HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const std
     }
     else
     {
-        return ObjectAddMember(jsonObject, name, JsonValue{});
+        return ObjectAddMember(jsonObject, name, JsonValue());
     }
 }
 
@@ -254,13 +254,13 @@ HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const tim
     }
     else
     {
-        return ObjectAddMember(jsonObject, name, JsonValue{});
+        return ObjectAddMember(jsonObject, name, JsonValue());
     }
 }
 
 HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const time_t* array, uint32_t arrayCount)
 {
-    JsonValue member{};
+    JsonValue member = JsonValue::array();
     for (auto i = 0u; i < arrayCount; ++i)
     {
         member.push_back(ToJsonTime(array[i]));
@@ -270,7 +270,7 @@ HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const tim
 
 HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const PFDateTimeDictionaryEntry* associativeArray, uint32_t arrayCount)
 {
-    JsonValue member{};
+    JsonValue member = JsonValue::object();
     for (auto i = 0u; i < arrayCount; ++i)
     {
         auto& entry{ associativeArray[i] };
@@ -329,7 +329,7 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, CStringVe
             return E_FAIL;
         }
 
-        auto jsonArray{ findResult.Payload()->get<Vector<String>>() };
+        auto jsonArray = findResult.Payload()->get<Vector<String>>();
         output.reserve(jsonArray.size());
         for (const auto& value : jsonArray)
         {
@@ -354,7 +354,7 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, StringDic
             return E_FAIL;
         }
 
-        auto memberObject{ findResult.Payload()->get<JsonValue>() };
+        auto memberObject = findResult.Payload()->get<JsonValue>();
         output.reserve(memberObject.size());
         for (auto& [key, value] : memberObject.items()) {
             String stringValue{};
@@ -403,7 +403,7 @@ HRESULT ObjectGetMemberTime(const JsonValue& jsonObject, const char* name, Vecto
             return E_FAIL;
         }
 
-        auto jsonArray{ findResult.Payload()->get<Vector<time_t>>() };
+        auto jsonArray = findResult.Payload()->get<Vector<time_t>>();
         output.reserve(jsonArray.size());
         for (const auto& value : jsonArray)
         {
@@ -427,7 +427,7 @@ HRESULT ObjectGetMemberTime(const JsonValue& jsonObject, const char* name, Dicti
             return E_FAIL;
         }
 
-        auto memberObject{ findResult.Payload()->get<JsonValue>() };
+        auto memberObject = findResult.Payload()->get<JsonValue>();
         output.reserve(memberObject.size());
         for (auto& [key, value] : memberObject.items()) {
             time_t timeValue{};

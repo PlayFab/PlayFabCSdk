@@ -240,7 +240,14 @@ void RunContextState::TaskQueueSubmitCallback(XTaskQueuePort port, SharedPtr<ITa
     ++m_pendingTaskQueueCallbacks;
     lock.unlock();
 
-    TRACE_VERBOSE("RunContextState[id=%u] TaskQueue callback submitted", m_id);
+    if (delayInMs > 0)
+    {
+        TRACE_INFORMATION("RunContextState[id=%u] TaskQueue callback submitted with DELAY=%ums, port=%d", m_id, delayInMs, static_cast<int>(port));
+    }
+    else
+    {
+        TRACE_VERBOSE("RunContextState[id=%u] TaskQueue callback submitted", m_id);
+    }
 
     HRESULT hr = XTaskQueueSubmitDelayedCallback(m_queue.Handle(), port, delayInMs, context, TaskQueueCallback);
     if (FAILED(hr))

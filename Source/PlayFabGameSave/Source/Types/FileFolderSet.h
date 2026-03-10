@@ -12,10 +12,10 @@ class FileFolderSet
 {
 public:
     // Init functions setup m_files, m_folders, m_compressedFiles and the related maps.
-    HRESULT InitWithLocalFilesAndFolders(const String& saveFolder, _Out_opt_ String* shortSaveDescription);
+    HRESULT InitWithLocalFilesAndFolders(const String& saveFolder, _Out_opt_ String* shortSaveDescription, _Out_opt_ bool* descriptionDirty);
     HRESULT InitWithExtendedManifest(const Vector<char>& manifestBytes, const DownloadDetailsWrapVector& remoteFileDetails, const String& saveFolder);
     void UpdateFilesWithUploadData();
-    void UpdateFilesWithDownloadData(const FileDetail& remoteFile, const String& relFilePath);
+    void UpdateFilesWithDownloadData(const FileDetail& remoteFile, const String& relFilePath, const String& saveFolder);
 
     // Indices into m_compressedFiles
     void SetCompressedFilesToDownload(Vector<size_t>&& compressedFileIndies);
@@ -81,12 +81,13 @@ public:
     uint64_t GetTotalUncompressedSize() const;
 
     HRESULT ExtendedManifestParseFolderJson(const JsonValue& folderJson, const String& curPath, bool isRoot, const String& saveFolder);
+
+    void Clear(); // Clears all data, returning to initial empty state
+
 private:
     // Internal private functions used by Init* functions
     HRESULT MergeLocalFolders(const String& rootPath, const String& folderName, const String& fullFolderPath);
     HRESULT MergeLocalFiles(const String& rootPath, const String& fullFolderPath, size_t folderIndex);
-
-    void Clear();
     size_t AddFileDetail(FileDetail&& fileDetail); // returns index of FileDetail in m_files
     size_t AddFolderDetail(FolderDetail&& folderDetail); // returns index of FolderDetail in m_folders
     size_t AddCompressedFile(CompressedFile&& compressedFile); // returns index of CompressedFile in m_compressedFiles

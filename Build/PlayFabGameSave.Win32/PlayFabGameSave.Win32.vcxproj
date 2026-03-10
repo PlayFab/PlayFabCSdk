@@ -11,6 +11,7 @@
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.import.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.Common\PlayFabGameSave.Common.vcxitems" Label="Shared" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.Win32\PlayFabGameSave.Win32.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.ServiceWrappers\PlayFabGameSave.ServiceWrappers.vcxitems" Label="Shared" />
   <PropertyGroup>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>

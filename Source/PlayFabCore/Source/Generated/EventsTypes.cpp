@@ -14,7 +14,7 @@ JsonValue DeleteDataConnectionRequest::ToJson() const
 
 JsonValue DeleteDataConnectionRequest::ToJson(const PFEventsDeleteDataConnectionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -57,7 +57,7 @@ JsonValue GetDataConnectionRequest::ToJson() const
 
 JsonValue GetDataConnectionRequest::ToJson(const PFEventsGetDataConnectionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -70,7 +70,7 @@ JsonValue DataConnectionAzureBlobSettings::ToJson() const
 
 JsonValue DataConnectionAzureBlobSettings::ToJson(const PFEventsDataConnectionAzureBlobSettings& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AccountName", input.accountName);
     JsonUtils::ObjectAddMember(output, "ContainerName", input.containerName);
     JsonUtils::ObjectAddMember(output, "TenantId", input.tenantId);
@@ -150,7 +150,7 @@ JsonValue DataConnectionAzureDataExplorerSettings::ToJson() const
 
 JsonValue DataConnectionAzureDataExplorerSettings::ToJson(const PFEventsDataConnectionAzureDataExplorerSettings& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ClusterUri", input.clusterUri);
     JsonUtils::ObjectAddMember(output, "Database", input.database);
     JsonUtils::ObjectAddMember(output, "Table", input.table);
@@ -230,7 +230,7 @@ JsonValue DataConnectionFabricKQLSettings::ToJson() const
 
 JsonValue DataConnectionFabricKQLSettings::ToJson(const PFEventsDataConnectionFabricKQLSettings& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ClusterUri", input.clusterUri);
     JsonUtils::ObjectAddMember(output, "Database", input.database);
     JsonUtils::ObjectAddMember(output, "Table", input.table);
@@ -310,7 +310,7 @@ JsonValue DataConnectionSettings::ToJson() const
 
 JsonValue DataConnectionSettings::ToJson(const PFEventsDataConnectionSettings& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<DataConnectionAzureBlobSettings>(output, "AzureBlobSettings", input.azureBlobSettings);
     JsonUtils::ObjectAddMember<DataConnectionAzureDataExplorerSettings>(output, "AzureDataExplorerSettings", input.azureDataExplorerSettings);
     JsonUtils::ObjectAddMember<DataConnectionFabricKQLSettings>(output, "AzureFabricKQLSettings", input.azureFabricKQLSettings);
@@ -594,7 +594,7 @@ JsonValue ListDataConnectionsRequest::ToJson() const
 
 JsonValue ListDataConnectionsRequest::ToJson(const PFEventsListDataConnectionsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
@@ -647,7 +647,7 @@ JsonValue SetDataConnectionRequest::ToJson() const
 
 JsonValue SetDataConnectionRequest::ToJson(const PFEventsSetDataConnectionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<DataConnectionSettings>(output, "ConnectionSettings", input.connectionSettings);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "IsActive", input.isActive);
@@ -706,7 +706,7 @@ JsonValue SetDataConnectionActiveRequest::ToJson() const
 
 JsonValue SetDataConnectionActiveRequest::ToJson(const PFEventsSetDataConnectionActiveRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Active", input.active);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
@@ -765,7 +765,7 @@ JsonValue EventContents::ToJson() const
 
 JsonValue EventContents::ToJson(const PFEventsEventContents& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "EventNamespace", input.eventNamespace);
@@ -784,7 +784,7 @@ JsonValue WriteEventsRequest::ToJson() const
 
 JsonValue WriteEventsRequest::ToJson(const PFEventsWriteEventsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<EventContents>(output, "Events", input.events, input.eventsCount);
     return output;

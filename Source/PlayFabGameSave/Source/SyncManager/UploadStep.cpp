@@ -5,6 +5,8 @@
 #include "ApiHelpers.h"
 #include "ProgressHelpers.h"
 #include "ZipUtils.h"
+#include "LockStep.h" // for TryGetLatestFinalizedManifest signature
+#include "PlatformUtils.h"
 
 using namespace PlayFab::GameSaveWrapper;
 
@@ -32,13 +34,17 @@ void UploadStep::Reset()
     m_stage = UploadStage::UploadStart;
     m_deleteManifestStage = DeleteManifestStage::DeleteManifestStart;
     m_hasStartedFinalizeManifest = false; // reset finalize tracking
+    m_conflictMetadata = ConflictMetadata(); // reset conflict metadata
 
     m_totalUncompressedSizeBytes = 0;
     m_currentUncompressedSizeBytes = 0;
     m_totalCompressedSizeBytes = 0;
+    m_currentCompressedSizeBytes = 0;
     m_manifests.clear();
     m_postUploadPendingPFManifest = ManifestWrap();
     m_postUploadLatestFinalizedPFManifest = ManifestWrap();
+    m_originalActivationBaselineVersion = 0;
+    m_originalBaselinePromoted = false;
 
 #if _DEBUG // just for debug stats
     m_numFilesInFinalizedManifest = 0;
@@ -221,6 +227,8 @@ HRESULT UploadStep::AddCompressedFile(
     String relFilePath = localFileFolderSet->GetRelFilePath(fileToUpload);
     RETURN_IF_FAILED(JoinPathHelper(saveFolder, relFilePath, afd.fullPath));
     afd.uncompressedSize = fileToUpload->fileSizeBytes;
+    afd.timeLastModified = fileToUpload->timeLastModified;
+    afd.timeCreated = fileToUpload->timeCreated;
     TRACE_INFORMATION("[GAME SAVE] UploadStep: Compressing file %s. size %llu", afd.fullPath.c_str(), afd.uncompressedSize);
     u.archiveContext->AddFile(relFilePath, std::move(afd));
     return S_OK;
@@ -345,19 +353,21 @@ void UploadStep::UploadFileFinally(
     TRACE_TASK(FormatString("UploadFileFinally HR:0x%0.8x", hr));
 
     auto& detail = m_compressedFilesToUpload[m_compressedFilesToUploadCurIndex];
+    // Always accumulate progress for both uncompressed (telemetry) and compressed (actual transfer) sizes
+    m_currentUncompressedSizeBytes += detail.uncompressedSizeBytes;
+    m_currentCompressedSizeBytes += detail.compressedSizeBytes;
     if (detail.archiveContext)
     {
-        m_currentUncompressedSizeBytes += detail.uncompressedSizeBytes;
+        // Temporary zip cleanup after successful upload attempt (we still delete even if subsequent logic fails)
         HRESULT deleteResult = FilePAL::DeleteLocalFile(detail.fullFilePath);
         if (FAILED(deleteResult))
         {
             m_telemetryManager->SetContextSyncHResult(deleteResult);
             m_telemetryManager->EmitContextSyncErrorEvent();
             m_stage = UploadStage::WaitForFailedUI_UploadFile;
-            if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, deleteResult, PFGameSaveFilesSyncState::Uploading) )
+            if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, deleteResult, PFGameSaveFilesSyncState::Uploading))
             {
-                // No fail callback set, so just fail API
-                m_stage = UploadStage::LockStepFailure;
+                m_stage = UploadStage::UploadStepFailure;
                 m_failureHR = deleteResult;
                 task.ScheduleNow();
             }
@@ -373,7 +383,7 @@ void UploadStep::UploadFileFinally(
         if( false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, hr, PFGameSaveFilesSyncState::Uploading) )
         {
             // No fail callback set, so just fail API
-            m_stage = UploadStage::LockStepFailure;
+            m_stage = UploadStage::UploadStepFailure;
             m_failureHR = hr;
             task.ScheduleNow();
         }
@@ -385,6 +395,7 @@ void UploadStep::UploadFileFinally(
             // uploaded last file (extended manifest)
             m_stage = UploadStage::FinalizeManifest;
             m_currentUncompressedSizeBytes = m_totalUncompressedSizeBytes;
+            m_currentCompressedSizeBytes = m_totalCompressedSizeBytes;
         }
         else
         {
@@ -401,7 +412,8 @@ void UploadStep::UploadFileFinally(
             m_compressedFilesToUploadCurIndex++;
         }
         
-        innerProgressContext->callback(PFGameSaveFilesSyncState::Uploading, m_currentUncompressedSizeBytes, m_totalUncompressedSizeBytes, innerProgressContext->callbackContext);
+        // Report progress using compressed byte counts (actual transfer units)
+        innerProgressContext->callback(PFGameSaveFilesSyncState::Uploading, m_currentCompressedSizeBytes, m_totalCompressedSizeBytes, innerProgressContext->callbackContext);
         task.ScheduleNow();
     }
 }
@@ -419,21 +431,27 @@ HRESULT UploadStep::Upload(
     _In_ std::recursive_mutex& folderSyncMutex,
     _In_ ProgressCallback progressCallback,
     _In_ void* progressCallbackContext,
-    _In_ const String& shortSaveDescription
+    _In_ const String& shortSaveDescription,
+    _In_ const ConflictMetadata& conflictMetadata
 )
 {
+    UNREFERENCED_PARAMETER(syncProgress);
     ScopeTracer scopeTracer(FormatString("UploadStep - %s", EnumName(m_stage)));
 
     switch (m_stage)
     {
         case UploadStage::UploadStart:
         {
+            uiCallbackManager.ClearProgressCancel(); // Clear any stale cancel request from previous operation
             m_telemetryManager->ResetContextSync();
             m_telemetryManager->SetContextSyncStartTime();
             m_telemetryManager->SetContextSyncSyncDownload(false);
+            m_conflictMetadata = conflictMetadata; // Store conflict metadata for later use in FinalizeManifest
             m_telemetryManager->SetContextSyncSyncErrorSource(SyncErrorSource::SER_RegisterUpload);
             m_telemetryManager->SetContextSyncContextVersion(latestPendingManifest->GetManifest().GetVersion());
-            syncProgress.syncState = PFGameSaveFilesSyncState::Uploading;
+            // Use progress callback to set sync state with proper mutex protection
+            // This fixes a thread-safety bug where direct assignment could race with GetSyncProgress()
+            progressCallback(PFGameSaveFilesSyncState::Uploading, 0, 0, progressCallbackContext);
             uiCallbackManager.ShowProgressUI(task, m_localUser, PFGameSaveFilesSyncState::Uploading); // no issue if callback not set
             this->m_stage = UploadStage::CompressFiles;
             task.ScheduleNow();
@@ -442,7 +460,14 @@ HRESULT UploadStep::Upload(
 
         case UploadStage::CompressFiles:
         {
-            // TODO: Task 50948316: PFGameSave: hook up cancel from progression dialog
+           // Check for cancel request from progress UI
+            if (uiCallbackManager.IsProgressCancelRequested())
+            {
+                TRACE_INFORMATION("[GAME SAVE] UploadStep: Cancel requested by user");
+                uiCallbackManager.ClearProgressCancel();
+                return E_PF_GAMESAVE_USER_CANCELLED;
+            }
+
             m_compressedFilesToUpload.clear();
             m_compressedFilesToUploadCurIndex = 0;
             auto compressResult = CompressFiles(localFileFolderSet, saveFolder, latestPendingManifest->VersionString());
@@ -545,7 +570,7 @@ HRESULT UploadStep::Upload(
                     if( false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading) )
                     {
                         // No fail callback set, so just fail API
-                        m_stage = UploadStage::LockStepFailure;
+                        m_stage = UploadStage::UploadStepFailure;
                         m_failureHR = result.hr;
                         task.ScheduleNow();
                     }
@@ -563,6 +588,14 @@ HRESULT UploadStep::Upload(
 
         case UploadStage::UploadFile:
         {
+            // Check for cancel request from progress UI
+            if (uiCallbackManager.IsProgressCancelRequested())
+            {
+                TRACE_INFORMATION("[GAME SAVE] UploadStep: Cancel requested by user during UploadFile");
+                uiCallbackManager.ClearProgressCancel();
+                return E_PF_GAMESAVE_USER_CANCELLED;
+            }
+
             UploadFileDetail fileDetail{};
             ExtendedManifestCompressedFileDetail& curUploadDetail = m_compressedFilesToUpload[m_compressedFilesToUploadCurIndex];
             fileDetail.fileName = curUploadDetail.fileName;
@@ -622,7 +655,8 @@ HRESULT UploadStep::Upload(
 
                 TRACE_TASK("UploadSingleFileToCloud");
                 TRACE_INFORMATION("[GAME SAVE] UploadStep: file %s path %s", fileDetail.fileName.c_str(), fileDetail.fullFilePath.c_str());
-                GameSaveServiceSelector::UploadSingleFileToCloud(runContext, fileDetail, m_initiateResult.GetFiles(), InnerProgressCallback, innerProgressContext.get(), m_totalUncompressedSizeBytes, m_currentUncompressedSizeBytes)
+                // Use compressed totals for dynamic size to accurately reflect transfer progress
+                GameSaveServiceSelector::UploadSingleFileToCloud(runContext, fileDetail, m_initiateResult.GetFiles(), InnerProgressCallback, innerProgressContext.get(), m_totalCompressedSizeBytes, m_currentCompressedSizeBytes)
                 .Finally([this, &task, &uiCallbackManager, &folderSyncMutex, innerProgressContext](Result<void> result)
                 {
                     m_telemetryManager->SetContextSyncHttpInfo(result.httpResult);
@@ -678,7 +712,33 @@ HRESULT UploadStep::Upload(
             m_numFilesInFinalizedManifest = filesToRequestList.size();
 #endif
             finalizeRequest.SetFilesToFinalize(std::move(filesToRequestList));
-            finalizeRequest.SetManifestDescription(shortSaveDescription);
+            
+            // Base64 encode the description for GRTS compatibility
+            String encodedDescription = Base64Encode(shortSaveDescription);
+            finalizeRequest.SetManifestDescription(encodedDescription);
+            
+            // Log description being sent for diagnostics
+            if (shortSaveDescription.empty())
+            {
+                TRACE_WARNING("[GAME SAVE] FinalizeManifest: shortSaveDescription is EMPTY");
+            }
+            else
+            {
+                TRACE_INFORMATION("[GAME SAVE] FinalizeManifest: shortSaveDescription='%s'", shortSaveDescription.c_str());
+            }
+            
+            // Add conflict metadata if this upload is part of conflict resolution
+            if (m_conflictMetadata.hasConflict)
+            {
+                PlayFab::Wrappers::PFGameSaveFinalizeManifestConflictWrapper<Allocator> conflictWrapper;
+                conflictWrapper.SetIsWinner(m_conflictMetadata.isWinner);
+                conflictWrapper.SetConflictingVersion(m_conflictMetadata.conflictingVersion);
+                finalizeRequest.SetConflict(conflictWrapper);
+                
+                TRACE_INFORMATION("[GAME SAVE] FinalizeManifest with conflict metadata: isWinner=%s conflictingVersion=%s", 
+                    m_conflictMetadata.isWinner ? "true" : "false", 
+                    m_conflictMetadata.conflictingVersion.c_str());
+            }
                 
             TRACE_TASK("FinalizeManifest");
             GameSaveServiceSelector::FinalizeManifest(m_entity.value(), finalizeRequest, runContext)
@@ -728,7 +788,7 @@ HRESULT UploadStep::Upload(
                         if( false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading) )
                         {
                             // No fail callback set, so just fail API
-                            m_stage = UploadStage::LockStepFailure;
+                            m_stage = UploadStage::UploadStepFailure;
                             m_failureHR = result.hr;
                             task.ScheduleNow();
                         }
@@ -754,7 +814,15 @@ HRESULT UploadStep::Upload(
                     }
 
                     localFileFolderSet->UpdateFilesWithUploadData();
-                    LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, shortSaveDescription);
+                    HRESULT writeHr = LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, shortSaveDescription);
+                    if (FAILED(writeHr))
+                    {
+                        TRACE_ERROR("[GAME SAVE] UploadStep: WriteLocalManifest FAILED hr=0x%08X", writeHr);
+                        m_stage = UploadStage::UploadStepFailure;
+                        m_failureHR = writeHr;
+                        task.ScheduleNow();
+                        return;
+                    }
                     m_stage = UploadStage::ListManifestsAfterUpload;
                     task.ScheduleNow();
                 }
@@ -807,7 +875,7 @@ HRESULT UploadStep::Upload(
                     if( false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading) )
                     {
                         // No fail callback set, so just fail API
-                        m_stage = UploadStage::LockStepFailure;
+                        m_stage = UploadStage::UploadStepFailure;
                         m_failureHR = result.hr;
                         task.ScheduleNow();
                     }
@@ -815,7 +883,7 @@ HRESULT UploadStep::Upload(
                 else
                 {
                     m_manifests = result.Payload().GetManifests();
-                    m_stage = UploadStage::TakeLockAfterUpload;
+                    m_stage = UploadStage::PromoteIfNeeded;
                     task.ScheduleNow();
                 }
             });
@@ -823,12 +891,74 @@ HRESULT UploadStep::Upload(
             return S_OK;
         }
 
-        case UploadStage::TakeLockAfterUpload:
+        case UploadStage::PromoteIfNeeded:
         {
             m_postUploadLatestFinalizedPFManifest = ManifestWrap();
+            // TODO: Previously passed ConflictOverlay parameter, now removed
             LockStep::TryGetLatestFinalizedManifest(m_manifests, m_postUploadLatestFinalizedPFManifest);
 
-            TRACE_INFORMATION("[GAME SAVE] UploadStep: TakeLockAfterUpload %s. FinalizedManifest v%s", 
+            auto promotionResult = EvaluateKnownGoodPromotionEligibility();
+            switch (promotionResult)
+            {
+                case KnownGoodPromotionResult::NeedsUpdateCall:
+                {
+                    UpdateManifestRequest request{};
+                    std::string versionStr = std::to_string(m_originalActivationBaselineVersion);
+                    request.SetVersion(versionStr.c_str());
+                    request.SetMarkAsKnownGood(true);
+
+                    TRACE_TASK("BaselinePromotion UpdateManifest");
+                    GameSaveServiceSelector::UpdateManifest(m_entity.value(), request, runContext)
+                    .Finally([this, &task, &uiCallbackManager, &folderSyncMutex](Result<UpdateManifestResponse> result)
+                    {
+                        std::lock_guard<std::recursive_mutex> lock(folderSyncMutex);
+                        TRACE_TASK(FormatString("BaselinePromotion UpdateManifestFinally HR:0x%0.8x", result.hr));
+                        if (FAILED(result.hr))
+                        {
+                            m_stage = UploadStage::WaitForFailedUI_PromoteIfNeeded;
+                            if(false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading))
+                            {
+                                m_stage = UploadStage::UploadStepFailure;
+                                m_failureHR = result.hr;
+                                task.ScheduleNow();
+                            }
+                        }
+                        else
+                        {
+                            m_originalBaselinePromoted = true;
+                            for (auto& manifestRef : m_manifests)
+                            {
+                                if (StringToUint64(manifestRef.GetVersion()) == m_originalActivationBaselineVersion)
+                                {
+                                    manifestRef.SetIsKnownGood(true);
+                                    break;
+                                }
+                            }
+                            // Continue to lock-taking logic
+                            m_stage = UploadStage::TakeLock;
+                            task.ScheduleNow();
+                        }
+                    });
+
+                    return S_OK; // async in-flight
+                }
+
+                case KnownGoodPromotionResult::AlreadyKnownGood:
+                case KnownGoodPromotionResult::NotApplicable:
+                default:
+                {
+                    // No service call needed; proceed
+                    m_stage = UploadStage::TakeLock;
+                    task.ScheduleNow();
+                    return S_OK;
+                }
+            }
+            return S_OK; // transitions handled above
+        }
+
+        case UploadStage::TakeLock:
+        {
+            TRACE_INFORMATION("[GAME SAVE] UploadStep: TakeLock %s. FinalizedManifest v%s", 
                 (option == PFGameSaveFilesUploadOption::KeepDeviceActive) ? "KeepDeviceActive" : "ReleaseDeviceAsActive", 
                 m_postUploadLatestFinalizedPFManifest.GetVersion().c_str());
 
@@ -839,12 +969,12 @@ HRESULT UploadStep::Upload(
                 uint64_t baseManifestVersion = StringToUint64(m_postUploadLatestFinalizedPFManifest.GetVersion());
                 LockStep::CreateInitManifestRequest(m_entity.value(), initManifestRequest, baseManifestVersion, newManifestVersion, m_manifestVersionOffset, saveFolder);
 
-                TRACE_TASK("TakeLockAfterUpload InitializeManifest");
+                TRACE_TASK("TakeLock InitializeManifest");
                 GameSaveServiceSelector::InitializeManifest(m_entity.value(), initManifestRequest, runContext)
                 .Finally([this, &task, &uiCallbackManager, &folderSyncMutex](Result<PlayFab::GameSaveWrapper::InitializeManifestResponse> result)
                 {
                     std::lock_guard<std::recursive_mutex> lock(folderSyncMutex); // Prevent any of the Finally blocks from changing the state while DoWork thread is active
-                    TRACE_TASK(FormatString("TakeLockAfterUpload InitializeManifestFinally HR:0x%0.8x", result.hr));
+                    TRACE_TASK(FormatString("TakeLock InitializeManifestFinally HR:0x%0.8x", result.hr));
                     m_telemetryManager->SetContextSyncHttpInfo(result.httpResult);
 
                     if (FAILED(result.hr))
@@ -852,21 +982,19 @@ HRESULT UploadStep::Upload(
                         m_telemetryManager->SetContextSyncHResult(result.hr);
                         m_telemetryManager->EmitContextSyncErrorEvent();
 
-                        // service can return this if somehow reusing an previously used manifest number:
-                        // {"code":409,"status":"Conflict","error":"GameSaveManifestVersionAlreadyExists","errorCode":20301,"errorMessage":"GameSaveManifestVersionAlreadyExists"}
                         if (result.hr == E_PF_GAME_SAVE_MANIFEST_VERSION_ALREADY_EXISTS)
                         {
-                            m_stage = UploadStage::TakeLockAfterUpload;
+                            m_stage = UploadStage::TakeLock; // retry with incremented offset
                             m_manifestVersionOffset++;
                             task.ScheduleNow();
                         }
                         else
                         {
-                            m_stage = UploadStage::WaitForFailedUI_TakeLockAfterUpload;
-                            if( false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading) )
+                            m_stage = UploadStage::WaitForFailedUI_TakeLock; // new failure wait stage
+                            if(false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading))
                             {
                                 // No fail callback set, so just fail API
-                                m_stage = UploadStage::LockStepFailure;
+                                m_stage = UploadStage::UploadStepFailure;
                                 m_failureHR = result.hr;
                                 task.ScheduleNow();
                             }
@@ -891,36 +1019,100 @@ HRESULT UploadStep::Upload(
                 m_stage = UploadStage::UploadDone;
                 task.ScheduleNow();
             }
-
             return S_OK;
         }
 
         case UploadStage::WaitForFailedUI_InitiateUpload:
         {
-            return uiCallbackManager.HandleFailedUI(task, [this]() { m_stage = UploadStage::InitiateUpload; }, [this]() { assert(false); m_stage = UploadStage::UploadDone; });
+            TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_InitiateUpload: waiting for user response");
+            return uiCallbackManager.HandleFailedUI(task, 
+                [this]() { 
+                    TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_InitiateUpload: user chose RETRY");
+                    m_stage = UploadStage::InitiateUpload; 
+                }, 
+                [this]() { 
+                    TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_InitiateUpload: user chose OFFLINE (unexpected during upload)");
+                    assert(false); 
+                    m_stage = UploadStage::UploadDone; 
+                });
         }
 
         case UploadStage::WaitForFailedUI_UploadFile:
         {
-            return uiCallbackManager.HandleFailedUI(task, [this]() { m_stage = UploadStage::UploadFile; }, [this]() { assert(false); m_stage = UploadStage::UploadDone; });
+            TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_UploadFile: waiting for user response");
+            return uiCallbackManager.HandleFailedUI(task, 
+                [this]() { 
+                    TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_UploadFile: user chose RETRY");
+                    m_stage = UploadStage::UploadFile; 
+                }, 
+                [this]() { 
+                    TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_UploadFile: user chose OFFLINE (unexpected during upload)");
+                    assert(false); 
+                    m_stage = UploadStage::UploadDone; 
+                });
         }
 
         case UploadStage::WaitForFailedUI_FinalizeManifest:
         {
-            return uiCallbackManager.HandleFailedUI(task, [this]() { m_stage = UploadStage::FinalizeManifest; }, [this]() { assert(false); m_stage = UploadStage::UploadDone; });
+            TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_FinalizeManifest: waiting for user response");
+            return uiCallbackManager.HandleFailedUI(task, 
+                [this]() { 
+                    TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_FinalizeManifest: user chose RETRY");
+                    m_stage = UploadStage::FinalizeManifest; 
+                }, 
+                [this]() { 
+                    TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_FinalizeManifest: user chose OFFLINE (unexpected during upload)");
+                    assert(false); 
+                    m_stage = UploadStage::UploadDone; 
+                });
         }
 
         case UploadStage::WaitForFailedUI_ListManifestsAfterUpload:
         {
-            return uiCallbackManager.HandleFailedUI(task, [this]() { m_stage = UploadStage::ListManifestsAfterUpload; }, [this]() { assert(false); m_stage = UploadStage::UploadDone; });
+            TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_ListManifestsAfterUpload: waiting for user response");
+            return uiCallbackManager.HandleFailedUI(task, 
+                [this]() { 
+                    TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_ListManifestsAfterUpload: user chose RETRY");
+                    m_stage = UploadStage::ListManifestsAfterUpload; 
+                }, 
+                [this]() { 
+                    TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_ListManifestsAfterUpload: user chose OFFLINE (unexpected during upload)");
+                    assert(false); 
+                    m_stage = UploadStage::UploadDone; 
+                });
         }
 
-        case UploadStage::WaitForFailedUI_TakeLockAfterUpload:
+        case UploadStage::WaitForFailedUI_PromoteIfNeeded:
         {
-            return uiCallbackManager.HandleFailedUI(task, [this]() { m_stage = UploadStage::TakeLockAfterUpload; }, [this]() { assert(false); m_stage = UploadStage::UploadDone; });
+            TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_PromoteIfNeeded: waiting for user response");
+            return uiCallbackManager.HandleFailedUI(task, 
+                [this]() { 
+                    TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_PromoteIfNeeded: user chose RETRY");
+                    m_stage = UploadStage::PromoteIfNeeded; 
+                }, 
+                [this]() { 
+                    TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_PromoteIfNeeded: user chose OFFLINE (unexpected during upload)");
+                    assert(false); 
+                    m_stage = UploadStage::UploadDone; 
+                });
         }
 
-        case UploadStage::LockStepFailure:
+        case UploadStage::WaitForFailedUI_TakeLock:
+        {
+            TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_TakeLock: waiting for user response");
+            return uiCallbackManager.HandleFailedUI(task, 
+                [this]() { 
+                    TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_TakeLock: user chose RETRY");
+                    m_stage = UploadStage::TakeLock; 
+                }, 
+                [this]() { 
+                    TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_TakeLock: user chose OFFLINE (unexpected during upload)");
+                    assert(false); 
+                    m_stage = UploadStage::UploadDone; 
+                });
+        }
+
+        case UploadStage::UploadStepFailure:
         {
             return m_failureHR;
         }
@@ -933,6 +1125,54 @@ HRESULT UploadStep::Upload(
     }
 
     return S_OK;
+}
+
+UploadStep::KnownGoodPromotionResult UploadStep::EvaluateKnownGoodPromotionEligibility()
+{
+    if (m_originalBaselinePromoted)
+    {
+        return KnownGoodPromotionResult::AlreadyKnownGood; // previously promoted or already true
+    }
+
+    if (m_originalActivationBaselineVersion == 0)
+    {
+        return KnownGoodPromotionResult::NotApplicable; // no baseline captured
+    }
+
+    if (m_manifests.empty())
+    {
+        return KnownGoodPromotionResult::NotApplicable; // nothing to inspect
+    }
+
+    uint64_t newestVer = StringToUint64(m_postUploadLatestFinalizedPFManifest.GetVersion());
+    if (newestVer == 0 || newestVer <= m_originalActivationBaselineVersion)
+    {
+        return KnownGoodPromotionResult::NotApplicable; // no finalized successor yet
+    }
+
+    // Locate baseline manifest
+    for (auto const& manifest : m_manifests)
+    {
+        if (ConvertToManifestStatusEnum(manifest.GetStatus()) != ManifestStatus::Finalized)
+        {
+            continue;
+        }
+
+        if (StringToUint64(manifest.GetVersion()) == m_originalActivationBaselineVersion)
+        {
+            auto isKnownGood = manifest.GetIsKnownGood();
+            if (isKnownGood.has_value() && isKnownGood.value())
+            {
+                m_originalBaselinePromoted = true; // capture so we short-circuit next time
+                return KnownGoodPromotionResult::AlreadyKnownGood;
+            }
+            TRACE_INFORMATION("[GAME SAVE] KnownGoodPromotion eligible: baseline v:%llu successor v:%llu", m_originalActivationBaselineVersion, newestVer);
+            return KnownGoodPromotionResult::NeedsUpdateCall;
+        }
+    }
+
+    TRACE_WARNING("[GAME SAVE] KnownGoodPromotion skipped: baseline v:%llu missing from enumeration", m_originalActivationBaselineVersion);
+    return KnownGoodPromotionResult::NotApplicable;
 }
 
 void UploadStep::SetToUploadFullSet(

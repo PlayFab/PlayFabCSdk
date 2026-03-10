@@ -41,7 +41,7 @@ AsyncOp<GetFriendsListResult> FriendsAPI::ClientGetFriendsList(
             RETURN_IF_FAILED_PLAYFAB(result);
 
             const char* path{ "/Client/GetFriendsList" };
-            JsonValue requestBody{ request.ToJson() };
+            JsonValue requestBody = request.ToJson();
             JsonUtils::ObjectAddMember(requestBody, "XboxToken", result.ExtractPayload().token);
 
             return ServicesHttpClient::MakeEntityRequest(
@@ -57,7 +57,7 @@ AsyncOp<GetFriendsListResult> FriendsAPI::ClientGetFriendsList(
     else
     {
         const char* path{ "/Client/GetFriendsList" };
-        JsonValue requestBody{ request.ToJson() };
+        JsonValue requestBody = request.ToJson();
 
         auto requestOp = ServicesHttpClient::MakeEntityRequest(
             ServicesCacheId::FriendsClientGetFriendsList,

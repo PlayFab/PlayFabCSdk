@@ -52,12 +52,19 @@ public:
     void SetForcedDisconnectFromCloud(bool isForcedDisconnectFromCloud) { m_isForcedDisconnectFromCloud = isForcedDisconnectFromCloud; }
     bool IsForcedDisconnectFromCloud() const { return m_isForcedDisconnectFromCloud; }
     bool IsDeviceReleasedAsActive() const { return m_deviceReleasedAsActive; }
+    bool IsSetSaveDescriptionStepDone() const { return m_setSaveDescriptionStep.IsSetDone(); }
     void ResetSetSaveDescriptionStep();
-    void SetLastShortSaveDescription(const String& shortSaveDescription);
+    void SetLastShortSaveDescription(const String& shortSaveDescription, bool dirty = false);
+    void ClearDescriptionDirty() { m_descriptionDirty = false; }
+    String GetSaveDescriptionForDebug() const;
     bool HasStartedFinalizeManifest() const { return m_uploadStep.HasStartedFinalizeManifest(); }
 
     void SetAddUserOptions(PFGameSaveFilesAddUserOptions o) { m_addUserOptions = o; }
     PFGameSaveFilesAddUserOptions GetAddUserOptions() const { return m_addUserOptions; }
+    
+    // Cancel any pending UI wait during cleanup/shutdown.
+    // Called by GameSaveGlobalState before termination to prevent hangs.
+    void CancelPendingUIWaitForCleanup();
 
     static HRESULT ConvertToPFGameSaveDescriptor(const ManifestWrap& manifest, PFGameSaveDescriptor& gameSave);
 private:
@@ -82,6 +89,7 @@ private:
     SharedPtr<FileFolderSet> m_localFileFolderSet;
     SharedPtr<FileFolderSet> m_remoteFileFolderSet;
     String m_lastShortSaveDescription;
+    bool m_descriptionDirty{ false };          // True if description was set offline and not yet uploaded
 
     std::mutex m_progressMutex;
     bool m_deviceReleasedAsActive{ false };
@@ -92,6 +100,8 @@ private:
     SharedPtr<ActiveDevicePollWorker> m_tokenRefreshWorker;
                       
     DeleteAllStage m_deleteStage{ DeleteAllStage::DeleteAllStageStarted };
+    bool m_conflictUploadStarted{ false };   // Reuse UploadStep during AddUser conflict path
+    bool m_conflictUploadCompleted{ false }; // Set once UploadStep finishes
 };
 
 } // namespace GameSave

@@ -1,6 +1,8 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 #pragma once
 
+#include "EnumTraits.h"
+
 namespace PlayFab
 {
 namespace GameSave
@@ -15,7 +17,7 @@ enum SyncState
     SS_Cancel,
     SS_Complete,
     SS_RollbackToLKG,
-    SS_RollbackToConflict
+    SS_RollbackToConflict //NOTE: See below where we have to define a specialization to define the max value for this enum (needed due to Clang compiler error).  If you add more values to this enum, you must update that specialization.
 };
 
 enum ManifestState
@@ -23,7 +25,7 @@ enum ManifestState
     MS_Initialized = 0, // Manifest has been initialized with PlayFab
     MS_Uploading,       // Manifest data is being uploaded
     MS_Finalized,       // Manifest data has been uploaded and committed
-    MS_PendingDeletion  // Manifest data is being deleted
+    MS_PendingDeletion  // Manifest data is being deleted.  //NOTE: See below where we have to define a specialization to define the max value for this enum (needed due to Clang compiler error).  If you add more values to this enum, you must update that specialization.
 };
 
 enum ConflictResolution
@@ -32,7 +34,7 @@ enum ConflictResolution
     CR_KeepLocal,               // Resolve by preferring local data over remote data
     CR_TakeRemote,              // Resolve by preferring remote data over local data
     CR_SelectVersion,           // Resolve by showing available version
-    CR_NoResolutionChosen       // User canceled without resolution
+    CR_NoResolutionChosen       // User canceled without resolution.  //NOTE: See below where we have to define a specialization to define the max value for this enum (needed due to Clang compiler error).  If you add more values to this enum, you must update that specialization.
 };
 
 enum SyncErrorSource
@@ -42,14 +44,14 @@ enum SyncErrorSource
     SER_DownloadData,
     SER_RegisterUpload,
     SER_UploadData,
-    SER_FinalizeUpload
+    SER_FinalizeUpload //NOTE: See below where we have to define a specialization to define the max value for this enum (needed due to Clang compiler error).  If you add more values to this enum, you must update that specialization.
 };
 
 enum DeleteType
 {
     DT_Local,
     DT_Version,
-    DT_All,
+    DT_All, //NOTE: See below where we have to define a specialization to define the max value for this enum (needed due to Clang compiler error).  If you add more values to this enum, you must update that specialization.
 };
 
 enum StateMachineLocation : uint32_t
@@ -59,7 +61,7 @@ enum StateMachineLocation : uint32_t
     // LockStep
     Login,
     ListManifests,
-    ShowUIAsNeeded,
+    SelectBaselineAndCheckContention,
     CreatePendingManifest,
     WaitForActiveDeviceContentionUI,
     WaitForFailedUI_Login,
@@ -321,4 +323,41 @@ private:
 };
 
 } // namespace GameSave
+
+// Specialization to define the max value for ManifestState enum (needed due to Clang compiler error)
+template <>
+struct EnumRange<GameSave::ManifestState>
+{
+    static constexpr GameSave::ManifestState maxValue = GameSave::MS_PendingDeletion;
+};
+
+// Specialization to define the max value for SyncState enum (needed due to Clang compiler error)
+template <>
+struct EnumRange<GameSave::SyncState>
+{
+    static constexpr GameSave::SyncState maxValue = GameSave::SS_RollbackToConflict;
+};
+
+// Specialization to define the max value for ConflictResolution enum (needed due to Clang compiler error)
+template <>
+struct EnumRange<GameSave::ConflictResolution>
+{
+    static constexpr GameSave::ConflictResolution maxValue = GameSave::CR_NoResolutionChosen;
+};
+
+// Specialization to define the max value for DeleteType enum (needed due to Clang compiler error)
+template <>
+struct EnumRange<GameSave::DeleteType>
+{
+    static constexpr GameSave::DeleteType maxValue = GameSave::DT_All;
+};
+
+// Specialization to define the max value for SyncErrorSource enum (needed due to Clang compiler error)
+template <>
+struct EnumRange<GameSave::SyncErrorSource>
+{
+    static constexpr GameSave::SyncErrorSource maxValue = GameSave::SER_FinalizeUpload;
+};
+
+
 } // namespace PlayFab

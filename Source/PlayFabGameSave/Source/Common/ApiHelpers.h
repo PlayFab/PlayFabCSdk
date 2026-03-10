@@ -2,6 +2,8 @@
 #pragma once
 #include "stdafx.h"
 
+#include "GameSaveGlobalState.h"
+
 namespace PlayFab
 {
 namespace GameSave

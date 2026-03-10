@@ -13,7 +13,7 @@ enum class LockStage
 {
     Login = 0,
     ListManifests,
-    ShowUIAsNeeded,
+    SelectBaselineAndCheckContention,
     CreatePendingManifest,
     WaitForActiveDeviceContentionUI,
     WaitForFailedUI_Login,
@@ -38,8 +38,9 @@ public:
     );
     int64_t GetPerPlayerQuotaBytes() const;
     std::optional<Entity> GetEntity() const;
-    const ManifestWrap& GetLatestPendingPFManifest() const;
-    const ManifestWrap& GetLatestFinalizedPFManifest() const;
+    const ManifestWrap& GetLatestPendingPFManifest() const;  
+    const ManifestWrap& GetBaselineFinalizedManifest() const; // Returns the finalized manifest chosen as the baseline for this activation (may be latest or a rollback-selected alternate)
+    ManifestWrap SelectBaselineManifest(const ManifestWrap& latestFinalizedL, bool& rollbackBaselineSelected);
     void Reset();
 
     static void CreateInitManifestRequest(
@@ -49,6 +50,7 @@ public:
         _In_ uint64_t newManifestVersion,
         _In_ uint64_t manifestVersionOffset,
         _In_ const String& saveFolder);
+
     static HRESULT TryGetLatestFinalizedManifest(_In_ const ManifestWrapVector& manifests, _In_ ManifestWrap& latestFinalizedManifest);
     static const ManifestWrap* TryGetLatestPendingManifest(_In_ const ManifestWrapVector& manifests, _In_ ManifestWrap& latestFinalizedManifest);
 
@@ -62,7 +64,7 @@ private:
     ManifestWrapVector m_manifests;
     String m_nextAvailableVersion;
     ManifestWrap m_latestPendingPFManifest;
-    ManifestWrap m_latestFinalizedPFManifest;
+    ManifestWrap m_baselineFinalizedManifest;
     bool m_forceDisconnectFromCloud{ false };
     LockStage m_stage{ LockStage::Login };
     HRESULT m_failureHR{ S_OK };

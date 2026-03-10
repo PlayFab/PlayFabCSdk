@@ -112,6 +112,9 @@ void ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(const PFXGameSaveDescrip
         return;
     }
 
+    TRACE_INFORMATION("ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor: input time=%lld, totalBytes=%llu, uploadedBytes=%llu", 
+        static_cast<long long>(descIn->time), descIn->totalBytes, descIn->uploadedBytes);
+
     descOut->time = descIn->time;
     descOut->totalBytes = descIn->totalBytes;
     descOut->uploadedBytes = descIn->uploadedBytes;
@@ -159,14 +162,21 @@ void ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(const PFXGameSaveDescrip
     {
         descOut->shortSaveDescription[0] = '\0';
     }
+
+    TRACE_INFORMATION("ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor: output time=%lld, totalBytes=%llu, uploadedBytes=%llu", 
+        descOut->time, descOut->totalBytes, descOut->uploadedBytes);
 }
 
 HRESULT GameSaveAPIProviderGRTS::Initialize(_In_ PFGameSaveInitArgs* args) noexcept
 {
-    TRACE_INFORMATION("GameSaveAPIProviderGRTS::Initialize");
     if (args && args->saveFolder && args->saveFolder[0] != '\0')
     {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::Initialize: saveFolder='%s'", args->saveFolder);
         this->m_initSaveFolder = String(args->saveFolder);
+    }
+    else
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::Initialize: no saveFolder specified");
     }
     return S_OK;
 }
@@ -238,10 +248,36 @@ static HRESULT PFXPALCallGetFolderWithUiAsync(PFXPALGetFolderContext* context)
     {
         configRequest.flags |= static_cast<uint32_t>(PFXGameSaveConfigRequestInitFlags::InitFlagUseFileLocation);
         configRequest.fileLocation = context->saveFolderOverride;
+
+        // Ensure folder exists before calling GRTS
+        BOOL created = CreateDirectoryA(context->saveFolderOverride, nullptr);
+        DWORD lastError = GetLastError();
+        TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: CreateDirectoryA('%s') result=%d, lastError=%u", 
+            context->saveFolderOverride, created, lastError);
+
+        if (!created && lastError != ERROR_ALREADY_EXISTS)
+        {
+            TRACE_WARNING("PFXPALCallGetFolderWithUiAsync: Failed to create directory '%s', error=%u", 
+                context->saveFolderOverride, lastError);
+            return HRESULT_FROM_WIN32(lastError);
+        }
     }
+
+    // Log all config request parameters before calling PFXGameSaveInitializeConfig
+    TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: configRequest.requestingUser=%p", configRequest.requestingUser);
+    TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: configRequest.titleId=%s", configRequest.titleId ? configRequest.titleId : "(null)");
+    TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: configRequest.apiUrl=%s", configRequest.apiUrl ? configRequest.apiUrl : "(null)");
+    TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: configRequest.flags=0x%08x", configRequest.flags);
+    TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: configRequest.entityId=%s (len=%zu)", 
+        configRequest.entityId ? configRequest.entityId : "(null)",
+        configRequest.entityId ? strlen(configRequest.entityId) : 0);
+    TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: configRequest.entityToken len=%zu", 
+        configRequest.entityToken ? strlen(configRequest.entityToken) : 0);
+    TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: configRequest.fileLocation=%s", configRequest.fileLocation ? configRequest.fileLocation : "(null)");
 
     PFXGameSaveConfigHandle configHandle{};
     hr = PFXGameSaveInitializeConfig(&configRequest, &configHandle);
+    TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: PFXGameSaveInitializeConfig hr=0x%08x", hr);
     RETURN_IF_FAILED(hr);
 
     void* gsContextPtr = nullptr;
@@ -273,6 +309,11 @@ static HRESULT PFXPALCallGetFolderWithUiAsync(PFXPALGetFolderContext* context)
             return E_FAIL; // All slots full
         }
         indexFound = firstEmptySlot;
+        TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: using new slot index=%u", indexFound);
+    }
+    else
+    {
+        TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: reusing existing slot index=%u", indexFound);
     }
 
     PFLocalUserHandle duplicatedHandle{};
@@ -292,12 +333,14 @@ static HRESULT PFXPALCallGetFolderWithUiAsync(PFXPALGetFolderContext* context)
     context->getFolderAsyncBlock.queue = context->compositeQueue;
     context->getFolderAsyncBlock.context = context;
     hr = PFXGameSaveFilesGetFolderWithUiAsync(configHandle, &context->getFolderAsyncBlock);
+    TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: PFXGameSaveFilesGetFolderWithUiAsync hr=0x%08x", hr);
     if (SUCCEEDED(hr))
     {
         context->getFolderAsyncStarted = true;
         // If cancel already requested before the inner async was started, propagate immediately
         if (context->cancelRequested)
         {
+            TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: cancelling due to earlier cancel request");
             XAsyncCancel(&context->getFolderAsyncBlock);
         }
     }
@@ -311,15 +354,19 @@ static void CALLBACK PFXPALEntityTokenComplete(XAsyncBlock* async)
     // Called after PFEntityGetEntityTokenAsync completes; continue config creation
     PFXPALGetFolderContext* context = static_cast<PFXPALGetFolderContext*>(async->context);
     HRESULT hr = XAsyncGetStatus(async, false);
+    TRACE_INFORMATION("PFXPALEntityTokenComplete: XAsyncGetStatus hr=0x%08x, cancelRequested=%s", 
+        hr, context->cancelRequested ? "true" : "false");
     if (context->cancelRequested || hr == E_ABORT)
     {
         // Cancellation requested: complete outer async with user cancelled code.
+        TRACE_INFORMATION("PFXPALEntityTokenComplete: cancellation or abort, completing with E_ABORT");
         XAsyncComplete(context->clientAsyncBlock, E_ABORT, 0);
         return;
     }
     if (FAILED(hr))
     {
         // Fall back without entity auth
+        TRACE_INFORMATION("PFXPALEntityTokenComplete: entity token failed, falling back without entity auth");
         context->useEntityAuth = false;
     }
     else
@@ -334,16 +381,27 @@ static void CALLBACK PFXPALEntityTokenComplete(XAsyncBlock* async)
             {
                 StrCpy(context->entityToken, sizeof(context->entityToken), tokenStruct->token);
                 context->useEntityAuth = true;
+                TRACE_INFORMATION("PFXPALEntityTokenComplete: entity token obtained successfully, useEntityAuth=true");
             }
+            else
+            {
+                TRACE_INFORMATION("PFXPALEntityTokenComplete: failed to get valid entity token result");
+            }
+        }
+        else
+        {
+            TRACE_INFORMATION("PFXPALEntityTokenComplete: failed to get entity token result size");
         }
     }
 
     // entity handle already released after starting token async
 
     // Continue with config creation (ignore failure to obtain token: fallback)
+    TRACE_INFORMATION("PFXPALEntityTokenComplete: continuing with config creation");
     hr = PFXPALCallGetFolderWithUiAsync(context);
     if (FAILED(hr))
     {
+        TRACE_INFORMATION("PFXPALEntityTokenComplete: PFXPALCallGetFolderWithUiAsync failed hr=0x%08x", hr);
         XAsyncComplete(context->clientAsyncBlock, hr, 0);
     }
 }
@@ -353,34 +411,50 @@ static void CALLBACK PFXPALLocalUserLoginComplete(XAsyncBlock* async)
     PFXPALGetFolderContext* context = static_cast<PFXPALGetFolderContext*>(async->context);
 
     HRESULT hr = XAsyncGetStatus(async, false);
+    TRACE_INFORMATION("PFXPALLocalUserLoginComplete: XAsyncGetStatus hr=0x%08x, cancelRequested=%s", 
+        hr, context->cancelRequested ? "true" : "false");
     if (context->cancelRequested || hr == E_ABORT)
     {
         // Cancellation requested: complete outer async with user cancelled code.
+        TRACE_INFORMATION("PFXPALLocalUserLoginComplete: cancellation or abort, completing with E_ABORT");
         XAsyncComplete(context->clientAsyncBlock, E_ABORT, 0);
         return;
     }
     if (FAILED(hr))
     {
         // Fall back without entity auth
+        TRACE_INFORMATION("PFXPALLocalUserLoginComplete: login failed, falling back without entity auth");
         context->useEntityAuth = false;
     }
     else
     {
         PFEntityHandle localEntityHandle{};
         hr = PFLocalUserTryGetEntityHandle(context->localUserHandle, &localEntityHandle);
+        TRACE_INFORMATION("PFXPALLocalUserLoginComplete: PFLocalUserTryGetEntityHandle hr=0x%08x", hr);
         if (SUCCEEDED(hr) && localEntityHandle)
         {
             // Entity key
             size_t keySize{};
-            if (SUCCEEDED(PFEntityGetEntityKeySize(localEntityHandle, &keySize)) && keySize > 0 && keySize < 4096)
+            HRESULT keyResult = PFEntityGetEntityKeySize(localEntityHandle, &keySize);
+            if (SUCCEEDED(keyResult) && keySize > 0 && keySize < 4096)
             {
                 std::vector<uint8_t> keyBuffer(keySize);
                 const PFEntityKey* key{};
                 size_t keyUsed{};
-                if (SUCCEEDED(PFEntityGetEntityKey(localEntityHandle, keyBuffer.size(), keyBuffer.data(), &key, &keyUsed)) && key && key->id && key->id[0] != '\0')
+                keyResult = PFEntityGetEntityKey(localEntityHandle, keyBuffer.size(), keyBuffer.data(), &key, &keyUsed);
+                if (SUCCEEDED(keyResult) && key && key->id && key->id[0] != '\0')
                 {
                     StrCpy(context->entityId, sizeof(context->entityId), key->id);
+                    TRACE_INFORMATION("PFXPALLocalUserLoginComplete: entity key obtained successfully, entityId='%s'", key->id);
                 }
+                else
+                {
+                    TRACE_INFORMATION("PFXPALLocalUserLoginComplete: PFEntityGetEntityKey failed hr=0x%08x", keyResult);
+                }
+            }
+            else
+            {
+                TRACE_INFORMATION("PFXPALLocalUserLoginComplete: PFEntityGetEntityKeySize failed hr=0x%08x or invalid size=%zu", keyResult, keySize);
             }
 
             // Async token fetch
@@ -389,6 +463,7 @@ static void CALLBACK PFXPALLocalUserLoginComplete(XAsyncBlock* async)
             context->entityTokenAsyncBlock.callback = PFXPALEntityTokenComplete;
             hr = PFEntityGetEntityTokenAsync(localEntityHandle, &context->entityTokenAsyncBlock);
             PFEntityCloseHandle(localEntityHandle); // Close local entity handle immediately pass or fail; async has its own ref internally.
+            TRACE_INFORMATION("PFXPALLocalUserLoginComplete: PFEntityGetEntityTokenAsync hr=0x%08x", hr);
             if (SUCCEEDED(hr))
             {
                 context->entityTokenAsyncStarted = true; // mark started for cancellation tracking
@@ -396,12 +471,18 @@ static void CALLBACK PFXPALLocalUserLoginComplete(XAsyncBlock* async)
             }
             // If token async failed to start, fall through to proceed without entity auth
         }
+        else
+        {
+            TRACE_INFORMATION("PFXPALLocalUserLoginComplete: failed to get entity handle");
+        }
     }
 
     // Continue with config creation (ignore failure to obtain token: fallback)
+    TRACE_INFORMATION("PFXPALLocalUserLoginComplete: continuing with config creation");
     hr = PFXPALCallGetFolderWithUiAsync(context);
     if (FAILED(hr))
     {
+        TRACE_INFORMATION("PFXPALLocalUserLoginComplete: PFXPALCallGetFolderWithUiAsync failed hr=0x%08x", hr);
         XAsyncComplete(context->clientAsyncBlock, hr, 0);
     }
 }
@@ -414,11 +495,13 @@ static void CALLBACK PFXPALLocalUserLoginComplete(XAsyncBlock* async)
 // 4. If entity path unavailable, proceed without auth and start config+folder
 static HRESULT PFXPALAddUserBegin(PFXPALGetFolderContext* context)
 {
+    TRACE_INFORMATION("PFXPALAddUserBegin: starting user initialization");
     RETURN_HR_INVALIDARG_IF_NULL(context);
 
     HRESULT hr;
     PFServiceConfigHandle serviceConfigHandle{};
     hr = PFLocalUserGetServiceConfigHandle(context->localUserHandle, &serviceConfigHandle);
+    TRACE_INFORMATION("PFXPALAddUserBegin: PFLocalUserGetServiceConfigHandle hr=0x%08x", hr);
     RETURN_IF_FAILED(hr);
 
     char apiEndpoint[1024];
@@ -429,28 +512,35 @@ static HRESULT PFXPALAddUserBegin(PFXPALGetFolderContext* context)
         hr = PFServiceConfigGetTitleId(serviceConfigHandle, sizeof(playfabTitleId), playfabTitleId, nullptr);
     }
     PFServiceConfigCloseHandle(serviceConfigHandle);
+    TRACE_INFORMATION("PFXPALAddUserBegin: service config retrieval hr=0x%08x", hr);
     RETURN_IF_FAILED(hr);
 
     // Store common fields in context for later config construction
     StrCpy(context->apiEndpoint, sizeof(context->apiEndpoint), apiEndpoint);
     StrCpy(context->playfabTitleId, sizeof(context->playfabTitleId), playfabTitleId);
+    TRACE_INFORMATION("PFXPALAddUserBegin: titleId='%s', apiEndpoint='%s'", playfabTitleId, apiEndpoint);
 
     // Preferred: XUser path
     XUserHandle xuser{};
     hr = PFLocalUserTryGetXUser(context->localUserHandle, &xuser);
+    TRACE_INFORMATION("PFXPALAddUserBegin: PFLocalUserTryGetXUser hr=0x%08x", hr);
     if (SUCCEEDED(hr))
     {
-
+        TRACE_INFORMATION("PFXPALAddUserBegin: using XUser path");
         context->xuser = xuser; // borrowed
-        RETURN_IF_FAILED(PFXPALCallGetFolderWithUiAsync(context));
+        hr = PFXPALCallGetFolderWithUiAsync(context);
+        TRACE_INFORMATION("PFXPALAddUserBegin: PFXPALCallGetFolderWithUiAsync hr=0x%08x", hr);
+        RETURN_IF_FAILED(hr);
         return S_OK;
     }
 
+    TRACE_INFORMATION("PFXPALAddUserBegin: XUser not available, trying entity auth fallback");
     // Fallback: entity auth
     context->loginLocalUserAsyncBlock.queue = context->clientAsyncBlock->queue;
     context->loginLocalUserAsyncBlock.context = context;
     context->loginLocalUserAsyncBlock.callback = PFXPALLocalUserLoginComplete;
     hr = PFLocalUserLoginAsync(context->localUserHandle, true, &context->loginLocalUserAsyncBlock);
+    TRACE_INFORMATION("PFXPALAddUserBegin: PFLocalUserLoginAsync hr=0x%08x", hr);
     if (SUCCEEDED(hr))
     {
         context->loginLocalUserAsyncStarted = true; // track started so we can cancel if needed
@@ -458,8 +548,11 @@ static HRESULT PFXPALAddUserBegin(PFXPALGetFolderContext* context)
     }
     // If token async failed to start, fall through to proceed without entity auth
 
+    TRACE_INFORMATION("PFXPALAddUserBegin: entity auth not available, proceeding without auth");
     // Proceed without entity auth
-    RETURN_IF_FAILED(PFXPALCallGetFolderWithUiAsync(context));
+    hr = PFXPALCallGetFolderWithUiAsync(context);
+    TRACE_INFORMATION("PFXPALAddUserBegin: final PFXPALCallGetFolderWithUiAsync hr=0x%08x", hr);
+    RETURN_IF_FAILED(hr);
     return S_OK;
 }
 
@@ -469,8 +562,11 @@ void CALLBACK PFXPALGetFolderComplete(XAsyncBlock* async)
     XAsyncBlock* asyncBlock{ context->clientAsyncBlock }; // Keep copy of asyncBlock pointer to complete after cleaning up context
 
     HRESULT hr = XAsyncGetStatus(async, false);
+    TRACE_INFORMATION("PFXPALGetFolderComplete: XAsyncGetStatus hr=0x%08x, cancelRequested=%s", 
+        hr, context->cancelRequested ? "true" : "false");
     if (context->cancelRequested || hr == E_ABORT || hr == E_GS_USER_CANCELED)
     {
+        TRACE_INFORMATION("PFXPALGetFolderComplete: cancellation/abort detected, completing with E_ABORT");
         XAsyncComplete(asyncBlock, E_ABORT, 0);
         return;
     }
@@ -480,17 +576,20 @@ void CALLBACK PFXPALGetFolderComplete(XAsyncBlock* async)
     if (state == nullptr)
     {
         hr = E_PF_GAMESAVE_USER_NOT_ADDED;
+        TRACE_INFORMATION("PFXPALGetFolderComplete: user state not found, failing with E_PF_GAMESAVE_USER_NOT_ADDED");
         HANDLE_XASYNC_FAILURE(hr);
     }
 
     hr = PFXGameSaveFilesGetFolderWithUiResult(async, sizeof(state->saveFolder), state->saveFolder);
     if (hr == E_GS_USER_CANCELED)
     {
+        TRACE_INFORMATION("PFXPALGetFolderComplete: user canceled, completing with E_ABORT");
         XAsyncComplete(asyncBlock, E_ABORT, 0);
         return;
     }
     HANDLE_XASYNC_FAILURE(hr);
 
+    TRACE_INFORMATION("PFXPALGetFolderComplete: folder obtained successfully, completing with S_OK");
     XAsyncComplete(asyncBlock, hr, 0);
 }
 
@@ -500,13 +599,23 @@ HRESULT GameSaveAPIProviderGRTS::AddUserWithUiAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
-    UNREFERENCED_PARAMETER(options);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: options=%d", static_cast<int>(options));
     RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
 
     std::unique_ptr<PFXPALGetFolderContext> context = std::make_unique<PFXPALGetFolderContext>();
+    context->addUserOptions = options; // Store options for later use
     if (!m_initSaveFolder.empty())
     {
         StrCpy(context->saveFolderOverride, sizeof(context->saveFolderOverride), m_initSaveFolder.c_str());
+        // Ensure trailing backslash
+        size_t len = strlen(context->saveFolderOverride);
+        if (len > 0 && len < sizeof(context->saveFolderOverride) - 2 &&
+            context->saveFolderOverride[len - 1] != '\\' && context->saveFolderOverride[len - 1] != '/')
+        {
+            context->saveFolderOverride[len] = '\\';
+            context->saveFolderOverride[len + 1] = '\0';
+        }
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: using save folder override='%s'", context->saveFolderOverride);
     }
     context->clientAsyncBlock = async;
     context->localUserHandle = localUserHandle;
@@ -524,33 +633,40 @@ HRESULT GameSaveAPIProviderGRTS::AddUserWithUiAsync(
 
                 if (op == XAsyncOp::Begin)
                 {
+                    TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: XAsyncOp::Begin");
                     RETURN_IF_FAILED(PFXPALAddUserBegin(context));
                     return S_OK;
                 }
                 else if (op == XAsyncOp::Cancel)
                 {
+                    TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: XAsyncOp::Cancel");
                     // Mark cancellation intent and propagate to any started inner async operations
                     context->cancelRequested = true;
                     if (context->loginLocalUserAsyncStarted)
                     {
+                        TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: cancelling loginLocalUserAsync");
                         XAsyncCancel(&context->loginLocalUserAsyncBlock);
                     }
                     if (context->entityTokenAsyncStarted)
                     {
+                        TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: cancelling entityTokenAsync");
                         XAsyncCancel(&context->entityTokenAsyncBlock);
                     }
                     if (context->getFolderAsyncStarted)
                     {
+                        TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: cancelling getFolderAsync");
                         XAsyncCancel(&context->getFolderAsyncBlock);
                     }
                     // If nothing started yet, complete immediately
                     if (!context->loginLocalUserAsyncStarted && !context->entityTokenAsyncStarted && !context->getFolderAsyncStarted)
                     {
+                        TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: no operations started, completing cancel immediately");
                         XAsyncComplete(data->async, E_ABORT, 0);
                     }
                 }
                 else if (op == XAsyncOp::Cleanup)
                 {
+                    TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: XAsyncOp::Cleanup");
                     std::unique_ptr<PFXPALGetFolderContext> contextPtr{ static_cast<PFXPALGetFolderContext*>(data->context) };
                 }
             }
@@ -565,6 +681,11 @@ HRESULT GameSaveAPIProviderGRTS::AddUserWithUiAsync(
     if (SUCCEEDED(hr))
     {
         context.release();
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: XAsyncBegin succeeded, returning S_OK");
+    }
+    else
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: XAsyncBegin failed hr=0x%08x", hr);
     }
     return hr;
 }
@@ -573,7 +694,9 @@ HRESULT GameSaveAPIProviderGRTS::AddUserWithUiResult(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
-    return XAsyncGetStatus(async, false);
+    HRESULT hr = XAsyncGetStatus(async, false);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiResult: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::GetFolderSize(
@@ -589,10 +712,16 @@ HRESULT GameSaveAPIProviderGRTS::GetFolderSize(
         PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
         if (state == nullptr)
         {
+            TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolderSize: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
             return E_PF_GAMESAVE_USER_NOT_ADDED;
         }
 
         *saveRootFolderSize = strlen(state->saveFolder) + 1;
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolderSize: returning size=%zu", *saveRootFolderSize);
+    }
+    else
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolderSize: saveRootFolderSize is null");
     }
     return S_OK;
 }
@@ -604,18 +733,21 @@ HRESULT GameSaveAPIProviderGRTS::GetFolder(
     _Out_opt_ size_t* saveRootFolderUsed
 ) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolder: saveRootFolderSize=%zu", saveRootFolderSize);
     RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
     RETURN_HR_INVALIDARG_IF_NULL(saveRootFolderBuffer);
 
     PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
     if (state == nullptr)
     {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolder: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
         return E_PF_GAMESAVE_USER_NOT_ADDED;
     }
 
     size_t folderSize = strlen(state->saveFolder) + 1;
     if (saveRootFolderSize < folderSize)
     {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolder: buffer too small, need %zu but got %zu", folderSize, saveRootFolderSize);
         return E_INVALIDARG;
     }
 
@@ -625,6 +757,7 @@ HRESULT GameSaveAPIProviderGRTS::GetFolder(
         *saveRootFolderUsed = folderSize;
     }
 
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolder: returning folder='%s', used=%zu", state->saveFolder, folderSize);
     return S_OK;
 }
 
@@ -634,9 +767,11 @@ HRESULT GameSaveAPIProviderGRTS::UploadWithUiAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: option=%d", static_cast<int>(option));
     PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
     if (state == nullptr)
     {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
         return E_PF_GAMESAVE_USER_NOT_ADDED;
     }
 
@@ -644,16 +779,25 @@ HRESULT GameSaveAPIProviderGRTS::UploadWithUiAsync(
     if (option == PFGameSaveFilesUploadOption::ReleaseDeviceAsActive)
     {
         pfxoptions = PFXGameSaveUploadOptions::UploadReleaseActive;
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: using UploadReleaseActive");
+    }
+    else
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: using UploadKeepActive");
     }
     PFXGameSaveConfigHandle configHandle = static_cast<PFXGameSaveConfigHandle>(state->configHandle);
-    return PFXGameSaveFilesUploadWithUiAsync(configHandle, pfxoptions, async);
+    HRESULT hr = PFXGameSaveFilesUploadWithUiAsync(configHandle, pfxoptions, async);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::UploadWithUiResult(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
-    return PFXGameSaveFilesUploadWithUiResult(async);
+    HRESULT hr = PFXGameSaveFilesUploadWithUiResult(async);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiResult: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetSaveDescriptionAsync(
@@ -661,21 +805,28 @@ HRESULT GameSaveAPIProviderGRTS::SetSaveDescriptionAsync(
     _In_ const char* shortSaveDescription,
     _In_ XAsyncBlock* async) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetSaveDescriptionAsync: shortSaveDescription='%s'", 
+        shortSaveDescription ? shortSaveDescription : "(null)");
     PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
     if (state == nullptr)
     {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetSaveDescriptionAsync: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
         return E_PF_GAMESAVE_USER_NOT_ADDED;
     }
 
-    return PFXGameSaveFilesSetSaveDescriptionAsync(
+    HRESULT hr = PFXGameSaveFilesSetSaveDescriptionAsync(
         static_cast<PFXGameSaveConfigHandle>(state->configHandle),
         shortSaveDescription,
         async);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetSaveDescriptionAsync: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetSaveDescriptionResult(_Inout_ XAsyncBlock* async) noexcept
 {
-    return PFXGameSaveFilesSetSaveDescriptionResult(async);
+    HRESULT hr = PFXGameSaveFilesSetSaveDescriptionResult(async);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetSaveDescriptionResult: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::GetRemainingQuota(
@@ -683,9 +834,22 @@ HRESULT GameSaveAPIProviderGRTS::GetRemainingQuota(
     _Out_ int64_t* remainingQuota
 ) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetRemainingQuota called");
     PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
     PFXGameSaveConfigHandle configHandle = (state != nullptr) ? (PFXGameSaveConfigHandle)state->configHandle : nullptr;
-    return PFXGameSaveFilesGetRemainingQuota(configHandle, remainingQuota);
+    if(configHandle == nullptr )
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetRemainingQuota: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
+        return E_PF_GAMESAVE_USER_NOT_ADDED;
+    }
+
+    HRESULT hr = PFXGameSaveFilesGetRemainingQuota(configHandle, remainingQuota);
+    if (SUCCEEDED(hr) && remainingQuota)
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetRemainingQuota: quota=%lld", *remainingQuota);
+    }
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetRemainingQuota: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::IsConnectedToCloud(
@@ -696,6 +860,7 @@ HRESULT GameSaveAPIProviderGRTS::IsConnectedToCloud(
     UNREFERENCED_PARAMETER(localUserHandle);
     UNREFERENCED_PARAMETER(isConnectedToCloud);
     *isConnectedToCloud = true;
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::IsConnectedToCloud: connected=true");
     return S_OK;
 }
 
@@ -708,20 +873,26 @@ static void CALLBACK PFXPALActiveDeviceChangedCallback(
     PFXPALGameSaveContext* gsContext = static_cast<PFXPALGameSaveContext*>(ctx);
     if (!gsContext)
     {
+        TRACE_INFORMATION("PFXPALActiveDeviceChangedCallback: no context");
         return;
     }
     auto cb = gsContext->activeDeviceChangedCallback.load(std::memory_order_acquire);
     if (!cb)
     {
+        TRACE_INFORMATION("PFXPALActiveDeviceChangedCallback: no registered callback");
         return; // no registered callback
     }
     PFLocalUserHandle localUser = PFXPALGetLocalUserFromXUser(requestingUser, nullptr);
     if (localUser == nullptr)
     {
+        TRACE_INFORMATION("PFXPALActiveDeviceChangedCallback: user not tracked");
         return; // user not tracked
     }
     PFGameSaveDescriptor pfDesc{};
     ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(activeDevice, &pfDesc);
+    
+    TRACE_INFORMATION("PFXPALActiveDeviceChangedCallback: converted descriptor, time=%lld, totalBytes=%llu", 
+        pfDesc.time, pfDesc.totalBytes);
     
     // If a queue handle is supplied, schedule via TaskQueue; otherwise invoke directly.
     // (Passing a null XTaskQueueHandle to XTaskQueueSubmitDelayedCallback is not valid, so we guard.)
@@ -730,6 +901,7 @@ static void CALLBACK PFXPALActiveDeviceChangedCallback(
 
     if (queueHandle)
     {
+        TRACE_INFORMATION("PFXPALActiveDeviceChangedCallback: using task queue for callback");
         struct ActiveDeviceChangedDispatchContext
         {
             PFLocalUserHandle localUser;
@@ -779,6 +951,7 @@ static void CALLBACK PFXPALActiveDeviceChangedCallback(
             0,
             raw,
             dispatchFn);
+        TRACE_INFORMATION("PFXPALActiveDeviceChangedCallback: XTaskQueueSubmitDelayedCallback hr=0x%08x", hr);
         if (FAILED(hr))
         {
             // Failed to enqueue: reclaim ownership and invoke synchronously (treat as if queue not provided)
@@ -797,6 +970,7 @@ static void CALLBACK PFXPALActiveDeviceChangedCallback(
     }
 
     // No queue supplied: invoke synchronously
+    TRACE_INFORMATION("PFXPALActiveDeviceChangedCallback: invoking callback synchronously");
     cb(localUser, &pfDesc, userCtx);
 }
 
@@ -805,6 +979,8 @@ HRESULT GameSaveAPIProviderGRTS::SetActiveDeviceChangedCallback(
     _In_opt_ PFGameSaveFilesActiveDeviceChangedCallback* callback, _In_opt_ void* context
 ) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetActiveDeviceChangedCallback: callback=%s", 
+        callback ? "provided" : "null");
     // Store callback in shared context so we can invoke when PFX layer notifies us.
     void* gsContextPtr = nullptr;
     HRESULT hr = PFPlatformGetGameSaveContext(&gsContextPtr);
@@ -816,24 +992,29 @@ HRESULT GameSaveAPIProviderGRTS::SetActiveDeviceChangedCallback(
     gsContext->activeDeviceChangedCallback.store(callback, std::memory_order_release);
 
     // Register global bridge with PFX layer
-    return PFXGameSaveSetActiveDeviceChangedCallback(callback ? PFXPALActiveDeviceChangedCallback : nullptr, gsContext);
+    hr = PFXGameSaveSetActiveDeviceChangedCallback(callback ? PFXPALActiveDeviceChangedCallback : nullptr, gsContext);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetActiveDeviceChangedCallback: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::UninitializeAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::UninitializeAsync");
     void* gsContextPtr = nullptr;
     HRESULT hr = PFPlatformGetGameSaveContext(&gsContextPtr);
     RETURN_IF_FAILED(hr);
     PFXPALGameSaveContext* gsContext = static_cast<PFXPALGameSaveContext*>(gsContextPtr);
 
+    ULONG usersProcessed = 0;
     for (ULONG i = 0; i < PF_GDK_MAX_USERS; ++i)
     {
         if (gsContext->users[i].localUser != nullptr)
         {
             PFLocalUserCloseHandle(gsContext->users[i].localUser);
             gsContext->users[i].localUser = nullptr;
+            usersProcessed++;
         }
 
         if (gsContext->users[i].xUser != nullptr)
@@ -850,14 +1031,19 @@ HRESULT GameSaveAPIProviderGRTS::UninitializeAsync(
         }
     }
 
-    return GameSaveGlobalState::CleanupAsync(async);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::UninitializeAsync: cleaned up %u users", usersProcessed);
+    hr = GameSaveGlobalState::CleanupAsync(async);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::UninitializeAsync: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::UninitializeResult(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
-    return XAsyncGetStatus(async, false);
+    HRESULT hr = XAsyncGetStatus(async, false);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::UninitializeResult: hr=0x%08x", hr);
+    return hr;
 }
 
 void CALLBACK MyPFXPALGameSaveProgressUiCallback(
@@ -865,12 +1051,17 @@ void CALLBACK MyPFXPALGameSaveProgressUiCallback(
     _In_ PFXGameSaveSyncState syncState,
     _In_opt_ void* context)
 {
+    TRACE_INFORMATION("MyPFXPALGameSaveProgressUiCallback: syncState=%d", static_cast<int>(syncState));
     PFXPALGameSaveContext* gsContext;
     PFLocalUserHandle localUser = PFXPALGetLocalUserFromXUser(requestingUser, &gsContext);
     if (localUser != nullptr)
     {
         PFGameSaveFilesSyncState pfSyncState = static_cast<PFGameSaveFilesSyncState>(syncState);
         gsContext->progressCallback(localUser, pfSyncState, context);
+    }
+    else
+    {
+        TRACE_INFORMATION("MyPFXPALGameSaveProgressUiCallback: local user not found");
     }
 }
 
@@ -880,12 +1071,18 @@ void CALLBACK MyPFXPALGameSaveSyncFailedUiCallback(
     _In_ HRESULT error,
     _In_opt_ void* context)
 {
+    TRACE_INFORMATION("MyPFXPALGameSaveSyncFailedUiCallback: syncState=%d, error=0x%08x", 
+        static_cast<int>(syncState), error);
     PFXPALGameSaveContext* gsContext;
     PFLocalUserHandle localUser = PFXPALGetLocalUserFromXUser(requestingUser, &gsContext);
     if (localUser != nullptr)
     {
         PFGameSaveFilesSyncState pfSyncState = static_cast<PFGameSaveFilesSyncState>(syncState);
         gsContext->syncFailedCallback(localUser, pfSyncState, error, context);
+    }
+    else
+    {
+        TRACE_INFORMATION("MyPFXPALGameSaveSyncFailedUiCallback: local user not found");
     }
 }
 
@@ -895,6 +1092,17 @@ void CALLBACK MyPFXPALGameSaveActiveDeviceContentionUiCallback(
     _In_ PFXGameSaveDescriptor* remoteGameSave,
     _In_opt_ void* context)
 {
+    TRACE_INFORMATION("MyPFXPALGameSaveActiveDeviceContentionUiCallback");
+    if (localGameSave)
+    {
+        TRACE_INFORMATION("MyPFXPALGameSaveActiveDeviceContentionUiCallback: local time=%lld, totalBytes=%llu", 
+            static_cast<long long>(localGameSave->time), localGameSave->totalBytes);
+    }
+    if (remoteGameSave)
+    {
+        TRACE_INFORMATION("MyPFXPALGameSaveActiveDeviceContentionUiCallback: remote time=%lld, totalBytes=%llu", 
+            remoteGameSave->time, remoteGameSave->totalBytes);
+    }
     PFXPALGameSaveContext* gsContext;
     PFLocalUserHandle localUser = PFXPALGetLocalUserFromXUser(requestingUser, &gsContext);
     if (localUser != nullptr)
@@ -905,6 +1113,10 @@ void CALLBACK MyPFXPALGameSaveActiveDeviceContentionUiCallback(
         ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(remoteGameSave, &pfRemoteGameSave);
         gsContext->activeDeviceContentionCallback(localUser, &pfLocalGameSave, &pfRemoteGameSave, context);
     }
+    else
+    {
+        TRACE_INFORMATION("MyPFXPALGameSaveActiveDeviceContentionUiCallback: local user not found");
+    }
 }
 
 void CALLBACK MyPFXGameSaveActiveDeviceContentionUiCallback(
@@ -913,6 +1125,8 @@ void CALLBACK MyPFXGameSaveActiveDeviceContentionUiCallback(
     _In_ time_t remoteTime,
     _In_opt_ void* context)
 {
+    TRACE_INFORMATION("MyPFXGameSaveActiveDeviceContentionUiCallback: localTime=%lld, remoteTime=%lld", 
+        static_cast<long long>(localTime), static_cast<long long>(remoteTime));
     PFXGameSaveDescriptor localGameSave{};
     localGameSave.time = localTime;
 
@@ -933,6 +1147,17 @@ void CALLBACK MyPFXPALGameSaveConflictUiCallback(
     _In_ PFXGameSaveDescriptor* remoteGameSave,
     _In_opt_ void* context)
 {
+    TRACE_INFORMATION("MyPFXPALGameSaveConflictUiCallback");
+    if (localGameSave)
+    {
+        TRACE_INFORMATION("MyPFXPALGameSaveConflictUiCallback: local time=%lld, totalBytes=%llu", 
+            localGameSave->time, localGameSave->totalBytes);
+    }
+    if (remoteGameSave)
+    {
+        TRACE_INFORMATION("MyPFXPALGameSaveConflictUiCallback: remote time=%lld, totalBytes=%llu", 
+            remoteGameSave->time, remoteGameSave->totalBytes);
+    }
     PFXPALGameSaveContext* gsContext;
     PFLocalUserHandle localUser = PFXPALGetLocalUserFromXUser(requestingUser, &gsContext);
     if (localUser != nullptr)
@@ -942,6 +1167,10 @@ void CALLBACK MyPFXPALGameSaveConflictUiCallback(
         ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(localGameSave, &pfLocalGameSave);
         ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(remoteGameSave, &pfRemoteGameSave);
         gsContext->conflictCallback(localUser, &pfLocalGameSave, &pfRemoteGameSave, context);
+    }
+    else
+    {
+        TRACE_INFORMATION("MyPFXPALGameSaveConflictUiCallback: local user not found");
     }
 }
 
@@ -953,6 +1182,8 @@ void CALLBACK MyPFXGameSaveConflictUiCallback(
     _In_ uint64_t remoteSize, 
     _In_opt_ void* context)
 {
+    TRACE_INFORMATION("MyPFXGameSaveConflictUiCallback: localTime=%lld, remoteTime=%lld, localSize=%llu, remoteSize=%llu", 
+        localModifiedTime, remoteModifiedTime, localSize, remoteSize);
     PFXGameSaveDescriptor localGameSave{};
     localGameSave.time = localModifiedTime;
     localGameSave.totalBytes = localSize;
@@ -975,6 +1206,8 @@ void CALLBACK MyPFXPALGameSaveOutOfStorageUiCallback(
     uint64_t requiredBytes,
     _In_opt_ void* context)
 {
+    TRACE_INFORMATION("MyPFXPALGameSaveOutOfStorageUiCallback: isUserPartition=%s, requiredBytes=%llu", 
+        isUserPartition ? "true" : "false", requiredBytes);
     UNREFERENCED_PARAMETER(isUserPartition); // titles don't need to know this bit of info
 
     PFXPALGameSaveContext* gsContext;
@@ -983,12 +1216,23 @@ void CALLBACK MyPFXPALGameSaveOutOfStorageUiCallback(
     {
         gsContext->outOfStorageCallback(localUser, requiredBytes, context);
     }
+    else
+    {
+        TRACE_INFORMATION("MyPFXPALGameSaveOutOfStorageUiCallback: local user not found");
+    }
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetUiCallbacks(
     _In_ PFGameSaveUICallbacks* callbacks
 ) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiCallbacks: callbacks: progress=%s, syncFailed=%s, activeDeviceContention=%s, conflict=%s, outOfStorage=%s",
+        callbacks->progressCallback ? "set" : "null",
+        callbacks->syncFailedCallback ? "set" : "null", 
+        callbacks->activeDeviceContentionCallback ? "set" : "null",
+        callbacks->conflictCallback ? "set" : "null",
+        callbacks->outOfStorageCallback ? "set" : "null");
+    
     // Remember the callbacks in the PFXPALGameSaveContext object
     void* context = nullptr;
     RETURN_IF_FAILED(PFPlatformGetGameSaveContext(&context));
@@ -1016,7 +1260,9 @@ HRESULT GameSaveAPIProviderGRTS::SetUiCallbacks(
     pfxcallbacks.outOfStorageCallback = MyPFXPALGameSaveOutOfStorageUiCallback;
     pfxcallbacks.outOfStorageContext = callbacks->outOfStorageContext;
 
-    return PFXGameSaveSetUiCallbacks(&pfxcallbacks);
+    HRESULT hr = PFXGameSaveSetUiCallbacks(&pfxcallbacks);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiCallbacks: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::UiProgressGetProgress(
@@ -1034,53 +1280,80 @@ HRESULT GameSaveAPIProviderGRTS::UiProgressGetProgress(
         *syncState = pfSyncState;
     }
 
+    if (SUCCEEDED(hr))
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::UiProgressGetProgress: syncState=%d, current=%llu, total=%llu", 
+            static_cast<int>(pfSyncState), current ? *current : 0, total ? *total : 0);
+    }
+    else
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::UiProgressGetProgress: hr=0x%08x", hr);
+    }
     return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetUiProgressResponse(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesUiProgressUserAction action) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiProgressResponse: action=%d", static_cast<int>(action));
     XUserHandle requestingUser = PFXPALGetXUserFromLocalUser(localUserHandle);
-    return PFXGameSaveSetProgressUiResponse(requestingUser, static_cast<PFXGameSaveProgressUiResponse>(action));
+    HRESULT hr = PFXGameSaveSetProgressUiResponse(requestingUser, static_cast<PFXGameSaveProgressUiResponse>(action));
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiProgressResponse: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetUiSyncFailedResponse(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesUiSyncFailedUserAction action) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiSyncFailedResponse: action=%d", static_cast<int>(action));
     XUserHandle requestingUser = PFXPALGetXUserFromLocalUser(localUserHandle);
-    return PFXGameSaveSetSyncFailedUiResponse(requestingUser, static_cast<PFXGameSaveSyncFailedUiResponse>(action));
+    HRESULT hr = PFXGameSaveSetSyncFailedUiResponse(requestingUser, static_cast<PFXGameSaveSyncFailedUiResponse>(action));
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiSyncFailedResponse: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetUiActiveDeviceContentionResponse(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesUiActiveDeviceContentionUserAction action) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiActiveDeviceContentionResponse: action=%d", static_cast<int>(action));
     XUserHandle requestingUser = PFXPALGetXUserFromLocalUser(localUserHandle);
-    return PFXGameSaveSetActiveDeviceContentionUiResponse(requestingUser, static_cast<PFXGameSaveActiveDeviceContentionUiResponse>(action));
+    HRESULT hr = PFXGameSaveSetActiveDeviceContentionUiResponse(requestingUser, static_cast<PFXGameSaveActiveDeviceContentionUiResponse>(action));
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiActiveDeviceContentionResponse: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetUiConflictResponse(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesUiConflictUserAction action) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiConflictResponse: action=%d", static_cast<int>(action));
     XUserHandle requestingUser = PFXPALGetXUserFromLocalUser(localUserHandle);
-    return PFXGameSaveSetConflictUiResponse(requestingUser, static_cast<PFXGameSaveConflictUiResponse>(action));
+    HRESULT hr = PFXGameSaveSetConflictUiResponse(requestingUser, static_cast<PFXGameSaveConflictUiResponse>(action));
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiConflictResponse: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetUiOutOfStorageResponse(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesUiOutOfStorageUserAction action) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiOutOfStorageResponse: action=%d", static_cast<int>(action));
     XUserHandle requestingUser = PFXPALGetXUserFromLocalUser(localUserHandle);
-    return PFXGameSaveSetOutOfStorageUiResponse(requestingUser, static_cast<PFXGameSaveOutOfStorageUiResponse>(action));
+    HRESULT hr = PFXGameSaveSetOutOfStorageUiResponse(requestingUser, static_cast<PFXGameSaveOutOfStorageUiResponse>(action));
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetUiOutOfStorageResponse: hr=0x%08x", hr);
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetMockDeviceIdForDebug(_In_ const char* deviceId) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetMockDeviceIdForDebug called with deviceId=%s", deviceId ? deviceId : "(null)");
     UNREFERENCED_PARAMETER(deviceId);
     return S_OK;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetMockManifestOffsetForDebug(_In_ size_t offset) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetMockManifestOffsetForDebug called with offset=%zu", offset);
     UNREFERENCED_PARAMETER(offset);
     return S_OK;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetMockDataFolderForDebug(_In_ const char* mockDataFolder) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetMockDataFolderForDebug called with mockDataFolder=%s", mockDataFolder ? mockDataFolder : "(null)");
     UNREFERENCED_PARAMETER(mockDataFolder);
     return S_OK;
 }
@@ -1089,6 +1362,10 @@ HRESULT GameSaveAPIProviderGRTS::GetStatsJsonSizeForDebug(_In_ PFLocalUserHandle
 {
     UNREFERENCED_PARAMETER(localUserHandle);
     UNREFERENCED_PARAMETER(jsonSize);
+    if (jsonSize != nullptr)
+    {
+        *jsonSize = 0;
+    }
     return S_OK;
 }
 
@@ -1103,29 +1380,63 @@ HRESULT GameSaveAPIProviderGRTS::GetStatsJsonForDebug(
     UNREFERENCED_PARAMETER(jsonSize);
     UNREFERENCED_PARAMETER(jsonBuffer);
     UNREFERENCED_PARAMETER(jsonSizeUsed);
+    if(jsonSizeUsed != nullptr)
+    {
+        *jsonSizeUsed = 0;
+    }
+
+    if (jsonSize > 0 && jsonBuffer != nullptr)
+    {
+        *jsonBuffer = '\0';
+    }
     return S_OK;
+}
+
+HRESULT GameSaveAPIProviderGRTS::GetSaveDescriptionSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* descriptionSize) noexcept
+{
+    UNREFERENCED_PARAMETER(localUserHandle);
+    UNREFERENCED_PARAMETER(descriptionSize);
+    return E_NOTIMPL;
+}
+
+HRESULT GameSaveAPIProviderGRTS::GetSaveDescriptionForDebug(
+    _In_ PFLocalUserHandle localUserHandle,
+    _In_ size_t descriptionSize,
+    _Out_writes_(descriptionSize) char* descriptionBuffer,
+    _Out_opt_ size_t* descriptionSizeUsed
+) noexcept
+{
+    UNREFERENCED_PARAMETER(localUserHandle);
+    UNREFERENCED_PARAMETER(descriptionSize);
+    UNREFERENCED_PARAMETER(descriptionBuffer);
+    UNREFERENCED_PARAMETER(descriptionSizeUsed);
+    return E_NOTIMPL;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetForceOutOfStorageErrorForDebug(_In_ bool forceError) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetForceOutOfStorageErrorForDebug called with forceError=%d", forceError);
     UNREFERENCED_PARAMETER(forceError);
     return S_OK;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetForceSyncFailedErrorForDebug(_In_ bool forceError) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetForceSyncFailedErrorForDebug called with forceError=%d", forceError);
     UNREFERENCED_PARAMETER(forceError);
     return S_OK;
 }
 
 HRESULT GameSaveAPIProviderGRTS::SetWriteManifestsToDiskForDebug(_In_ bool writeManifests) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetWriteManifestsToDiskForDebug called with writeManifests=%d", writeManifests);
     UNREFERENCED_PARAMETER(writeManifests);
     return S_OK;
 }
 
 HRESULT GameSaveAPIProviderGRTS::PauseUploadForDebug() noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] PauseUploadForDebug called");
     return S_OK;
 }
 
@@ -1145,6 +1456,7 @@ HRESULT GameSaveAPIProviderGRTS::ResetCloudAsync(
     _In_ XAsyncBlock* async
 ) noexcept
 {
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::ResetCloudAsync: not implemented, returning E_NOTIMPL");
     UNREFERENCED_PARAMETER(localUserHandle);
     UNREFERENCED_PARAMETER(async);
     return E_NOTIMPL;

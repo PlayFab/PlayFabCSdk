@@ -16,7 +16,7 @@ enum class ResetCloudStage
     Login = 0,
     ListManifests,
     DeleteManifests,
-    LockStepFailure,
+    ResetCloudStepFailure,
     ResetCloudDone
 };
 

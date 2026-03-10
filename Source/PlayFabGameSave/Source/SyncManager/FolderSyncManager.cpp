@@ -4,6 +4,9 @@
 #include "ProgressHelpers.h"
 #include "Platform/Platform.h"
 #include "ActiveDevicePollWorker.h"
+#include "Wrappers/GameSaveServiceSelector.h"
+#include "PlatformUtils.h"
+#include "LocalStateManifest.h"
 
 using namespace PlayFab::GameSaveWrapper;
 
@@ -19,14 +22,14 @@ void FolderSyncManagerProgressCallback(PFGameSaveFilesSyncState syncState, uint6
 }
 
 FolderSyncManager::FolderSyncManager(_In_ LocalUser const& localUser) :
+    m_localUser{ localUser },
     m_telemetryManager{ MakeShared<GameSaveTelemetryManager>() },
     m_lockStep(localUser, m_telemetryManager),
     m_compareStep(localUser, m_telemetryManager),
     m_downloadStep(localUser, m_telemetryManager),
     m_uploadStep(localUser, m_telemetryManager),
     m_resetCloudStep(localUser, m_telemetryManager),
-    m_setSaveDescriptionStep(localUser, m_telemetryManager),
-    m_localUser{localUser}
+    m_setSaveDescriptionStep(localUser, m_telemetryManager)
 {
     SharedPtr<GameSaveGlobalState> state;
     HRESULT hr = GameSaveGlobalState::Get(state);
@@ -49,6 +52,15 @@ FolderSyncManager::FolderSyncManager(_In_ LocalUser const& localUser) :
 FolderSyncManager::~FolderSyncManager()
 {
     TRACE_TASK("FolderSyncManager dtor");
+    
+    // Cancel any pending UI wait to prevent hangs during shutdown
+    m_uiManager.CancelPendingUIWait();
+}
+
+void FolderSyncManager::CancelPendingUIWaitForCleanup()
+{
+    TRACE_TASK("FolderSyncManager::CancelPendingUIWaitForCleanup");
+    m_uiManager.CancelPendingUIWait();
 }
 
 void FolderSyncManager::FireActivationFailedTelemetry(HRESULT hr, bool offline)
@@ -96,6 +108,11 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
     m_isForcedDisconnectFromCloud = m_lockStep.IsForceDisconnectFromCloud();
     if (m_isForcedDisconnectFromCloud)
     {
+        // Even when offline, create local file folder set so SetSaveDescription can persist to localstate.json
+        if (m_localFileFolderSet == nullptr)
+        {
+            m_localFileFolderSet = MakeShared<FileFolderSet>();
+        }
         m_telemetryManager->SetContextActivationSyncState(SyncState::SS_NotStarted);
         m_telemetryManager->EmitContextActivationEvent();
         SetSyncStateProgress(PFGameSaveFilesSyncState::NotStarted, 0, 0);
@@ -111,10 +128,19 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
         m_uploadStep.SetEntity(entity.value());
         m_setSaveDescriptionStep.SetEntity(entity.value());
 
-        m_latestFinalizedManifest = MakeShared<ManifestInternal>(m_lockStep.GetLatestFinalizedPFManifest());
+        m_latestFinalizedManifest = MakeShared<ManifestInternal>(m_lockStep.GetBaselineFinalizedManifest());
         m_latestPendingManifest = MakeShared<ManifestInternal>(m_lockStep.GetLatestPendingPFManifest());
         m_localFileFolderSet = MakeShared<FileFolderSet>();
         m_remoteFileFolderSet = MakeShared<FileFolderSet>();
+
+        // Record original activation baseline version for later Known Good promotion eligibility.
+        if (m_latestFinalizedManifest)
+        {
+            auto version = m_latestFinalizedManifest->GetManifest().GetVersion();
+            uint64_t baselineVer = version.empty() ? 0 : StringToUint64(version);
+            m_uploadStep.SetOriginalActivationBaselineVersion(baselineVer);
+            TRACE_INFORMATION("[GAME SAVE] Recorded original activation baseline v:%llu for Known Good promotion criteria", baselineVer);
+        }
     }
 
     // 2. Compare cloud vs local metadata w/ conflict UX if needed & sync error UX if needed
@@ -140,6 +166,16 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
         return E_PENDING;
     }
 
+    // Restore the description loaded from localstate.json (persists offline descriptions across reinitialize)
+    const String& loadedDescription = m_compareStep.GetLoadedShortSaveDescription();
+    bool loadedDirty = m_compareStep.GetLoadedDescriptionDirty();
+    if (!loadedDescription.empty() && m_lastShortSaveDescription.empty())
+    {
+        m_lastShortSaveDescription = loadedDescription;
+        m_descriptionDirty = loadedDirty;
+        TRACE_INFORMATION("[GAME SAVE] Restored shortSaveDescription='%s' dirty=%d from localstate.json", loadedDescription.c_str(), loadedDirty);
+    }
+
     m_isForcedDisconnectFromCloud = m_compareStep.IsForceDisconnectFromCloud();
     if (m_isForcedDisconnectFromCloud)
     {
@@ -148,6 +184,86 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
         SetSyncStateProgress(PFGameSaveFilesSyncState::NotStarted, 0, 0);
         SetStatsForDebug();
         return S_OK;
+    }
+
+    // Conflict upload integration: if a conflict occurred during compare, perform a single upload of local divergent branch
+    if (m_compareStep.ConflictRequiresUpload() && !m_conflictUploadCompleted)
+    {
+        // Prepare sets if first time
+        if (!m_conflictUploadStarted)
+        {
+            // Mark files/folders scheduled in compare for upload; UploadStep will inspect vectors
+            // Always keep device active after AddUser (so we request KeepDeviceActive)
+            uint64_t origBaseline = m_uploadStep.GetOriginalActivationBaselineVersion();
+            m_uploadStep.Reset();
+            if (origBaseline != 0)
+            {
+                m_uploadStep.SetOriginalActivationBaselineVersion(origBaseline);
+            }
+            m_conflictUploadStarted = true;
+            TRACE_INFORMATION("[GAME SAVE] ConflictUpload: starting single upload during AddUser path");
+        }
+
+        // Calculate conflict metadata BEFORE starting upload (needed for FinalizeManifest)
+        ConflictMetadata conflictMetadata;
+        if (m_compareStep.DidConflictOccur())
+        {
+            uint64_t baselineVer = m_uploadStep.GetOriginalActivationBaselineVersion();
+            TakeUIChoice choice = m_compareStep.GetConflictChoice();
+            
+            switch (choice)
+            {
+                case TakeUIChoice::TakeLocal:
+                    // User chose local. New upload is winner; baseline cloud version is loser.
+                    conflictMetadata = ConflictMetadata(true, Uint64ToString(baselineVer));
+                    TRACE_INFORMATION("[GAME SAVE] ConflictUpload: KEEP_LOCAL - new upload wins against cloud v%llu", baselineVer);
+                    break;
+                case TakeUIChoice::TakeRemote:
+                    // User chose remote. New upload is loser; baseline cloud version is winner.
+                    conflictMetadata = ConflictMetadata(false, Uint64ToString(baselineVer));
+                    TRACE_INFORMATION("[GAME SAVE] ConflictUpload: KEEP_CLOUD - new upload loses to cloud v%llu", baselineVer);
+                    break;
+                default:
+                    TRACE_WARNING("[GAME SAVE] ConflictUpload: Unknown conflict choice, no metadata set");
+                    break;
+            }
+        }
+
+        if (!m_uploadStep.IsUploadDone())
+        {
+            HRESULT hrUp = m_uploadStep.Upload(
+                runContext, task,
+                m_latestPendingManifest, m_localFileFolderSet, m_remoteFileFolderSet,
+                m_saveFolder, PFGameSaveFilesUploadOption::KeepDeviceActive,
+                m_uiManager, m_syncProgress, folderSyncMutex,
+                FolderSyncManagerProgressCallback, this,
+                m_lastShortSaveDescription, conflictMetadata);
+            if (FAILED(hrUp))
+            {
+                if (hrUp == E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD)
+                {
+                    SetForcedDisconnectFromCloud(true);
+                }
+                return hrUp; // propagate failure or pending
+            }
+            return E_PENDING; // continue pumping until upload completes
+        }
+
+        // Upload finished
+        m_conflictUploadCompleted = true;
+        m_descriptionDirty = false;  // Clear dirty flag - description is now synced to cloud
+        TRACE_INFORMATION("[GAME SAVE] ConflictUpload: completed single upload during AddUser path");
+        // Update latest manifests from upload step output (post-upload vectors)
+        const ManifestWrap& postLatestFinal = m_uploadStep.GetPostUploadLatestFinalizedPFManifest();
+        if (!postLatestFinal.GetVersion().empty())
+        {
+            m_latestFinalizedManifest = MakeShared<ManifestInternal>(postLatestFinal);
+        }
+        const ManifestWrap& postPending = m_uploadStep.GetPostUploadPendingPFManifest();
+        if (!postPending.GetVersion().empty())
+        {
+            m_latestPendingManifest = MakeShared<ManifestInternal>(postPending);
+        }
     }
 
     m_telemetryManager->EmitContextActivationEvent();
@@ -210,7 +326,10 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
         // 3. Download what's needed w/ progress UX if needed & sync error UX if needed
         if (!m_downloadStep.IsDownloadDone())
         {
-            String shortSaveDescription = m_latestFinalizedManifest->GetManifest().GetManifestDescription();
+            // Use locally stored description if it was set offline (dirty), otherwise use cloud description
+            String shortSaveDescription = m_descriptionDirty 
+                ? m_lastShortSaveDescription
+                : m_latestFinalizedManifest->GetDecodedManifestDescription();
 
             HRESULT hr = m_downloadStep.Download(runContext, task, m_saveFolder, m_uiManager, m_localFileFolderSet, m_remoteFileFolderSet, m_syncProgress, folderSyncMutex, FolderSyncManagerProgressCallback, this, shortSaveDescription);
             if (FAILED(hr))
@@ -222,6 +341,18 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
             }
 
             return E_PENDING;
+        }
+    }
+
+    // After download completes, update local description with cloud description if local wasn't dirty
+    // This ensures GetSaveDescription returns the cloud description when local hasn't been modified offline
+    if (!m_descriptionDirty && m_latestFinalizedManifest)
+    {
+        String cloudDescription = m_latestFinalizedManifest->GetDecodedManifestDescription();
+        if (!cloudDescription.empty() && cloudDescription != m_lastShortSaveDescription)
+        {
+            TRACE_INFORMATION("[GAME SAVE] Updating local description to cloud description='%s' (dirty=false)", cloudDescription.c_str());
+            SetLastShortSaveDescription(cloudDescription, false);
         }
     }
 
@@ -248,15 +379,15 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
 void FolderSyncManager::SetStatsForDebug()
 {
 #if _DEBUG
-    JsonValue rootJson { JsonValue::object() };
+    JsonValue rootJson = JsonValue::object();
 
-    JsonValue fileDownloadJsonArray{ JsonValue::array() };
+    JsonValue fileDownloadJsonArray = JsonValue::array();
     if (m_remoteFileFolderSet)
     {
         const PlayFab::Vector<const FileDetail*>& filesToDownload = m_remoteFileFolderSet->GetFilesToDownload();
         for (const FileDetail* fileToDownload : filesToDownload)
         {
-            JsonValue jsonObj{ JsonValue::object() };
+            JsonValue jsonObj = JsonValue::object();
             JsonUtils::ObjectAddMember(jsonObj, "Name", fileToDownload->fileName);
             JsonUtils::ObjectAddMember(jsonObj, "Size", fileToDownload->fileSizeBytes);
             JsonUtils::ObjectAddMember(jsonObj, "TimeCreated", fileToDownload->timeCreated);
@@ -266,13 +397,13 @@ void FolderSyncManager::SetStatsForDebug()
     }
     JsonUtils::ObjectAddMember(rootJson, "FilesToDownload", std::move(fileDownloadJsonArray));
 
-    JsonValue fileUploadedJsonArray{ JsonValue::array() };
+    JsonValue fileUploadedJsonArray = JsonValue::array();
     if (m_localFileFolderSet)
     {
         const PlayFab::Vector<const FileDetail*>& filesToUpload = m_localFileFolderSet->GetFilesToUpload();
         for (const FileDetail* fileToUpload : filesToUpload)
         {
-            JsonValue jsonObj{ JsonValue::object() };
+            JsonValue jsonObj = JsonValue::object();
             JsonUtils::ObjectAddMember(jsonObj, "Name", fileToUpload->fileName);
             JsonUtils::ObjectAddMember(jsonObj, "Size", fileToUpload->fileSizeBytes);
             JsonUtils::ObjectAddMember(jsonObj, "TimeCreated", fileToUpload->timeCreated);
@@ -286,10 +417,10 @@ void FolderSyncManager::SetStatsForDebug()
     {
         const PlayFab::Vector<PlayFab::GameSave::CompressedFile>& compressedFiles = m_remoteFileFolderSet->GetCompressedFiles();
         const PlayFab::Vector<size_t>& compressedFilesToDownload = m_remoteFileFolderSet->GetCompressedFilesToDownload();
-        JsonValue fileCompressedToDownloadJsonArray{ JsonValue::array() };
+        JsonValue fileCompressedToDownloadJsonArray = JsonValue::array();
         for (const size_t index : compressedFilesToDownload)
         {
-            JsonValue jsonObj{ JsonValue::object() };
+            JsonValue jsonObj = JsonValue::object();
             const PlayFab::GameSave::CompressedFile& file = compressedFiles.at(index);
             JsonUtils::ObjectAddMember(jsonObj, "Name", file.fileName);
             JsonUtils::ObjectAddMember(jsonObj, "Size", file.uncompressedSizeBytes);
@@ -305,13 +436,13 @@ void FolderSyncManager::SetStatsForDebug()
         JsonUtils::ObjectAddMember(rootJson, "CompressedFilesToDownload", std::move(fileCompressedToDownloadJsonArray));
     }
 
-    JsonValue fileCompressedToUploadJsonArray{ JsonValue::array() };
+    JsonValue fileCompressedToUploadJsonArray = JsonValue::array();
     if (m_localFileFolderSet)
     {
         Vector<ExtendedManifestCompressedFileDetail> compressedFilesToUpload = m_localFileFolderSet->GetCompressedFilesToUpload();
         for (const ExtendedManifestCompressedFileDetail& file : compressedFilesToUpload)
         {
-            JsonValue jsonObj{ JsonValue::object() };
+            JsonValue jsonObj = JsonValue::object();
             JsonUtils::ObjectAddMember(jsonObj, "Name", file.fileName);
             JsonUtils::ObjectAddMember(jsonObj, "Size", file.uncompressedSizeBytes);
             uint64_t compressedSize = file.compressedSizeBytes;
@@ -325,13 +456,13 @@ void FolderSyncManager::SetStatsForDebug()
     }
     JsonUtils::ObjectAddMember(rootJson, "CompressedFilesToUpload", std::move(fileCompressedToUploadJsonArray));
 
-    JsonValue allFilesArray{ JsonValue::array() };
+    JsonValue allFilesArray = JsonValue::array();
     if (m_localFileFolderSet)
     {
         const PlayFab::Vector<PlayFab::GameSave::FileDetail>& skippedFiles = m_localFileFolderSet->GetSkippedFiles();
         for (const PlayFab::GameSave::FileDetail& file : skippedFiles)
         {
-            JsonValue jsonObj{ JsonValue::object() };
+            JsonValue jsonObj = JsonValue::object();
             JsonUtils::ObjectAddMember(jsonObj, "Name", file.fileName);
             JsonUtils::ObjectAddMember(jsonObj, "Size", file.fileSizeBytes);
             JsonUtils::ObjectAddMember(jsonObj, "SkipFile", file.skipFile);
@@ -340,7 +471,7 @@ void FolderSyncManager::SetStatsForDebug()
     }
     JsonUtils::ObjectAddMember(rootJson, "SkippedFiles", std::move(allFilesArray));
 
-    JsonValue jsonObjUpload{ JsonValue::object() };
+    JsonValue jsonObjUpload = JsonValue::object();
     JsonUtils::ObjectAddMember(jsonObjUpload, "NumFilesInFinalizedManifest", m_uploadStep.GetNumFilesInFinalizedManifest());
     JsonUtils::ObjectAddMember(rootJson, "Upload", std::move(jsonObjUpload));
 
@@ -413,7 +544,7 @@ HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ 
                 m_latestPendingManifest, m_localFileFolderSet, m_remoteFileFolderSet, 
                 m_saveFolder, option, m_uiManager, m_syncProgress, 
                 folderSyncMutex, FolderSyncManagerProgressCallback, this,
-                m_lastShortSaveDescription);
+                m_lastShortSaveDescription, ConflictMetadata()); // No conflict metadata for normal uploads
             if (hr == E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD)
             {
                 // If we get disconnected from the cloud (aka the manifest we uploaded is outdated), we need to do the following:
@@ -447,6 +578,9 @@ HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ 
         m_latestFinalizedManifest = MakeShared<ManifestInternal>(m_uploadStep.GetPostUploadLatestFinalizedPFManifest());
         m_latestPendingManifest = MakeShared<ManifestInternal>(m_uploadStep.GetPostUploadPendingPFManifest());
         m_remoteFileFolderSet = MakeShared<FileFolderSet>(); // this will be automatically filled next time upload is done in CompareStep
+        
+        // Clear dirty flag - description is now synced to cloud
+        m_descriptionDirty = false;
     }
     else
     {
@@ -474,6 +608,7 @@ HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ 
     }
 
     SetSyncStateProgress(PFGameSaveFilesSyncState::SyncComplete, 0, 0);
+    TRACE_INFORMATION("[GAME SAVE] FolderSyncManager::DoWorkFolderUpload Done");
     SetStatsForDebug();
 
     return S_OK;
@@ -521,6 +656,22 @@ HRESULT FolderSyncManager::DoWorkSetSaveDescription(_In_ const RunContext& runCo
         return E_ABORT;
     }
 
+    // When disconnected from cloud, store description locally only (skip server update)
+    // Description will be committed to cloud on next successful upload when reconnected
+    if (IsForcedDisconnectFromCloud())
+    {
+        TRACE_INFORMATION("DoWorkSetSaveDescription: offline - storing description locally only (dirty=true)");
+        SetLastShortSaveDescription(shortSaveDescription, true);  // Mark dirty so it persists through reconnect
+        return S_OK;
+    }
+
+    if (m_latestPendingManifest == nullptr)
+    {
+        // No manifest available yet - user may not have completed initial sync
+        TRACE_ERROR("DoWorkSetSaveDescription: no pending manifest available");
+        return E_PF_GAMESAVE_USER_NOT_ADDED;
+    }
+
     // 1. SetSaveDescription
     if (!m_setSaveDescriptionStep.IsSetDone())
     {
@@ -533,7 +684,12 @@ HRESULT FolderSyncManager::DoWorkSetSaveDescription(_In_ const RunContext& runCo
         );
         if (FAILED(hr))
         {
-            return hr;
+            // Network call failed - fall back to storing description locally with dirty flag
+            // Description will be synced to cloud on next successful upload
+            TRACE_INFORMATION("DoWorkSetSaveDescription: network call failed (hr=0x%08X), storing description locally (dirty=true)", hr);
+            SetLastShortSaveDescription(shortSaveDescription, true);
+            m_setSaveDescriptionStep.Reset();  // Reset step so it can be retried on next call
+            return S_OK;  // Return success - description is stored locally
         }
 
         return E_PENDING;
@@ -548,6 +704,11 @@ HRESULT FolderSyncManager::InitForDownload()
     m_lockStep.Reset();
     m_compareStep.Reset();
     m_downloadStep.Reset();
+    m_isForcedDisconnectFromCloud = false;
+    m_latestFinalizedManifest = nullptr;
+    m_latestPendingManifest = nullptr;
+    m_localFileFolderSet = nullptr;
+    m_remoteFileFolderSet = nullptr;
     return S_OK;
 }
 
@@ -616,9 +777,41 @@ void FolderSyncManager::ResetSetSaveDescriptionStep()
     m_setSaveDescriptionStep.Reset();
 }
 
-void FolderSyncManager::SetLastShortSaveDescription(const String& shortSaveDescription)
+void FolderSyncManager::SetLastShortSaveDescription(const String& shortSaveDescription, bool dirty)
 {
     m_lastShortSaveDescription = shortSaveDescription;
+    m_descriptionDirty = dirty;
+    
+    // Persist to localstate.json so description survives across sessions and is available for conflict UI
+    if (m_localFileFolderSet && !m_saveFolder.empty())
+    {
+        HRESULT hr = LocalStateManifest::WriteLocalManifest(m_saveFolder, m_localFileFolderSet, shortSaveDescription, dirty);
+        if (FAILED(hr))
+        {
+            TRACE_WARNING("[GAME SAVE] SetLastShortSaveDescription: Failed to persist to localstate.json hr=0x%08X", hr);
+        }
+        else
+        {
+            TRACE_INFORMATION("[GAME SAVE] SetLastShortSaveDescription: Persisted description='%s' dirty=%d to localstate.json", shortSaveDescription.c_str(), dirty);
+        }
+    }
+}
+
+String FolderSyncManager::GetSaveDescriptionForDebug() const
+{
+    // Prefer locally set description (from SetSaveDescriptionAsync or deferred) as it's the most recent.
+    // This ensures that after SetSaveDescriptionAsync succeeds, we return the new description
+    // even if m_latestFinalizedManifest hasn't been refreshed yet.
+    if (!m_lastShortSaveDescription.empty())
+    {
+        return m_lastShortSaveDescription;
+    }
+    // Fall back to manifest description
+    if (m_latestFinalizedManifest)
+    {
+        return m_latestFinalizedManifest->GetDecodedManifestDescription();
+    }
+    return String{};
 }
 
 HRESULT FolderSyncManager::ConvertToPFGameSaveDescriptor(const ManifestWrap& manifest, PFGameSaveDescriptor& gameSave)
@@ -654,7 +847,16 @@ HRESULT FolderSyncManager::ConvertToPFGameSaveDescriptor(const ManifestWrap& man
         gameSave.deviceFriendlyName[0] = '\0';
     }
 
-    String manifestDescription = manifest.GetManifestDescription();
+    // Decode the base64-encoded description for client consumption
+    String manifestDescription = Base64Decode(manifest.GetManifestDescription());
+    if (manifestDescription.empty())
+    {
+        TRACE_WARNING("[GAME SAVE] ConvertToPFGameSaveDescriptor: ManifestDescription is EMPTY for manifest v:%s", manifest.GetVersion().c_str());
+    }
+    else
+    {
+        TRACE_INFORMATION("[GAME SAVE] ConvertToPFGameSaveDescriptor: ManifestDescription='%s' for manifest v:%s", manifestDescription.c_str(), manifest.GetVersion().c_str());
+    }
     StrCpy(gameSave.shortSaveDescription, sizeof(gameSave.shortSaveDescription), manifestDescription.c_str());
     gameSave.thumbnailUri[0] = '\0'; // No thumbnail URI in manifest, might be set after
 

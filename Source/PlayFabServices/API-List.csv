@@ -155,7 +155,7 @@ PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromPSNOnlin
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromSteamIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromSteamIDs,false,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromSteamNamesAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromSteamNames,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromTwitchIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromTwitchIDs,false,Yes,No,No,Yes,No,No,Yes
-PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromXboxLiveIDs,false,Yes,No,No,Yes,No,No,Yes
+PF Services,AccountManagement,PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsAsync,SessionTicket,Account Management,ClientGetPlayFabIDsFromXboxLiveIDs,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkAndroidDeviceIDAsync,SessionTicket,Account Management,ClientLinkAndroidDeviceID,false,No,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkAppleAsync,SessionTicket,Account Management,ClientLinkApple,false,No,No,No,Yes,No,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkBattleNetAccountAsync,SessionTicket,Account Management,ClientLinkBattleNetAccount,false,Yes,No,No,No,No,No,No
@@ -173,7 +173,7 @@ PF Services,AccountManagement,PFAccountManagementClientLinkOpenIdConnectAsync,Se
 PF Services,AccountManagement,PFAccountManagementClientLinkPSNAccountAsync,SessionTicket,Account Management,ClientLinkPSNAccount,false,No,No,Yes,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkSteamAccountAsync,SessionTicket,Account Management,ClientLinkSteamAccount,false,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientLinkTwitchAsync,SessionTicket,Account Management,ClientLinkTwitch,false,No,No,No,Yes,No,No,Yes
-PF Services,AccountManagement,PFAccountManagementClientLinkXboxAccountAsync,SessionTicket,Account Management,ClientLinkXboxAccount,false,Yes,No,No,Yes,No,No,Yes
+PF Services,AccountManagement,PFAccountManagementClientLinkXboxAccountAsync,SessionTicket,Account Management,ClientLinkXboxAccount,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientRemoveContactEmailAsync,SessionTicket,Account Management,ClientRemoveContactEmail,false,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientRemoveGenericIDAsync,SessionTicket,Account Management,ClientRemoveGenericID,false,No,No,No,No,No,No,No
 PF Services,AccountManagement,PFAccountManagementClientReportPlayerAsync,SessionTicket,Account Management,ClientReportPlayer,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes
@@ -195,7 +195,7 @@ PF Services,AccountManagement,PFAccountManagementClientUnlinkOpenIdConnectAsync,
 PF Services,AccountManagement,PFAccountManagementClientUnlinkPSNAccountAsync,SessionTicket,Account Management,ClientUnlinkPSNAccount,false,No,No,Yes,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientUnlinkSteamAccountAsync,SessionTicket,Account Management,ClientUnlinkSteamAccount,false,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementClientUnlinkTwitchAsync,SessionTicket,Account Management,ClientUnlinkTwitch,false,No,No,No,Yes,No,No,Yes
-PF Services,AccountManagement,PFAccountManagementClientUnlinkXboxAccountAsync,SessionTicket,Account Management,ClientUnlinkXboxAccount,false,Yes,No,No,Yes,No,No,Yes
+PF Services,AccountManagement,PFAccountManagementClientUnlinkXboxAccountAsync,SessionTicket,Account Management,ClientUnlinkXboxAccount,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientUpdateAvatarUrlAsync,SessionTicket,Account Management,ClientUpdateAvatarUrl,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementClientUpdateUserTitleDisplayNameAsync,SessionTicket,Account Management,ClientUpdateUserTitleDisplayName,false,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementServerAddGenericIDAsync,SecretKey,Account Management,ServerAddGenericID,false,No,No,No,No,No,No,No
@@ -247,7 +247,7 @@ PF Services,AccountManagement,PFAccountManagementServerUnlinkTwitchAccountAsync,
 PF Services,AccountManagement,PFAccountManagementServerUnlinkXboxAccountAsync,SecretKey,Account Management,ServerUnlinkXboxAccount,false,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementServerUpdateAvatarUrlAsync,SecretKey,Account Management,ServerUpdateAvatarUrl,false,Yes,No,No,Yes,No,No,Yes
 PF Services,AccountManagement,PFAccountManagementServerUpdateBansAsync,SecretKey,Account Management,ServerUpdateBans,false,Yes,No,No,Yes,No,No,Yes
-PF Services,AccountManagement,PFAccountManagementGetTitlePlayersFromXboxLiveIDsAsync,EntityToken,Account Management,GetTitlePlayersFromXboxLiveIDs,false,Yes,No,No,Yes,No,No,Yes
+PF Services,AccountManagement,PFAccountManagementGetTitlePlayersFromXboxLiveIDsAsync,EntityToken,Account Management,GetTitlePlayersFromXboxLiveIDs,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,AccountManagement,PFAccountManagementSetDisplayNameAsync,EntityToken,Account Management,SetDisplayName,false,Yes,Yes,Yes,Yes,Yes,Yes,Yes
 PF Services,Leaderboard,PFLeaderboardAdminCreatePlayerStatisticDefinitionAsync,SecretKey,Player Data Management,AdminCreatePlayerStatisticDefinition,false,No,No,No,No,No,No,No
 PF Services,Leaderboard,PFLeaderboardAdminGetPlayerStatisticDefinitionsAsync,SecretKey,Player Data Management,AdminGetPlayerStatisticDefinitions,false,No,No,No,No,No,No,No

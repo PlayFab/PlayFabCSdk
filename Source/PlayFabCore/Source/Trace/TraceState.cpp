@@ -93,7 +93,7 @@ TraceState::TraceState(RunContext&& /*initContext*/, RunContext&& traceContext, 
     HCTraceSetClientCallback(TraceCallback);
 
     // Synchronously load trace settings. TraceSettings loaded from file override those configured via API
-    // TODO document location, name, and format of TraceSettings file. It should just be a Json serialized
+    // document location, name, and format of TraceSettings file. It should just be a Json serialized
     // version of the TraceSettings struct:
     // {
     //   "enableTraceToFile": true,

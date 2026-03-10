@@ -145,12 +145,10 @@ void AccountManagementTests::TestClientGetPlayFabIDsFromTwitchIDs(TestContext& t
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientGetPlayFabIDsFromXboxLiveIDs(TestContext& tc)
 {
     tc.Skip();
 }
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkAndroidDeviceID(TestContext& tc)
@@ -267,12 +265,10 @@ void AccountManagementTests::TestClientLinkTwitch(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientLinkXboxAccount(TestContext& tc)
 {
     tc.Skip();
 }
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientRemoveContactEmail(TestContext& tc)
@@ -408,12 +404,10 @@ void AccountManagementTests::TestClientUnlinkTwitch(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestClientUnlinkXboxAccount(TestContext& tc)
 {
     tc.Skip();
 }
-#endif
 
 void AccountManagementTests::TestClientUpdateAvatarUrl(TestContext& tc)
 {
@@ -749,12 +743,10 @@ void AccountManagementTests::TestServerUpdateBans(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestGetTitlePlayersFromXboxLiveIDs(TestContext& tc)
 {
     tc.Skip();
 }
-#endif
 
 void AccountManagementTests::TestSetDisplayName(TestContext& tc)
 {

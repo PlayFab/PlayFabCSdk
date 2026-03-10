@@ -15,7 +15,7 @@ AsyncOp<void> AccountManagementAPI::ClientAddOrUpdateContactEmail(
 )
 {
     const char* path{ "/Client/AddOrUpdateContactEmail" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientAddOrUpdateContactEmail,
@@ -48,7 +48,7 @@ AsyncOp<AddUsernamePasswordResult> AccountManagementAPI::ClientAddUsernamePasswo
 )
 {
     const char* path{ "/Client/AddUsernamePassword" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientAddUsernamePassword,
@@ -83,7 +83,7 @@ AsyncOp<GetAccountInfoResult> AccountManagementAPI::ClientGetAccountInfo(
 )
 {
     const char* path{ "/Client/GetAccountInfo" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetAccountInfo,
@@ -118,7 +118,7 @@ AsyncOp<GetPlayerCombinedInfoResult> AccountManagementAPI::ClientGetPlayerCombin
 )
 {
     const char* path{ "/Client/GetPlayerCombinedInfo" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayerCombinedInfo,
@@ -153,7 +153,7 @@ AsyncOp<GetPlayerProfileResult> AccountManagementAPI::ClientGetPlayerProfile(
 )
 {
     const char* path{ "/Client/GetPlayerProfile" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayerProfile,
@@ -188,7 +188,7 @@ AsyncOp<GetPlayFabIDsFromBattleNetAccountIdsResult> AccountManagementAPI::Client
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromBattleNetAccountIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromBattleNetAccountIds,
@@ -223,7 +223,7 @@ AsyncOp<GetPlayFabIDsFromFacebookIDsResult> AccountManagementAPI::ClientGetPlayF
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromFacebookIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromFacebookIDs,
@@ -258,7 +258,7 @@ AsyncOp<GetPlayFabIDsFromFacebookInstantGamesIdsResult> AccountManagementAPI::Cl
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromFacebookInstantGamesIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromFacebookInstantGamesIds,
@@ -293,7 +293,7 @@ AsyncOp<GetPlayFabIDsFromGameCenterIDsResult> AccountManagementAPI::ClientGetPla
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromGameCenterIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromGameCenterIDs,
@@ -328,7 +328,7 @@ AsyncOp<GetPlayFabIDsFromGoogleIDsResult> AccountManagementAPI::ClientGetPlayFab
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromGoogleIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromGoogleIDs,
@@ -363,7 +363,7 @@ AsyncOp<GetPlayFabIDsFromGooglePlayGamesPlayerIDsResult> AccountManagementAPI::C
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromGooglePlayGamesPlayerIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromGooglePlayGamesPlayerIDs,
@@ -398,7 +398,7 @@ AsyncOp<GetPlayFabIDsFromKongregateIDsResult> AccountManagementAPI::ClientGetPla
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromKongregateIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromKongregateIDs,
@@ -433,7 +433,7 @@ AsyncOp<GetPlayFabIDsFromNintendoServiceAccountIdsResult> AccountManagementAPI::
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromNintendoServiceAccountIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromNintendoServiceAccountIds,
@@ -468,7 +468,7 @@ AsyncOp<GetPlayFabIDsFromNintendoSwitchDeviceIdsResult> AccountManagementAPI::Cl
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromNintendoSwitchDeviceIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromNintendoSwitchDeviceIds,
@@ -503,7 +503,7 @@ AsyncOp<GetPlayFabIDsFromOpenIdsResult> AccountManagementAPI::ClientGetPlayFabID
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromOpenIdSubjectIdentifiers" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromOpenIdSubjectIdentifiers,
@@ -538,7 +538,7 @@ AsyncOp<GetPlayFabIDsFromPSNAccountIDsResult> AccountManagementAPI::ClientGetPla
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromPSNAccountIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromPSNAccountIDs,
@@ -573,7 +573,7 @@ AsyncOp<GetPlayFabIDsFromPSNOnlineIDsResult> AccountManagementAPI::ClientGetPlay
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromPSNOnlineIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromPSNOnlineIDs,
@@ -608,7 +608,7 @@ AsyncOp<GetPlayFabIDsFromSteamIDsResult> AccountManagementAPI::ClientGetPlayFabI
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromSteamIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromSteamIDs,
@@ -643,7 +643,7 @@ AsyncOp<GetPlayFabIDsFromSteamNamesResult> AccountManagementAPI::ClientGetPlayFa
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromSteamNames" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromSteamNames,
@@ -678,7 +678,7 @@ AsyncOp<GetPlayFabIDsFromTwitchIDsResult> AccountManagementAPI::ClientGetPlayFab
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromTwitchIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromTwitchIDs,
@@ -713,7 +713,7 @@ AsyncOp<GetPlayFabIDsFromXboxLiveIDsResult> AccountManagementAPI::ClientGetPlayF
 )
 {
     const char* path{ "/Client/GetPlayFabIDsFromXboxLiveIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientGetPlayFabIDsFromXboxLiveIDs,
@@ -748,7 +748,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkAndroidDeviceID(
 )
 {
     const char* path{ "/Client/LinkAndroidDeviceID" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkAndroidDeviceID,
@@ -781,7 +781,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkApple(
 )
 {
     const char* path{ "/Client/LinkApple" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkApple,
@@ -814,7 +814,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkBattleNetAccount(
 )
 {
     const char* path{ "/Client/LinkBattleNetAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkBattleNetAccount,
@@ -847,7 +847,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkCustomID(
 )
 {
     const char* path{ "/Client/LinkCustomID" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkCustomID,
@@ -880,7 +880,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkFacebookAccount(
 )
 {
     const char* path{ "/Client/LinkFacebookAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkFacebookAccount,
@@ -913,7 +913,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkFacebookInstantGamesId(
 )
 {
     const char* path{ "/Client/LinkFacebookInstantGamesId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkFacebookInstantGamesId,
@@ -946,7 +946,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkGameCenterAccount(
 )
 {
     const char* path{ "/Client/LinkGameCenterAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkGameCenterAccount,
@@ -979,7 +979,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkGoogleAccount(
 )
 {
     const char* path{ "/Client/LinkGoogleAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkGoogleAccount,
@@ -1012,7 +1012,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkGooglePlayGamesServicesAccount(
 )
 {
     const char* path{ "/Client/LinkGooglePlayGamesServicesAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkGooglePlayGamesServicesAccount,
@@ -1045,7 +1045,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkIOSDeviceID(
 )
 {
     const char* path{ "/Client/LinkIOSDeviceID" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkIOSDeviceID,
@@ -1078,7 +1078,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkKongregate(
 )
 {
     const char* path{ "/Client/LinkKongregate" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkKongregate,
@@ -1111,7 +1111,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkNintendoServiceAccount(
 )
 {
     const char* path{ "/Client/LinkNintendoServiceAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkNintendoServiceAccount,
@@ -1144,7 +1144,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkNintendoSwitchDeviceId(
 )
 {
     const char* path{ "/Client/LinkNintendoSwitchDeviceId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkNintendoSwitchDeviceId,
@@ -1177,7 +1177,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkOpenIdConnect(
 )
 {
     const char* path{ "/Client/LinkOpenIdConnect" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkOpenIdConnect,
@@ -1210,7 +1210,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkPSNAccount(
 )
 {
     const char* path{ "/Client/LinkPSNAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkPSNAccount,
@@ -1243,7 +1243,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkSteamAccount(
 )
 {
     const char* path{ "/Client/LinkSteamAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkSteamAccount,
@@ -1276,7 +1276,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkTwitch(
 )
 {
     const char* path{ "/Client/LinkTwitch" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkTwitch,
@@ -1310,7 +1310,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkXboxAccount(
 )
 {
     const char* path{ "/Client/LinkXboxAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientLinkXboxAccount,
@@ -1344,7 +1344,7 @@ AsyncOp<void> AccountManagementAPI::ClientRemoveContactEmail(
 )
 {
     const char* path{ "/Client/RemoveContactEmail" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientRemoveContactEmail,
@@ -1377,7 +1377,7 @@ AsyncOp<ReportPlayerClientResult> AccountManagementAPI::ClientReportPlayer(
 )
 {
     const char* path{ "/Client/ReportPlayer" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientReportPlayer,
@@ -1412,7 +1412,7 @@ AsyncOp<void> AccountManagementAPI::ClientSendAccountRecoveryEmail(
 )
 {
     const char* path{ "/Client/SendAccountRecoveryEmail" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakePostRequest(
         ServicesCacheId::AccountManagementClientSendAccountRecoveryEmail,
@@ -1445,7 +1445,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkAndroidDeviceID(
 )
 {
     const char* path{ "/Client/UnlinkAndroidDeviceID" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkAndroidDeviceID,
@@ -1478,7 +1478,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkApple(
 )
 {
     const char* path{ "/Client/UnlinkApple" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkApple,
@@ -1511,7 +1511,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkBattleNetAccount(
 )
 {
     const char* path{ "/Client/UnlinkBattleNetAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkBattleNetAccount,
@@ -1544,7 +1544,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkCustomID(
 )
 {
     const char* path{ "/Client/UnlinkCustomID" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkCustomID,
@@ -1577,7 +1577,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkFacebookAccount(
 )
 {
     const char* path{ "/Client/UnlinkFacebookAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkFacebookAccount,
@@ -1610,7 +1610,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkFacebookInstantGamesId(
 )
 {
     const char* path{ "/Client/UnlinkFacebookInstantGamesId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkFacebookInstantGamesId,
@@ -1643,7 +1643,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkGameCenterAccount(
 )
 {
     const char* path{ "/Client/UnlinkGameCenterAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkGameCenterAccount,
@@ -1676,7 +1676,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkGoogleAccount(
 )
 {
     const char* path{ "/Client/UnlinkGoogleAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkGoogleAccount,
@@ -1709,7 +1709,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkGooglePlayGamesServicesAccount(
 )
 {
     const char* path{ "/Client/UnlinkGooglePlayGamesServicesAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkGooglePlayGamesServicesAccount,
@@ -1742,7 +1742,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkIOSDeviceID(
 )
 {
     const char* path{ "/Client/UnlinkIOSDeviceID" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkIOSDeviceID,
@@ -1775,7 +1775,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkKongregate(
 )
 {
     const char* path{ "/Client/UnlinkKongregate" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkKongregate,
@@ -1808,7 +1808,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkNintendoServiceAccount(
 )
 {
     const char* path{ "/Client/UnlinkNintendoServiceAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkNintendoServiceAccount,
@@ -1841,7 +1841,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkNintendoSwitchDeviceId(
 )
 {
     const char* path{ "/Client/UnlinkNintendoSwitchDeviceId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkNintendoSwitchDeviceId,
@@ -1874,7 +1874,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkOpenIdConnect(
 )
 {
     const char* path{ "/Client/UnlinkOpenIdConnect" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkOpenIdConnect,
@@ -1907,7 +1907,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkPSNAccount(
 )
 {
     const char* path{ "/Client/UnlinkPSNAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkPSNAccount,
@@ -1940,7 +1940,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkSteamAccount(
 )
 {
     const char* path{ "/Client/UnlinkSteamAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkSteamAccount,
@@ -1973,7 +1973,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkTwitch(
 )
 {
     const char* path{ "/Client/UnlinkTwitch" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkTwitch,
@@ -2006,7 +2006,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkXboxAccount(
 )
 {
     const char* path{ "/Client/UnlinkXboxAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUnlinkXboxAccount,
@@ -2039,7 +2039,7 @@ AsyncOp<void> AccountManagementAPI::ClientUpdateAvatarUrl(
 )
 {
     const char* path{ "/Client/UpdateAvatarUrl" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUpdateAvatarUrl,
@@ -2072,7 +2072,7 @@ AsyncOp<UpdateUserTitleDisplayNameResult> AccountManagementAPI::ClientUpdateUser
 )
 {
     const char* path{ "/Client/UpdateUserTitleDisplayName" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementClientUpdateUserTitleDisplayName,
@@ -2107,7 +2107,7 @@ AsyncOp<BanUsersResult> AccountManagementAPI::ServerBanUsers(
 )
 {
     const char* path{ "/Server/BanUsers" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerBanUsers,
@@ -2142,7 +2142,7 @@ AsyncOp<void> AccountManagementAPI::ServerDeletePlayer(
 )
 {
     const char* path{ "/Server/DeletePlayer" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerDeletePlayer,
@@ -2175,7 +2175,7 @@ AsyncOp<GetPlayerCombinedInfoResult> AccountManagementAPI::ServerGetPlayerCombin
 )
 {
     const char* path{ "/Server/GetPlayerCombinedInfo" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayerCombinedInfo,
@@ -2210,7 +2210,7 @@ AsyncOp<GetPlayerProfileResult> AccountManagementAPI::ServerGetPlayerProfile(
 )
 {
     const char* path{ "/Server/GetPlayerProfile" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayerProfile,
@@ -2245,7 +2245,7 @@ AsyncOp<GetPlayFabIDsFromBattleNetAccountIdsResult> AccountManagementAPI::Server
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromBattleNetAccountIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromBattleNetAccountIds,
@@ -2280,7 +2280,7 @@ AsyncOp<GetPlayFabIDsFromFacebookIDsResult> AccountManagementAPI::ServerGetPlayF
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromFacebookIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromFacebookIDs,
@@ -2315,7 +2315,7 @@ AsyncOp<GetPlayFabIDsFromFacebookInstantGamesIdsResult> AccountManagementAPI::Se
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromFacebookInstantGamesIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromFacebookInstantGamesIds,
@@ -2350,7 +2350,7 @@ AsyncOp<GetPlayFabIDsFromNintendoServiceAccountIdsResult> AccountManagementAPI::
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromNintendoServiceAccountIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromNintendoServiceAccountIds,
@@ -2385,7 +2385,7 @@ AsyncOp<GetPlayFabIDsFromNintendoSwitchDeviceIdsResult> AccountManagementAPI::Se
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromNintendoSwitchDeviceIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromNintendoSwitchDeviceIds,
@@ -2420,7 +2420,7 @@ AsyncOp<GetPlayFabIDsFromOpenIdsResult> AccountManagementAPI::ServerGetPlayFabID
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromOpenIdSubjectIdentifiers" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromOpenIdSubjectIdentifiers,
@@ -2455,7 +2455,7 @@ AsyncOp<GetPlayFabIDsFromPSNAccountIDsResult> AccountManagementAPI::ServerGetPla
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromPSNAccountIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromPSNAccountIDs,
@@ -2490,7 +2490,7 @@ AsyncOp<GetPlayFabIDsFromPSNOnlineIDsResult> AccountManagementAPI::ServerGetPlay
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromPSNOnlineIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromPSNOnlineIDs,
@@ -2525,7 +2525,7 @@ AsyncOp<GetPlayFabIDsFromSteamIDsResult> AccountManagementAPI::ServerGetPlayFabI
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromSteamIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromSteamIDs,
@@ -2560,7 +2560,7 @@ AsyncOp<GetPlayFabIDsFromSteamNamesResult> AccountManagementAPI::ServerGetPlayFa
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromSteamNames" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromSteamNames,
@@ -2595,7 +2595,7 @@ AsyncOp<GetPlayFabIDsFromTwitchIDsResult> AccountManagementAPI::ServerGetPlayFab
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromTwitchIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromTwitchIDs,
@@ -2630,7 +2630,7 @@ AsyncOp<GetPlayFabIDsFromXboxLiveIDsResult> AccountManagementAPI::ServerGetPlayF
 )
 {
     const char* path{ "/Server/GetPlayFabIDsFromXboxLiveIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetPlayFabIDsFromXboxLiveIDs,
@@ -2665,7 +2665,7 @@ AsyncOp<GetServerCustomIDsFromPlayFabIDsResult> AccountManagementAPI::ServerGetS
 )
 {
     const char* path{ "/Server/GetServerCustomIDsFromPlayFabIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetServerCustomIDsFromPlayFabIDs,
@@ -2700,7 +2700,7 @@ AsyncOp<GetUserAccountInfoResult> AccountManagementAPI::ServerGetUserAccountInfo
 )
 {
     const char* path{ "/Server/GetUserAccountInfo" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetUserAccountInfo,
@@ -2735,7 +2735,7 @@ AsyncOp<GetUserBansResult> AccountManagementAPI::ServerGetUserBans(
 )
 {
     const char* path{ "/Server/GetUserBans" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerGetUserBans,
@@ -2770,7 +2770,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkBattleNetAccount(
 )
 {
     const char* path{ "/Server/LinkBattleNetAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkBattleNetAccount,
@@ -2803,7 +2803,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkNintendoServiceAccount(
 )
 {
     const char* path{ "/Server/LinkNintendoServiceAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkNintendoServiceAccount,
@@ -2836,7 +2836,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkNintendoServiceAccountSubject(
 )
 {
     const char* path{ "/Server/LinkNintendoServiceAccountSubject" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkNintendoServiceAccountSubject,
@@ -2869,7 +2869,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkNintendoSwitchDeviceId(
 )
 {
     const char* path{ "/Server/LinkNintendoSwitchDeviceId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkNintendoSwitchDeviceId,
@@ -2902,7 +2902,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkPSNAccount(
 )
 {
     const char* path{ "/Server/LinkPSNAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkPSNAccount,
@@ -2935,7 +2935,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkPSNId(
 )
 {
     const char* path{ "/Server/LinkPSNId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkPSNId,
@@ -2968,7 +2968,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkServerCustomId(
 )
 {
     const char* path{ "/Server/LinkServerCustomId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkServerCustomId,
@@ -3001,7 +3001,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkSteamId(
 )
 {
     const char* path{ "/Server/LinkSteamId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkSteamId,
@@ -3034,7 +3034,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkTwitchAccount(
 )
 {
     const char* path{ "/Server/LinkTwitchAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkTwitchAccount,
@@ -3067,7 +3067,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkXboxAccount(
 )
 {
     const char* path{ "/Server/LinkXboxAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkXboxAccount,
@@ -3100,7 +3100,7 @@ AsyncOp<void> AccountManagementAPI::ServerLinkXboxId(
 )
 {
     const char* path{ "/Server/LinkXboxId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerLinkXboxId,
@@ -3133,7 +3133,7 @@ AsyncOp<RevokeAllBansForUserResult> AccountManagementAPI::ServerRevokeAllBansFor
 )
 {
     const char* path{ "/Server/RevokeAllBansForUser" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerRevokeAllBansForUser,
@@ -3168,7 +3168,7 @@ AsyncOp<RevokeBansResult> AccountManagementAPI::ServerRevokeBans(
 )
 {
     const char* path{ "/Server/RevokeBans" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerRevokeBans,
@@ -3203,7 +3203,7 @@ AsyncOp<void> AccountManagementAPI::ServerSendCustomAccountRecoveryEmail(
 )
 {
     const char* path{ "/Server/SendCustomAccountRecoveryEmail" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerSendCustomAccountRecoveryEmail,
@@ -3236,7 +3236,7 @@ AsyncOp<void> AccountManagementAPI::ServerSendEmailFromTemplate(
 )
 {
     const char* path{ "/Server/SendEmailFromTemplate" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerSendEmailFromTemplate,
@@ -3269,7 +3269,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkBattleNetAccount(
 )
 {
     const char* path{ "/Server/UnlinkBattleNetAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkBattleNetAccount,
@@ -3302,7 +3302,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkFacebookAccount(
 )
 {
     const char* path{ "/Server/UnlinkFacebookAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkFacebookAccount,
@@ -3335,7 +3335,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkFacebookInstantGamesId(
 )
 {
     const char* path{ "/Server/UnlinkFacebookInstantGamesId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkFacebookInstantGamesId,
@@ -3368,7 +3368,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkNintendoServiceAccount(
 )
 {
     const char* path{ "/Server/UnlinkNintendoServiceAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkNintendoServiceAccount,
@@ -3401,7 +3401,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkNintendoSwitchDeviceId(
 )
 {
     const char* path{ "/Server/UnlinkNintendoSwitchDeviceId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkNintendoSwitchDeviceId,
@@ -3434,7 +3434,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkPSNAccount(
 )
 {
     const char* path{ "/Server/UnlinkPSNAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkPSNAccount,
@@ -3467,7 +3467,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkServerCustomId(
 )
 {
     const char* path{ "/Server/UnlinkServerCustomId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkServerCustomId,
@@ -3500,7 +3500,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkSteamId(
 )
 {
     const char* path{ "/Server/UnlinkSteamId" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkSteamId,
@@ -3533,7 +3533,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkTwitchAccount(
 )
 {
     const char* path{ "/Server/UnlinkTwitchAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkTwitchAccount,
@@ -3566,7 +3566,7 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkXboxAccount(
 )
 {
     const char* path{ "/Server/UnlinkXboxAccount" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkXboxAccount,
@@ -3599,7 +3599,7 @@ AsyncOp<void> AccountManagementAPI::ServerUpdateAvatarUrl(
 )
 {
     const char* path{ "/Server/UpdateAvatarUrl" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUpdateAvatarUrl,
@@ -3632,7 +3632,7 @@ AsyncOp<UpdateBansResult> AccountManagementAPI::ServerUpdateBans(
 )
 {
     const char* path{ "/Server/UpdateBans" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUpdateBans,
@@ -3667,7 +3667,7 @@ AsyncOp<GetTitlePlayersFromProviderIDsResponse> AccountManagementAPI::GetTitlePl
 )
 {
     const char* path{ "/Profile/GetTitlePlayersFromXboxLiveIDs" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementGetTitlePlayersFromXboxLiveIDs,
@@ -3702,7 +3702,7 @@ AsyncOp<SetDisplayNameResponse> AccountManagementAPI::SetDisplayName(
 )
 {
     const char* path{ "/Profile/SetDisplayName" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::AccountManagementSetDisplayName,

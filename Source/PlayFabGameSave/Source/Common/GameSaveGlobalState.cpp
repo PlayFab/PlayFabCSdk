@@ -16,13 +16,6 @@ namespace PlayFab
 namespace GameSave
 {
 
-namespace Detail
-{
-
-    // Choose arbitrary but recognizable values for handles
-    uintptr_t const kFirstEntityHandle = 0x40000000;
-}
-
 enum class AccessMode
 {
     Initialize,
@@ -171,6 +164,12 @@ HRESULT CALLBACK GameSaveGlobalState::CleanupAsyncProvider(XAsyncOp op, XAsyncPr
         RETURN_IF_FAILED(GameSaveAccessGlobalState(AccessMode::Cleanup, context->state));
         context->clientAsyncBlock = data->async;
 
+        // CRITICAL: Cancel any pending UI waits BEFORE terminating RunContexts.
+        // This prevents hangs when an UploadAsyncProvider is waiting for a UI callback response
+        // (e.g., SyncFailed retry/cancel) that will never come because the game is shutting down.
+        // Without this, the provider blocks forever in WaitForScheduleNow() and termination hangs.
+        context->state->CancelAllPendingUIWaits();
+
         context->state->m_runContext.Terminate(*context->state, context);
         return S_OK;
     }
@@ -276,6 +275,22 @@ RunContext GameSaveGlobalState::RunContext() const noexcept
 GameSaveAPIProvider& GameSaveGlobalState::ApiProvider() noexcept
 {
     return *m_apiProvider;
+}
+
+void GameSaveGlobalState::CancelAllPendingUIWaits() noexcept
+{
+    TRACE_VERBOSE("PFGameSave::GameSaveGlobalState::CancelAllPendingUIWaits");
+    
+    // Cancel any pending UI waits across all FolderSyncManagers to prevent hangs during termination.
+    // This is critical because UploadAsyncProvider may be waiting for a UI callback response
+    // (e.g., SyncFailed retry/cancel), and if the game never responds, the provider would block forever.
+    for (auto& pair : m_managers)
+    {
+        if (pair.second)
+        {
+            pair.second->CancelPendingUIWaitForCleanup();
+        }
+    }
 }
 
 void TRACE_TASK(const String& msg)

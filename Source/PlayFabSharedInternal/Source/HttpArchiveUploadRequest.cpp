@@ -6,37 +6,12 @@
 #include <ApiXAsyncProvider.h>
 #include "AsyncOp.h"
 #include "XAsyncOperation.h"
+#include "PlatformUtils.h"
 
 #if HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH && !HC_PLATFORM_IS_PLAYSTATION
 
 namespace PlayFab
 {
-
-// function to base64 encode a string from a given string
-static String Base64Encode(const String& in)
-{
-    static const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-    String out;
-    out.reserve(((in.size() + 2) / 3) * 4);
-
-    size_t i = 0;
-    while (i < in.size())
-    {
-        uint32_t octet_a = i < in.size() ? static_cast<uint8_t>(in[i++]) : 0;
-        uint32_t octet_b = i < in.size() ? static_cast<uint8_t>(in[i++]) : 0;
-        uint32_t octet_c = i < in.size() ? static_cast<uint8_t>(in[i++]) : 0;
-
-        uint32_t triple = (octet_a << 0x10) + (octet_b << 0x08) + octet_c;
-
-        out.push_back(base64_chars[(triple >> 3 * 6) & 0x3F]);
-        out.push_back(base64_chars[(triple >> 2 * 6) & 0x3F]);
-        out.push_back(i > in.size() + 1 ? '=' : base64_chars[(triple >> 1 * 6) & 0x3F]);
-        out.push_back(i > in.size() ? '=' : base64_chars[(triple >> 0 * 6) & 0x3F]);
-    }
-
-    return out;
-}
 
 class ArchiveUploadProvider : public XAsyncProviderBase
 {

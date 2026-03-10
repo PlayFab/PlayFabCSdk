@@ -499,9 +499,23 @@ HRESULT GameSaveAPIProviderWin32::AddUserWithUiAsync(
     [async, options](SharedPtr<FolderSyncManager> folderSync, RunContext&& rc)
     {
         FolderSyncManagerProgress progress = folderSync->GetSyncProgress();
+        // Allow calling AddUserWithUiAsync if:
+        // 1. User has never been added (NotStarted state), OR
+        // 2. User is disconnected from cloud and wants to reconnect
+        //    (per documentation: "When disconnected from cloud, AddUserWithUiAsync() can be called again")
+        bool isReconnectAttempt = folderSync->IsForcedDisconnectFromCloud();
         if (progress.syncState != PFGameSaveFilesSyncState::NotStarted)
         {
-            return E_PF_GAMESAVE_USER_ALREADY_ADDED;
+            if (!isReconnectAttempt)
+            {
+                // User already added and not in offline mode - reject duplicate AddUser
+                return E_PF_GAMESAVE_USER_ALREADY_ADDED;
+            }
+            // User is disconnected from cloud - allow reconnection attempt
+            // Per documentation: "When disconnected from cloud, PFGameSaveFilesAddUserWithUiAsync() 
+            // can be called again if you want to try connect to the cloud."
+            folderSync->SetForcedDisconnectFromCloud(false);
+            folderSync->InitForDownload();
         }
 
         folderSync->SetSyncStateProgress(PFGameSaveFilesSyncState::PreparingForDownload, 0, 0);
@@ -554,11 +568,16 @@ HRESULT GameSaveAPIProviderWin32::IsConnectedToCloud(
     RETURN_HR_INVALIDARG_IF_NULL(isConnectedToCloud);
 
     *isConnectedToCloud = false;
-    return GameSaveEntityApiImpl(localUserHandle, [&isConnectedToCloud](SharedPtr<FolderSyncManager> folderSync)
+    HRESULT hr = GameSaveEntityApiImpl(localUserHandle, [&isConnectedToCloud](SharedPtr<FolderSyncManager> folderSync)
     {
         *isConnectedToCloud = (folderSync->IsForcedDisconnectFromCloud() == false);
         return S_OK;
     });
+
+    TRACE_INFORMATION("[GAME SAVE] GameSaveAPIProviderWin32::IsConnectedToCloud: connected=%s (hr=0x%08X)", 
+        *isConnectedToCloud ? "true" : "false", hr);
+
+    return hr;
 }
 
 HRESULT GameSaveAPIProviderWin32::UploadWithUiAsync(
@@ -641,7 +660,14 @@ HRESULT GameSaveAPIProviderWin32::SetUiProgressResponse(_In_ PFLocalUserHandle l
     switch (action)
     {
     case PFGameSaveFilesUiProgressUserAction::Cancel:
-        return UiActionHelper(localUserHandle, UIAction::UIProgressCancel);
+        // Use flag-based cancel instead of SetAction/ScheduleNow to avoid race conditions.
+        // The cancel flag will be checked during download/upload loops.
+        RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
+        return GameSaveEntityApiImpl(localUserHandle, [](SharedPtr<FolderSyncManager> folderSync)
+        {
+            folderSync->GetUIManager().RequestProgressCancel();
+            return S_OK;
+        });
     default:
         return E_INVALIDARG;
     }
@@ -707,6 +733,7 @@ HRESULT GameSaveAPIProviderWin32::SetUiOutOfStorageResponse(_In_ PFLocalUserHand
 
 HRESULT GameSaveAPIProviderWin32::SetMockDeviceIdForDebug(_In_ const char* deviceId) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetMockDeviceIdForDebug called with deviceId=%s", deviceId ? deviceId : "(null)");
     try
     {
         SharedPtr<GameSaveGlobalState> state;
@@ -723,6 +750,7 @@ HRESULT GameSaveAPIProviderWin32::SetMockDeviceIdForDebug(_In_ const char* devic
 
 HRESULT GameSaveAPIProviderWin32::SetMockManifestOffsetForDebug(_In_ size_t offset) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetMockManifestOffsetForDebug called with offset=%zu", offset);
     try
     {
         SharedPtr<GameSaveGlobalState> state;
@@ -739,6 +767,7 @@ HRESULT GameSaveAPIProviderWin32::SetMockManifestOffsetForDebug(_In_ size_t offs
 
 HRESULT GameSaveAPIProviderWin32::SetMockDataFolderForDebug(_In_ const char* mockDataFolder) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetMockDataFolderForDebug called with mockDataFolder=%s", mockDataFolder ? mockDataFolder : "(null)");
     try
     {
         SharedPtr<GameSaveGlobalState> state;
@@ -791,8 +820,45 @@ HRESULT GameSaveAPIProviderWin32::GetStatsJsonForDebug(
     });
 }
 
+HRESULT GameSaveAPIProviderWin32::GetSaveDescriptionSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* descriptionSize) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(descriptionSize);
+
+    return GameSaveEntityApiImpl(localUserHandle, [&descriptionSize](SharedPtr<FolderSyncManager> folderSync)
+    {
+        String description = folderSync->GetSaveDescriptionForDebug();
+        *descriptionSize = description.size() + 1;
+        return S_OK;
+    });
+}
+
+HRESULT GameSaveAPIProviderWin32::GetSaveDescriptionForDebug(
+    _In_ PFLocalUserHandle localUserHandle,
+    _In_ size_t descriptionSize,
+    _Out_writes_(descriptionSize) char* descriptionBuffer,
+    _Out_opt_ size_t* descriptionSizeUsed) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(descriptionBuffer);
+
+    return GameSaveEntityApiImpl(localUserHandle, [descriptionSize, &descriptionBuffer, &descriptionSizeUsed](SharedPtr<FolderSyncManager> folderSync)
+    {
+        String description = folderSync->GetSaveDescriptionForDebug();
+        RETURN_HR_IF(E_INVALIDARG, descriptionSize < description.size() + 1);
+        memcpy(descriptionBuffer, description.data(), description.size() + 1);
+        if (descriptionSizeUsed)
+        {
+            *descriptionSizeUsed = description.size() + 1;
+        }
+
+        return S_OK;
+    });
+}
+
 HRESULT GameSaveAPIProviderWin32::SetForceOutOfStorageErrorForDebug(_In_ bool forceError) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetForceOutOfStorageErrorForDebug called with forceError=%d", forceError);
     try
     {
         SharedPtr<GameSaveGlobalState> state;
@@ -809,6 +875,7 @@ HRESULT GameSaveAPIProviderWin32::SetForceOutOfStorageErrorForDebug(_In_ bool fo
 
 HRESULT GameSaveAPIProviderWin32::SetForceSyncFailedErrorForDebug(_In_ bool forceError) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetForceSyncFailedErrorForDebug called with forceError=%d", forceError);
     try
     {
         SharedPtr<GameSaveGlobalState> state;
@@ -825,6 +892,7 @@ HRESULT GameSaveAPIProviderWin32::SetForceSyncFailedErrorForDebug(_In_ bool forc
 
 HRESULT GameSaveAPIProviderWin32::SetWriteManifestsToDiskForDebug(_In_ bool writeManifests) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetWriteManifestsToDiskForDebug called with writeManifests=%d", writeManifests);
     try
     {
         SharedPtr<GameSaveGlobalState> state;
@@ -841,6 +909,7 @@ HRESULT GameSaveAPIProviderWin32::SetWriteManifestsToDiskForDebug(_In_ bool writ
 
 HRESULT GameSaveAPIProviderWin32::PauseUploadForDebug() noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] PauseUploadForDebug called");
     try
     {
         PlayFab::GameSaveWrapper::GameSaveServiceMock::PauseUpload();
@@ -854,6 +923,7 @@ HRESULT GameSaveAPIProviderWin32::PauseUploadForDebug() noexcept
 
 HRESULT GameSaveAPIProviderWin32::SetMockForceOfflineForDebug(_In_ GameSaveServiceMockForcedOffline mode) noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] SetMockForceOfflineForDebug called with mode=%d", static_cast<int>(mode));
     try
     {
         PlayFab::GameSaveWrapper::GameSaveServiceMock::SetForcedOffline(mode);
@@ -867,6 +937,7 @@ HRESULT GameSaveAPIProviderWin32::SetMockForceOfflineForDebug(_In_ GameSaveServi
 
 HRESULT GameSaveAPIProviderWin32::ResumeUploadForDebug() noexcept
 {
+    TRACE_INFORMATION("[GAME SAVE] ResumeUploadForDebug called");
     try
     {
         PlayFab::GameSaveWrapper::GameSaveServiceMock::ResumeUpload();

@@ -15,7 +15,7 @@ AsyncOp<DeleteDataConnectionResponse> EventsAPI::DeleteDataConnection(
 )
 {
     const char* path{ "/Event/DeleteDataConnection" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::EventsDeleteDataConnection;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
@@ -51,7 +51,7 @@ AsyncOp<GetDataConnectionResponse> EventsAPI::GetDataConnection(
 )
 {
     const char* path{ "/Event/GetDataConnection" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::EventsGetDataConnection;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
@@ -87,7 +87,7 @@ AsyncOp<ListDataConnectionsResponse> EventsAPI::ListDataConnections(
 )
 {
     const char* path{ "/Event/ListDataConnections" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::EventsListDataConnections;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
@@ -123,7 +123,7 @@ AsyncOp<SetDataConnectionResponse> EventsAPI::SetDataConnection(
 )
 {
     const char* path{ "/Event/SetDataConnection" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::EventsSetDataConnection;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
@@ -159,7 +159,7 @@ AsyncOp<SetDataConnectionActiveResponse> EventsAPI::SetDataConnectionActive(
 )
 {
     const char* path{ "/Event/SetDataConnectionActive" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::EventsSetDataConnectionActive;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
@@ -195,7 +195,7 @@ AsyncOp<WriteEventsResponse> EventsAPI::WriteEvents(
 )
 {
     const char* path{ "/Event/WriteEvents" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::EventsWriteEvents;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
@@ -231,7 +231,7 @@ AsyncOp<WriteEventsResponse> EventsAPI::WriteTelemetryEvents(
 )
 {
     const char* path{ "/Event/WriteTelemetryEvents" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
     CacheId retryCacheId = CacheId::EventsWriteTelemetryEvents;
 
     auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(

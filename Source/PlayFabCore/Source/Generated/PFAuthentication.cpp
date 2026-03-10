@@ -1644,7 +1644,6 @@ PF_API PFAuthenticationReLoginWithTwitchAsync(
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAuthenticationLoginWithXboxAsync(
     _In_ PFServiceConfigHandle contextHandle,
     _In_ const PFAuthenticationLoginWithXboxRequest* request,
@@ -1725,7 +1724,6 @@ PF_API PFAuthenticationReLoginWithXboxAsync(
         return XAsyncProviderBase::Run(std::move(provider));
     });
 }
-#endif
 
 #if 0
 PF_API PFAuthenticationRegisterPlayFabUserAsync(

@@ -291,7 +291,7 @@ AsyncOp<Authentication::CombinedLoginResult> AndroidLocalUserLoginHandler::Login
         request.SetCreateAccount(true);
         request.SetServerAuthCode(result.ExtractPayload());
 
-        JsonValue requestBody{request.ToJson()};
+        JsonValue requestBody = request.ToJson();
         RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", serviceConfig->TitleId()));
 
         return serviceConfig->HttpClient()->MakePostRequest(
@@ -388,7 +388,7 @@ AsyncOp<void> AndroidLocalUserLoginHandler::ReLogin(
         Authentication::LoginWithGooglePlayGamesServicesRequest request;
         request.SetServerAuthCode(result.ExtractPayload());
 
-        JsonValue requestBody{request.ToJson()};
+        JsonValue requestBody = request.ToJson();
         RETURN_IF_FAILED(JsonUtils::ObjectAddMember(requestBody, "TitleId", entity->ServiceConfig()->TitleId()));
 
         return entity->ServiceConfig()->HttpClient()->MakePostRequest(

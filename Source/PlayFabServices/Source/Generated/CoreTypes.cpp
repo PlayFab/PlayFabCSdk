@@ -13,7 +13,7 @@ JsonValue PlayerProfileViewConstraints::ToJson() const
 
 JsonValue PlayerProfileViewConstraints::ToJson(const PFPlayerProfileViewConstraints& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ShowAvatarUrl", input.showAvatarUrl);
     JsonUtils::ObjectAddMember(output, "ShowBannedUntil", input.showBannedUntil);
     JsonUtils::ObjectAddMember(output, "ShowCampaignAttributions", input.showCampaignAttributions);
@@ -41,7 +41,7 @@ JsonValue GetPlayerCombinedInfoRequestParams::ToJson() const
 
 JsonValue GetPlayerCombinedInfoRequestParams::ToJson(const PFGetPlayerCombinedInfoRequestParams& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "GetCharacterInventories", input.getCharacterInventories);
     JsonUtils::ObjectAddMember(output, "GetCharacterList", input.getCharacterList);
     JsonUtils::ObjectAddMember(output, "GetPlayerProfile", input.getPlayerProfile);
@@ -67,7 +67,7 @@ JsonValue EntityKey::ToJson() const
 
 JsonValue EntityKey::ToJson(const PFEntityKey& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     return output;

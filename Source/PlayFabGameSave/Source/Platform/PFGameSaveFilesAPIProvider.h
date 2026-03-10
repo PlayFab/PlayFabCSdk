@@ -94,6 +94,13 @@ public:
         _Out_writes_(jsonSize) char* jsonBuffer,
         _Out_opt_ size_t* jsonSizeUsed
     ) noexcept = 0;
+    virtual HRESULT GetSaveDescriptionSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* descriptionSize) noexcept = 0;
+    virtual HRESULT GetSaveDescriptionForDebug(
+        _In_ PFLocalUserHandle localUserHandle,
+        _In_ size_t descriptionSize,
+        _Out_writes_(descriptionSize) char* descriptionBuffer,
+        _Out_opt_ size_t* descriptionSizeUsed
+    ) noexcept = 0;
     virtual HRESULT SetForceOutOfStorageErrorForDebug(_In_ bool forceError) noexcept = 0;
     virtual HRESULT SetForceSyncFailedErrorForDebug(_In_ bool forceError) noexcept = 0;
     virtual HRESULT SetWriteManifestsToDiskForDebug(_In_ bool writeManifests) noexcept = 0;
@@ -112,6 +119,9 @@ public:
     ) noexcept = 0;
     virtual HRESULT SetSaveDescriptionResult(_Inout_ XAsyncBlock* async) noexcept = 0;
 
+    // Optional callbacks for in-process download/upload scenarios - only some platforms need these to be defined
+    virtual HRESULT DownloadProcessingComplete() noexcept { return S_OK; }
+    virtual HRESULT UploadProcessingComplete() noexcept { return S_OK; }
 };
 
 } // namespace GameSave

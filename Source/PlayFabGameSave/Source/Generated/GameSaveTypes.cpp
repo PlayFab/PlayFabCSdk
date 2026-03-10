@@ -15,7 +15,7 @@ JsonValue DeleteManifestRequest::ToJson() const
 
 JsonValue DeleteManifestRequest::ToJson(const PFGameSaveDeleteManifestRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "Version", input.version);
@@ -29,7 +29,7 @@ JsonValue FinalizeManifestConflict::ToJson() const
 
 JsonValue FinalizeManifestConflict::ToJson(const PFGameSaveFinalizeManifestConflict& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ConflictingVersion", input.conflictingVersion);
     JsonUtils::ObjectAddMember(output, "IsWinner", input.isWinner);
     return output;
@@ -42,7 +42,7 @@ JsonValue FinalizedFileDetails::ToJson() const
 
 JsonValue FinalizedFileDetails::ToJson(const PFGameSaveFinalizedFileDetails& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "FileName", input.fileName);
     JsonUtils::ObjectAddMember(output, "FileSizeBytes", input.fileSizeBytes);
     return output;
@@ -55,7 +55,7 @@ JsonValue FinalizeManifestRequest::ToJson() const
 
 JsonValue FinalizeManifestRequest::ToJson(const PFGameSaveFinalizeManifestRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<FinalizeManifestConflict>(output, "Conflict", input.conflict);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -160,7 +160,7 @@ JsonValue ManifestMetadata::ToJson() const
 
 JsonValue ManifestMetadata::ToJson(const PFGameSaveManifestMetadata& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "DeviceId", input.deviceId);
     JsonUtils::ObjectAddMember(output, "DeviceName", input.deviceName);
     JsonUtils::ObjectAddMember(output, "DeviceType", input.deviceType);
@@ -254,7 +254,7 @@ JsonValue UploadProgress::ToJson() const
 
 JsonValue UploadProgress::ToJson(const PFGameSaveUploadProgress& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "TotalBytes", input.totalBytes);
     JsonUtils::ObjectAddMember(output, "UploadedBytes", input.uploadedBytes);
     return output;
@@ -549,7 +549,7 @@ JsonValue GetConfigForTitleRequest::ToJson() const
 
 JsonValue GetConfigForTitleRequest::ToJson(const PFGameSaveGetConfigForTitleRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -621,7 +621,7 @@ JsonValue GetManifestDownloadDetailsRequest::ToJson() const
 
 JsonValue GetManifestDownloadDetailsRequest::ToJson(const PFGameSaveGetManifestDownloadDetailsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "Version", input.version);
@@ -731,7 +731,7 @@ JsonValue GetQuotaForPlayerRequest::ToJson() const
 
 JsonValue GetQuotaForPlayerRequest::ToJson(const PFGameSaveGetQuotaForPlayerRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -797,7 +797,7 @@ JsonValue InitializeManifestRequest::ToJson() const
 
 JsonValue InitializeManifestRequest::ToJson(const PFGameSaveInitializeManifestRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "BaseVersion", input.baseVersion);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -856,7 +856,7 @@ JsonValue FileToUpload::ToJson() const
 
 JsonValue FileToUpload::ToJson(const PFGameSaveFileToUpload& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "FileName", input.fileName);
     return output;
 }
@@ -868,7 +868,7 @@ JsonValue InitiateUploadRequest::ToJson() const
 
 JsonValue InitiateUploadRequest::ToJson(const PFGameSaveInitiateUploadRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<FileToUpload>(output, "Files", input.files, input.filesCount);
@@ -981,7 +981,7 @@ JsonValue ListManifestsRequest::ToJson() const
 
 JsonValue ListManifestsRequest::ToJson(const PFGameSaveListManifestsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "IncludeUnavailable", input.includeUnavailable);
@@ -1111,7 +1111,7 @@ JsonValue RequestOnboardingRequest::ToJson() const
 
 JsonValue RequestOnboardingRequest::ToJson(const PFGameSaveRequestOnboardingRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -1124,7 +1124,7 @@ JsonValue RollbackToManifestRequest::ToJson() const
 
 JsonValue RollbackToManifestRequest::ToJson(const PFGameSaveRollbackToManifestRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "RollbackReason", input.rollbackReason);
@@ -1182,7 +1182,7 @@ JsonValue UpdateConfigForTitleRequest::ToJson() const
 
 JsonValue UpdateConfigForTitleRequest::ToJson(const PFGameSaveUpdateConfigForTitleRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DisableClientRollbackToLastConflictLoser", input.disableClientRollbackToLastConflictLoser);
     JsonUtils::ObjectAddMember(output, "DisableClientRollbackToLastKnownGood", input.disableClientRollbackToLastKnownGood);
@@ -1257,7 +1257,7 @@ JsonValue UpdateManifestRequest::ToJson() const
 
 JsonValue UpdateManifestRequest::ToJson(const PFGameSaveUpdateManifestRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "ManifestDescription", input.manifestDescription);

@@ -4,8 +4,10 @@
     <ProjectGuid>{2800a769-2da4-42cc-ac27-6ad411bc4349}</ProjectGuid>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <ProjectSubType>NativeUnitTestProject</ProjectSubType>
+    <GDKExtLibNames>;</GDKExtLibNames>
   </PropertyGroup>
-  <Import Project="..\..\Build\PlayFab.C.Win32.props" />
+  <Import Project="..\..\Build\PlayFab.C.GDK.props" />
+  <Import Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.Common\PlayFabCore.Common.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.ServiceWrappers\PlayFabCore.ServiceWrappers.vcxitems" Label="Shared" />
@@ -17,6 +19,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>appnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

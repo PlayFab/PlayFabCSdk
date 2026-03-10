@@ -63,7 +63,7 @@ void GameSaveTelemetryManager::PopulateCommonFields(JsonValue& payload) const no
 
 JsonValue ContextActivationEvent::ToJson() const
 {
-    JsonValue output{ JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "totalSizeBytes", totalSizeBytes);
     JsonUtils::ObjectAddMember(output, "compressedSizeBytes", compressedSizeBytes);
     JsonUtils::ObjectAddMember(output, "manifestState", manifestState);
@@ -81,7 +81,7 @@ JsonValue ContextActivationEvent::ToJson() const
 
 JsonValue ContextActivationFailureEvent::ToJson() const
 {
-    JsonValue output{ JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "canceled", canceled);
     JsonUtils::ObjectAddMember(output, "aborted", aborted);
     JsonUtils::ObjectAddMember(output, "retryAllowed", retryAllowed);
@@ -96,7 +96,7 @@ JsonValue ContextActivationFailureEvent::ToJson() const
 
 JsonValue ContextDeleteEvent::ToJson() const
 {
-    JsonValue output{ JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "elapsedMs", ElapsedMs());
     JsonUtils::ObjectAddMember(output, "totalSizeBytes", totalSizeBytes);
     JsonUtils::ObjectAddMember(output, "hresult", hresult);
@@ -114,7 +114,7 @@ JsonValue ContextDeleteEvent::ToJson() const
 
 JsonValue ContextSyncEvent::ToJson() const
 {
-    JsonValue output{ JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "blockCount", blockCount);
     JsonUtils::ObjectAddMember(output, "fileCount", fileCount);
     JsonUtils::ObjectAddMember(output, "syncSizeBytes", syncSizeBytes);
@@ -132,7 +132,7 @@ JsonValue ContextSyncEvent::ToJson() const
 
 JsonValue ContextSyncErrorEvent::ToJson() const
 {
-    JsonValue output{ JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "elapsedMs", ElapsedMs());
     JsonUtils::ObjectAddMember(output, "cv", correlationVector);
     JsonUtils::ObjectAddMember(output, "hresult", hresult);
@@ -153,6 +153,13 @@ HRESULT GameSaveTelemetryManager::EmitEvent(const char* eventName, JsonValue& pa
 
     TRACE_INFORMATION("[GAME SAVE] GameSaveTelemetryManager::EmitEvent %s", eventName);
 
+    // Skip telemetry if pipeline was never created (e.g., login failed in offline scenario)
+    if (m_telemetryPipeline.Handle() == nullptr)
+    {
+        TRACE_WARNING("[GAME SAVE] GameSaveTelemetryManager::EmitEvent %s skipped - pipeline not initialized (offline mode)", eventName);
+        return S_OK;
+    }
+
     PopulateCommonFields(payload);
     String payloadStr{ JsonUtils::WriteToString(payload) };
 
@@ -166,7 +173,6 @@ HRESULT GameSaveTelemetryManager::EmitEvent(const char* eventName, JsonValue& pa
     {
        TRACE_ERROR("[GAME SAVE] GameSaveTelemetryManager::EmitEvent %s failed with hr:0x%0.8x", eventName, hr);
     }
-    assert(SUCCEEDED(hr) || hr == E_PF_CORE_EVENT_PIPELINE_BUFFER_FULL);
 
     return hr;
 }

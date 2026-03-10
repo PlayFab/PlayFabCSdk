@@ -15,7 +15,7 @@ AsyncOp<CreateDraftItemResponse> CatalogAPI::CreateDraftItem(
 )
 {
     const char* path{ "/Catalog/CreateDraftItem" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogCreateDraftItem,
@@ -50,7 +50,7 @@ AsyncOp<CreateUploadUrlsResponse> CatalogAPI::CreateUploadUrls(
 )
 {
     const char* path{ "/Catalog/CreateUploadUrls" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogCreateUploadUrls,
@@ -85,7 +85,7 @@ AsyncOp<void> CatalogAPI::DeleteEntityItemReviews(
 )
 {
     const char* path{ "/Catalog/DeleteEntityItemReviews" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogDeleteEntityItemReviews,
@@ -118,7 +118,7 @@ AsyncOp<void> CatalogAPI::DeleteItem(
 )
 {
     const char* path{ "/Catalog/DeleteItem" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogDeleteItem,
@@ -151,7 +151,7 @@ AsyncOp<GetCatalogConfigResponse> CatalogAPI::GetCatalogConfig(
 )
 {
     const char* path{ "/Catalog/GetCatalogConfig" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetCatalogConfig,
@@ -186,7 +186,7 @@ AsyncOp<GetDraftItemResponse> CatalogAPI::GetDraftItem(
 )
 {
     const char* path{ "/Catalog/GetDraftItem" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetDraftItem,
@@ -221,7 +221,7 @@ AsyncOp<GetDraftItemsResponse> CatalogAPI::GetDraftItems(
 )
 {
     const char* path{ "/Catalog/GetDraftItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetDraftItems,
@@ -256,7 +256,7 @@ AsyncOp<GetEntityDraftItemsResponse> CatalogAPI::GetEntityDraftItems(
 )
 {
     const char* path{ "/Catalog/GetEntityDraftItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetEntityDraftItems,
@@ -291,7 +291,7 @@ AsyncOp<GetEntityItemReviewResponse> CatalogAPI::GetEntityItemReview(
 )
 {
     const char* path{ "/Catalog/GetEntityItemReview" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetEntityItemReview,
@@ -326,7 +326,7 @@ AsyncOp<GetItemResponse> CatalogAPI::GetItem(
 )
 {
     const char* path{ "/Catalog/GetItem" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetItem,
@@ -361,7 +361,7 @@ AsyncOp<GetItemContainersResponse> CatalogAPI::GetItemContainers(
 )
 {
     const char* path{ "/Catalog/GetItemContainers" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetItemContainers,
@@ -396,7 +396,7 @@ AsyncOp<GetItemModerationStateResponse> CatalogAPI::GetItemModerationState(
 )
 {
     const char* path{ "/Catalog/GetItemModerationState" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetItemModerationState,
@@ -431,7 +431,7 @@ AsyncOp<GetItemPublishStatusResponse> CatalogAPI::GetItemPublishStatus(
 )
 {
     const char* path{ "/Catalog/GetItemPublishStatus" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetItemPublishStatus,
@@ -466,7 +466,7 @@ AsyncOp<GetItemReviewsResponse> CatalogAPI::GetItemReviews(
 )
 {
     const char* path{ "/Catalog/GetItemReviews" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetItemReviews,
@@ -501,7 +501,7 @@ AsyncOp<GetItemReviewSummaryResponse> CatalogAPI::GetItemReviewSummary(
 )
 {
     const char* path{ "/Catalog/GetItemReviewSummary" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetItemReviewSummary,
@@ -536,7 +536,7 @@ AsyncOp<GetItemsResponse> CatalogAPI::GetItems(
 )
 {
     const char* path{ "/Catalog/GetItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogGetItems,
@@ -571,7 +571,7 @@ AsyncOp<void> CatalogAPI::PublishDraftItem(
 )
 {
     const char* path{ "/Catalog/PublishDraftItem" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogPublishDraftItem,
@@ -604,7 +604,7 @@ AsyncOp<void> CatalogAPI::ReportItem(
 )
 {
     const char* path{ "/Catalog/ReportItem" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogReportItem,
@@ -637,7 +637,7 @@ AsyncOp<void> CatalogAPI::ReportItemReview(
 )
 {
     const char* path{ "/Catalog/ReportItemReview" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogReportItemReview,
@@ -670,7 +670,7 @@ AsyncOp<void> CatalogAPI::ReviewItem(
 )
 {
     const char* path{ "/Catalog/ReviewItem" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogReviewItem,
@@ -703,7 +703,7 @@ AsyncOp<SearchItemsResponse> CatalogAPI::SearchItems(
 )
 {
     const char* path{ "/Catalog/SearchItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogSearchItems,
@@ -738,7 +738,7 @@ AsyncOp<void> CatalogAPI::SetItemModerationState(
 )
 {
     const char* path{ "/Catalog/SetItemModerationState" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogSetItemModerationState,
@@ -771,7 +771,7 @@ AsyncOp<void> CatalogAPI::SubmitItemReviewVote(
 )
 {
     const char* path{ "/Catalog/SubmitItemReviewVote" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogSubmitItemReviewVote,
@@ -804,7 +804,7 @@ AsyncOp<void> CatalogAPI::TakedownItemReviews(
 )
 {
     const char* path{ "/Catalog/TakedownItemReviews" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogTakedownItemReviews,
@@ -837,7 +837,7 @@ AsyncOp<void> CatalogAPI::UpdateCatalogConfig(
 )
 {
     const char* path{ "/Catalog/UpdateCatalogConfig" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogUpdateCatalogConfig,
@@ -870,7 +870,7 @@ AsyncOp<UpdateDraftItemResponse> CatalogAPI::UpdateDraftItem(
 )
 {
     const char* path{ "/Catalog/UpdateDraftItem" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CatalogUpdateDraftItem,

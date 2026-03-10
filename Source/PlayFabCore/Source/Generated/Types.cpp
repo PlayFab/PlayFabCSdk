@@ -1154,7 +1154,7 @@ JsonValue EntityKey::ToJson() const
 
 JsonValue EntityKey::ToJson(const PFEntityKey& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     return output;
@@ -1993,7 +1993,7 @@ JsonValue PlayerProfileViewConstraints::ToJson() const
 
 JsonValue PlayerProfileViewConstraints::ToJson(const PFPlayerProfileViewConstraints& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ShowAvatarUrl", input.showAvatarUrl);
     JsonUtils::ObjectAddMember(output, "ShowBannedUntil", input.showBannedUntil);
     JsonUtils::ObjectAddMember(output, "ShowCampaignAttributions", input.showCampaignAttributions);
@@ -2021,7 +2021,7 @@ JsonValue AdCampaignAttributionModel::ToJson() const
 
 JsonValue AdCampaignAttributionModel::ToJson(const PFAdCampaignAttributionModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberTime(output, "AttributedAt", input.attributedAt);
     JsonUtils::ObjectAddMember(output, "CampaignId", input.campaignId);
     JsonUtils::ObjectAddMember(output, "Platform", input.platform);
@@ -2090,7 +2090,7 @@ JsonValue ContactEmailInfoModel::ToJson() const
 
 JsonValue ContactEmailInfoModel::ToJson(const PFContactEmailInfoModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "EmailAddress", input.emailAddress);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "VerificationStatus", input.verificationStatus);
@@ -2170,7 +2170,7 @@ JsonValue LinkedPlatformAccountModel::ToJson() const
 
 JsonValue LinkedPlatformAccountModel::ToJson(const PFLinkedPlatformAccountModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Email", input.email);
     JsonUtils::ObjectAddMember(output, "Platform", input.platform);
     JsonUtils::ObjectAddMember(output, "PlatformUserId", input.platformUserId);
@@ -2264,7 +2264,7 @@ JsonValue LocationModel::ToJson() const
 
 JsonValue LocationModel::ToJson(const PFLocationModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "City", input.city);
     JsonUtils::ObjectAddMember(output, "ContinentCode", input.continentCode);
     JsonUtils::ObjectAddMember(output, "CountryCode", input.countryCode);
@@ -2372,7 +2372,7 @@ JsonValue SubscriptionModel::ToJson() const
 
 JsonValue SubscriptionModel::ToJson(const PFSubscriptionModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberTime(output, "Expiration", input.expiration);
     JsonUtils::ObjectAddMemberTime(output, "InitialSubscriptionTime", input.initialSubscriptionTime);
     JsonUtils::ObjectAddMember(output, "IsActive", input.isActive);
@@ -2475,7 +2475,7 @@ JsonValue MembershipModel::ToJson() const
 
 JsonValue MembershipModel::ToJson(const PFMembershipModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "IsActive", input.isActive);
     JsonUtils::ObjectAddMemberTime(output, "MembershipExpiration", input.membershipExpiration);
     JsonUtils::ObjectAddMember(output, "MembershipId", input.membershipId);
@@ -2562,7 +2562,7 @@ JsonValue PushNotificationRegistrationModel::ToJson() const
 
 JsonValue PushNotificationRegistrationModel::ToJson(const PFPushNotificationRegistrationModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "NotificationEndpointARN", input.notificationEndpointARN);
     JsonUtils::ObjectAddMember(output, "Platform", input.platform);
     return output;
@@ -2628,7 +2628,7 @@ JsonValue StatisticModel::ToJson() const
 
 JsonValue StatisticModel::ToJson(const PFStatisticModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     JsonUtils::ObjectAddMember(output, "Version", input.version);
@@ -2686,7 +2686,7 @@ JsonValue TagModel::ToJson() const
 
 JsonValue TagModel::ToJson(const PFTagModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "TagValue", input.tagValue);
     return output;
 }
@@ -2738,7 +2738,7 @@ JsonValue ValueToDateModel::ToJson() const
 
 JsonValue ValueToDateModel::ToJson(const PFValueToDateModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Currency", input.currency);
     JsonUtils::ObjectAddMember(output, "TotalValue", input.totalValue);
     JsonUtils::ObjectAddMember(output, "TotalValueAsDecimal", input.totalValueAsDecimal);
@@ -2807,7 +2807,7 @@ JsonValue PlayerProfileModel::ToJson() const
 
 JsonValue PlayerProfileModel::ToJson(const PFPlayerProfileModel& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<AdCampaignAttributionModel>(output, "AdCampaignAttributions", input.adCampaignAttributions, input.adCampaignAttributionsCount);
     JsonUtils::ObjectAddMember(output, "AvatarUrl", input.avatarUrl);
     JsonUtils::ObjectAddMemberTime(output, "BannedUntil", input.bannedUntil);
@@ -3135,7 +3135,7 @@ JsonValue GetPlayerCombinedInfoRequestParams::ToJson() const
 
 JsonValue GetPlayerCombinedInfoRequestParams::ToJson(const PFGetPlayerCombinedInfoRequestParams& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "GetCharacterInventories", input.getCharacterInventories);
     JsonUtils::ObjectAddMember(output, "GetCharacterList", input.getCharacterList);
     JsonUtils::ObjectAddMember(output, "GetPlayerProfile", input.getPlayerProfile);
@@ -3452,7 +3452,7 @@ JsonValue Variable::ToJson() const
 
 JsonValue Variable::ToJson(const PFVariable& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;

@@ -22,6 +22,19 @@ public:
     ~UploadAsyncProvider()
     {
         TRACE_TASK("UploadAsyncProvider dtor");
+        // If provider is destroyed without completing (e.g., app suspend/crash),
+        // reset sync state to prevent stale state on next attempt.
+        // Only reset if still in upload states to avoid clobbering valid states.
+        if (m_folderSync)
+        {
+            FolderSyncManagerProgress progress = m_folderSync->GetSyncProgress();
+            if (progress.syncState == PFGameSaveFilesSyncState::PreparingForUpload ||
+                progress.syncState == PFGameSaveFilesSyncState::Uploading)
+            {
+                TRACE_WARNING("UploadAsyncProvider destroyed while in upload state, resetting to SyncComplete");
+                m_folderSync->SetSyncStateProgress(PFGameSaveFilesSyncState::SyncComplete, 0, 0);
+            }
+        }
     }
 
     void ScheduleNow() override

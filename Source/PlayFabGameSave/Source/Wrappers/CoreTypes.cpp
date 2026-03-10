@@ -10,7 +10,7 @@ JsonValue EntityKey::ToJson() const
 
 JsonValue EntityKey::ToJson(const PFEntityKey& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     return output;

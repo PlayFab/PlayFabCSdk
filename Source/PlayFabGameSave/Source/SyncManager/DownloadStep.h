@@ -22,7 +22,7 @@ enum class DownloadStage
     UpdateLocalManifest,
     WaitForFailedUI_Download,
     WaitForOutOfStorageUI,
-    LockStepFailure,
+    DownloadStepFailure,
     DownloadDone
 };
 
@@ -78,6 +78,9 @@ private:
 
     uint64_t m_totalUncompressedSizeBytes{};
     uint64_t m_currentUncompressedSizeBytes{};
+    uint64_t m_totalCompressedSizeBytes{};
+    // Cumulative compressed bytes successfully downloaded so far. Used for accurate dynamic progress.
+    uint64_t m_currentCompressedSizeBytes{};
     LocalUser m_localUser;
     std::optional<Entity> m_entity;
     DownloadStage m_stage{ DownloadStage::DownloadStart };

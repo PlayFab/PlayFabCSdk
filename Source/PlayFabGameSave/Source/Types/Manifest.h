@@ -16,6 +16,7 @@ public:
     uint64_t Version() const;
     const String& VersionString() const;
     bool HasVersion() const;
+    String GetDecodedManifestDescription() const;
 
     void SetRemoteFileDetails(DownloadDetailsWrapVector&& remoteFileDetails) { m_remoteFileDetails = std::move(remoteFileDetails); m_gotRemoteFileDetails = true; }
     bool GotRemoteFileDetails() const { return m_gotRemoteFileDetails; }

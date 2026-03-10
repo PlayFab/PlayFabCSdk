@@ -15,7 +15,7 @@ AsyncOp<void> MultiplayerServerAPI::DeleteSecret(
 )
 {
     const char* path{ "/MultiplayerServer/DeleteSecret" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::MultiplayerServerDeleteSecret,
@@ -48,7 +48,7 @@ AsyncOp<ListBuildAliasesResponse> MultiplayerServerAPI::ListBuildAliases(
 )
 {
     const char* path{ "/MultiplayerServer/ListBuildAliases" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::MultiplayerServerListBuildAliases,
@@ -83,7 +83,7 @@ AsyncOp<ListBuildSummariesResponse> MultiplayerServerAPI::ListBuildSummariesV2(
 )
 {
     const char* path{ "/MultiplayerServer/ListBuildSummariesV2" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::MultiplayerServerListBuildSummariesV2,
@@ -118,7 +118,7 @@ AsyncOp<ListQosServersForTitleResponse> MultiplayerServerAPI::ListQosServersForT
 )
 {
     const char* path{ "/MultiplayerServer/ListQosServersForTitle" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::MultiplayerServerListQosServersForTitle,
@@ -153,7 +153,7 @@ AsyncOp<ListSecretSummariesResponse> MultiplayerServerAPI::ListSecretSummaries(
 )
 {
     const char* path{ "/MultiplayerServer/ListSecretSummaries" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::MultiplayerServerListSecretSummaries,
@@ -188,7 +188,7 @@ AsyncOp<RequestMultiplayerServerResponse> MultiplayerServerAPI::RequestMultiplay
 )
 {
     const char* path{ "/MultiplayerServer/RequestMultiplayerServer" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::MultiplayerServerRequestMultiplayerServer,
@@ -223,7 +223,7 @@ AsyncOp<RequestPartyServiceResponse> MultiplayerServerAPI::RequestPartyService(
 )
 {
     const char* path{ "/Party/RequestPartyService" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::MultiplayerServerRequestPartyService,
@@ -258,7 +258,7 @@ AsyncOp<void> MultiplayerServerAPI::UploadSecret(
 )
 {
     const char* path{ "/MultiplayerServer/UploadSecret" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::MultiplayerServerUploadSecret,

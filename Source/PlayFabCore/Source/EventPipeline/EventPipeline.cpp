@@ -469,7 +469,7 @@ JsonValue EventUploader::BuildRequestBody(Vector<Event> events)
     Wrappers::ModelVector<Wrappers::PFEventsEventContentsWrapper<Allocator>, Allocator> eventContents = ConvertEvents(events);
 
     request.SetEvents(eventContents);
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     return requestBody;
 }

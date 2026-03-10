@@ -15,7 +15,7 @@ AsyncOp<ClientDeletePlayerCustomPropertiesResult> PlayerDataManagementAPI::Clien
 )
 {
     const char* path{ "/Client/DeletePlayerCustomProperties" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientDeletePlayerCustomProperties,
@@ -50,7 +50,7 @@ AsyncOp<ClientGetPlayerCustomPropertyResult> PlayerDataManagementAPI::ClientGetP
 )
 {
     const char* path{ "/Client/GetPlayerCustomProperty" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientGetPlayerCustomProperty,
@@ -85,7 +85,7 @@ AsyncOp<ClientGetUserDataResult> PlayerDataManagementAPI::ClientGetUserData(
 )
 {
     const char* path{ "/Client/GetUserData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientGetUserData,
@@ -120,7 +120,7 @@ AsyncOp<ClientGetUserDataResult> PlayerDataManagementAPI::ClientGetUserPublisher
 )
 {
     const char* path{ "/Client/GetUserPublisherData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientGetUserPublisherData,
@@ -155,7 +155,7 @@ AsyncOp<ClientGetUserDataResult> PlayerDataManagementAPI::ClientGetUserPublisher
 )
 {
     const char* path{ "/Client/GetUserPublisherReadOnlyData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientGetUserPublisherReadOnlyData,
@@ -190,7 +190,7 @@ AsyncOp<ClientGetUserDataResult> PlayerDataManagementAPI::ClientGetUserReadOnlyD
 )
 {
     const char* path{ "/Client/GetUserReadOnlyData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientGetUserReadOnlyData,
@@ -224,7 +224,7 @@ AsyncOp<ClientListPlayerCustomPropertiesResult> PlayerDataManagementAPI::ClientL
 )
 {
     const char* path{ "/Client/ListPlayerCustomProperties" };
-    JsonValue requestBody { JsonValue::object() };
+    JsonValue requestBody = JsonValue::object();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientListPlayerCustomProperties,
@@ -259,7 +259,7 @@ AsyncOp<ClientUpdatePlayerCustomPropertiesResult> PlayerDataManagementAPI::Clien
 )
 {
     const char* path{ "/Client/UpdatePlayerCustomProperties" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientUpdatePlayerCustomProperties,
@@ -294,7 +294,7 @@ AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ClientUpdateUserData(
 )
 {
     const char* path{ "/Client/UpdateUserData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientUpdateUserData,
@@ -329,7 +329,7 @@ AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ClientUpdateUserPublisher
 )
 {
     const char* path{ "/Client/UpdateUserPublisherData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::PlayerDataManagementClientUpdateUserPublisherData,
@@ -364,7 +364,7 @@ AsyncOp<ServerDeletePlayerCustomPropertiesResult> PlayerDataManagementAPI::Serve
 )
 {
     const char* path{ "/Server/DeletePlayerCustomProperties" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerDeletePlayerCustomProperties,
@@ -399,7 +399,7 @@ AsyncOp<ServerGetPlayerCustomPropertyResult> PlayerDataManagementAPI::ServerGetP
 )
 {
     const char* path{ "/Server/GetPlayerCustomProperty" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerGetPlayerCustomProperty,
@@ -434,7 +434,7 @@ AsyncOp<ServerGetUserDataResult> PlayerDataManagementAPI::ServerGetUserData(
 )
 {
     const char* path{ "/Server/GetUserData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerGetUserData,
@@ -469,7 +469,7 @@ AsyncOp<ServerGetUserDataResult> PlayerDataManagementAPI::ServerGetUserInternalD
 )
 {
     const char* path{ "/Server/GetUserInternalData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerGetUserInternalData,
@@ -504,7 +504,7 @@ AsyncOp<ServerGetUserDataResult> PlayerDataManagementAPI::ServerGetUserPublisher
 )
 {
     const char* path{ "/Server/GetUserPublisherData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerGetUserPublisherData,
@@ -539,7 +539,7 @@ AsyncOp<ServerGetUserDataResult> PlayerDataManagementAPI::ServerGetUserPublisher
 )
 {
     const char* path{ "/Server/GetUserPublisherInternalData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerGetUserPublisherInternalData,
@@ -574,7 +574,7 @@ AsyncOp<ServerGetUserDataResult> PlayerDataManagementAPI::ServerGetUserPublisher
 )
 {
     const char* path{ "/Server/GetUserPublisherReadOnlyData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerGetUserPublisherReadOnlyData,
@@ -609,7 +609,7 @@ AsyncOp<ServerGetUserDataResult> PlayerDataManagementAPI::ServerGetUserReadOnlyD
 )
 {
     const char* path{ "/Server/GetUserReadOnlyData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerGetUserReadOnlyData,
@@ -644,7 +644,7 @@ AsyncOp<ServerListPlayerCustomPropertiesResult> PlayerDataManagementAPI::ServerL
 )
 {
     const char* path{ "/Server/ListPlayerCustomProperties" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerListPlayerCustomProperties,
@@ -679,7 +679,7 @@ AsyncOp<ServerUpdatePlayerCustomPropertiesResult> PlayerDataManagementAPI::Serve
 )
 {
     const char* path{ "/Server/UpdatePlayerCustomProperties" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerUpdatePlayerCustomProperties,
@@ -714,7 +714,7 @@ AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ServerUpdateUserData(
 )
 {
     const char* path{ "/Server/UpdateUserData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerUpdateUserData,
@@ -749,7 +749,7 @@ AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ServerUpdateUserInternalD
 )
 {
     const char* path{ "/Server/UpdateUserInternalData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerUpdateUserInternalData,
@@ -784,7 +784,7 @@ AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ServerUpdateUserPublisher
 )
 {
     const char* path{ "/Server/UpdateUserPublisherData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerUpdateUserPublisherData,
@@ -819,7 +819,7 @@ AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ServerUpdateUserPublisher
 )
 {
     const char* path{ "/Server/UpdateUserPublisherInternalData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerUpdateUserPublisherInternalData,
@@ -854,7 +854,7 @@ AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ServerUpdateUserPublisher
 )
 {
     const char* path{ "/Server/UpdateUserPublisherReadOnlyData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerUpdateUserPublisherReadOnlyData,
@@ -889,7 +889,7 @@ AsyncOp<UpdateUserDataResult> PlayerDataManagementAPI::ServerUpdateUserReadOnlyD
 )
 {
     const char* path{ "/Server/UpdateUserReadOnlyData" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PlayerDataManagementServerUpdateUserReadOnlyData,

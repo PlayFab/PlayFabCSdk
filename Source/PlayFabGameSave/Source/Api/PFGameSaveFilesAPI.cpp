@@ -7,6 +7,9 @@
 #include "PFGameSaveFilesForDebug.h"
 #include "GameSaveServiceMock.h"
 
+#include "../Source/Platform/PFGameSaveFilesAPIProvider.h"
+#include "SdkVersion.h"
+
 using namespace PlayFab;
 using namespace PlayFab::GameSave;
 
@@ -31,12 +34,25 @@ PF_API PFGameSaveFilesInitialize(_In_ PFGameSaveInitArgs* args) noexcept
 {
     try
     {
+        TRACE_INFORMATION("[GAME SAVE] PFGameSaveFilesInitialize - SDK Version: %s", PlayFab::sdkVersion);
         RETURN_HR_INVALIDARG_IF_NULL(args);
         RETURN_IF_FAILED(GameSaveGlobalState::Create(nullptr, args->options, args->backgroundQueue));
         SharedPtr<GameSaveGlobalState> state;
         RETURN_IF_FAILED(GameSaveGlobalState::Get(state));
 
-        return state->ApiProvider().Initialize(args);
+        HRESULT hr = state->ApiProvider().Initialize(args);
+        if (FAILED(hr))
+        {
+            // Cleanup global state if initialization failed
+            XAsyncBlock async{};
+            async.context = nullptr;
+            async.queue = args->backgroundQueue;
+            RETURN_IF_FAILED(GameSaveGlobalState::CleanupAsync(&async));
+            XAsyncGetStatus(&async, true);
+            return hr;
+        }
+
+        return S_OK;
     }
     catch (...)
     {
@@ -64,7 +80,8 @@ PF_API PFGameSaveFilesUninitializeResult(
 
 PF_API PFGameSaveFilesSetActiveDeviceChangedCallback(
     _In_opt_ XTaskQueueHandle callbackQueue,
-    _In_opt_ PFGameSaveFilesActiveDeviceChangedCallback* callback, _In_opt_ void* context
+    _In_ PFGameSaveFilesActiveDeviceChangedCallback* callback, 
+    _In_opt_ void* context
     ) noexcept
 {
     return GSApiImpl("PFGameSaveFilesSetActiveDeviceChangedCallback", [&](GameSaveGlobalState& state) {
@@ -292,6 +309,25 @@ PF_API PFGameSaveFilesGetStatsJsonForDebug(
     return GSApiImpl("PFGameSaveFilesGetStatsJsonForDebug", [&](GameSaveGlobalState& state) {
         RETURN_HR_INVALIDARG_IF_NULL(jsonBuffer);
         return state.ApiProvider().GetStatsJsonForDebug(localUserHandle, jsonSize, jsonBuffer, jsonSizeUsed);
+    }); 
+}
+
+PF_API PFGameSaveFilesGetSaveDescriptionSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* descriptionSize) noexcept
+{
+    return GSApiImpl("PFGameSaveFilesGetSaveDescriptionSizeForDebug", [&](GameSaveGlobalState& state) {
+        return state.ApiProvider().GetSaveDescriptionSizeForDebug(localUserHandle, descriptionSize);
+    }); 
+}
+
+PF_API PFGameSaveFilesGetSaveDescriptionForDebug(
+    _In_ PFLocalUserHandle localUserHandle,
+    _In_ size_t descriptionSize,
+    _Out_writes_(descriptionSize) char* descriptionBuffer,
+    _Out_opt_ size_t* descriptionSizeUsed) noexcept
+{
+    return GSApiImpl("PFGameSaveFilesGetSaveDescriptionForDebug", [&](GameSaveGlobalState& state) {
+        RETURN_HR_INVALIDARG_IF_NULL(descriptionBuffer);
+        return state.ApiProvider().GetSaveDescriptionForDebug(localUserHandle, descriptionSize, descriptionBuffer, descriptionSizeUsed);
     }); 
 }
 

@@ -87,6 +87,13 @@ public:
         _Out_writes_(jsonSize) char* jsonBuffer,
         _Out_opt_ size_t* jsonSizeUsed
     ) noexcept override;
+    HRESULT GetSaveDescriptionSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* descriptionSize) noexcept override;
+    HRESULT GetSaveDescriptionForDebug(
+        _In_ PFLocalUserHandle localUserHandle,
+        _In_ size_t descriptionSize,
+        _Out_writes_(descriptionSize) char* descriptionBuffer,
+        _Out_opt_ size_t* descriptionSizeUsed
+    ) noexcept override;
     HRESULT SetForceOutOfStorageErrorForDebug(_In_ bool forceError) noexcept override;
     HRESULT SetForceSyncFailedErrorForDebug(_In_ bool forceError) noexcept override;
     HRESULT SetWriteManifestsToDiskForDebug(_In_ bool writeManifests) noexcept override;

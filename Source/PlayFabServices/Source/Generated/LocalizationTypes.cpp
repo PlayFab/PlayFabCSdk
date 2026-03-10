@@ -15,7 +15,7 @@ JsonValue GetLanguageListRequest::ToJson() const
 
 JsonValue GetLanguageListRequest::ToJson(const PFLocalizationGetLanguageListRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }

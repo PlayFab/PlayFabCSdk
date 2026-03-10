@@ -2,6 +2,7 @@
 #pragma once
 #include "ExtendedManifest.h"
 #include "Manifest.h"
+#include "Wrappers/GameSaveServiceSelector.h" // for ManifestWrap / ManifestWrapVector
 
 namespace PlayFab
 {
@@ -39,6 +40,11 @@ public:
 
     bool IsCompareDone() const;
     bool IsForceDisconnectFromCloud() const { return m_forceDisconnectFromCloud; }
+    bool DidConflictOccur() const { return m_conflictOccurred; }
+    bool ConflictRequiresUpload() const { return m_conflictRequiresUpload; }
+    TakeUIChoice GetConflictChoice() const { return m_takeUIChoice; }
+    const String& GetLoadedShortSaveDescription() const { return m_loadedShortSaveDescription; }
+    bool GetLoadedDescriptionDirty() const { return m_loadedDescriptionDirty; }
     HRESULT CompareWithCloud(
         _In_ RunContext runContext,
         _In_ ISchedulableTask& task,
@@ -91,6 +97,10 @@ private:
     bool m_forceDisconnectFromCloud{ false };
     TakeUIChoice m_takeUIChoice{ TakeUIChoice::NoChoiceYet };
     SharedPtr<GameSaveTelemetryManager> m_telemetryManager{};
+    bool m_conflictOccurred{ false };          // Set true once a conflict path was taken
+    bool m_conflictRequiresUpload{ false };    // Signals FolderSyncManager to perform single upload finalize
+    String m_loadedShortSaveDescription;       // Description loaded from localstate.json during compare
+    bool m_loadedDescriptionDirty{ false };    // True if description was set offline and not yet uploaded
 };
 
 } // namespace GameSave
