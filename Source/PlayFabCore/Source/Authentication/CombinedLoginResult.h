@@ -26,9 +26,14 @@ public:
         const JsonValue& loginResponse,
         SharedPtr<PFCoreGlobalState> PFCoreGlobalState,
         SharedPtr<ServiceConfig const> serviceConfig,
-        SharedPtr<LoginContext> loginContext
+        SharedPtr<struct ILoginHandler> loginHandler
     ) noexcept;
 
+    CombinedLoginResult(
+        SharedPtr<PFCoreGlobalState> PFCoreGlobalState,
+        LoginResult loginResult,
+        SharedPtr<Entity> entity
+    );
     CombinedLoginResult(const CombinedLoginResult&) = default;
     CombinedLoginResult(CombinedLoginResult&&) = default;
     CombinedLoginResult& operator=(const CombinedLoginResult&) = delete;

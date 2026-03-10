@@ -55,6 +55,72 @@ public:
     static HRESULT Copy(const PFLeaderboardsLeaderboardColumn& input, PFLeaderboardsLeaderboardColumn& output, ModelBuffer& buffer);
 };
 
+class LeaderboardEntityRankOnVersionEndConfig : public Wrappers::PFLeaderboardsLeaderboardEntityRankOnVersionEndConfigWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFLeaderboardsLeaderboardEntityRankOnVersionEndConfigWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig& model);
+    static HRESULT Copy(const PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig& input, PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig& output, ModelBuffer& buffer);
+};
+
+class LeaderboardVersionEndConfig : public Wrappers::PFLeaderboardsLeaderboardVersionEndConfigWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFLeaderboardsLeaderboardVersionEndConfig>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFLeaderboardsLeaderboardVersionEndConfigWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFLeaderboardsLeaderboardVersionEndConfig& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFLeaderboardsLeaderboardVersionEndConfig const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFLeaderboardsLeaderboardVersionEndConfig& model);
+    static HRESULT Copy(const PFLeaderboardsLeaderboardVersionEndConfig& input, PFLeaderboardsLeaderboardVersionEndConfig& output, ModelBuffer& buffer);
+};
+
+class LeaderboardEventEmissionConfig : public Wrappers::PFLeaderboardsLeaderboardEventEmissionConfigWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFLeaderboardsLeaderboardEventEmissionConfig>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFLeaderboardsLeaderboardEventEmissionConfigWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFLeaderboardsLeaderboardEventEmissionConfig& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFLeaderboardsLeaderboardEventEmissionConfig const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFLeaderboardsLeaderboardEventEmissionConfig& model);
+    static HRESULT Copy(const PFLeaderboardsLeaderboardEventEmissionConfig& input, PFLeaderboardsLeaderboardEventEmissionConfig& output, ModelBuffer& buffer);
+};
+
 class CreateLeaderboardDefinitionRequest : public Wrappers::PFLeaderboardsCreateLeaderboardDefinitionRequestWrapper<Allocator>, public InputModel
 {
 public:

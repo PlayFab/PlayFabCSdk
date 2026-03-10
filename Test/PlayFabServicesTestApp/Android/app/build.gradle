@@ -5,7 +5,7 @@ android {
     ndkVersion "26.1.10909125"
 
     defaultConfig {
-        applicationId "com.microsoft.playfab.sdk.AndroidTestClient"
+        applicationId "com.microsoft.playfab.sdk"
         minSdk 21
         targetSdk 34
         versionCode 1
@@ -36,7 +36,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            externalNativeBuild {
+                cmake {
+                    arguments "-DCMAKE_BUILD_TYPE=Debug"
+                }
+            }
+        }
         release {
+            externalNativeBuild {
+                cmake {
+                    arguments "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+                }
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable true
@@ -46,6 +58,9 @@ android {
     }
 
     packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
         doNotStrip "**/*.so"
         pickFirst '**/*.so'
     }
@@ -108,18 +123,40 @@ dependencies {
     // implementation project(":libHttpClient.Android")
     // implementation project(":PlayFabServices.Android")
 
-    debugImplementation files('libs/libHttpClient.Android-debug.aar')
-    releaseImplementation files('libs/libHttpClient.Android-release.aar')
-    debugImplementation files('libs/PlayFabCore.Android-full-debug.aar')
-    releaseImplementation files('libs/PlayFabCore.Android-full-release.aar')
-    debugImplementation files('libs/PlayFabServices.Android-full-debug.aar')
-    releaseImplementation files('libs/PlayFabServices.Android-full-release.aar')
+    // Only add AAR dependencies if the files exist (allows Gradle sync before building)
+    def lhcDebugAar = file('libs/libHttpClient.Android-debug.aar')
+    def lhcReleaseAar = file('libs/libHttpClient.Android-release.aar')
+    def coreDebugAar = file('libs/PlayFabCore.Android-full-debug.aar')
+    def coreReleaseAar = file('libs/PlayFabCore.Android-full-release.aar')
+    def servicesDebugAar = file('libs/PlayFabServices.Android-full-debug.aar')
+    def servicesReleaseAar = file('libs/PlayFabServices.Android-full-release.aar')
+    
+    if (lhcDebugAar.exists()) {
+        debugImplementation files(lhcDebugAar)
+    }
+    if (lhcReleaseAar.exists()) {
+        releaseImplementation files(lhcReleaseAar)
+    }
+    if (coreDebugAar.exists()) {
+        debugImplementation files(coreDebugAar)
+    }
+    if (coreReleaseAar.exists()) {
+        releaseImplementation files(coreReleaseAar)
+    }
+    if (servicesDebugAar.exists()) {
+        debugImplementation files(servicesDebugAar)
+    }
+    if (servicesReleaseAar.exists()) {
+        releaseImplementation files(servicesReleaseAar)
+    }
 
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
 
     implementation "com.google.android.material:material:1.6.0"
+
+    implementation "com.google.android.gms:play-services-games-v2:+"
     
-    androidTestImplementation "androidx.test:core:1.4.0"
-    androidTestImplementation "androidx.test:rules:1.4.0"
-    androidTestImplementation "androidx.test.ext:junit:1.1.3"
+    androidTestImplementation "androidx.test:core:1.5.0"
+    androidTestImplementation "androidx.test:rules:1.5.0"
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
 }

@@ -4,11 +4,15 @@
 #include "ApiXAsyncProvider.h"
 #include "GlobalState.h"
 #include <playfab/core/cpp/Entity.h>
+#include "ApiHelpers.h"
 
 using namespace PlayFab;
 using namespace PlayFab::Statistics;
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+extern "C"
+{
+
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFStatisticsCreateStatisticDefinitionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFStatisticsCreateStatisticDefinitionRequest* request,
@@ -17,20 +21,20 @@ PF_API PFStatisticsCreateStatisticDefinitionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsCreateStatisticDefinitionAsync),
-        std::bind(&StatisticsAPI::CreateStatisticDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsCreateStatisticDefinitionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsCreateStatisticDefinitionAsync),
+            std::bind(&StatisticsAPI::CreateStatisticDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFStatisticsDeleteStatisticDefinitionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFStatisticsDeleteStatisticDefinitionRequest* request,
@@ -39,16 +43,16 @@ PF_API PFStatisticsDeleteStatisticDefinitionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsDeleteStatisticDefinitionAsync),
-        std::bind(&StatisticsAPI::DeleteStatisticDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsDeleteStatisticDefinitionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsDeleteStatisticDefinitionAsync),
+            std::bind(&StatisticsAPI::DeleteStatisticDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -60,16 +64,16 @@ PF_API PFStatisticsDeleteStatisticsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsDeleteStatisticsAsync),
-        std::bind(&StatisticsAPI::DeleteStatistics, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsDeleteStatisticsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsDeleteStatisticsAsync),
+            std::bind(&StatisticsAPI::DeleteStatistics, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFStatisticsDeleteStatisticsGetResultSize(
@@ -77,7 +81,10 @@ PF_API PFStatisticsDeleteStatisticsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsDeleteStatisticsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFStatisticsDeleteStatisticsGetResult(
@@ -88,15 +95,18 @@ PF_API PFStatisticsDeleteStatisticsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsDeleteStatisticsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFStatisticsDeleteStatisticsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFStatisticsDeleteStatisticsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFStatisticsGetStatisticDefinitionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFStatisticsGetStatisticDefinitionRequest* request,
@@ -105,16 +115,16 @@ PF_API PFStatisticsGetStatisticDefinitionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsGetStatisticDefinitionAsync),
-        std::bind(&StatisticsAPI::GetStatisticDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsGetStatisticDefinitionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsGetStatisticDefinitionAsync),
+            std::bind(&StatisticsAPI::GetStatisticDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFStatisticsGetStatisticDefinitionGetResultSize(
@@ -122,7 +132,10 @@ PF_API PFStatisticsGetStatisticDefinitionGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsGetStatisticDefinitionGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFStatisticsGetStatisticDefinitionGetResult(
@@ -133,12 +146,15 @@ PF_API PFStatisticsGetStatisticDefinitionGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsGetStatisticDefinitionGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFStatisticsGetStatisticDefinitionResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFStatisticsGetStatisticDefinitionResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
@@ -150,16 +166,16 @@ PF_API PFStatisticsGetStatisticsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsGetStatisticsAsync),
-        std::bind(&StatisticsAPI::GetStatistics, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsGetStatisticsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsGetStatisticsAsync),
+            std::bind(&StatisticsAPI::GetStatistics, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFStatisticsGetStatisticsGetResultSize(
@@ -167,7 +183,10 @@ PF_API PFStatisticsGetStatisticsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsGetStatisticsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFStatisticsGetStatisticsGetResult(
@@ -178,15 +197,18 @@ PF_API PFStatisticsGetStatisticsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsGetStatisticsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFStatisticsGetStatisticsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFStatisticsGetStatisticsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFStatisticsGetStatisticsForEntitiesAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFStatisticsGetStatisticsForEntitiesRequest* request,
@@ -195,16 +217,16 @@ PF_API PFStatisticsGetStatisticsForEntitiesAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsGetStatisticsForEntitiesAsync),
-        std::bind(&StatisticsAPI::GetStatisticsForEntities, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsGetStatisticsForEntitiesAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsGetStatisticsForEntitiesAsync),
+            std::bind(&StatisticsAPI::GetStatisticsForEntities, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFStatisticsGetStatisticsForEntitiesGetResultSize(
@@ -212,7 +234,10 @@ PF_API PFStatisticsGetStatisticsForEntitiesGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsGetStatisticsForEntitiesGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFStatisticsGetStatisticsForEntitiesGetResult(
@@ -223,16 +248,19 @@ PF_API PFStatisticsGetStatisticsForEntitiesGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsGetStatisticsForEntitiesGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFStatisticsGetStatisticsForEntitiesResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFStatisticsGetStatisticsForEntitiesResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFStatisticsIncrementStatisticVersionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFStatisticsIncrementStatisticVersionRequest* request,
@@ -241,16 +269,16 @@ PF_API PFStatisticsIncrementStatisticVersionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsIncrementStatisticVersionAsync),
-        std::bind(&StatisticsAPI::IncrementStatisticVersion, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsIncrementStatisticVersionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsIncrementStatisticVersionAsync),
+            std::bind(&StatisticsAPI::IncrementStatisticVersion, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFStatisticsIncrementStatisticVersionGetResult(
@@ -258,11 +286,14 @@ PF_API PFStatisticsIncrementStatisticVersionGetResult(
     _Out_ PFStatisticsIncrementStatisticVersionResponse* result
 ) noexcept
 {
-    return XAsyncGetResult(async, nullptr, sizeof(PFStatisticsIncrementStatisticVersionResponse), result, nullptr);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsIncrementStatisticVersionGetResult), [&]()
+    {
+        return XAsyncGetResult(async, nullptr, sizeof(PFStatisticsIncrementStatisticVersionResponse), result, nullptr);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFStatisticsListStatisticDefinitionsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFStatisticsListStatisticDefinitionsRequest* request,
@@ -271,16 +302,16 @@ PF_API PFStatisticsListStatisticDefinitionsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsListStatisticDefinitionsAsync),
-        std::bind(&StatisticsAPI::ListStatisticDefinitions, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsListStatisticDefinitionsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsListStatisticDefinitionsAsync),
+            std::bind(&StatisticsAPI::ListStatisticDefinitions, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFStatisticsListStatisticDefinitionsGetResultSize(
@@ -288,7 +319,10 @@ PF_API PFStatisticsListStatisticDefinitionsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsListStatisticDefinitionsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFStatisticsListStatisticDefinitionsGetResult(
@@ -299,16 +333,41 @@ PF_API PFStatisticsListStatisticDefinitionsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsListStatisticDefinitionsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFStatisticsListStatisticDefinitionsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFStatisticsListStatisticDefinitionsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
 #if 0
+PF_API PFStatisticsUnlinkAggregationSourceFromStatisticAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFStatisticsUnlinkAggregationSourceFromStatisticRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsUnlinkAggregationSourceFromStatisticAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsUnlinkAggregationSourceFromStatisticAsync),
+            std::bind(&StatisticsAPI::UnlinkAggregationSourceFromStatistic, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
 PF_API PFStatisticsUpdateStatisticDefinitionAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFStatisticsUpdateStatisticDefinitionRequest* request,
@@ -317,16 +376,16 @@ PF_API PFStatisticsUpdateStatisticDefinitionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsUpdateStatisticDefinitionAsync),
-        std::bind(&StatisticsAPI::UpdateStatisticDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsUpdateStatisticDefinitionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsUpdateStatisticDefinitionAsync),
+            std::bind(&StatisticsAPI::UpdateStatisticDefinition, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
@@ -338,16 +397,16 @@ PF_API PFStatisticsUpdateStatisticsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFStatisticsUpdateStatisticsAsync),
-        std::bind(&StatisticsAPI::UpdateStatistics, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFStatisticsUpdateStatisticsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFStatisticsUpdateStatisticsAsync),
+            std::bind(&StatisticsAPI::UpdateStatistics, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFStatisticsUpdateStatisticsGetResultSize(
@@ -355,7 +414,10 @@ PF_API PFStatisticsUpdateStatisticsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsUpdateStatisticsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFStatisticsUpdateStatisticsGetResult(
@@ -366,11 +428,15 @@ PF_API PFStatisticsUpdateStatisticsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsUpdateStatisticsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFStatisticsUpdateStatisticsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFStatisticsUpdateStatisticsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
+}

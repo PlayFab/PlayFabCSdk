@@ -22,7 +22,7 @@ private: // XAsyncOperation
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 struct ServerLoginResult
 {
     Wrappers::PFAuthenticationEntityTokenResponseWrapper<Allocator> entityTokenResponse;
@@ -167,7 +167,7 @@ private: // XAsyncOperation
     Entity m_entity;
     RequestType m_request;
 };
-#endif // HC_PLATFORM == HC_PLATFORM_WIN32
+#endif
 
 }
 }

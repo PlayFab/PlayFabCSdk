@@ -10,10 +10,10 @@ namespace PlayFab
 {
 namespace Test
 {
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     constexpr char kAchievementName[] = { "testAchievement" };
     constexpr char customSteamId[] = { "SteamPlayerCustomID" };
-#endif // HC_PLATFORM_WIN32
+#endif
 
 #if HC_PLATFORM == HC_PLATFORM_IOS
     constexpr char dummyDeviceToken[] = { "1e5b2337a9abd90c7f2e8534006283d3b578295c6bc416e3213bb0d174a9ab62" };
@@ -104,7 +104,7 @@ void PlatformSpecificTests::TestClientRegisterForIOSPushNotification(TestContext
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void PlatformSpecificTests::TestServerAwardSteamAchievement(TestContext& tc)
 { 
 

@@ -110,6 +110,36 @@ PF_API PFEntityGetEntityTokenResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
+/// <summary>
+/// Gets the size of the buffer needed to hold the PlayFab secretKey. Will fail with E_PF_NOSECRETKEY if there is no 
+/// Secret Key associated with the provided Entity.
+/// </summary>
+/// <param name="handle">Entity handle.</param>
+/// <param name="secretKeySize">Buffer size required for the secretKey (including null terminator).</param>
+/// <returns>Result code for this API operation.</returns>
+PF_API PFEntityGetSecretKeySize(
+    _In_  PFEntityHandle handle,
+    _Out_ size_t* secretKeySize
+) noexcept;
+
+/// <summary>
+/// Gets the PlayFab secretKey associated with a title Entity. Will fail with E_PF_NOSECRETKEY if there is no Secret 
+/// Key associated with the provided Entity.
+/// </summary>
+/// <param name="handle">Entity handle.</param>
+/// <param name="secretKeySize">Size of the provided buffer. Required size can be obtained via PFEntityGetSecretKeySize.</param>
+/// <param name="secretKey">Buffer the secretKey will be written to.</param>
+/// <param name="secretKeyUsed">The number of bytes used in the buffer including the null terminator.</param>
+/// <returns>Result code for this API operation.</returns>
+PF_API PFEntityGetSecretKey(
+    _In_ PFEntityHandle handle,
+    _In_ size_t secretKeySize,
+    _Out_writes_(secretKeySize) char* secretKey,
+    _Out_opt_ size_t* secretKeyUsed
+) noexcept;
+#endif
+
 /// <summary>
 /// Get the size in bytes needed to store the PFEntityKey for an Entity.
 /// </summary>
@@ -178,6 +208,32 @@ PF_API PFEntityGetAPIEndpoint(
     _In_ size_t apiEndpointSize,
     _Out_writes_(apiEndpointSize) char* apiEndpoint,
     _Out_opt_ size_t* apiEndpointUsed
+) noexcept;
+
+/// <summary>
+/// Gets the size of the buffer needed to hold the titleId string from an entity handle.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle returned from a auth call.</param>
+/// <param name="apiEndpointSize">Buffer size required for the titleId string (including null terminator).</param>
+/// <returns>Result code for this API operation.</returns>
+PF_API PFEntityGetTitleIdSize(
+    _In_  PFEntityHandle entityHandle,
+    _Out_ size_t* titleIdSize
+) noexcept;
+
+/// <summary>
+/// Gets the titleId for the PFServiceConfig associated with an entity handle.
+/// </summary>
+/// <param name="entityHandle">PFEntityHandle returned from a auth call.</param>
+/// <param name="titleIdSize">Size of the provided buffer. Required size can be obtained via PFEntityGetAPIEndpointSize.</param>
+/// <param name="titleIdBuffer">Buffer the titleId string will be written to.</param>
+/// <param name="titleIdUsed">The number of bytes used in the buffer including the null terminator.</param>
+/// <returns>Result code for this API operation.</returns>
+PF_API PFEntityGetTitleId(
+    _In_ PFEntityHandle entityHandle,
+    _In_ size_t titleIdSize,
+    _Out_writes_(titleIdSize) char* titleIdBuffer,
+    _Out_opt_ size_t* titleIdUsed
 ) noexcept;
 
 /// <summary>

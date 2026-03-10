@@ -8,7 +8,7 @@ namespace PlayFab
 namespace Test
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class CreateStatisticDefinitionOperation : public XAsyncOperation<void>
 {
 public:
@@ -26,7 +26,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class DeleteStatisticDefinitionOperation : public XAsyncOperation<void>
 {
 public:
@@ -62,7 +62,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class GetStatisticDefinitionOperation : public XAsyncOperation<Wrappers::PFStatisticsGetStatisticDefinitionResponseWrapper<Allocator>>
 {
 public:
@@ -100,7 +100,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class GetStatisticsForEntitiesOperation : public XAsyncOperation<Wrappers::PFStatisticsGetStatisticsForEntitiesResponseWrapper<Allocator>>
 {
 public:
@@ -120,7 +120,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class IncrementStatisticVersionOperation : public XAsyncOperation<Wrappers::PFStatisticsIncrementStatisticVersionResponseWrapper<Allocator>>
 {
 public:
@@ -140,7 +140,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ListStatisticDefinitionsOperation : public XAsyncOperation<Wrappers::PFStatisticsListStatisticDefinitionsResponseWrapper<Allocator>>
 {
 public:
@@ -161,6 +161,24 @@ private:
 #endif
 
 #if 0
+class UnlinkAggregationSourceFromStatisticOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFStatisticsUnlinkAggregationSourceFromStatisticRequestWrapper<Allocator>;
+
+    UnlinkAggregationSourceFromStatisticOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
 class UpdateStatisticDefinitionOperation : public XAsyncOperation<void>
 {
 public:

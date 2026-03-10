@@ -2,7 +2,7 @@ apply plugin: "com.android.library"
 
 android {
     compileSdk 34
-    ndkVersion "25.1.8937393"
+    ndkVersion "26.1.10909125"
 
     defaultConfig {
         targetSdkVersion 34
@@ -154,4 +154,49 @@ dependencies {
     implementation project(":libHttpClient.Android")
     implementation project(":PlayFabSharedInternal.Android")
     implementation project(":PlayFabCore.Android")
+}
+
+// Ensure dependent projects are evaluated before this project
+evaluationDependsOn(":PlayFabSharedInternal.Android")
+evaluationDependsOn(":PlayFabCore.Android")
+
+// Ensure PlayFabSharedInternal.Android and PlayFabCore.Android native builds complete before
+// PlayFabServices.Android native build starts. This is needed because PlayFabServices.Android
+// links against the static/shared library outputs of those projects.
+// Only create dependencies between matching build types (Debug->Debug, RelWithDebInfo->RelWithDebInfo)
+// This prevents Release builds from triggering Debug builds
+gradle.projectsEvaluated {
+    def sharedInternalProject = rootProject.findProject(":PlayFabSharedInternal.Android")
+    def coreProject = rootProject.findProject(":PlayFabCore.Android")
+
+    tasks.matching { task ->
+        task.name.startsWith("buildCMake") || task.name.startsWith("configureCMake")
+    }.all { buildTask ->
+        // Extract the build type from task name
+        def isDebugTask = buildTask.name.contains("Debug")
+        def isReleaseTask = buildTask.name.contains("RelWithDebInfo") || buildTask.name.contains("Release")
+        
+        // Helper closure to check if a dependency task matches the current build type
+        def matchesVariant = { depTask ->
+            if (depTask.name.contains("Clean")) return false
+            if (!depTask.name.startsWith("externalNativeBuild") && !depTask.name.startsWith("buildCMake")) return false
+            
+            def depIsDebug = depTask.name.contains("Debug")
+            def depIsRelease = depTask.name.contains("RelWithDebInfo") || depTask.name.contains("Release")
+            
+            return (isDebugTask && depIsDebug) || (isReleaseTask && depIsRelease)
+        }
+        
+        if (sharedInternalProject != null) {
+            sharedInternalProject.tasks.matching(matchesVariant).all { sharedBuildTask ->
+                buildTask.dependsOn(sharedBuildTask)
+            }
+        }
+
+        if (coreProject != null) {
+            coreProject.tasks.matching(matchesVariant).all { coreBuildTask ->
+                buildTask.dependsOn(coreBuildTask)
+            }
+        }
+    }
 }

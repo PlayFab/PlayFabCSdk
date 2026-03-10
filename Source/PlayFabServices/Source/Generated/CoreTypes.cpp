@@ -13,7 +13,7 @@ JsonValue PlayerProfileViewConstraints::ToJson() const
 
 JsonValue PlayerProfileViewConstraints::ToJson(const PFPlayerProfileViewConstraints& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ShowAvatarUrl", input.showAvatarUrl);
     JsonUtils::ObjectAddMember(output, "ShowBannedUntil", input.showBannedUntil);
     JsonUtils::ObjectAddMember(output, "ShowCampaignAttributions", input.showCampaignAttributions);
@@ -41,7 +41,7 @@ JsonValue GetPlayerCombinedInfoRequestParams::ToJson() const
 
 JsonValue GetPlayerCombinedInfoRequestParams::ToJson(const PFGetPlayerCombinedInfoRequestParams& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "GetCharacterInventories", input.getCharacterInventories);
     JsonUtils::ObjectAddMember(output, "GetCharacterList", input.getCharacterList);
     JsonUtils::ObjectAddMember(output, "GetPlayerProfile", input.getPlayerProfile);
@@ -67,7 +67,7 @@ JsonValue EntityKey::ToJson() const
 
 JsonValue EntityKey::ToJson(const PFEntityKey& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     return output;
@@ -202,6 +202,59 @@ HRESULT UserAppleIdInfo::Copy(const PFUserAppleIdInfo& input, PFUserAppleIdInfo&
         auto propCopyResult = buffer.CopyTo(input.appleSubjectId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.appleSubjectId = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+HRESULT UserBattleNetInfo::FromJson(const JsonValue& input)
+{
+    String battleNetAccountId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "BattleNetAccountId", battleNetAccountId));
+    this->SetBattleNetAccountId(std::move(battleNetAccountId));
+
+    String battleNetBattleTag{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "BattleNetBattleTag", battleNetBattleTag));
+    this->SetBattleNetBattleTag(std::move(battleNetBattleTag));
+
+    return S_OK;
+}
+
+size_t UserBattleNetInfo::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFUserBattleNetInfo const*> UserBattleNetInfo::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<UserBattleNetInfo>(&this->Model());
+}
+
+size_t UserBattleNetInfo::RequiredBufferSize(const PFUserBattleNetInfo& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.battleNetAccountId)
+    {
+        requiredSize += (std::strlen(model.battleNetAccountId) + 1);
+    }
+    if (model.battleNetBattleTag)
+    {
+        requiredSize += (std::strlen(model.battleNetBattleTag) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT UserBattleNetInfo::Copy(const PFUserBattleNetInfo& input, PFUserBattleNetInfo& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.battleNetAccountId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.battleNetAccountId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.battleNetBattleTag);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.battleNetBattleTag = propCopyResult.ExtractPayload();
     }
     return S_OK;
 }
@@ -1246,6 +1299,13 @@ HRESULT UserAccountInfo::FromJson(const JsonValue& input)
         this->SetAppleAccountInfo(std::move(*appleAccountInfo));
     }
 
+    std::optional<UserBattleNetInfo> battleNetAccountInfo{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "BattleNetAccountInfo", battleNetAccountInfo));
+    if (battleNetAccountInfo)
+    {
+        this->SetBattleNetAccountInfo(std::move(*battleNetAccountInfo));
+    }
+
     RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "Created", this->m_model.created));
 
     std::optional<UserCustomIdInfo> customIdInfo{};
@@ -1403,6 +1463,10 @@ size_t UserAccountInfo::RequiredBufferSize(const PFUserAccountInfo& model)
     {
         requiredSize += UserAppleIdInfo::RequiredBufferSize(*model.appleAccountInfo);
     }
+    if (model.battleNetAccountInfo)
+    {
+        requiredSize += UserBattleNetInfo::RequiredBufferSize(*model.battleNetAccountInfo);
+    }
     if (model.customIdInfo)
     {
         requiredSize += UserCustomIdInfo::RequiredBufferSize(*model.customIdInfo);
@@ -1499,6 +1563,11 @@ HRESULT UserAccountInfo::Copy(const PFUserAccountInfo& input, PFUserAccountInfo&
         auto propCopyResult = buffer.CopyTo<UserAppleIdInfo>(input.appleAccountInfo);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.appleAccountInfo = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<UserBattleNetInfo>(input.battleNetAccountInfo);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.battleNetAccountInfo = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo<UserCustomIdInfo>(input.customIdInfo);

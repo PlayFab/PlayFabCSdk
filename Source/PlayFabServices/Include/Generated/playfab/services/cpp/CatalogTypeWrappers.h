@@ -62,10 +62,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetType() const
+    {
+        return m_type;
+    }
+
     void SetType(String value)
     {
         m_type = std::move(value);
         this->m_model.type =  m_type.empty() ? nullptr : m_type.data();
+    }
+
+    String const& GetValue() const
+    {
+        return m_value;
     }
 
     void SetValue(String value)
@@ -140,10 +150,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    String const& GetMaxClientVersion() const
+    {
+        return m_maxClientVersion;
     }
 
     void SetMaxClientVersion(String value)
@@ -152,10 +172,20 @@ public:
         this->m_model.maxClientVersion =  m_maxClientVersion.empty() ? nullptr : m_maxClientVersion.data();
     }
 
+    String const& GetMinClientVersion() const
+    {
+        return m_minClientVersion;
+    }
+
     void SetMinClientVersion(String value)
     {
         m_minClientVersion = std::move(value);
         this->m_model.minClientVersion =  m_minClientVersion.empty() ? nullptr : m_minClientVersion.data();
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)
@@ -165,10 +195,20 @@ public:
         this->m_model.tagsCount =  static_cast<uint32_t>(m_tags.size());
     }
 
+    String const& GetType() const
+    {
+        return m_type;
+    }
+
     void SetType(String value)
     {
         m_type = std::move(value);
         this->m_model.type =  m_type.empty() ? nullptr : m_type.data();
+    }
+
+    String const& GetUrl() const
+    {
+        return m_url;
     }
 
     void SetUrl(String value)
@@ -243,10 +283,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlatform() const
+    {
+        return m_platform;
+    }
+
     void SetPlatform(String value)
     {
         m_platform = std::move(value);
         this->m_model.platform =  m_platform.empty() ? nullptr : m_platform.data();
+    }
+
+    String const& GetUrl() const
+    {
+        return m_url;
     }
 
     void SetUrl(String value)
@@ -317,10 +367,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    String const& GetTag() const
+    {
+        return m_tag;
     }
 
     void SetTag(String value)
@@ -329,10 +389,20 @@ public:
         this->m_model.tag =  m_tag.empty() ? nullptr : m_tag.data();
     }
 
+    String const& GetType() const
+    {
+        return m_type;
+    }
+
     void SetType(String value)
     {
         m_type = std::move(value);
         this->m_model.type =  m_type.empty() ? nullptr : m_type.data();
+    }
+
+    String const& GetUrl() const
+    {
+        return m_url;
     }
 
     void SetUrl(String value)
@@ -401,9 +471,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    int32_t GetAmount() const
+    {
+        return this->m_model.amount;
+    }
+
     void SetAmount(int32_t value)
     {
         this->m_model.amount = value;
+    }
+
+    String const& GetItemId() const
+    {
+        return m_itemId;
     }
 
     void SetItemId(String value)
@@ -470,6 +550,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFCatalogCatalogPriceAmountWrapper<Alloc>, Alloc> const& GetAmounts() const
+    {
+        return m_amounts;
+    }
+
     void SetAmounts(ModelVector<PFCatalogCatalogPriceAmountWrapper<Alloc>, Alloc> value)
     {
         m_amounts = std::move(value);
@@ -477,10 +562,20 @@ public:
         this->m_model.amountsCount =  static_cast<uint32_t>(m_amounts.size());
     }
 
+    std::optional<int32_t> const& GetUnitAmount() const
+    {
+        return m_unitAmount;
+    }
+
     void SetUnitAmount(std::optional<int32_t> value)
     {
         m_unitAmount = std::move(value);
         this->m_model.unitAmount = m_unitAmount ? m_unitAmount.operator->() : nullptr;
+    }
+
+    std::optional<double> const& GetUnitDurationInSeconds() const
+    {
+        return m_unitDurationInSeconds;
     }
 
     void SetUnitDurationInSeconds(std::optional<double> value)
@@ -545,6 +640,11 @@ public:
         swap(lhs.m_prices, rhs.m_prices);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFCatalogCatalogPriceWrapper<Alloc>, Alloc> const& GetPrices() const
+    {
+        return m_prices;
     }
 
     void SetPrices(ModelVector<PFCatalogCatalogPriceWrapper<Alloc>, Alloc> value)
@@ -612,16 +712,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetAmount() const
+    {
+        return m_amount;
+    }
+
     void SetAmount(std::optional<int32_t> value)
     {
         m_amount = std::move(value);
         this->m_model.amount = m_amount ? m_amount.operator->() : nullptr;
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    std::optional<PFCatalogCatalogPriceOptionsWrapper<Alloc>> const& GetPriceOptions() const
+    {
+        return m_priceOptions;
     }
 
     void SetPriceOptions(std::optional<PFCatalogCatalogPriceOptionsWrapper<Alloc>> value)
@@ -689,6 +804,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    CStringVector<Alloc> const& GetValues() const
+    {
+        return m_values;
+    }
+
     void SetValues(CStringVector<Alloc> value)
     {
         m_values = std::move(value);
@@ -754,16 +874,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<time_t> const& GetLastModifiedDate() const
+    {
+        return m_lastModifiedDate;
+    }
+
     void SetLastModifiedDate(std::optional<time_t> value)
     {
         m_lastModifiedDate = std::move(value);
         this->m_model.lastModifiedDate = m_lastModifiedDate ? m_lastModifiedDate.operator->() : nullptr;
     }
 
+    String const& GetReason() const
+    {
+        return m_reason;
+    }
+
     void SetReason(String value)
     {
         m_reason = std::move(value);
         this->m_model.reason =  m_reason.empty() ? nullptr : m_reason.data();
+    }
+
+    std::optional<PFCatalogModerationStatus> const& GetStatus() const
+    {
+        return m_status;
     }
 
     void SetStatus(std::optional<PFCatalogModerationStatus> value)
@@ -842,10 +977,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<float> const& GetAverage() const
+    {
+        return m_average;
+    }
+
     void SetAverage(std::optional<float> value)
     {
         m_average = std::move(value);
         this->m_model.average = m_average ? m_average.operator->() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetCount1Star() const
+    {
+        return m_count1Star;
     }
 
     void SetCount1Star(std::optional<int32_t> value)
@@ -854,10 +999,20 @@ public:
         this->m_model.count1Star = m_count1Star ? m_count1Star.operator->() : nullptr;
     }
 
+    std::optional<int32_t> const& GetCount2Star() const
+    {
+        return m_count2Star;
+    }
+
     void SetCount2Star(std::optional<int32_t> value)
     {
         m_count2Star = std::move(value);
         this->m_model.count2Star = m_count2Star ? m_count2Star.operator->() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetCount3Star() const
+    {
+        return m_count3Star;
     }
 
     void SetCount3Star(std::optional<int32_t> value)
@@ -866,16 +1021,31 @@ public:
         this->m_model.count3Star = m_count3Star ? m_count3Star.operator->() : nullptr;
     }
 
+    std::optional<int32_t> const& GetCount4Star() const
+    {
+        return m_count4Star;
+    }
+
     void SetCount4Star(std::optional<int32_t> value)
     {
         m_count4Star = std::move(value);
         this->m_model.count4Star = m_count4Star ? m_count4Star.operator->() : nullptr;
     }
 
+    std::optional<int32_t> const& GetCount5Star() const
+    {
+        return m_count5Star;
+    }
+
     void SetCount5Star(std::optional<int32_t> value)
     {
         m_count5Star = std::move(value);
         this->m_model.count5Star = m_count5Star ? m_count5Star.operator->() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetTotalCount() const
+    {
+        return m_totalCount;
     }
 
     void SetTotalCount(std::optional<int32_t> value)
@@ -960,11 +1130,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetAppleAppStorePrices() const
+    {
+        return m_appleAppStorePrices;
+    }
+
     void SetAppleAppStorePrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
     {
         m_appleAppStorePrices = std::move(value);
         this->m_model.appleAppStorePrices =  m_appleAppStorePrices.empty() ? nullptr : m_appleAppStorePrices.data();
         this->m_model.appleAppStorePricesCount =  static_cast<uint32_t>(m_appleAppStorePrices.size());
+    }
+
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetGooglePlayPrices() const
+    {
+        return m_googlePlayPrices;
     }
 
     void SetGooglePlayPrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
@@ -974,11 +1154,21 @@ public:
         this->m_model.googlePlayPricesCount =  static_cast<uint32_t>(m_googlePlayPrices.size());
     }
 
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetMicrosoftStorePrices() const
+    {
+        return m_microsoftStorePrices;
+    }
+
     void SetMicrosoftStorePrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
     {
         m_microsoftStorePrices = std::move(value);
         this->m_model.microsoftStorePrices =  m_microsoftStorePrices.empty() ? nullptr : m_microsoftStorePrices.data();
         this->m_model.microsoftStorePricesCount =  static_cast<uint32_t>(m_microsoftStorePrices.size());
+    }
+
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetNintendoEShopPrices() const
+    {
+        return m_nintendoEShopPrices;
     }
 
     void SetNintendoEShopPrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
@@ -988,11 +1178,21 @@ public:
         this->m_model.nintendoEShopPricesCount =  static_cast<uint32_t>(m_nintendoEShopPrices.size());
     }
 
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetPlayStationStorePrices() const
+    {
+        return m_playStationStorePrices;
+    }
+
     void SetPlayStationStorePrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
     {
         m_playStationStorePrices = std::move(value);
         this->m_model.playStationStorePrices =  m_playStationStorePrices.empty() ? nullptr : m_playStationStorePrices.data();
         this->m_model.playStationStorePricesCount =  static_cast<uint32_t>(m_playStationStorePrices.size());
+    }
+
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetSteamPrices() const
+    {
+        return m_steamPrices;
     }
 
     void SetSteamPrices(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
@@ -1068,10 +1268,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFilter() const
+    {
+        return m_filter;
+    }
+
     void SetFilter(String value)
     {
         m_filter = std::move(value);
         this->m_model.filter =  m_filter.empty() ? nullptr : m_filter.data();
+    }
+
+    std::optional<bool> const& GetIncludeAllItems() const
+    {
+        return m_includeAllItems;
     }
 
     void SetIncludeAllItems(std::optional<bool> value)
@@ -1134,6 +1344,11 @@ public:
         swap(lhs.m_segmentIds, rhs.m_segmentIds);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    CStringVector<Alloc> const& GetSegmentIds() const
+    {
+        return m_segmentIds;
     }
 
     void SetSegmentIds(CStringVector<Alloc> value)
@@ -1201,16 +1416,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<int32_t> const& GetFixedValue() const
+    {
+        return m_fixedValue;
+    }
+
     void SetFixedValue(std::optional<int32_t> value)
     {
         m_fixedValue = std::move(value);
         this->m_model.fixedValue = m_fixedValue ? m_fixedValue.operator->() : nullptr;
     }
 
+    String const& GetItemId() const
+    {
+        return m_itemId;
+    }
+
     void SetItemId(String value)
     {
         m_itemId = std::move(value);
         this->m_model.itemId =  m_itemId.empty() ? nullptr : m_itemId.data();
+    }
+
+    std::optional<double> const& GetMultiplier() const
+    {
+        return m_multiplier;
     }
 
     void SetMultiplier(std::optional<double> value)
@@ -1277,6 +1507,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFCatalogCatalogPriceAmountOverrideWrapper<Alloc>, Alloc> const& GetAmounts() const
+    {
+        return m_amounts;
+    }
+
     void SetAmounts(ModelVector<PFCatalogCatalogPriceAmountOverrideWrapper<Alloc>, Alloc> value)
     {
         m_amounts = std::move(value);
@@ -1336,6 +1571,11 @@ public:
         swap(lhs.m_prices, rhs.m_prices);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFCatalogCatalogPriceOverrideWrapper<Alloc>, Alloc> const& GetPrices() const
+    {
+        return m_prices;
     }
 
     void SetPrices(ModelVector<PFCatalogCatalogPriceOverrideWrapper<Alloc>, Alloc> value)
@@ -1403,16 +1643,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogFilterOptionsWrapper<Alloc>> const& GetFilterOptions() const
+    {
+        return m_filterOptions;
+    }
+
     void SetFilterOptions(std::optional<PFCatalogFilterOptionsWrapper<Alloc>> value)
     {
         m_filterOptions = std::move(value);
         this->m_model.filterOptions = m_filterOptions ? &m_filterOptions->Model() : nullptr;
     }
 
+    std::optional<PFCatalogPermissionsWrapper<Alloc>> const& GetPermissions() const
+    {
+        return m_permissions;
+    }
+
     void SetPermissions(std::optional<PFCatalogPermissionsWrapper<Alloc>> value)
     {
         m_permissions = std::move(value);
         this->m_model.permissions = m_permissions ? &m_permissions->Model() : nullptr;
+    }
+
+    std::optional<PFCatalogCatalogPriceOptionsOverrideWrapper<Alloc>> const& GetPriceOptionsOverride() const
+    {
+        return m_priceOptionsOverride;
     }
 
     void SetPriceOptionsOverride(std::optional<PFCatalogCatalogPriceOptionsOverrideWrapper<Alloc>> value)
@@ -1533,11 +1788,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFCatalogCatalogAlternateIdWrapper<Alloc>, Alloc> const& GetAlternateIds() const
+    {
+        return m_alternateIds;
+    }
+
     void SetAlternateIds(ModelVector<PFCatalogCatalogAlternateIdWrapper<Alloc>, Alloc> value)
     {
         m_alternateIds = std::move(value);
         this->m_model.alternateIds =  m_alternateIds.empty() ? nullptr : m_alternateIds.data();
         this->m_model.alternateIdsCount =  static_cast<uint32_t>(m_alternateIds.size());
+    }
+
+    ModelVector<PFCatalogContentWrapper<Alloc>, Alloc> const& GetContents() const
+    {
+        return m_contents;
     }
 
     void SetContents(ModelVector<PFCatalogContentWrapper<Alloc>, Alloc> value)
@@ -1547,10 +1812,20 @@ public:
         this->m_model.contentsCount =  static_cast<uint32_t>(m_contents.size());
     }
 
+    String const& GetContentType() const
+    {
+        return m_contentType;
+    }
+
     void SetContentType(String value)
     {
         m_contentType = std::move(value);
         this->m_model.contentType =  m_contentType.empty() ? nullptr : m_contentType.data();
+    }
+
+    std::optional<time_t> const& GetCreationDate() const
+    {
+        return m_creationDate;
     }
 
     void SetCreationDate(std::optional<time_t> value)
@@ -1559,10 +1834,20 @@ public:
         this->m_model.creationDate = m_creationDate ? m_creationDate.operator->() : nullptr;
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetCreatorEntity() const
+    {
+        return m_creatorEntity;
+    }
+
     void SetCreatorEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_creatorEntity = std::move(value);
         this->m_model.creatorEntity = m_creatorEntity ? &m_creatorEntity->Model() : nullptr;
+    }
+
+    ModelVector<PFCatalogDeepLinkWrapper<Alloc>, Alloc> const& GetDeepLinks() const
+    {
+        return m_deepLinks;
     }
 
     void SetDeepLinks(ModelVector<PFCatalogDeepLinkWrapper<Alloc>, Alloc> value)
@@ -1572,10 +1857,20 @@ public:
         this->m_model.deepLinksCount =  static_cast<uint32_t>(m_deepLinks.size());
     }
 
+    String const& GetDefaultStackId() const
+    {
+        return m_defaultStackId;
+    }
+
     void SetDefaultStackId(String value)
     {
         m_defaultStackId = std::move(value);
         this->m_model.defaultStackId =  m_defaultStackId.empty() ? nullptr : m_defaultStackId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetDescription() const
+    {
+        return m_description;
     }
 
     void SetDescription(StringDictionaryEntryVector<Alloc> value)
@@ -1585,10 +1880,20 @@ public:
         this->m_model.descriptionCount =  static_cast<uint32_t>(m_description.size());
     }
 
+    JsonObject<Alloc> const& GetDisplayProperties() const
+    {
+        return m_displayProperties;
+    }
+
     void SetDisplayProperties(JsonObject<Alloc> value)
     {
         m_displayProperties = std::move(value);
         this->m_model.displayProperties.stringValue = m_displayProperties.stringValue.empty() ? nullptr : m_displayProperties.stringValue.data();
+    }
+
+    String const& GetDisplayVersion() const
+    {
+        return m_displayVersion;
     }
 
     void SetDisplayVersion(String value)
@@ -1597,10 +1902,20 @@ public:
         this->m_model.displayVersion =  m_displayVersion.empty() ? nullptr : m_displayVersion.data();
     }
 
+    std::optional<time_t> const& GetEndDate() const
+    {
+        return m_endDate;
+    }
+
     void SetEndDate(std::optional<time_t> value)
     {
         m_endDate = std::move(value);
         this->m_model.endDate = m_endDate ? m_endDate.operator->() : nullptr;
+    }
+
+    String const& GetETag() const
+    {
+        return m_eTag;
     }
 
     void SetETag(String value)
@@ -1609,10 +1924,20 @@ public:
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    ModelVector<PFCatalogImageWrapper<Alloc>, Alloc> const& GetImages() const
+    {
+        return m_images;
     }
 
     void SetImages(ModelVector<PFCatalogImageWrapper<Alloc>, Alloc> value)
@@ -1622,10 +1947,20 @@ public:
         this->m_model.imagesCount =  static_cast<uint32_t>(m_images.size());
     }
 
+    std::optional<bool> const& GetIsHidden() const
+    {
+        return m_isHidden;
+    }
+
     void SetIsHidden(std::optional<bool> value)
     {
         m_isHidden = std::move(value);
         this->m_model.isHidden = m_isHidden ? m_isHidden.operator->() : nullptr;
+    }
+
+    ModelVector<PFCatalogCatalogItemReferenceWrapper<Alloc>, Alloc> const& GetItemReferences() const
+    {
+        return m_itemReferences;
     }
 
     void SetItemReferences(ModelVector<PFCatalogCatalogItemReferenceWrapper<Alloc>, Alloc> value)
@@ -1635,11 +1970,21 @@ public:
         this->m_model.itemReferencesCount =  static_cast<uint32_t>(m_itemReferences.size());
     }
 
+    ModelDictionaryEntryVector<PFCatalogKeywordSetWrapper<Alloc>, Alloc> const& GetKeywords() const
+    {
+        return m_keywords;
+    }
+
     void SetKeywords(ModelDictionaryEntryVector<PFCatalogKeywordSetWrapper<Alloc>, Alloc> value)
     {
         m_keywords = std::move(value);
         this->m_model.keywords =  m_keywords.empty() ? nullptr : m_keywords.data();
         this->m_model.keywordsCount =  static_cast<uint32_t>(m_keywords.size());
+    }
+
+    std::optional<time_t> const& GetLastModifiedDate() const
+    {
+        return m_lastModifiedDate;
     }
 
     void SetLastModifiedDate(std::optional<time_t> value)
@@ -1648,10 +1993,20 @@ public:
         this->m_model.lastModifiedDate = m_lastModifiedDate ? m_lastModifiedDate.operator->() : nullptr;
     }
 
+    std::optional<PFCatalogModerationStateWrapper<Alloc>> const& GetModeration() const
+    {
+        return m_moderation;
+    }
+
     void SetModeration(std::optional<PFCatalogModerationStateWrapper<Alloc>> value)
     {
         m_moderation = std::move(value);
         this->m_model.moderation = m_moderation ? &m_moderation->Model() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetPlatforms() const
+    {
+        return m_platforms;
     }
 
     void SetPlatforms(CStringVector<Alloc> value)
@@ -1661,10 +2016,20 @@ public:
         this->m_model.platformsCount =  static_cast<uint32_t>(m_platforms.size());
     }
 
+    std::optional<PFCatalogCatalogPriceOptionsWrapper<Alloc>> const& GetPriceOptions() const
+    {
+        return m_priceOptions;
+    }
+
     void SetPriceOptions(std::optional<PFCatalogCatalogPriceOptionsWrapper<Alloc>> value)
     {
         m_priceOptions = std::move(value);
         this->m_model.priceOptions = m_priceOptions ? &m_priceOptions->Model() : nullptr;
+    }
+
+    std::optional<PFCatalogRatingWrapper<Alloc>> const& GetRating() const
+    {
+        return m_rating;
     }
 
     void SetRating(std::optional<PFCatalogRatingWrapper<Alloc>> value)
@@ -1673,10 +2038,20 @@ public:
         this->m_model.rating = m_rating ? &m_rating->Model() : nullptr;
     }
 
+    std::optional<PFCatalogRealMoneyPriceDetailsWrapper<Alloc>> const& GetRealMoneyPriceDetails() const
+    {
+        return m_realMoneyPriceDetails;
+    }
+
     void SetRealMoneyPriceDetails(std::optional<PFCatalogRealMoneyPriceDetailsWrapper<Alloc>> value)
     {
         m_realMoneyPriceDetails = std::move(value);
         this->m_model.realMoneyPriceDetails = m_realMoneyPriceDetails ? &m_realMoneyPriceDetails->Model() : nullptr;
+    }
+
+    std::optional<time_t> const& GetStartDate() const
+    {
+        return m_startDate;
     }
 
     void SetStartDate(std::optional<time_t> value)
@@ -1685,10 +2060,20 @@ public:
         this->m_model.startDate = m_startDate ? m_startDate.operator->() : nullptr;
     }
 
+    std::optional<PFCatalogStoreDetailsWrapper<Alloc>> const& GetStoreDetails() const
+    {
+        return m_storeDetails;
+    }
+
     void SetStoreDetails(std::optional<PFCatalogStoreDetailsWrapper<Alloc>> value)
     {
         m_storeDetails = std::move(value);
         this->m_model.storeDetails = m_storeDetails ? &m_storeDetails->Model() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)
@@ -1698,11 +2083,21 @@ public:
         this->m_model.tagsCount =  static_cast<uint32_t>(m_tags.size());
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetTitle() const
+    {
+        return m_title;
+    }
+
     void SetTitle(StringDictionaryEntryVector<Alloc> value)
     {
         m_title = std::move(value);
         this->m_model.title =  m_title.empty() ? nullptr : m_title.data();
         this->m_model.titleCount =  static_cast<uint32_t>(m_title.size());
+    }
+
+    String const& GetType() const
+    {
+        return m_type;
     }
 
     void SetType(String value)
@@ -1821,6 +2216,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -1828,10 +2228,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFCatalogCatalogItemWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
+    }
+
     void SetItem(std::optional<PFCatalogCatalogItemWrapper<Alloc>> value)
     {
         m_item = std::move(value);
         this->m_model.item = m_item ? &m_item->Model() : nullptr;
+    }
+
+    bool GetPublish() const
+    {
+        return this->m_model.publish;
     }
 
     void SetPublish(bool value)
@@ -1895,6 +2305,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogItemWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
+    }
+
     void SetItem(std::optional<PFCatalogCatalogItemWrapper<Alloc>> value)
     {
         m_item = std::move(value);
@@ -1953,6 +2368,11 @@ public:
         swap(lhs.m_fileName, rhs.m_fileName);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    String const& GetFileName() const
+    {
+        return m_fileName;
     }
 
     void SetFileName(String value)
@@ -2017,11 +2437,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    ModelVector<PFCatalogUploadInfoWrapper<Alloc>, Alloc> const& GetFiles() const
+    {
+        return m_files;
     }
 
     void SetFiles(ModelVector<PFCatalogUploadInfoWrapper<Alloc>, Alloc> value)
@@ -2091,16 +2521,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFileName() const
+    {
+        return m_fileName;
+    }
+
     void SetFileName(String value)
     {
         m_fileName = std::move(value);
         this->m_model.fileName =  m_fileName.empty() ? nullptr : m_fileName.data();
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    String const& GetUrl() const
+    {
+        return m_url;
     }
 
     void SetUrl(String value)
@@ -2167,6 +2612,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFCatalogUploadUrlMetadataWrapper<Alloc>, Alloc> const& GetUploadUrls() const
+    {
+        return m_uploadUrls;
+    }
+
     void SetUploadUrls(ModelVector<PFCatalogUploadUrlMetadataWrapper<Alloc>, Alloc> value)
     {
         m_uploadUrls = std::move(value);
@@ -2230,11 +2680,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -2305,10 +2765,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2318,10 +2788,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -2390,6 +2870,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -2453,11 +2938,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    CStringVector<Alloc> const& GetContentTypes() const
+    {
+        return m_contentTypes;
+    }
+
     void SetContentTypes(CStringVector<Alloc> value)
     {
         m_contentTypes = std::move(value);
         this->m_model.contentTypes =  m_contentTypes.empty() ? nullptr : m_contentTypes.data();
         this->m_model.contentTypesCount =  static_cast<uint32_t>(m_contentTypes.size());
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)
@@ -2525,10 +3020,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetFormat() const
+    {
+        return m_format;
+    }
+
     void SetFormat(String value)
     {
         m_format = std::move(value);
         this->m_model.format =  m_format.empty() ? nullptr : m_format.data();
+    }
+
+    String const& GetPlatform() const
+    {
+        return m_platform;
     }
 
     void SetPlatform(String value)
@@ -2595,10 +3100,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
         this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+    std::optional<PFCatalogDisplayPropertyType> const& GetType() const
+    {
+        return m_type;
     }
 
     void SetType(std::optional<PFCatalogDisplayPropertyType> value)
@@ -2665,11 +3180,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    CStringVector<Alloc> const& GetContentTypes() const
+    {
+        return m_contentTypes;
+    }
+
     void SetContentTypes(CStringVector<Alloc> value)
     {
         m_contentTypes = std::move(value);
         this->m_model.contentTypes =  m_contentTypes.empty() ? nullptr : m_contentTypes.data();
         this->m_model.contentTypesCount =  static_cast<uint32_t>(m_contentTypes.size());
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)
@@ -2735,6 +3260,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
+    }
+
     void SetTags(CStringVector<Alloc> value)
     {
         m_tags = std::move(value);
@@ -2796,6 +3326,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
     void SetName(String value)
     {
         m_name = std::move(value);
@@ -2854,6 +3389,11 @@ public:
         swap(lhs.m_categoryRatings, rhs.m_categoryRatings);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFCatalogCategoryRatingConfigWrapper<Alloc>, Alloc> const& GetCategoryRatings() const
+    {
+        return m_categoryRatings;
     }
 
     void SetCategoryRatings(ModelVector<PFCatalogCategoryRatingConfigWrapper<Alloc>, Alloc> value)
@@ -2919,11 +3459,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    CStringVector<Alloc> const& GetContentTypes() const
+    {
+        return m_contentTypes;
+    }
+
     void SetContentTypes(CStringVector<Alloc> value)
     {
         m_contentTypes = std::move(value);
         this->m_model.contentTypes =  m_contentTypes.empty() ? nullptr : m_contentTypes.data();
         this->m_model.contentTypesCount =  static_cast<uint32_t>(m_contentTypes.size());
+    }
+
+    CStringVector<Alloc> const& GetTags() const
+    {
+        return m_tags;
     }
 
     void SetTags(CStringVector<Alloc> value)
@@ -3007,6 +3557,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetAdminEntities() const
+    {
+        return m_adminEntities;
+    }
+
     void SetAdminEntities(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
     {
         m_adminEntities = std::move(value);
@@ -3014,10 +3569,20 @@ public:
         this->m_model.adminEntitiesCount =  static_cast<uint32_t>(m_adminEntities.size());
     }
 
+    std::optional<PFCatalogCatalogSpecificConfigWrapper<Alloc>> const& GetCatalog() const
+    {
+        return m_catalog;
+    }
+
     void SetCatalog(std::optional<PFCatalogCatalogSpecificConfigWrapper<Alloc>> value)
     {
         m_catalog = std::move(value);
         this->m_model.catalog = m_catalog ? &m_catalog->Model() : nullptr;
+    }
+
+    ModelVector<PFCatalogDeepLinkFormatWrapper<Alloc>, Alloc> const& GetDeepLinkFormats() const
+    {
+        return m_deepLinkFormats;
     }
 
     void SetDeepLinkFormats(ModelVector<PFCatalogDeepLinkFormatWrapper<Alloc>, Alloc> value)
@@ -3027,11 +3592,21 @@ public:
         this->m_model.deepLinkFormatsCount =  static_cast<uint32_t>(m_deepLinkFormats.size());
     }
 
+    ModelVector<PFCatalogDisplayPropertyIndexInfoWrapper<Alloc>, Alloc> const& GetDisplayPropertyIndexInfos() const
+    {
+        return m_displayPropertyIndexInfos;
+    }
+
     void SetDisplayPropertyIndexInfos(ModelVector<PFCatalogDisplayPropertyIndexInfoWrapper<Alloc>, Alloc> value)
     {
         m_displayPropertyIndexInfos = std::move(value);
         this->m_model.displayPropertyIndexInfos =  m_displayPropertyIndexInfos.empty() ? nullptr : m_displayPropertyIndexInfos.data();
         this->m_model.displayPropertyIndexInfosCount =  static_cast<uint32_t>(m_displayPropertyIndexInfos.size());
+    }
+
+    std::optional<PFCatalogFileConfigWrapper<Alloc>> const& GetFile() const
+    {
+        return m_file;
     }
 
     void SetFile(std::optional<PFCatalogFileConfigWrapper<Alloc>> value)
@@ -3040,15 +3615,30 @@ public:
         this->m_model.file = m_file ? &m_file->Model() : nullptr;
     }
 
+    std::optional<PFCatalogImageConfigWrapper<Alloc>> const& GetImage() const
+    {
+        return m_image;
+    }
+
     void SetImage(std::optional<PFCatalogImageConfigWrapper<Alloc>> value)
     {
         m_image = std::move(value);
         this->m_model.image = m_image ? &m_image->Model() : nullptr;
     }
 
+    bool GetIsCatalogEnabled() const
+    {
+        return this->m_model.isCatalogEnabled;
+    }
+
     void SetIsCatalogEnabled(bool value)
     {
         this->m_model.isCatalogEnabled = value;
+    }
+
+    CStringVector<Alloc> const& GetPlatforms() const
+    {
+        return m_platforms;
     }
 
     void SetPlatforms(CStringVector<Alloc> value)
@@ -3058,10 +3648,20 @@ public:
         this->m_model.platformsCount =  static_cast<uint32_t>(m_platforms.size());
     }
 
+    std::optional<PFCatalogReviewConfigWrapper<Alloc>> const& GetReview() const
+    {
+        return m_review;
+    }
+
     void SetReview(std::optional<PFCatalogReviewConfigWrapper<Alloc>> value)
     {
         m_review = std::move(value);
         this->m_model.review = m_review ? &m_review->Model() : nullptr;
+    }
+
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetReviewerEntities() const
+    {
+        return m_reviewerEntities;
     }
 
     void SetReviewerEntities(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
@@ -3069,6 +3669,11 @@ public:
         m_reviewerEntities = std::move(value);
         this->m_model.reviewerEntities =  m_reviewerEntities.empty() ? nullptr : m_reviewerEntities.data();
         this->m_model.reviewerEntitiesCount =  static_cast<uint32_t>(m_reviewerEntities.size());
+    }
+
+    std::optional<PFCatalogUserGeneratedContentSpecificConfigWrapper<Alloc>> const& GetUserGeneratedContent() const
+    {
+        return m_userGeneratedContent;
     }
 
     void SetUserGeneratedContent(std::optional<PFCatalogUserGeneratedContentSpecificConfigWrapper<Alloc>> value)
@@ -3149,6 +3754,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogConfigWrapper<Alloc>> const& GetConfig() const
+    {
+        return m_config;
+    }
+
     void SetConfig(std::optional<PFCatalogCatalogConfigWrapper<Alloc>> value)
     {
         m_config = std::move(value);
@@ -3215,10 +3825,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -3228,10 +3848,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -3300,6 +3930,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogItemWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
+    }
+
     void SetItem(std::optional<PFCatalogCatalogItemWrapper<Alloc>> value)
     {
         m_item = std::move(value);
@@ -3328,6 +3963,8 @@ public:
     PFCatalogGetDraftItemsRequestWrapper(const PFCatalogGetDraftItemsRequest& model) :
         ModelWrapper<PFCatalogGetDraftItemsRequest, Alloc>{ model },
         m_alternateIds{ model.alternateIds, model.alternateIds + model.alternateIdsCount },
+        m_continuationToken{ SafeString(model.continuationToken) },
+        m_count{ model.count ? std::optional<int32_t>{ *model.count } : std::nullopt },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_entity{ model.entity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.entity } : std::nullopt },
         m_ids{ model.ids, model.ids + model.idsCount }
@@ -3359,11 +3996,18 @@ public:
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_alternateIds, rhs.m_alternateIds);
+        swap(lhs.m_continuationToken, rhs.m_continuationToken);
+        swap(lhs.m_count, rhs.m_count);
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_entity, rhs.m_entity);
         swap(lhs.m_ids, rhs.m_ids);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFCatalogCatalogAlternateIdWrapper<Alloc>, Alloc> const& GetAlternateIds() const
+    {
+        return m_alternateIds;
     }
 
     void SetAlternateIds(ModelVector<PFCatalogCatalogAlternateIdWrapper<Alloc>, Alloc> value)
@@ -3373,6 +4017,33 @@ public:
         this->m_model.alternateIdsCount =  static_cast<uint32_t>(m_alternateIds.size());
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
+    void SetContinuationToken(String value)
+    {
+        m_continuationToken = std::move(value);
+        this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+    }
+
+    std::optional<int32_t> const& GetCount() const
+    {
+        return m_count;
+    }
+
+    void SetCount(std::optional<int32_t> value)
+    {
+        m_count = std::move(value);
+        this->m_model.count = m_count ? m_count.operator->() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -3380,10 +4051,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetIds() const
+    {
+        return m_ids;
     }
 
     void SetIds(CStringVector<Alloc> value)
@@ -3397,12 +4078,16 @@ private:
     void SetModelPointers()
     {
         this->m_model.alternateIds = m_alternateIds.empty() ? nullptr : m_alternateIds.data();
+        this->m_model.continuationToken = m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+        this->m_model.count = m_count ? m_count.operator->() : nullptr;
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.entity = m_entity ?  &m_entity->Model() : nullptr;
         this->m_model.ids = m_ids.empty() ? nullptr : m_ids.data();
     }
 
     ModelVector<PFCatalogCatalogAlternateIdWrapper<Alloc>, Alloc> m_alternateIds;
+    String m_continuationToken;
+    std::optional<int32_t> m_count;
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFEntityKeyWrapper<Alloc>> m_entity;
     CStringVector<Alloc> m_ids;
@@ -3455,10 +4140,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+    }
+
+    ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> const& GetItems() const
+    {
+        return m_items;
     }
 
     void SetItems(ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> value)
@@ -3530,15 +4225,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
     }
 
+    int32_t GetCount() const
+    {
+        return this->m_model.count;
+    }
+
     void SetCount(int32_t value)
     {
         this->m_model.count = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -3548,10 +4258,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetFilter() const
+    {
+        return m_filter;
     }
 
     void SetFilter(String value)
@@ -3622,10 +4342,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+    }
+
+    ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> const& GetItems() const
+    {
+        return m_items;
     }
 
     void SetItems(ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> value)
@@ -3697,10 +4427,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -3710,10 +4450,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -3796,6 +4546,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> const& GetCategoryRatings() const
+    {
+        return m_categoryRatings;
+    }
+
     void SetCategoryRatings(DictionaryEntryVector<PFInt32DictionaryEntry, Alloc> value)
     {
         m_categoryRatings = std::move(value);
@@ -3803,9 +4558,19 @@ public:
         this->m_model.categoryRatingsCount =  static_cast<uint32_t>(m_categoryRatings.size());
     }
 
+    int32_t GetHelpfulNegative() const
+    {
+        return this->m_model.helpfulNegative;
+    }
+
     void SetHelpfulNegative(int32_t value)
     {
         this->m_model.helpfulNegative = value;
+    }
+
+    int32_t GetHelpfulPositive() const
+    {
+        return this->m_model.helpfulPositive;
     }
 
     void SetHelpfulPositive(int32_t value)
@@ -3813,9 +4578,19 @@ public:
         this->m_model.helpfulPositive = value;
     }
 
+    bool GetIsInstalled() const
+    {
+        return this->m_model.isInstalled;
+    }
+
     void SetIsInstalled(bool value)
     {
         this->m_model.isInstalled = value;
+    }
+
+    String const& GetItemId() const
+    {
+        return m_itemId;
     }
 
     void SetItemId(String value)
@@ -3824,10 +4599,20 @@ public:
         this->m_model.itemId =  m_itemId.empty() ? nullptr : m_itemId.data();
     }
 
+    String const& GetItemVersion() const
+    {
+        return m_itemVersion;
+    }
+
     void SetItemVersion(String value)
     {
         m_itemVersion = std::move(value);
         this->m_model.itemVersion =  m_itemVersion.empty() ? nullptr : m_itemVersion.data();
+    }
+
+    String const& GetLocale() const
+    {
+        return m_locale;
     }
 
     void SetLocale(String value)
@@ -3836,9 +4621,19 @@ public:
         this->m_model.locale =  m_locale.empty() ? nullptr : m_locale.data();
     }
 
+    int32_t GetRating() const
+    {
+        return this->m_model.rating;
+    }
+
     void SetRating(int32_t value)
     {
         this->m_model.rating = value;
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetReviewerEntity() const
+    {
+        return m_reviewerEntity;
     }
 
     void SetReviewerEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -3847,10 +4642,20 @@ public:
         this->m_model.reviewerEntity = m_reviewerEntity ? &m_reviewerEntity->Model() : nullptr;
     }
 
+    String const& GetReviewId() const
+    {
+        return m_reviewId;
+    }
+
     void SetReviewId(String value)
     {
         m_reviewId = std::move(value);
         this->m_model.reviewId =  m_reviewId.empty() ? nullptr : m_reviewId.data();
+    }
+
+    String const& GetReviewText() const
+    {
+        return m_reviewText;
     }
 
     void SetReviewText(String value)
@@ -3859,9 +4664,19 @@ public:
         this->m_model.reviewText =  m_reviewText.empty() ? nullptr : m_reviewText.data();
     }
 
+    time_t GetSubmitted() const
+    {
+        return this->m_model.submitted;
+    }
+
     void SetSubmitted(time_t value)
     {
         this->m_model.submitted = value;
+    }
+
+    String const& GetTitle() const
+    {
+        return m_title;
     }
 
     void SetTitle(String value)
@@ -3938,6 +4753,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogReviewWrapper<Alloc>> const& GetReview() const
+    {
+        return m_review;
+    }
+
     void SetReview(std::optional<PFCatalogReviewWrapper<Alloc>> value)
     {
         m_review = std::move(value);
@@ -4004,10 +4824,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4017,10 +4847,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -4087,6 +4927,11 @@ public:
         swap(lhs.m_item, rhs.m_item);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<PFCatalogCatalogItemWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
     }
 
     void SetItem(std::optional<PFCatalogCatalogItemWrapper<Alloc>> value)
@@ -4157,10 +5002,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
     }
 
     void SetContinuationToken(String value)
@@ -4169,9 +5024,19 @@ public:
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
     }
 
+    int32_t GetCount() const
+    {
+        return this->m_model.count;
+    }
+
     void SetCount(int32_t value)
     {
         this->m_model.count = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4181,10 +5046,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -4257,11 +5132,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> const& GetContainers() const
+    {
+        return m_containers;
+    }
+
     void SetContainers(ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> value)
     {
         m_containers = std::move(value);
         this->m_model.containers =  m_containers.empty() ? nullptr : m_containers.data();
         this->m_model.containersCount =  static_cast<uint32_t>(m_containers.size());
+    }
+
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
     }
 
     void SetContinuationToken(String value)
@@ -4330,10 +5215,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4341,6 +5236,11 @@ public:
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -4405,6 +5305,11 @@ public:
         swap(lhs.m_state, rhs.m_state);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<PFCatalogModerationStateWrapper<Alloc>> const& GetState() const
+    {
+        return m_state;
     }
 
     void SetState(std::optional<PFCatalogModerationStateWrapper<Alloc>> value)
@@ -4473,10 +5378,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4486,10 +5401,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -4560,10 +5485,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogPublishResult> const& GetResult() const
+    {
+        return m_result;
+    }
+
     void SetResult(std::optional<PFCatalogPublishResult> value)
     {
         m_result = std::move(value);
         this->m_model.result = m_result ? m_result.operator->() : nullptr;
+    }
+
+    String const& GetStatusMessage() const
+    {
+        return m_statusMessage;
     }
 
     void SetStatusMessage(String value)
@@ -4636,10 +5571,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
     }
 
     void SetContinuationToken(String value)
@@ -4648,9 +5593,19 @@ public:
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
     }
 
+    int32_t GetCount() const
+    {
+        return this->m_model.count;
+    }
+
     void SetCount(int32_t value)
     {
         this->m_model.count = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4660,10 +5615,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    String const& GetOrderBy() const
+    {
+        return m_orderBy;
     }
 
     void SetOrderBy(String value)
@@ -4736,10 +5701,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+    }
+
+    ModelVector<PFCatalogReviewWrapper<Alloc>, Alloc> const& GetReviews() const
+    {
+        return m_reviews;
     }
 
     void SetReviews(ModelVector<PFCatalogReviewWrapper<Alloc>, Alloc> value)
@@ -4809,10 +5784,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4820,6 +5805,11 @@ public:
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -4890,10 +5880,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogReviewWrapper<Alloc>> const& GetLeastFavorableReview() const
+    {
+        return m_leastFavorableReview;
+    }
+
     void SetLeastFavorableReview(std::optional<PFCatalogReviewWrapper<Alloc>> value)
     {
         m_leastFavorableReview = std::move(value);
         this->m_model.leastFavorableReview = m_leastFavorableReview ? &m_leastFavorableReview->Model() : nullptr;
+    }
+
+    std::optional<PFCatalogReviewWrapper<Alloc>> const& GetMostFavorableReview() const
+    {
+        return m_mostFavorableReview;
     }
 
     void SetMostFavorableReview(std::optional<PFCatalogReviewWrapper<Alloc>> value)
@@ -4902,10 +5902,20 @@ public:
         this->m_model.mostFavorableReview = m_mostFavorableReview ? &m_mostFavorableReview->Model() : nullptr;
     }
 
+    std::optional<PFCatalogRatingWrapper<Alloc>> const& GetRating() const
+    {
+        return m_rating;
+    }
+
     void SetRating(std::optional<PFCatalogRatingWrapper<Alloc>> value)
     {
         m_rating = std::move(value);
         this->m_model.rating = m_rating ? &m_rating->Model() : nullptr;
+    }
+
+    int32_t GetReviewsCount() const
+    {
+        return this->m_model.reviewsCount;
     }
 
     void SetReviewsCount(int32_t value)
@@ -4977,11 +5987,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    ModelVector<PFCatalogCatalogAlternateIdWrapper<Alloc>, Alloc> const& GetAlternateIds() const
+    {
+        return m_alternateIds;
+    }
+
     void SetAlternateIds(ModelVector<PFCatalogCatalogAlternateIdWrapper<Alloc>, Alloc> value)
     {
         m_alternateIds = std::move(value);
         this->m_model.alternateIds =  m_alternateIds.empty() ? nullptr : m_alternateIds.data();
         this->m_model.alternateIdsCount =  static_cast<uint32_t>(m_alternateIds.size());
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -4991,10 +6011,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    CStringVector<Alloc> const& GetIds() const
+    {
+        return m_ids;
     }
 
     void SetIds(CStringVector<Alloc> value)
@@ -5062,6 +6092,11 @@ public:
         swap(lhs.m_items, rhs.m_items);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> const& GetItems() const
+    {
+        return m_items;
     }
 
     void SetItems(ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> value)
@@ -5133,10 +6168,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5146,16 +6191,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetETag() const
+    {
+        return m_eTag;
+    }
+
     void SetETag(String value)
     {
         m_eTag = std::move(value);
         this->m_model.eTag =  m_eTag.empty() ? nullptr : m_eTag.data();
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -5236,16 +6296,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
     }
 
+    std::optional<PFCatalogConcernCategory> const& GetConcernCategory() const
+    {
+        return m_concernCategory;
+    }
+
     void SetConcernCategory(std::optional<PFCatalogConcernCategory> value)
     {
         m_concernCategory = std::move(value);
         this->m_model.concernCategory = m_concernCategory ? m_concernCategory.operator->() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5255,16 +6330,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    String const& GetReason() const
+    {
+        return m_reason;
     }
 
     void SetReason(String value)
@@ -5349,16 +6439,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
     }
 
+    std::optional<PFCatalogConcernCategory> const& GetConcernCategory() const
+    {
+        return m_concernCategory;
+    }
+
     void SetConcernCategory(std::optional<PFCatalogConcernCategory> value)
     {
         m_concernCategory = std::move(value);
         this->m_model.concernCategory = m_concernCategory ? m_concernCategory.operator->() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5368,10 +6473,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetItemId() const
+    {
+        return m_itemId;
     }
 
     void SetItemId(String value)
@@ -5380,10 +6495,20 @@ public:
         this->m_model.itemId =  m_itemId.empty() ? nullptr : m_itemId.data();
     }
 
+    String const& GetReason() const
+    {
+        return m_reason;
+    }
+
     void SetReason(String value)
     {
         m_reason = std::move(value);
         this->m_model.reason =  m_reason.empty() ? nullptr : m_reason.data();
+    }
+
+    String const& GetReviewId() const
+    {
+        return m_reviewId;
     }
 
     void SetReviewId(String value)
@@ -5466,10 +6591,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5479,16 +6614,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
+    }
+
+    std::optional<PFCatalogReviewWrapper<Alloc>> const& GetReview() const
+    {
+        return m_review;
     }
 
     void SetReview(std::optional<PFCatalogReviewWrapper<Alloc>> value)
@@ -5561,10 +6711,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    String const& GetId() const
+    {
+        return m_id;
     }
 
     void SetId(String value)
@@ -5645,15 +6805,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
     }
 
+    int32_t GetCount() const
+    {
+        return this->m_model.count;
+    }
+
     void SetCount(int32_t value)
     {
         this->m_model.count = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5663,10 +6838,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetFilter() const
+    {
+        return m_filter;
     }
 
     void SetFilter(String value)
@@ -5675,10 +6860,20 @@ public:
         this->m_model.filter =  m_filter.empty() ? nullptr : m_filter.data();
     }
 
+    String const& GetLanguage() const
+    {
+        return m_language;
+    }
+
     void SetLanguage(String value)
     {
         m_language = std::move(value);
         this->m_model.language =  m_language.empty() ? nullptr : m_language.data();
+    }
+
+    String const& GetOrderBy() const
+    {
+        return m_orderBy;
     }
 
     void SetOrderBy(String value)
@@ -5687,16 +6882,31 @@ public:
         this->m_model.orderBy =  m_orderBy.empty() ? nullptr : m_orderBy.data();
     }
 
+    String const& GetSearch() const
+    {
+        return m_search;
+    }
+
     void SetSearch(String value)
     {
         m_search = std::move(value);
         this->m_model.search =  m_search.empty() ? nullptr : m_search.data();
     }
 
+    String const& GetSelect() const
+    {
+        return m_select;
+    }
+
     void SetSelect(String value)
     {
         m_select = std::move(value);
         this->m_model.select =  m_select.empty() ? nullptr : m_select.data();
+    }
+
+    std::optional<PFCatalogStoreReferenceWrapper<Alloc>> const& GetStore() const
+    {
+        return m_store;
     }
 
     void SetStore(std::optional<PFCatalogStoreReferenceWrapper<Alloc>> value)
@@ -5777,10 +6987,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetContinuationToken() const
+    {
+        return m_continuationToken;
+    }
+
     void SetContinuationToken(String value)
     {
         m_continuationToken = std::move(value);
         this->m_model.continuationToken =  m_continuationToken.empty() ? nullptr : m_continuationToken.data();
+    }
+
+    ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> const& GetItems() const
+    {
+        return m_items;
     }
 
     void SetItems(ModelVector<PFCatalogCatalogItemWrapper<Alloc>, Alloc> value)
@@ -5854,10 +7074,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5867,16 +7097,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetId() const
+    {
+        return m_id;
+    }
+
     void SetId(String value)
     {
         m_id = std::move(value);
         this->m_model.id =  m_id.empty() ? nullptr : m_id.data();
     }
 
+    String const& GetReason() const
+    {
+        return m_reason;
+    }
+
     void SetReason(String value)
     {
         m_reason = std::move(value);
         this->m_model.reason =  m_reason.empty() ? nullptr : m_reason.data();
+    }
+
+    std::optional<PFCatalogModerationStatus> const& GetStatus() const
+    {
+        return m_status;
     }
 
     void SetStatus(std::optional<PFCatalogModerationStatus> value)
@@ -5957,10 +7202,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -5970,10 +7225,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    String const& GetItemId() const
+    {
+        return m_itemId;
     }
 
     void SetItemId(String value)
@@ -5982,10 +7247,20 @@ public:
         this->m_model.itemId =  m_itemId.empty() ? nullptr : m_itemId.data();
     }
 
+    String const& GetReviewId() const
+    {
+        return m_reviewId;
+    }
+
     void SetReviewId(String value)
     {
         m_reviewId = std::move(value);
         this->m_model.reviewId =  m_reviewId.empty() ? nullptr : m_reviewId.data();
+    }
+
+    std::optional<PFCatalogHelpfulnessVote> const& GetVote() const
+    {
+        return m_vote;
     }
 
     void SetVote(std::optional<PFCatalogHelpfulnessVote> value)
@@ -6062,16 +7337,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> const& GetAlternateId() const
+    {
+        return m_alternateId;
+    }
+
     void SetAlternateId(std::optional<PFCatalogCatalogAlternateIdWrapper<Alloc>> value)
     {
         m_alternateId = std::move(value);
         this->m_model.alternateId = m_alternateId ? &m_alternateId->Model() : nullptr;
     }
 
+    String const& GetItemId() const
+    {
+        return m_itemId;
+    }
+
     void SetItemId(String value)
     {
         m_itemId = std::move(value);
         this->m_model.itemId =  m_itemId.empty() ? nullptr : m_itemId.data();
+    }
+
+    String const& GetReviewId() const
+    {
+        return m_reviewId;
     }
 
     void SetReviewId(String value)
@@ -6140,11 +7430,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    ModelVector<PFCatalogReviewTakedownWrapper<Alloc>, Alloc> const& GetReviews() const
+    {
+        return m_reviews;
     }
 
     void SetReviews(ModelVector<PFCatalogReviewTakedownWrapper<Alloc>, Alloc> value)
@@ -6212,10 +7512,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFCatalogCatalogConfigWrapper<Alloc>> const& GetConfig() const
+    {
+        return m_config;
+    }
+
     void SetConfig(std::optional<PFCatalogCatalogConfigWrapper<Alloc>> value)
     {
         m_config = std::move(value);
         this->m_model.config = m_config ? &m_config->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -6283,6 +7593,11 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
@@ -6290,10 +7605,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFCatalogCatalogItemWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
+    }
+
     void SetItem(std::optional<PFCatalogCatalogItemWrapper<Alloc>> value)
     {
         m_item = std::move(value);
         this->m_model.item = m_item ? &m_item->Model() : nullptr;
+    }
+
+    bool GetPublish() const
+    {
+        return this->m_model.publish;
     }
 
     void SetPublish(bool value)
@@ -6355,6 +7680,11 @@ public:
         swap(lhs.m_item, rhs.m_item);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<PFCatalogCatalogItemWrapper<Alloc>> const& GetItem() const
+    {
+        return m_item;
     }
 
     void SetItem(std::optional<PFCatalogCatalogItemWrapper<Alloc>> value)

@@ -4,7 +4,7 @@
 #include "CatalogOperations.h"
 #include "Platform/PlatformUtils.h"
 #if HC_PLATFORM == HC_PLATFORM_GDK
-#include "GDK/PlatformUser_GDK.h"
+#include "Platform/GDK/TitleLocalUser_GDK.h"
 #endif
 #include <httpClient/httpClient.h>
 #include <JsonUtils.h>
@@ -136,7 +136,7 @@ AsyncOp<void> InventoryTests::Initialize()
 
         return result;
     })
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     .Then([&](Result<void> result) -> AsyncOp<CreateDraftItemOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
@@ -219,7 +219,7 @@ AsyncOp<void> InventoryTests::Initialize()
         
         return S_OK;
     })
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     .Then([&](Result<void>) -> AsyncOp<CreateDraftItemOperation::ResultType>
     {
         RETURN_IF_FAILED(m_state->servicesInitResult);
@@ -418,7 +418,7 @@ void InventoryTests::TestGetInventoryItems(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestGetMicrosoftStoreAccessTokens(TestContext& tc)
 {
     // TODO: This test is currently failing due to the PlayFab service currently being reworked
@@ -440,7 +440,7 @@ void InventoryTests::TestGetMicrosoftStoreAccessTokens(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestGetTransactionHistory(TestContext& tc)
 {
     constexpr char kCollectionId[]{ "purchaseInventoryItemsCollection" };
@@ -536,31 +536,30 @@ void InventoryTests::TestPurchaseInventoryItems(TestContext& tc)
 #endif
 }
 
-#if HC_PLATFORM == HC_PLATFORM_IOS
+#if HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_GDK
 void InventoryTests::TestRedeemAppleAppStoreInventoryItems(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_ANDROID || HC_PLATFORM == HC_PLATFORM_GDK
 void InventoryTests::TestRedeemGooglePlayInventoryItems(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestRedeemMicrosoftStoreInventoryItems(TestContext& tc)
 {
 #if HC_PLATFORM == HC_PLATFORM_GDK
     constexpr char kCollectionId[]{ "redeemMicrosoftStoreInventoryItemsCollection" };
 
-    assert(DefaultPlatformUser());
-    RedeemMicrosoftStoreInventoryItemsOperation::RequestType request{ Wrappers::XUser::Duplicate(DefaultPlatformUser()->Handle()) };
+    RedeemMicrosoftStoreInventoryItemsOperation::RequestType request{ Wrappers::XUser::Duplicate(GetXUserFromLocalUser(DefaultLocalUser()).Handle()) };
     request.SetCollectionId(kCollectionId);
     request.SetEntity(DefaultTitlePlayer().EntityKey());
-        
+
     return RedeemMicrosoftStoreInventoryItemsOperation::Run(DefaultTitlePlayer(), request, RunContext()).Finally([&](Result<RedeemMicrosoftStoreInventoryItemsOperation::ResultType> result)
     {
         tc.EndTest(std::move(result));
@@ -571,21 +570,21 @@ void InventoryTests::TestRedeemMicrosoftStoreInventoryItems(TestContext& tc)
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestRedeemNintendoEShopInventoryItems(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestRedeemPlayStationStoreInventoryItems(TestContext& tc)
 {
     tc.Skip();
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
 void InventoryTests::TestRedeemSteamInventoryItems(TestContext& tc)
 {
     const char* storeId = "100";
@@ -795,6 +794,80 @@ void InventoryTests::TestUpdateInventoryItems(TestContext& tc)
     });
 }
 
+#if HC_PLATFORM == HC_PLATFORM_GDK
+void InventoryTests::TestExecuteTransferOperations(TestContext& tc)
+{
+    ExecuteTransferOperationsOperation::RequestType request;
+
+    EntityKey givingEntityKey;
+	EntityKey receivingEntityKey;
+    givingEntityKey.SetId("A34D37670FB51723");
+	givingEntityKey.SetType("title_player_account");
+	receivingEntityKey.SetId("A636A52197C3D9A0");
+	receivingEntityKey.SetType("title_player_account"); 
+
+    request.SetGivingEntity(givingEntityKey);
+    request.SetReceivingEntity(receivingEntityKey);
+    
+    ModelVector<Wrappers::PFInventoryTransferInventoryItemsOperationWrapper<Allocator>> ops;
+    Wrappers::PFInventoryTransferInventoryItemsOperationWrapper<Allocator> transferOp;
+    transferOp.SetAmount(1);
+
+    Wrappers::PFInventoryInventoryItemReferenceWrapper<Allocator> givingItem;
+    Wrappers::PFInventoryAlternateIdWrapper<Allocator> altId;
+    altId.SetType(kFriendlyId);
+    altId.SetValue("FriendlyIDForTest01");
+    givingItem.SetAlternateId(altId);
+    transferOp.SetGivingItem(givingItem);
+
+    Wrappers::PFInventoryInventoryItemReferenceWrapper<Allocator> receivingItem;
+    Wrappers::PFInventoryAlternateIdWrapper<Allocator> receivingAltId;
+    receivingAltId.SetType(kFriendlyId);
+    receivingAltId.SetValue("FriendlyIDForTest02");
+    receivingItem.SetAlternateId(receivingAltId);
+	transferOp.SetReceivingItem(receivingItem);
+
+    ops.push_back(transferOp);
+    request.SetOperations(ops);
+
+    ExecuteTransferOperationsOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ExecuteTransferOperationsOperation::ResultType> result) -> Result<void>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+/// <summary>
+/// Ignore the result, just verify that the call works, the operationToken is not deterministic so can't validate the result
+/// </summary>
+/// <param name="tc"></param>
+void InventoryTests::TestGetInventoryOperationStatus(TestContext& tc)
+{
+    GetInventoryOperationStatusOperation::RequestType statusRequest;
+    constexpr char kCollectionId[]{ "default" };
+
+    statusRequest.SetOperationToken("operationToken");
+    statusRequest.SetCollectionId(kCollectionId);
+    statusRequest.SetEntity(DefaultTitlePlayer().EntityKey());
+
+    return GetInventoryOperationStatusOperation::Run(TitleEntity(), statusRequest, RunContext()).Then([&](Result<GetInventoryOperationStatusOperation::ResultType> result) -> Result<void>
+    {
+        UNREFERENCED_PARAMETER(result);
+
+        return S_OK;
+    })
+    .Finally([&](Result<void> result)
+    {
+        tc.EndTest(std::move(result));
+    });
+}
+#endif
 
 }
 }

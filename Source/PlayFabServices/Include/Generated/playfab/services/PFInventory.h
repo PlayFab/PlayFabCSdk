@@ -41,8 +41,8 @@ PF_API PFInventoryAddInventoryItemsAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service
-/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the
+/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFInventoryAddInventoryItemsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -59,8 +59,8 @@ PF_API PFInventoryAddInventoryItemsGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service
-/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the
+/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -85,8 +85,8 @@ PF_API PFInventoryAddInventoryItemsGetResult(
 /// Delete an Inventory Collection by the specified Id for an Entity.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be one of global PlayFab Service errors. See doc page "Handling PlayFab Errors"
-/// for more details on error handling.
+/// the async result will be E_PF_INVENTORY_COLLECTION_DELETION_DISALLOWED or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFInventoryDeleteInventoryCollectionAsync(
     _In_ PFEntityHandle entityHandle,
@@ -122,8 +122,8 @@ PF_API PFInventoryDeleteInventoryItemsAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors"
-/// for more details on error handling.
+/// E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the global PlayFab Service errors. See doc
+/// page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFInventoryDeleteInventoryItemsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -140,8 +140,8 @@ PF_API PFInventoryDeleteInventoryItemsGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors"
-/// for more details on error handling.
+/// E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the global PlayFab Service errors. See doc
+/// page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -185,8 +185,9 @@ PF_API PFInventoryExecuteInventoryOperationsAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INSUFFICIENT_FUNDS, E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND or any of the
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INSUFFICIENT_FUNDS, E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFInventoryExecuteInventoryOperationsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -203,8 +204,9 @@ PF_API PFInventoryExecuteInventoryOperationsGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INSUFFICIENT_FUNDS, E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND or any of the
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INSUFFICIENT_FUNDS, E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -217,7 +219,7 @@ PF_API PFInventoryExecuteInventoryOperationsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Transfer a list of inventory items. A maximum list of 50 operations can be performed by a single
 /// request. When the response code is 202, one or more operations did not complete within the timeframe
@@ -230,6 +232,7 @@ PF_API PFInventoryExecuteInventoryOperationsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// Transfer the specified list of inventory items of an entity's container Id to another entity's container
 /// Id.
 ///
@@ -249,8 +252,8 @@ PF_API PFInventoryExecuteTransferOperationsAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INSUFFICIENT_FUNDS, E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc
-/// page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INSUFFICIENT_FUNDS, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFInventoryExecuteTransferOperationsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -267,8 +270,8 @@ PF_API PFInventoryExecuteTransferOperationsGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INSUFFICIENT_FUNDS, E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc
-/// page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INSUFFICIENT_FUNDS, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -369,8 +372,8 @@ PF_API PFInventoryGetInventoryItemsAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_DELETED,
-/// E_PF_DATABASE_THROUGHPUT_EXCEEDED or any of the global PlayFab Service errors. See doc page "Handling
-/// PlayFab Errors" for more details on error handling.
+/// E_PF_DATABASE_THROUGHPUT_EXCEEDED, E_PF_RESOURCE_NOT_MODIFIED or any of the global PlayFab Service
+/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFInventoryGetInventoryItemsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -387,8 +390,8 @@ PF_API PFInventoryGetInventoryItemsGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_DELETED,
-/// E_PF_DATABASE_THROUGHPUT_EXCEEDED or any of the global PlayFab Service errors. See doc page "Handling
-/// PlayFab Errors" for more details on error handling.
+/// E_PF_DATABASE_THROUGHPUT_EXCEEDED, E_PF_RESOURCE_NOT_MODIFIED or any of the global PlayFab Service
+/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -401,7 +404,7 @@ PF_API PFInventoryGetInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Get the status of an inventory operation using an OperationToken. You can check on the operation
 /// status at anytime within 1 day of the request by passing the TransactionToken to the this API.
@@ -411,6 +414,7 @@ PF_API PFInventoryGetInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// Get the status of an Inventory Operation using an OperationToken.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryGetInventoryOperationStatusGetResultSize"/>
@@ -460,7 +464,7 @@ PF_API PFInventoryGetInventoryOperationStatusGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Gets the access tokens.
 /// </summary>
@@ -469,7 +473,7 @@ PF_API PFInventoryGetInventoryOperationStatusGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, GDK, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Gets the access tokens for Microsoft Store authentication.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryGetMicrosoftStoreAccessTokensGetResultSize"/>
@@ -521,7 +525,7 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Get transaction history for a player. Up to 250 Events can be returned at once. You can use continuation
 /// tokens to paginate through results that return greater than the limit. Getting transaction history
@@ -533,7 +537,7 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Get transaction history for specified entity and collection.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryGetTransactionHistoryGetResultSize"/>
@@ -611,8 +615,9 @@ PF_API PFInventoryPurchaseInventoryItemsAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INSUFFICIENT_FUNDS, E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND or any of the
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INSUFFICIENT_FUNDS, E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFInventoryPurchaseInventoryItemsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -629,8 +634,9 @@ PF_API PFInventoryPurchaseInventoryItemsGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INSUFFICIENT_FUNDS, E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND or any of the
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INSUFFICIENT_FUNDS, E_PF_INVALID_CATALOG_ITEM_CONFIGURATION, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -643,7 +649,7 @@ PF_API PFInventoryPurchaseInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if HC_PLATFORM == HC_PLATFORM_IOS
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_IOS
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -652,7 +658,7 @@ PF_API PFInventoryPurchaseInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on iOS.
+/// This API is available on Windows and iOS.
 /// Redeem items from the Apple App Store.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemAppleAppStoreInventoryItemsGetResultSize"/>
@@ -670,9 +676,9 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_INVALID_CATALOG_ITEM_CONFIGURATION
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_INVALID_CATALOG_ITEM_CONFIGURATION,
+/// E_PF_PRECONDITION_FAILED or any of the global PlayFab Service errors. See doc page "Handling PlayFab
+/// Errors" for more details on error handling.
 /// </returns>
 PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -688,9 +694,9 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_INVALID_CATALOG_ITEM_CONFIGURATION
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_INVALID_CATALOG_ITEM_CONFIGURATION,
+/// E_PF_PRECONDITION_FAILED or any of the global PlayFab Service errors. See doc page "Handling PlayFab
+/// Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -704,7 +710,7 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_ANDROID
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -713,7 +719,7 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Android.
+/// This API is available on Windows and Android.
 /// Redeem items from the Google Play Store.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemGooglePlayInventoryItemsGetResultSize"/>
@@ -765,16 +771,17 @@ PF_API PFInventoryRedeemGooglePlayInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
-/// Redeem items.
+/// Redeem items from the Microsoft Store. Supported entitlement types are Developer Manager Consumable
+/// and Durable.
 /// </summary>
 /// <param name="entityHandle">PFEntityHandle to use for authentication.</param>
 /// <param name="request">Populated request object.</param>
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, GDK, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Redeem items from the Microsoft Store.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemMicrosoftStoreInventoryItemsGetResultSize"/>
@@ -828,7 +835,7 @@ PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -837,7 +844,7 @@ PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Nintendo Switch, Linux, and macOS.
+/// This API is available on Windows, Nintendo Switch, Linux, and macOS.
 /// Redeem items from the Nintendo EShop.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemNintendoEShopInventoryItemsGetResultSize"/>
@@ -889,7 +896,7 @@ PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -898,7 +905,7 @@ PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Sony PlayStation®, Linux, and macOS.
+/// This API is available on Windows, Sony PlayStation®, Linux, and macOS.
 /// Redeem items from the PlayStation Store.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemPlayStationStoreInventoryItemsGetResultSize"/>
@@ -952,7 +959,7 @@ PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Redeem items.
 /// </summary>
@@ -961,7 +968,7 @@ PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Redeem inventory items from Steam.
 ///
 /// When the asynchronous task is complete, call <see cref="PFInventoryRedeemSteamInventoryItemsGetResultSize"/>
@@ -1041,8 +1048,8 @@ PF_API PFInventorySubtractInventoryItemsAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INSUFFICIENT_FUNDS, E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc
-/// page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INSUFFICIENT_FUNDS, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFInventorySubtractInventoryItemsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -1059,8 +1066,8 @@ PF_API PFInventorySubtractInventoryItemsGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_INSUFFICIENT_FUNDS, E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc
-/// page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_INSUFFICIENT_FUNDS, E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -1165,8 +1172,8 @@ PF_API PFInventoryUpdateInventoryItemsAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors"
-/// for more details on error handling.
+/// E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the global PlayFab Service errors. See doc
+/// page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFInventoryUpdateInventoryItemsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -1183,8 +1190,8 @@ PF_API PFInventoryUpdateInventoryItemsGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_DATABASE_THROUGHPUT_EXCEEDED,
-/// E_PF_ITEM_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors"
-/// for more details on error handling.
+/// E_PF_ITEM_NOT_FOUND, E_PF_PRECONDITION_FAILED or any of the global PlayFab Service errors. See doc
+/// page "Handling PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

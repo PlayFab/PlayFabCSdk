@@ -28,9 +28,7 @@ String HttpClient::GetUrl(const char* path) const
     fullUrl << "&platform=";
 
     // Add Platform param (used by service for telemetry)
-#if HC_PLATFORM == HC_PLATFORM_WIN32
-    fullUrl << win32Plat;
-#elif HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_GDK
     fullUrl << gdkPlat;
 #elif HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4
     fullUrl << ps4Plat;
@@ -104,6 +102,8 @@ AsyncOp<ServiceResponse> HttpClient::MakeSecretKeyRequest(
     HCCompressionLevel compressionLevel
 ) const
 {
+    UNREFERENCED_PARAMETER(serviceConfig);
+
     UnorderedMap<String, String> headers{};
     headers[kSecretKeyHeaderName] = secretKey;
 

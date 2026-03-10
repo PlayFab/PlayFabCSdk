@@ -5,9 +5,7 @@
 #include <playfab/services/PFServices.h>
 #include "Platform/PlayFabPal.h"
 #include "Platform/Generic/MemoryManager.h"
-#include "Operations/Core/AuthenticationOperations.h"
-
-using namespace PlayFab::Platform;
+#include "Platform/Android/TitleLocalUser_Android.h"
 
 namespace PlayFab
 {
@@ -30,12 +28,15 @@ HRESULT CoreInitialize(XTaskQueueHandle queue) noexcept
     return PFInitialize(queue, AndroidTestApp::TestApp::GetInstance().GetJavaVM(), AndroidTestApp::TestApp::GetInstance().GetAppContext());
 }
 
-AsyncOp<UserPtr> GetDefaultPlatformUser(
+AsyncOp<TitleLocalUser> GetDefaultLocalUser(
+    ServiceConfig const& serviceConfig,
     RunContext rc
 ) noexcept
 {
-    UNREFERENCED_PARAMETER(rc);
-    return AsyncOp<UserPtr>{ UserPtr{} };
+    auto playerContext = MakeShared<AndroidLocalUserContext>(defaultPlayerCustomId);
+    PFLocalUserHandle handle;
+    RETURN_IF_FAILED(PFLocalUserCreateHandleWithPersistedLocalId(serviceConfig.Handle(), playerContext->customId.data(), AndroidLocalUserContext::LocalUserLoginHandler, playerContext.get(), &handle));
+    return AsyncOp<TitleLocalUser>{ TitleLocalUser{ LocalUserHandleWrapper::Wrap(handle), std::move(playerContext) } };
 }
 
 class LoginWithGooglePlayGamesServicesOperation : public XAsyncOperation<LoginResult>
@@ -76,24 +77,6 @@ Result<LoginResult> LoginWithGooglePlayGamesServicesOperation::GetResult(XAsyncB
     PFAuthenticationLoginResult const* loginResult;
     RETURN_IF_FAILED(PFAuthenticationLoginWithGooglePlayGamesServicesGetResult(async, &entityHandle, buffer.size(), buffer.data(), &loginResult, nullptr));
     return LoginResult{ Entity::Wrap(entityHandle), *loginResult };
-}
-
-AsyncOp<LoginResult> LoginDefaultTitlePlayer(
-    ServiceConfig serviceConfig,
-    UserPtr platformUser,
-    RunContext rc
-) noexcept
-{
-    assert(!platformUser);
-    UNREFERENCED_PARAMETER(platformUser);
-
-    Stringstream customId;
-    customId << defaultPlayerCustomId << "_" << time(nullptr);
-
-    LoginWithCustomIDOperation::RequestType request;
-    request.SetCustomId(customId.str());
-    request.SetCreateAccount(true);
-    return RunOperation(MakeUnique<LoginWithCustomIDOperation>(serviceConfig, request, rc));
 }
 
 // Platform dependent PlayFabServices wrappers

@@ -1,15 +1,13 @@
 #include "TestAppPch.h"
 #include "LocalizationOperations.h"
-#if HC_PLATFORM != HC_PLATFORM_GDK
 #include <playfab/services/PFLocalization.h>
-#endif
 
 namespace PlayFab
 {
 namespace Test
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 GetLanguageListOperation::GetLanguageListOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

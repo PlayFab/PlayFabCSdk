@@ -19,10 +19,13 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "")
 # Set final output folder
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Debug/x64/PlayFabTestApp.Android)
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Release/x64/PlayFabTestApp.Android)
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PATH_TO_ROOT}/Out/Release/x64/PlayFabTestApp.Android)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Debug/x64/PlayFabTestApp.Android)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Release/x64/PlayFabTestApp.Android)
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PATH_TO_ROOT}/Out/Release/x64/PlayFabTestApp.Android)
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PATH_TO_ROOT}/Out/Debug/x64/PlayFabTestApp.Android)
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PATH_TO_ROOT}/Out/Release/x64/PlayFabTestApp.Android)
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PATH_TO_ROOT}/Out/Release/x64/PlayFabTestApp.Android)
 
 # BINARY_DIR is a temp folder used by cmake itself.
 # Binary folder can be remove freely.
@@ -79,6 +82,8 @@ add_library(
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Android/PlatformUtilsAndroid.cpp"
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Android/PlatformUtilsAndroid.h"
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Android/PlayFabAndroid.cpp"
+    "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Android/TitleLocalUser_Android.cpp"
+    "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Android/TitleLocalUser_Android.h"
 )
 
 if (${ANDROID_ABI} STREQUAL "x86_64")
@@ -98,8 +103,17 @@ set(PLAYFAB_SERVICES_PATH "${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/${CMAKE_BU
 set(PLAYFAB_CORE_PATH "${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/${CMAKE_BUILD_TYPE}/PlayFabCore.Android/libPlayFabCore.Android.so")
 
 # libHttpClient Shared Lib
-string(TOLOWER "${CMAKE_BUILD_TYPE}" PATH_FLAVOR)
-set(LIBHTTPCLIENT_PATH ${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${PATH_FLAVOR}/obj/${ANDROID_ABI}/libHttpClient.Android.so)
+# AGP 7.4.2+ uses cxx/<hash> instead of cmake directory for intermediates
+file(GLOB_RECURSE LIBHTTPCLIENT_FOUND 
+    "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cxx/${CMAKE_BUILD_TYPE}/*/obj/${ANDROID_ABI}/libHttpClient.Android.so"
+    "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI}/libHttpClient.Android.so"
+)
+if(LIBHTTPCLIENT_FOUND)
+    list(GET LIBHTTPCLIENT_FOUND 0 LIBHTTPCLIENT_PATH)
+else()
+    message(WARNING "Could not find libHttpClient.Android.so, it will need to be built first")
+    set(LIBHTTPCLIENT_PATH "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI}/libHttpClient.Android.so")
+endif()
 
 find_library(ANDROID_LOG_PATH log) # Android log library
 

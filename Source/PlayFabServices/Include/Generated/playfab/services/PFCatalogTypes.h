@@ -1282,6 +1282,17 @@ typedef struct PFCatalogGetDraftItemsRequest
     uint32_t alternateIdsCount;
 
     /// <summary>
+    /// (Optional) An opaque token used to retrieve the next page of items created by the caller, if
+    /// any are available. Should be null on initial request.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* continuationToken;
+
+    /// <summary>
+    /// (Optional) Number of items to retrieve. This value is optional. Default value is 10.
+    /// </summary>
+    _Maybenull_ int32_t const* count;
+
+    /// <summary>
     /// (Optional) The optional custom tags associated with the request (e.g. build number, external
     /// trace identifiers, etc.).
     /// </summary>

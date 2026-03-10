@@ -15,13 +15,17 @@ jint JNI_OnLoad(JavaVM*, void*)
 void Java_com_microsoft_playfab_sdk_AndroidTestClient_InitializeApp(
     JNIEnv* env,
     jobject instance,
-    jobject context
+    jobject context,
+    jstring playerId,
+    jobject signInClient
 )
 {
     AndroidTestApp::TestApp::GetInstance().AppInitialize(
         env,
         instance,
-        context
+        context,
+        playerId,
+        signInClient
     );
 }
 

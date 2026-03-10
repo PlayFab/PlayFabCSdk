@@ -29,7 +29,7 @@ public:
                 // On the initial Login, set token to expire in 1 minute to trigger a refresh
                 time_t tokenExpiration = time(nullptr) + 60;
                 auto tokenExpirationString = TimeTToIso8601String(tokenExpiration);
-                JsonValue tokenExpirationJson{ tokenExpirationString.data() };
+                JsonValue tokenExpirationJson(tokenExpirationString.data());
                 loginMock.ResponseBodyPayload()["EntityToken"].emplace("TokenExpiration", std::move(tokenExpirationJson));
             }
             else if (hitCount == 2)
@@ -37,7 +37,7 @@ public:
                 // On subsequent Login, supply a new, non-expiring token
                 auto& entityTokenJson = mock.ResponseBodyPayload()["EntityToken"];
                 entityTokenJson.erase("TokenExpiration");
-                entityTokenJson["EntityToken"] = JsonValue{ refreshedToken };
+                entityTokenJson["EntityToken"] = JsonValue(refreshedToken);
             }
             else
             {
@@ -113,7 +113,7 @@ public:
                 // On the initial Login, set token to expire in 1 minute to trigger a refresh
                 time_t tokenExpiration = time(nullptr) + 60;
                 auto tokenExpirationString = TimeTToIso8601String(tokenExpiration);
-                JsonValue tokenExpirationJson{ tokenExpirationString.data() };
+                JsonValue tokenExpirationJson(tokenExpirationString.data());
                 loginMock.ResponseBodyPayload()["EntityToken"].emplace("TokenExpiration", tokenExpirationJson);
             }
             else if (hitCount == 2)
@@ -125,7 +125,7 @@ public:
             {
                 // Reset to default response with the new token
                 mock.ResponseBody() = mock.ServiceResponses()["default"];
-                mock.ResponseBodyPayload()["EntityToken"]["EntityToken"] = JsonValue{ newToken };
+                mock.ResponseBodyPayload()["EntityToken"]["EntityToken"] = JsonValue(newToken);
             }
             else
             {

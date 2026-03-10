@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <optional>
 #include <map>
+#include <functional>
 
 namespace PlayFab
 {
@@ -105,6 +106,12 @@ public:
     void clear() noexcept;
     void push_back(const value_type& value);
     void push_back(value_type&& value);
+
+    // iterator support (needed for range-based for loops)
+    auto begin() noexcept { return m_values.begin(); }
+    auto end() noexcept { return m_values.end(); }
+    auto begin() const noexcept { return m_values.begin(); }
+    auto end() const noexcept { return m_values.end(); }
 
 protected:
     virtual pointer_type GetPointer(const value_type& value) const = 0;

@@ -15,7 +15,7 @@ AsyncOp<void> LeaderboardsAPI::CreateLeaderboardDefinition(
 )
 {
     const char* path{ "/Leaderboard/CreateLeaderboardDefinition" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsCreateLeaderboardDefinition,
@@ -48,7 +48,7 @@ AsyncOp<void> LeaderboardsAPI::DeleteLeaderboardDefinition(
 )
 {
     const char* path{ "/Leaderboard/DeleteLeaderboardDefinition" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsDeleteLeaderboardDefinition,
@@ -81,7 +81,7 @@ AsyncOp<void> LeaderboardsAPI::DeleteLeaderboardEntries(
 )
 {
     const char* path{ "/Leaderboard/DeleteLeaderboardEntries" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsDeleteLeaderboardEntries,
@@ -114,7 +114,7 @@ AsyncOp<GetEntityLeaderboardResponse> LeaderboardsAPI::GetFriendLeaderboardForEn
 )
 {
     const char* path{ "/Leaderboard/GetFriendLeaderboardForEntity" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsGetFriendLeaderboardForEntity,
@@ -149,7 +149,7 @@ AsyncOp<GetEntityLeaderboardResponse> LeaderboardsAPI::GetLeaderboard(
 )
 {
     const char* path{ "/Leaderboard/GetLeaderboard" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsGetLeaderboard,
@@ -184,7 +184,7 @@ AsyncOp<GetEntityLeaderboardResponse> LeaderboardsAPI::GetLeaderboardAroundEntit
 )
 {
     const char* path{ "/Leaderboard/GetLeaderboardAroundEntity" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsGetLeaderboardAroundEntity,
@@ -219,7 +219,7 @@ AsyncOp<GetLeaderboardDefinitionResponse> LeaderboardsAPI::GetLeaderboardDefinit
 )
 {
     const char* path{ "/Leaderboard/GetLeaderboardDefinition" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsGetLeaderboardDefinition,
@@ -254,7 +254,7 @@ AsyncOp<GetEntityLeaderboardResponse> LeaderboardsAPI::GetLeaderboardForEntities
 )
 {
     const char* path{ "/Leaderboard/GetLeaderboardForEntities" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsGetLeaderboardForEntities,
@@ -289,7 +289,7 @@ AsyncOp<IncrementLeaderboardVersionResponse> LeaderboardsAPI::IncrementLeaderboa
 )
 {
     const char* path{ "/Leaderboard/IncrementLeaderboardVersion" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsIncrementLeaderboardVersion,
@@ -324,7 +324,7 @@ AsyncOp<ListLeaderboardDefinitionsResponse> LeaderboardsAPI::ListLeaderboardDefi
 )
 {
     const char* path{ "/Leaderboard/ListLeaderboardDefinitions" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsListLeaderboardDefinitions,
@@ -359,7 +359,7 @@ AsyncOp<void> LeaderboardsAPI::UnlinkLeaderboardFromStatistic(
 )
 {
     const char* path{ "/Leaderboard/UnlinkLeaderboardFromStatistic" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsUnlinkLeaderboardFromStatistic,
@@ -392,7 +392,7 @@ AsyncOp<void> LeaderboardsAPI::UpdateLeaderboardDefinition(
 )
 {
     const char* path{ "/Leaderboard/UpdateLeaderboardDefinition" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsUpdateLeaderboardDefinition,
@@ -425,7 +425,7 @@ AsyncOp<void> LeaderboardsAPI::UpdateLeaderboardEntries(
 )
 {
     const char* path{ "/Leaderboard/UpdateLeaderboardEntries" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::LeaderboardsUpdateLeaderboardEntries,

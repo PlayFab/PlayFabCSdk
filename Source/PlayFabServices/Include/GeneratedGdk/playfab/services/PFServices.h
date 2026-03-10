@@ -10,10 +10,12 @@
 #include <playfab/core/PFCore.h>
 #include <playfab/services/PFFriends.h>
 #include <playfab/services/PFAccountManagement.h>
+#include <playfab/services/PFPlatformSpecific.h>
 #include <playfab/services/PFPlayerDataManagement.h>
 #include <playfab/services/PFCloudScript.h>
 #include <playfab/services/PFSegments.h>
 #include <playfab/services/PFTitleDataManagement.h>
+#include <playfab/services/PFPushNotifications.h>
 #include <playfab/services/PFData.h>
 #include <playfab/services/PFInventory.h>
 #include <playfab/services/PFCatalog.h>
@@ -21,6 +23,7 @@
 #include <playfab/services/PFGroups.h>
 #include <playfab/services/PFLeaderboards.h>
 #include <playfab/services/PFStatistics.h>
+#include <playfab/services/PFLocalization.h>
 #include <playfab/services/PFMultiplayerServer.h>
 #include <playfab/services/PFProfiles.h>
 #if HC_PLATFORM != HC_PLATFORM_GDK
@@ -30,7 +33,7 @@
 extern "C"
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Initializes PlayFab Services global state
 /// </summary>

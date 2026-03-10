@@ -15,7 +15,7 @@ JsonValue ClientDeletePlayerCustomPropertiesRequest::ToJson() const
 
 JsonValue ClientDeletePlayerCustomPropertiesRequest::ToJson(const PFPlayerDataManagementClientDeletePlayerCustomPropertiesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExpectedPropertiesVersion", input.expectedPropertiesVersion);
     JsonUtils::ObjectAddMemberArray(output, "PropertyNames", input.propertyNames, input.propertyNamesCount);
@@ -114,7 +114,7 @@ JsonValue ClientGetPlayerCustomPropertyRequest::ToJson() const
 
 JsonValue ClientGetPlayerCustomPropertyRequest::ToJson(const PFPlayerDataManagementClientGetPlayerCustomPropertyRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "PropertyName", input.propertyName);
     return output;
 }
@@ -224,7 +224,7 @@ JsonValue GetUserDataRequest::ToJson() const
 
 JsonValue GetUserDataRequest::ToJson(const PFPlayerDataManagementGetUserDataRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "IfChangedFromDataVersion", input.ifChangedFromDataVersion);
     JsonUtils::ObjectAddMemberArray(output, "Keys", input.keys, input.keysCount);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
@@ -325,7 +325,7 @@ JsonValue UpdateProperty::ToJson() const
 
 JsonValue UpdateProperty::ToJson(const PFPlayerDataManagementUpdateProperty& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;
@@ -338,7 +338,7 @@ JsonValue ClientUpdatePlayerCustomPropertiesRequest::ToJson() const
 
 JsonValue ClientUpdatePlayerCustomPropertiesRequest::ToJson(const PFPlayerDataManagementClientUpdatePlayerCustomPropertiesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExpectedPropertiesVersion", input.expectedPropertiesVersion);
     JsonUtils::ObjectAddMemberArray<UpdateProperty>(output, "Properties", input.properties, input.propertiesCount);
@@ -382,7 +382,7 @@ JsonValue ClientUpdateUserDataRequest::ToJson() const
 
 JsonValue ClientUpdateUserDataRequest::ToJson(const PFPlayerDataManagementClientUpdateUserDataRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "Data", input.data, input.dataCount);
     JsonUtils::ObjectAddMemberArray(output, "KeysToRemove", input.keysToRemove, input.keysToRemoveCount);
@@ -427,7 +427,7 @@ JsonValue ServerDeletePlayerCustomPropertiesRequest::ToJson() const
 
 JsonValue ServerDeletePlayerCustomPropertiesRequest::ToJson(const PFPlayerDataManagementServerDeletePlayerCustomPropertiesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExpectedPropertiesVersion", input.expectedPropertiesVersion);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
@@ -498,7 +498,7 @@ JsonValue ServerGetPlayerCustomPropertyRequest::ToJson() const
 
 JsonValue ServerGetPlayerCustomPropertyRequest::ToJson(const PFPlayerDataManagementServerGetPlayerCustomPropertyRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember(output, "PropertyName", input.propertyName);
     return output;
@@ -626,7 +626,7 @@ JsonValue ListPlayerCustomPropertiesRequest::ToJson() const
 
 JsonValue ListPlayerCustomPropertiesRequest::ToJson(const PFPlayerDataManagementListPlayerCustomPropertiesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     return output;
 }
@@ -694,7 +694,7 @@ JsonValue ServerUpdatePlayerCustomPropertiesRequest::ToJson() const
 
 JsonValue ServerUpdatePlayerCustomPropertiesRequest::ToJson(const PFPlayerDataManagementServerUpdatePlayerCustomPropertiesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExpectedPropertiesVersion", input.expectedPropertiesVersion);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
@@ -751,7 +751,7 @@ JsonValue ServerUpdateUserDataRequest::ToJson() const
 
 JsonValue ServerUpdateUserDataRequest::ToJson(const PFPlayerDataManagementServerUpdateUserDataRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "Data", input.data, input.dataCount);
     JsonUtils::ObjectAddMemberArray(output, "KeysToRemove", input.keysToRemove, input.keysToRemoveCount);
@@ -767,7 +767,7 @@ JsonValue UpdateUserInternalDataRequest::ToJson() const
 
 JsonValue UpdateUserInternalDataRequest::ToJson(const PFPlayerDataManagementUpdateUserInternalDataRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "Data", input.data, input.dataCount);
     JsonUtils::ObjectAddMemberArray(output, "KeysToRemove", input.keysToRemove, input.keysToRemoveCount);

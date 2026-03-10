@@ -14,7 +14,7 @@ AsyncOp<GetPlayerSegmentsResult> SegmentsAPI::ClientGetPlayerSegments(
 )
 {
     const char* path{ "/Client/GetPlayerSegments" };
-    JsonValue requestBody { JsonValue::object() };
+    JsonValue requestBody = JsonValue::object();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::SegmentsClientGetPlayerSegments,
@@ -49,7 +49,7 @@ AsyncOp<GetPlayerTagsResult> SegmentsAPI::ClientGetPlayerTags(
 )
 {
     const char* path{ "/Client/GetPlayerTags" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::SegmentsClientGetPlayerTags,
@@ -84,7 +84,7 @@ AsyncOp<void> SegmentsAPI::ServerAddPlayerTag(
 )
 {
     const char* path{ "/Server/AddPlayerTag" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::SegmentsServerAddPlayerTag,
@@ -116,7 +116,7 @@ AsyncOp<GetAllSegmentsResult> SegmentsAPI::ServerGetAllSegments(
 )
 {
     const char* path{ "/Server/GetAllSegments" };
-    JsonValue requestBody { JsonValue::object() };
+    JsonValue requestBody = JsonValue::object();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::SegmentsServerGetAllSegments,
@@ -151,7 +151,7 @@ AsyncOp<GetPlayerSegmentsResult> SegmentsAPI::ServerGetPlayerSegments(
 )
 {
     const char* path{ "/Server/GetPlayerSegments" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::SegmentsServerGetPlayerSegments,
@@ -186,7 +186,7 @@ AsyncOp<GetPlayersInSegmentResult> SegmentsAPI::ServerGetPlayersInSegment(
 )
 {
     const char* path{ "/Server/GetPlayersInSegment" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::SegmentsServerGetPlayersInSegment,
@@ -221,7 +221,7 @@ AsyncOp<GetPlayerTagsResult> SegmentsAPI::ServerGetPlayerTags(
 )
 {
     const char* path{ "/Server/GetPlayerTags" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::SegmentsServerGetPlayerTags,
@@ -256,7 +256,7 @@ AsyncOp<void> SegmentsAPI::ServerRemovePlayerTag(
 )
 {
     const char* path{ "/Server/RemovePlayerTag" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::SegmentsServerRemovePlayerTag,

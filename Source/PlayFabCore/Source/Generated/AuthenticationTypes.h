@@ -75,6 +75,20 @@ public:
     static JsonValue ToJson(const PFAuthenticationLoginWithAppleRequest& input);
 };
 
+class LoginWithBattleNetRequest : public Wrappers::PFAuthenticationLoginWithBattleNetRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAuthenticationLoginWithBattleNetRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAuthenticationLoginWithBattleNetRequest& input);
+};
+
 class LoginWithCustomIDRequest : public Wrappers::PFAuthenticationLoginWithCustomIDRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -362,6 +376,62 @@ public:
     static HRESULT Copy(const PFAuthenticationRegisterPlayFabUserResult& input, PFAuthenticationRegisterPlayFabUserResult& output, ModelBuffer& buffer);
 };
 
+class ServerLoginWithAndroidDeviceIDRequest : public Wrappers::PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAuthenticationServerLoginWithAndroidDeviceIDRequest& input);
+};
+
+class ServerLoginWithBattleNetRequest : public Wrappers::PFAuthenticationServerLoginWithBattleNetRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAuthenticationServerLoginWithBattleNetRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAuthenticationServerLoginWithBattleNetRequest& input);
+};
+
+class ServerLoginWithCustomIDRequest : public Wrappers::PFAuthenticationServerLoginWithCustomIDRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAuthenticationServerLoginWithCustomIDRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAuthenticationServerLoginWithCustomIDRequest& input);
+};
+
+class ServerLoginWithIOSDeviceIDRequest : public Wrappers::PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAuthenticationServerLoginWithIOSDeviceIDRequest& input);
+};
+
 class ServerLoginWithPSNRequest : public Wrappers::PFAuthenticationServerLoginWithPSNRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -404,6 +474,20 @@ public:
     static JsonValue ToJson(const PFAuthenticationLoginWithSteamIdRequest& input);
 };
 
+class ServerLoginWithTwitchRequest : public Wrappers::PFAuthenticationServerLoginWithTwitchRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFAuthenticationServerLoginWithTwitchRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFAuthenticationServerLoginWithTwitchRequest& input);
+};
+
 class ServerLoginWithXboxRequest : public Wrappers::PFAuthenticationServerLoginWithXboxRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -432,7 +516,6 @@ public:
     static JsonValue ToJson(const PFAuthenticationLoginWithXboxIdRequest& input);
 };
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 class AuthenticateCustomIdRequest : public Wrappers::PFAuthenticationAuthenticateCustomIdRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -446,7 +529,6 @@ public:
     JsonValue ToJson() const override;
     static JsonValue ToJson(const PFAuthenticationAuthenticateCustomIdRequest& input);
 };
-#endif
 
 class EntityTokenResponse : public Wrappers::PFAuthenticationEntityTokenResponseWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAuthenticationEntityTokenResponse>
 {
@@ -467,7 +549,6 @@ public:
     static HRESULT Copy(const PFAuthenticationEntityTokenResponse& input, PFAuthenticationEntityTokenResponse& output, ModelBuffer& buffer);
 };
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 class AuthenticateCustomIdResult : public Wrappers::PFAuthenticationAuthenticateCustomIdResultWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFAuthenticationAuthenticateCustomIdResult>
 {
 public:
@@ -486,7 +567,6 @@ public:
     static size_t RequiredBufferSize(const PFAuthenticationAuthenticateCustomIdResult& model);
     static HRESULT Copy(const PFAuthenticationAuthenticateCustomIdResult& input, PFAuthenticationAuthenticateCustomIdResult& output, ModelBuffer& buffer);
 };
-#endif
 
 class DeleteRequest : public Wrappers::PFAuthenticationDeleteRequestWrapper<Allocator>, public InputModel
 {

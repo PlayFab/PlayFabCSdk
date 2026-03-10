@@ -15,7 +15,7 @@ AsyncOp<ExecuteCloudScriptResult> CloudScriptAPI::ClientExecuteCloudScript(
 )
 {
     const char* path{ "/Client/ExecuteCloudScript" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CloudScriptClientExecuteCloudScript,
@@ -50,7 +50,7 @@ AsyncOp<ExecuteCloudScriptResult> CloudScriptAPI::ServerExecuteCloudScript(
 )
 {
     const char* path{ "/Server/ExecuteCloudScript" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::CloudScriptServerExecuteCloudScript,
@@ -85,7 +85,7 @@ AsyncOp<ExecuteCloudScriptResult> CloudScriptAPI::ExecuteEntityCloudScript(
 )
 {
     const char* path{ "/CloudScript/ExecuteEntityCloudScript" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CloudScriptExecuteEntityCloudScript,
@@ -120,7 +120,7 @@ AsyncOp<ExecuteFunctionResult> CloudScriptAPI::ExecuteFunction(
 )
 {
     const char* path{ "/CloudScript/ExecuteFunction" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CloudScriptExecuteFunction,
@@ -155,7 +155,7 @@ AsyncOp<ListEventHubFunctionsResult> CloudScriptAPI::ListEventHubFunctions(
 )
 {
     const char* path{ "/CloudScript/ListEventHubFunctions" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CloudScriptListEventHubFunctions,
@@ -190,7 +190,7 @@ AsyncOp<void> CloudScriptAPI::RegisterEventHubFunction(
 )
 {
     const char* path{ "/CloudScript/RegisterEventHubFunction" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::CloudScriptRegisterEventHubFunction,

@@ -28,6 +28,7 @@ public:
     static AsyncOp<GetStatisticsForEntitiesResponse> GetStatisticsForEntities(Entity const& entity, const GetStatisticsForEntitiesRequest& request, RunContext rc);
     static AsyncOp<IncrementStatisticVersionResponse> IncrementStatisticVersion(Entity const& entity, const IncrementStatisticVersionRequest& request, RunContext rc);
     static AsyncOp<ListStatisticDefinitionsResponse> ListStatisticDefinitions(Entity const& entity, const ListStatisticDefinitionsRequest& request, RunContext rc);
+    static AsyncOp<void> UnlinkAggregationSourceFromStatistic(Entity const& entity, const UnlinkAggregationSourceFromStatisticRequest& request, RunContext rc);
     static AsyncOp<void> UpdateStatisticDefinition(Entity const& entity, const UpdateStatisticDefinitionRequest& request, RunContext rc);
     static AsyncOp<UpdateStatisticsResponse> UpdateStatistics(Entity const& entity, const UpdateStatisticsRequest& request, RunContext rc);
 };

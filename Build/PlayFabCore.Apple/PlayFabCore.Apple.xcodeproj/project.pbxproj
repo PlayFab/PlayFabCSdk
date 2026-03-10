@@ -141,6 +141,22 @@
 		826AE7272AF1B45900DF9129 /* LocalStorage_Generic.h in Headers */ = {isa = PBXBuildFile; fileRef = 826AE6DD2AF1B45900DF9129 /* LocalStorage_Generic.h */; };
 		826AE7282AF1B45900DF9129 /* LocalStorage_Generic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6DE2AF1B45900DF9129 /* LocalStorage_Generic.cpp */; };
 		826AE7292AF1B45900DF9129 /* Platform_Generic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826AE6DF2AF1B45900DF9129 /* Platform_Generic.cpp */; };
+		82658ACF2C73BAF700E9DEE0 /* LoginHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658AC52C73BAF700E9DEE0 /* LoginHandler.cpp */; };
+		82658AD02C73BAF700E9DEE0 /* LoginHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658AC52C73BAF700E9DEE0 /* LoginHandler.cpp */; };
+		82658AD12C73BAF700E9DEE0 /* LoginHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 82658ACE2C73BAF700E9DEE0 /* LoginHandler.h */; };
+		82658AD22C73BAF700E9DEE0 /* LoginHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 82658ACE2C73BAF700E9DEE0 /* LoginHandler.h */; };
+		82658B4F2C73FEF500E9DEE0 /* PFLocalUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 82658B4E2C73FEF500E9DEE0 /* PFLocalUser.h */; };
+		82658B502C73FEF500E9DEE0 /* PFLocalUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 82658B4E2C73FEF500E9DEE0 /* PFLocalUser.h */; };
+		82658B522C73FF1900E9DEE0 /* PFLocalUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658B512C73FF1900E9DEE0 /* PFLocalUser.cpp */; };
+		82658B532C73FF1900E9DEE0 /* PFLocalUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658B512C73FF1900E9DEE0 /* PFLocalUser.cpp */; };
+		82658B562C73FF6400E9DEE0 /* LocalUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658B542C73FF6300E9DEE0 /* LocalUser.cpp */; };
+		82658B572C73FF6400E9DEE0 /* LocalUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658B542C73FF6300E9DEE0 /* LocalUser.cpp */; };
+		82658B582C73FF6400E9DEE0 /* LocalUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 82658B552C73FF6400E9DEE0 /* LocalUser.h */; };
+		82658B592C73FF6400E9DEE0 /* LocalUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 82658B552C73FF6400E9DEE0 /* LocalUser.h */; };
+		8239FB872E145E4100563638 /* LocalUserCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8239FB862E145E4100563638 /* LocalUserCache.cpp */; };
+		8239FB882E145E4100563638 /* LocalUserCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 8239FB852E145E4100563638 /* LocalUserCache.h */; };
+		8239FB892E145E4100563638 /* LocalUserCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8239FB862E145E4100563638 /* LocalUserCache.cpp */; };
+		8239FB8A2E145E4100563638 /* LocalUserCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 8239FB852E145E4100563638 /* LocalUserCache.h */; };
 		F13D255ED821D5DDA6F5E948 /* PFTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = ED1DF19E65BA31EFD2D5B795 /* PFTypes.h */; };
 		9E68ECC944FC95CE689B04A6 /* PFTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = ED1DF19E65BA31EFD2D5B795 /* PFTypes.h */; };
 		DC4A13370E8D51395AA213C8 /* TypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = 65BF7F4615883F47A64A4CC2 /* TypeWrappers.h */; };
@@ -344,6 +360,14 @@
 		826AE6DD2AF1B45900DF9129 /* LocalStorage_Generic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalStorage_Generic.h; sourceTree = "<group>"; };
 		826AE6DE2AF1B45900DF9129 /* LocalStorage_Generic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalStorage_Generic.cpp; sourceTree = "<group>"; };
 		826AE6DF2AF1B45900DF9129 /* Platform_Generic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platform_Generic.cpp; sourceTree = "<group>"; };
+		82658AC52C73BAF700E9DEE0 /* LoginHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoginHandler.cpp; sourceTree = "<group>"; };
+		82658ACE2C73BAF700E9DEE0 /* LoginHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginHandler.h; sourceTree = "<group>"; };
+		82658B4E2C73FEF500E9DEE0 /* PFLocalUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFLocalUser.h; sourceTree = "<group>"; };
+		82658B512C73FF1900E9DEE0 /* PFLocalUser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFLocalUser.cpp; sourceTree = "<group>"; };
+		82658B542C73FF6300E9DEE0 /* LocalUser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalUser.cpp; sourceTree = "<group>"; };
+		82658B552C73FF6400E9DEE0 /* LocalUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalUser.h; sourceTree = "<group>"; };
+		8239FB852E145E4100563638 /* LocalUserCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalUserCache.h; sourceTree = "<group>"; };
+		8239FB862E145E4100563638 /* LocalUserCache.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalUserCache.cpp; sourceTree = "<group>"; };
 		8286B1AB2B73FCCD009A4677 /* HttpClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HttpClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8286B1AD2B73FD26009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
 		ED1DF19E65BA31EFD2D5B795 /* PFTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTypes.h; sourceTree = "<group>"; };
@@ -503,6 +527,7 @@
 		826082C82AF0610F00D8B93D /* core */ = {
 			isa = PBXGroup;
 			children = (
+				82658B4E2C73FEF500E9DEE0 /* PFLocalUser.h */,
 				826082CE2AF0610F00D8B93D /* cpp */,
 				826082C92AF0610F00D8B93D /* PFPal.h */,
 				826082CA2AF0610F00D8B93D /* PFEventPipeline.h */,
@@ -578,6 +603,10 @@
 		8260832A2AF068E500D8B93D /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				8239FB852E145E4100563638 /* LocalUserCache.h */,
+				8239FB862E145E4100563638 /* LocalUserCache.cpp */,
+				82658B542C73FF6300E9DEE0 /* LocalUser.cpp */,
+				82658B552C73FF6400E9DEE0 /* LocalUser.h */,
 				8260832B2AF068E500D8B93D /* ApiHelpers.cpp */,
 				8260832C2AF068E500D8B93D /* HandleTable.h */,
 				8260832D2AF068E500D8B93D /* TokenExpiredHandler.cpp */,
@@ -602,6 +631,7 @@
 		8260833C2AF068E500D8B93D /* Api */ = {
 			isa = PBXGroup;
 			children = (
+				82658B512C73FF1900E9DEE0 /* PFLocalUser.cpp */,
 				8260833E2AF068E500D8B93D /* PFEventPipeline.cpp */,
 				8260833F2AF068E500D8B93D /* PFCore.cpp */,
 				826083412AF068E500D8B93D /* PFPlatform.cpp */,
@@ -627,6 +657,8 @@
 		8260834C2AF068E500D8B93D /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
+				82658AC52C73BAF700E9DEE0 /* LoginHandler.cpp */,
+				82658ACE2C73BAF700E9DEE0 /* LoginHandler.h */,
 				8260834F2AF068E500D8B93D /* GetEntityAsyncProvider.h */,
 				826083502AF068E500D8B93D /* LoginContext.cpp */,
 				826083512AF068E500D8B93D /* CombinedLoginResult.h */,
@@ -809,6 +841,10 @@
 				8236DE022B5AEA1700FFA328 /* PFHCConfig.h in Headers */,
 				8236DE032B5AEA1700FFA328 /* ApiHelpers.h in Headers */,
 				8236DE042B5AEA1700FFA328 /* PFHttpConfig.h in Headers */,
+				82658AD22C73BAF700E9DEE0 /* LoginHandler.h in Headers */,
+				82658B592C73FF6400E9DEE0 /* LocalUser.h in Headers */,
+				82658B502C73FEF500E9DEE0 /* PFLocalUser.h in Headers */,
+				8239FB8A2E145E4100563638 /* LocalUserCache.h in Headers */,
 				F13D255ED821D5DDA6F5E948 /* PFTypes.h in Headers */,
 				DC4A13370E8D51395AA213C8 /* TypeWrappers.h in Headers */,
 				024DCA2745944BB8F7B65ED5 /* PFAuthenticationTypes.h in Headers */,
@@ -866,6 +902,10 @@
 				826082EB2AF0610F00D8B93D /* PFHCConfig.h in Headers */,
 				826083842AF068E500D8B93D /* ApiHelpers.h in Headers */,
 				826082F42AF0610F00D8B93D /* PFHttpConfig.h in Headers */,
+				82658AD12C73BAF700E9DEE0 /* LoginHandler.h in Headers */,
+				82658B582C73FF6400E9DEE0 /* LocalUser.h in Headers */,
+				82658B4F2C73FEF500E9DEE0 /* PFLocalUser.h in Headers */,
+				8239FB882E145E4100563638 /* LocalUserCache.h in Headers */,
 				9E68ECC944FC95CE689B04A6 /* PFTypes.h in Headers */,
 				AEA6A1874FCB8393C2A24FE0 /* TypeWrappers.h in Headers */,
 				1384E6820413D6CF88875DE1 /* PFAuthenticationTypes.h in Headers */,
@@ -1083,7 +1123,11 @@
 				8236DE282B5AEA1700FFA328 /* Platform_Generic.cpp in Sources */,
 				8236DE292B5AEA1700FFA328 /* PFEntity.cpp in Sources */,
 				8236DE2A2B5AEA1700FFA328 /* PFEventPipeline.cpp in Sources */,
+				82658ACF2C73BAF700E9DEE0 /* LoginHandler.cpp in Sources */,
+				82658B522C73FF1900E9DEE0 /* PFLocalUser.cpp in Sources */,
+				82658B562C73FF6400E9DEE0 /* LocalUser.cpp in Sources */,
 				8236DE2B2B5AEA1700FFA328 /* Entity.cpp in Sources */,
+				8239FB892E145E4100563638 /* LocalUserCache.cpp in Sources */,
 				A1AEE80007847B242D507308 /* Types.cpp in Sources */,
 				1EE95DD7F2D7D5D4AF3A97DF /* AuthenticationTypes.cpp in Sources */,
 				1AE41043191243E404269A9C /* Authentication.cpp in Sources */,
@@ -1125,7 +1169,11 @@
 				826AE7292AF1B45900DF9129 /* Platform_Generic.cpp in Sources */,
 				8260838A2AF068E500D8B93D /* PFEntity.cpp in Sources */,
 				826083862AF068E500D8B93D /* PFEventPipeline.cpp in Sources */,
+				82658AD02C73BAF700E9DEE0 /* LoginHandler.cpp in Sources */,
+				82658B532C73FF1900E9DEE0 /* PFLocalUser.cpp in Sources */,
+				82658B572C73FF6400E9DEE0 /* LocalUser.cpp in Sources */,
 				826083792AF068E500D8B93D /* Entity.cpp in Sources */,
+				8239FB872E145E4100563638 /* LocalUserCache.cpp in Sources */,
 				E91A17AEF98F768C8F802FB7 /* Types.cpp in Sources */,
 				B15E0D00D6E2ACE2C404FE64 /* AuthenticationTypes.cpp in Sources */,
 				580495DB44C9DBF5185A9EB1 /* Authentication.cpp in Sources */,
@@ -1184,6 +1232,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -1233,6 +1282,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -1303,7 +1353,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1371,7 +1421,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

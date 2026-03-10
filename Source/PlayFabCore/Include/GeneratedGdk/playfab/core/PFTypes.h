@@ -277,7 +277,8 @@ enum class PFLoginIdentityProvider : uint32_t
     NintendoSwitchAccount,
     GooglePlayGames,
     XboxMobileStore,
-    King
+    King,
+    BattleNet
 };
 
 /// <summary>
@@ -715,6 +716,23 @@ typedef struct PFUserAppleIdInfo
 } PFUserAppleIdInfo;
 
 /// <summary>
+/// PFUserBattleNetInfo data model.
+/// </summary>
+typedef struct PFUserBattleNetInfo
+{
+    /// <summary>
+    /// (Optional) Battle.net identifier.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* battleNetAccountId;
+
+    /// <summary>
+    /// (Optional) Battle.net display name.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* battleNetBattleTag;
+
+} PFUserBattleNetInfo;
+
+/// <summary>
 /// PFUserCustomIdInfo data model.
 /// </summary>
 typedef struct PFUserCustomIdInfo
@@ -1088,6 +1106,11 @@ typedef struct PFUserAccountInfo
     /// (Optional) Sign in with Apple account information, if an Apple account has been linked.
     /// </summary>
     _Maybenull_ PFUserAppleIdInfo const* appleAccountInfo;
+
+    /// <summary>
+    /// (Optional) Battle.net account information, if a Battle.net account has been linked.
+    /// </summary>
+    _Maybenull_ PFUserBattleNetInfo const* battleNetAccountInfo;
 
     /// <summary>
     /// Timestamp indicating when the user account was created.

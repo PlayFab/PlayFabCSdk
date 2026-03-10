@@ -15,7 +15,7 @@ JsonValue LinkedStatisticColumn::ToJson() const
 
 JsonValue LinkedStatisticColumn::ToJson(const PFLeaderboardsLinkedStatisticColumn& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "LinkedStatisticColumnName", input.linkedStatisticColumnName);
     JsonUtils::ObjectAddMember(output, "LinkedStatisticName", input.linkedStatisticName);
     return output;
@@ -81,7 +81,7 @@ JsonValue LeaderboardColumn::ToJson() const
 
 JsonValue LeaderboardColumn::ToJson(const PFLeaderboardsLeaderboardColumn& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<LinkedStatisticColumn>(output, "LinkedStatisticColumn", input.linkedStatisticColumn);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "SortDirection", input.sortDirection);
@@ -146,6 +146,165 @@ HRESULT LeaderboardColumn::Copy(const PFLeaderboardsLeaderboardColumn& input, PF
     return S_OK;
 }
 
+JsonValue LeaderboardEntityRankOnVersionEndConfig::ToJson() const
+{
+    return LeaderboardEntityRankOnVersionEndConfig::ToJson(this->Model());
+}
+
+JsonValue LeaderboardEntityRankOnVersionEndConfig::ToJson(const PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember(output, "EventType", input.eventType);
+    JsonUtils::ObjectAddMember(output, "RankLimit", input.rankLimit);
+    return output;
+}
+
+HRESULT LeaderboardEntityRankOnVersionEndConfig::FromJson(const JsonValue& input)
+{
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EventType", this->m_model.eventType));
+
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "RankLimit", this->m_model.rankLimit));
+
+    return S_OK;
+}
+
+size_t LeaderboardEntityRankOnVersionEndConfig::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig const*> LeaderboardEntityRankOnVersionEndConfig::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<LeaderboardEntityRankOnVersionEndConfig>(&this->Model());
+}
+
+size_t LeaderboardEntityRankOnVersionEndConfig::RequiredBufferSize(const PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig& model)
+{
+    UNREFERENCED_PARAMETER(model); // Fixed size
+    return sizeof(ModelType);
+}
+
+HRESULT LeaderboardEntityRankOnVersionEndConfig::Copy(const PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig& input, PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig& output, ModelBuffer& buffer)
+{
+    output = input;
+    UNREFERENCED_PARAMETER(buffer); // Fixed size
+    return S_OK;
+}
+
+JsonValue LeaderboardVersionEndConfig::ToJson() const
+{
+    return LeaderboardVersionEndConfig::ToJson(this->Model());
+}
+
+JsonValue LeaderboardVersionEndConfig::ToJson(const PFLeaderboardsLeaderboardVersionEndConfig& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember(output, "EventType", input.eventType);
+    return output;
+}
+
+HRESULT LeaderboardVersionEndConfig::FromJson(const JsonValue& input)
+{
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EventType", this->m_model.eventType));
+
+    return S_OK;
+}
+
+size_t LeaderboardVersionEndConfig::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFLeaderboardsLeaderboardVersionEndConfig const*> LeaderboardVersionEndConfig::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<LeaderboardVersionEndConfig>(&this->Model());
+}
+
+size_t LeaderboardVersionEndConfig::RequiredBufferSize(const PFLeaderboardsLeaderboardVersionEndConfig& model)
+{
+    UNREFERENCED_PARAMETER(model); // Fixed size
+    return sizeof(ModelType);
+}
+
+HRESULT LeaderboardVersionEndConfig::Copy(const PFLeaderboardsLeaderboardVersionEndConfig& input, PFLeaderboardsLeaderboardVersionEndConfig& output, ModelBuffer& buffer)
+{
+    output = input;
+    UNREFERENCED_PARAMETER(buffer); // Fixed size
+    return S_OK;
+}
+
+JsonValue LeaderboardEventEmissionConfig::ToJson() const
+{
+    return LeaderboardEventEmissionConfig::ToJson(this->Model());
+}
+
+JsonValue LeaderboardEventEmissionConfig::ToJson(const PFLeaderboardsLeaderboardEventEmissionConfig& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember<LeaderboardEntityRankOnVersionEndConfig>(output, "EntityRankOnVersionEndConfig", input.entityRankOnVersionEndConfig);
+    JsonUtils::ObjectAddMember<LeaderboardVersionEndConfig>(output, "VersionEndConfig", input.versionEndConfig);
+    return output;
+}
+
+HRESULT LeaderboardEventEmissionConfig::FromJson(const JsonValue& input)
+{
+    std::optional<LeaderboardEntityRankOnVersionEndConfig> entityRankOnVersionEndConfig{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EntityRankOnVersionEndConfig", entityRankOnVersionEndConfig));
+    if (entityRankOnVersionEndConfig)
+    {
+        this->SetEntityRankOnVersionEndConfig(std::move(*entityRankOnVersionEndConfig));
+    }
+
+    std::optional<LeaderboardVersionEndConfig> versionEndConfig{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "VersionEndConfig", versionEndConfig));
+    if (versionEndConfig)
+    {
+        this->SetVersionEndConfig(std::move(*versionEndConfig));
+    }
+
+    return S_OK;
+}
+
+size_t LeaderboardEventEmissionConfig::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFLeaderboardsLeaderboardEventEmissionConfig const*> LeaderboardEventEmissionConfig::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<LeaderboardEventEmissionConfig>(&this->Model());
+}
+
+size_t LeaderboardEventEmissionConfig::RequiredBufferSize(const PFLeaderboardsLeaderboardEventEmissionConfig& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.entityRankOnVersionEndConfig)
+    {
+        requiredSize += LeaderboardEntityRankOnVersionEndConfig::RequiredBufferSize(*model.entityRankOnVersionEndConfig);
+    }
+    if (model.versionEndConfig)
+    {
+        requiredSize += LeaderboardVersionEndConfig::RequiredBufferSize(*model.versionEndConfig);
+    }
+    return requiredSize;
+}
+
+HRESULT LeaderboardEventEmissionConfig::Copy(const PFLeaderboardsLeaderboardEventEmissionConfig& input, PFLeaderboardsLeaderboardEventEmissionConfig& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo<LeaderboardEntityRankOnVersionEndConfig>(input.entityRankOnVersionEndConfig);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.entityRankOnVersionEndConfig = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<LeaderboardVersionEndConfig>(input.versionEndConfig);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.versionEndConfig = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue CreateLeaderboardDefinitionRequest::ToJson() const
 {
     return CreateLeaderboardDefinitionRequest::ToJson(this->Model());
@@ -153,10 +312,11 @@ JsonValue CreateLeaderboardDefinitionRequest::ToJson() const
 
 JsonValue CreateLeaderboardDefinitionRequest::ToJson(const PFLeaderboardsCreateLeaderboardDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<LeaderboardColumn>(output, "Columns", input.columns, input.columnsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "EntityType", input.entityType);
+    JsonUtils::ObjectAddMember<LeaderboardEventEmissionConfig>(output, "EventEmissionConfig", input.eventEmissionConfig);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "SizeLimit", input.sizeLimit);
     JsonUtils::ObjectAddMember<VersionConfiguration>(output, "VersionConfiguration", input.versionConfiguration);
@@ -170,7 +330,7 @@ JsonValue DeleteLeaderboardDefinitionRequest::ToJson() const
 
 JsonValue DeleteLeaderboardDefinitionRequest::ToJson(const PFLeaderboardsDeleteLeaderboardDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -183,7 +343,7 @@ JsonValue DeleteLeaderboardEntriesRequest::ToJson() const
 
 JsonValue DeleteLeaderboardEntriesRequest::ToJson(const PFLeaderboardsDeleteLeaderboardEntriesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray(output, "EntityIds", input.entityIds, input.entityIdsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
@@ -197,7 +357,7 @@ JsonValue GetFriendLeaderboardForEntityRequest::ToJson() const
 
 JsonValue GetFriendLeaderboardForEntityRequest::ToJson(const PFLeaderboardsGetFriendLeaderboardForEntityRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "ExternalFriendSources", JsonUtils::ToJson(input.externalFriendSources));
@@ -373,7 +533,7 @@ JsonValue GetEntityLeaderboardRequest::ToJson() const
 
 JsonValue GetEntityLeaderboardRequest::ToJson(const PFLeaderboardsGetEntityLeaderboardRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "LeaderboardName", input.leaderboardName);
     JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
@@ -389,7 +549,7 @@ JsonValue GetLeaderboardAroundEntityRequest::ToJson() const
 
 JsonValue GetLeaderboardAroundEntityRequest::ToJson(const PFLeaderboardsGetLeaderboardAroundEntityRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "LeaderboardName", input.leaderboardName);
@@ -405,7 +565,7 @@ JsonValue GetLeaderboardDefinitionRequest::ToJson() const
 
 JsonValue GetLeaderboardDefinitionRequest::ToJson(const PFLeaderboardsGetLeaderboardDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -422,6 +582,13 @@ HRESULT GetLeaderboardDefinitionResponse::FromJson(const JsonValue& input)
     String entityType{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EntityType", entityType));
     this->SetEntityType(std::move(entityType));
+
+    std::optional<LeaderboardEventEmissionConfig> eventEmissionConfig{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EventEmissionConfig", eventEmissionConfig));
+    if (eventEmissionConfig)
+    {
+        this->SetEventEmissionConfig(std::move(*eventEmissionConfig));
+    }
 
     std::optional<time_t> lastResetTime{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "LastResetTime", lastResetTime));
@@ -464,6 +631,10 @@ size_t GetLeaderboardDefinitionResponse::RequiredBufferSize(const PFLeaderboards
     {
         requiredSize += (std::strlen(model.entityType) + 1);
     }
+    if (model.eventEmissionConfig)
+    {
+        requiredSize += LeaderboardEventEmissionConfig::RequiredBufferSize(*model.eventEmissionConfig);
+    }
     if (model.lastResetTime)
     {
         requiredSize += (alignof(time_t) + sizeof(time_t));
@@ -493,6 +664,11 @@ HRESULT GetLeaderboardDefinitionResponse::Copy(const PFLeaderboardsGetLeaderboar
         output.entityType = propCopyResult.ExtractPayload();
     }
     {
+        auto propCopyResult = buffer.CopyTo<LeaderboardEventEmissionConfig>(input.eventEmissionConfig);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.eventEmissionConfig = propCopyResult.ExtractPayload();
+    }
+    {
         auto propCopyResult = buffer.CopyTo(input.lastResetTime);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastResetTime = propCopyResult.ExtractPayload();
@@ -517,7 +693,7 @@ JsonValue GetLeaderboardForEntitiesRequest::ToJson() const
 
 JsonValue GetLeaderboardForEntitiesRequest::ToJson(const PFLeaderboardsGetLeaderboardForEntitiesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray(output, "EntityIds", input.entityIds, input.entityIdsCount);
     JsonUtils::ObjectAddMember(output, "LeaderboardName", input.leaderboardName);
@@ -532,7 +708,7 @@ JsonValue IncrementLeaderboardVersionRequest::ToJson() const
 
 JsonValue IncrementLeaderboardVersionRequest::ToJson(const PFLeaderboardsIncrementLeaderboardVersionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -575,8 +751,10 @@ JsonValue ListLeaderboardDefinitionsRequest::ToJson() const
 
 JsonValue ListLeaderboardDefinitionsRequest::ToJson(const PFLeaderboardsListLeaderboardDefinitionsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
+    JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
     return output;
 }
 
@@ -591,6 +769,13 @@ HRESULT LeaderboardDefinition::FromJson(const JsonValue& input)
     String entityType{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EntityType", entityType));
     this->SetEntityType(std::move(entityType));
+
+    std::optional<LeaderboardEventEmissionConfig> eventEmissionConfig{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EventEmissionConfig", eventEmissionConfig));
+    if (eventEmissionConfig)
+    {
+        this->SetEventEmissionConfig(std::move(*eventEmissionConfig));
+    }
 
     std::optional<time_t> lastResetTime{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "LastResetTime", lastResetTime));
@@ -633,6 +818,10 @@ size_t LeaderboardDefinition::RequiredBufferSize(const PFLeaderboardsLeaderboard
     {
         requiredSize += (std::strlen(model.entityType) + 1);
     }
+    if (model.eventEmissionConfig)
+    {
+        requiredSize += LeaderboardEventEmissionConfig::RequiredBufferSize(*model.eventEmissionConfig);
+    }
     if (model.lastResetTime)
     {
         requiredSize += (alignof(time_t) + sizeof(time_t));
@@ -662,6 +851,11 @@ HRESULT LeaderboardDefinition::Copy(const PFLeaderboardsLeaderboardDefinition& i
         output.entityType = propCopyResult.ExtractPayload();
     }
     {
+        auto propCopyResult = buffer.CopyTo<LeaderboardEventEmissionConfig>(input.eventEmissionConfig);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.eventEmissionConfig = propCopyResult.ExtractPayload();
+    }
+    {
         auto propCopyResult = buffer.CopyTo(input.lastResetTime);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.lastResetTime = propCopyResult.ExtractPayload();
@@ -685,6 +879,12 @@ HRESULT ListLeaderboardDefinitionsResponse::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember<LeaderboardDefinition>(input, "LeaderboardDefinitions", leaderboardDefinitions));
     this->SetLeaderboardDefinitions(std::move(leaderboardDefinitions));
 
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PageSize", this->m_model.pageSize));
+
+    String skipToken{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SkipToken", skipToken));
+    this->SetSkipToken(std::move(skipToken));
+
     return S_OK;
 }
 
@@ -706,6 +906,10 @@ size_t ListLeaderboardDefinitionsResponse::RequiredBufferSize(const PFLeaderboar
     {
         requiredSize += LeaderboardDefinition::RequiredBufferSize(*model.leaderboardDefinitions[i]);
     }
+    if (model.skipToken)
+    {
+        requiredSize += (std::strlen(model.skipToken) + 1);
+    }
     return requiredSize;
 }
 
@@ -717,6 +921,11 @@ HRESULT ListLeaderboardDefinitionsResponse::Copy(const PFLeaderboardsListLeaderb
         RETURN_IF_FAILED(propCopyResult.hr);
         output.leaderboardDefinitions = propCopyResult.ExtractPayload();
     }
+    {
+        auto propCopyResult = buffer.CopyTo(input.skipToken);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.skipToken = propCopyResult.ExtractPayload();
+    }
     return S_OK;
 }
 
@@ -727,7 +936,7 @@ JsonValue UnlinkLeaderboardFromStatisticRequest::ToJson() const
 
 JsonValue UnlinkLeaderboardFromStatisticRequest::ToJson(const PFLeaderboardsUnlinkLeaderboardFromStatisticRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "StatisticName", input.statisticName);
@@ -741,8 +950,9 @@ JsonValue UpdateLeaderboardDefinitionRequest::ToJson() const
 
 JsonValue UpdateLeaderboardDefinitionRequest::ToJson(const PFLeaderboardsUpdateLeaderboardDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<LeaderboardEventEmissionConfig>(output, "EventEmissionConfig", input.eventEmissionConfig);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "SizeLimit", input.sizeLimit);
     JsonUtils::ObjectAddMember<VersionConfiguration>(output, "VersionConfiguration", input.versionConfiguration);
@@ -756,7 +966,7 @@ JsonValue LeaderboardEntryUpdate::ToJson() const
 
 JsonValue LeaderboardEntryUpdate::ToJson(const PFLeaderboardsLeaderboardEntryUpdate& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "EntityId", input.entityId);
     JsonUtils::ObjectAddMember(output, "Metadata", input.metadata);
     JsonUtils::ObjectAddMemberArray(output, "Scores", input.scores, input.scoresCount);
@@ -770,7 +980,7 @@ JsonValue UpdateLeaderboardEntriesRequest::ToJson() const
 
 JsonValue UpdateLeaderboardEntriesRequest::ToJson(const PFLeaderboardsUpdateLeaderboardEntriesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<LeaderboardEntryUpdate>(output, "Entries", input.entries, input.entriesCount);
     JsonUtils::ObjectAddMember(output, "LeaderboardName", input.leaderboardName);
@@ -791,7 +1001,7 @@ JsonValue ToJson(PFExternalFriendSources const* input)
         Stringstream ss;
         if (*input == PFExternalFriendSources::None)
         {
-            return JsonValue{ EnumName(PFExternalFriendSources::None) };
+            return JsonValue(EnumName(PFExternalFriendSources::None));
         }
         if ((*input & PFExternalFriendSources::Steam) == PFExternalFriendSources::Steam)
         {
@@ -818,11 +1028,11 @@ JsonValue ToJson(PFExternalFriendSources const* input)
             ss << separator << EnumName(PFExternalFriendSources::All);
             separator = ",";
         }
-        return JsonValue{ ss.str().data() };
+        return JsonValue(ss.str().data());
     }
     else
     {
-        return JsonValue{};
+        return JsonValue();
     }
 }
 

@@ -4,6 +4,9 @@
 namespace PlayFab
 {
 
+#pragma warning( push )
+#pragma warning( disable : 6328 ) // Size mismatch : 'unsigned __int64' passed as _Param_(5) when 'int' is required in call to 'HCTraceImplMessage'
+
 static std::atomic<uint32_t> g_nextId{ 0 };
 
 // RAII wrapper of XTaskQueueHandle
@@ -169,6 +172,7 @@ RunContextState::RunContextState(TaskQueue&& q, PlayFab::CancellationToken&& ct,
     m_id{ g_nextId++ },
     m_depth{ m_parent ? m_parent->m_depth + 1 : 0 }
 {
+    TRACE_VERBOSE("RunContextState[id=%u]::RunContextState", m_id);
 }
 
 RunContextState::~RunContextState() noexcept
@@ -183,6 +187,7 @@ SharedPtr<RunContextState> RunContextState::Root(XTaskQueueHandle queueHandle) n
 
 SharedPtr<RunContextState> RunContextState::Derive() noexcept
 {
+    TRACE_VERBOSE("RunContextState[id=%u]::Derive", m_id);
     SharedPtr<RunContextState> derived = MakeShared<RunContextState>(m_queue.DeriveWorkQueue(), m_cancellationToken.Derive(), shared_from_this());
     AppendChild(derived);
     return derived;
@@ -190,6 +195,7 @@ SharedPtr<RunContextState> RunContextState::Derive() noexcept
 
 SharedPtr<RunContextState> RunContextState::DeriveOnQueue(XTaskQueueHandle queueHandle) noexcept
 {
+    TRACE_VERBOSE("RunContextState[id=%u]::DeriveOnQueue", m_id);
     SharedPtr<RunContextState> derived = MakeShared<RunContextState>(TaskQueue::DeriveWorkQueue(queueHandle), m_cancellationToken.Derive(), shared_from_this());
     AppendChild(derived);
     return derived;
@@ -234,7 +240,14 @@ void RunContextState::TaskQueueSubmitCallback(XTaskQueuePort port, SharedPtr<ITa
     ++m_pendingTaskQueueCallbacks;
     lock.unlock();
 
-    TRACE_VERBOSE("RunContextState[id=%u] TaskQueue callback submitted", m_id);
+    if (delayInMs > 0)
+    {
+        TRACE_INFORMATION("RunContextState[id=%u] TaskQueue callback submitted with DELAY=%ums, port=%d", m_id, delayInMs, static_cast<int>(port));
+    }
+    else
+    {
+        TRACE_VERBOSE("RunContextState[id=%u] TaskQueue callback submitted", m_id);
+    }
 
     HRESULT hr = XTaskQueueSubmitDelayedCallback(m_queue.Handle(), port, delayInMs, context, TaskQueueCallback);
     if (FAILED(hr))
@@ -283,7 +296,7 @@ void RunContextState::TaskQueueTerminate() noexcept
     if (m_queueTerminated)
     {
         // Early out if the queue has already been terminated. Check needed because unlike XTaskQueueSubmitDelayedCallback, 
-        // XTaskQueueTerminate will succeed even after the queue has been terminated (creating another asyncronous callback that could
+        // XTaskQueueTerminate will succeed even after the queue has been terminated (creating another asynchronous callback that could
         // run beyond RunContext::Terminate completing in some cases)
         return;
     }
@@ -540,5 +553,7 @@ void RunContext::Terminate(ITerminationListener& listener, void* context) noexce
 {
     m_state->Terminate(listener, context);
 }
+
+#pragma warning( pop )
 
 } // namespace PlayFab

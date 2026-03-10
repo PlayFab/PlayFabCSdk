@@ -41,6 +41,10 @@
 		82B3CBF42B5B023E00337232 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B3CBF32B5B023E00337232 /* Security.framework */; };
 		82658A1F2C6D44B300E9DEE0 /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A1D2C6D44B300E9DEE0 /* Types.cpp */; };
 		82658A202C6D44B300E9DEE0 /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A1D2C6D44B300E9DEE0 /* Types.cpp */; };
+		8239FB6F2DFA0A4200563638 /* ApiHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 8239FB6D2DFA0A4200563638 /* ApiHelpers.h */; };
+		8239FB702DFA0A4200563638 /* ApiHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8239FB6E2DFA0A4200563638 /* ApiHelpers.cpp */; };
+		8239FB712DFA0A4200563638 /* ApiHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8239FB6E2DFA0A4200563638 /* ApiHelpers.cpp */; };
+		8239FB722DFA0A4200563638 /* ApiHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 8239FB6D2DFA0A4200563638 /* ApiHelpers.h */; };
 		645E37D6547B8165C6BE42C9 /* CoreTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 86EE2FD2352C8DFCB607537C /* CoreTypes.h */; };
 		926E207482B5E159E4AEF3C9 /* CoreTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 86EE2FD2352C8DFCB607537C /* CoreTypes.h */; };
 		50630CE0EA798DF1E56794EC /* CoreTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4865228F17B9EF7035E768C1 /* CoreTypes.cpp */; };
@@ -450,6 +454,8 @@
 		826AE4C72AF1867400DF9129 /* PFServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFServices.h; sourceTree = "<group>"; };
 		826AE5922AF186D500DF9129 /* PFServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFServices.h; sourceTree = "<group>"; };
 		826AE6152AF1871C00DF9129 /* CacheId.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheId.h; sourceTree = "<group>"; };
+		8239FB6D2DFA0A4200563638 /* ApiHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApiHelpers.h; sourceTree = "<group>"; };
+		8239FB6E2DFA0A4200563638 /* ApiHelpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ApiHelpers.cpp; sourceTree = "<group>"; };
 		8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
 		82B3CBE62B5B016B00337232 /* PlayFabServices_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlayFabServices_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82B3CBF12B5B023A00337232 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -706,6 +712,8 @@
 		826AE3B32AF1841900DF9129 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				8239FB6D2DFA0A4200563638 /* ApiHelpers.h */,
+				8239FB6E2DFA0A4200563638 /* ApiHelpers.cpp */,
 				826AE3B42AF1841900DF9129 /* GlobalState.h */,
 				826AE3B52AF1841900DF9129 /* GlobalState.cpp */,
 				826AE3B62AF1841900DF9129 /* HttpClient.h */,
@@ -1019,6 +1027,7 @@
 				826AE67E2AF1871C00DF9129 /* CacheId.h in Headers */,
 				826AE5E42AF186D500DF9129 /* PFServices.h in Headers */,
 				826AE41B2AF1841900DF9129 /* GlobalState.h in Headers */,
+				8239FB6F2DFA0A4200563638 /* ApiHelpers.h in Headers */,
 				926E207482B5E159E4AEF3C9 /* CoreTypes.h in Headers */,
 				1D46738B449BED007B25FB1B /* PFTypes.h in Headers */,
 				DCA598F2F5AE756F671DB01D /* TypeWrappers.h in Headers */,
@@ -1126,6 +1135,7 @@
 				82B3CB6B2B5B016B00337232 /* CacheId.h in Headers */,
 				82B3CB772B5B016B00337232 /* PFServices.h in Headers */,
 				82B3CB8E2B5B016B00337232 /* GlobalState.h in Headers */,
+				8239FB722DFA0A4200563638 /* ApiHelpers.h in Headers */,
 				645E37D6547B8165C6BE42C9 /* CoreTypes.h in Headers */,
 				A811FC0E5F5C30E0B358A099 /* PFTypes.h in Headers */,
 				EFBEDD29DD80B0B5A2E943B7 /* TypeWrappers.h in Headers */,
@@ -1403,6 +1413,7 @@
 				826AE4222AF1841900DF9129 /* stdafx.cpp in Sources */,
 				826AE41E2AF1841900DF9129 /* Platform.cpp in Sources */,
 				82658A202C6D44B300E9DEE0 /* Types.cpp in Sources */,
+				8239FB702DFA0A4200563638 /* ApiHelpers.cpp in Sources */,
 				8714259ADFF0592FD1C9EDFF /* CoreTypes.cpp in Sources */,
 				E19F140D0335FDA41C314B9D /* FriendsTypes.cpp in Sources */,
 				5ED9A3E4E69B0C8578EA7ED4 /* Friends.cpp in Sources */,
@@ -1471,6 +1482,7 @@
 				82B3CBD52B5B016B00337232 /* stdafx.cpp in Sources */,
 				82B3CBDB2B5B016B00337232 /* Platform.cpp in Sources */,
 				82658A1F2C6D44B300E9DEE0 /* Types.cpp in Sources */,
+				8239FB712DFA0A4200563638 /* ApiHelpers.cpp in Sources */,
 				50630CE0EA798DF1E56794EC /* CoreTypes.cpp in Sources */,
 				96AF19897BF81C1BCBB34801 /* FriendsTypes.cpp in Sources */,
 				B95A2DD7E31A717118DC99FA /* Friends.cpp in Sources */,
@@ -1599,7 +1611,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1667,7 +1679,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -1721,6 +1733,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -1767,6 +1780,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -1814,6 +1828,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -1863,6 +1878,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";

@@ -15,7 +15,7 @@ JsonValue CatalogAlternateId::ToJson() const
 
 JsonValue CatalogAlternateId::ToJson(const PFCatalogCatalogAlternateId& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;
@@ -81,7 +81,7 @@ JsonValue Content::ToJson() const
 
 JsonValue Content::ToJson(const PFCatalogContent& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "MaxClientVersion", input.maxClientVersion);
     JsonUtils::ObjectAddMember(output, "MinClientVersion", input.minClientVersion);
@@ -204,7 +204,7 @@ JsonValue DeepLink::ToJson() const
 
 JsonValue DeepLink::ToJson(const PFCatalogDeepLink& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Platform", input.platform);
     JsonUtils::ObjectAddMember(output, "Url", input.url);
     return output;
@@ -270,7 +270,7 @@ JsonValue Image::ToJson() const
 
 JsonValue Image::ToJson(const PFCatalogImage& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "Tag", input.tag);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
@@ -364,7 +364,7 @@ JsonValue CatalogPriceAmount::ToJson() const
 
 JsonValue CatalogPriceAmount::ToJson(const PFCatalogCatalogPriceAmount& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "ItemId", input.itemId);
     return output;
@@ -419,7 +419,7 @@ JsonValue CatalogPrice::ToJson() const
 
 JsonValue CatalogPrice::ToJson(const PFCatalogCatalogPrice& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<CatalogPriceAmount>(output, "Amounts", input.amounts, input.amountsCount);
     JsonUtils::ObjectAddMember(output, "UnitAmount", input.unitAmount);
     JsonUtils::ObjectAddMember(output, "UnitDurationInSeconds", input.unitDurationInSeconds);
@@ -500,7 +500,7 @@ JsonValue CatalogPriceOptions::ToJson() const
 
 JsonValue CatalogPriceOptions::ToJson(const PFCatalogCatalogPriceOptions& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<CatalogPrice>(output, "Prices", input.prices, input.pricesCount);
     return output;
 }
@@ -553,7 +553,7 @@ JsonValue CatalogItemReference::ToJson() const
 
 JsonValue CatalogItemReference::ToJson(const PFCatalogCatalogItemReference& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember<CatalogPriceOptions>(output, "PriceOptions", input.priceOptions);
@@ -636,7 +636,7 @@ JsonValue KeywordSet::ToJson() const
 
 JsonValue KeywordSet::ToJson(const PFCatalogKeywordSet& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray(output, "Values", input.values, input.valuesCount);
     return output;
 }
@@ -689,7 +689,7 @@ JsonValue ModerationState::ToJson() const
 
 JsonValue ModerationState::ToJson(const PFCatalogModerationState& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberTime(output, "LastModifiedDate", input.lastModifiedDate);
     JsonUtils::ObjectAddMember(output, "Reason", input.reason);
     JsonUtils::ObjectAddMember(output, "Status", input.status);
@@ -769,7 +769,7 @@ JsonValue Rating::ToJson() const
 
 JsonValue Rating::ToJson(const PFCatalogRating& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Average", input.average);
     JsonUtils::ObjectAddMember(output, "Count1Star", input.count1Star);
     JsonUtils::ObjectAddMember(output, "Count2Star", input.count2Star);
@@ -905,7 +905,7 @@ JsonValue RealMoneyPriceDetails::ToJson() const
 
 JsonValue RealMoneyPriceDetails::ToJson(const PFCatalogRealMoneyPriceDetails& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "AppleAppStorePrices", input.appleAppStorePrices, input.appleAppStorePricesCount);
     JsonUtils::ObjectAddMemberDictionary(output, "GooglePlayPrices", input.googlePlayPrices, input.googlePlayPricesCount);
     JsonUtils::ObjectAddMemberDictionary(output, "MicrosoftStorePrices", input.microsoftStorePrices, input.microsoftStorePricesCount);
@@ -1033,7 +1033,7 @@ JsonValue FilterOptions::ToJson() const
 
 JsonValue FilterOptions::ToJson(const PFCatalogFilterOptions& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Filter", input.filter);
     JsonUtils::ObjectAddMember(output, "IncludeAllItems", input.includeAllItems);
     return output;
@@ -1099,7 +1099,7 @@ JsonValue Permissions::ToJson() const
 
 JsonValue Permissions::ToJson(const PFCatalogPermissions& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray(output, "SegmentIds", input.segmentIds, input.segmentIdsCount);
     return output;
 }
@@ -1152,7 +1152,7 @@ JsonValue CatalogPriceAmountOverride::ToJson() const
 
 JsonValue CatalogPriceAmountOverride::ToJson(const PFCatalogCatalogPriceAmountOverride& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "FixedValue", input.fixedValue);
     JsonUtils::ObjectAddMember(output, "ItemId", input.itemId);
     JsonUtils::ObjectAddMember(output, "Multiplier", input.multiplier);
@@ -1232,7 +1232,7 @@ JsonValue CatalogPriceOverride::ToJson() const
 
 JsonValue CatalogPriceOverride::ToJson(const PFCatalogCatalogPriceOverride& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<CatalogPriceAmountOverride>(output, "Amounts", input.amounts, input.amountsCount);
     return output;
 }
@@ -1285,7 +1285,7 @@ JsonValue CatalogPriceOptionsOverride::ToJson() const
 
 JsonValue CatalogPriceOptionsOverride::ToJson(const PFCatalogCatalogPriceOptionsOverride& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<CatalogPriceOverride>(output, "Prices", input.prices, input.pricesCount);
     return output;
 }
@@ -1338,7 +1338,7 @@ JsonValue StoreDetails::ToJson() const
 
 JsonValue StoreDetails::ToJson(const PFCatalogStoreDetails& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<FilterOptions>(output, "FilterOptions", input.filterOptions);
     JsonUtils::ObjectAddMember<Permissions>(output, "Permissions", input.permissions);
     JsonUtils::ObjectAddMember<CatalogPriceOptionsOverride>(output, "PriceOptionsOverride", input.priceOptionsOverride);
@@ -1427,7 +1427,7 @@ JsonValue CatalogItem::ToJson() const
 
 JsonValue CatalogItem::ToJson(const PFCatalogCatalogItem& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<CatalogAlternateId>(output, "AlternateIds", input.alternateIds, input.alternateIdsCount);
     JsonUtils::ObjectAddMemberArray<Content>(output, "Contents", input.contents, input.contentsCount);
     JsonUtils::ObjectAddMember(output, "ContentType", input.contentType);
@@ -1888,7 +1888,7 @@ JsonValue CreateDraftItemRequest::ToJson() const
 
 JsonValue CreateDraftItemRequest::ToJson(const PFCatalogCreateDraftItemRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<CatalogItem>(output, "Item", input.item);
     JsonUtils::ObjectAddMember(output, "Publish", input.publish);
@@ -1945,7 +1945,7 @@ JsonValue UploadInfo::ToJson() const
 
 JsonValue UploadInfo::ToJson(const PFCatalogUploadInfo& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "FileName", input.fileName);
     return output;
 }
@@ -1957,7 +1957,7 @@ JsonValue CreateUploadUrlsRequest::ToJson() const
 
 JsonValue CreateUploadUrlsRequest::ToJson(const PFCatalogCreateUploadUrlsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<UploadInfo>(output, "Files", input.files, input.filesCount);
     return output;
@@ -2077,7 +2077,7 @@ JsonValue DeleteEntityItemReviewsRequest::ToJson() const
 
 JsonValue DeleteEntityItemReviewsRequest::ToJson(const PFCatalogDeleteEntityItemReviewsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -2090,7 +2090,7 @@ JsonValue DeleteItemRequest::ToJson() const
 
 JsonValue DeleteItemRequest::ToJson(const PFCatalogDeleteItemRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2105,7 +2105,7 @@ JsonValue GetCatalogConfigRequest::ToJson() const
 
 JsonValue GetCatalogConfigRequest::ToJson(const PFCatalogGetCatalogConfigRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
@@ -2117,7 +2117,7 @@ JsonValue CatalogSpecificConfig::ToJson() const
 
 JsonValue CatalogSpecificConfig::ToJson(const PFCatalogCatalogSpecificConfig& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray(output, "ContentTypes", input.contentTypes, input.contentTypesCount);
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
     return output;
@@ -2185,7 +2185,7 @@ JsonValue DeepLinkFormat::ToJson() const
 
 JsonValue DeepLinkFormat::ToJson(const PFCatalogDeepLinkFormat& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Format", input.format);
     JsonUtils::ObjectAddMember(output, "Platform", input.platform);
     return output;
@@ -2251,7 +2251,7 @@ JsonValue DisplayPropertyIndexInfo::ToJson() const
 
 JsonValue DisplayPropertyIndexInfo::ToJson(const PFCatalogDisplayPropertyIndexInfo& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     return output;
@@ -2317,7 +2317,7 @@ JsonValue FileConfig::ToJson() const
 
 JsonValue FileConfig::ToJson(const PFCatalogFileConfig& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray(output, "ContentTypes", input.contentTypes, input.contentTypesCount);
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
     return output;
@@ -2385,7 +2385,7 @@ JsonValue ImageConfig::ToJson() const
 
 JsonValue ImageConfig::ToJson(const PFCatalogImageConfig& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
     return output;
 }
@@ -2438,7 +2438,7 @@ JsonValue CategoryRatingConfig::ToJson() const
 
 JsonValue CategoryRatingConfig::ToJson(const PFCatalogCategoryRatingConfig& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
 }
@@ -2490,7 +2490,7 @@ JsonValue ReviewConfig::ToJson() const
 
 JsonValue ReviewConfig::ToJson(const PFCatalogReviewConfig& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<CategoryRatingConfig>(output, "CategoryRatings", input.categoryRatings, input.categoryRatingsCount);
     return output;
 }
@@ -2543,7 +2543,7 @@ JsonValue UserGeneratedContentSpecificConfig::ToJson() const
 
 JsonValue UserGeneratedContentSpecificConfig::ToJson(const PFCatalogUserGeneratedContentSpecificConfig& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray(output, "ContentTypes", input.contentTypes, input.contentTypesCount);
     JsonUtils::ObjectAddMemberArray(output, "Tags", input.tags, input.tagsCount);
     return output;
@@ -2611,7 +2611,7 @@ JsonValue CatalogConfig::ToJson() const
 
 JsonValue CatalogConfig::ToJson(const PFCatalogCatalogConfig& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "AdminEntities", input.adminEntities, input.adminEntitiesCount);
     JsonUtils::ObjectAddMember<CatalogSpecificConfig>(output, "Catalog", input.catalog);
     JsonUtils::ObjectAddMemberArray<DeepLinkFormat>(output, "DeepLinkFormats", input.deepLinkFormats, input.deepLinkFormatsCount);
@@ -2855,7 +2855,7 @@ JsonValue GetDraftItemRequest::ToJson() const
 
 JsonValue GetDraftItemRequest::ToJson(const PFCatalogGetDraftItemRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2913,8 +2913,10 @@ JsonValue GetDraftItemsRequest::ToJson() const
 
 JsonValue GetDraftItemsRequest::ToJson(const PFCatalogGetDraftItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<CatalogAlternateId>(output, "AlternateIds", input.alternateIds, input.alternateIdsCount);
+    JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
+    JsonUtils::ObjectAddMember(output, "Count", input.count);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "Ids", input.ids, input.idsCount);
@@ -2982,7 +2984,7 @@ JsonValue GetEntityDraftItemsRequest::ToJson() const
 
 JsonValue GetEntityDraftItemsRequest::ToJson(const PFCatalogGetEntityDraftItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -3052,7 +3054,7 @@ JsonValue GetEntityItemReviewRequest::ToJson() const
 
 JsonValue GetEntityItemReviewRequest::ToJson(const PFCatalogGetEntityItemReviewRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3067,7 +3069,7 @@ JsonValue Review::ToJson() const
 
 JsonValue Review::ToJson(const PFCatalogReview& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CategoryRatings", input.categoryRatings, input.categoryRatingsCount);
     JsonUtils::ObjectAddMember(output, "HelpfulNegative", input.helpfulNegative);
     JsonUtils::ObjectAddMember(output, "HelpfulPositive", input.helpfulPositive);
@@ -3279,7 +3281,7 @@ JsonValue GetItemRequest::ToJson() const
 
 JsonValue GetItemRequest::ToJson(const PFCatalogGetItemRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3337,7 +3339,7 @@ JsonValue GetItemContainersRequest::ToJson() const
 
 JsonValue GetItemContainersRequest::ToJson(const PFCatalogGetItemContainersRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
@@ -3408,7 +3410,7 @@ JsonValue GetItemModerationStateRequest::ToJson() const
 
 JsonValue GetItemModerationStateRequest::ToJson(const PFCatalogGetItemModerationStateRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
@@ -3465,7 +3467,7 @@ JsonValue GetItemPublishStatusRequest::ToJson() const
 
 JsonValue GetItemPublishStatusRequest::ToJson(const PFCatalogGetItemPublishStatusRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3533,7 +3535,7 @@ JsonValue GetItemReviewsRequest::ToJson() const
 
 JsonValue GetItemReviewsRequest::ToJson(const PFCatalogGetItemReviewsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
@@ -3604,7 +3606,7 @@ JsonValue GetItemReviewSummaryRequest::ToJson() const
 
 JsonValue GetItemReviewSummaryRequest::ToJson(const PFCatalogGetItemReviewSummaryRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
@@ -3695,7 +3697,7 @@ JsonValue GetItemsRequest::ToJson() const
 
 JsonValue GetItemsRequest::ToJson(const PFCatalogGetItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberArray<CatalogAlternateId>(output, "AlternateIds", input.alternateIds, input.alternateIdsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3751,7 +3753,7 @@ JsonValue PublishDraftItemRequest::ToJson() const
 
 JsonValue PublishDraftItemRequest::ToJson(const PFCatalogPublishDraftItemRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3767,7 +3769,7 @@ JsonValue ReportItemRequest::ToJson() const
 
 JsonValue ReportItemRequest::ToJson(const PFCatalogReportItemRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ConcernCategory", input.concernCategory);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -3784,7 +3786,7 @@ JsonValue ReportItemReviewRequest::ToJson() const
 
 JsonValue ReportItemReviewRequest::ToJson(const PFCatalogReportItemReviewRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ConcernCategory", input.concernCategory);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -3802,7 +3804,7 @@ JsonValue ReviewItemRequest::ToJson() const
 
 JsonValue ReviewItemRequest::ToJson(const PFCatalogReviewItemRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3818,7 +3820,7 @@ JsonValue StoreReference::ToJson() const
 
 JsonValue StoreReference::ToJson(const PFCatalogStoreReference& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     return output;
@@ -3831,7 +3833,7 @@ JsonValue SearchItemsRequest::ToJson() const
 
 JsonValue SearchItemsRequest::ToJson(const PFCatalogSearchItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -3906,7 +3908,7 @@ JsonValue SetItemModerationStateRequest::ToJson() const
 
 JsonValue SetItemModerationStateRequest::ToJson(const PFCatalogSetItemModerationStateRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
@@ -3922,7 +3924,7 @@ JsonValue SubmitItemReviewVoteRequest::ToJson() const
 
 JsonValue SubmitItemReviewVoteRequest::ToJson(const PFCatalogSubmitItemReviewVoteRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -3939,7 +3941,7 @@ JsonValue ReviewTakedown::ToJson() const
 
 JsonValue ReviewTakedown::ToJson(const PFCatalogReviewTakedown& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogAlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "ItemId", input.itemId);
     JsonUtils::ObjectAddMember(output, "ReviewId", input.reviewId);
@@ -3953,7 +3955,7 @@ JsonValue TakedownItemReviewsRequest::ToJson() const
 
 JsonValue TakedownItemReviewsRequest::ToJson(const PFCatalogTakedownItemReviewsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<ReviewTakedown>(output, "Reviews", input.reviews, input.reviewsCount);
     return output;
@@ -3966,7 +3968,7 @@ JsonValue UpdateCatalogConfigRequest::ToJson() const
 
 JsonValue UpdateCatalogConfigRequest::ToJson(const PFCatalogUpdateCatalogConfigRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<CatalogConfig>(output, "Config", input.config);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
@@ -3979,7 +3981,7 @@ JsonValue UpdateDraftItemRequest::ToJson() const
 
 JsonValue UpdateDraftItemRequest::ToJson(const PFCatalogUpdateDraftItemRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<CatalogItem>(output, "Item", input.item);
     JsonUtils::ObjectAddMember(output, "Publish", input.publish);

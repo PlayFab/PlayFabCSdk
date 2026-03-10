@@ -1,3 +1,5 @@
+#pragma once
+
 #include <playfab/core/PFEventPipeline.h>
 #include "PlayFabException.h"
 #include <algorithm>
@@ -26,7 +28,7 @@ public:
     // Creates a EventPipeline by duplicating a PFEventPipelineHandle (caller still owns provided handle)
     static EventPipeline Duplicate(PFEventPipelineHandle handle)
     {
-        PFEventPipelineHandle duplicatedHandle;
+        PFEventPipelineHandle duplicatedHandle{};
         THROW_IF_FAILED(PFEventPipelineDuplicateHandle(handle, &duplicatedHandle));
         return EventPipeline{ duplicatedHandle };
     }
@@ -92,7 +94,7 @@ public:
         THROW_IF_FAILED(PFEventPipelineDuplicateHandle(other.m_handle, &m_handle));
     }
 
-    EventPipeline(EventPipeline&& other)
+    EventPipeline(EventPipeline&& other) noexcept
     {
         std::swap(m_handle, other.m_handle);
     }

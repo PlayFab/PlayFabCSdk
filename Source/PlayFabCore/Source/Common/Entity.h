@@ -5,10 +5,13 @@
 #include "EntityToken.h"
 #include "TokenExpiredHandler.h"
 #include "TokenRefreshedHandler.h"
-#include "Authentication/LoginContext.h"
 
 namespace PlayFab
 {
+namespace Authentication
+{
+struct ILoginHandler;
+}
 
 class TokenRefreshWorker;
 
@@ -22,7 +25,7 @@ public:
         Authentication::EntityTokenResponse&& entityTokenResponse,
         SharedPtr<PlayFab::ServiceConfig const> serviceConfig,
         RunContext&& tokenRefreshContext,
-        SharedPtr<Authentication::LoginContext> loginContext,
+        SharedPtr<Authentication::ILoginHandler> loginHandler,
         TokenExpiredHandler tokenExpiredHandler,
         TokenRefreshedHandler tokenRefreshedHandler,
         std::optional<String> secretKey = std::nullopt
@@ -58,7 +61,7 @@ public:
     Result<String> GetSecretKey() const;
 
     // Update the cached LoginContext in the TokenRefreshWorker
-    HRESULT OnLoginContextUpdated(SharedPtr<Authentication::LoginContext> loginContext);
+    HRESULT OnLoginContextUpdated(SharedPtr<Authentication::ILoginHandler> loginHandler);
 
     // Handlers to update cached tokens when they are refreshed
     HRESULT OnEntityTokenRefreshed(Authentication::EntityTokenResponse const& newToken);

@@ -45,6 +45,11 @@ template<> struct EnumRange<PFOperationTypes>
     static constexpr PFOperationTypes maxValue = PFOperationTypes::None;
 };
 
+template<> struct EnumRange<PFEventType>
+{
+    static constexpr PFEventType maxValue = PFEventType::PlayStream;
+};
+
 template<> struct EnumRange<PFResetInterval>
 {
     static constexpr PFResetInterval maxValue = PFResetInterval::Month;

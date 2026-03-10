@@ -1,8 +1,6 @@
 #pragma once
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 #include <playfab/services/cpp/PlatformSpecificTypeWrappers.h>
-#endif
 #include "TestContext.h"
 
 namespace PlayFab
@@ -64,7 +62,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerAwardSteamAchievementOperation : public XAsyncOperation<Wrappers::PFPlatformSpecificAwardSteamAchievementResultWrapper<Allocator>>
 {
 public:

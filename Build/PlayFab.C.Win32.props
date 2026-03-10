@@ -13,4 +13,9 @@
     <IntDir>$(PlayFabIntRoot)\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
   </PropertyGroup>
 
+  <!-- Identify non-GDK builds for shared props conditions -->
+  <PropertyGroup>
+    <UseGDK>false</UseGDK>
+  </PropertyGroup>
+
 </Project>

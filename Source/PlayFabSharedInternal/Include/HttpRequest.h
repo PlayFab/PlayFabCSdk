@@ -1,6 +1,7 @@
 #pragma once
 
 #include <httpClient/httpClient.h>
+#include <httpClient/httpProvider.h>
 #include <playfab/core/PFHttpConfig.h>
 #include "XAsyncOperation.h"
 #include "RunContext.h"
@@ -42,21 +43,24 @@ struct ServiceResponse
     ~ServiceResponse() = default;
 
     HRESULT FromJson(const JsonValue& input);
+    HRESULT FromVector(const Vector<char>& input);
+    inline bool IsHttpSuccess() const { return HttpCode >= 200 && HttpCode < 300; }
 
     // Fields from response body
-    int HttpCode;
+    int HttpCode{ 0 };
     String HttpStatus;
-    ServiceErrorCode ErrorCode;
+    ServiceErrorCode ErrorCode{ ServiceErrorCode::Success };
     String ErrorName;
     String ErrorMessage;
     JsonValue ErrorDetails;
     JsonValue Data;
+    Vector<char> ResponseBody; // Empty unless not PF call.  Use "Data" for PF calls
 
     // From response header
     String RequestId;
 };
 
-// Wrapper around PFHCHttpCallPerformAsync XAsync operation making a PlayFab service call
+// Wrapper around HCHttpCallPerformAsync XAsync operation making a PlayFab service call
 class HCHttpCall : public XAsyncOperation<ServiceResponse>
 {
 public:
@@ -83,14 +87,20 @@ public:
 
     HCHttpCall(HCHttpCall const&) = delete;
     HCHttpCall& operator=(HCHttpCall) = delete;
-    ~HCHttpCall() noexcept;
+    virtual ~HCHttpCall() noexcept;
 
     void SetHeader(String headerName, String headerValue) noexcept;
+    void SetIsPlayfabCall(bool isPlayfabCall) noexcept { m_isPlayfabCall = isPlayfabCall; }
+    void SetDynamicSize(uint64_t totalSize, uint64_t currentSize) noexcept;
+    void SetProgressReportCallback(bool isUploadFunction, void* context, HCHttpCallProgressReportFunction callback) noexcept;
 
 private:
-    // XAsyncOperation
     HRESULT OnStarted(XAsyncBlock* async) noexcept override;
     Result<ServiceResponse> GetResult(XAsyncBlock* async) noexcept override;
+    Result<ServiceResponse> GetResultOfPlayfabCall() noexcept;
+
+protected:
+    HRESULT SetupCall() noexcept;
 
     static HRESULT CALLBACK HCRequestBodyRead(
         _In_ HCCallHandle callHandle,
@@ -115,10 +125,16 @@ private:
     Vector<char> m_responseBody;
     std::optional<uint32_t> m_retryCacheId;
     bool m_retryAllowed{ kDefaultHttpRetryAllowed };
+    bool m_isPlayfabCall{ true };
     uint32_t m_retryDelay{ kDefaultHttpRetryDelay };
     uint32_t m_timeoutWindow{ kDefaultHttpTimeoutWindow };
     HCCallHandle m_callHandle{ nullptr };
     HCCompressionLevel m_compressionLevel;
+    HCHttpCallProgressReportFunction m_progressReportCallback{ nullptr };
+    void* m_progressReportContext{ nullptr };
+    bool m_isUploadFunction{ false };
+    uint64_t m_dynamicTotalSize{ 0 };
+    uint64_t m_dynamicCurrentSize{ 0 };
     bool m_compressedResponsesExpected{ kDefaultHttpCompressedResponsesExpected };
 };
 

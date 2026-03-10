@@ -232,7 +232,7 @@ HRESULT ObjectAddMember(JsonValue& jsonObject, StringRefType name, const std::op
     }
     else
     {
-        return ObjectAddMember(jsonObject, name, JsonValue{});
+        return ObjectAddMember(jsonObject, name, JsonValue());
     }
 }
 
@@ -245,7 +245,7 @@ HRESULT ObjectAddMember(JsonValue& jsonObject, StringRefType name, const PtrT va
     }
     else
     {
-        return ObjectAddMember(jsonObject, name, JsonValue{});
+        return ObjectAddMember(jsonObject, name, JsonValue());
     }
 }
 
@@ -258,14 +258,14 @@ HRESULT ObjectAddMember(JsonValue& jsonObject, StringRefType name, const typenam
     }
     else
     {
-        return ObjectAddMember(jsonObject, name, JsonValue{});
+        return ObjectAddMember(jsonObject, name, JsonValue());
     }
 }
 
 template <typename T>
 HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const Vector<T>& array)
 {
-    JsonValue member{ JsonValue::array() };
+    JsonValue member = JsonValue::array();
     for (auto& item : array)
     {
         member.push_back(ToJson(item));
@@ -276,7 +276,7 @@ HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const Ve
 template <typename T>
 HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const T* array, uint32_t arrayCount)
 {
-    JsonValue member{ JsonValue::array() };
+    JsonValue member = JsonValue::array();
     for (auto i = 0u; i < arrayCount; ++i)
     {
         member.push_back(ToJson(array[i]));
@@ -287,7 +287,7 @@ HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const T*
 template <typename InternalModelWrapperT>
 HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const typename InternalModelWrapperT::ModelType* const* array, uint32_t arrayCount)
 {
-    JsonValue member{ JsonValue::array() };
+    JsonValue member = JsonValue::array();
     for (auto i = 0u; i < arrayCount; ++i)
     {
         member.push_back(ToJson<InternalModelWrapperT>(*array[i]));
@@ -298,7 +298,7 @@ HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const ty
 template <typename ValueT>
 HRESULT ObjectAddMemberDictionary(JsonValue& jsonObject, StringRefType name, const Map<String, ValueT>& map)
 {
-    JsonValue member{ JsonValue::object() };
+    JsonValue member = JsonValue::object();
 
     for (auto& pair : map)
     {
@@ -310,7 +310,7 @@ HRESULT ObjectAddMemberDictionary(JsonValue& jsonObject, StringRefType name, con
 template <typename EntryT, typename std::enable_if_t<PlayFab::Detail::IsDictionaryEntry<EntryT>::value, bool>>
 HRESULT ObjectAddMemberDictionary(JsonValue& jsonObject, StringRefType name, const EntryT* associativeArray, uint32_t arrayCount)
 {
-    JsonValue member{ JsonValue::object() };
+    JsonValue member = JsonValue::object();
     for (auto i = 0u; i < arrayCount; ++i)
     {
         auto& entry{ associativeArray[i] };
@@ -322,7 +322,7 @@ HRESULT ObjectAddMemberDictionary(JsonValue& jsonObject, StringRefType name, con
 template <typename InternalModelWrapperT, typename std::enable_if_t<std::is_base_of_v<InputModel, InternalModelWrapperT>, bool>>
 HRESULT ObjectAddMemberDictionary(JsonValue& jsonObject, StringRefType name, const typename InternalModelWrapperT::DictionaryEntryType* associativeArray, uint32_t arrayCount)
 {
-    JsonValue member{ JsonValue::object() };
+    JsonValue member = JsonValue::object();
     for (auto i = 0u; i < arrayCount; ++i)
     {
         auto& entry{ associativeArray[i] };
@@ -372,7 +372,7 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, Vector<T>
             return E_FAIL;
         }
 
-        auto jsonArray{ findResult.Payload()->get<Vector<JsonValue>>() };
+        auto jsonArray = findResult.Payload()->get<Vector<JsonValue>>();
         output.reserve(jsonArray.size());
         for (auto& value : jsonArray)
         {
@@ -397,7 +397,7 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, ModelVect
             return E_FAIL;
         }
 
-        auto jsonArray{ findResult.Payload()->get<Vector<JsonValue>>() };
+        auto jsonArray = findResult.Payload()->get<Vector<JsonValue>>();
         output.reserve(jsonArray.size());
 
         for (const auto& value : jsonArray)
@@ -430,7 +430,7 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, Dictionar
             return E_FAIL;
         }
 
-        auto memberObject{ findResult.Payload()->get<JsonValue>() };
+        auto memberObject = findResult.Payload()->get<JsonValue>();
         output.reserve(memberObject.size());
         for (const auto& [key, value] : memberObject.items())
         {
@@ -456,7 +456,7 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, ModelDict
             return E_FAIL;
         }
 
-        auto memberObject{ findResult.Payload()->get<JsonValue>() };
+        auto memberObject = findResult.Payload()->get<JsonValue>();
         output.reserve(memberObject.size());
         for (const auto& [key, value] : memberObject.items())
         {

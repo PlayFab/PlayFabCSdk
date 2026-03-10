@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Generated/Friends.h"
 #include "JsonUtils.h"
-#include "GDK/PlatformUser_GDK.h"
+#include "PlayFabXUser.h"
 
 namespace PlayFab
 {
@@ -36,12 +36,12 @@ AsyncOp<GetFriendsListResult> FriendsAPI::ClientGetFriendsList(
         auto duplicateUserResult = XUser::Duplicate(request.Model().user);
         RETURN_IF_FAILED(duplicateUserResult.hr);
 
-        return duplicateUserResult.Payload().GetTokenAndSignature(rc).Then([rc, entity, request](Result<Platform::TokenAndSignature> result) mutable -> AsyncOp<ServiceResponse>
+        return duplicateUserResult.Payload().GetTokenAndSignature(rc).Then([rc, entity, request](Result<TokenAndSignature> result) mutable -> AsyncOp<ServiceResponse>
         {
             RETURN_IF_FAILED_PLAYFAB(result);
 
             const char* path{ "/Client/GetFriendsList" };
-            JsonValue requestBody{ request.ToJson() };
+            JsonValue requestBody = request.ToJson();
             JsonUtils::ObjectAddMember(requestBody, "XboxToken", result.ExtractPayload().token);
 
             return ServicesHttpClient::MakeEntityRequest(
@@ -57,7 +57,7 @@ AsyncOp<GetFriendsListResult> FriendsAPI::ClientGetFriendsList(
     else
     {
         const char* path{ "/Client/GetFriendsList" };
-        JsonValue requestBody{ request.ToJson() };
+        JsonValue requestBody = request.ToJson();
 
         auto requestOp = ServicesHttpClient::MakeEntityRequest(
             ServicesCacheId::FriendsClientGetFriendsList,

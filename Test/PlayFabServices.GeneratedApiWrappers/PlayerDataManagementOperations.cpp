@@ -7,7 +7,6 @@ namespace PlayFab
 namespace Test
 {
 
-#if 0
 
 ClientDeletePlayerCustomPropertiesOperation::ClientDeletePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -35,9 +34,7 @@ Result<ClientDeletePlayerCustomPropertiesOperation::ResultType> ClientDeletePlay
     RETURN_IF_FAILED(PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
-#endif
 
-#if 0
 
 ClientGetPlayerCustomPropertyOperation::ClientGetPlayerCustomPropertyOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -65,7 +62,6 @@ Result<ClientGetPlayerCustomPropertyOperation::ResultType> ClientGetPlayerCustom
     RETURN_IF_FAILED(PFPlayerDataManagementClientGetPlayerCustomPropertyGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
-#endif
 
 
 ClientGetUserDataOperation::ClientGetUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
@@ -179,7 +175,6 @@ Result<ClientGetUserReadOnlyDataOperation::ResultType> ClientGetUserReadOnlyData
     return ResultType{ *result };
 }
 
-#if 0
 
 ClientListPlayerCustomPropertiesOperation::ClientListPlayerCustomPropertiesOperation(Entity entity, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -206,9 +201,7 @@ Result<ClientListPlayerCustomPropertiesOperation::ResultType> ClientListPlayerCu
     RETURN_IF_FAILED(PFPlayerDataManagementClientListPlayerCustomPropertiesGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
-#endif
 
-#if 0
 
 ClientUpdatePlayerCustomPropertiesOperation::ClientUpdatePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -233,7 +226,6 @@ Result<ClientUpdatePlayerCustomPropertiesOperation::ResultType> ClientUpdatePlay
     RETURN_IF_FAILED(PFPlayerDataManagementClientUpdatePlayerCustomPropertiesGetResult(async, &result));
     return ResultType{ result };
 }
-#endif
 
 
 ClientUpdateUserDataOperation::ClientUpdateUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
@@ -285,7 +277,7 @@ Result<ClientUpdateUserPublisherDataOperation::ResultType> ClientUpdateUserPubli
     return ResultType{ result };
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 ServerDeletePlayerCustomPropertiesOperation::ServerDeletePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -315,7 +307,7 @@ Result<ServerDeletePlayerCustomPropertiesOperation::ResultType> ServerDeletePlay
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 ServerGetPlayerCustomPropertyOperation::ServerGetPlayerCustomPropertyOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -345,7 +337,7 @@ Result<ServerGetPlayerCustomPropertyOperation::ResultType> ServerGetPlayerCustom
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerGetUserDataOperation::ServerGetUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -375,7 +367,7 @@ Result<ServerGetUserDataOperation::ResultType> ServerGetUserDataOperation::GetRe
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerGetUserInternalDataOperation::ServerGetUserInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -405,7 +397,7 @@ Result<ServerGetUserInternalDataOperation::ResultType> ServerGetUserInternalData
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerGetUserPublisherDataOperation::ServerGetUserPublisherDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -435,7 +427,7 @@ Result<ServerGetUserPublisherDataOperation::ResultType> ServerGetUserPublisherDa
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerGetUserPublisherInternalDataOperation::ServerGetUserPublisherInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -465,7 +457,7 @@ Result<ServerGetUserPublisherInternalDataOperation::ResultType> ServerGetUserPub
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerGetUserPublisherReadOnlyDataOperation::ServerGetUserPublisherReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -495,7 +487,7 @@ Result<ServerGetUserPublisherReadOnlyDataOperation::ResultType> ServerGetUserPub
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerGetUserReadOnlyDataOperation::ServerGetUserReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -525,7 +517,7 @@ Result<ServerGetUserReadOnlyDataOperation::ResultType> ServerGetUserReadOnlyData
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 ServerListPlayerCustomPropertiesOperation::ServerListPlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -555,7 +547,7 @@ Result<ServerListPlayerCustomPropertiesOperation::ResultType> ServerListPlayerCu
 }
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 ServerUpdatePlayerCustomPropertiesOperation::ServerUpdatePlayerCustomPropertiesOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -585,7 +577,7 @@ Result<ServerUpdatePlayerCustomPropertiesOperation::ResultType> ServerUpdatePlay
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerUpdateUserDataOperation::ServerUpdateUserDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -612,7 +604,7 @@ Result<ServerUpdateUserDataOperation::ResultType> ServerUpdateUserDataOperation:
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerUpdateUserInternalDataOperation::ServerUpdateUserInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -639,7 +631,7 @@ Result<ServerUpdateUserInternalDataOperation::ResultType> ServerUpdateUserIntern
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerUpdateUserPublisherDataOperation::ServerUpdateUserPublisherDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -666,7 +658,7 @@ Result<ServerUpdateUserPublisherDataOperation::ResultType> ServerUpdateUserPubli
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerUpdateUserPublisherInternalDataOperation::ServerUpdateUserPublisherInternalDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -693,7 +685,7 @@ Result<ServerUpdateUserPublisherInternalDataOperation::ResultType> ServerUpdateU
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerUpdateUserPublisherReadOnlyDataOperation::ServerUpdateUserPublisherReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -720,7 +712,7 @@ Result<ServerUpdateUserPublisherReadOnlyDataOperation::ResultType> ServerUpdateU
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerUpdateUserReadOnlyDataOperation::ServerUpdateUserReadOnlyDataOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

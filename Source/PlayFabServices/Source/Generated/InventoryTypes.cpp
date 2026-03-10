@@ -15,7 +15,7 @@ JsonValue AlternateId::ToJson() const
 
 JsonValue AlternateId::ToJson(const PFInventoryAlternateId& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     JsonUtils::ObjectAddMember(output, "Value", input.value);
     return output;
@@ -28,7 +28,7 @@ JsonValue InventoryItemReference::ToJson() const
 
 JsonValue InventoryItemReference::ToJson(const PFInventoryInventoryItemReference& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<AlternateId>(output, "AlternateId", input.alternateId);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "StackId", input.stackId);
@@ -42,7 +42,7 @@ JsonValue InitialValues::ToJson() const
 
 JsonValue InitialValues::ToJson(const PFInventoryInitialValues& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "DisplayProperties", input.displayProperties);
     return output;
 }
@@ -54,7 +54,7 @@ JsonValue AddInventoryItemsRequest::ToJson() const
 
 JsonValue AddInventoryItemsRequest::ToJson(const PFInventoryAddInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -141,7 +141,7 @@ JsonValue DeleteInventoryCollectionRequest::ToJson() const
 
 JsonValue DeleteInventoryCollectionRequest::ToJson(const PFInventoryDeleteInventoryCollectionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -156,7 +156,7 @@ JsonValue DeleteInventoryItemsRequest::ToJson() const
 
 JsonValue DeleteInventoryItemsRequest::ToJson(const PFInventoryDeleteInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -240,7 +240,7 @@ JsonValue AddInventoryItemsOperation::ToJson() const
 
 JsonValue AddInventoryItemsOperation::ToJson(const PFInventoryAddInventoryItemsOperation& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DurationInSeconds", input.durationInSeconds);
     JsonUtils::ObjectAddMember<InventoryItemReference>(output, "Item", input.item);
@@ -255,7 +255,7 @@ JsonValue DeleteInventoryItemsOperation::ToJson() const
 
 JsonValue DeleteInventoryItemsOperation::ToJson(const PFInventoryDeleteInventoryItemsOperation& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<InventoryItemReference>(output, "Item", input.item);
     return output;
 }
@@ -267,7 +267,7 @@ JsonValue PurchasePriceAmount::ToJson() const
 
 JsonValue PurchasePriceAmount::ToJson(const PFInventoryPurchasePriceAmount& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "ItemId", input.itemId);
     JsonUtils::ObjectAddMember(output, "StackId", input.stackId);
@@ -281,7 +281,7 @@ JsonValue PurchaseInventoryItemsOperation::ToJson() const
 
 JsonValue PurchaseInventoryItemsOperation::ToJson(const PFInventoryPurchaseInventoryItemsOperation& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DeleteEmptyStacks", input.deleteEmptyStacks);
     JsonUtils::ObjectAddMember(output, "DurationInSeconds", input.durationInSeconds);
@@ -299,7 +299,7 @@ JsonValue SubtractInventoryItemsOperation::ToJson() const
 
 JsonValue SubtractInventoryItemsOperation::ToJson(const PFInventorySubtractInventoryItemsOperation& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DeleteEmptyStacks", input.deleteEmptyStacks);
     JsonUtils::ObjectAddMember(output, "DurationInSeconds", input.durationInSeconds);
@@ -314,7 +314,7 @@ JsonValue TransferInventoryItemsOperation::ToJson() const
 
 JsonValue TransferInventoryItemsOperation::ToJson(const PFInventoryTransferInventoryItemsOperation& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DeleteEmptyStacks", input.deleteEmptyStacks);
     JsonUtils::ObjectAddMember<InventoryItemReference>(output, "GivingItem", input.givingItem);
@@ -330,12 +330,13 @@ JsonValue InventoryItem::ToJson() const
 
 JsonValue InventoryItem::ToJson(const PFInventoryInventoryItem& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "DisplayProperties", input.displayProperties);
     JsonUtils::ObjectAddMemberTime(output, "ExpirationDate", input.expirationDate);
     JsonUtils::ObjectAddMember(output, "Id", input.id);
     JsonUtils::ObjectAddMember(output, "StackId", input.stackId);
+    JsonUtils::ObjectAddMemberTime(output, "StartDate", input.startDate);
     JsonUtils::ObjectAddMember(output, "Type", input.type);
     return output;
 }
@@ -361,6 +362,10 @@ HRESULT InventoryItem::FromJson(const JsonValue& input)
     String stackId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "StackId", stackId));
     this->SetStackId(std::move(stackId));
+
+    std::optional<time_t> startDate{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "StartDate", startDate));
+    this->SetStartDate(std::move(startDate));
 
     String type{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Type", type));
@@ -402,6 +407,10 @@ size_t InventoryItem::RequiredBufferSize(const PFInventoryInventoryItem& model)
     {
         requiredSize += (std::strlen(model.stackId) + 1);
     }
+    if (model.startDate)
+    {
+        requiredSize += (alignof(time_t) + sizeof(time_t));
+    }
     if (model.type)
     {
         requiredSize += (std::strlen(model.type) + 1);
@@ -438,6 +447,11 @@ HRESULT InventoryItem::Copy(const PFInventoryInventoryItem& input, PFInventoryIn
         output.stackId = propCopyResult.ExtractPayload();
     }
     {
+        auto propCopyResult = buffer.CopyTo(input.startDate);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.startDate = propCopyResult.ExtractPayload();
+    }
+    {
         auto propCopyResult = buffer.CopyTo(input.type);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.type = propCopyResult.ExtractPayload();
@@ -452,7 +466,7 @@ JsonValue UpdateInventoryItemsOperation::ToJson() const
 
 JsonValue UpdateInventoryItemsOperation::ToJson(const PFInventoryUpdateInventoryItemsOperation& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<InventoryItem>(output, "Item", input.item);
     return output;
 }
@@ -464,7 +478,7 @@ JsonValue InventoryOperation::ToJson() const
 
 JsonValue InventoryOperation::ToJson(const PFInventoryInventoryOperation& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember<AddInventoryItemsOperation>(output, "Add", input.add);
     JsonUtils::ObjectAddMember<DeleteInventoryItemsOperation>(output, "Delete", input.deleteOp);
     JsonUtils::ObjectAddMember<PurchaseInventoryItemsOperation>(output, "Purchase", input.purchase);
@@ -481,7 +495,7 @@ JsonValue ExecuteInventoryOperationsRequest::ToJson() const
 
 JsonValue ExecuteInventoryOperationsRequest::ToJson(const PFInventoryExecuteInventoryOperationsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -565,7 +579,7 @@ JsonValue ExecuteTransferOperationsRequest::ToJson() const
 
 JsonValue ExecuteTransferOperationsRequest::ToJson(const PFInventoryExecuteTransferOperationsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "GivingCollectionId", input.givingCollectionId);
     JsonUtils::ObjectAddMember<EntityKey>(output, "GivingEntity", input.givingEntity);
@@ -704,7 +718,7 @@ JsonValue GetInventoryCollectionIdsRequest::ToJson() const
 
 JsonValue GetInventoryCollectionIdsRequest::ToJson(const PFInventoryGetInventoryCollectionIdsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -773,7 +787,7 @@ JsonValue GetInventoryItemsRequest::ToJson() const
 
 JsonValue GetInventoryItemsRequest::ToJson(const PFInventoryGetInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
@@ -857,10 +871,11 @@ JsonValue GetInventoryOperationStatusRequest::ToJson() const
 
 JsonValue GetInventoryOperationStatusRequest::ToJson(const PFInventoryGetInventoryOperationStatusRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
+    JsonUtils::ObjectAddMember(output, "OperationToken", input.operationToken);
     return output;
 }
 
@@ -911,7 +926,7 @@ JsonValue GetMicrosoftStoreAccessTokensRequest::ToJson() const
 
 JsonValue GetMicrosoftStoreAccessTokensRequest::ToJson(const PFInventoryGetMicrosoftStoreAccessTokensRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
@@ -965,7 +980,7 @@ JsonValue GetTransactionHistoryRequest::ToJson() const
 
 JsonValue GetTransactionHistoryRequest::ToJson(const PFInventoryGetTransactionHistoryRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMember(output, "ContinuationToken", input.continuationToken);
     JsonUtils::ObjectAddMember(output, "Count", input.count);
@@ -974,6 +989,46 @@ JsonValue GetTransactionHistoryRequest::ToJson(const PFInventoryGetTransactionHi
     JsonUtils::ObjectAddMember(output, "Filter", input.filter);
     JsonUtils::ObjectAddMember(output, "OrderBy", input.orderBy);
     return output;
+}
+
+HRESULT TransactionClawbackDetails::FromJson(const JsonValue& input)
+{
+    String transactionIdClawedback{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "TransactionIdClawedback", transactionIdClawedback));
+    this->SetTransactionIdClawedback(std::move(transactionIdClawedback));
+
+    return S_OK;
+}
+
+size_t TransactionClawbackDetails::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFInventoryTransactionClawbackDetails const*> TransactionClawbackDetails::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<TransactionClawbackDetails>(&this->Model());
+}
+
+size_t TransactionClawbackDetails::RequiredBufferSize(const PFInventoryTransactionClawbackDetails& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.transactionIdClawedback)
+    {
+        requiredSize += (std::strlen(model.transactionIdClawedback) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT TransactionClawbackDetails::Copy(const PFInventoryTransactionClawbackDetails& input, PFInventoryTransactionClawbackDetails& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.transactionIdClawedback);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.transactionIdClawedback = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
 }
 
 HRESULT TransactionOperation::FromJson(const JsonValue& input)
@@ -1096,6 +1151,14 @@ HRESULT TransactionOperation::Copy(const PFInventoryTransactionOperation& input,
 
 HRESULT TransactionPurchaseDetails::FromJson(const JsonValue& input)
 {
+    String itemFriendlyId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemFriendlyId", itemFriendlyId));
+    this->SetItemFriendlyId(std::move(itemFriendlyId));
+
+    String itemId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemId", itemId));
+    this->SetItemId(std::move(itemId));
+
     String storeFriendlyId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "StoreFriendlyId", storeFriendlyId));
     this->SetStoreFriendlyId(std::move(storeFriendlyId));
@@ -1120,6 +1183,14 @@ Result<PFInventoryTransactionPurchaseDetails const*> TransactionPurchaseDetails:
 size_t TransactionPurchaseDetails::RequiredBufferSize(const PFInventoryTransactionPurchaseDetails& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.itemFriendlyId)
+    {
+        requiredSize += (std::strlen(model.itemFriendlyId) + 1);
+    }
+    if (model.itemId)
+    {
+        requiredSize += (std::strlen(model.itemId) + 1);
+    }
     if (model.storeFriendlyId)
     {
         requiredSize += (std::strlen(model.storeFriendlyId) + 1);
@@ -1134,6 +1205,16 @@ size_t TransactionPurchaseDetails::RequiredBufferSize(const PFInventoryTransacti
 HRESULT TransactionPurchaseDetails::Copy(const PFInventoryTransactionPurchaseDetails& input, PFInventoryTransactionPurchaseDetails& output, ModelBuffer& buffer)
 {
     output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.itemFriendlyId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.itemFriendlyId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.itemId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.itemId = propCopyResult.ExtractPayload();
+    }
     {
         auto propCopyResult = buffer.CopyTo(input.storeFriendlyId);
         RETURN_IF_FAILED(propCopyResult.hr);
@@ -1317,6 +1398,17 @@ HRESULT Transaction::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ApiName", apiName));
     this->SetApiName(std::move(apiName));
 
+    std::optional<TransactionClawbackDetails> clawbackDetails{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ClawbackDetails", clawbackDetails));
+    if (clawbackDetails)
+    {
+        this->SetClawbackDetails(std::move(*clawbackDetails));
+    }
+
+    StringDictionaryEntryVector customTags{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CustomTags", customTags));
+    this->SetCustomTags(std::move(customTags));
+
     String itemType{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "ItemType", itemType));
     this->SetItemType(std::move(itemType));
@@ -1376,6 +1468,16 @@ size_t Transaction::RequiredBufferSize(const PFInventoryTransaction& model)
     {
         requiredSize += (std::strlen(model.apiName) + 1);
     }
+    if (model.clawbackDetails)
+    {
+        requiredSize += TransactionClawbackDetails::RequiredBufferSize(*model.clawbackDetails);
+    }
+    requiredSize += (alignof(PFStringDictionaryEntry) + sizeof(PFStringDictionaryEntry) * model.customTagsCount);
+    for (size_t i = 0; i < model.customTagsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.customTags[i].key) + 1);
+        requiredSize += (std::strlen(model.customTags[i].value) + 1);
+    }
     if (model.itemType)
     {
         requiredSize += (std::strlen(model.itemType) + 1);
@@ -1415,6 +1517,16 @@ HRESULT Transaction::Copy(const PFInventoryTransaction& input, PFInventoryTransa
         auto propCopyResult = buffer.CopyTo(input.apiName);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.apiName = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<TransactionClawbackDetails>(input.clawbackDetails);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.clawbackDetails = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToDictionary(input.customTags, input.customTagsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.customTags = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.itemType);
@@ -1515,7 +1627,7 @@ JsonValue PurchaseInventoryItemsRequest::ToJson() const
 
 JsonValue PurchaseInventoryItemsRequest::ToJson(const PFInventoryPurchaseInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -1605,7 +1717,7 @@ JsonValue RedeemAppleAppStoreInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemAppleAppStoreInventoryItemsRequest::ToJson(const PFInventoryRedeemAppleAppStoreInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -1823,7 +1935,7 @@ JsonValue GooglePlayProductPurchase::ToJson() const
 
 JsonValue GooglePlayProductPurchase::ToJson(const PFInventoryGooglePlayProductPurchase& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ProductId", input.productId);
     JsonUtils::ObjectAddMember(output, "Token", input.token);
     return output;
@@ -1836,7 +1948,7 @@ JsonValue RedeemGooglePlayInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemGooglePlayInventoryItemsRequest::ToJson(const PFInventoryRedeemGooglePlayInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -1920,7 +2032,7 @@ JsonValue RedeemMicrosoftStoreInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemMicrosoftStoreInventoryItemsRequest::ToJson(const PFInventoryRedeemMicrosoftStoreInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMember(output, "CollectionsIdKey", input.collectionsIdKey);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -2007,7 +2119,7 @@ JsonValue RedeemNintendoEShopInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemNintendoEShopInventoryItemsRequest::ToJson(const PFInventoryRedeemNintendoEShopInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2091,7 +2203,7 @@ JsonValue RedeemPlayStationStoreInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemPlayStationStoreInventoryItemsRequest::ToJson(const PFInventoryRedeemPlayStationStoreInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AuthorizationCode", input.authorizationCode);
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -2177,7 +2289,7 @@ JsonValue RedeemSteamInventoryItemsRequest::ToJson() const
 
 JsonValue RedeemSteamInventoryItemsRequest::ToJson(const PFInventoryRedeemSteamInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -2260,7 +2372,7 @@ JsonValue SubtractInventoryItemsRequest::ToJson() const
 
 JsonValue SubtractInventoryItemsRequest::ToJson(const PFInventorySubtractInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -2347,7 +2459,7 @@ JsonValue TransferInventoryItemsRequest::ToJson() const
 
 JsonValue TransferInventoryItemsRequest::ToJson(const PFInventoryTransferInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Amount", input.amount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DeleteEmptyStacks", input.deleteEmptyStacks);
@@ -2477,7 +2589,7 @@ JsonValue UpdateInventoryItemsRequest::ToJson() const
 
 JsonValue UpdateInventoryItemsRequest::ToJson(const PFInventoryUpdateInventoryItemsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);

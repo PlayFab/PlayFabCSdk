@@ -18,4 +18,13 @@ HRESULT PlatformInitialize() noexcept
     return S_OK;
 }
 
+HRESULT PlatformGetPlatformType(PlatformInfo& platformInfo, PFPlatformType& platformType) noexcept
+{
+    TRACE_INFORMATION("Platform_Generic::PlatformGetPlatformType");
+    platformInfo = PlatformInfo::None;
+    platformType = PFPlatformType::Unknown;
+    return S_OK;
+}
+
+
 }

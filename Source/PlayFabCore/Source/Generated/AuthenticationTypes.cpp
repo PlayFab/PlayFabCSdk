@@ -14,7 +14,7 @@ JsonValue LoginWithAndroidDeviceIDRequest::ToJson() const
 
 JsonValue LoginWithAndroidDeviceIDRequest::ToJson(const PFAuthenticationLoginWithAndroidDeviceIDRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AndroidDevice", input.androidDevice);
     JsonUtils::ObjectAddMember(output, "AndroidDeviceId", input.androidDeviceId);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
@@ -169,7 +169,23 @@ JsonValue LoginWithAppleRequest::ToJson() const
 
 JsonValue LoginWithAppleRequest::ToJson(const PFAuthenticationLoginWithAppleRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "IdentityToken", input.identityToken);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    JsonUtils::ObjectAddMember(output, "PlayerSecret", input.playerSecret);
+    return output;
+}
+
+JsonValue LoginWithBattleNetRequest::ToJson() const
+{
+    return LoginWithBattleNetRequest::ToJson(this->Model());
+}
+
+JsonValue LoginWithBattleNetRequest::ToJson(const PFAuthenticationLoginWithBattleNetRequest& input)
+{
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "IdentityToken", input.identityToken);
@@ -185,7 +201,7 @@ JsonValue LoginWithCustomIDRequest::ToJson() const
 
 JsonValue LoginWithCustomIDRequest::ToJson(const PFAuthenticationLoginWithCustomIDRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMember(output, "CustomId", input.customId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -201,7 +217,7 @@ JsonValue LoginWithEmailAddressRequest::ToJson() const
 
 JsonValue LoginWithEmailAddressRequest::ToJson(const PFAuthenticationLoginWithEmailAddressRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Email", input.email);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -216,7 +232,7 @@ JsonValue LoginWithFacebookRequest::ToJson() const
 
 JsonValue LoginWithFacebookRequest::ToJson(const PFAuthenticationLoginWithFacebookRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
     JsonUtils::ObjectAddMember(output, "AuthenticationToken", input.authenticationToken);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
@@ -233,7 +249,7 @@ JsonValue LoginWithFacebookInstantGamesIdRequest::ToJson() const
 
 JsonValue LoginWithFacebookInstantGamesIdRequest::ToJson(const PFAuthenticationLoginWithFacebookInstantGamesIdRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "FacebookInstantGamesSignature", input.facebookInstantGamesSignature);
@@ -249,7 +265,7 @@ JsonValue LoginWithGameCenterRequest::ToJson() const
 
 JsonValue LoginWithGameCenterRequest::ToJson(const PFAuthenticationLoginWithGameCenterRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -269,7 +285,7 @@ JsonValue LoginWithGoogleAccountRequest::ToJson() const
 
 JsonValue LoginWithGoogleAccountRequest::ToJson(const PFAuthenticationLoginWithGoogleAccountRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -286,7 +302,7 @@ JsonValue LoginWithGooglePlayGamesServicesRequest::ToJson() const
 
 JsonValue LoginWithGooglePlayGamesServicesRequest::ToJson(const PFAuthenticationLoginWithGooglePlayGamesServicesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -302,7 +318,7 @@ JsonValue LoginWithIOSDeviceIDRequest::ToJson() const
 
 JsonValue LoginWithIOSDeviceIDRequest::ToJson(const PFAuthenticationLoginWithIOSDeviceIDRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DeviceId", input.deviceId);
@@ -320,7 +336,7 @@ JsonValue LoginWithKongregateRequest::ToJson() const
 
 JsonValue LoginWithKongregateRequest::ToJson(const PFAuthenticationLoginWithKongregateRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AuthTicket", input.authTicket);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -337,7 +353,7 @@ JsonValue LoginWithNintendoServiceAccountRequest::ToJson() const
 
 JsonValue LoginWithNintendoServiceAccountRequest::ToJson(const PFAuthenticationLoginWithNintendoServiceAccountRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "IdentityToken", input.identityToken);
@@ -353,7 +369,7 @@ JsonValue LoginWithNintendoSwitchDeviceIdRequest::ToJson() const
 
 JsonValue LoginWithNintendoSwitchDeviceIdRequest::ToJson(const PFAuthenticationLoginWithNintendoSwitchDeviceIdRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -369,7 +385,7 @@ JsonValue LoginWithOpenIdConnectRequest::ToJson() const
 
 JsonValue LoginWithOpenIdConnectRequest::ToJson(const PFAuthenticationLoginWithOpenIdConnectRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "ConnectionId", input.connectionId);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -386,7 +402,7 @@ JsonValue LoginWithPlayFabRequest::ToJson() const
 
 JsonValue LoginWithPlayFabRequest::ToJson(const PFAuthenticationLoginWithPlayFabRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
     JsonUtils::ObjectAddMember(output, "Password", input.password);
@@ -401,7 +417,7 @@ JsonValue LoginWithPSNRequest::ToJson() const
 
 JsonValue LoginWithPSNRequest::ToJson(const PFAuthenticationLoginWithPSNRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AuthCode", input.authCode);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -419,7 +435,7 @@ JsonValue LoginWithSteamRequest::ToJson() const
 
 JsonValue LoginWithSteamRequest::ToJson(const PFAuthenticationLoginWithSteamRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -436,7 +452,7 @@ JsonValue LoginWithTwitchRequest::ToJson() const
 
 JsonValue LoginWithTwitchRequest::ToJson(const PFAuthenticationLoginWithTwitchRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -452,7 +468,7 @@ JsonValue LoginWithXboxRequest::ToJson() const
 
 JsonValue LoginWithXboxRequest::ToJson(const PFAuthenticationLoginWithXboxRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -469,7 +485,7 @@ JsonValue LoginWithXUserRequest::ToJson() const
 
 JsonValue LoginWithXUserRequest::ToJson(const PFAuthenticationLoginWithXUserRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -485,7 +501,7 @@ JsonValue RegisterPlayFabUserRequest::ToJson() const
 
 JsonValue RegisterPlayFabUserRequest::ToJson(const PFAuthenticationRegisterPlayFabUserRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DisplayName", input.displayName);
     JsonUtils::ObjectAddMember(output, "Email", input.email);
@@ -568,6 +584,70 @@ HRESULT RegisterPlayFabUserResult::Copy(const PFAuthenticationRegisterPlayFabUse
     return S_OK;
 }
 
+JsonValue ServerLoginWithAndroidDeviceIDRequest::ToJson() const
+{
+    return ServerLoginWithAndroidDeviceIDRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithAndroidDeviceIDRequest::ToJson(const PFAuthenticationServerLoginWithAndroidDeviceIDRequest& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember(output, "AndroidDevice", input.androidDevice);
+    JsonUtils::ObjectAddMember(output, "AndroidDeviceId", input.androidDeviceId);
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    JsonUtils::ObjectAddMember(output, "OS", input.OS);
+    return output;
+}
+
+JsonValue ServerLoginWithBattleNetRequest::ToJson() const
+{
+    return ServerLoginWithBattleNetRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithBattleNetRequest::ToJson(const PFAuthenticationServerLoginWithBattleNetRequest& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "IdentityToken", input.identityToken);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    return output;
+}
+
+JsonValue ServerLoginWithCustomIDRequest::ToJson() const
+{
+    return ServerLoginWithCustomIDRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithCustomIDRequest::ToJson(const PFAuthenticationServerLoginWithCustomIDRequest& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMember(output, "CustomId", input.customId);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    return output;
+}
+
+JsonValue ServerLoginWithIOSDeviceIDRequest::ToJson() const
+{
+    return ServerLoginWithIOSDeviceIDRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithIOSDeviceIDRequest::ToJson(const PFAuthenticationServerLoginWithIOSDeviceIDRequest& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "DeviceId", input.deviceId);
+    JsonUtils::ObjectAddMember(output, "DeviceModel", input.deviceModel);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    JsonUtils::ObjectAddMember(output, "OS", input.OS);
+    return output;
+}
+
 JsonValue ServerLoginWithPSNRequest::ToJson() const
 {
     return ServerLoginWithPSNRequest::ToJson(this->Model());
@@ -575,7 +655,7 @@ JsonValue ServerLoginWithPSNRequest::ToJson() const
 
 JsonValue ServerLoginWithPSNRequest::ToJson(const PFAuthenticationServerLoginWithPSNRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AuthCode", input.authCode);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
@@ -592,7 +672,7 @@ JsonValue LoginWithServerCustomIdRequest::ToJson() const
 
 JsonValue LoginWithServerCustomIdRequest::ToJson(const PFAuthenticationLoginWithServerCustomIdRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -608,11 +688,28 @@ JsonValue LoginWithSteamIdRequest::ToJson() const
 
 JsonValue LoginWithSteamIdRequest::ToJson(const PFAuthenticationLoginWithSteamIdRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
     JsonUtils::ObjectAddMember(output, "SteamId", input.steamId);
+    return output;
+}
+
+JsonValue ServerLoginWithTwitchRequest::ToJson() const
+{
+    return ServerLoginWithTwitchRequest::ToJson(this->Model());
+}
+
+JsonValue ServerLoginWithTwitchRequest::ToJson(const PFAuthenticationServerLoginWithTwitchRequest& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember(output, "AccessToken", input.accessToken);
+    JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
+    JsonUtils::ObjectAddMember(output, "PlayerSecret", input.playerSecret);
+    JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     return output;
 }
 
@@ -623,7 +720,7 @@ JsonValue ServerLoginWithXboxRequest::ToJson() const
 
 JsonValue ServerLoginWithXboxRequest::ToJson(const PFAuthenticationServerLoginWithXboxRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -638,7 +735,7 @@ JsonValue LoginWithXboxIdRequest::ToJson() const
 
 JsonValue LoginWithXboxIdRequest::ToJson(const PFAuthenticationLoginWithXboxIdRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -647,7 +744,6 @@ JsonValue LoginWithXboxIdRequest::ToJson(const PFAuthenticationLoginWithXboxIdRe
     return output;
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 JsonValue AuthenticateCustomIdRequest::ToJson() const
 {
     return AuthenticateCustomIdRequest::ToJson(this->Model());
@@ -655,13 +751,12 @@ JsonValue AuthenticateCustomIdRequest::ToJson() const
 
 JsonValue AuthenticateCustomIdRequest::ToJson(const PFAuthenticationAuthenticateCustomIdRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CustomId", input.customId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     return output;
 }
 
-#endif
 HRESULT EntityTokenResponse::FromJson(const JsonValue& input)
 {
     std::optional<EntityKey> entity{};
@@ -731,7 +826,6 @@ HRESULT EntityTokenResponse::Copy(const PFAuthenticationEntityTokenResponse& inp
     return S_OK;
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 HRESULT AuthenticateCustomIdResult::FromJson(const JsonValue& input)
 {
     std::optional<EntityTokenResponse> entityToken{};
@@ -777,7 +871,6 @@ HRESULT AuthenticateCustomIdResult::Copy(const PFAuthenticationAuthenticateCusto
     return S_OK;
 }
 
-#endif
 JsonValue DeleteRequest::ToJson() const
 {
     return DeleteRequest::ToJson(this->Model());
@@ -785,7 +878,7 @@ JsonValue DeleteRequest::ToJson() const
 
 JsonValue DeleteRequest::ToJson(const PFAuthenticationDeleteRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -798,7 +891,7 @@ JsonValue GetEntityRequest::ToJson() const
 
 JsonValue GetEntityRequest::ToJson(const PFAuthenticationGetEntityRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -819,7 +912,7 @@ JsonValue ValidateEntityTokenRequest::ToJson() const
 
 JsonValue ValidateEntityTokenRequest::ToJson(const PFAuthenticationValidateEntityTokenRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "EntityToken", input.entityToken);
     return output;

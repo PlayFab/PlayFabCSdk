@@ -2,7 +2,7 @@ apply plugin: "com.android.library"
 
 android {
     compileSdk 34
-    ndkVersion "25.1.8937393"
+    ndkVersion "26.1.10909125"
 
     defaultConfig {
         targetSdkVersion 34
@@ -74,4 +74,40 @@ android {
 dependencies {
     implementation project(":libHttpClient.Android")
     implementation project(":PlayFabSharedInternal.Android")
+
+    implementation "com.google.android.gms:play-services-games-v2:+"
+}
+
+// Ensure PlayFabSharedInternal.Android is evaluated before this project
+evaluationDependsOn(":PlayFabSharedInternal.Android")
+
+// Ensure PlayFabSharedInternal.Android native build completes before PlayFabCore.Android native build starts
+// This is needed because PlayFabCore.Android links against the static library output of PlayFabSharedInternal.Android
+gradle.projectsEvaluated {
+    def sharedInternalProject = rootProject.findProject(":PlayFabSharedInternal.Android")
+    if (sharedInternalProject != null) {
+        // Make buildCMake and configureCMake tasks depend on matching variant tasks in PlayFabSharedInternal
+        // Only create dependencies between matching build types (Debug->Debug, RelWithDebInfo->RelWithDebInfo)
+        // This prevents Release builds from triggering Debug builds
+        tasks.matching { task ->
+            task.name.startsWith("buildCMake") || task.name.startsWith("configureCMake")
+        }.all { buildTask ->
+            // Extract the build type from task name (e.g., "Debug" from "buildCMakeDebug[arm64-v8a]")
+            def isDebugTask = buildTask.name.contains("Debug")
+            def isReleaseTask = buildTask.name.contains("RelWithDebInfo") || buildTask.name.contains("Release")
+            
+            sharedInternalProject.tasks.matching { sharedTask ->
+                if (sharedTask.name.contains("Clean")) return false
+                if (!sharedTask.name.startsWith("externalNativeBuild") && !sharedTask.name.startsWith("buildCMake")) return false
+                
+                // Match variants: Debug tasks depend on Debug tasks, Release on Release
+                def sharedIsDebug = sharedTask.name.contains("Debug")
+                def sharedIsRelease = sharedTask.name.contains("RelWithDebInfo") || sharedTask.name.contains("Release")
+                
+                return (isDebugTask && sharedIsDebug) || (isReleaseTask && sharedIsRelease)
+            }.all { sharedBuildTask ->
+                buildTask.dependsOn(sharedBuildTask)
+            }
+        }
+    }
 }

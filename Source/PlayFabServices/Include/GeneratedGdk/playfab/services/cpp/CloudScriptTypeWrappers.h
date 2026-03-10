@@ -70,11 +70,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetFunctionName() const
+    {
+        return m_functionName;
     }
 
     void SetFunctionName(String value)
@@ -83,10 +93,20 @@ public:
         this->m_model.functionName =  m_functionName.empty() ? nullptr : m_functionName.data();
     }
 
+    JsonObject<Alloc> const& GetFunctionParameter() const
+    {
+        return m_functionParameter;
+    }
+
     void SetFunctionParameter(JsonObject<Alloc> value)
     {
         m_functionParameter = std::move(value);
         this->m_model.functionParameter.stringValue = m_functionParameter.stringValue.empty() ? nullptr : m_functionParameter.stringValue.data();
+    }
+
+    std::optional<bool> const& GetGeneratePlayStreamEvent() const
+    {
+        return m_generatePlayStreamEvent;
     }
 
     void SetGeneratePlayStreamEvent(std::optional<bool> value)
@@ -95,10 +115,20 @@ public:
         this->m_model.generatePlayStreamEvent = m_generatePlayStreamEvent ? m_generatePlayStreamEvent.operator->() : nullptr;
     }
 
+    std::optional<PFCloudScriptCloudScriptRevisionOption> const& GetRevisionSelection() const
+    {
+        return m_revisionSelection;
+    }
+
     void SetRevisionSelection(std::optional<PFCloudScriptCloudScriptRevisionOption> value)
     {
         m_revisionSelection = std::move(value);
         this->m_model.revisionSelection = m_revisionSelection ? m_revisionSelection.operator->() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetSpecificRevision() const
+    {
+        return m_specificRevision;
     }
 
     void SetSpecificRevision(std::optional<int32_t> value)
@@ -175,16 +205,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetError() const
+    {
+        return m_error;
+    }
+
     void SetError(String value)
     {
         m_error = std::move(value);
         this->m_model.error =  m_error.empty() ? nullptr : m_error.data();
     }
 
+    String const& GetMessage() const
+    {
+        return m_message;
+    }
+
     void SetMessage(String value)
     {
         m_message = std::move(value);
         this->m_model.message =  m_message.empty() ? nullptr : m_message.data();
+    }
+
+    String const& GetStackTrace() const
+    {
+        return m_stackTrace;
     }
 
     void SetStackTrace(String value)
@@ -255,16 +300,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    JsonObject<Alloc> const& GetData() const
+    {
+        return m_data;
+    }
+
     void SetData(JsonObject<Alloc> value)
     {
         m_data = std::move(value);
         this->m_model.data.stringValue = m_data.stringValue.empty() ? nullptr : m_data.stringValue.data();
     }
 
+    String const& GetLevel() const
+    {
+        return m_level;
+    }
+
     void SetLevel(String value)
     {
         m_level = std::move(value);
         this->m_model.level =  m_level.empty() ? nullptr : m_level.data();
+    }
+
+    String const& GetMessage() const
+    {
+        return m_message;
     }
 
     void SetMessage(String value)
@@ -341,9 +401,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    int32_t GetAPIRequestsIssued() const
+    {
+        return this->m_model.aPIRequestsIssued;
+    }
+
     void SetAPIRequestsIssued(int32_t value)
     {
         this->m_model.aPIRequestsIssued = value;
+    }
+
+    std::optional<PFCloudScriptScriptExecutionErrorWrapper<Alloc>> const& GetError() const
+    {
+        return m_error;
     }
 
     void SetError(std::optional<PFCloudScriptScriptExecutionErrorWrapper<Alloc>> value)
@@ -352,9 +422,19 @@ public:
         this->m_model.error = m_error ? &m_error->Model() : nullptr;
     }
 
+    double GetExecutionTimeSeconds() const
+    {
+        return this->m_model.executionTimeSeconds;
+    }
+
     void SetExecutionTimeSeconds(double value)
     {
         this->m_model.executionTimeSeconds = value;
+    }
+
+    String const& GetFunctionName() const
+    {
+        return m_functionName;
     }
 
     void SetFunctionName(String value)
@@ -363,10 +443,20 @@ public:
         this->m_model.functionName =  m_functionName.empty() ? nullptr : m_functionName.data();
     }
 
+    JsonObject<Alloc> const& GetFunctionResult() const
+    {
+        return m_functionResult;
+    }
+
     void SetFunctionResult(JsonObject<Alloc> value)
     {
         m_functionResult = std::move(value);
         this->m_model.functionResult.stringValue = m_functionResult.stringValue.empty() ? nullptr : m_functionResult.stringValue.data();
+    }
+
+    std::optional<bool> const& GetFunctionResultTooLarge() const
+    {
+        return m_functionResultTooLarge;
     }
 
     void SetFunctionResultTooLarge(std::optional<bool> value)
@@ -375,9 +465,19 @@ public:
         this->m_model.functionResultTooLarge = m_functionResultTooLarge ? m_functionResultTooLarge.operator->() : nullptr;
     }
 
+    int32_t GetHttpRequestsIssued() const
+    {
+        return this->m_model.httpRequestsIssued;
+    }
+
     void SetHttpRequestsIssued(int32_t value)
     {
         this->m_model.httpRequestsIssued = value;
+    }
+
+    ModelVector<PFCloudScriptLogStatementWrapper<Alloc>, Alloc> const& GetLogs() const
+    {
+        return m_logs;
     }
 
     void SetLogs(ModelVector<PFCloudScriptLogStatementWrapper<Alloc>, Alloc> value)
@@ -387,10 +487,20 @@ public:
         this->m_model.logsCount =  static_cast<uint32_t>(m_logs.size());
     }
 
+    std::optional<bool> const& GetLogsTooLarge() const
+    {
+        return m_logsTooLarge;
+    }
+
     void SetLogsTooLarge(std::optional<bool> value)
     {
         m_logsTooLarge = std::move(value);
         this->m_model.logsTooLarge = m_logsTooLarge ? m_logsTooLarge.operator->() : nullptr;
+    }
+
+    uint32_t GetMemoryConsumedBytes() const
+    {
+        return this->m_model.memoryConsumedBytes;
     }
 
     void SetMemoryConsumedBytes(uint32_t value)
@@ -398,9 +508,19 @@ public:
         this->m_model.memoryConsumedBytes = value;
     }
 
+    double GetProcessorTimeSeconds() const
+    {
+        return this->m_model.processorTimeSeconds;
+    }
+
     void SetProcessorTimeSeconds(double value)
     {
         this->m_model.processorTimeSeconds = value;
+    }
+
+    int32_t GetRevision() const
+    {
+        return this->m_model.revision;
     }
 
     void SetRevision(int32_t value)
@@ -484,11 +604,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetFunctionName() const
+    {
+        return m_functionName;
     }
 
     void SetFunctionName(String value)
@@ -497,10 +627,20 @@ public:
         this->m_model.functionName =  m_functionName.empty() ? nullptr : m_functionName.data();
     }
 
+    JsonObject<Alloc> const& GetFunctionParameter() const
+    {
+        return m_functionParameter;
+    }
+
     void SetFunctionParameter(JsonObject<Alloc> value)
     {
         m_functionParameter = std::move(value);
         this->m_model.functionParameter.stringValue = m_functionParameter.stringValue.empty() ? nullptr : m_functionParameter.stringValue.data();
+    }
+
+    std::optional<bool> const& GetGeneratePlayStreamEvent() const
+    {
+        return m_generatePlayStreamEvent;
     }
 
     void SetGeneratePlayStreamEvent(std::optional<bool> value)
@@ -509,16 +649,31 @@ public:
         this->m_model.generatePlayStreamEvent = m_generatePlayStreamEvent ? m_generatePlayStreamEvent.operator->() : nullptr;
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
     }
 
+    std::optional<PFCloudScriptCloudScriptRevisionOption> const& GetRevisionSelection() const
+    {
+        return m_revisionSelection;
+    }
+
     void SetRevisionSelection(std::optional<PFCloudScriptCloudScriptRevisionOption> value)
     {
         m_revisionSelection = std::move(value);
         this->m_model.revisionSelection = m_revisionSelection ? m_revisionSelection.operator->() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetSpecificRevision() const
+    {
+        return m_specificRevision;
     }
 
     void SetSpecificRevision(std::optional<int32_t> value)
@@ -605,11 +760,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -618,10 +783,20 @@ public:
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetFunctionName() const
+    {
+        return m_functionName;
+    }
+
     void SetFunctionName(String value)
     {
         m_functionName = std::move(value);
         this->m_model.functionName =  m_functionName.empty() ? nullptr : m_functionName.data();
+    }
+
+    JsonObject<Alloc> const& GetFunctionParameter() const
+    {
+        return m_functionParameter;
     }
 
     void SetFunctionParameter(JsonObject<Alloc> value)
@@ -630,16 +805,31 @@ public:
         this->m_model.functionParameter.stringValue = m_functionParameter.stringValue.empty() ? nullptr : m_functionParameter.stringValue.data();
     }
 
+    std::optional<bool> const& GetGeneratePlayStreamEvent() const
+    {
+        return m_generatePlayStreamEvent;
+    }
+
     void SetGeneratePlayStreamEvent(std::optional<bool> value)
     {
         m_generatePlayStreamEvent = std::move(value);
         this->m_model.generatePlayStreamEvent = m_generatePlayStreamEvent ? m_generatePlayStreamEvent.operator->() : nullptr;
     }
 
+    std::optional<PFCloudScriptCloudScriptRevisionOption> const& GetRevisionSelection() const
+    {
+        return m_revisionSelection;
+    }
+
     void SetRevisionSelection(std::optional<PFCloudScriptCloudScriptRevisionOption> value)
     {
         m_revisionSelection = std::move(value);
         this->m_model.revisionSelection = m_revisionSelection ? m_revisionSelection.operator->() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetSpecificRevision() const
+    {
+        return m_specificRevision;
     }
 
     void SetSpecificRevision(std::optional<int32_t> value)
@@ -722,11 +912,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -735,16 +935,31 @@ public:
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetFunctionName() const
+    {
+        return m_functionName;
+    }
+
     void SetFunctionName(String value)
     {
         m_functionName = std::move(value);
         this->m_model.functionName =  m_functionName.empty() ? nullptr : m_functionName.data();
     }
 
+    JsonObject<Alloc> const& GetFunctionParameter() const
+    {
+        return m_functionParameter;
+    }
+
     void SetFunctionParameter(JsonObject<Alloc> value)
     {
         m_functionParameter = std::move(value);
         this->m_model.functionParameter.stringValue = m_functionParameter.stringValue.empty() ? nullptr : m_functionParameter.stringValue.data();
+    }
+
+    std::optional<bool> const& GetGeneratePlayStreamEvent() const
+    {
+        return m_generatePlayStreamEvent;
     }
 
     void SetGeneratePlayStreamEvent(std::optional<bool> value)
@@ -819,16 +1034,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetError() const
+    {
+        return m_error;
+    }
+
     void SetError(String value)
     {
         m_error = std::move(value);
         this->m_model.error =  m_error.empty() ? nullptr : m_error.data();
     }
 
+    String const& GetMessage() const
+    {
+        return m_message;
+    }
+
     void SetMessage(String value)
     {
         m_message = std::move(value);
         this->m_model.message =  m_message.empty() ? nullptr : m_message.data();
+    }
+
+    String const& GetStackTrace() const
+    {
+        return m_stackTrace;
     }
 
     void SetStackTrace(String value)
@@ -865,6 +1095,7 @@ public:
         m_error{ model.error ? std::optional<PFCloudScriptFunctionExecutionErrorWrapper<Alloc>>{ *model.error } : std::nullopt },
         m_functionName{ SafeString(model.functionName) },
         m_functionResult{ model.functionResult },
+        m_functionResultSize{ model.functionResultSize ? std::optional<int32_t>{ *model.functionResultSize } : std::nullopt },
         m_functionResultTooLarge{ model.functionResultTooLarge ? std::optional<bool>{ *model.functionResultTooLarge } : std::nullopt }
     {
         SetModelPointers();
@@ -896,9 +1127,15 @@ public:
         swap(lhs.m_error, rhs.m_error);
         swap(lhs.m_functionName, rhs.m_functionName);
         swap(lhs.m_functionResult, rhs.m_functionResult);
+        swap(lhs.m_functionResultSize, rhs.m_functionResultSize);
         swap(lhs.m_functionResultTooLarge, rhs.m_functionResultTooLarge);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<PFCloudScriptFunctionExecutionErrorWrapper<Alloc>> const& GetError() const
+    {
+        return m_error;
     }
 
     void SetError(std::optional<PFCloudScriptFunctionExecutionErrorWrapper<Alloc>> value)
@@ -907,9 +1144,19 @@ public:
         this->m_model.error = m_error ? &m_error->Model() : nullptr;
     }
 
+    int32_t GetExecutionTimeMilliseconds() const
+    {
+        return this->m_model.executionTimeMilliseconds;
+    }
+
     void SetExecutionTimeMilliseconds(int32_t value)
     {
         this->m_model.executionTimeMilliseconds = value;
+    }
+
+    String const& GetFunctionName() const
+    {
+        return m_functionName;
     }
 
     void SetFunctionName(String value)
@@ -918,10 +1165,31 @@ public:
         this->m_model.functionName =  m_functionName.empty() ? nullptr : m_functionName.data();
     }
 
+    JsonObject<Alloc> const& GetFunctionResult() const
+    {
+        return m_functionResult;
+    }
+
     void SetFunctionResult(JsonObject<Alloc> value)
     {
         m_functionResult = std::move(value);
         this->m_model.functionResult.stringValue = m_functionResult.stringValue.empty() ? nullptr : m_functionResult.stringValue.data();
+    }
+
+    std::optional<int32_t> const& GetFunctionResultSize() const
+    {
+        return m_functionResultSize;
+    }
+
+    void SetFunctionResultSize(std::optional<int32_t> value)
+    {
+        m_functionResultSize = std::move(value);
+        this->m_model.functionResultSize = m_functionResultSize ? m_functionResultSize.operator->() : nullptr;
+    }
+
+    std::optional<bool> const& GetFunctionResultTooLarge() const
+    {
+        return m_functionResultTooLarge;
     }
 
     void SetFunctionResultTooLarge(std::optional<bool> value)
@@ -936,12 +1204,14 @@ private:
         this->m_model.error = m_error ?  &m_error->Model() : nullptr;
         this->m_model.functionName = m_functionName.empty() ? nullptr : m_functionName.data();
         this->m_model.functionResult.stringValue = m_functionResult.stringValue.empty() ? nullptr : m_functionResult.stringValue.data();
+        this->m_model.functionResultSize = m_functionResultSize ? m_functionResultSize.operator->() : nullptr;
         this->m_model.functionResultTooLarge = m_functionResultTooLarge ? m_functionResultTooLarge.operator->() : nullptr;
     }
 
     std::optional<PFCloudScriptFunctionExecutionErrorWrapper<Alloc>> m_error;
     String m_functionName;
     JsonObject<Alloc> m_functionResult;
+    std::optional<int32_t> m_functionResultSize;
     std::optional<bool> m_functionResultTooLarge;
 };
 
@@ -988,6 +1258,11 @@ public:
         swap(lhs.m_customTags, rhs.m_customTags);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1055,16 +1330,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetConnectionString() const
+    {
+        return m_connectionString;
+    }
+
     void SetConnectionString(String value)
     {
         m_connectionString = std::move(value);
         this->m_model.connectionString =  m_connectionString.empty() ? nullptr : m_connectionString.data();
     }
 
+    String const& GetEventHubName() const
+    {
+        return m_eventHubName;
+    }
+
     void SetEventHubName(String value)
     {
         m_eventHubName = std::move(value);
         this->m_model.eventHubName =  m_eventHubName.empty() ? nullptr : m_eventHubName.data();
+    }
+
+    String const& GetFunctionName() const
+    {
+        return m_functionName;
     }
 
     void SetFunctionName(String value)
@@ -1129,6 +1419,11 @@ public:
         swap(lhs.m_functions, rhs.m_functions);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFCloudScriptEventHubFunctionModelWrapper<Alloc>, Alloc> const& GetFunctions() const
+    {
+        return m_functions;
     }
 
     void SetFunctions(ModelVector<PFCloudScriptEventHubFunctionModelWrapper<Alloc>, Alloc> value)
@@ -1198,10 +1493,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetConnectionString() const
+    {
+        return m_connectionString;
+    }
+
     void SetConnectionString(String value)
     {
         m_connectionString = std::move(value);
         this->m_model.connectionString =  m_connectionString.empty() ? nullptr : m_connectionString.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1211,10 +1516,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetEventHubName() const
+    {
+        return m_eventHubName;
+    }
+
     void SetEventHubName(String value)
     {
         m_eventHubName = std::move(value);
         this->m_model.eventHubName =  m_eventHubName.empty() ? nullptr : m_eventHubName.data();
+    }
+
+    String const& GetFunctionName() const
+    {
+        return m_functionName;
     }
 
     void SetFunctionName(String value)

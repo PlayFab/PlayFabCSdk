@@ -8,15 +8,27 @@
     <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetPathOfFileAbove(PlayFab.C.GDK.props))" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.zlib\PlayFabSharedInternal.zlib.vcxitems" Label="Shared" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.libarchive\PlayFabSharedInternal.libarchive.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\libHttpClient.import.props" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal\PlayFabSharedInternal.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.GDK\PlayFabSharedInternal.GDK.vcxitems" Label="Shared" />
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalOptions>/Zi %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalOptions>/Zi %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>

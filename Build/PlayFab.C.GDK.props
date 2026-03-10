@@ -7,10 +7,36 @@
   <!--Use same build config as LHC-->
   <Import Project="$(HCBuildRoot)\libHttpClient.GDK.props" />
 
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalLibraryDirectories>$(PlayFabSourceDir)\PlayFabGameSave\Include\GDK;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabGameSave\Include\GDK;$(PlayFabSourceDir)\PlayFabGameSave\Include;$(PlayFabCoreGeneratedHeadersDir);$(PlayFabSourceDir)\PlayFabSharedInternal\Include;$(PlayFabSourceDir)\PlayFabSharedInternal\Include\Generated</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
   <!--Override build output directories-->
   <PropertyGroup>
     <OutDir>$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
     <IntDir>$(PlayFabIntRoot)\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
   </PropertyGroup>
+
+  <!-- Identify GDK builds for shared props conditions -->
+  <PropertyGroup>
+    <UseGDK>true</UseGDK>
+    <HCPlatform>GDK</HCPlatform>
+  </PropertyGroup>
+
+  <!-- When using plain x64 platform, the GDK platform toolchain no longer sets _GAMING_DESKTOP automatically
+       or links standard DirectX libraries -->
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_GAMING_DESKTOP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
 
 </Project>

@@ -129,7 +129,8 @@ target_sources(
     PRIVATE
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Linux/MainLinux.cpp"
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Linux/PlayFabLinux.cpp"
-    "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Linux/PlatfromUtilsLinux.cpp"
+    "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Linux/PlatformUtilsLinux.cpp"
+    "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Generic/TitleLocalUser_Generic.cpp"
     "${TEST_APP_COMMON_SOURCE_FILES}"
     "${GENERATED_TESTS_SOURCE_FILES}"
     "${GENERATED_API_WRAPPER_FILES}"

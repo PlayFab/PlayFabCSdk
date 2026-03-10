@@ -15,7 +15,7 @@ JsonValue GetEntityProfileRequest::ToJson() const
 
 JsonValue GetEntityProfileRequest::ToJson(const PFProfilesGetEntityProfileRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DataAsObject", input.dataAsObject);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -152,7 +152,7 @@ JsonValue EntityPermissionStatement::ToJson() const
 
 JsonValue EntityPermissionStatement::ToJson(const PFProfilesEntityPermissionStatement& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Action", input.action);
     JsonUtils::ObjectAddMember(output, "Comment", input.comment);
     JsonUtils::ObjectAddMember(output, "Condition", input.condition);
@@ -563,7 +563,7 @@ JsonValue GetEntityProfilesRequest::ToJson() const
 
 JsonValue GetEntityProfilesRequest::ToJson(const PFProfilesGetEntityProfilesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DataAsObject", input.dataAsObject);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Entities", input.entities, input.entitiesCount);
@@ -618,7 +618,7 @@ JsonValue GetTitlePlayersFromMasterPlayerAccountIdsRequest::ToJson() const
 
 JsonValue GetTitlePlayersFromMasterPlayerAccountIdsRequest::ToJson(const PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray(output, "MasterPlayerAccountIds", input.masterPlayerAccountIds, input.masterPlayerAccountIdsCount);
     JsonUtils::ObjectAddMember(output, "TitleId", input.titleId);
@@ -687,7 +687,7 @@ JsonValue SetProfileLanguageRequest::ToJson() const
 
 JsonValue SetProfileLanguageRequest::ToJson(const PFProfilesSetProfileLanguageRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "ExpectedVersion", input.expectedVersion);
@@ -755,7 +755,7 @@ JsonValue SetEntityProfilePolicyRequest::ToJson() const
 
 JsonValue SetEntityProfilePolicyRequest::ToJson(const PFProfilesSetEntityProfilePolicyRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<EntityPermissionStatement>(output, "Statements", input.statements, input.statementsCount);

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "HttpClient.h"
 #include "HttpRequest.h"
+#include "HttpFileUploadRequest.h"
+#include "HttpFileDownloadRequest.h"
 #include "JsonUtils.h"
 #include "SdkVersion.h"
 #include "XAsyncOperation.h"
@@ -40,9 +42,7 @@ String ServicesHttpClient::GetUrl(String const& connectionString, const char* pa
     fullUrl << "&platform=";
 
     // Add Platform param (used by service for telemetry)
-#if HC_PLATFORM == HC_PLATFORM_WIN32
-    fullUrl << win32Plat;
-#elif HC_PLATFORM == HC_PLATFORM_GDK
+#if HC_PLATFORM == HC_PLATFORM_GDK
     fullUrl << gdkPlat;
 #elif HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4
     fullUrl << ps4Plat;
@@ -139,11 +139,10 @@ AsyncOp<ServiceResponse> ServicesHttpClient::MakeEntityRequest(
             std::move(runContextDerived),
             httpSettings
         );
-
+        
         return RunOperation(std::move(requestOp));
     });
 }
-
 
 AsyncOp<ServiceResponse> ServicesHttpClient::MakeSecretKeyRequest(
     ServicesCacheId cacheId,
@@ -173,6 +172,66 @@ AsyncOp<ServiceResponse> ServicesHttpClient::MakeSecretKeyRequest(
         static_cast<uint32_t>(cacheId),
         retrySettings,
         std::move(runContext),
+        httpSettings
+    );
+
+    return RunOperation(std::move(requestOp));
+}
+
+AsyncOp<ServiceResponse> ServicesHttpClient::MakePostRequestWithFileUpload(
+    ServicesCacheId cacheId,
+    String&& endpoint,
+    const String uploadFilePath,
+    RunContext&& runContext
+)
+{
+    UnorderedMap<String, String> headers = GetDefaultHeaders();
+
+    PFHttpRetrySettings retrySettings{};
+    RETURN_IF_FAILED(PFGetHttpRetrySettings(&retrySettings));
+
+    PFHttpSettings httpSettings{};
+    RETURN_IF_FAILED(PFGetHttpSettings(&httpSettings));
+
+    auto requestOp = MakeUnique<HCHttpFileUploadCall>(
+        kPostMethod,
+        endpoint,
+        std::move(headers),
+        uploadFilePath,
+        static_cast<uint32_t>(cacheId),
+        retrySettings,
+        runContext.Derive(),
+        httpSettings
+    );
+
+    return RunOperation(std::move(requestOp));
+}
+
+AsyncOp<ServiceResponse> ServicesHttpClient::MakePostRequestWithFileDownload(
+    ServicesCacheId cacheId,
+    String&& endpoint,
+    JsonValue const& requestBody,
+    const String downloadFilePath,
+    RunContext&& runContext
+)
+{
+    UnorderedMap<String, String> headers = GetDefaultHeaders();
+
+    PFHttpRetrySettings retrySettings{};
+    RETURN_IF_FAILED(PFGetHttpRetrySettings(&retrySettings));
+
+    PFHttpSettings httpSettings{};
+    RETURN_IF_FAILED(PFGetHttpSettings(&httpSettings));
+
+    auto requestOp = MakeUnique<HCHttpFileDownloadCall>(
+        kPostMethod,
+        endpoint,
+        std::move(headers),
+        JsonUtils::WriteToString(requestBody),
+        downloadFilePath,
+        static_cast<uint32_t>(cacheId),
+        retrySettings,
+        runContext.Derive(),
         httpSettings
     );
 

@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Generated/Authentication.h"
 #include "JsonUtils.h"
+#include "Authentication/LoginHandler.h"
 
 #if HC_PLATFORM == HC_PLATFORM_GDK
 #include <XGameRuntimeFeature.h>
@@ -17,14 +18,14 @@ class TokenRefreshWorker : public ITaskQueueWork, public std::enable_shared_from
 public:
     static SharedPtr<TokenRefreshWorker> MakeAndStart(
         SharedPtr<Entity> const& entity,
-        SharedPtr<Authentication::LoginContext> loginContext,
+        SharedPtr<Authentication::ILoginHandler> loginHandler,
         TokenExpiredHandler tokenExpiredHandler,
         RunContext&& rc
     ) noexcept;
 
     ~TokenRefreshWorker();
 
-    HRESULT OnLoginContextUpdated(SharedPtr<Authentication::LoginContext> loginContext);
+    HRESULT OnLoginContextUpdated(SharedPtr<Authentication::ILoginHandler> loginHandler);
 
     static void SetInterval(uint32_t interval) { s_interval = interval; }
 #if _DEBUG
@@ -32,7 +33,7 @@ public:
 #endif
 
 private:
-    TokenRefreshWorker(SharedPtr<Entity> const& entity, SharedPtr<Authentication::LoginContext> loginContext, TokenExpiredHandler tokenExpiredHandler, RunContext&& rc);
+    TokenRefreshWorker(SharedPtr<Entity> const& entity, SharedPtr<Authentication::ILoginHandler> loginHandler, TokenExpiredHandler tokenExpiredHandler, RunContext&& rc);
 
     // ITaskQueueWork
     void Run() override;
@@ -44,7 +45,7 @@ private:
 
     std::mutex m_mutex;
     WeakPtr<Entity> m_weakEntity;
-    SharedPtr<Authentication::LoginContext> m_loginContext;
+    SharedPtr<Authentication::ILoginHandler> m_loginHandler;
     TokenExpiredHandler m_tokenExpiredHandler;
     PlayFab::RunContext m_rc;
 
@@ -82,9 +83,9 @@ extern "C" PF_API_ATTRIBUTES void PFDebugSetSetInterval(uint32_t interval)
 }
 #endif
 
-TokenRefreshWorker::TokenRefreshWorker(SharedPtr<Entity> const& entity, SharedPtr<Authentication::LoginContext> loginContext, TokenExpiredHandler tokenExpiredHandler, PlayFab::RunContext&& rc) :
+TokenRefreshWorker::TokenRefreshWorker(SharedPtr<Entity> const& entity, SharedPtr<Authentication::ILoginHandler> loginHandler, TokenExpiredHandler tokenExpiredHandler, PlayFab::RunContext&& rc) :
     m_weakEntity{ entity },
-    m_loginContext{ std::move(loginContext) },
+    m_loginHandler{ std::move(loginHandler) },
     m_tokenExpiredHandler{ std::move(tokenExpiredHandler) },
     m_rc{ std::move(rc) }
 {
@@ -120,22 +121,22 @@ TokenRefreshWorker::~TokenRefreshWorker()
 
 SharedPtr<TokenRefreshWorker> TokenRefreshWorker::MakeAndStart(
     SharedPtr<Entity> const& entity,
-    SharedPtr<Authentication::LoginContext> loginContext,
+    SharedPtr<Authentication::ILoginHandler> loginHandler,
     TokenExpiredHandler tokenExpiredHandler,
     RunContext&& rc
 ) noexcept
 {
     Allocator<TokenRefreshWorker> a;
-    SharedPtr<TokenRefreshWorker> worker{ new (a.allocate(1)) TokenRefreshWorker{ entity, std::move(loginContext), std::move(tokenExpiredHandler), std::move(rc) }, Deleter<TokenRefreshWorker>{}, a };
+    SharedPtr<TokenRefreshWorker> worker{ new (a.allocate(1)) TokenRefreshWorker{ entity, std::move(loginHandler), std::move(tokenExpiredHandler), std::move(rc) }, Deleter<TokenRefreshWorker>{}, a };
 
     worker->m_rc.TaskQueueSubmitWork(worker);
     return worker;
 }
 
-HRESULT TokenRefreshWorker::OnLoginContextUpdated(SharedPtr<Authentication::LoginContext> loginContext)
+HRESULT TokenRefreshWorker::OnLoginContextUpdated(SharedPtr<Authentication::ILoginHandler> loginHandler)
 {
     std::lock_guard<std::mutex> lock{ m_mutex };
-    m_loginContext = std::move(loginContext);
+    m_loginHandler = std::move(loginHandler);
     return S_OK;
 }
 
@@ -166,7 +167,7 @@ void TokenRefreshWorker::CheckAndRefreshToken(SharedPtr<Entity> entity) noexcept
     {
         // If the Entity doesn't have a LoginContext (i.e. it wasn't obtained by a login) invoked the TokenExpiredHandler so that the
         // title can resolve the issue. We may want to have additional handling for this case in the future.
-        if (!m_loginContext)
+        if (!m_loginHandler)
         {
             TRACE_VERBOSE("TokenRefreshWorker: EntityToken requires refresh but has no LoginContext, invoking TokenExpiredHandler");
             m_tokenExpiredHandler.Invoke(entity->EntityKey());
@@ -175,36 +176,7 @@ void TokenRefreshWorker::CheckAndRefreshToken(SharedPtr<Entity> entity) noexcept
 
         SharedPtr<TokenRefreshWorker> self{ shared_from_this() };
 
-        m_loginContext->GetRequestBody(m_rc).Then([entity, self](Result<JsonValue> result) -> AsyncOp<ServiceResponse>
-        {
-            RETURN_IF_FAILED(result.hr);
-
-            return entity->ServiceConfig()->HttpClient()->MakePostRequest(
-                self->m_loginContext->RequestPath(),
-                self->m_loginContext->RequestHeaders(),
-                result.ExtractPayload(),
-                self->m_loginContext->RetryCacheId(),
-                self->m_rc.Derive()
-            );
-        }).Then([entity, self](Result<ServiceResponse> result) -> Result<void>
-        {
-            RETURN_IF_FAILED(result.hr);
-
-#if _DEBUG
-            if (TokenRefreshWorker::s_debugForceExpireToken)
-            {
-                TokenRefreshWorker::s_debugForceExpireToken = false;
-                return E_FAIL;
-            }
-#endif
-
-            Authentication::EntityTokenResponse entityToken;
-            RETURN_IF_FAILED(JsonUtils::ObjectGetMember(result.Payload().Data, "EntityToken", entityToken));
-            RETURN_IF_FAILED(entity->OnEntityTokenRefreshed(std::move(entityToken)));
-
-            return S_OK;
-
-        }).Finally([entity, self](Result<void> result)
+        m_loginHandler->ReLogin(entity, m_rc).Finally([entity, self](Result<void> result)
         {
             // If we are unable to re-login for any reason, invoke the TokenExpiredHandler so the title can resolve the issue
             if (Failed(result))
@@ -307,7 +279,7 @@ Result<SharedPtr<Entity>> Entity::Make(
     Authentication::EntityTokenResponse&& entityTokenResponse,
     SharedPtr<PlayFab::ServiceConfig const> serviceConfig,
     RunContext&& tokenRefreshContext,
-    SharedPtr<Authentication::LoginContext> loginContext,
+    SharedPtr<Authentication::ILoginHandler> loginHandler,
     TokenExpiredHandler tokenExpiredHandler,
     TokenRefreshedHandler tokenRefreshedHandler,
     std::optional<String> secretKey
@@ -326,7 +298,7 @@ Result<SharedPtr<Entity>> Entity::Make(
         }, Deleter<Entity>(), a
     };
 
-    entity->m_tokenRefreshWorker = TokenRefreshWorker::MakeAndStart(entity, std::move(loginContext), std::move(tokenExpiredHandler), std::move(tokenRefreshContext));
+    entity->m_tokenRefreshWorker = TokenRefreshWorker::MakeAndStart(entity, std::move(loginHandler), std::move(tokenExpiredHandler), std::move(tokenRefreshContext));
 
     return entity;
 }
@@ -447,10 +419,10 @@ HRESULT Entity::OnEntityTokenRefreshed(Authentication::GetEntityTokenResponse co
     return S_OK;
 }
 
-HRESULT Entity::OnLoginContextUpdated(SharedPtr<Authentication::LoginContext> loginContext)
+HRESULT Entity::OnLoginContextUpdated(SharedPtr<Authentication::ILoginHandler> loginHandler)
 {
     std::unique_lock<std::mutex> lock{ m_mutex };
-    return m_tokenRefreshWorker->OnLoginContextUpdated(std::move(loginContext));
+    return m_tokenRefreshWorker->OnLoginContextUpdated(std::move(loginHandler));
 }
 
 }

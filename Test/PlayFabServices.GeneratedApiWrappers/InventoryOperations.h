@@ -78,7 +78,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 class ExecuteTransferOperationsOperation : public XAsyncOperation<Wrappers::PFInventoryExecuteTransferOperationsResponseWrapper<Allocator>>
 {
 public:
@@ -134,7 +134,7 @@ private:
     RequestType m_request;
 };
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 class GetInventoryOperationStatusOperation : public XAsyncOperation<Wrappers::PFInventoryGetInventoryOperationStatusResponseWrapper<Allocator>>
 {
 public:
@@ -154,7 +154,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class GetMicrosoftStoreAccessTokensOperation : public XAsyncOperation<Wrappers::PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper<Allocator>>
 {
 public:
@@ -174,7 +174,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class GetTransactionHistoryOperation : public XAsyncOperation<Wrappers::PFInventoryGetTransactionHistoryResponseWrapper<Allocator>>
 {
 public:
@@ -212,7 +212,7 @@ private:
     RequestType m_request;
 };
 
-#if HC_PLATFORM == HC_PLATFORM_IOS
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_IOS
 class RedeemAppleAppStoreInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemAppleAppStoreInventoryItemsResponseWrapper<Allocator>>
 {
 public:
@@ -232,7 +232,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_ANDROID
 class RedeemGooglePlayInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemGooglePlayInventoryItemsResponseWrapper<Allocator>>
 {
 public:
@@ -252,7 +252,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class RedeemMicrosoftStoreInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemMicrosoftStoreInventoryItemsResponseWrapper<Allocator>>
 {
 public:
@@ -272,7 +272,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class RedeemNintendoEShopInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemNintendoEShopInventoryItemsResponseWrapper<Allocator>>
 {
 public:
@@ -292,7 +292,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class RedeemPlayStationStoreInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemPlayStationStoreInventoryItemsResponseWrapper<Allocator>>
 {
 public:
@@ -312,7 +312,7 @@ private:
 };
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class RedeemSteamInventoryItemsOperation : public XAsyncOperation<Wrappers::PFInventoryRedeemSteamInventoryItemsResponseWrapper<Allocator>>
 {
 public:

@@ -1,10 +1,9 @@
 #include "TestAppPch.h"
 #include "EventPipelineTests.h"
 #include "Operations/Core/AuthenticationOperations.h"
+#include "Operations/Core/CoreOperations.h"
 #include "Platform/PlatformUtils.h"
 #include "Platform/PlayFabPal.h"
-
-using namespace PlayFab::Platform;
 
 namespace PlayFab
 {
@@ -41,15 +40,15 @@ void EventPipelineTests::AddTests()
 
 AsyncOp<void> EventPipelineTests::Initialize()
 {
-    return CoreTestClass::Initialize().Then([this](Result<void> result) -> AsyncOp<UserPtr>
+    return CoreTestClass::Initialize().Then([this](Result<void> result) -> AsyncOp<TitleLocalUser>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        return Platform::GetDefaultPlatformUser(RunContext());
+        return Platform::GetDefaultLocalUser(ServiceConfig(), RunContext());
     })
-    .Then([&](Result<UserPtr> result) -> AsyncOp<LoginResult>
+    .Then([&](Result<TitleLocalUser> result) -> AsyncOp<LoginResult>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        return Platform::LoginDefaultTitlePlayer(ServiceConfig(), result.ExtractPayload(), RunContext());
+        return RunOperation(MakeUnique<LocalUserLoginOperation>(result.ExtractPayload(), RunContext()));
     })
     .Then([&](Result<LoginResult> result) -> Result<void>
     {

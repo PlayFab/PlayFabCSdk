@@ -33,6 +33,50 @@ public:
     static HRESULT Copy(const PFStatisticsStatisticColumn& input, PFStatisticsStatisticColumn& output, ModelBuffer& buffer);
 };
 
+class StatisticsUpdateEventConfig : public Wrappers::PFStatisticsStatisticsUpdateEventConfigWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFStatisticsStatisticsUpdateEventConfig>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFStatisticsStatisticsUpdateEventConfigWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFStatisticsStatisticsUpdateEventConfig& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFStatisticsStatisticsUpdateEventConfig const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFStatisticsStatisticsUpdateEventConfig& model);
+    static HRESULT Copy(const PFStatisticsStatisticsUpdateEventConfig& input, PFStatisticsStatisticsUpdateEventConfig& output, ModelBuffer& buffer);
+};
+
+class StatisticsEventEmissionConfig : public Wrappers::PFStatisticsStatisticsEventEmissionConfigWrapper<Allocator>, public InputModel, public ServiceOutputModel, public ClientOutputModel<PFStatisticsStatisticsEventEmissionConfig>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFStatisticsStatisticsEventEmissionConfigWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFStatisticsStatisticsEventEmissionConfig& input);
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFStatisticsStatisticsEventEmissionConfig const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFStatisticsStatisticsEventEmissionConfig& model);
+    static HRESULT Copy(const PFStatisticsStatisticsEventEmissionConfig& input, PFStatisticsStatisticsEventEmissionConfig& output, ModelBuffer& buffer);
+};
+
 class CreateStatisticDefinitionRequest : public Wrappers::PFStatisticsCreateStatisticDefinitionRequestWrapper<Allocator>, public InputModel
 {
 public:
@@ -349,6 +393,20 @@ public:
 
     static size_t RequiredBufferSize(const PFStatisticsListStatisticDefinitionsResponse& model);
     static HRESULT Copy(const PFStatisticsListStatisticDefinitionsResponse& input, PFStatisticsListStatisticDefinitionsResponse& output, ModelBuffer& buffer);
+};
+
+class UnlinkAggregationSourceFromStatisticRequest : public Wrappers::PFStatisticsUnlinkAggregationSourceFromStatisticRequestWrapper<Allocator>, public InputModel
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFStatisticsUnlinkAggregationSourceFromStatisticRequestWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // InputModel
+    JsonValue ToJson() const override;
+    static JsonValue ToJson(const PFStatisticsUnlinkAggregationSourceFromStatisticRequest& input);
 };
 
 class UpdateStatisticDefinitionRequest : public Wrappers::PFStatisticsUpdateStatisticDefinitionRequestWrapper<Allocator>, public InputModel

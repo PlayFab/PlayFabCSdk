@@ -4,9 +4,13 @@
 #include "ApiXAsyncProvider.h"
 #include "GlobalState.h"
 #include <playfab/core/cpp/Entity.h>
+#include "ApiHelpers.h"
 
 using namespace PlayFab;
 using namespace PlayFab::TitleDataManagement;
+
+extern "C"
+{
 
 PF_API PFTitleDataManagementClientGetPublisherDataAsync(
     _In_ PFEntityHandle contextHandle,
@@ -16,16 +20,16 @@ PF_API PFTitleDataManagementClientGetPublisherDataAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementClientGetPublisherDataAsync),
-        std::bind(&TitleDataManagementAPI::ClientGetPublisherData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementClientGetPublisherDataAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementClientGetPublisherDataAsync),
+            std::bind(&TitleDataManagementAPI::ClientGetPublisherData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFTitleDataManagementClientGetPublisherDataGetResultSize(
@@ -33,7 +37,10 @@ PF_API PFTitleDataManagementClientGetPublisherDataGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetPublisherDataGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFTitleDataManagementClientGetPublisherDataGetResult(
@@ -44,12 +51,15 @@ PF_API PFTitleDataManagementClientGetPublisherDataGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetPublisherDataGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFTitleDataManagementGetPublisherDataResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFTitleDataManagementGetPublisherDataResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFTitleDataManagementClientGetTimeAsync(
@@ -58,16 +68,16 @@ PF_API PFTitleDataManagementClientGetTimeAsync(
 ) noexcept
 {
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementClientGetTimeAsync),
-        std::bind(&TitleDataManagementAPI::ClientGetTime, Entity::Duplicate(contextHandle), std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementClientGetTimeAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementClientGetTimeAsync),
+            std::bind(&TitleDataManagementAPI::ClientGetTime, Entity::Duplicate(contextHandle), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFTitleDataManagementClientGetTimeGetResult(
@@ -75,7 +85,10 @@ PF_API PFTitleDataManagementClientGetTimeGetResult(
     _Out_ PFTitleDataManagementGetTimeResult* result
 ) noexcept
 {
-    return XAsyncGetResult(async, nullptr, sizeof(PFTitleDataManagementGetTimeResult), result, nullptr);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetTimeGetResult), [&]()
+    {
+        return XAsyncGetResult(async, nullptr, sizeof(PFTitleDataManagementGetTimeResult), result, nullptr);
+    });
 }
 
 PF_API PFTitleDataManagementClientGetTitleDataAsync(
@@ -86,16 +99,16 @@ PF_API PFTitleDataManagementClientGetTitleDataAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleDataAsync),
-        std::bind(&TitleDataManagementAPI::ClientGetTitleData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleDataAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleDataAsync),
+            std::bind(&TitleDataManagementAPI::ClientGetTitleData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFTitleDataManagementClientGetTitleDataGetResultSize(
@@ -103,7 +116,10 @@ PF_API PFTitleDataManagementClientGetTitleDataGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleDataGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFTitleDataManagementClientGetTitleDataGetResult(
@@ -114,12 +130,15 @@ PF_API PFTitleDataManagementClientGetTitleDataGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleDataGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFTitleDataManagementGetTitleDataResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFTitleDataManagementGetTitleDataResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFTitleDataManagementClientGetTitleNewsAsync(
@@ -130,16 +149,16 @@ PF_API PFTitleDataManagementClientGetTitleNewsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleNewsAsync),
-        std::bind(&TitleDataManagementAPI::ClientGetTitleNews, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleNewsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleNewsAsync),
+            std::bind(&TitleDataManagementAPI::ClientGetTitleNews, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFTitleDataManagementClientGetTitleNewsGetResultSize(
@@ -147,7 +166,10 @@ PF_API PFTitleDataManagementClientGetTitleNewsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleNewsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFTitleDataManagementClientGetTitleNewsGetResult(
@@ -158,15 +180,18 @@ PF_API PFTitleDataManagementClientGetTitleNewsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleNewsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFTitleDataManagementGetTitleNewsResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFTitleDataManagementGetTitleNewsResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetPublisherDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementGetPublisherDataRequest* request,
@@ -175,16 +200,16 @@ PF_API PFTitleDataManagementServerGetPublisherDataAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementServerGetPublisherDataAsync),
-        std::bind(&TitleDataManagementAPI::ServerGetPublisherData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementServerGetPublisherDataAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementServerGetPublisherDataAsync),
+            std::bind(&TitleDataManagementAPI::ServerGetPublisherData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFTitleDataManagementServerGetPublisherDataGetResultSize(
@@ -192,7 +217,10 @@ PF_API PFTitleDataManagementServerGetPublisherDataGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetPublisherDataGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFTitleDataManagementServerGetPublisherDataGetResult(
@@ -203,32 +231,35 @@ PF_API PFTitleDataManagementServerGetPublisherDataGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetPublisherDataGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFTitleDataManagementGetPublisherDataResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFTitleDataManagementGetPublisherDataResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetTimeAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ XAsyncBlock* async
 ) noexcept
 {
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementServerGetTimeAsync),
-        std::bind(&TitleDataManagementAPI::ServerGetTime, Entity::Duplicate(contextHandle), std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementServerGetTimeAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementServerGetTimeAsync),
+            std::bind(&TitleDataManagementAPI::ServerGetTime, Entity::Duplicate(contextHandle), std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFTitleDataManagementServerGetTimeGetResult(
@@ -236,11 +267,14 @@ PF_API PFTitleDataManagementServerGetTimeGetResult(
     _Out_ PFTitleDataManagementGetTimeResult* result
 ) noexcept
 {
-    return XAsyncGetResult(async, nullptr, sizeof(PFTitleDataManagementGetTimeResult), result, nullptr);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTimeGetResult), [&]()
+    {
+        return XAsyncGetResult(async, nullptr, sizeof(PFTitleDataManagementGetTimeResult), result, nullptr);
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetTitleDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementGetTitleDataRequest* request,
@@ -249,16 +283,16 @@ PF_API PFTitleDataManagementServerGetTitleDataAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleDataAsync),
-        std::bind(&TitleDataManagementAPI::ServerGetTitleData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleDataAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleDataAsync),
+            std::bind(&TitleDataManagementAPI::ServerGetTitleData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFTitleDataManagementServerGetTitleDataGetResultSize(
@@ -266,7 +300,10 @@ PF_API PFTitleDataManagementServerGetTitleDataGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleDataGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFTitleDataManagementServerGetTitleDataGetResult(
@@ -277,16 +314,19 @@ PF_API PFTitleDataManagementServerGetTitleDataGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleDataGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFTitleDataManagementGetTitleDataResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFTitleDataManagementGetTitleDataResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetTitleInternalDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementGetTitleDataRequest* request,
@@ -295,16 +335,16 @@ PF_API PFTitleDataManagementServerGetTitleInternalDataAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleInternalDataAsync),
-        std::bind(&TitleDataManagementAPI::ServerGetTitleInternalData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleInternalDataAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleInternalDataAsync),
+            std::bind(&TitleDataManagementAPI::ServerGetTitleInternalData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFTitleDataManagementServerGetTitleInternalDataGetResultSize(
@@ -312,7 +352,10 @@ PF_API PFTitleDataManagementServerGetTitleInternalDataGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleInternalDataGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFTitleDataManagementServerGetTitleInternalDataGetResult(
@@ -323,16 +366,19 @@ PF_API PFTitleDataManagementServerGetTitleInternalDataGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleInternalDataGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFTitleDataManagementGetTitleDataResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFTitleDataManagementGetTitleDataResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerGetTitleNewsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementGetTitleNewsRequest* request,
@@ -341,16 +387,16 @@ PF_API PFTitleDataManagementServerGetTitleNewsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleNewsAsync),
-        std::bind(&TitleDataManagementAPI::ServerGetTitleNews, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleNewsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleNewsAsync),
+            std::bind(&TitleDataManagementAPI::ServerGetTitleNews, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFTitleDataManagementServerGetTitleNewsGetResultSize(
@@ -358,7 +404,10 @@ PF_API PFTitleDataManagementServerGetTitleNewsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleNewsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFTitleDataManagementServerGetTitleNewsGetResult(
@@ -369,16 +418,19 @@ PF_API PFTitleDataManagementServerGetTitleNewsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleNewsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFTitleDataManagementGetTitleNewsResult*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFTitleDataManagementGetTitleNewsResult*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerSetPublisherDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementSetPublisherDataRequest* request,
@@ -387,20 +439,20 @@ PF_API PFTitleDataManagementServerSetPublisherDataAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementServerSetPublisherDataAsync),
-        std::bind(&TitleDataManagementAPI::ServerSetPublisherData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementServerSetPublisherDataAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementServerSetPublisherDataAsync),
+            std::bind(&TitleDataManagementAPI::ServerSetPublisherData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerSetTitleDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementSetTitleDataRequest* request,
@@ -409,20 +461,20 @@ PF_API PFTitleDataManagementServerSetTitleDataAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementServerSetTitleDataAsync),
-        std::bind(&TitleDataManagementAPI::ServerSetTitleData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementServerSetTitleDataAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementServerSetTitleDataAsync),
+            std::bind(&TitleDataManagementAPI::ServerSetTitleData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFTitleDataManagementServerSetTitleInternalDataAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFTitleDataManagementSetTitleDataRequest* request,
@@ -431,16 +483,17 @@ PF_API PFTitleDataManagementServerSetTitleInternalDataAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFTitleDataManagementServerSetTitleInternalDataAsync),
-        std::bind(&TitleDataManagementAPI::ServerSetTitleInternalData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFTitleDataManagementServerSetTitleInternalDataAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFTitleDataManagementServerSetTitleInternalDataAsync),
+            std::bind(&TitleDataManagementAPI::ServerSetTitleInternalData, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 #endif
 
+}

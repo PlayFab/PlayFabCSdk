@@ -9,6 +9,7 @@
 
 #include <playfab/core/cpp/TypeWrappers.h>
 #include <playfab/core/PFAuthenticationTypes.h>
+#include <playfab/core/cpp/AuthenticationTypeWrappers_Xbox.h>
 
 namespace PlayFab
 {
@@ -70,10 +71,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAndroidDevice() const
+    {
+        return m_androidDevice;
+    }
+
     void SetAndroidDevice(String value)
     {
         m_androidDevice = std::move(value);
         this->m_model.androidDevice =  m_androidDevice.empty() ? nullptr : m_androidDevice.data();
+    }
+
+    String const& GetAndroidDeviceId() const
+    {
+        return m_androidDeviceId;
     }
 
     void SetAndroidDeviceId(String value)
@@ -82,9 +93,19 @@ public:
         this->m_model.androidDeviceId =  m_androidDeviceId.empty() ? nullptr : m_androidDeviceId.data();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -94,16 +115,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    String const& GetOS() const
+    {
+        return m_OS;
+    }
+
     void SetOS(String value)
     {
         m_OS = std::move(value);
         this->m_model.OS =  m_OS.empty() ? nullptr : m_OS.data();
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -141,14 +177,29 @@ public:
 
     using ModelWrapper<PFAuthenticationUserSettings, Alloc>::ModelWrapper;
 
+    bool GetGatherDeviceInfo() const
+    {
+        return this->m_model.gatherDeviceInfo;
+    }
+
     void SetGatherDeviceInfo(bool value)
     {
         this->m_model.gatherDeviceInfo = value;
     }
 
+    bool GetGatherFocusInfo() const
+    {
+        return this->m_model.gatherFocusInfo;
+    }
+
     void SetGatherFocusInfo(bool value)
     {
         this->m_model.gatherFocusInfo = value;
+    }
+
+    bool GetNeedsAttribution() const
+    {
+        return this->m_model.needsAttribution;
     }
 
     void SetNeedsAttribution(bool value)
@@ -212,10 +263,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFGetPlayerCombinedInfoResultPayloadWrapper<Alloc>> const& GetInfoResultPayload() const
+    {
+        return m_infoResultPayload;
+    }
+
     void SetInfoResultPayload(std::optional<PFGetPlayerCombinedInfoResultPayloadWrapper<Alloc>> value)
     {
         m_infoResultPayload = std::move(value);
         this->m_model.infoResultPayload = m_infoResultPayload ? &m_infoResultPayload->Model() : nullptr;
+    }
+
+    std::optional<time_t> const& GetLastLoginTime() const
+    {
+        return m_lastLoginTime;
     }
 
     void SetLastLoginTime(std::optional<time_t> value)
@@ -224,9 +285,19 @@ public:
         this->m_model.lastLoginTime = m_lastLoginTime ? m_lastLoginTime.operator->() : nullptr;
     }
 
+    bool GetNewlyCreated() const
+    {
+        return this->m_model.newlyCreated;
+    }
+
     void SetNewlyCreated(bool value)
     {
         this->m_model.newlyCreated = value;
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
     }
 
     void SetPlayFabId(String value)
@@ -235,10 +306,20 @@ public:
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
     }
 
+    std::optional<PFAuthenticationUserSettingsWrapper<Alloc>> const& GetSettingsForUser() const
+    {
+        return m_settingsForUser;
+    }
+
     void SetSettingsForUser(std::optional<PFAuthenticationUserSettingsWrapper<Alloc>> value)
     {
         m_settingsForUser = std::move(value);
         this->m_model.settingsForUser = m_settingsForUser ? &m_settingsForUser->Model() : nullptr;
+    }
+
+    std::optional<PFTreatmentAssignmentWrapper<Alloc>> const& GetTreatmentAssignment() const
+    {
+        return m_treatmentAssignment;
     }
 
     void SetTreatmentAssignment(std::optional<PFTreatmentAssignmentWrapper<Alloc>> value)
@@ -315,9 +396,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -327,16 +418,152 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetIdentityToken() const
+    {
+        return m_identityToken;
+    }
+
     void SetIdentityToken(String value)
     {
         m_identityToken = std::move(value);
         this->m_model.identityToken =  m_identityToken.empty() ? nullptr : m_identityToken.data();
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
+    }
+
+    void SetPlayerSecret(String value)
+    {
+        m_playerSecret = std::move(value);
+        this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.identityToken = m_identityToken.empty() ? nullptr : m_identityToken.data();
+        this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
+        this->m_model.playerSecret = m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_identityToken;
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
+    String m_playerSecret;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAuthenticationLoginWithBattleNetRequestWrapper : public ModelWrapper<PFAuthenticationLoginWithBattleNetRequest, Alloc>
+{
+public:
+    using ModelType = PFAuthenticationLoginWithBattleNetRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAuthenticationLoginWithBattleNetRequestWrapper() = default;
+
+    PFAuthenticationLoginWithBattleNetRequestWrapper(const PFAuthenticationLoginWithBattleNetRequest& model) :
+        ModelWrapper<PFAuthenticationLoginWithBattleNetRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_identityToken{ SafeString(model.identityToken) },
+        m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt },
+        m_playerSecret{ SafeString(model.playerSecret) }
+    {
+        SetModelPointers();
+    }
+
+    PFAuthenticationLoginWithBattleNetRequestWrapper(const PFAuthenticationLoginWithBattleNetRequestWrapper& src) :
+        PFAuthenticationLoginWithBattleNetRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAuthenticationLoginWithBattleNetRequestWrapper(PFAuthenticationLoginWithBattleNetRequestWrapper&& src) :
+        PFAuthenticationLoginWithBattleNetRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAuthenticationLoginWithBattleNetRequestWrapper& operator=(PFAuthenticationLoginWithBattleNetRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAuthenticationLoginWithBattleNetRequestWrapper() = default;
+
+    friend void swap(PFAuthenticationLoginWithBattleNetRequestWrapper& lhs, PFAuthenticationLoginWithBattleNetRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_identityToken, rhs.m_identityToken);
+        swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
+        swap(lhs.m_playerSecret, rhs.m_playerSecret);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
+    void SetCreateAccount(bool value)
+    {
+        this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetIdentityToken() const
+    {
+        return m_identityToken;
+    }
+
+    void SetIdentityToken(String value)
+    {
+        m_identityToken = std::move(value);
+        this->m_model.identityToken =  m_identityToken.empty() ? nullptr : m_identityToken.data();
+    }
+
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
+    void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
+    {
+        m_infoRequestParameters = std::move(value);
+        this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -411,15 +638,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    String const& GetCustomId() const
+    {
+        return m_customId;
     }
 
     void SetCustomId(String value)
     {
         m_customId = std::move(value);
         this->m_model.customId =  m_customId.empty() ? nullptr : m_customId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -429,10 +671,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -507,11 +759,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetEmail() const
+    {
+        return m_email;
     }
 
     void SetEmail(String value)
@@ -520,10 +782,20 @@ public:
         this->m_model.email =  m_email.empty() ? nullptr : m_email.data();
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPassword() const
+    {
+        return m_password;
     }
 
     void SetPassword(String value)
@@ -600,10 +872,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAccessToken() const
+    {
+        return m_accessToken;
+    }
+
     void SetAccessToken(String value)
     {
         m_accessToken = std::move(value);
         this->m_model.accessToken =  m_accessToken.empty() ? nullptr : m_accessToken.data();
+    }
+
+    String const& GetAuthenticationToken() const
+    {
+        return m_authenticationToken;
     }
 
     void SetAuthenticationToken(String value)
@@ -612,9 +894,19 @@ public:
         this->m_model.authenticationToken =  m_authenticationToken.empty() ? nullptr : m_authenticationToken.data();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -624,10 +916,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -704,9 +1006,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -716,16 +1028,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetFacebookInstantGamesSignature() const
+    {
+        return m_facebookInstantGamesSignature;
+    }
+
     void SetFacebookInstantGamesSignature(String value)
     {
         m_facebookInstantGamesSignature = std::move(value);
         this->m_model.facebookInstantGamesSignature =  m_facebookInstantGamesSignature.empty() ? nullptr : m_facebookInstantGamesSignature.data();
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -808,9 +1135,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -820,10 +1157,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerId() const
+    {
+        return m_playerId;
     }
 
     void SetPlayerId(String value)
@@ -832,10 +1179,20 @@ public:
         this->m_model.playerId =  m_playerId.empty() ? nullptr : m_playerId.data();
     }
 
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
+    }
+
     void SetPlayerSecret(String value)
     {
         m_playerSecret = std::move(value);
         this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+    }
+
+    String const& GetPublicKeyUrl() const
+    {
+        return m_publicKeyUrl;
     }
 
     void SetPublicKeyUrl(String value)
@@ -844,16 +1201,31 @@ public:
         this->m_model.publicKeyUrl =  m_publicKeyUrl.empty() ? nullptr : m_publicKeyUrl.data();
     }
 
+    String const& GetSalt() const
+    {
+        return m_salt;
+    }
+
     void SetSalt(String value)
     {
         m_salt = std::move(value);
         this->m_model.salt =  m_salt.empty() ? nullptr : m_salt.data();
     }
 
+    String const& GetSignature() const
+    {
+        return m_signature;
+    }
+
     void SetSignature(String value)
     {
         m_signature = std::move(value);
         this->m_model.signature =  m_signature.empty() ? nullptr : m_signature.data();
+    }
+
+    String const& GetTimestamp() const
+    {
+        return m_timestamp;
     }
 
     void SetTimestamp(String value)
@@ -938,9 +1310,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -950,10 +1332,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -962,10 +1354,20 @@ public:
         this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
     }
 
+    String const& GetServerAuthCode() const
+    {
+        return m_serverAuthCode;
+    }
+
     void SetServerAuthCode(String value)
     {
         m_serverAuthCode = std::move(value);
         this->m_model.serverAuthCode =  m_serverAuthCode.empty() ? nullptr : m_serverAuthCode.data();
+    }
+
+    std::optional<bool> const& GetSetEmail() const
+    {
+        return m_setEmail;
     }
 
     void SetSetEmail(std::optional<bool> value)
@@ -1042,9 +1444,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1054,16 +1466,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
+    }
+
     void SetPlayerSecret(String value)
     {
         m_playerSecret = std::move(value);
         this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+    }
+
+    String const& GetServerAuthCode() const
+    {
+        return m_serverAuthCode;
     }
 
     void SetServerAuthCode(String value)
@@ -1142,9 +1569,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1154,10 +1591,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetDeviceId() const
+    {
+        return m_deviceId;
+    }
+
     void SetDeviceId(String value)
     {
         m_deviceId = std::move(value);
         this->m_model.deviceId =  m_deviceId.empty() ? nullptr : m_deviceId.data();
+    }
+
+    String const& GetDeviceModel() const
+    {
+        return m_deviceModel;
     }
 
     void SetDeviceModel(String value)
@@ -1166,16 +1613,31 @@ public:
         this->m_model.deviceModel =  m_deviceModel.empty() ? nullptr : m_deviceModel.data();
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    String const& GetOS() const
+    {
+        return m_OS;
+    }
+
     void SetOS(String value)
     {
         m_OS = std::move(value);
         this->m_model.OS =  m_OS.empty() ? nullptr : m_OS.data();
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -1256,15 +1718,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAuthTicket() const
+    {
+        return m_authTicket;
+    }
+
     void SetAuthTicket(String value)
     {
         m_authTicket = std::move(value);
         this->m_model.authTicket =  m_authTicket.empty() ? nullptr : m_authTicket.data();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1274,16 +1751,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    String const& GetKongregateId() const
+    {
+        return m_kongregateId;
+    }
+
     void SetKongregateId(String value)
     {
         m_kongregateId = std::move(value);
         this->m_model.kongregateId =  m_kongregateId.empty() ? nullptr : m_kongregateId.data();
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -1360,9 +1852,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1372,16 +1874,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetIdentityToken() const
+    {
+        return m_identityToken;
+    }
+
     void SetIdentityToken(String value)
     {
         m_identityToken = std::move(value);
         this->m_model.identityToken =  m_identityToken.empty() ? nullptr : m_identityToken.data();
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -1456,9 +1973,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1468,16 +1995,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    String const& GetNintendoSwitchDeviceId() const
+    {
+        return m_nintendoSwitchDeviceId;
+    }
+
     void SetNintendoSwitchDeviceId(String value)
     {
         m_nintendoSwitchDeviceId = std::move(value);
         this->m_model.nintendoSwitchDeviceId =  m_nintendoSwitchDeviceId.empty() ? nullptr : m_nintendoSwitchDeviceId.data();
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -1554,15 +2096,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetConnectionId() const
+    {
+        return m_connectionId;
+    }
+
     void SetConnectionId(String value)
     {
         m_connectionId = std::move(value);
         this->m_model.connectionId =  m_connectionId.empty() ? nullptr : m_connectionId.data();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1572,16 +2129,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    String const& GetIdToken() const
+    {
+        return m_idToken;
+    }
+
     void SetIdToken(String value)
     {
         m_idToken = std::move(value);
         this->m_model.idToken =  m_idToken.empty() ? nullptr : m_idToken.data();
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -1658,11 +2230,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
     }
 
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
@@ -1671,10 +2253,20 @@ public:
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    String const& GetPassword() const
+    {
+        return m_password;
+    }
+
     void SetPassword(String value)
     {
         m_password = std::move(value);
         this->m_model.password =  m_password.empty() ? nullptr : m_password.data();
+    }
+
+    String const& GetUsername() const
+    {
+        return m_username;
     }
 
     void SetUsername(String value)
@@ -1753,15 +2345,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAuthCode() const
+    {
+        return m_authCode;
+    }
+
     void SetAuthCode(String value)
     {
         m_authCode = std::move(value);
         this->m_model.authCode =  m_authCode.empty() ? nullptr : m_authCode.data();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1771,10 +2378,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    std::optional<int32_t> const& GetIssuerId() const
+    {
+        return m_issuerId;
     }
 
     void SetIssuerId(std::optional<int32_t> value)
@@ -1783,10 +2400,20 @@ public:
         this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
     }
 
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
+    }
+
     void SetPlayerSecret(String value)
     {
         m_playerSecret = std::move(value);
         this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+    }
+
+    String const& GetRedirectUri() const
+    {
+        return m_redirectUri;
     }
 
     void SetRedirectUri(String value)
@@ -1867,9 +2494,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1879,10 +2516,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -1891,10 +2538,20 @@ public:
         this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
     }
 
+    String const& GetSteamTicket() const
+    {
+        return m_steamTicket;
+    }
+
     void SetSteamTicket(String value)
     {
         m_steamTicket = std::move(value);
         this->m_model.steamTicket =  m_steamTicket.empty() ? nullptr : m_steamTicket.data();
+    }
+
+    std::optional<bool> const& GetTicketIsServiceSpecific() const
+    {
+        return m_ticketIsServiceSpecific;
     }
 
     void SetTicketIsServiceSpecific(std::optional<bool> value)
@@ -1971,15 +2628,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAccessToken() const
+    {
+        return m_accessToken;
+    }
+
     void SetAccessToken(String value)
     {
         m_accessToken = std::move(value);
         this->m_model.accessToken =  m_accessToken.empty() ? nullptr : m_accessToken.data();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -1989,10 +2661,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
     }
 
     void SetPlayerSecret(String value)
@@ -2067,9 +2749,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2079,16 +2771,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
+    }
+
     void SetPlayerSecret(String value)
     {
         m_playerSecret = std::move(value);
         this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+    }
+
+    String const& GetXboxToken() const
+    {
+        return m_xboxToken;
     }
 
     void SetXboxToken(String value)
@@ -2111,160 +2818,6 @@ private:
     String m_playerSecret;
     String m_xboxToken;
 };
-
-#if HC_PLATFORM == HC_PLATFORM_GDK
-class XUser
-{
-public:
-    static XUser Wrap(XUserHandle handle)
-    {
-        return XUser{ handle };
-    }
-
-    static XUser Duplicate(XUserHandle handle)
-    {
-        XUserHandle duplicatedHandle;
-        THROW_IF_FAILED(XUserDuplicateHandle(handle, &duplicatedHandle));
-        return XUser{ duplicatedHandle };
-    }
-
-    XUser(XUser const& other)
-    {
-        THROW_IF_FAILED(XUserDuplicateHandle(other.m_handle, &m_handle));
-    }
-
-    XUser(XUser&& other)
-    {
-        std::swap(other.m_handle, m_handle);
-    }
-
-    XUser& operator=(XUser other)
-    {
-        std::swap(m_handle, other.m_handle);
-        return *this;
-    }
-
-    ~XUser()
-    {
-        if (m_handle)
-        {
-            XUserCloseHandle(m_handle);
-        }
-    }
-
-    XUserHandle Handle() const noexcept
-    {
-        return m_handle;
-    }
-
-private:
-    XUser(XUserHandle handle) : m_handle{ handle }
-    {
-    }
-
-    XUserHandle m_handle{ nullptr };
-};
-
-template<template<typename AllocT> class Alloc = std::allocator>
-class PFAuthenticationLoginWithXUserRequestWrapper : public ModelWrapper<PFAuthenticationLoginWithXUserRequest, Alloc>
-{
-public:
-    using ModelType = PFAuthenticationLoginWithXUserRequest;
-    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
-    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
-
-    PFAuthenticationLoginWithXUserRequestWrapper(XUser user)
-        : m_user{ std::move(user) }
-    {
-        SetModelPointers();
-    }
-
-    PFAuthenticationLoginWithXUserRequestWrapper(const PFAuthenticationLoginWithXUserRequest& model) :
-        ModelWrapper<PFAuthenticationLoginWithXUserRequest, Alloc>{ model },
-        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
-        m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt },
-        m_playerSecret{ SafeString(model.playerSecret) },
-        m_user{ XUser::Duplicate(model.user) }
-    {
-        SetModelPointers();
-    }
-
-    PFAuthenticationLoginWithXUserRequestWrapper(const PFAuthenticationLoginWithXUserRequestWrapper& src) :
-        PFAuthenticationLoginWithXUserRequestWrapper{ src.Model() }
-    {
-    }
-
-    PFAuthenticationLoginWithXUserRequestWrapper(PFAuthenticationLoginWithXUserRequestWrapper&& src) :
-        m_user{ XUser::Wrap(nullptr) }
-    {
-        swap(*this, src);
-    }
-
-    PFAuthenticationLoginWithXUserRequestWrapper& operator=(PFAuthenticationLoginWithXUserRequestWrapper src) 
-    {
-        swap(*this, src);
-        return *this;
-    }
-
-    virtual ~PFAuthenticationLoginWithXUserRequestWrapper() = default;
-
-    friend void swap(PFAuthenticationLoginWithXUserRequestWrapper& lhs, PFAuthenticationLoginWithXUserRequestWrapper& rhs)
-    {
-        using std::swap;
-        swap(lhs.m_model, rhs.m_model);
-        swap(lhs.m_customTags, rhs.m_customTags);
-        swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
-        swap(lhs.m_playerSecret, rhs.m_playerSecret);
-        swap(lhs.m_user, rhs.m_user);
-        lhs.SetModelPointers();
-        rhs.SetModelPointers();
-    }
-
-    void SetCreateAccount(bool value)
-    {
-        this->m_model.createAccount = value;
-    }
-
-    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
-    {
-        m_customTags = std::move(value);
-        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
-        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
-    }
-
-    void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
-    {
-        m_infoRequestParameters = std::move(value);
-        this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
-    }
-
-    void SetPlayerSecret(String value)
-    {
-        m_playerSecret = std::move(value);
-        this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
-    }
-
-    void SetUser(XUser value)
-    {
-        m_user = std::move(value);
-        this->m_model.user = m_user.Handle();
-    }
-
-private:
-    void SetModelPointers()
-    {
-        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
-        this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
-        this->m_model.playerSecret = m_playerSecret.empty() ? nullptr : m_playerSecret.data();
-        this->m_model.user = m_user.Handle();
-    }
-
-    StringDictionaryEntryVector<Alloc> m_customTags;
-    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
-    String m_playerSecret;
-    XUser m_user;
-};
-#endif
 
 template<template<typename AllocT> class Alloc = std::allocator>
 class PFAuthenticationRegisterPlayFabUserRequestWrapper : public ModelWrapper<PFAuthenticationRegisterPlayFabUserRequest, Alloc>
@@ -2329,11 +2882,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetDisplayName() const
+    {
+        return m_displayName;
     }
 
     void SetDisplayName(String value)
@@ -2342,10 +2905,20 @@ public:
         this->m_model.displayName =  m_displayName.empty() ? nullptr : m_displayName.data();
     }
 
+    String const& GetEmail() const
+    {
+        return m_email;
+    }
+
     void SetEmail(String value)
     {
         m_email = std::move(value);
         this->m_model.email =  m_email.empty() ? nullptr : m_email.data();
+    }
+
+    String const& GetEncryptedRequest() const
+    {
+        return m_encryptedRequest;
     }
 
     void SetEncryptedRequest(String value)
@@ -2354,10 +2927,20 @@ public:
         this->m_model.encryptedRequest =  m_encryptedRequest.empty() ? nullptr : m_encryptedRequest.data();
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPassword() const
+    {
+        return m_password;
     }
 
     void SetPassword(String value)
@@ -2366,10 +2949,20 @@ public:
         this->m_model.password =  m_password.empty() ? nullptr : m_password.data();
     }
 
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
+    }
+
     void SetPlayerSecret(String value)
     {
         m_playerSecret = std::move(value);
         this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+    }
+
+    std::optional<bool> const& GetRequireBothUsernameAndEmail() const
+    {
+        return m_requireBothUsernameAndEmail;
     }
 
     void SetRequireBothUsernameAndEmail(std::optional<bool> value)
@@ -2378,10 +2971,20 @@ public:
         this->m_model.requireBothUsernameAndEmail = m_requireBothUsernameAndEmail ? m_requireBothUsernameAndEmail.operator->() : nullptr;
     }
 
+    String const& GetTitleId() const
+    {
+        return m_titleId;
+    }
+
     void SetTitleId(String value)
     {
         m_titleId = std::move(value);
         this->m_model.titleId =  m_titleId.empty() ? nullptr : m_titleId.data();
+    }
+
+    String const& GetUsername() const
+    {
+        return m_username;
     }
 
     void SetUsername(String value)
@@ -2466,16 +3069,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
     void SetPlayFabId(String value)
     {
         m_playFabId = std::move(value);
         this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
     }
 
+    std::optional<PFAuthenticationUserSettingsWrapper<Alloc>> const& GetSettingsForUser() const
+    {
+        return m_settingsForUser;
+    }
+
     void SetSettingsForUser(std::optional<PFAuthenticationUserSettingsWrapper<Alloc>> value)
     {
         m_settingsForUser = std::move(value);
         this->m_model.settingsForUser = m_settingsForUser ? &m_settingsForUser->Model() : nullptr;
+    }
+
+    String const& GetUsername() const
+    {
+        return m_username;
     }
 
     void SetUsername(String value)
@@ -2495,6 +3113,490 @@ private:
     String m_playFabId;
     std::optional<PFAuthenticationUserSettingsWrapper<Alloc>> m_settingsForUser;
     String m_username;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper : public ModelWrapper<PFAuthenticationServerLoginWithAndroidDeviceIDRequest, Alloc>
+{
+public:
+    using ModelType = PFAuthenticationServerLoginWithAndroidDeviceIDRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper() = default;
+
+    PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper(const PFAuthenticationServerLoginWithAndroidDeviceIDRequest& model) :
+        ModelWrapper<PFAuthenticationServerLoginWithAndroidDeviceIDRequest, Alloc>{ model },
+        m_androidDevice{ SafeString(model.androidDevice) },
+        m_androidDeviceId{ SafeString(model.androidDeviceId) },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt },
+        m_OS{ SafeString(model.OS) }
+    {
+        SetModelPointers();
+    }
+
+    PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper(const PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper& src) :
+        PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper(PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper&& src) :
+        PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper& operator=(PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper() = default;
+
+    friend void swap(PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper& lhs, PFAuthenticationServerLoginWithAndroidDeviceIDRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_androidDevice, rhs.m_androidDevice);
+        swap(lhs.m_androidDeviceId, rhs.m_androidDeviceId);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
+        swap(lhs.m_OS, rhs.m_OS);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    String const& GetAndroidDevice() const
+    {
+        return m_androidDevice;
+    }
+
+    void SetAndroidDevice(String value)
+    {
+        m_androidDevice = std::move(value);
+        this->m_model.androidDevice =  m_androidDevice.empty() ? nullptr : m_androidDevice.data();
+    }
+
+    String const& GetAndroidDeviceId() const
+    {
+        return m_androidDeviceId;
+    }
+
+    void SetAndroidDeviceId(String value)
+    {
+        m_androidDeviceId = std::move(value);
+        this->m_model.androidDeviceId =  m_androidDeviceId.empty() ? nullptr : m_androidDeviceId.data();
+    }
+
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
+    void SetCreateAccount(bool value)
+    {
+        this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
+    void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
+    {
+        m_infoRequestParameters = std::move(value);
+        this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetOS() const
+    {
+        return m_OS;
+    }
+
+    void SetOS(String value)
+    {
+        m_OS = std::move(value);
+        this->m_model.OS =  m_OS.empty() ? nullptr : m_OS.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.androidDevice = m_androidDevice.empty() ? nullptr : m_androidDevice.data();
+        this->m_model.androidDeviceId = m_androidDeviceId.empty() ? nullptr : m_androidDeviceId.data();
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
+        this->m_model.OS = m_OS.empty() ? nullptr : m_OS.data();
+    }
+
+    String m_androidDevice;
+    String m_androidDeviceId;
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
+    String m_OS;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAuthenticationServerLoginWithBattleNetRequestWrapper : public ModelWrapper<PFAuthenticationServerLoginWithBattleNetRequest, Alloc>
+{
+public:
+    using ModelType = PFAuthenticationServerLoginWithBattleNetRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAuthenticationServerLoginWithBattleNetRequestWrapper() = default;
+
+    PFAuthenticationServerLoginWithBattleNetRequestWrapper(const PFAuthenticationServerLoginWithBattleNetRequest& model) :
+        ModelWrapper<PFAuthenticationServerLoginWithBattleNetRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_identityToken{ SafeString(model.identityToken) },
+        m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt }
+    {
+        SetModelPointers();
+    }
+
+    PFAuthenticationServerLoginWithBattleNetRequestWrapper(const PFAuthenticationServerLoginWithBattleNetRequestWrapper& src) :
+        PFAuthenticationServerLoginWithBattleNetRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAuthenticationServerLoginWithBattleNetRequestWrapper(PFAuthenticationServerLoginWithBattleNetRequestWrapper&& src) :
+        PFAuthenticationServerLoginWithBattleNetRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAuthenticationServerLoginWithBattleNetRequestWrapper& operator=(PFAuthenticationServerLoginWithBattleNetRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAuthenticationServerLoginWithBattleNetRequestWrapper() = default;
+
+    friend void swap(PFAuthenticationServerLoginWithBattleNetRequestWrapper& lhs, PFAuthenticationServerLoginWithBattleNetRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_identityToken, rhs.m_identityToken);
+        swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
+    void SetCreateAccount(bool value)
+    {
+        this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetIdentityToken() const
+    {
+        return m_identityToken;
+    }
+
+    void SetIdentityToken(String value)
+    {
+        m_identityToken = std::move(value);
+        this->m_model.identityToken =  m_identityToken.empty() ? nullptr : m_identityToken.data();
+    }
+
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
+    void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
+    {
+        m_infoRequestParameters = std::move(value);
+        this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.identityToken = m_identityToken.empty() ? nullptr : m_identityToken.data();
+        this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_identityToken;
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAuthenticationServerLoginWithCustomIDRequestWrapper : public ModelWrapper<PFAuthenticationServerLoginWithCustomIDRequest, Alloc>
+{
+public:
+    using ModelType = PFAuthenticationServerLoginWithCustomIDRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAuthenticationServerLoginWithCustomIDRequestWrapper() = default;
+
+    PFAuthenticationServerLoginWithCustomIDRequestWrapper(const PFAuthenticationServerLoginWithCustomIDRequest& model) :
+        ModelWrapper<PFAuthenticationServerLoginWithCustomIDRequest, Alloc>{ model },
+        m_customId{ SafeString(model.customId) },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt }
+    {
+        SetModelPointers();
+    }
+
+    PFAuthenticationServerLoginWithCustomIDRequestWrapper(const PFAuthenticationServerLoginWithCustomIDRequestWrapper& src) :
+        PFAuthenticationServerLoginWithCustomIDRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAuthenticationServerLoginWithCustomIDRequestWrapper(PFAuthenticationServerLoginWithCustomIDRequestWrapper&& src) :
+        PFAuthenticationServerLoginWithCustomIDRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAuthenticationServerLoginWithCustomIDRequestWrapper& operator=(PFAuthenticationServerLoginWithCustomIDRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAuthenticationServerLoginWithCustomIDRequestWrapper() = default;
+
+    friend void swap(PFAuthenticationServerLoginWithCustomIDRequestWrapper& lhs, PFAuthenticationServerLoginWithCustomIDRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customId, rhs.m_customId);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
+    void SetCreateAccount(bool value)
+    {
+        this->m_model.createAccount = value;
+    }
+
+    String const& GetCustomId() const
+    {
+        return m_customId;
+    }
+
+    void SetCustomId(String value)
+    {
+        m_customId = std::move(value);
+        this->m_model.customId =  m_customId.empty() ? nullptr : m_customId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
+    void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
+    {
+        m_infoRequestParameters = std::move(value);
+        this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customId = m_customId.empty() ? nullptr : m_customId.data();
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String m_customId;
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper : public ModelWrapper<PFAuthenticationServerLoginWithIOSDeviceIDRequest, Alloc>
+{
+public:
+    using ModelType = PFAuthenticationServerLoginWithIOSDeviceIDRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper() = default;
+
+    PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper(const PFAuthenticationServerLoginWithIOSDeviceIDRequest& model) :
+        ModelWrapper<PFAuthenticationServerLoginWithIOSDeviceIDRequest, Alloc>{ model },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_deviceId{ SafeString(model.deviceId) },
+        m_deviceModel{ SafeString(model.deviceModel) },
+        m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt },
+        m_OS{ SafeString(model.OS) }
+    {
+        SetModelPointers();
+    }
+
+    PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper(const PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper& src) :
+        PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper(PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper&& src) :
+        PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper& operator=(PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper() = default;
+
+    friend void swap(PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper& lhs, PFAuthenticationServerLoginWithIOSDeviceIDRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_deviceId, rhs.m_deviceId);
+        swap(lhs.m_deviceModel, rhs.m_deviceModel);
+        swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
+        swap(lhs.m_OS, rhs.m_OS);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
+    void SetCreateAccount(bool value)
+    {
+        this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetDeviceId() const
+    {
+        return m_deviceId;
+    }
+
+    void SetDeviceId(String value)
+    {
+        m_deviceId = std::move(value);
+        this->m_model.deviceId =  m_deviceId.empty() ? nullptr : m_deviceId.data();
+    }
+
+    String const& GetDeviceModel() const
+    {
+        return m_deviceModel;
+    }
+
+    void SetDeviceModel(String value)
+    {
+        m_deviceModel = std::move(value);
+        this->m_model.deviceModel =  m_deviceModel.empty() ? nullptr : m_deviceModel.data();
+    }
+
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
+    void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
+    {
+        m_infoRequestParameters = std::move(value);
+        this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetOS() const
+    {
+        return m_OS;
+    }
+
+    void SetOS(String value)
+    {
+        m_OS = std::move(value);
+        this->m_model.OS =  m_OS.empty() ? nullptr : m_OS.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.deviceId = m_deviceId.empty() ? nullptr : m_deviceId.data();
+        this->m_model.deviceModel = m_deviceModel.empty() ? nullptr : m_deviceModel.data();
+        this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
+        this->m_model.OS = m_OS.empty() ? nullptr : m_OS.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    String m_deviceId;
+    String m_deviceModel;
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
+    String m_OS;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -2550,15 +3652,30 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetAuthCode() const
+    {
+        return m_authCode;
+    }
+
     void SetAuthCode(String value)
     {
         m_authCode = std::move(value);
         this->m_model.authCode =  m_authCode.empty() ? nullptr : m_authCode.data();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2568,16 +3685,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    std::optional<int32_t> const& GetIssuerId() const
+    {
+        return m_issuerId;
+    }
+
     void SetIssuerId(std::optional<int32_t> value)
     {
         m_issuerId = std::move(value);
         this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
+    }
+
+    String const& GetRedirectUri() const
+    {
+        return m_redirectUri;
     }
 
     void SetRedirectUri(String value)
@@ -2654,9 +3786,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2666,16 +3808,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
+    }
+
     void SetPlayerSecret(String value)
     {
         m_playerSecret = std::move(value);
         this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+    }
+
+    String const& GetServerCustomId() const
+    {
+        return m_serverCustomId;
     }
 
     void SetServerCustomId(String value)
@@ -2748,9 +3905,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2760,10 +3927,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetSteamId() const
+    {
+        return m_steamId;
     }
 
     void SetSteamId(String value)
@@ -2783,6 +3960,142 @@ private:
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
     String m_steamId;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFAuthenticationServerLoginWithTwitchRequestWrapper : public ModelWrapper<PFAuthenticationServerLoginWithTwitchRequest, Alloc>
+{
+public:
+    using ModelType = PFAuthenticationServerLoginWithTwitchRequest;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFAuthenticationServerLoginWithTwitchRequestWrapper() = default;
+
+    PFAuthenticationServerLoginWithTwitchRequestWrapper(const PFAuthenticationServerLoginWithTwitchRequest& model) :
+        ModelWrapper<PFAuthenticationServerLoginWithTwitchRequest, Alloc>{ model },
+        m_accessToken{ SafeString(model.accessToken) },
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
+        m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt },
+        m_playerSecret{ SafeString(model.playerSecret) },
+        m_playFabId{ SafeString(model.playFabId) }
+    {
+        SetModelPointers();
+    }
+
+    PFAuthenticationServerLoginWithTwitchRequestWrapper(const PFAuthenticationServerLoginWithTwitchRequestWrapper& src) :
+        PFAuthenticationServerLoginWithTwitchRequestWrapper{ src.Model() }
+    {
+    }
+
+    PFAuthenticationServerLoginWithTwitchRequestWrapper(PFAuthenticationServerLoginWithTwitchRequestWrapper&& src) :
+        PFAuthenticationServerLoginWithTwitchRequestWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFAuthenticationServerLoginWithTwitchRequestWrapper& operator=(PFAuthenticationServerLoginWithTwitchRequestWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFAuthenticationServerLoginWithTwitchRequestWrapper() = default;
+
+    friend void swap(PFAuthenticationServerLoginWithTwitchRequestWrapper& lhs, PFAuthenticationServerLoginWithTwitchRequestWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_accessToken, rhs.m_accessToken);
+        swap(lhs.m_customTags, rhs.m_customTags);
+        swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
+        swap(lhs.m_playerSecret, rhs.m_playerSecret);
+        swap(lhs.m_playFabId, rhs.m_playFabId);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    String const& GetAccessToken() const
+    {
+        return m_accessToken;
+    }
+
+    void SetAccessToken(String value)
+    {
+        m_accessToken = std::move(value);
+        this->m_model.accessToken =  m_accessToken.empty() ? nullptr : m_accessToken.data();
+    }
+
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
+    void SetCreateAccount(bool value)
+    {
+        this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
+    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
+    {
+        m_customTags = std::move(value);
+        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
+    void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
+    {
+        m_infoRequestParameters = std::move(value);
+        this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetPlayerSecret() const
+    {
+        return m_playerSecret;
+    }
+
+    void SetPlayerSecret(String value)
+    {
+        m_playerSecret = std::move(value);
+        this->m_model.playerSecret =  m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+    }
+
+    String const& GetPlayFabId() const
+    {
+        return m_playFabId;
+    }
+
+    void SetPlayFabId(String value)
+    {
+        m_playFabId = std::move(value);
+        this->m_model.playFabId =  m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.accessToken = m_accessToken.empty() ? nullptr : m_accessToken.data();
+        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
+        this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
+        this->m_model.playerSecret = m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+        this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+    }
+
+    String m_accessToken;
+    StringDictionaryEntryVector<Alloc> m_customTags;
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
+    String m_playerSecret;
+    String m_playFabId;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -2834,9 +4147,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2846,10 +4169,20 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
+    }
+
+    String const& GetXboxToken() const
+    {
+        return m_xboxToken;
     }
 
     void SetXboxToken(String value)
@@ -2922,9 +4255,19 @@ public:
         rhs.SetModelPointers();
     }
 
+    bool GetCreateAccount() const
+    {
+        return this->m_model.createAccount;
+    }
+
     void SetCreateAccount(bool value)
     {
         this->m_model.createAccount = value;
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -2934,16 +4277,31 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
+    std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> const& GetInfoRequestParameters() const
+    {
+        return m_infoRequestParameters;
+    }
+
     void SetInfoRequestParameters(std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> value)
     {
         m_infoRequestParameters = std::move(value);
         this->m_model.infoRequestParameters = m_infoRequestParameters ? &m_infoRequestParameters->Model() : nullptr;
     }
 
+    String const& GetSandbox() const
+    {
+        return m_sandbox;
+    }
+
     void SetSandbox(String value)
     {
         m_sandbox = std::move(value);
         this->m_model.sandbox =  m_sandbox.empty() ? nullptr : m_sandbox.data();
+    }
+
+    String const& GetXboxId() const
+    {
+        return m_xboxId;
     }
 
     void SetXboxId(String value)
@@ -2967,7 +4325,6 @@ private:
     String m_xboxId;
 };
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 template<template<typename AllocT> class Alloc = std::allocator>
 class PFAuthenticationAuthenticateCustomIdRequestWrapper : public ModelWrapper<PFAuthenticationAuthenticateCustomIdRequest, Alloc>
 {
@@ -3015,10 +4372,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    String const& GetCustomId() const
+    {
+        return m_customId;
+    }
+
     void SetCustomId(String value)
     {
         m_customId = std::move(value);
         this->m_model.customId =  m_customId.empty() ? nullptr : m_customId.data();
+    }
+
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
     }
 
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
@@ -3038,7 +4405,6 @@ private:
     String m_customId;
     StringDictionaryEntryVector<Alloc> m_customTags;
 };
-#endif
 
 template<template<typename AllocT> class Alloc = std::allocator>
 class PFAuthenticationEntityTokenResponseWrapper : public ModelWrapper<PFAuthenticationEntityTokenResponse, Alloc>
@@ -3089,16 +4455,31 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    String const& GetEntityToken() const
+    {
+        return m_entityToken;
+    }
+
     void SetEntityToken(String value)
     {
         m_entityToken = std::move(value);
         this->m_model.entityToken =  m_entityToken.empty() ? nullptr : m_entityToken.data();
+    }
+
+    std::optional<time_t> const& GetTokenExpiration() const
+    {
+        return m_tokenExpiration;
     }
 
     void SetTokenExpiration(std::optional<time_t> value)
@@ -3120,7 +4501,6 @@ private:
     std::optional<time_t> m_tokenExpiration;
 };
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
 template<template<typename AllocT> class Alloc = std::allocator>
 class PFAuthenticationAuthenticateCustomIdResultWrapper : public ModelWrapper<PFAuthenticationAuthenticateCustomIdResult, Alloc>
 {
@@ -3166,10 +4546,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFAuthenticationEntityTokenResponseWrapper<Alloc>> const& GetEntityToken() const
+    {
+        return m_entityToken;
+    }
+
     void SetEntityToken(std::optional<PFAuthenticationEntityTokenResponseWrapper<Alloc>> value)
     {
         m_entityToken = std::move(value);
         this->m_model.entityToken = m_entityToken ? &m_entityToken->Model() : nullptr;
+    }
+
+    bool GetNewlyCreated() const
+    {
+        return this->m_model.newlyCreated;
     }
 
     void SetNewlyCreated(bool value)
@@ -3185,7 +4575,6 @@ private:
 
     std::optional<PFAuthenticationEntityTokenResponseWrapper<Alloc>> m_entityToken;
 };
-#endif
 
 template<template<typename AllocT> class Alloc = std::allocator>
 class PFAuthenticationDeleteRequestWrapper : public ModelWrapper<PFAuthenticationDeleteRequest, Alloc>
@@ -3234,11 +4623,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    PFEntityKeyWrapper<Alloc> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(PFEntityKeyWrapper<Alloc> value)
@@ -3305,11 +4704,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
     }
 
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
@@ -3376,11 +4785,21 @@ public:
         rhs.SetModelPointers();
     }
 
+    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
+    {
+        return m_customTags;
+    }
+
     void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
     {
         m_customTags = std::move(value);
         this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
+    }
+
+    String const& GetEntityToken() const
+    {
+        return m_entityToken;
     }
 
     void SetEntityToken(String value)
@@ -3453,10 +4872,20 @@ public:
         rhs.SetModelPointers();
     }
 
+    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
+    {
+        return m_entity;
+    }
+
     void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
     {
         m_entity = std::move(value);
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
+    }
+
+    std::optional<PFAuthenticationIdentifiedDeviceType> const& GetIdentifiedDeviceType() const
+    {
+        return m_identifiedDeviceType;
     }
 
     void SetIdentifiedDeviceType(std::optional<PFAuthenticationIdentifiedDeviceType> value)
@@ -3465,16 +4894,31 @@ public:
         this->m_model.identifiedDeviceType = m_identifiedDeviceType ? m_identifiedDeviceType.operator->() : nullptr;
     }
 
+    std::optional<PFLoginIdentityProvider> const& GetIdentityProvider() const
+    {
+        return m_identityProvider;
+    }
+
     void SetIdentityProvider(std::optional<PFLoginIdentityProvider> value)
     {
         m_identityProvider = std::move(value);
         this->m_model.identityProvider = m_identityProvider ? m_identityProvider.operator->() : nullptr;
     }
 
+    String const& GetIdentityProviderIssuedId() const
+    {
+        return m_identityProviderIssuedId;
+    }
+
     void SetIdentityProviderIssuedId(String value)
     {
         m_identityProviderIssuedId = std::move(value);
         this->m_model.identityProviderIssuedId =  m_identityProviderIssuedId.empty() ? nullptr : m_identityProviderIssuedId.data();
+    }
+
+    std::optional<PFEntityLineageWrapper<Alloc>> const& GetLineage() const
+    {
+        return m_lineage;
     }
 
     void SetLineage(std::optional<PFEntityLineageWrapper<Alloc>> value)

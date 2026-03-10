@@ -15,7 +15,7 @@ AsyncOp<AbortFileUploadsResponse> DataAPI::AbortFileUploads(
 )
 {
     const char* path{ "/File/AbortFileUploads" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::DataAbortFileUploads,
@@ -50,7 +50,7 @@ AsyncOp<DeleteFilesResponse> DataAPI::DeleteFiles(
 )
 {
     const char* path{ "/File/DeleteFiles" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::DataDeleteFiles,
@@ -85,7 +85,7 @@ AsyncOp<FinalizeFileUploadsResponse> DataAPI::FinalizeFileUploads(
 )
 {
     const char* path{ "/File/FinalizeFileUploads" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::DataFinalizeFileUploads,
@@ -120,7 +120,7 @@ AsyncOp<GetFilesResponse> DataAPI::GetFiles(
 )
 {
     const char* path{ "/File/GetFiles" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::DataGetFiles,
@@ -155,7 +155,7 @@ AsyncOp<GetObjectsResponse> DataAPI::GetObjects(
 )
 {
     const char* path{ "/Object/GetObjects" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::DataGetObjects,
@@ -190,7 +190,7 @@ AsyncOp<InitiateFileUploadsResponse> DataAPI::InitiateFileUploads(
 )
 {
     const char* path{ "/File/InitiateFileUploads" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::DataInitiateFileUploads,
@@ -225,7 +225,7 @@ AsyncOp<SetObjectsResponse> DataAPI::SetObjects(
 )
 {
     const char* path{ "/Object/SetObjects" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::DataSetObjects,

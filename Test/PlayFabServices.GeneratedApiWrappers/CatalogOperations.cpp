@@ -63,7 +63,7 @@ Result<CreateUploadUrlsOperation::ResultType> CreateUploadUrlsOperation::GetResu
     return ResultType{ *result };
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 DeleteEntityItemReviewsOperation::DeleteEntityItemReviewsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -103,7 +103,7 @@ HRESULT DeleteItemOperation::OnStarted(XAsyncBlock* async) noexcept
 }
 
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 GetCatalogConfigOperation::GetCatalogConfigOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -301,7 +301,7 @@ Result<GetItemContainersOperation::ResultType> GetItemContainersOperation::GetRe
     return ResultType{ *result };
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 GetItemModerationStateOperation::GetItemModerationStateOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -547,7 +547,7 @@ Result<SearchItemsOperation::ResultType> SearchItemsOperation::GetResult(XAsyncB
     return ResultType{ *result };
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 SetItemModerationStateOperation::SetItemModerationStateOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -587,7 +587,7 @@ HRESULT SubmitItemReviewVoteOperation::OnStarted(XAsyncBlock* async) noexcept
 }
 
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 TakedownItemReviewsOperation::TakedownItemReviewsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
@@ -608,7 +608,7 @@ HRESULT TakedownItemReviewsOperation::OnStarted(XAsyncBlock* async) noexcept
 
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 
 UpdateCatalogConfigOperation::UpdateCatalogConfigOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },

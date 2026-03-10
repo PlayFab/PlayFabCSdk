@@ -60,7 +60,7 @@ String const& TestContext::Summary() const
 
 bool TestContext::IsFlaky() const
 {
-	return m_isFlaky;
+    return m_isFlaky;
 }
 
 void TestContext::StartTest()
@@ -93,10 +93,10 @@ void TestContext::AssertTrue(bool statement, const char* errorMessage)
     if (!statement)
     {
         if (IsFlaky()) // If the test is flaky, we don't want to fail the test
-		{
+        {
             Result<String> result{ E_FAIL, errorMessage };
             RecordFlakyResult(std::move(result));
-		}
+        }
         else
         {
             throw Exception{ errorMessage };
@@ -107,9 +107,9 @@ void TestContext::AssertTrue(bool statement, const char* errorMessage)
 void TestContext::EndTest(Result<void>&& finalResult) noexcept
 {
     if (IsFlaky())
-	{
-		RecordFlakyResult(std::move(finalResult));
-	}
+    {
+        RecordFlakyResult(std::move(finalResult));
+    }
     else
     {
         RecordResult(std::move(finalResult));

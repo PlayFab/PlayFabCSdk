@@ -9,6 +9,9 @@
 
 #include <playfab/core/PFPal.h>
 #include <playfab/core/PFErrors.h>
+#include <playfab/core/PFLocalUser.h>
+#include <playfab/core/PFLocalUser_Xbox.h>
+#include <playfab/core/PFLocalUser_Steam.h>
 #include <playfab/core/PFServiceConfig.h>
 #include <playfab/core/PFEntity.h>
 #include <playfab/core/PFAuthentication.h>
@@ -20,7 +23,7 @@
 extern "C"
 {
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Initialize PlayFabCore global state. Custom platform hooks must be configured prior to calling PFInitialize.
 /// </summary>

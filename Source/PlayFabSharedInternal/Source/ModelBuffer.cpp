@@ -5,10 +5,6 @@ namespace PlayFab
 {
 
 ModelBuffer::ModelBuffer(void* buffer, size_t bufferSize) :
-#if _DEBUG
-    m_buffer{ static_cast<char*>(buffer) },
-    m_bufferSize{ bufferSize },
-#endif
     m_bufferPtr{ buffer },
     m_remaining{ bufferSize }
 {

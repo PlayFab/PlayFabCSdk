@@ -82,12 +82,59 @@ typedef struct PFLeaderboardsLeaderboardColumn
 } PFLeaderboardsLeaderboardColumn;
 
 /// <summary>
+/// PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig data model.
+/// </summary>
+typedef struct PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig
+{
+    /// <summary>
+    /// The type of event to emit when the leaderboard version end.
+    /// </summary>
+    PFEventType eventType;
+
+    /// <summary>
+    /// The maximum number of entity to return on leaderboard version end. Range is 1 to 1000.
+    /// </summary>
+    int32_t rankLimit;
+
+} PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig;
+
+/// <summary>
+/// PFLeaderboardsLeaderboardVersionEndConfig data model.
+/// </summary>
+typedef struct PFLeaderboardsLeaderboardVersionEndConfig
+{
+    /// <summary>
+    /// The type of event to emit when the leaderboard version end.
+    /// </summary>
+    PFEventType eventType;
+
+} PFLeaderboardsLeaderboardVersionEndConfig;
+
+/// <summary>
+/// PFLeaderboardsLeaderboardEventEmissionConfig data model.
+/// </summary>
+typedef struct PFLeaderboardsLeaderboardEventEmissionConfig
+{
+    /// <summary>
+    /// (Optional) This event emits the top ranks of the leaderboard when the leaderboard version end.
+    /// </summary>
+    _Maybenull_ PFLeaderboardsLeaderboardEntityRankOnVersionEndConfig const* entityRankOnVersionEndConfig;
+
+    /// <summary>
+    /// (Optional) This event is emitted when the leaderboard version end.
+    /// </summary>
+    _Maybenull_ PFLeaderboardsLeaderboardVersionEndConfig const* versionEndConfig;
+
+} PFLeaderboardsLeaderboardEventEmissionConfig;
+
+/// <summary>
 /// PFLeaderboardsCreateLeaderboardDefinitionRequest data model.
 /// </summary>
 typedef struct PFLeaderboardsCreateLeaderboardDefinitionRequest
 {
     /// <summary>
-    /// Leaderboard columns describing the sort directions, cannot be changed after creation.
+    /// Leaderboard columns describing the sort directions, cannot be changed after creation. A maximum
+    /// of 5 columns are allowed.
     /// </summary>
     _Field_size_(columnsCount) PFLeaderboardsLeaderboardColumn const* const* columns;
 
@@ -114,6 +161,12 @@ typedef struct PFLeaderboardsCreateLeaderboardDefinitionRequest
     _Null_terminated_ const char* entityType;
 
     /// <summary>
+    /// (Optional) [In Preview]: The configuration for the events emitted by this leaderboard. If not
+    /// specified, no events will be emitted.
+    /// </summary>
+    _Maybenull_ PFLeaderboardsLeaderboardEventEmissionConfig const* eventEmissionConfig;
+
+    /// <summary>
     /// A name for the leaderboard, unique per title.
     /// </summary>
     _Null_terminated_ const char* name;
@@ -124,9 +177,9 @@ typedef struct PFLeaderboardsCreateLeaderboardDefinitionRequest
     int32_t sizeLimit;
 
     /// <summary>
-    /// The version reset configuration for the leaderboard definition.
+    /// (Optional) The version reset configuration for the leaderboard definition.
     /// </summary>
-    PFVersionConfiguration const* versionConfiguration;
+    _Maybenull_ PFVersionConfiguration const* versionConfiguration;
 
 } PFLeaderboardsCreateLeaderboardDefinitionRequest;
 
@@ -339,7 +392,7 @@ typedef struct PFLeaderboardsGetEntityLeaderboardRequest
     _Null_terminated_ const char* leaderboardName;
 
     /// <summary>
-    /// Maximum number of results to return from the leaderboard. Minimum 1, maximum 1,000.
+    /// Maximum number of results to return from the leaderboard. Minimum 1, maximum 100.
     /// </summary>
     uint32_t pageSize;
 
@@ -448,6 +501,12 @@ typedef struct PFLeaderboardsGetLeaderboardDefinitionResponse
     /// entity types, use 'external' as the type.
     /// </summary>
     _Null_terminated_ const char* entityType;
+
+    /// <summary>
+    /// (Optional) [In Preview]: The configuration for the events emitted by this leaderboard. If not
+    /// specified, no events will be emitted.
+    /// </summary>
+    _Maybenull_ PFLeaderboardsLeaderboardEventEmissionConfig const* eventEmissionConfig;
 
     /// <summary>
     /// (Optional) Last time, in UTC, leaderboard version was incremented.
@@ -566,6 +625,16 @@ typedef struct PFLeaderboardsListLeaderboardDefinitionsRequest
     /// </summary>
     uint32_t customTagsCount;
 
+    /// <summary>
+    /// (Optional) The page size for the request.
+    /// </summary>
+    _Maybenull_ int32_t const* pageSize;
+
+    /// <summary>
+    /// (Optional) The skip token for the paged request.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* skipToken;
+
 } PFLeaderboardsListLeaderboardDefinitionsRequest;
 
 /// <summary>
@@ -593,6 +662,12 @@ typedef struct PFLeaderboardsLeaderboardDefinition
     /// entity types, use 'external' as the type.
     /// </summary>
     _Null_terminated_ const char* entityType;
+
+    /// <summary>
+    /// (Optional) [In Preview]: The configuration for the events emitted by this leaderboard. If not
+    /// specified, no events will be emitted.
+    /// </summary>
+    _Maybenull_ PFLeaderboardsLeaderboardEventEmissionConfig const* eventEmissionConfig;
 
     /// <summary>
     /// (Optional) Last time, in UTC, leaderboard version was incremented.
@@ -635,6 +710,16 @@ typedef struct PFLeaderboardsListLeaderboardDefinitionsResponse
     /// Count of leaderboardDefinitions
     /// </summary>
     uint32_t leaderboardDefinitionsCount;
+
+    /// <summary>
+    /// The page size on the response.
+    /// </summary>
+    int32_t pageSize;
+
+    /// <summary>
+    /// (Optional) The skip token for the paged response.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* skipToken;
 
 } PFLeaderboardsListLeaderboardDefinitionsResponse;
 
@@ -683,6 +768,12 @@ typedef struct PFLeaderboardsUpdateLeaderboardDefinitionRequest
     uint32_t customTagsCount;
 
     /// <summary>
+    /// (Optional) [In Preview]: The configuration for the events emitted by this leaderboard. If not
+    /// specified, no events will be emitted.
+    /// </summary>
+    _Maybenull_ PFLeaderboardsLeaderboardEventEmissionConfig const* eventEmissionConfig;
+
+    /// <summary>
     /// The name of the leaderboard to update the definition for.
     /// </summary>
     _Null_terminated_ const char* name;
@@ -711,7 +802,7 @@ typedef struct PFLeaderboardsLeaderboardEntryUpdate
 
     /// <summary>
     /// (Optional) Arbitrary metadata to store along side the leaderboard entry, will be returned by
-    /// all Leaderboard APIs. Must be less than 50 UTF8 encoded characters.
+    /// all Leaderboard APIs.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* metadata;
 

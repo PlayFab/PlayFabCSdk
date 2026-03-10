@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{4CEE291E-2C36-43F4-A571-008E25FABDCE}</ItemsProjectGuid>
+  </PropertyGroup>
+  <Import Condition="'$(PlayFabPathsImported)' != 'true'" Project="$([MSBuild]::GetPathOfFileAbove(PlayFab.C.paths.props))" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabGameSave\Include\Generated;</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSave.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSaveTypes.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\InternalPFGameSave.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\CacheId.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSave.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSaveTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\GameSaveTypeWrappers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\InternalPFGameSave.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Generated\InternalPFGameSaveTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabGameSave\Source\Wrappers\CoreTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabGameSave\Source\Wrappers\CoreTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabGameSave\Source\Wrappers\Types.h" />
+  </ItemGroup>
+</Project>

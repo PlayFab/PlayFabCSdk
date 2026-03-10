@@ -15,7 +15,7 @@ AsyncOp<void> GroupsAPI::AcceptGroupApplication(
 )
 {
     const char* path{ "/Group/AcceptGroupApplication" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsAcceptGroupApplication,
@@ -48,7 +48,7 @@ AsyncOp<void> GroupsAPI::AcceptGroupInvitation(
 )
 {
     const char* path{ "/Group/AcceptGroupInvitation" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsAcceptGroupInvitation,
@@ -81,7 +81,7 @@ AsyncOp<void> GroupsAPI::AddMembers(
 )
 {
     const char* path{ "/Group/AddMembers" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsAddMembers,
@@ -114,7 +114,7 @@ AsyncOp<ApplyToGroupResponse> GroupsAPI::ApplyToGroup(
 )
 {
     const char* path{ "/Group/ApplyToGroup" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsApplyToGroup,
@@ -149,7 +149,7 @@ AsyncOp<void> GroupsAPI::BlockEntity(
 )
 {
     const char* path{ "/Group/BlockEntity" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsBlockEntity,
@@ -182,7 +182,7 @@ AsyncOp<void> GroupsAPI::ChangeMemberRole(
 )
 {
     const char* path{ "/Group/ChangeMemberRole" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsChangeMemberRole,
@@ -215,7 +215,7 @@ AsyncOp<CreateGroupResponse> GroupsAPI::CreateGroup(
 )
 {
     const char* path{ "/Group/CreateGroup" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsCreateGroup,
@@ -250,7 +250,7 @@ AsyncOp<CreateGroupRoleResponse> GroupsAPI::CreateRole(
 )
 {
     const char* path{ "/Group/CreateRole" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsCreateRole,
@@ -285,7 +285,7 @@ AsyncOp<void> GroupsAPI::DeleteGroup(
 )
 {
     const char* path{ "/Group/DeleteGroup" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsDeleteGroup,
@@ -318,7 +318,7 @@ AsyncOp<void> GroupsAPI::DeleteRole(
 )
 {
     const char* path{ "/Group/DeleteRole" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsDeleteRole,
@@ -351,7 +351,7 @@ AsyncOp<GetGroupResponse> GroupsAPI::GetGroup(
 )
 {
     const char* path{ "/Group/GetGroup" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsGetGroup,
@@ -386,7 +386,7 @@ AsyncOp<InviteToGroupResponse> GroupsAPI::InviteToGroup(
 )
 {
     const char* path{ "/Group/InviteToGroup" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsInviteToGroup,
@@ -421,7 +421,7 @@ AsyncOp<IsMemberResponse> GroupsAPI::IsMember(
 )
 {
     const char* path{ "/Group/IsMember" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsIsMember,
@@ -456,7 +456,7 @@ AsyncOp<ListGroupApplicationsResponse> GroupsAPI::ListGroupApplications(
 )
 {
     const char* path{ "/Group/ListGroupApplications" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsListGroupApplications,
@@ -491,7 +491,7 @@ AsyncOp<ListGroupBlocksResponse> GroupsAPI::ListGroupBlocks(
 )
 {
     const char* path{ "/Group/ListGroupBlocks" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsListGroupBlocks,
@@ -526,7 +526,7 @@ AsyncOp<ListGroupInvitationsResponse> GroupsAPI::ListGroupInvitations(
 )
 {
     const char* path{ "/Group/ListGroupInvitations" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsListGroupInvitations,
@@ -561,7 +561,7 @@ AsyncOp<ListGroupMembersResponse> GroupsAPI::ListGroupMembers(
 )
 {
     const char* path{ "/Group/ListGroupMembers" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsListGroupMembers,
@@ -596,7 +596,7 @@ AsyncOp<ListMembershipResponse> GroupsAPI::ListMembership(
 )
 {
     const char* path{ "/Group/ListMembership" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsListMembership,
@@ -631,7 +631,7 @@ AsyncOp<ListMembershipOpportunitiesResponse> GroupsAPI::ListMembershipOpportunit
 )
 {
     const char* path{ "/Group/ListMembershipOpportunities" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsListMembershipOpportunities,
@@ -666,7 +666,7 @@ AsyncOp<void> GroupsAPI::RemoveGroupApplication(
 )
 {
     const char* path{ "/Group/RemoveGroupApplication" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsRemoveGroupApplication,
@@ -699,7 +699,7 @@ AsyncOp<void> GroupsAPI::RemoveGroupInvitation(
 )
 {
     const char* path{ "/Group/RemoveGroupInvitation" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsRemoveGroupInvitation,
@@ -732,7 +732,7 @@ AsyncOp<void> GroupsAPI::RemoveMembers(
 )
 {
     const char* path{ "/Group/RemoveMembers" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsRemoveMembers,
@@ -765,7 +765,7 @@ AsyncOp<void> GroupsAPI::UnblockEntity(
 )
 {
     const char* path{ "/Group/UnblockEntity" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsUnblockEntity,
@@ -798,7 +798,7 @@ AsyncOp<UpdateGroupResponse> GroupsAPI::UpdateGroup(
 )
 {
     const char* path{ "/Group/UpdateGroup" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsUpdateGroup,
@@ -833,7 +833,7 @@ AsyncOp<UpdateGroupRoleResponse> GroupsAPI::UpdateRole(
 )
 {
     const char* path{ "/Group/UpdateRole" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::GroupsUpdateRole,

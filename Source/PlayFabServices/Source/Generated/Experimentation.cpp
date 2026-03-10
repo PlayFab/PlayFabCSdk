@@ -15,7 +15,7 @@ AsyncOp<GetTreatmentAssignmentResult> ExperimentationAPI::GetTreatmentAssignment
 )
 {
     const char* path{ "/Experimentation/GetTreatmentAssignment" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::ExperimentationGetTreatmentAssignment,

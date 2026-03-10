@@ -11,6 +11,7 @@ void DebugTraceOutput::TraceMessage(const char* message) noexcept
     {
 #if defined(_WIN32)
         OutputDebugStringA(message);
+        OutputDebugStringA("\n");
 #endif
     }
 }

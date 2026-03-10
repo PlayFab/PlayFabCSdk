@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PFCoreGlobalState.h"
+#include "LocalUserCache.h"
 #include "Platform/Platform.h"
 #include "Trace/TraceState.h"
 #include <httpClient/httpClient.h>
@@ -16,6 +17,7 @@ namespace Detail
 uintptr_t const kFirstServiceConfigHandle = 0x10000000;
 uintptr_t const kFirstEventPipelineHandle = 0x30000000;
 uintptr_t const kFirstEntityHandle = 0x40000000;
+uintptr_t const kFirstLocalUserHandle = 0x50000000;
 
 }
 
@@ -93,6 +95,7 @@ HRESULT AccessPFCoreGlobalState(AccessMode mode, SharedPtr<PFCoreGlobalState>& s
 PFCoreGlobalState::PFCoreGlobalState(XTaskQueueHandle backgroundQueue) noexcept :
     m_runContext{ RunContext::Root(backgroundQueue) },
     m_serviceConfigs{ Detail::kFirstServiceConfigHandle },
+    m_localUsers{ Detail::kFirstLocalUserHandle },
     m_entities{ Detail::kFirstEntityHandle },
     m_clientEventPipelines{ Detail::kFirstEventPipelineHandle },
     m_httpRetrySettings{ MakeShared<PFHttpRetrySettings>() },
@@ -113,19 +116,40 @@ PFCoreGlobalState::~PFCoreGlobalState() noexcept
 
 HRESULT PFCoreGlobalState::Create(XTaskQueueHandle backgroundQueue, HCInitArgs* args) noexcept
 {
-    // Initialize any platform hooks. This happens first because these hooks may be used after this point
-    RETURN_IF_FAILED(PlatformInitialize());
+    try
+    {
+        // Initialize any platform hooks. This happens first because these hooks may be used after this point
+        RETURN_IF_FAILED(PlatformInitialize());
 
-    // Next set up tracing so that we can trace as much of initialization as possible.
-    // LocalStorage not needed anywhere else currently so create an instance just for TraceState. If
-    // it is needed elsewhere, there should be a single shared instance hanging off of PFCoreGlobalState
-    RETURN_IF_FAILED(TraceState::Create(RunContext::Root(backgroundQueue), LocalStorage()));
+        // Next set up tracing so that we can trace as much of initialization as possible.
+        // LocalStorage not needed anywhere else currently so create an instance just for TraceState. If
+        // it is needed elsewhere, there should be a single shared instance hanging off of PFCoreGlobalState
+        RETURN_IF_FAILED(TraceState::Create(RunContext::Root(backgroundQueue), LocalStorage()));
 
-    RETURN_IF_FAILED(HCInitialize(args));
+        RETURN_IF_FAILED(HCInitialize(args));
 
-    Allocator<PFCoreGlobalState> a{};
-    SharedPtr<PFCoreGlobalState> state = SharedPtr<PFCoreGlobalState>{ new (a.allocate(1)) PFCoreGlobalState{ backgroundQueue }, Deleter<PFCoreGlobalState>(), a };
-    return AccessPFCoreGlobalState(AccessMode::Initialize, state);
+        PFPlatformType platformType;
+        PlatformInfo platformInfo{};
+        RETURN_IF_FAILED(PlatformGetPlatformType(platformInfo, platformType));
+
+        Allocator<PFCoreGlobalState> a{};
+        SharedPtr<PFCoreGlobalState> state = SharedPtr<PFCoreGlobalState>{ new (a.allocate(1)) PFCoreGlobalState{ backgroundQueue }, Deleter<PFCoreGlobalState>(), a };
+        state->m_platformType = platformType;
+        state->m_isGRTSAvailable = (platformInfo & PlatformInfo::GRTSAvailable) != 0;
+
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
+        auto platformInitResult = PlatformComponents_Android::Initialize(args->javaVM, args->applicationContext);
+        RETURN_IF_FAILED(platformInitResult.hr);
+        state->m_platformComponents = platformInitResult.ExtractPayload();
+#endif
+
+        return AccessPFCoreGlobalState(AccessMode::Initialize, state);
+    }
+    catch (...)
+    {
+        TRACE_WARNING("[0x%08X] Exception thrown in PFCoreGlobalState::Create\n    %s:%u", E_FAIL, __FILE__, __LINE__);
+        return CurrentExceptionToHR();
+    }
 }
 
 HRESULT PFCoreGlobalState::Get(SharedPtr<PFCoreGlobalState>& state) noexcept
@@ -161,19 +185,22 @@ HRESULT PFCoreGlobalState::CleanupAsync(XAsyncBlock* async) noexcept
 
 HRESULT CALLBACK PFCoreGlobalState::CleanupAsyncProvider(XAsyncOp op, XAsyncProviderData const* data)
 {
-    CleanupContext* context{ static_cast<CleanupContext*>(data->context) };
-    
     switch (op)
     {
     case XAsyncOp::Begin:
     try
     {
         TRACE_VERBOSE("PlayFabCore::PFCoreGlobalState::CleanupAsyncProvider::Begin");
+        UniquePtr<CleanupContext> context{ static_cast<CleanupContext*>(data->context) };
 
         RETURN_IF_FAILED(AccessPFCoreGlobalState(AccessMode::Cleanup, context->state));
         context->clientAsyncBlock = data->async;
 
-        context->state->m_runContext.Terminate(*context->state, context);
+        // Clear the local user cache early in the cleanup process to prevent resource leaks
+        Core::LocalUserCache::Instance().ClearAllLocalUsers();
+
+        context->state->m_runContext.Terminate(*context->state, context.get());
+        context.release();
         return S_OK;
     }
     catch (...)
@@ -291,6 +318,11 @@ ServiceConfigHandleTable& PFCoreGlobalState::ServiceConfigs() noexcept
     return m_serviceConfigs;
 }
 
+LocalUserHandleTable& PFCoreGlobalState::LocalUsers() noexcept
+{
+    return m_localUsers;
+}
+
 EntityHandleTable& PFCoreGlobalState::Entities() noexcept
 {
     return m_entities;
@@ -320,4 +352,29 @@ SharedPtr<PFHttpSettings> PFCoreGlobalState::HttpSettings() const noexcept
 {
     return m_httpSettings;
 }
+
+PFPlatformType const PFCoreGlobalState::GetPlatformType() const noexcept
+{
+    return m_platformType;
+}
+
+#if HC_PLATFORM == HC_PLATFORM_GDK
+PFXPALGameSaveContext* PFCoreGlobalState::GameSaveContext() noexcept
+{
+    return &m_gamesave;
+}
+#endif
+
+bool PFCoreGlobalState::IsGRTSAvailable() const noexcept
+{
+    return m_isGRTSAvailable;
+}
+
+#if HC_PLATFORM == HC_PLATFORM_ANDROID
+SharedPtr<PlatformComponents_Android> PFCoreGlobalState::PlatformComponents() const noexcept
+{
+    return m_platformComponents;
+}
+#endif
+
 } // namespace PlayFab

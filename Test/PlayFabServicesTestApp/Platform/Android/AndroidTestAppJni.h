@@ -11,7 +11,9 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved);
 JNIEXPORT void JNICALL Java_com_microsoft_playfab_sdk_AndroidTestClient_InitializeApp(
     JNIEnv* env,
     jobject instance,
-    jobject context
+    jobject context,
+    jstring playerId,
+    jobject signInClient
 );
 
 void Java_com_microsoft_playfab_sdk_AndroidTestClient_UpdateInstances(

@@ -46,12 +46,49 @@ typedef struct PFStatisticsStatisticColumn
 } PFStatisticsStatisticColumn;
 
 /// <summary>
+/// PFStatisticsStatisticsUpdateEventConfig data model.
+/// </summary>
+typedef struct PFStatisticsStatisticsUpdateEventConfig
+{
+    /// <summary>
+    /// The event type to emit when statistics are updated.
+    /// </summary>
+    PFEventType eventType;
+
+} PFStatisticsStatisticsUpdateEventConfig;
+
+/// <summary>
+/// PFStatisticsStatisticsEventEmissionConfig data model.
+/// </summary>
+typedef struct PFStatisticsStatisticsEventEmissionConfig
+{
+    /// <summary>
+    /// (Optional) Emitted when statistics are updated.
+    /// </summary>
+    _Maybenull_ PFStatisticsStatisticsUpdateEventConfig const* updateEventConfig;
+
+} PFStatisticsStatisticsEventEmissionConfig;
+
+/// <summary>
 /// PFStatisticsCreateStatisticDefinitionRequest data model.
 /// </summary>
 typedef struct PFStatisticsCreateStatisticDefinitionRequest
 {
     /// <summary>
-    /// (Optional) The columns for the statistic defining the aggregation method for each column.
+    /// (Optional) [In Preview]: The list of statistic definition names whose scores must be aggregated
+    /// towards this stat. If AggregationSource is specified, the entityType of this definition MUST be
+    /// Title (making it a CommunityStat). Currently, only one aggregation source can be specified.
+    /// </summary>
+    _Maybenull_ _Field_size_(aggregationSourcesCount) const char* const* aggregationSources;
+
+    /// <summary>
+    /// Count of aggregationSources
+    /// </summary>
+    uint32_t aggregationSourcesCount;
+
+    /// <summary>
+    /// (Optional) The columns for the statistic defining the aggregation method for each column. A maximum
+    /// of 5 columns are allowed.
     /// </summary>
     _Maybenull_ _Field_size_(columnsCount) PFStatisticsStatisticColumn const* const* columns;
 
@@ -75,6 +112,12 @@ typedef struct PFStatisticsCreateStatisticDefinitionRequest
     /// (Optional) The entity type allowed to have score(s) for this statistic.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* entityType;
+
+    /// <summary>
+    /// (Optional) [In Preview]: Configurations for different Statistics events that can be emitted by
+    /// the service.
+    /// </summary>
+    _Maybenull_ PFStatisticsStatisticsEventEmissionConfig const* eventEmissionConfig;
 
     /// <summary>
     /// Name of the statistic. Must be less than 150 characters. Restricted to a-Z, 0-9, '(', ')', '_',
@@ -199,6 +242,28 @@ typedef struct PFStatisticsGetStatisticDefinitionRequest
 typedef struct PFStatisticsGetStatisticDefinitionResponse
 {
     /// <summary>
+    /// (Optional) The list of statistic definitions names this definition aggregates to. .
+    /// </summary>
+    _Maybenull_ _Field_size_(aggregationDestinationsCount) const char* const* aggregationDestinations;
+
+    /// <summary>
+    /// Count of aggregationDestinations
+    /// </summary>
+    uint32_t aggregationDestinationsCount;
+
+    /// <summary>
+    /// (Optional) The list of statistic definitions names whose values must be aggregated towards this
+    /// stat. If AggregationSource is specified, the entityType of this definition MUST be Title (making
+    /// it a CommunityStat). Currently, only one aggregation source can be specified.
+    /// </summary>
+    _Maybenull_ _Field_size_(aggregationSourcesCount) const char* const* aggregationSources;
+
+    /// <summary>
+    /// Count of aggregationSources
+    /// </summary>
+    uint32_t aggregationSourcesCount;
+
+    /// <summary>
     /// (Optional) The columns for the statistic defining the aggregation method for each column.
     /// </summary>
     _Maybenull_ _Field_size_(columnsCount) PFStatisticsStatisticColumn const* const* columns;
@@ -217,6 +282,12 @@ typedef struct PFStatisticsGetStatisticDefinitionResponse
     /// (Optional) The entity type that can have this statistic.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* entityType;
+
+    /// <summary>
+    /// (Optional) [In Preview]: Configurations for different Statistics events that can be emitted by
+    /// the service.
+    /// </summary>
+    _Maybenull_ PFStatisticsStatisticsEventEmissionConfig const* eventEmissionConfig;
 
     /// <summary>
     /// (Optional) Last time, in UTC, statistic version was incremented.
@@ -271,6 +342,17 @@ typedef struct PFStatisticsGetStatisticsRequest
     /// entity.
     /// </summary>
     _Maybenull_ PFEntityKey const* entity;
+
+    /// <summary>
+    /// (Optional) The list of statistics to return for the user. If set to null, the current version
+    /// of all statistics are returned.
+    /// </summary>
+    _Maybenull_ _Field_size_(statisticNamesCount) const char* const* statisticNames;
+
+    /// <summary>
+    /// Count of statisticNames
+    /// </summary>
+    uint32_t statisticNamesCount;
 
 } PFStatisticsGetStatisticsRequest;
 
@@ -381,6 +463,17 @@ typedef struct PFStatisticsGetStatisticsForEntitiesRequest
     /// </summary>
     uint32_t entitiesCount;
 
+    /// <summary>
+    /// (Optional) The list of statistics to return for the user. If set to null, the current version
+    /// of all statistics are returned.
+    /// </summary>
+    _Maybenull_ _Field_size_(statisticNamesCount) const char* const* statisticNames;
+
+    /// <summary>
+    /// Count of statisticNames
+    /// </summary>
+    uint32_t statisticNamesCount;
+
 } PFStatisticsGetStatisticsForEntitiesRequest;
 
 /// <summary>
@@ -389,12 +482,12 @@ typedef struct PFStatisticsGetStatisticsForEntitiesRequest
 typedef struct PFStatisticsEntityStatistics
 {
     /// <summary>
-    /// (Optional) Entity key.
+    /// (Optional) The entity for which the statistics are returned.
     /// </summary>
     _Maybenull_ PFEntityKey const* entityKey;
 
     /// <summary>
-    /// (Optional) All statistics for the given entitykey.
+    /// (Optional) The statistics for the given entity key.
     /// </summary>
     _Maybenull_ _Field_size_(statisticsCount) PFStatisticsEntityStatisticValue const* const* statistics;
 
@@ -484,6 +577,16 @@ typedef struct PFStatisticsListStatisticDefinitionsRequest
     /// </summary>
     uint32_t customTagsCount;
 
+    /// <summary>
+    /// (Optional) The page size for the request.
+    /// </summary>
+    _Maybenull_ int32_t const* pageSize;
+
+    /// <summary>
+    /// (Optional) The skip token for the paged request.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* skipToken;
+
 } PFStatisticsListStatisticDefinitionsRequest;
 
 /// <summary>
@@ -491,6 +594,28 @@ typedef struct PFStatisticsListStatisticDefinitionsRequest
 /// </summary>
 typedef struct PFStatisticsStatisticDefinition
 {
+    /// <summary>
+    /// (Optional) The list of statistic definitions names this definition aggregates to. .
+    /// </summary>
+    _Maybenull_ _Field_size_(aggregationDestinationsCount) const char* const* aggregationDestinations;
+
+    /// <summary>
+    /// Count of aggregationDestinations
+    /// </summary>
+    uint32_t aggregationDestinationsCount;
+
+    /// <summary>
+    /// (Optional) The list of statistic definitions names whose values must be aggregated towards this
+    /// stat. If AggregationSource is specified, the entityType of this definition MUST be Title (making
+    /// it a CommunityStat). Currently, only one aggregation source can be specified.
+    /// </summary>
+    _Maybenull_ _Field_size_(aggregationSourcesCount) const char* const* aggregationSources;
+
+    /// <summary>
+    /// Count of aggregationSources
+    /// </summary>
+    uint32_t aggregationSourcesCount;
+
     /// <summary>
     /// (Optional) The columns for the statistic defining the aggregation method for each column.
     /// </summary>
@@ -510,6 +635,12 @@ typedef struct PFStatisticsStatisticDefinition
     /// (Optional) The entity type that can have this statistic.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* entityType;
+
+    /// <summary>
+    /// (Optional) [In Preview]: Configurations for different Statistics events that can be emitted by
+    /// the service.
+    /// </summary>
+    _Maybenull_ PFStatisticsStatisticsEventEmissionConfig const* eventEmissionConfig;
 
     /// <summary>
     /// (Optional) Last time, in UTC, statistic version was incremented.
@@ -549,15 +680,14 @@ typedef struct PFStatisticsStatisticDefinition
 typedef struct PFStatisticsListStatisticDefinitionsResponse
 {
     /// <summary>
-    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
-    /// trace identifiers, etc.).
+    /// The page size on the response.
     /// </summary>
-    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+    int32_t pageSize;
 
     /// <summary>
-    /// Count of customTags
+    /// (Optional) The skip token for the paged response.
     /// </summary>
-    uint32_t customTagsCount;
+    _Maybenull_ _Null_terminated_ const char* skipToken;
 
     /// <summary>
     /// (Optional) List of statistic definitions for the title.
@@ -570,6 +700,34 @@ typedef struct PFStatisticsListStatisticDefinitionsResponse
     uint32_t statisticDefinitionsCount;
 
 } PFStatisticsListStatisticDefinitionsResponse;
+
+/// <summary>
+/// PFStatisticsUnlinkAggregationSourceFromStatisticRequest data model.
+/// </summary>
+typedef struct PFStatisticsUnlinkAggregationSourceFromStatisticRequest
+{
+    /// <summary>
+    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
+    /// trace identifiers, etc.).
+    /// </summary>
+    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
+
+    /// <summary>
+    /// Count of customTags
+    /// </summary>
+    uint32_t customTagsCount;
+
+    /// <summary>
+    /// The name of the statistic to unlink.
+    /// </summary>
+    _Null_terminated_ const char* name;
+
+    /// <summary>
+    /// The name of the aggregation source statistic to unlink.
+    /// </summary>
+    _Null_terminated_ const char* sourceStatisticName;
+
+} PFStatisticsUnlinkAggregationSourceFromStatisticRequest;
 
 /// <summary>
 /// PFStatisticsUpdateStatisticDefinitionRequest data model.
@@ -586,6 +744,12 @@ typedef struct PFStatisticsUpdateStatisticDefinitionRequest
     /// Count of customTags
     /// </summary>
     uint32_t customTagsCount;
+
+    /// <summary>
+    /// (Optional) [In Preview]: Configurations for different Statistics events that can be emitted by
+    /// the service.
+    /// </summary>
+    _Maybenull_ PFStatisticsStatisticsEventEmissionConfig const* eventEmissionConfig;
 
     /// <summary>
     /// Name of the statistic. Must be less than 150 characters. Restricted to a-Z, 0-9, '(', ')', '_',
@@ -607,7 +771,7 @@ typedef struct PFStatisticsStatisticUpdate
 {
     /// <summary>
     /// (Optional) Arbitrary metadata to store along side the statistic, will be returned by all Leaderboard
-    /// APIs. Must be less than 50 UTF8 encoded characters.
+    /// APIs.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* metadata;
 
@@ -670,8 +834,7 @@ typedef struct PFStatisticsUpdateStatisticsRequest
     uint32_t statisticsCount;
 
     /// <summary>
-    /// (Optional) Optional transactionId of this update which can be used to ensure idempotence. Using
-    /// this field is still in testing stage.
+    /// (Optional) Optional transactionId of this update which can be used to ensure idempotence.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* transactionId;
 

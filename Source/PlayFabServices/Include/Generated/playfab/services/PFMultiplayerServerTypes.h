@@ -60,6 +60,10 @@ enum class PFMultiplayerServerAzureVmSize : uint32_t
     Standard_D4ads_v5,
     Standard_D8ads_v5,
     Standard_D16ads_v5,
+    Standard_D2ads_v6,
+    Standard_D4ads_v6,
+    Standard_D8ads_v6,
+    Standard_D16ads_v6,
     Standard_E2a_v4,
     Standard_E4a_v4,
     Standard_E8a_v4,
@@ -746,7 +750,8 @@ typedef struct PFMultiplayerServerRequestMultiplayerServerRequest
 
     /// <summary>
     /// (Optional) Data encoded as a string that is passed to the game server when requested. This can
-    /// be used to to communicate information such as game mode or map through the request flow.
+    /// be used to communicate information such as game mode or map through the request flow. Maximum
+    /// size is 8KB.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* sessionCookie;
 
@@ -997,6 +1002,11 @@ typedef struct PFMultiplayerServerRequestPartyServiceRequest
     /// (Optional) A guid string party ID created track the party session over its life.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* partyId;
+
+    /// <summary>
+    /// (Optional) A player entity Id on behalf of whom the request is being made.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* playFabId;
 
     /// <summary>
     /// The preferred regions to request a party session from. The party service will iterate through

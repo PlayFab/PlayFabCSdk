@@ -7,7 +7,6 @@ function(GET_PLAYFAB_SHARED_INTERNAL_FILES
          )
 
     set(${OUT_PLAYFAB_SHARED_INTERNAL_FILES}
-        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Linux/PlatformUser_Linux.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/ApiXAsyncProvider.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/AsyncOp.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/BaseModel.h"
@@ -18,7 +17,6 @@ function(GET_PLAYFAB_SHARED_INTERNAL_FILES
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/JsonUtils.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Memory.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/ModelBuffer.h"
-        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/PlatformUser.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/PlatformUtils.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Nlohmann.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Result.h"
@@ -29,8 +27,11 @@ function(GET_PLAYFAB_SHARED_INTERNAL_FILES
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Types.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/XAsyncOperation.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/XAsyncProviderBase.h"
+        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/FilePAL.h"
+        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/FilePAL_Generic.h"
+        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/HttpFileDownloadRequest.h"
+        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/HttpFileUploadRequest.h"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/pch.h"
-        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/Linux/PlatformUser_Linux.cpp"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/CancellationToken.cpp"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/Generated/Error.cpp"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/HttpRequest.cpp"
@@ -43,6 +44,10 @@ function(GET_PLAYFAB_SHARED_INTERNAL_FILES
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/Trace.cpp"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/XAsyncOperation.cpp"
         "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/XAsyncProviderBase.cpp"
+        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/FilePAL.cpp"
+        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/FilePAL_Shared.cpp"
+        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/HttpFileDownloadRequest.cpp"
+        "${PATH_TO_SOURCE}/PlayFabSharedInternal/Source/HttpFileUploadRequest.cpp"
         PARENT_SCOPE
         )
 

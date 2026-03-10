@@ -15,7 +15,7 @@ JsonValue AbortFileUploadsRequest::ToJson() const
 
 JsonValue AbortFileUploadsRequest::ToJson(const PFDataAbortFileUploadsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "FileNames", input.fileNames, input.fileNamesCount);
@@ -75,7 +75,7 @@ JsonValue DeleteFilesRequest::ToJson() const
 
 JsonValue DeleteFilesRequest::ToJson(const PFDataDeleteFilesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "FileNames", input.fileNames, input.fileNamesCount);
@@ -135,7 +135,7 @@ JsonValue FinalizeFileUploadsRequest::ToJson() const
 
 JsonValue FinalizeFileUploadsRequest::ToJson(const PFDataFinalizeFileUploadsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "FileNames", input.fileNames, input.fileNamesCount);
@@ -280,7 +280,7 @@ JsonValue GetFilesRequest::ToJson() const
 
 JsonValue GetFilesRequest::ToJson(const PFDataGetFilesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -353,7 +353,7 @@ JsonValue GetObjectsRequest::ToJson() const
 
 JsonValue GetObjectsRequest::ToJson(const PFDataGetObjectsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "EscapeObject", input.escapeObject);
@@ -493,7 +493,7 @@ JsonValue InitiateFileUploadsRequest::ToJson() const
 
 JsonValue InitiateFileUploadsRequest::ToJson(const PFDataInitiateFileUploadsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray(output, "FileNames", input.fileNames, input.fileNamesCount);
@@ -620,7 +620,7 @@ JsonValue SetObject::ToJson() const
 
 JsonValue SetObject::ToJson(const PFDataSetObject& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "DataObject", input.dataObject);
     JsonUtils::ObjectAddMember(output, "DeleteObject", input.deleteObject);
     JsonUtils::ObjectAddMember(output, "EscapedDataObject", input.escapedDataObject);
@@ -635,7 +635,7 @@ JsonValue SetObjectsRequest::ToJson() const
 
 JsonValue SetObjectsRequest::ToJson(const PFDataSetObjectsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "ExpectedProfileVersion", input.expectedProfileVersion);

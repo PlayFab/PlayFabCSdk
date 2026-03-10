@@ -33,7 +33,7 @@ private:
         _In_ uint32_t memoryTypeId
     )
     {
-		UNREFERENCED_PARAMETER(memoryTypeId);
+        UNREFERENCED_PARAMETER(memoryTypeId);
         std::lock_guard<std::mutex> lock{ s_mutex };
         auto ret = new char[dwSize];
         s_allocMap[ret] = s_allocCalls++;
@@ -45,7 +45,7 @@ private:
         _In_ uint32_t memoryTypeId
     )
     {
-		UNREFERENCED_PARAMETER(memoryTypeId);
+        UNREFERENCED_PARAMETER(memoryTypeId);
         std::lock_guard<std::mutex> lock{ s_mutex };
         s_freeCalls++;
         Assert::IsTrue(s_allocMap.erase(pAddress) > 0);

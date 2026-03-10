@@ -12,6 +12,9 @@
 extern "C"
 {
 
+/// <summary>
+/// Enables PlayFab trace logging to a file.
+/// </summary>
 PF_API PFTraceEnableTraceToFile(
     _In_z_ const char* traceFileDirectory
 ) noexcept;

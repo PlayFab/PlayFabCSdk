@@ -15,7 +15,7 @@ JsonValue AcceptGroupApplicationRequest::ToJson() const
 
 JsonValue AcceptGroupApplicationRequest::ToJson(const PFGroupsAcceptGroupApplicationRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -29,7 +29,7 @@ JsonValue AcceptGroupInvitationRequest::ToJson() const
 
 JsonValue AcceptGroupInvitationRequest::ToJson(const PFGroupsAcceptGroupInvitationRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -43,7 +43,7 @@ JsonValue AddMembersRequest::ToJson() const
 
 JsonValue AddMembersRequest::ToJson(const PFGroupsAddMembersRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Members", input.members, input.membersCount);
@@ -58,7 +58,7 @@ JsonValue ApplyToGroupRequest::ToJson() const
 
 JsonValue ApplyToGroupRequest::ToJson(const PFGroupsApplyToGroupRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AutoAcceptOutstandingInvite", input.autoAcceptOutstandingInvite);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -192,7 +192,7 @@ JsonValue BlockEntityRequest::ToJson() const
 
 JsonValue BlockEntityRequest::ToJson(const PFGroupsBlockEntityRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -206,7 +206,7 @@ JsonValue ChangeMemberRoleRequest::ToJson() const
 
 JsonValue ChangeMemberRoleRequest::ToJson(const PFGroupsChangeMemberRoleRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DestinationRoleId", input.destinationRoleId);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -222,7 +222,7 @@ JsonValue CreateGroupRequest::ToJson() const
 
 JsonValue CreateGroupRequest::ToJson(const PFGroupsCreateGroupRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember(output, "GroupName", input.groupName);
@@ -334,7 +334,7 @@ JsonValue CreateGroupRoleRequest::ToJson() const
 
 JsonValue CreateGroupRoleRequest::ToJson(const PFGroupsCreateGroupRoleRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMember(output, "RoleId", input.roleId);
@@ -404,7 +404,7 @@ JsonValue DeleteGroupRequest::ToJson() const
 
 JsonValue DeleteGroupRequest::ToJson(const PFGroupsDeleteGroupRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -417,7 +417,7 @@ JsonValue DeleteRoleRequest::ToJson() const
 
 JsonValue DeleteRoleRequest::ToJson(const PFGroupsDeleteRoleRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMember(output, "RoleId", input.roleId);
@@ -431,7 +431,7 @@ JsonValue GetGroupRequest::ToJson() const
 
 JsonValue GetGroupRequest::ToJson(const PFGroupsGetGroupRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMember(output, "GroupName", input.groupName);
@@ -543,7 +543,7 @@ JsonValue InviteToGroupRequest::ToJson() const
 
 JsonValue InviteToGroupRequest::ToJson(const PFGroupsInviteToGroupRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AutoAcceptOutstandingApplication", input.autoAcceptOutstandingApplication);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
@@ -649,7 +649,7 @@ JsonValue IsMemberRequest::ToJson() const
 
 JsonValue IsMemberRequest::ToJson(const PFGroupsIsMemberRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -694,7 +694,7 @@ JsonValue ListGroupApplicationsRequest::ToJson() const
 
 JsonValue ListGroupApplicationsRequest::ToJson(const PFGroupsListGroupApplicationsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -809,7 +809,7 @@ JsonValue ListGroupBlocksRequest::ToJson() const
 
 JsonValue ListGroupBlocksRequest::ToJson(const PFGroupsListGroupBlocksRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -919,7 +919,7 @@ JsonValue ListGroupInvitationsRequest::ToJson() const
 
 JsonValue ListGroupInvitationsRequest::ToJson(const PFGroupsListGroupInvitationsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -1063,7 +1063,7 @@ JsonValue ListGroupMembersRequest::ToJson() const
 
 JsonValue ListGroupMembersRequest::ToJson(const PFGroupsListGroupMembersRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     return output;
@@ -1184,7 +1184,7 @@ JsonValue ListMembershipRequest::ToJson() const
 
 JsonValue ListMembershipRequest::ToJson(const PFGroupsListMembershipRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -1363,7 +1363,7 @@ JsonValue ListMembershipOpportunitiesRequest::ToJson() const
 
 JsonValue ListMembershipOpportunitiesRequest::ToJson(const PFGroupsListMembershipOpportunitiesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
@@ -1431,7 +1431,7 @@ JsonValue RemoveGroupApplicationRequest::ToJson() const
 
 JsonValue RemoveGroupApplicationRequest::ToJson(const PFGroupsRemoveGroupApplicationRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -1445,7 +1445,7 @@ JsonValue RemoveGroupInvitationRequest::ToJson() const
 
 JsonValue RemoveGroupInvitationRequest::ToJson(const PFGroupsRemoveGroupInvitationRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -1459,7 +1459,7 @@ JsonValue RemoveMembersRequest::ToJson() const
 
 JsonValue RemoveMembersRequest::ToJson(const PFGroupsRemoveMembersRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Members", input.members, input.membersCount);
@@ -1474,7 +1474,7 @@ JsonValue UnblockEntityRequest::ToJson() const
 
 JsonValue UnblockEntityRequest::ToJson(const PFGroupsUnblockEntityRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);
@@ -1488,7 +1488,7 @@ JsonValue UpdateGroupRequest::ToJson() const
 
 JsonValue UpdateGroupRequest::ToJson(const PFGroupsUpdateGroupRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AdminRoleId", input.adminRoleId);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExpectedProfileVersion", input.expectedProfileVersion);
@@ -1560,7 +1560,7 @@ JsonValue UpdateGroupRoleRequest::ToJson() const
 
 JsonValue UpdateGroupRoleRequest::ToJson(const PFGroupsUpdateGroupRoleRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExpectedProfileVersion", input.expectedProfileVersion);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Group", input.group);

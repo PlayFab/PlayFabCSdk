@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{9ab6a9be-a672-44bd-b7de-d466aa9021a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{7d6f41bb-2c53-4df4-b70a-c1f135f3f7b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform\Windows">
+      <UniqueIdentifier>{8f7b5f14-e282-4036-9b44-df2cceaa5a06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{8b250c18-762a-47f5-af2e-6c3897092279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\playfab">
+      <UniqueIdentifier>{23d4a5b0-d7d9-4609-92fc-2d00b14ccfd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\playfab\gamesave">
+      <UniqueIdentifier>{0a7cf5d1-3427-4e3a-8990-82e66439d7d4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\PlayFabGameSave\Source\Platform\Windows\PFGameSaveFilesAPIProvider_Win32.h">
+      <Filter>Source\Platform\Windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\PlayFabGameSave\Source\Platform\Windows\Platform_Win32.cpp">
+      <Filter>Source\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayFabGameSave\Source\Platform\Windows\PFGameSaveFilesAPIProvider_Win32.cpp">
+      <Filter>Source\Platform\Windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

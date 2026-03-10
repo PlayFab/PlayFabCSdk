@@ -13,7 +13,6 @@
 extern "C"
 {
 
-#if 0
 /// <summary>
 /// Deletes title-specific custom properties for a player
 /// </summary>
@@ -22,6 +21,7 @@ extern "C"
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on all platforms.
 /// Deletes custom properties for the specified player. The list of provided property names must be non-empty.
 /// See also ClientGetPlayerCustomPropertyAsync, ClientListPlayerCustomPropertiesAsync, ClientUpdatePlayerCustomPropertiesAsync.
 ///
@@ -72,9 +72,7 @@ PF_API PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResult(
     _Outptr_ PFPlayerDataManagementClientDeletePlayerCustomPropertiesResult** result,
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
-#endif
 
-#if 0
 /// <summary>
 /// Retrieves a title-specific custom property value for a player.
 /// </summary>
@@ -83,6 +81,7 @@ PF_API PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on all platforms.
 /// See also ClientDeletePlayerCustomPropertiesAsync, ClientListPlayerCustomPropertiesAsync, ClientUpdatePlayerCustomPropertiesAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFPlayerDataManagementClientGetPlayerCustomPropertyGetResultSize"/>
@@ -132,7 +131,6 @@ PF_API PFPlayerDataManagementClientGetPlayerCustomPropertyGetResult(
     _Outptr_ PFPlayerDataManagementClientGetPlayerCustomPropertyResult** result,
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
-#endif
 
 /// <summary>
 /// Retrieves the title-specific custom data for the user which is readable and writable by the client
@@ -378,7 +376,6 @@ PF_API PFPlayerDataManagementClientGetUserReadOnlyDataGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 
-#if 0
 /// <summary>
 /// Retrieves title-specific custom property values for a player.
 /// </summary>
@@ -386,6 +383,7 @@ PF_API PFPlayerDataManagementClientGetUserReadOnlyDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on all platforms.
 /// See also ClientDeletePlayerCustomPropertiesAsync, ClientGetPlayerCustomPropertyAsync, ClientUpdatePlayerCustomPropertiesAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFPlayerDataManagementClientListPlayerCustomPropertiesGetResultSize"/>
@@ -432,9 +430,7 @@ PF_API PFPlayerDataManagementClientListPlayerCustomPropertiesGetResult(
     _Outptr_ PFPlayerDataManagementClientListPlayerCustomPropertiesResult** result,
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
-#endif
 
-#if 0
 /// <summary>
 /// Updates the title-specific custom property values for a player
 /// </summary>
@@ -443,6 +439,7 @@ PF_API PFPlayerDataManagementClientListPlayerCustomPropertiesGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on all platforms.
 /// Performs an additive update of the custom properties for the specified player. In updating the player's
 /// custom properties, properties which already exist will have their values overwritten. No other properties
 /// will be changed apart from those specified in the call. See also ClientDeletePlayerCustomPropertiesAsync,
@@ -474,7 +471,6 @@ PF_API PFPlayerDataManagementClientUpdatePlayerCustomPropertiesGetResult(
     _Inout_ XAsyncBlock* async,
     _Out_ PFPlayerDataManagementClientUpdatePlayerCustomPropertiesResult* result
 ) noexcept;
-#endif
 
 /// <summary>
 /// Creates and updates the title-specific custom data for the user which is readable and writable by
@@ -555,7 +551,7 @@ PF_API PFPlayerDataManagementClientUpdateUserPublisherDataGetResult(
     _Out_ PFPlayerDataManagementUpdateUserDataResult* result
 ) noexcept;
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Deletes title-specific custom properties for a player
 /// </summary>
@@ -564,6 +560,7 @@ PF_API PFPlayerDataManagementClientUpdateUserPublisherDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// Deletes custom properties for the specified player. The list of provided property names must be non-empty.
 /// See also ServerGetPlayerCustomPropertyAsync, ServerListPlayerCustomPropertiesAsync, ServerUpdatePlayerCustomPropertiesAsync.
 ///
@@ -616,7 +613,7 @@ PF_API PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Retrieves a title-specific custom property value for a player.
 /// </summary>
@@ -625,6 +622,7 @@ PF_API PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// See also ServerDeletePlayerCustomPropertiesAsync, ServerListPlayerCustomPropertiesAsync, ServerUpdatePlayerCustomPropertiesAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFPlayerDataManagementServerGetPlayerCustomPropertyGetResultSize"/>
@@ -676,7 +674,7 @@ PF_API PFPlayerDataManagementServerGetPlayerCustomPropertyGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the title-specific custom data for the user which is readable and writable by the client
 /// </summary>
@@ -685,7 +683,7 @@ PF_API PFPlayerDataManagementServerGetPlayerCustomPropertyGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Data is stored as JSON key-value pairs. If the Keys parameter is provided, the data object returned
 /// will only contain the data specific to the indicated Keys. Otherwise, the full set of custom user
 /// data will be returned. See also ServerGetUserInternalDataAsync, ServerGetUserReadOnlyDataAsync, ServerUpdateUserDataAsync,
@@ -738,7 +736,7 @@ PF_API PFPlayerDataManagementServerGetUserDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the title-specific custom data for the user which cannot be accessed by the client
 /// </summary>
@@ -747,7 +745,7 @@ PF_API PFPlayerDataManagementServerGetUserDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Data is stored as JSON key-value pairs. If the Keys parameter is provided, the data object returned
 /// will only contain the data specific to the indicated Keys. Otherwise, the full set of custom user
 /// data will be returned. See also ServerGetUserDataAsync, ServerGetUserReadOnlyDataAsync, ServerUpdateUserDataAsync,
@@ -800,7 +798,7 @@ PF_API PFPlayerDataManagementServerGetUserInternalDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the publisher-specific custom data for the user which is readable and writable by the client
 /// </summary>
@@ -809,7 +807,7 @@ PF_API PFPlayerDataManagementServerGetUserInternalDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Data is stored as JSON key-value pairs. If the Keys parameter is provided, the data object returned
 /// will only contain the data specific to the indicated Keys. Otherwise, the full set of custom user
 /// data will be returned. See also ServerGetUserPublisherInternalDataAsync, ServerGetUserPublisherReadOnlyDataAsync,
@@ -864,7 +862,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the publisher-specific custom data for the user which cannot be accessed by the client
 /// </summary>
@@ -873,7 +871,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Data is stored as JSON key-value pairs. If the Keys parameter is provided, the data object returned
 /// will only contain the data specific to the indicated Keys. Otherwise, the full set of custom user
 /// data will be returned. See also ServerGetUserPublisherDataAsync, ServerGetUserPublisherReadOnlyDataAsync,
@@ -928,7 +926,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherInternalDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the publisher-specific custom data for the user which can only be read by the client
 /// </summary>
@@ -937,7 +935,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherInternalDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Data is stored as JSON key-value pairs. If the Keys parameter is provided, the data object returned
 /// will only contain the data specific to the indicated Keys. Otherwise, the full set of custom user
 /// data will be returned. See also ServerGetUserPublisherDataAsync, ServerGetUserPublisherInternalDataAsync,
@@ -992,7 +990,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherReadOnlyDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the title-specific custom data for the user which can only be read by the client
 /// </summary>
@@ -1001,7 +999,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherReadOnlyDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// Data is stored as JSON key-value pairs. If the Keys parameter is provided, the data object returned
 /// will only contain the data specific to the indicated Keys. Otherwise, the full set of custom user
 /// data will be returned. See also ServerGetUserDataAsync, ServerGetUserInternalDataAsync, ServerUpdateUserDataAsync,
@@ -1054,7 +1052,7 @@ PF_API PFPlayerDataManagementServerGetUserReadOnlyDataGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Retrieves title-specific custom property values for a player.
 /// </summary>
@@ -1063,6 +1061,7 @@ PF_API PFPlayerDataManagementServerGetUserReadOnlyDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// See also ServerDeletePlayerCustomPropertiesAsync, ServerGetPlayerCustomPropertyAsync, ServerUpdatePlayerCustomPropertiesAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFPlayerDataManagementServerListPlayerCustomPropertiesGetResultSize"/>
@@ -1112,7 +1111,7 @@ PF_API PFPlayerDataManagementServerListPlayerCustomPropertiesGetResult(
 ) noexcept;
 #endif
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Updates the title-specific custom property values for a player
 /// </summary>
@@ -1121,6 +1120,7 @@ PF_API PFPlayerDataManagementServerListPlayerCustomPropertiesGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
+/// This API is available on Windows.
 /// Performs an additive update of the custom properties for the specified player. In updating the player's
 /// custom properties, properties which already exist will have their values overwritten. No other properties
 /// will be changed apart from those specified in the call. See also ServerDeletePlayerCustomPropertiesAsync,
@@ -1181,7 +1181,7 @@ PF_API PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Updates the title-specific custom data for the user which is readable and writable by the client
 /// </summary>
@@ -1190,7 +1190,7 @@ PF_API PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// This function performs an additive update of the arbitrary JSON object containing the custom data
 /// for the user. In updating the custom data object, keys which already exist in the object will have
 /// their values overwritten, while keys with null values will be removed. No other key-value pairs will
@@ -1221,7 +1221,7 @@ PF_API PFPlayerDataManagementServerUpdateUserDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Updates the title-specific custom data for the user which cannot be accessed by the client
 /// </summary>
@@ -1230,7 +1230,7 @@ PF_API PFPlayerDataManagementServerUpdateUserDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// This function performs an additive update of the arbitrary JSON object containing the custom data
 /// for the user. In updating the custom data object, keys which already exist in the object will have
 /// their values overwritten, keys with null values will be removed. No other key-value pairs will be
@@ -1261,7 +1261,7 @@ PF_API PFPlayerDataManagementServerUpdateUserInternalDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Updates the publisher-specific custom data for the user which is readable and writable by the client
 /// </summary>
@@ -1270,7 +1270,7 @@ PF_API PFPlayerDataManagementServerUpdateUserInternalDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// This function performs an additive update of the arbitrary JSON object containing the custom data
 /// for the user. In updating the custom data object, keys which already exist in the object will have
 /// their values overwritten, while keys with null values will be removed. No other key-value pairs will
@@ -1302,7 +1302,7 @@ PF_API PFPlayerDataManagementServerUpdateUserPublisherDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Updates the publisher-specific custom data for the user which cannot be accessed by the client
 /// </summary>
@@ -1311,7 +1311,7 @@ PF_API PFPlayerDataManagementServerUpdateUserPublisherDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// This function performs an additive update of the arbitrary JSON object containing the custom data
 /// for the user. In updating the custom data object, keys which already exist in the object will have
 /// their values overwritten, keys with null values will be removed. No other key-value pairs will be
@@ -1343,7 +1343,7 @@ PF_API PFPlayerDataManagementServerUpdateUserPublisherInternalDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Updates the publisher-specific custom data for the user which can only be read by the client
 /// </summary>
@@ -1352,7 +1352,7 @@ PF_API PFPlayerDataManagementServerUpdateUserPublisherInternalDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// This function performs an additive update of the arbitrary JSON object containing the custom data
 /// for the user. In updating the custom data object, keys which already exist in the object will have
 /// their values overwritten, keys with null values will be removed. No other key-value pairs will be
@@ -1384,7 +1384,7 @@ PF_API PFPlayerDataManagementServerUpdateUserPublisherReadOnlyDataGetResult(
 ) noexcept;
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Updates the title-specific custom data for the user which can only be read by the client
 /// </summary>
@@ -1393,7 +1393,7 @@ PF_API PFPlayerDataManagementServerUpdateUserPublisherReadOnlyDataGetResult(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
-/// This API is available on Win32, Linux, and macOS.
+/// This API is available on Windows, Linux, and macOS.
 /// This function performs an additive update of the arbitrary JSON object containing the custom data
 /// for the user. In updating the custom data object, keys which already exist in the object will have
 /// their values overwritten, keys with null values will be removed. No other key-value pairs will be

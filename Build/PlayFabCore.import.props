@@ -22,11 +22,11 @@
   <PropertyGroup>
     <PlayFabCoreProjectName>PlayFabCore.$(HCPlatform)</PlayFabCoreProjectName>
     <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'Win32'">$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
-    <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\Gaming.Desktop.x64\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
+    <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
   </PropertyGroup>
 
   <!--Add reference to appropriate PlayFabCore project-->
-  <ItemGroup Condition="'$(HCPlatform)' == 'Win32' Or '$(HCPlatform)' == 'GDK'" Label="PlayFabCore project reference">
+  <ItemGroup Condition="('$(HCPlatform)' == 'Win32' Or '$(HCPlatform)' == 'GDK')" Label="PlayFabCore project reference">
     <ProjectReference Include="$(PlayFabBuildRoot)\$(PlayFabCoreProjectName)\$(PlayFabCoreProjectName).vcxproj">
       <Project Condition="'$(HCPlatform)' == 'Win32'">{e39e44ee-0f50-4a99-a5d5-04633b19128f}</Project>
       <Project Condition="'$(HCPlatform)' == 'GDK'">{d5c6a9a7-da63-4032-8ab2-3350f89162fc}</Project>

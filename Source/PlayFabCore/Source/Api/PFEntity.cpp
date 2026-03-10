@@ -55,9 +55,9 @@ PF_API PFEntityGetEntityTokenAsync(
         }
     };
 
-    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFEntityGetEntityTokenAsync), entityHandle, [&](SharedPtr<Entity> entity, RunContext&& rc)
+    return EntityAsyncApiImpl(async, XASYNC_IDENTITY(PFEntityGetEntityTokenAsync), entityHandle, [&](SharedPtr<PFCoreGlobalState> state, SharedPtr<Entity> entity)
     {
-        auto provider = MakeProvider(std::move(rc), async, XASYNC_IDENTITY(PFEntityGetEntityTokenAsync), GetEntityTokenAsyncWrapper{ std::move(entity) });
+        auto provider = MakeProvider(state->RunContext().DeriveOnQueue(async->queue), async, XASYNC_IDENTITY(PFEntityGetEntityTokenAsync), GetEntityTokenAsyncWrapper{std::move(entity)});
         return XAsyncProviderBase::Run(std::move(provider));
     });
 }
@@ -67,7 +67,10 @@ PF_API PFEntityGetEntityTokenResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFEntityGetEntityTokenResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFEntityGetEntityTokenResult(
@@ -78,17 +81,20 @@ PF_API PFEntityGetEntityTokenResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(entityToken);
-
-    HRESULT hr = XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed);
-    if (SUCCEEDED(hr))
+    return ResultApiImpl(XASYNC_IDENTITY(PFEntityGetEntityTokenResult), [&]()
     {
-        *entityToken = static_cast<PFEntityToken*>(buffer);
-    }
-    return hr;
+        RETURN_HR_INVALIDARG_IF_NULL(entityToken);
+
+        HRESULT hr = XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed);
+        if (SUCCEEDED(hr))
+        {
+            *entityToken = static_cast<PFEntityToken*>(buffer);
+        }
+        return hr;
+    });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_MAC || HC_PLATFORM == HC_PLATFORM_LINUX
 PF_API PFEntityGetSecretKeySize(
     _In_  PFEntityHandle handle,
     _Out_ size_t* secretKeySize
@@ -184,6 +190,45 @@ PF_API PFEntityIsTitlePlayer(
     });
 }
 
+
+PF_API PFEntityGetTitleIdSize(
+    _In_  PFEntityHandle entityHandle,
+    _Out_ size_t* titleIdSize
+) noexcept
+{
+    return EntityApiImpl(XASYNC_IDENTITY(PFEntityGetTitleIdSize), entityHandle, [&](SharedPtr<Entity> entity)
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(titleIdSize);
+        *titleIdSize = entity->ServiceConfig()->TitleId().size() + 1;
+        return S_OK;
+    });
+}
+
+PF_API PFEntityGetTitleId(
+    _In_ PFEntityHandle entityHandle,
+    _In_ size_t titleIdSize,
+    _Out_writes_(titleIdSize) char* titleIdBuffer,
+    _Out_opt_ size_t* titleIdUsed
+) noexcept
+{
+    return EntityApiImpl(XASYNC_IDENTITY(PFEntityGetTitleId), entityHandle, [&](SharedPtr<Entity> entity)
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(titleIdBuffer);
+
+        String const& titleId = entity->ServiceConfig()->TitleId();
+        RETURN_HR_IF(E_INVALIDARG, titleIdSize < titleId.size() + 1);
+
+        memcpy(titleIdBuffer, titleId.data(), titleId.size() + 1);
+
+        if (titleIdUsed)
+        {
+            *titleIdUsed = titleId.size() + 1;
+        }
+
+        return S_OK;
+    });
+}
+
 PF_API PFEntityGetAPIEndpointSize(
     _In_  PFEntityHandle entityHandle,
     _Out_ size_t* apiEndpointSize
@@ -239,12 +284,11 @@ PF_API_(void) PFEntityUnregisterTokenExpiredEventHandler(
     _In_ PFRegistrationToken token
 ) noexcept
 {
-    SharedPtr<PFCoreGlobalState> state;
-    PFCoreGlobalState::Get(state);
-    if (state)
+    ApiImpl(XASYNC_IDENTITY(PFEntityUnregisterTokenExpiredEventHandler), [&](PFCoreGlobalState& state)
     {
-        state->TokenExpiredHandler().UnregisterClientHandler(token);
-    }
+        state.TokenExpiredHandler().UnregisterClientHandler(token);
+        return S_OK;
+    });
 }
 
 PF_API PFEntityRegisterTokenRefreshedEventHandler(
@@ -254,26 +298,24 @@ PF_API PFEntityRegisterTokenRefreshedEventHandler(
     _Out_ PFRegistrationToken* token
 ) noexcept
 {
-    SharedPtr<PFCoreGlobalState> state;
-    RETURN_IF_FAILED(PFCoreGlobalState::Get(state));
-
-    return state->TokenRefreshedHandler().RegisterClientHandler(
-        state->RunContext().DeriveOnQueue(queue),
-        context,
-        handler,
-        token
-    );
+    return ApiImpl(XASYNC_IDENTITY(PFEntityRegisterTokenRefreshedEventHandler), [&](PFCoreGlobalState& state)
+    {
+        return state.TokenRefreshedHandler().RegisterClientHandler(
+            state.RunContext().DeriveOnQueue(queue),
+            context,
+            handler,
+            token
+        );
+    });
 }
 
 PF_API_(void) PFEntityUnregisterTokenRefreshedEventHandler(
     _In_ PFRegistrationToken token
 ) noexcept
 {
-
-    SharedPtr<PFCoreGlobalState> state;
-    PFCoreGlobalState::Get(state);
-    if (state)
+    ApiImpl(XASYNC_IDENTITY(PFEntityUnregisterTokenRefreshedEventHandler), [&](PFCoreGlobalState& state)
     {
-        state->TokenRefreshedHandler().UnregisterClientHandler(token);
-    }
+        state.TokenRefreshedHandler().UnregisterClientHandler(token);
+        return S_OK;
+    });
 }

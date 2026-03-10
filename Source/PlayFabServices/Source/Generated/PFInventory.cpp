@@ -4,9 +4,13 @@
 #include "ApiXAsyncProvider.h"
 #include "GlobalState.h"
 #include <playfab/core/cpp/Entity.h>
+#include "ApiHelpers.h"
 
 using namespace PlayFab;
 using namespace PlayFab::Inventory;
+
+extern "C"
+{
 
 PF_API PFInventoryAddInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
@@ -16,16 +20,16 @@ PF_API PFInventoryAddInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryAddInventoryItemsAsync),
-        std::bind(&InventoryAPI::AddInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryAddInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryAddInventoryItemsAsync),
+            std::bind(&InventoryAPI::AddInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryAddInventoryItemsGetResultSize(
@@ -33,7 +37,10 @@ PF_API PFInventoryAddInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryAddInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryAddInventoryItemsGetResult(
@@ -44,12 +51,15 @@ PF_API PFInventoryAddInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryAddInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryAddInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryAddInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFInventoryDeleteInventoryCollectionAsync(
@@ -60,16 +70,16 @@ PF_API PFInventoryDeleteInventoryCollectionAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryDeleteInventoryCollectionAsync),
-        std::bind(&InventoryAPI::DeleteInventoryCollection, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryDeleteInventoryCollectionAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryDeleteInventoryCollectionAsync),
+            std::bind(&InventoryAPI::DeleteInventoryCollection, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryDeleteInventoryItemsAsync(
@@ -80,16 +90,16 @@ PF_API PFInventoryDeleteInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryDeleteInventoryItemsAsync),
-        std::bind(&InventoryAPI::DeleteInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryDeleteInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryDeleteInventoryItemsAsync),
+            std::bind(&InventoryAPI::DeleteInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryDeleteInventoryItemsGetResultSize(
@@ -97,7 +107,10 @@ PF_API PFInventoryDeleteInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryDeleteInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryDeleteInventoryItemsGetResult(
@@ -108,12 +121,15 @@ PF_API PFInventoryDeleteInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryDeleteInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryDeleteInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryDeleteInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFInventoryExecuteInventoryOperationsAsync(
@@ -124,16 +140,16 @@ PF_API PFInventoryExecuteInventoryOperationsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryExecuteInventoryOperationsAsync),
-        std::bind(&InventoryAPI::ExecuteInventoryOperations, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryExecuteInventoryOperationsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryExecuteInventoryOperationsAsync),
+            std::bind(&InventoryAPI::ExecuteInventoryOperations, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryExecuteInventoryOperationsGetResultSize(
@@ -141,7 +157,10 @@ PF_API PFInventoryExecuteInventoryOperationsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryExecuteInventoryOperationsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryExecuteInventoryOperationsGetResult(
@@ -152,15 +171,18 @@ PF_API PFInventoryExecuteInventoryOperationsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryExecuteInventoryOperationsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryExecuteInventoryOperationsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryExecuteInventoryOperationsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 PF_API PFInventoryExecuteTransferOperationsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryExecuteTransferOperationsRequest* request,
@@ -169,16 +191,16 @@ PF_API PFInventoryExecuteTransferOperationsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryExecuteTransferOperationsAsync),
-        std::bind(&InventoryAPI::ExecuteTransferOperations, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryExecuteTransferOperationsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryExecuteTransferOperationsAsync),
+            std::bind(&InventoryAPI::ExecuteTransferOperations, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryExecuteTransferOperationsGetResultSize(
@@ -186,7 +208,10 @@ PF_API PFInventoryExecuteTransferOperationsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryExecuteTransferOperationsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryExecuteTransferOperationsGetResult(
@@ -197,12 +222,15 @@ PF_API PFInventoryExecuteTransferOperationsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryExecuteTransferOperationsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryExecuteTransferOperationsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryExecuteTransferOperationsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
@@ -214,16 +242,16 @@ PF_API PFInventoryGetInventoryCollectionIdsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryGetInventoryCollectionIdsAsync),
-        std::bind(&InventoryAPI::GetInventoryCollectionIds, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryGetInventoryCollectionIdsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryGetInventoryCollectionIdsAsync),
+            std::bind(&InventoryAPI::GetInventoryCollectionIds, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryGetInventoryCollectionIdsGetResultSize(
@@ -231,7 +259,10 @@ PF_API PFInventoryGetInventoryCollectionIdsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetInventoryCollectionIdsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryGetInventoryCollectionIdsGetResult(
@@ -242,12 +273,15 @@ PF_API PFInventoryGetInventoryCollectionIdsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetInventoryCollectionIdsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryGetInventoryCollectionIdsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryGetInventoryCollectionIdsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFInventoryGetInventoryItemsAsync(
@@ -258,16 +292,16 @@ PF_API PFInventoryGetInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryGetInventoryItemsAsync),
-        std::bind(&InventoryAPI::GetInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryGetInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryGetInventoryItemsAsync),
+            std::bind(&InventoryAPI::GetInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryGetInventoryItemsGetResultSize(
@@ -275,7 +309,10 @@ PF_API PFInventoryGetInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryGetInventoryItemsGetResult(
@@ -286,15 +323,18 @@ PF_API PFInventoryGetInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryGetInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryGetInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
-#if 0
+#if HC_PLATFORM == HC_PLATFORM_GDK
 PF_API PFInventoryGetInventoryOperationStatusAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryGetInventoryOperationStatusRequest* request,
@@ -303,16 +343,16 @@ PF_API PFInventoryGetInventoryOperationStatusAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryGetInventoryOperationStatusAsync),
-        std::bind(&InventoryAPI::GetInventoryOperationStatus, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryGetInventoryOperationStatusAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryGetInventoryOperationStatusAsync),
+            std::bind(&InventoryAPI::GetInventoryOperationStatus, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryGetInventoryOperationStatusGetResultSize(
@@ -320,7 +360,10 @@ PF_API PFInventoryGetInventoryOperationStatusGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetInventoryOperationStatusGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryGetInventoryOperationStatusGetResult(
@@ -331,16 +374,19 @@ PF_API PFInventoryGetInventoryOperationStatusGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetInventoryOperationStatusGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryGetInventoryOperationStatusResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryGetInventoryOperationStatusResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryGetMicrosoftStoreAccessTokensAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryGetMicrosoftStoreAccessTokensRequest* request,
@@ -349,16 +395,16 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryGetMicrosoftStoreAccessTokensAsync),
-        std::bind(&InventoryAPI::GetMicrosoftStoreAccessTokens, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryGetMicrosoftStoreAccessTokensAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryGetMicrosoftStoreAccessTokensAsync),
+            std::bind(&InventoryAPI::GetMicrosoftStoreAccessTokens, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResultSize(
@@ -366,7 +412,10 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetMicrosoftStoreAccessTokensGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
@@ -377,16 +426,19 @@ PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetMicrosoftStoreAccessTokensGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryGetMicrosoftStoreAccessTokensResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryGetMicrosoftStoreAccessTokensResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryGetTransactionHistoryAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryGetTransactionHistoryRequest* request,
@@ -395,16 +447,16 @@ PF_API PFInventoryGetTransactionHistoryAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryGetTransactionHistoryAsync),
-        std::bind(&InventoryAPI::GetTransactionHistory, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryGetTransactionHistoryAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryGetTransactionHistoryAsync),
+            std::bind(&InventoryAPI::GetTransactionHistory, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryGetTransactionHistoryGetResultSize(
@@ -412,7 +464,10 @@ PF_API PFInventoryGetTransactionHistoryGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetTransactionHistoryGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryGetTransactionHistoryGetResult(
@@ -423,12 +478,15 @@ PF_API PFInventoryGetTransactionHistoryGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetTransactionHistoryGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryGetTransactionHistoryResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryGetTransactionHistoryResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
@@ -440,16 +498,16 @@ PF_API PFInventoryPurchaseInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryPurchaseInventoryItemsAsync),
-        std::bind(&InventoryAPI::PurchaseInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryPurchaseInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryPurchaseInventoryItemsAsync),
+            std::bind(&InventoryAPI::PurchaseInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryPurchaseInventoryItemsGetResultSize(
@@ -457,7 +515,10 @@ PF_API PFInventoryPurchaseInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryPurchaseInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryPurchaseInventoryItemsGetResult(
@@ -468,15 +529,18 @@ PF_API PFInventoryPurchaseInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryPurchaseInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryPurchaseInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryPurchaseInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_IOS
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_IOS
 PF_API PFInventoryRedeemAppleAppStoreInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemAppleAppStoreInventoryItemsRequest* request,
@@ -485,16 +549,16 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryRedeemAppleAppStoreInventoryItemsAsync),
-        std::bind(&InventoryAPI::RedeemAppleAppStoreInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryRedeemAppleAppStoreInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryRedeemAppleAppStoreInventoryItemsAsync),
+            std::bind(&InventoryAPI::RedeemAppleAppStoreInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResultSize(
@@ -502,7 +566,10 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemAppleAppStoreInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResult(
@@ -513,16 +580,19 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemAppleAppStoreInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryRedeemAppleAppStoreInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryRedeemAppleAppStoreInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_ANDROID
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_ANDROID
 PF_API PFInventoryRedeemGooglePlayInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemGooglePlayInventoryItemsRequest* request,
@@ -531,16 +601,16 @@ PF_API PFInventoryRedeemGooglePlayInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryRedeemGooglePlayInventoryItemsAsync),
-        std::bind(&InventoryAPI::RedeemGooglePlayInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryRedeemGooglePlayInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryRedeemGooglePlayInventoryItemsAsync),
+            std::bind(&InventoryAPI::RedeemGooglePlayInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryRedeemGooglePlayInventoryItemsGetResultSize(
@@ -548,7 +618,10 @@ PF_API PFInventoryRedeemGooglePlayInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemGooglePlayInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryRedeemGooglePlayInventoryItemsGetResult(
@@ -559,16 +632,19 @@ PF_API PFInventoryRedeemGooglePlayInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemGooglePlayInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryRedeemGooglePlayInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryRedeemGooglePlayInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemMicrosoftStoreInventoryItemsRequest* request,
@@ -577,16 +653,16 @@ PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryRedeemMicrosoftStoreInventoryItemsAsync),
-        std::bind(&InventoryAPI::RedeemMicrosoftStoreInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryRedeemMicrosoftStoreInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryRedeemMicrosoftStoreInventoryItemsAsync),
+            std::bind(&InventoryAPI::RedeemMicrosoftStoreInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResultSize(
@@ -594,7 +670,10 @@ PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemMicrosoftStoreInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult(
@@ -605,16 +684,19 @@ PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryRedeemMicrosoftStoreInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryRedeemMicrosoftStoreInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_NINTENDO_SWITCH || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryRedeemNintendoEShopInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemNintendoEShopInventoryItemsRequest* request,
@@ -623,16 +705,16 @@ PF_API PFInventoryRedeemNintendoEShopInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryRedeemNintendoEShopInventoryItemsAsync),
-        std::bind(&InventoryAPI::RedeemNintendoEShopInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryRedeemNintendoEShopInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryRedeemNintendoEShopInventoryItemsAsync),
+            std::bind(&InventoryAPI::RedeemNintendoEShopInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResultSize(
@@ -640,7 +722,10 @@ PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemNintendoEShopInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResult(
@@ -651,16 +736,19 @@ PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemNintendoEShopInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryRedeemNintendoEShopInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryRedeemNintendoEShopInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_4 || HC_PLATFORM == HC_PLATFORM_SONY_PLAYSTATION_5 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryRedeemPlayStationStoreInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemPlayStationStoreInventoryItemsRequest* request,
@@ -669,16 +757,16 @@ PF_API PFInventoryRedeemPlayStationStoreInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryRedeemPlayStationStoreInventoryItemsAsync),
-        std::bind(&InventoryAPI::RedeemPlayStationStoreInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryRedeemPlayStationStoreInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryRedeemPlayStationStoreInventoryItemsAsync),
+            std::bind(&InventoryAPI::RedeemPlayStationStoreInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResultSize(
@@ -686,7 +774,10 @@ PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemPlayStationStoreInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResult(
@@ -697,16 +788,19 @@ PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemPlayStationStoreInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryRedeemPlayStationStoreInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryRedeemPlayStationStoreInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
-#if HC_PLATFORM == HC_PLATFORM_WIN32 || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
+#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFInventoryRedeemSteamInventoryItemsAsync(
     _In_ PFEntityHandle contextHandle,
     _In_ const PFInventoryRedeemSteamInventoryItemsRequest* request,
@@ -715,16 +809,16 @@ PF_API PFInventoryRedeemSteamInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryRedeemSteamInventoryItemsAsync),
-        std::bind(&InventoryAPI::RedeemSteamInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryRedeemSteamInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryRedeemSteamInventoryItemsAsync),
+            std::bind(&InventoryAPI::RedeemSteamInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryRedeemSteamInventoryItemsGetResultSize(
@@ -732,7 +826,10 @@ PF_API PFInventoryRedeemSteamInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemSteamInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryRedeemSteamInventoryItemsGetResult(
@@ -743,12 +840,15 @@ PF_API PFInventoryRedeemSteamInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemSteamInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryRedeemSteamInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryRedeemSteamInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 #endif
 
@@ -760,16 +860,16 @@ PF_API PFInventorySubtractInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventorySubtractInventoryItemsAsync),
-        std::bind(&InventoryAPI::SubtractInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventorySubtractInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventorySubtractInventoryItemsAsync),
+            std::bind(&InventoryAPI::SubtractInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventorySubtractInventoryItemsGetResultSize(
@@ -777,7 +877,10 @@ PF_API PFInventorySubtractInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventorySubtractInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventorySubtractInventoryItemsGetResult(
@@ -788,12 +891,15 @@ PF_API PFInventorySubtractInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventorySubtractInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventorySubtractInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventorySubtractInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFInventoryTransferInventoryItemsAsync(
@@ -804,16 +910,16 @@ PF_API PFInventoryTransferInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryTransferInventoryItemsAsync),
-        std::bind(&InventoryAPI::TransferInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryTransferInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryTransferInventoryItemsAsync),
+            std::bind(&InventoryAPI::TransferInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryTransferInventoryItemsGetResultSize(
@@ -821,7 +927,10 @@ PF_API PFInventoryTransferInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryTransferInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryTransferInventoryItemsGetResult(
@@ -832,12 +941,15 @@ PF_API PFInventoryTransferInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryTransferInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryTransferInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryTransferInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
 PF_API PFInventoryUpdateInventoryItemsAsync(
@@ -848,16 +960,16 @@ PF_API PFInventoryUpdateInventoryItemsAsync(
 {
     RETURN_HR_INVALIDARG_IF_NULL(request);
 
-    SharedPtr<GlobalState> state{ nullptr };
-    RETURN_IF_FAILED(GlobalState::Get(state));
-
-    auto provider = MakeProvider(
-        state->RunContext().DeriveOnQueue(async->queue),
-        async,
-        XASYNC_IDENTITY(PFInventoryUpdateInventoryItemsAsync),
-        std::bind(&InventoryAPI::UpdateInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-    );
-    return XAsyncProviderBase::Run(std::move(provider));
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryUpdateInventoryItemsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFInventoryUpdateInventoryItemsAsync),
+            std::bind(&InventoryAPI::UpdateInventoryItems, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
 }
 
 PF_API PFInventoryUpdateInventoryItemsGetResultSize(
@@ -865,7 +977,10 @@ PF_API PFInventoryUpdateInventoryItemsGetResultSize(
     _Out_ size_t* bufferSize
 ) noexcept
 {
-    return XAsyncGetResultSize(async, bufferSize);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryUpdateInventoryItemsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
 }
 
 PF_API PFInventoryUpdateInventoryItemsGetResult(
@@ -876,11 +991,15 @@ PF_API PFInventoryUpdateInventoryItemsGetResult(
     _Out_opt_ size_t* bufferUsed
 ) noexcept
 {
-    RETURN_HR_INVALIDARG_IF_NULL(result);
+    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryUpdateInventoryItemsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
 
-    RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-    *result = static_cast<PFInventoryUpdateInventoryItemsResponse*>(buffer);
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFInventoryUpdateInventoryItemsResponse*>(buffer);
 
-    return S_OK;
+        return S_OK;
+    });
 }
 
+}

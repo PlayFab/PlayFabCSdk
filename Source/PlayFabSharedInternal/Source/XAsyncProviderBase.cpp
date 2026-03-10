@@ -15,10 +15,17 @@ XAsyncProviderBase::XAsyncProviderBase(_In_ RunContext&& runContext, _In_ XAsync
     m_runContext{ std::move(runContext) },
     m_async{ async }
 {
+    Stringstream threadIdStream;
+    threadIdStream << std::this_thread::get_id();
+    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase ctor", threadIdStream.str().c_str());
 }
 
 HRESULT XAsyncProviderBase::Run(_In_ UniquePtr<XAsyncProviderBase> provider) noexcept
 {
+    Stringstream threadIdStream;
+    threadIdStream << std::this_thread::get_id();
+    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase::Run", threadIdStream.str().c_str());
+
     RETURN_HR_IF(E_ABORT, provider->m_runContext.RegisterTerminableAndCheck(*provider));
     RETURN_IF_FAILED(XAsyncBegin(provider->m_async, provider.get(), nullptr, provider->identityName, XAsyncProvider));
     provider.release();
@@ -43,22 +50,33 @@ HRESULT XAsyncProviderBase::GetResult(void*, size_t)
 
 HRESULT XAsyncProviderBase::Schedule(uint32_t delay) const
 {
+    Stringstream threadIdStream;
+    threadIdStream << std::this_thread::get_id();
+    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase::Schedule", threadIdStream.str().c_str());
     return XAsyncSchedule(m_async, delay);
 }
 
 void XAsyncProviderBase::Complete(size_t resultSize)
 {
+    Stringstream threadIdStream;
+    threadIdStream << std::this_thread::get_id();
+    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase::Complete", threadIdStream.str().c_str());
     XAsyncComplete(m_async, S_OK, resultSize);
 }
 
 void XAsyncProviderBase::Fail(HRESULT hr)
 {
+    Stringstream threadIdStream;
+    threadIdStream << std::this_thread::get_id();
+    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase::Fail HR:0x%08x", threadIdStream.str().c_str(), static_cast<uint32_t>(hr));
     XAsyncComplete(m_async, hr, 0);
 }
 
 void XAsyncProviderBase::Terminate(ITerminationListener& listener, void* context) noexcept
 {
-    TRACE_WARNING("XAsyncProvider terminated before completion. PFUninitialize may be blocked until result payload is retreived.");
+    Stringstream threadIdStream;
+    threadIdStream << std::this_thread::get_id();
+    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProvider terminated before completion. PFUninitialize may be blocked until result payload is retreived.", threadIdStream.str().c_str());
 
     assert(!m_terminationListener);
     m_terminationListener = &listener;
@@ -69,7 +87,9 @@ HRESULT CALLBACK XAsyncProviderBase::XAsyncProvider(_In_ XAsyncOp op, _Inout_ co
 {
     auto provider{ static_cast<XAsyncProviderBase*>(data->context) };
 
-    TRACE_VERBOSE("Provider[ID=%s] XAsyncOp::%s", provider->identityName, EnumName(op));
+    Stringstream threadIdStream;
+    threadIdStream << std::this_thread::get_id();
+    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] Provider[ID=%s] XAsyncOp::%s", threadIdStream.str().c_str(), provider->identityName, EnumName(op));
 
     switch (op)
     {
@@ -114,7 +134,7 @@ HRESULT CALLBACK XAsyncProviderBase::XAsyncProvider(_In_ XAsyncOp op, _Inout_ co
     }
     case XAsyncOp::Cleanup:
     {
-        // Cleanup should only fail in catostrophic cases. Can't pass result to client 
+        // Cleanup should only fail in catastrophic cases. Can't pass result to client 
         // at this point so die with exception.
 
         // Copy the ITerminationListener locally before destroying the provider, but unregister

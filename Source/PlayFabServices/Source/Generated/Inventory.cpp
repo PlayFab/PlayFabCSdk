@@ -15,7 +15,7 @@ AsyncOp<AddInventoryItemsResponse> InventoryAPI::AddInventoryItems(
 )
 {
     const char* path{ "/Inventory/AddInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryAddInventoryItems,
@@ -50,7 +50,7 @@ AsyncOp<void> InventoryAPI::DeleteInventoryCollection(
 )
 {
     const char* path{ "/Inventory/DeleteInventoryCollection" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryDeleteInventoryCollection,
@@ -83,7 +83,7 @@ AsyncOp<DeleteInventoryItemsResponse> InventoryAPI::DeleteInventoryItems(
 )
 {
     const char* path{ "/Inventory/DeleteInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryDeleteInventoryItems,
@@ -118,7 +118,7 @@ AsyncOp<ExecuteInventoryOperationsResponse> InventoryAPI::ExecuteInventoryOperat
 )
 {
     const char* path{ "/Inventory/ExecuteInventoryOperations" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryExecuteInventoryOperations,
@@ -153,7 +153,7 @@ AsyncOp<ExecuteTransferOperationsResponse> InventoryAPI::ExecuteTransferOperatio
 )
 {
     const char* path{ "/Inventory/ExecuteTransferOperations" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryExecuteTransferOperations,
@@ -188,7 +188,7 @@ AsyncOp<GetInventoryCollectionIdsResponse> InventoryAPI::GetInventoryCollectionI
 )
 {
     const char* path{ "/Inventory/GetInventoryCollectionIds" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryGetInventoryCollectionIds,
@@ -223,7 +223,7 @@ AsyncOp<GetInventoryItemsResponse> InventoryAPI::GetInventoryItems(
 )
 {
     const char* path{ "/Inventory/GetInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryGetInventoryItems,
@@ -258,7 +258,7 @@ AsyncOp<GetInventoryOperationStatusResponse> InventoryAPI::GetInventoryOperation
 )
 {
     const char* path{ "/Inventory/GetInventoryOperationStatus" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryGetInventoryOperationStatus,
@@ -293,7 +293,7 @@ AsyncOp<GetMicrosoftStoreAccessTokensResponse> InventoryAPI::GetMicrosoftStoreAc
 )
 {
     const char* path{ "/Inventory/GetMicrosoftStoreAccessTokens" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryGetMicrosoftStoreAccessTokens,
@@ -328,7 +328,7 @@ AsyncOp<GetTransactionHistoryResponse> InventoryAPI::GetTransactionHistory(
 )
 {
     const char* path{ "/Inventory/GetTransactionHistory" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryGetTransactionHistory,
@@ -363,7 +363,7 @@ AsyncOp<PurchaseInventoryItemsResponse> InventoryAPI::PurchaseInventoryItems(
 )
 {
     const char* path{ "/Inventory/PurchaseInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryPurchaseInventoryItems,
@@ -398,7 +398,7 @@ AsyncOp<RedeemAppleAppStoreInventoryItemsResponse> InventoryAPI::RedeemAppleAppS
 )
 {
     const char* path{ "/Inventory/RedeemAppleAppStoreInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryRedeemAppleAppStoreInventoryItems,
@@ -433,7 +433,7 @@ AsyncOp<RedeemGooglePlayInventoryItemsResponse> InventoryAPI::RedeemGooglePlayIn
 )
 {
     const char* path{ "/Inventory/RedeemGooglePlayInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryRedeemGooglePlayInventoryItems,
@@ -461,7 +461,7 @@ AsyncOp<RedeemGooglePlayInventoryItemsResponse> InventoryAPI::RedeemGooglePlayIn
     });
 }
 
-#if HC_PLATFORM != HC_PLATFORM_GDK
+#if HC_PLATFORM != HC_PLATFORM_GDK // Temporary while GDK is still a separate platform
 AsyncOp<RedeemMicrosoftStoreInventoryItemsResponse> InventoryAPI::RedeemMicrosoftStoreInventoryItems(
     Entity const& entity,
     const RedeemMicrosoftStoreInventoryItemsRequest& request,
@@ -469,7 +469,7 @@ AsyncOp<RedeemMicrosoftStoreInventoryItemsResponse> InventoryAPI::RedeemMicrosof
 )
 {
     const char* path{ "/Inventory/RedeemMicrosoftStoreInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryRedeemMicrosoftStoreInventoryItems,
@@ -496,7 +496,7 @@ AsyncOp<RedeemMicrosoftStoreInventoryItemsResponse> InventoryAPI::RedeemMicrosof
         }
     });
 }
-#endif
+#endif // HC_PLATFORM_GDK
 
 AsyncOp<RedeemNintendoEShopInventoryItemsResponse> InventoryAPI::RedeemNintendoEShopInventoryItems(
     Entity const& entity,
@@ -505,7 +505,7 @@ AsyncOp<RedeemNintendoEShopInventoryItemsResponse> InventoryAPI::RedeemNintendoE
 )
 {
     const char* path{ "/Inventory/RedeemNintendoEShopInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryRedeemNintendoEShopInventoryItems,
@@ -540,7 +540,7 @@ AsyncOp<RedeemPlayStationStoreInventoryItemsResponse> InventoryAPI::RedeemPlaySt
 )
 {
     const char* path{ "/Inventory/RedeemPlayStationStoreInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryRedeemPlayStationStoreInventoryItems,
@@ -575,7 +575,7 @@ AsyncOp<RedeemSteamInventoryItemsResponse> InventoryAPI::RedeemSteamInventoryIte
 )
 {
     const char* path{ "/Inventory/RedeemSteamInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryRedeemSteamInventoryItems,
@@ -610,7 +610,7 @@ AsyncOp<SubtractInventoryItemsResponse> InventoryAPI::SubtractInventoryItems(
 )
 {
     const char* path{ "/Inventory/SubtractInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventorySubtractInventoryItems,
@@ -645,7 +645,7 @@ AsyncOp<TransferInventoryItemsResponse> InventoryAPI::TransferInventoryItems(
 )
 {
     const char* path{ "/Inventory/TransferInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryTransferInventoryItems,
@@ -680,7 +680,7 @@ AsyncOp<UpdateInventoryItemsResponse> InventoryAPI::UpdateInventoryItems(
 )
 {
     const char* path{ "/Inventory/UpdateInventoryItems" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeEntityRequest(
         ServicesCacheId::InventoryUpdateInventoryItems,

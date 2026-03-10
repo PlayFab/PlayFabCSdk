@@ -15,7 +15,7 @@ JsonValue StatisticColumn::ToJson() const
 
 JsonValue StatisticColumn::ToJson(const PFStatisticsStatisticColumn& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AggregationMethod", input.aggregationMethod);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -63,6 +63,103 @@ HRESULT StatisticColumn::Copy(const PFStatisticsStatisticColumn& input, PFStatis
     return S_OK;
 }
 
+JsonValue StatisticsUpdateEventConfig::ToJson() const
+{
+    return StatisticsUpdateEventConfig::ToJson(this->Model());
+}
+
+JsonValue StatisticsUpdateEventConfig::ToJson(const PFStatisticsStatisticsUpdateEventConfig& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember(output, "EventType", input.eventType);
+    return output;
+}
+
+HRESULT StatisticsUpdateEventConfig::FromJson(const JsonValue& input)
+{
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EventType", this->m_model.eventType));
+
+    return S_OK;
+}
+
+size_t StatisticsUpdateEventConfig::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFStatisticsStatisticsUpdateEventConfig const*> StatisticsUpdateEventConfig::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<StatisticsUpdateEventConfig>(&this->Model());
+}
+
+size_t StatisticsUpdateEventConfig::RequiredBufferSize(const PFStatisticsStatisticsUpdateEventConfig& model)
+{
+    UNREFERENCED_PARAMETER(model); // Fixed size
+    return sizeof(ModelType);
+}
+
+HRESULT StatisticsUpdateEventConfig::Copy(const PFStatisticsStatisticsUpdateEventConfig& input, PFStatisticsStatisticsUpdateEventConfig& output, ModelBuffer& buffer)
+{
+    output = input;
+    UNREFERENCED_PARAMETER(buffer); // Fixed size
+    return S_OK;
+}
+
+JsonValue StatisticsEventEmissionConfig::ToJson() const
+{
+    return StatisticsEventEmissionConfig::ToJson(this->Model());
+}
+
+JsonValue StatisticsEventEmissionConfig::ToJson(const PFStatisticsStatisticsEventEmissionConfig& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMember<StatisticsUpdateEventConfig>(output, "UpdateEventConfig", input.updateEventConfig);
+    return output;
+}
+
+HRESULT StatisticsEventEmissionConfig::FromJson(const JsonValue& input)
+{
+    std::optional<StatisticsUpdateEventConfig> updateEventConfig{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "UpdateEventConfig", updateEventConfig));
+    if (updateEventConfig)
+    {
+        this->SetUpdateEventConfig(std::move(*updateEventConfig));
+    }
+
+    return S_OK;
+}
+
+size_t StatisticsEventEmissionConfig::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFStatisticsStatisticsEventEmissionConfig const*> StatisticsEventEmissionConfig::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<StatisticsEventEmissionConfig>(&this->Model());
+}
+
+size_t StatisticsEventEmissionConfig::RequiredBufferSize(const PFStatisticsStatisticsEventEmissionConfig& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.updateEventConfig)
+    {
+        requiredSize += StatisticsUpdateEventConfig::RequiredBufferSize(*model.updateEventConfig);
+    }
+    return requiredSize;
+}
+
+HRESULT StatisticsEventEmissionConfig::Copy(const PFStatisticsStatisticsEventEmissionConfig& input, PFStatisticsStatisticsEventEmissionConfig& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo<StatisticsUpdateEventConfig>(input.updateEventConfig);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.updateEventConfig = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 JsonValue CreateStatisticDefinitionRequest::ToJson() const
 {
     return CreateStatisticDefinitionRequest::ToJson(this->Model());
@@ -70,10 +167,12 @@ JsonValue CreateStatisticDefinitionRequest::ToJson() const
 
 JsonValue CreateStatisticDefinitionRequest::ToJson(const PFStatisticsCreateStatisticDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMemberArray(output, "AggregationSources", input.aggregationSources, input.aggregationSourcesCount);
     JsonUtils::ObjectAddMemberArray<StatisticColumn>(output, "Columns", input.columns, input.columnsCount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "EntityType", input.entityType);
+    JsonUtils::ObjectAddMember<StatisticsEventEmissionConfig>(output, "EventEmissionConfig", input.eventEmissionConfig);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember<VersionConfiguration>(output, "VersionConfiguration", input.versionConfiguration);
     return output;
@@ -86,7 +185,7 @@ JsonValue DeleteStatisticDefinitionRequest::ToJson() const
 
 JsonValue DeleteStatisticDefinitionRequest::ToJson(const PFStatisticsDeleteStatisticDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -99,7 +198,7 @@ JsonValue StatisticDelete::ToJson() const
 
 JsonValue StatisticDelete::ToJson(const PFStatisticsStatisticDelete& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
 }
@@ -111,7 +210,7 @@ JsonValue DeleteStatisticsRequest::ToJson() const
 
 JsonValue DeleteStatisticsRequest::ToJson(const PFStatisticsDeleteStatisticsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<StatisticDelete>(output, "Statistics", input.statistics, input.statisticsCount);
@@ -168,7 +267,7 @@ JsonValue GetStatisticDefinitionRequest::ToJson() const
 
 JsonValue GetStatisticDefinitionRequest::ToJson(const PFStatisticsGetStatisticDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -176,6 +275,14 @@ JsonValue GetStatisticDefinitionRequest::ToJson(const PFStatisticsGetStatisticDe
 
 HRESULT GetStatisticDefinitionResponse::FromJson(const JsonValue& input)
 {
+    CStringVector aggregationDestinations{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "AggregationDestinations", aggregationDestinations));
+    this->SetAggregationDestinations(std::move(aggregationDestinations));
+
+    CStringVector aggregationSources{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "AggregationSources", aggregationSources));
+    this->SetAggregationSources(std::move(aggregationSources));
+
     ModelVector<StatisticColumn> columns{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember<StatisticColumn>(input, "Columns", columns));
     this->SetColumns(std::move(columns));
@@ -185,6 +292,13 @@ HRESULT GetStatisticDefinitionResponse::FromJson(const JsonValue& input)
     String entityType{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EntityType", entityType));
     this->SetEntityType(std::move(entityType));
+
+    std::optional<StatisticsEventEmissionConfig> eventEmissionConfig{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EventEmissionConfig", eventEmissionConfig));
+    if (eventEmissionConfig)
+    {
+        this->SetEventEmissionConfig(std::move(*eventEmissionConfig));
+    }
 
     std::optional<time_t> lastResetTime{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "LastResetTime", lastResetTime));
@@ -223,6 +337,16 @@ Result<PFStatisticsGetStatisticDefinitionResponse const*> GetStatisticDefinition
 size_t GetStatisticDefinitionResponse::RequiredBufferSize(const PFStatisticsGetStatisticDefinitionResponse& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(char*) + sizeof(char*) * model.aggregationDestinationsCount);
+    for (size_t i = 0; i < model.aggregationDestinationsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.aggregationDestinations[i]) + 1);
+    }
+    requiredSize += (alignof(char*) + sizeof(char*) * model.aggregationSourcesCount);
+    for (size_t i = 0; i < model.aggregationSourcesCount; ++i)
+    {
+        requiredSize += (std::strlen(model.aggregationSources[i]) + 1);
+    }
     requiredSize += (alignof(PFStatisticsStatisticColumn*) + sizeof(PFStatisticsStatisticColumn*) * model.columnsCount);
     for (size_t i = 0; i < model.columnsCount; ++i)
     {
@@ -231,6 +355,10 @@ size_t GetStatisticDefinitionResponse::RequiredBufferSize(const PFStatisticsGetS
     if (model.entityType)
     {
         requiredSize += (std::strlen(model.entityType) + 1);
+    }
+    if (model.eventEmissionConfig)
+    {
+        requiredSize += StatisticsEventEmissionConfig::RequiredBufferSize(*model.eventEmissionConfig);
     }
     if (model.lastResetTime)
     {
@@ -256,6 +384,16 @@ HRESULT GetStatisticDefinitionResponse::Copy(const PFStatisticsGetStatisticDefin
 {
     output = input;
     {
+        auto propCopyResult = buffer.CopyToArray(input.aggregationDestinations, input.aggregationDestinationsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.aggregationDestinations = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToArray(input.aggregationSources, input.aggregationSourcesCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.aggregationSources = propCopyResult.ExtractPayload();
+    }
+    {
         auto propCopyResult = buffer.CopyToArray<StatisticColumn>(input.columns, input.columnsCount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.columns = propCopyResult.ExtractPayload();
@@ -264,6 +402,11 @@ HRESULT GetStatisticDefinitionResponse::Copy(const PFStatisticsGetStatisticDefin
         auto propCopyResult = buffer.CopyTo(input.entityType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entityType = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<StatisticsEventEmissionConfig>(input.eventEmissionConfig);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.eventEmissionConfig = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.lastResetTime);
@@ -295,9 +438,10 @@ JsonValue GetStatisticsRequest::ToJson() const
 
 JsonValue GetStatisticsRequest::ToJson(const PFStatisticsGetStatisticsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
+    JsonUtils::ObjectAddMemberArray(output, "StatisticNames", input.statisticNames, input.statisticNamesCount);
     return output;
 }
 
@@ -491,9 +635,10 @@ JsonValue GetStatisticsForEntitiesRequest::ToJson() const
 
 JsonValue GetStatisticsForEntitiesRequest::ToJson(const PFStatisticsGetStatisticsForEntitiesRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Entities", input.entities, input.entitiesCount);
+    JsonUtils::ObjectAddMemberArray(output, "StatisticNames", input.statisticNames, input.statisticNamesCount);
     return output;
 }
 
@@ -617,7 +762,7 @@ JsonValue IncrementStatisticVersionRequest::ToJson() const
 
 JsonValue IncrementStatisticVersionRequest::ToJson(const PFStatisticsIncrementStatisticVersionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     return output;
@@ -660,13 +805,23 @@ JsonValue ListStatisticDefinitionsRequest::ToJson() const
 
 JsonValue ListStatisticDefinitionsRequest::ToJson(const PFStatisticsListStatisticDefinitionsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "PageSize", input.pageSize);
+    JsonUtils::ObjectAddMember(output, "SkipToken", input.skipToken);
     return output;
 }
 
 HRESULT StatisticDefinition::FromJson(const JsonValue& input)
 {
+    CStringVector aggregationDestinations{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "AggregationDestinations", aggregationDestinations));
+    this->SetAggregationDestinations(std::move(aggregationDestinations));
+
+    CStringVector aggregationSources{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "AggregationSources", aggregationSources));
+    this->SetAggregationSources(std::move(aggregationSources));
+
     ModelVector<StatisticColumn> columns{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember<StatisticColumn>(input, "Columns", columns));
     this->SetColumns(std::move(columns));
@@ -676,6 +831,13 @@ HRESULT StatisticDefinition::FromJson(const JsonValue& input)
     String entityType{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EntityType", entityType));
     this->SetEntityType(std::move(entityType));
+
+    std::optional<StatisticsEventEmissionConfig> eventEmissionConfig{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "EventEmissionConfig", eventEmissionConfig));
+    if (eventEmissionConfig)
+    {
+        this->SetEventEmissionConfig(std::move(*eventEmissionConfig));
+    }
 
     std::optional<time_t> lastResetTime{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "LastResetTime", lastResetTime));
@@ -714,6 +876,16 @@ Result<PFStatisticsStatisticDefinition const*> StatisticDefinition::Copy(ModelBu
 size_t StatisticDefinition::RequiredBufferSize(const PFStatisticsStatisticDefinition& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(char*) + sizeof(char*) * model.aggregationDestinationsCount);
+    for (size_t i = 0; i < model.aggregationDestinationsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.aggregationDestinations[i]) + 1);
+    }
+    requiredSize += (alignof(char*) + sizeof(char*) * model.aggregationSourcesCount);
+    for (size_t i = 0; i < model.aggregationSourcesCount; ++i)
+    {
+        requiredSize += (std::strlen(model.aggregationSources[i]) + 1);
+    }
     requiredSize += (alignof(PFStatisticsStatisticColumn*) + sizeof(PFStatisticsStatisticColumn*) * model.columnsCount);
     for (size_t i = 0; i < model.columnsCount; ++i)
     {
@@ -722,6 +894,10 @@ size_t StatisticDefinition::RequiredBufferSize(const PFStatisticsStatisticDefini
     if (model.entityType)
     {
         requiredSize += (std::strlen(model.entityType) + 1);
+    }
+    if (model.eventEmissionConfig)
+    {
+        requiredSize += StatisticsEventEmissionConfig::RequiredBufferSize(*model.eventEmissionConfig);
     }
     if (model.lastResetTime)
     {
@@ -747,6 +923,16 @@ HRESULT StatisticDefinition::Copy(const PFStatisticsStatisticDefinition& input, 
 {
     output = input;
     {
+        auto propCopyResult = buffer.CopyToArray(input.aggregationDestinations, input.aggregationDestinationsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.aggregationDestinations = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyToArray(input.aggregationSources, input.aggregationSourcesCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.aggregationSources = propCopyResult.ExtractPayload();
+    }
+    {
         auto propCopyResult = buffer.CopyToArray<StatisticColumn>(input.columns, input.columnsCount);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.columns = propCopyResult.ExtractPayload();
@@ -755,6 +941,11 @@ HRESULT StatisticDefinition::Copy(const PFStatisticsStatisticDefinition& input, 
         auto propCopyResult = buffer.CopyTo(input.entityType);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.entityType = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo<StatisticsEventEmissionConfig>(input.eventEmissionConfig);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.eventEmissionConfig = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.lastResetTime);
@@ -781,9 +972,11 @@ HRESULT StatisticDefinition::Copy(const PFStatisticsStatisticDefinition& input, 
 
 HRESULT ListStatisticDefinitionsResponse::FromJson(const JsonValue& input)
 {
-    StringDictionaryEntryVector customTags{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CustomTags", customTags));
-    this->SetCustomTags(std::move(customTags));
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PageSize", this->m_model.pageSize));
+
+    String skipToken{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SkipToken", skipToken));
+    this->SetSkipToken(std::move(skipToken));
 
     ModelVector<StatisticDefinition> statisticDefinitions{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember<StatisticDefinition>(input, "StatisticDefinitions", statisticDefinitions));
@@ -805,11 +998,9 @@ Result<PFStatisticsListStatisticDefinitionsResponse const*> ListStatisticDefinit
 size_t ListStatisticDefinitionsResponse::RequiredBufferSize(const PFStatisticsListStatisticDefinitionsResponse& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
-    requiredSize += (alignof(PFStringDictionaryEntry) + sizeof(PFStringDictionaryEntry) * model.customTagsCount);
-    for (size_t i = 0; i < model.customTagsCount; ++i)
+    if (model.skipToken)
     {
-        requiredSize += (std::strlen(model.customTags[i].key) + 1);
-        requiredSize += (std::strlen(model.customTags[i].value) + 1);
+        requiredSize += (std::strlen(model.skipToken) + 1);
     }
     requiredSize += (alignof(PFStatisticsStatisticDefinition*) + sizeof(PFStatisticsStatisticDefinition*) * model.statisticDefinitionsCount);
     for (size_t i = 0; i < model.statisticDefinitionsCount; ++i)
@@ -823,9 +1014,9 @@ HRESULT ListStatisticDefinitionsResponse::Copy(const PFStatisticsListStatisticDe
 {
     output = input;
     {
-        auto propCopyResult = buffer.CopyToDictionary(input.customTags, input.customTagsCount);
+        auto propCopyResult = buffer.CopyTo(input.skipToken);
         RETURN_IF_FAILED(propCopyResult.hr);
-        output.customTags = propCopyResult.ExtractPayload();
+        output.skipToken = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyToArray<StatisticDefinition>(input.statisticDefinitions, input.statisticDefinitionsCount);
@@ -835,6 +1026,20 @@ HRESULT ListStatisticDefinitionsResponse::Copy(const PFStatisticsListStatisticDe
     return S_OK;
 }
 
+JsonValue UnlinkAggregationSourceFromStatisticRequest::ToJson() const
+{
+    return UnlinkAggregationSourceFromStatisticRequest::ToJson(this->Model());
+}
+
+JsonValue UnlinkAggregationSourceFromStatisticRequest::ToJson(const PFStatisticsUnlinkAggregationSourceFromStatisticRequest& input)
+{
+    JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember(output, "Name", input.name);
+    JsonUtils::ObjectAddMember(output, "SourceStatisticName", input.sourceStatisticName);
+    return output;
+}
+
 JsonValue UpdateStatisticDefinitionRequest::ToJson() const
 {
     return UpdateStatisticDefinitionRequest::ToJson(this->Model());
@@ -842,8 +1047,9 @@ JsonValue UpdateStatisticDefinitionRequest::ToJson() const
 
 JsonValue UpdateStatisticDefinitionRequest::ToJson(const PFStatisticsUpdateStatisticDefinitionRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
+    JsonUtils::ObjectAddMember<StatisticsEventEmissionConfig>(output, "EventEmissionConfig", input.eventEmissionConfig);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMember<VersionConfiguration>(output, "VersionConfiguration", input.versionConfiguration);
     return output;
@@ -856,7 +1062,7 @@ JsonValue StatisticUpdate::ToJson() const
 
 JsonValue StatisticUpdate::ToJson(const PFStatisticsStatisticUpdate& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "Metadata", input.metadata);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMemberArray(output, "Scores", input.scores, input.scoresCount);
@@ -871,7 +1077,7 @@ JsonValue UpdateStatisticsRequest::ToJson() const
 
 JsonValue UpdateStatisticsRequest::ToJson(const PFStatisticsUpdateStatisticsRequest& input)
 {
-    JsonValue output { JsonValue::object() };
+    JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     JsonUtils::ObjectAddMemberArray<StatisticUpdate>(output, "Statistics", input.statistics, input.statisticsCount);

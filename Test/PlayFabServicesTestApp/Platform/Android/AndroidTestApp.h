@@ -25,7 +25,9 @@ public:
     void AppInitialize(
         JNIEnv* env,
         jobject activityInstance,
-        jobject context
+        jobject context,
+        jstring currentPlayerId,
+        jobject signInClient
     );
 
     void UpdateInstances(
@@ -40,8 +42,11 @@ public:
     bool RunTests();
     JavaVM* GetJavaVM();
     jobject GetAppContext();
+    std::string const& GetCurrentPlayerId();
+    jobject GetSignInClient();
     void GetBufferFromFile(const char* filename, std::vector<char>& fileBuffer);
     const char* GetDeviceToken();
+    const char* GetServerAuthToken();
 
 private: // Private constructor for singleton behavior
     TestApp();
@@ -54,9 +59,12 @@ private:
     jobject m_context;
     jobject m_activityInstance;
     jclass m_testAppClass;
+    std::string m_currentPlayerId;
+    jobject m_signInClient;
 
     jmethodID m_getBufferFromFileMethod;
     jmethodID m_getDeviceTokenMethod;
+    jmethodID m_getServerAuthTokenMethod;
 };
 
 }

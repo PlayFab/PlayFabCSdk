@@ -15,7 +15,7 @@ AsyncOp<void> PushNotificationsAPI::ServerSendPushNotification(
 )
 {
     const char* path{ "/Server/SendPushNotification" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PushNotificationsServerSendPushNotification,
@@ -48,7 +48,7 @@ AsyncOp<void> PushNotificationsAPI::ServerSendPushNotificationFromTemplate(
 )
 {
     const char* path{ "/Server/SendPushNotificationFromTemplate" };
-    JsonValue requestBody{ request.ToJson() };
+    JsonValue requestBody = request.ToJson();
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::PushNotificationsServerSendPushNotificationFromTemplate,
