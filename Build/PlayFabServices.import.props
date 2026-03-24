@@ -21,7 +21,7 @@
   <PropertyGroup>
     <PlayFabServicesProjectName>PlayFabServices.$(HCPlatform)</PlayFabServicesProjectName>
     <PlayFabServicesOutDir Condition="'$(HCPlatform)' == 'Win32'">$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabServicesProjectName)\</PlayFabServicesOutDir>
-    <PlayFabServicesOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabServicesProjectName)\</PlayFabServicesOutDir>
+    <PlayFabServicesOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\Gaming.Desktop.x64\$(Configuration)\$(PlayFabServicesProjectName)\</PlayFabServicesOutDir>
   </PropertyGroup>
 
   <!--Add reference to appropriate PlayFabServices project-->

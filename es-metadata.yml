@@ -1,0 +1,8 @@
+schemaVersion: 0.0.1
+isProduction: true
+accountableOwners:
+  service: fab862f0-94e9-406b-a60b-da2dfed4d647
+routing:
+  defaultAreaPath:
+    org: microsoft
+    path: Xbox\Developer\SDKs\PlayFab\PF Core

@@ -16,5 +16,5 @@ constexpr char iosPlat[] = "IOS";
 constexpr char macosPlat[] = "MACOS";
 constexpr char androidPlat[] = "ANDROID";
 
-constexpr char buildOrigin[] = "BINARY";
+constexpr char buildOrigin[] = "SOURCE";
 }

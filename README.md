@@ -1,14 +1,9 @@
 # PlayFabCSdk
 Cross-Platform C/C++ PlayFab SDK.
 
-This SDK includes:
-- **PlayFabServices**: Access to PlayFab service APIs (Catalog, Economy, Multiplayer, etc.)
-- **PlayFabCore**: Core authentication and platform functionality
-- **PlayFabGameSave** (GDK): Game save file management with multi-device sync support
-
 This SDK currently supports the following platforms:
-- Windows (Win32) x64
-- GDK (Xbox and Windows)
+- Xbox 
+- Windows
 - Linux (eg. Ubuntu 22.04 or Windows Subsystem for Linux)
 - iOS
 - macOS
@@ -22,7 +17,7 @@ To gain access to platforms supported through private repos, [Request Access](ht
 
 ## Requirements
 
-### Win32 and GDK
+### GDK
 - A [PlayFab developer account](https://developer.playfab.com).
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) installed (to build from source).
 - (For GDK) [Microsoft Game Development Kit](https://learn.microsoft.com/gaming/gdk/) installed.
@@ -41,7 +36,7 @@ To gain access to platforms supported through private repos, [Request Access](ht
 
 Download the most recent release of the SDK from [PlayFabCSdk releases](https://github.com/PlayFab/PlayFabCSdk/releases). 
 
-#### Integrate PlayFab C SDK into your own project - Visual Studio (Win32 and GDK)
+#### Integrate PlayFab C SDK into your own project - Visual Studio (Windows)
 
 Each release package contains the required headers, binaries, and property sheet file (Win32 - PlayFabServicesSDK.Win32.props, GDK - PlayFabServicesSDK.GDK.props) that can be imported to your project to automatically add references.
 
@@ -146,10 +141,6 @@ git submodule update --init --recursive
 ### Building from source for Windows and GDK
 
 After cloning this repository and its submodules, you can build the libraries by opening the solution file PlayFab.C.vs2022.sln. That solution contains the PlayFabServices project, its dependencies, and a test app. After building, the binaries will be in a subdirectory within \Out.
-
-> __Note__: As of the 2510 release, the Win32-specific build projects have been removed. The GDK build projects (e.g. PlayFabCore.GDK, PlayFabServices.GDK) now target both Xbox and Windows desktop via the `x64` platform configuration. The `_GAMING_DESKTOP` define and DirectX link libraries are added automatically by `PlayFab.C.GDK.props`. Note that PlayFabCore.UnitTests is excluded from the x64 solution build since it is a Win32-only project.
-
-To build the PlayFabGameSave library (GDK only), open PlayFabGameSave.C.GDK.vs2022.sln. This solution contains the PlayFabGameSave project along with its dependencies (PlayFabCore, PlayFabServices, libarchive, zlib) and a GDK test app.
 
 #### Import Property Sheet (Windows and GDK)
 
