@@ -1,0 +1,275 @@
+---
+id: Scenario-35-Conflict-UI-Metadata-Validation
+name: 35. Conflict UI Metadata Validation
+tags:
+  - passing
+  - gamesaves
+description: |
+  Verifies that conflict UI receives correct metadata for local save:
+  - localGameSave.time should be the actual file modification time, not "now"
+  - localGameSave.shortSaveDescription should persist across sessions via SetSaveDescription
+  
+  Test flow:
+  - DeviceA uploads baseline with description "Baseline Save"
+  - DeviceA downloads, modifies files, calls SetSaveDescription("Local Progress"), does NOT upload
+  - DeviceB uploads new cloud data with description "Cloud Save"  
+  - DeviceA reinitializes, AddUser triggers conflict, chooses UseLocal
+  - Verify via trace logs: localDesc="Local Progress" and valid timestamp
+devices:
+  DeviceA: {}
+  DeviceB: {}
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  devicea-upload-baseline:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\ConflictMetaA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\ConflictMetaA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    # Create baseline save data
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateTextFile
+            relativePath: save/progress.dat
+            content: "baseline_data_v1"
+    # Set description before upload
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Baseline Save"
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  devicea-modify-and-set-description:
+    # Reinitialize DeviceA, download baseline, modify, set description, but DON'T upload
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\ConflictMetaA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Wait to ensure file timestamps will be noticeably different from "now" in next session
+    - command: Sleep
+      parameters:
+        milliseconds: 3000
+    # Modify local files - this creates pending local changes
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateTextFile
+            relativePath: save/progress.dat
+            content: "local_modified_data_v2"
+    # Set description for local save - this should persist to localstate.json
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Local Progress"
+    # Deliberately do NOT upload - simulate user closing game before syncing
+    # The description "Local Progress" should be persisted to localstate.json
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  deviceb-upload-cloud-change:
+    # DeviceB uploads a different version to cloud, creating conflict scenario
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\ConflictMetaB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\ConflictMetaB"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Modify and upload with different content
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateTextFile
+            relativePath: save/progress.dat
+            content: "cloud_data_from_deviceb_v3"
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Cloud Save"
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  devicea-trigger-conflict-and-verify:
+    # DeviceA reinitializes - conflict should be detected
+    # Trace logs should show:
+    #   - localGameSave.shortSaveDescription = "Local Progress" (persisted from SetSaveDescription)
+    #   - localGameSave.time = actual file modification time (from 3+ seconds ago, not "now")
+    #   - remoteGameSave.shortSaveDescription = "Cloud Save"
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\ConflictMetaA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    # Set up conflict auto-response to UseLocal
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseLocal
+    # AddUser will detect conflict: local has "local_modified_data_v2", cloud has "cloud_data_from_deviceb_v3"
+    # The conflict callback will fire with metadata - check trace logs for validation
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Verify local data was preserved (UseLocal)
+    - command: VerifyFileContent
+      parameters:
+        relativePath: save/progress.dat
+        expectedContent: "local_modified_data_v2"
+    # Upload local version to resolve
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: devicea-upload-baseline
+  - role: DeviceA
+    block: devicea-modify-and-set-description
+  - role: DeviceB
+    block: deviceb-upload-cloud-change
+  - role: DeviceA
+    block: devicea-trigger-conflict-and-verify
+
+cleanup:
+  DeviceA:
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\ConflictMetaA"
+  DeviceB:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\ConflictMetaB"

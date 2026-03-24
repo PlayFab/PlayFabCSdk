@@ -1,0 +1,143 @@
+id: Scenario-37-Telemetry-Crash-Offline-Login-Fail
+name: 37. Telemetry Crash Regression - Offline During Login Failure
+tags:
+  - gamesaves
+  - offline
+  - regression
+  - passing
+description: |
+  Regression test for customer-reported crash when:
+  1. Network fails during AddUserWithUiAsync (ListManifests/login refresh fails)
+  2. User chooses UseOffline from SyncFailed UI
+  3. SetSaveDescriptionAsync is called
+  
+  Pre-fix: Crash in EmitContextActivationEvent() because telemetry pipeline was never created
+           (CreateEntityTelemetryPipeline is only called in ListManifests stage, which is skipped)
+  Post-fix: Graceful handling - telemetry skipped when pipeline not initialized
+  
+  Key difference from scenario-29: This scenario tests the same offline flow but specifically
+  validates that SetSaveDescriptionAsync doesn't crash when called after going offline.
+  Both scenarios mock network failures during AddUserWithUiAsync to force offline mode.
+
+devices:
+  DeviceA: {}
+
+defaults:
+  stepTimeoutSeconds: 240
+
+blocks:
+  initialize-force-login-failure-offline:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    
+    # Configure HTTP mock to fail LoginWithCustomID BEFORE creating user handle
+    # This will cause login to fail during AddUserWithUiAsync's LockStep::Login stage
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/Client/LoginWithCustomID"
+        statusCode: 503
+    
+    # Configure auto-response to go offline after 1 retry
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+        maxRetries: 1
+    
+    # CRITICAL: Create user handle with skipLogin=true
+    # This creates the handle but does NOT associate an entity with it.
+    # When AddUserWithUiAsync runs, PFLocalUserTryGetEntityHandle will return null,
+    # forcing it to go through LockStep::Login stage where our mock will fail it.
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "TelemetryCrashTest_NoEntity"
+        customId: "TelemetryCrashTest_NoEntity"
+        createAccount: true
+        skipLogin: true
+    
+    # AddUser will hit LockStep::Login stage (because no entity is associated)
+    # Login will fail due to mock -> goes to WaitForFailedUI_Login
+    # After retry, user chooses offline -> m_forceDisconnectFromCloud = true
+    # Then EmitContextActivationEvent() is called - this is the crash point!
+    # CreateEntityTelemetryPipeline was NEVER called because we never reached ListManifests!
+    # Pre-fix: CRASH (telemetry pipeline null)
+    # Post-fix: Warning logged, continues gracefully
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 120
+    
+    # Disable auto-responder
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    
+    # Verify we're offline (disconnected from cloud)
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+    
+    - command: PFGameSaveFilesGetFolder
+
+  test-setdescription-after-login-failure:
+    # Create a local file so we have something to work with
+    - command: CreateLocalPayload
+      parameters:
+        files:
+          - relativePath: test/data.bin
+            content: "TEST_DATA_OFFLINE_LOGIN_FAIL"
+    
+    # THIS IS THE KEY TEST: SetSaveDescription after login failed and went offline
+    # Pre-fix: CRASH in EmitContextActivationEvent (telemetry pipeline null)
+    # Post-fix: Should succeed (S_OK) and store description locally
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Description after login failure offline"
+      expectedHr: "0x00000000"
+    
+    # Verify description was stored locally
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Description after login failure offline"
+    
+    # Verify still offline
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+
+  cleanup:
+    # Clear HTTP mocks
+    - command: ClearHttpMocks
+    
+    # Uninitialize
+    - command: PFGameSaveFilesRemoveUser
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: XTaskQueueCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: initialize-force-login-failure-offline
+  - role: DeviceA
+    block: test-setdescription-after-login-failure
+  - role: DeviceA
+    block: cleanup

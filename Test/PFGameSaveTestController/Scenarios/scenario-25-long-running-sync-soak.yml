@@ -1,0 +1,96 @@
+id: Scenario-25-Long-Running-Sync-Soak
+name: 25. Long-Running Sync Soak
+tags:
+  - failing
+  - gamesaves
+description: |
+  10 iterations of upload/download cycles, verify no memory leaks or state corruption.
+  Note: This test requires RunIterations command to be implemented.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 600
+blocks:
+  soak-test-iterations:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    # Iteration loop (10 cycles)
+    - command: RunIterations
+      parameters:
+        count: 10
+        operations:
+          - command: WriteGameSaveData
+            parameters:
+              operations:
+                - verb: CreateTextFile
+                  relativePath: "soak/iteration{{INDEX}}.txt"
+                  content: "ITERATION_{{INDEX}}_DATA"
+                - verb: CreateBinaryFile
+                  relativePath: "soak/binary{{INDEX}}.bin"
+                  bytes: 32768
+                  pattern: [0x50, 0xAB]
+          - command: PFGameSaveFilesUploadWithUiAsync
+            parameters:
+              mode: KeepDeviceActive
+          - command: PFGameSaveFilesUninitializeAsync
+          - command: PFGameSaveFilesInitialize
+            parameters:
+              saveFolder: "C:\\gamesave\\DeviceA"
+          - command: PFGameSaveFilesSetUiCallbacks
+            parameters:
+              enable: true
+          - command: PFLocalUserCreateHandleWithPersistedLocalId
+            parameters:
+              persistedLocalId: "PFGameSaveTestHarness"
+              customId: "PFGameSaveTestHarness"
+              createAccount: true
+          - command: PFGameSaveFilesAddUserWithUiAsync
+    # Final snapshot
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: soak-test-iterations
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"

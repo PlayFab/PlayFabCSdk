@@ -1,0 +1,169 @@
+id: Interactive-03-Debug-SetDescription-Offline-Crash
+name: 3. Debug SetSaveDescription Offline Crash
+tags:
+  - interactive
+  - gamesaves
+  - debug
+description: |
+  Interactive test to debug customer-reported crash when calling SetSaveDescriptionAsync offline.
+  Multiple pause points to test disconnecting network at different stages.
+  
+  INSTRUCTIONS:
+  1. Run test with network connected
+  2. At each WaitForUserInput prompt, EITHER:
+     a) Press SPACE/ENTER to continue (keep network on), OR
+     b) Disconnect network, then press SPACE/ENTER
+  3. Note which pause point causes the crash
+  
+  PAUSE POINTS:
+  - PAUSE_1: After PFInitialize, before AddUser
+  - PAUSE_2: After AddUser succeeds (ONLINE), before creating save data
+  - PAUSE_3: After creating save data, before SetSaveDescriptionAsync
+  - PAUSE_4: After SetSaveDescription, before Upload
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 600
+blocks:
+  debug-setdescription-offline:
+    # === INITIALIZATION ===
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DebugOffline"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DebugOffline"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+
+    # === PAUSE_0: Before PlayFab Login (CRASH REPRO POINT) ===
+    # Disconnect network HERE to reproduce customer crash - Login will fail, pipeline never created
+    - command: WaitForUserInput
+      parameters:
+        message: "[PAUSE_0] BEFORE PlayFab Login - Disconnect network NOW to reproduce crash, then press SPACE/ENTER..."
+
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+
+    # === PAUSE_1: After PlayFab Login, Before AddUser ===
+    # Disconnecting here won't crash - pipeline gets created in ListManifests stage
+    - command: WaitForUserInput
+      parameters:
+        message: "[PAUSE_1] AFTER PlayFab Login, BEFORE AddUser - Disconnect here for non-crash offline path..."
+
+    # === Configure auto-responder for AddUser sync failures ===
+    # If offline, AddUser will show SyncFailed UI - auto-respond with UseOffline to continue in offline mode
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: UseOffline
+
+    # === ADD USER (works online OR offline) ===
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 120
+    
+    # Disable sync failed auto-responder after AddUser
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+        
+    # Note: Not checking IsConnectedToCloud here - AddUser can succeed offline
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+
+    # === PAUSE_2: After AddUser succeeds ===
+    - command: WaitForUserInput
+      parameters:
+        message: "[PAUSE_2] AFTER AddUser (online) - Disconnect network now if testing this point, then press SPACE/ENTER..."
+
+    # === CREATE SAVE DATA ===
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/savefile.bin
+            bytes: 1024
+            pattern: [0xDE, 0xAD, 0xBE, 0xEF]
+
+    # === PAUSE_3: Before SetSaveDescriptionAsync ===
+    - command: WaitForUserInput
+      parameters:
+        message: "[PAUSE_3] BEFORE SetSaveDescriptionAsync - Disconnect network now if testing this point, then press SPACE/ENTER..."
+
+    # === CHECK STATE BEFORE SetSaveDescription ===
+    # Note: Not asserting expectedConnected - just logging state
+    - command: PFGameSaveFilesIsConnectedToCloud
+
+    # === THE KEY CALL - SetSaveDescriptionAsync ===
+    # If this crashes, we've reproduced the issue!
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Test description - checking if this crashes offline"
+      timeoutSeconds: 120
+      # Note: Not specifying expectedHr - let it succeed or fail, we want to see if it crashes
+
+    # === PAUSE_4: After SetSaveDescription ===
+    - command: WaitForUserInput
+      parameters:
+        message: "[PAUSE_4] AFTER SetSaveDescriptionAsync completed - Disconnect network now if testing upload, then press SPACE/ENTER..."
+
+    # === Try Upload ===
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+        # When offline, upload may fail with:
+        # - 0x00000000: Success (online)
+        # - 0x89237004: E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD (offline mode)
+        # - 0x800704C7: E_CANCELLED (user cancelled via SyncFailed auto-response)
+        expectedHr: "0x00000000,0x89237004,0x800704C7"
+      timeoutSeconds: 120
+
+    # === FINAL STATE CHECK ===
+    - command: WaitForUserInput
+      parameters:
+        message: "[DONE] Test completed without crash! Press SPACE/ENTER to cleanup..."
+
+    # === CLEANUP ===
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+
+executionOrder:
+  - role: DeviceA
+    block: debug-setdescription-offline
+
+cleanup:
+  DeviceA:
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

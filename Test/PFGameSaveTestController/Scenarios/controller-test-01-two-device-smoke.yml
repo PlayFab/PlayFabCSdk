@@ -1,0 +1,40 @@
+id: Scenario-01-Two-Device-Smoke
+name: 1. Two-Device Routing Smoke
+tags:
+  - harness
+devices:
+  DeviceA: {}
+  DeviceB: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  deviceA-first:
+    - command: SmokeEnsureConnected
+    - command: SmokeCommandEcho
+      parameters:
+        payload: "ping-a1"
+  deviceA-last:
+    - command: SmokeCommandEcho
+      parameters:
+        payload: "ping-a2"
+    - command: SmokeTeardown
+  deviceB-middle:
+    - command: SmokeEnsureConnected
+    - command: SmokeCommandEcho
+      parameters:
+        payload: "ping-b1"
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5000
+executionOrder:
+  - role: DeviceA
+    block: deviceA-first
+  - role: DeviceB
+    block: deviceB-middle
+  - role: DeviceA
+    block: deviceA-last
+cleanup:
+  DeviceA:
+    - command: SmokeTeardown
+  DeviceB:
+    - command: SmokeTeardown

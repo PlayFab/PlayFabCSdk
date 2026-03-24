@@ -1,0 +1,181 @@
+# Scenario 32: PFUninitialize hang when game does not respond to SyncFailed callback
+#
+# Bug repro (InprocSteam_HangAnalysis_Report):
+# When an upload is in progress and the network fails, the SDK calls the game's
+# syncFailedCallback. If the game never responds (e.g., during shutdown, UI lockup,
+# or giving up after multiple failures), the UploadAsyncProvider waits forever for
+# ScheduleNow() to be called. When PFUninitialize() is called in this state, the
+# SDK hangs indefinitely because:
+#   1. m_activeTask in UICallbackManager points to the waiting provider
+#   2. The provider never receives ScheduleNow() so it never completes
+#   3. RunContextState termination blocks waiting for the provider
+#
+# The fix adds CancelPendingUIWait() to FolderSyncManager's destructor which:
+#   - Checks if there's a pending m_activeTask
+#   - Sets m_action = UIAction::UISyncFailedCancel
+#   - Calls m_activeTask->ScheduleNow() to unblock the provider
+#
+# Test flow:
+# 1. Initialize and start an upload
+# 2. Mock HTTP to fail with network errors (simulating connectivity loss)
+# 3. Configure sync-failed auto-response to respond for the first few failures
+# 4. Then DISABLE the auto-response (simulating game not responding)
+# 5. Trigger another HTTP failure while upload is pending
+# 6. Call PFUninitialize while the SDK is waiting for UI response
+# 7. Without fix: test times out (hang)
+# 8. With fix: PFUninitialize completes, returns E_PF_GAMESAVE_USER_CANCELLED
+#
+# To manually verify the hang:
+# 1. Comment out the CancelPendingUIWait() call in FolderSyncManager::~FolderSyncManager()
+# 2. Run this test - it should hang at PFUninitializeAsync
+
+id: Scenario-32-Uninitialize-Hang-No-UI-Response
+name: 32. PFUninitialize Hang When Game Does Not Respond to SyncFailed Callback
+tags:
+  - passing
+  - gamesaves
+description: >
+  Verifies that PFUninitialize does not hang when an upload is pending and the
+  game has not responded to the SyncFailed UI callback. This reproduces the
+  customer-reported hang during PFUninitialize() after network connectivity loss.
+devices:
+  DeviceA: {}
+defaults:
+  # Short timeout to detect the hang quickly without fix
+  stepTimeoutSeconds: 60
+blocks:
+  setup-upload-with-network-failure:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario32"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    # Create data to upload
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: hang-test/payload.bin
+            bytes: 4096
+            pattern: [0xDE, 0xAD, 0xBE, 0xEF]
+    # Enable sync-failed auto-response to retry initially (simulates game responding)
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+        maxRetries: 2
+    # Successful initial upload to establish baseline
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Now setup for the hang scenario: modify data for second upload
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: hang-test/modified.bin
+            bytes: 2048
+            pattern: [0xFA, 0xCE, 0xB0, 0x0C]
+    # Mock HTTP to fail simulating network loss (like dwError=12007 DNS failure)
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/GetManifestDownloadDetails"
+        statusCode: 503
+        delay: 100
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/InitiateUpload"
+        statusCode: 503
+        delay: 100
+    # DISABLE auto-response to simulate game not responding to SyncFailed callback
+    # This is the key step that causes the hang without the fix
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    # Start upload that will fail and trigger SyncFailed callback
+    # The SDK will call syncFailedCallback, but since auto-response is disabled,
+    # the test harness won't respond - simulating the game hanging/not responding
+    # The upload will be stuck waiting for PFGameSaveFilesNotifySyncFailedRetry()
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+        # fireAndForget: starts the upload but returns immediately without waiting
+        # This allows the test to proceed to PFUninitialize while the SDK is waiting
+        # for a UI callback response that will never come
+        fireAndForget: true
+    # Brief delay to let the upload start, hit HTTP mock failure, and invoke syncFailedCallback
+    - command: SmokeDelay
+      parameters:
+        durationMs: 15000
+  force-uninitialize-while-pending:
+    # At this point, UploadAsyncProvider is waiting for UI callback response
+    # The SDK called syncFailedCallback but the game (harness) hasn't responded
+    # Now we call PFUninitialize - this is where the hang occurs without the fix
+    #
+    # WITH FIX: CancelPendingUIWait() in FolderSyncManager destructor will:
+    #   - Set m_action = UIAction::UISyncFailedCancel
+    #   - Call m_activeTask->ScheduleNow()
+    #   - Upload completes with E_PF_GAMESAVE_USER_CANCELLED
+    #   - Termination proceeds normally
+    #
+    # WITHOUT FIX: PFUninitialize hangs forever waiting for ScheduleNow()
+    - command: PFLocalUserCloseHandle
+      timeoutSeconds: 30
+    - command: PFGameSaveFilesUninitializeAsync
+      timeoutSeconds: 30
+    - command: PFServicesUninitializeAsync
+      timeoutSeconds: 30
+    - command: PFServiceConfigCloseHandle
+      timeoutSeconds: 30
+    # THIS IS THE CRITICAL STEP - if it completes within timeout, the fix works
+    # If it hangs, the fix is not applied (or there's a regression)
+    - command: PFUninitializeAsync
+      timeoutSeconds: 30
+    - command: XTaskQueueCloseHandle
+      timeoutSeconds: 30
+    # Clear HTTP mocks for cleanup
+    - command: ClearHttpMocks
+executionOrder:
+  - role: DeviceA
+    block: setup-upload-with-network-failure
+  - role: DeviceA
+    block: force-uninitialize-while-pending
+cleanup:
+  DeviceA:
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario32"

@@ -1,0 +1,43 @@
+id: GRTS-02b-Invite-Receive
+name: GRTS 02b - Receive Invite
+tags:
+  - grts
+description: Initialize XGameRuntime, XSAPI, add user, and send multiplayer activity invite.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  receive-invite:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076b1590e"
+    - command: XUserPlatformRemoteConnectSetEventHandlers
+    - command: XUserPlatformSpopPromptSetEventHandlers
+    - command: XGameInviteRegisterForEvent
+    - command: XGameInviteRegisterForPendingEvent
+    - command: XUserAddAsync
+    - command: XUserGetId
+    - command: XblContextCreateHandle
+    - command: WaitForXGameInviteRegisterForPendingEvent
+      parameters:
+        timeoutSeconds: 60000
+    - command: XGameInviteAcceptPendingInvite
+    - command: WaitForXGameInviteRegisterForEvent
+      parameters:
+        timeoutSeconds: 60000
+executionOrder:
+  - role: DeviceA
+    block: receive-invite
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

@@ -1,11 +1,8 @@
 #include "TestAppPch.h"
-#include <Memory.h>
-#include <playfab/services/PFServices.h>
 #include "Platform/PlayFabPal.h"
 #include "Platform/Generic/MemoryManager.h"
 #include "Operations/Core/AuthenticationOperations.h"
-
-using namespace PlayFab::Platform;
+#include "Platform/Generic/TitleLocalUser_Generic.h"
 
 namespace PlayFab
 {
@@ -28,31 +25,16 @@ HRESULT CoreInitialize(XTaskQueueHandle queue) noexcept
     return PFInitialize(queue);
 }
 
-AsyncOp<UserPtr> GetDefaultPlatformUser(
+AsyncOp<TitleLocalUser> GetDefaultLocalUser(
+    ServiceConfig const& serviceConfig,
     RunContext rc
 ) noexcept
 {
-    // There is no platform user for Linux
-    UNREFERENCED_PARAMETER(rc);
-    return AsyncOp<UserPtr>{ UserPtr{} };
-}
+    auto customContext = MakeShared<CustomLocalUserContext>(defaultPlayerCustomId);
 
-AsyncOp<LoginResult> LoginDefaultTitlePlayer(
-    ServiceConfig serviceConfig,
-    UserPtr platformUser,
-    RunContext rc
-) noexcept
-{
-    assert(!platformUser);
-    UNREFERENCED_PARAMETER(platformUser);
-
-    Stringstream customId;
-    customId << defaultPlayerCustomId << "_" << time(nullptr);
-
-    LoginWithCustomIDOperation::RequestType request;
-    request.SetCustomId(customId.str());
-    request.SetCreateAccount(true);
-    return RunOperation(MakeUnique<LoginWithCustomIDOperation>(serviceConfig, request, rc));
+    PFLocalUserHandle handle;
+    RETURN_IF_FAILED(PFLocalUserCreateHandleWithPersistedLocalId(serviceConfig.Handle(), customContext->customId.data(), CustomLocalUserContext::LocalUserLoginHandler, customContext.get(), &handle));
+    return AsyncOp<TitleLocalUser>{ TitleLocalUser{ LocalUserHandleWrapper::Wrap(handle), std::move(customContext) } };
 }
 
 // Platform dependent PlayFabServices wrappers

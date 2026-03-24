@@ -22,7 +22,7 @@
   <PropertyGroup>
     <PlayFabCoreProjectName>PlayFabCore.$(HCPlatform)</PlayFabCoreProjectName>
     <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'Win32'">$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
-    <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
+    <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\Gaming.Desktop.x64\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
   </PropertyGroup>
 
   <!--Add reference to appropriate PlayFabCore project-->

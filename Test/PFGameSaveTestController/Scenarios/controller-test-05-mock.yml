@@ -1,0 +1,82 @@
+id: Scenario-05-Test-Offline-to-Online-Reconnect-with-Mocked-Failures
+name: 5. Test Offline to Online Reconnect with Mocked Failures
+tags:
+  - harness
+description: Forces offline mode with retryable failures, validates offline operations, then reconnects and uploads successfully.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  initialize-and-force-offline:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    # Configure auto-response to initially retry sync failures
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    # Configure HTTP mocks to force connectivity failures
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/ListManifests"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/GetManifestDownloadDetails"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/Client/LoginWithCustomID"
+        statusCode: 503
+    # First attempt: Should fail with connectivity error
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectFailure: true
+      timeoutSeconds: 60
+    # # Reconfigure to use offline mode on next sync failure
+    # - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+    #   parameters:
+    #     enable: true
+    #     action: UseOffline
+    # # Second attempt: Should enter offline mode
+    # - command: PFGameSaveFilesAddUserWithUiAsync
+    #   timeoutSeconds: 60
+    # Verify offline status
+    - command: PFGameSaveFilesIsConnectedToCloud
+    - command: PFGameSaveFilesGetFolder
+    - command: PFGameSaveFilesGetRemainingQuota
+executionOrder: 
+  - role: DeviceA
+    block: initialize-and-force-offline
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

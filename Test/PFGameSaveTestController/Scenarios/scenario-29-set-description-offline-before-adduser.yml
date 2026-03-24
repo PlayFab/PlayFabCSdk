@@ -1,0 +1,256 @@
+id: Scenario-29-Set-Description-Offline-Before-AddUser
+name: 29. SetSaveDescription Offline Before AddUser (Connected=False)
+tags:
+  - gamesaves
+  - offline
+  - passing
+description: |
+  Tests PFGameSaveFilesSetSaveDescriptionAsync behavior when called offline BEFORE AddUser succeeds.
+  AddUser fails due to network issues, user chooses UseOffline (connected=false), then SetSaveDescriptionAsync is called.
+  SetSaveDescription should succeed and store the description locally for later sync when reconnected.
+  When the device goes back online and uploads, the offline description should be committed to cloud.
+  Another device should then see the description after syncing.
+devices:
+  DeviceA: {}
+  DeviceB: {}
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  initialize-and-force-offline:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    # Configure auto-response to retry once, then switch to UseOffline
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+        maxRetries: 1
+    # Configure HTTP mocks to force connectivity failures BEFORE AddUser
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/ListManifests"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/GetManifestDownloadDetails"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/Client/LoginWithCustomID"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/SetSaveDescription"
+        statusCode: 503
+    # Attempt to add user - should retry once, then enter offline mode
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 120
+    # Verify offline status - should be FALSE because AddUser failed and user chose UseOffline
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+    - command: PFGameSaveFilesGetFolder
+
+  test-setdescription-while-disconnected:
+    # Create offline payload
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: offline/payload_offline.bin
+            bytes: 8192
+            pattern: [0x0F, 0xF1, 0x1E]
+    # Verify still offline
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+    # THIS IS THE KEY TEST: Call SetSaveDescriptionAsync while disconnected from cloud
+    # Should succeed and store description locally (not crash or hang)
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Test description while offline (before AddUser connected)"
+      timeoutSeconds: 60
+    # Verify description was stored locally
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Test description while offline (before AddUser connected)"
+    # Verify still offline and in good state
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+    # Try upload while disconnected - should return E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD = 0x89237004
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+        expectedHr: "0x89237004"
+    # Verify still disconnected
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+
+  reconnect-and-upload:
+    # Clear HTTP mocks to restore connectivity
+    - command: ClearHttpMocks
+    # Must uninitialize and reinitialize to reconnect from offline mode
+    # Per SDK docs: "To re-trigger the download the same user, call PFGameSaveFilesUninitializeAsync and wait for it to complete first"
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # Clear sync-failed auto-response and allow normal retry
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+    # Set conflict auto-response to TakeLocal (keep our offline changes including description)
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseLocal
+    # Reconnect to cloud by calling AddUser again (now valid since we uninitialized first)
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 120
+    # Verify online status
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    # Verify the offline description persisted (should still be set from localstate.json)
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Test description while offline (before AddUser connected)"
+    # Upload - this should commit the offline description to cloud
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  deviceb-verify-description:
+    # DeviceB syncs and verifies the offline description from DeviceA made it to cloud
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # KEY VERIFICATION: The offline description from DeviceA should be visible on DeviceB
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Test description while offline (before AddUser connected)"
+    # Also verify the offline file made it
+    - command: VerifyFileExists
+      parameters:
+        relativePath: offline/payload_offline.bin
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: initialize-and-force-offline
+  - role: DeviceA
+    block: test-setdescription-while-disconnected
+  - role: DeviceA
+    block: reconnect-and-upload
+  - role: DeviceB
+    block: deviceb-verify-description
+
+cleanup:
+  DeviceA:
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+  DeviceB:
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"

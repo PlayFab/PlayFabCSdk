@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{ca9b7e43-d3bd-4482-9718-4c31d045958f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{a94fddf3-8568-4f3c-8050-67921394d9ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{d4e8f1a2-5b3c-4d9e-8f7a-1c2b3d4e5f6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{e5f9a2b3-6c4d-5e0f-9a8b-2d3c4e5f6a7b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Platform\Windows\pch.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeviceApplication.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeviceGameSaveState.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeviceLogging.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeviceWebSocketClient.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeviceWebSocketConnection.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Windows\DeviceWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeviceGameSave.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeviceCommandProcessor.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\CaptureSaveContainerSnapshot.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\ChaosModeHandler.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\CommandHandlerShared.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\ConsumeDiskSpace.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\CopyTargetFolderToSaveFolder.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeleteLocalFolder.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeleteSaveRoot.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DeviceCommandHandlers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\GatherLogs.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\GatherSnapshot.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\GetDebugStats.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\HarnessHash.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\HttpMock.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\HttpMockHandlers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\PFCommandHandlers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\SmokeCommandHandlers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\WriteGameSaveData.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\XblHandlers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\XGameRuntimeHandlers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\XTaskQueueHandlers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\XUserHandlers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Platform\Windows\DeviceApplication_Win32.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DeviceGameSave.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\DeviceLogging_Win32.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DeviceWebSocketClient.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DeviceWebSocketConnection.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\DeviceWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\pch.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\Main.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\DeviceGameSaveState_Win32.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\HarnessHash_Win32.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DeviceCommandProcessor.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\CaptureSaveContainerSnapshot.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ChaosModeHandler.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ConsumeDiskSpace.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\CopyTargetFolderToSaveFolder.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DeleteLocalFolder.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DeleteSaveRoot.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DeviceCommandHandlers.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\GatherLogs.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\GatherSnapshot.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\GetDebugStats.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\HttpMock.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\HttpMockHandlers.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\PFCommandHandlers.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\SmokeCommandHandlers.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\WriteGameSaveData.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\XblHandlers.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\XGameRuntimeHandlers.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\XTaskQueueHandlers.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\XUserHandlers.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <Filter>Assets</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <MGCCompile Include="MicrosoftGameConfig.mgc">
+      <Filter>Assets</Filter>
+    </MGCCompile>
+  </ItemGroup>
+</Project>

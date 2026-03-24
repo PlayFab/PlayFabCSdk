@@ -1,0 +1,31 @@
+id: Scenario-02-Runtime-Bootstrap
+name: 2. Runtime Bootstrap Sequence
+tags:
+  - harness
+description: Initialize the runtime and PlayFab services before running API smoke
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  bootstrap:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+executionOrder:
+  - role: DeviceA
+    block: bootstrap
+cleanup:
+  DeviceA:
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    #- command: PFUninitializeAsync

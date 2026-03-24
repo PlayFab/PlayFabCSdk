@@ -1,181 +1,206 @@
-# PlayFab C SDK Changelog
+# PlayFab.C Changelog
 
-## 2510 Release
-
-### March 2026
-
-#### Build Improvements
-- Added `_GAMING_DESKTOP` preprocessor define and DirectX link libraries (`d3d12.lib`, `dxgi.lib`, `dxguid.lib`) to `PlayFab.C.GDK.props` for the x64 platform, since the GDK toolchain no longer provides these automatically after the migration from `Gaming.Desktop.x64` to `x64`
-- Excluded PlayFabCore.UnitTests from x64 solution build configuration (Win32-only project incompatible with GDK-mapped x64 platform)
-
-### February 2026 (QFE2)
-
-#### GameSave Bug Fixes
-- Fixed save conflict where local `PFGameSaveDescriptor.time` was often incorrect
-- Fixed `PFGameSaveFilesSetSaveDescriptionResult` returning `E_FAIL` when called offline on SteamDeck
-- Fixed `PFGameSaveFilesAddUserWithUiAsync` returning `E_PF_GAMESAVE_USER_ALREADY_ADDED` when reconnecting from offline mode
-- Fixed crash after clicking Continue Offline with disconnected network on SteamDeck
-- Fixed `PFGameSaveFilesSetSaveDescriptionAsync` hang when called offline on SteamDeck
-- Fixed incorrect timestamps when syncing between inproc and GRTS-based devices
-- Fixed LockStep reusing stale pending manifest when finalized version has advanced
-- Fixed GRTS save folder initialization failure when directory doesn't exist or path lacks trailing backslash
-- Fixed `PFGameSaveDescriptor.shortSaveDescription` contents being garbage on SteamDeck
-- Fixed download of many small files not working with inproc provider
-- Fixed upload progress reports using uncompressed sizes, which could cause corruption
-- Fixed inproc cancel from progress dialog causing assert failure
-- Fixed cleanup not happening properly if init fails with invalid argument
-- Fixed unexpected device-contention callback invocation
-
-#### GameSave Improvements
-- Added better error handling throughout PFGameSaves
-- Added logging to GRTS provider for better debugging
-- Hooked up rollback flags for inproc client
-- Made Steam SDK optional for Game Save sample
-- Updated SDK sample to show thumbnails during UI conflict dialog
-- Cleaned up platform-dependent code in common folder
-
-#### API Updates
-- Extended `PFAuthenticationLoginWithXboxAsync` and other Xbox-related authentication functions to all client platforms
-- Updated to latest service API definitions (Inventory, Catalog, AccountManagement, and others)
-
-#### Build Improvements
-- Fixed nlohmann JSON brace initialization issue
-- Fixed compiler warnings and improved build compatibility for new platforms
-- Updated Android build dependencies
-- Updated SDK version to 2510.2.0
+## Changes from March 21, 2025 (f35a478) to November 7, 2025
 
 ### November 2025
 
-#### Build Improvements
-- Updated build order - SharedInternal now builds first
-- Updated Android Gradle Plugin to latest version
-- Removed separate Win32 build projects (PlayFabCore.Win32, PlayFabServices.Win32, PlayFabSharedInternal.Win32.143, PlayFabServicesTestApp.Win32); GDK projects now target both Xbox and Windows desktop via Gaming.Desktop.x64 platform
+#### GitHub Release and Build Improvements (Nov 6, 2025)
+- **Removed Android download** from release pipeline
+- **Removed Win32 download** from release pipeline
+- **Removed Android and tests** to enable GitHub release
+- **Updated build order** - SharedInternal now builds first
+- **Removed Win32 release** and updated NDK version inconsistencies
+- **Updated Android Gradle Plugin** to latest version
+- **Fixed GitHub release pipeline** for 2510 PF.C GitHub release
 
 ### October 2025
 
 #### Bug Fixes
-- Fixed crash on SteamDeck when selecting Prepare after SetUser
-- Fixed PFGameSave failure in PAL layer when not using XUser on PC
-- Fixed PFGameSave reports failure with E_PF_GAMESAVE_ALREADY_INITIALIZED on resume
-- Fixed PFGameSave crashes during download
-- Removed pathcch.lib dependency which caused build issues
+- **Bug 59468890**: Fixed ShamWow crash on SteamDeck when selecting Prepare after SetUser (Oct 17)
+- **Bug 59765924**: Fixed PFGameSave failure in PAL layer when not using XUser on PC (Oct 13)
+- **Bug 59671549**: Fixed PFGameSave PG reports failure with E_PF_GAMESAVE_ALREADY_INITIALIZED on resume (Oct 13)
+- **Bug 59704068**: Fixed PFGameSave inproc crashes during download (Oct 8)
+- **Removed pathcch.lib dependency** which caused build issues in PF.Alls (Oct 8)
 
 #### Features & Improvements
-- Added missing SteamDeck indicator in telemetry
-- Prevented KnownFolders from being set as root folder
-- Fixed bug when uploading and setting description simultaneously
-- Added tests for GDK expanded API 2510
-- Fixed missing std::placeholders reference in TypeWrapperHelpers.h
-- Added in-game upload differentiator for telemetry
+- **Bug 59650019**: Added missing SteamDeck indicator in telemetry (Oct 8)
+- **Bug 59467685**: Hooked up GRTS API for ActiveDeviceChanged (Oct 6)
+- **Bug 59088914**: Prevented KnownFolders from being set as root folder (Oct 4)
+- **Bug 59024384**: Fixed bug when uploading and setting description simultaneously (Oct 3)
+- **Added tests for GDK expanded API 2510** (Oct 3)
+- **Added PFGameSaves state machine spec** (no code changes) (Oct 3)
+- **Fixed missing std::placeholders reference** in TypeWrapperHelpers.h (Oct 2)
+- **Bug 59382941**: Added in-game upload differentiator for telemetry (in proc) (Oct 1)
 
 ### September 2025
 
 #### Major Features
-- Updated SdkVersion.h for GA and updated XCurl.lib paths
-- Added 3PP auth support into PFGameSave
-- Disabled unused libarchive compression formats
-- Added PFGameSave Rollback API additions
-- Removed quota endpoint call (quota now returned by List endpoint)
-- Created cross-platform multidevice test automation suite
-- Disabled incremental linking when /PROFILE is enabled to avoid LNK4075 warning
+- **Updated SdkVersion.h for GA** and updated XCurl.lib paths (Sep 30)
+- **Updated ADO to use latest LHC** (Sep 30)
+- **Deliverable 59176316**: Added 3PP auth support into PFGameSave and hooked up to GRTS API (Sep 26)
+- **Disabled unused libarchive compression formats** (Sep 25)
+- **Deliverable 52846872**: Added PFGameSave Rollback API additions - GRTS side (Sep 25)
+- **Task 59246554**: Removed quota endpoint call (quota now returned by List endpoint) (Sep 24)
+- **Deliverable 58976311**: Created cross-platform multidevice test automation suite (Sep 24)
+- **Disabled incremental linking** when /PROFILE is enabled to avoid LNK4075 warning (Sep 24)
+- **Removed S_OVERRIDE from function definitions** (Sep 20)
 
 #### Platform Updates
-- Added missing secretkey APIs for GDK and typedef guards
-- Updated SdkVersion.h
+- **Removed HC_platform_win32 and win32 projects** (Sep 20)
+- **Removed Win32 from pipelines** (Sep 4)
+- **Updated SdkVersion.h** (Sep 9)
+- **Added missing secretkey APIs for GDK** and typedef guards (Sep 4)
 
-#### API Updates
-- Added PFGameSaveFilesSetSaveDescriptionAsync
+#### Samples & Documentation
+- **Added GDK console sample for PFGameSaves** (Sep 2)
+- **Fixed missing Steam API** (Sep 2)
+- **Added PFGameSaveFilesSetSaveDescriptionAsync** (Sep 1)
 
 ### August 2025
 
 #### API Expansion
-- Expanded GDK API Surface for Unified SDK
+- **Expanded GDK API Surface for Unified SDK** (Aug 22)
   - New APIs integration
   - Fine-tuned Inventory and Catalog customizations
   - Updated "GDK" references to "Windows" in remarks
-- Added more tracing around platform init
+- **Adding more tracing around platform init** (Aug 22)
+- **Adding debug log tracing to PFGameSave sample** (Aug 21)
 
 #### Build System Improvements
-- Centralized file lists via shared props and fixed GDK build/link
-- Fixed Android TestApp to build on release with Gradle
-- Added logging around PFGameSaves provider selection
-- Fixed undefined HC_PLATFORM in Unreal Plugin
-- Updated GameSave telemetry events
+- **Centralized file lists via shared props** and fixed GDK build/link (Aug 20)
+- **Fixed Android TestApp to build on release with Gradle** (Aug 18)
+- **Added logging around PFGameSaves provider selection** (Aug 12)
+- **Fixed undefined HC_PLATFORM in Unreal Plugin** (Aug 9)
+- **Updated GameSave telemetry events** to use playfab.gamesave.internal namespace (Aug 8)
 
-#### Bug Fixes
-- Fixed PFCore not automatically including Xbox auth in PFAuthentication
-- Enabled NuGet Central Package Management
+#### Testing & Quality
+- **Set up legacy C# SDK nuget publish pipeline** (Aug 5)
+- **Bug 58635317**: Fixed PFCore not automatically including Xbox auth in PFAuthentication (Aug 4)
+- **Enabled NuGet Central Package Management** (Aug 4)
+- **Added AI review and unit tests** (Aug 4)
+- **Updated GDK artifact zip** during PRs to sit on top of existing GDK install (Aug 4)
 
 ### July 2025
 
-#### Major Features
-- Support for in-proc game saves upload on Windows to enable 3PP
-- Renamed Android LocalUser away from Platform
-- Cleaned up tests and dead GDK gamesave files
+#### Major Deliverables
+- **Deliverable 58322635**: Support for in-proc game saves upload on Windows to enable 3PP (Jul 31)
+- **Task 58362960**: Created SDK sample to verify Steamdeck / Windows paths (Jul 30)
+- **Task 58551113**: Renamed Android LocalUser away from Platform (Jul 29)
+- **Bug 58536053**: Cleaned up tests and dead GDK gamesave files (Jul 29)
 
 #### Bug Fixes
-- Only extract zips after all are downloaded to avoid network errors
-- Fixed string copy crash in PFGameSaves.dll on out of proc path
-- Fixed PFGameSaveFilesUploadWithUiAsync crash with nullptr queue
-- Added console handling to GRTS detection
-- PFGameSaves now takes in saveFolder for SteamDeck support in init args
-- PFGameSaves now reads ForceUseLocalServices regkey to use inproc
+- **Task 58363828**: Only extract zips after all are downloaded to avoid network errors (Jul 28)
+- **Bug 58535428**: Fixed string copy crash in PFGameSaves.dll on out of proc path (Jul 28)
+- **Bug 58363091**: Fixed PFGameSaveFilesUploadWithUiAsync crash with nullptr queue (Jul 28)
+- **Bug 58472486**: Added console handling to GRTS detection (Jul 24)
+
+#### Pipeline & Documentation
+- **Restored PRs back into main** after 2510 preview (Jul 14)
+- **Updated generate reference docs script** (Jul 10)
+- **Bug 58219891**: PFGameSaves now takes in saveFolder for SteamDeck support in init args (Jul 2)
+- **Bug 58180984**: PFGameSaves now reads ForceUseLocalServices regkey to use inproc (Jul 1)
 
 ### June 2025
 
 #### Core Features
-- Deduped Core PFErrors generation
-- Fixed GameSave init API regression
-- Added exception handling helpers to all public APIs, including auto-generated ones
-- Added exception handling helpers to GameSave public APIs
-- Bug fixes for Steam API
-- Added Steam API to PF Core GDK binary
+- **Removed JKS file** to fix PR OB pipeline (Jun 25)
+- **MacOS image update** (Jun 20)
+- **Task 58004023**: Deduped Core PFErrors generation (Jun 17)
+- **Bug 57963808**: Fixed Gamesave init API regression (Jun 16)
+
+#### Exception Handling & Steam API
+- **Added exception handling helpers to all public APIs**, including auto-generated ones (Jun 12)
+- **Task 57845165**: Cleaned up ctor/dtor of Steam API (Jun 12)
+- **Added exception handling helpers to GameSave public APIs** (Jun 11)
+- **Task 57845165**: Bug fixes for Steam API (Jun 11)
+- **Task 57706665**: Added Steam API to PF Core GDK binary (Jun 10)
+- **Removed dead files** (Jun 10)
 
 #### LocalUser Updates
-- Added missing replacement for GetPlatformContext for LocalUser_Xbox
-- LocalUser changes to enable side-by-side similar to auth APIs
-- Created Steam extension for PF Core
+- **Bug 57819072**: Added missing replacement for GetPlatformContext for LocalUser_Xbox (Jun 5)
+- **Removed conditional for SDK release prep** (Jun 3)
+- **Task 57706703**: LocalUser changes to enable side-by-side similar to auth APIs (Jun 2)
+- **Task 57706665**: Created Steam extension for PF Core part 1 (May 30)
 
 ### May 2025
 
-#### GameSave (Major Addition)
-- Added complete GameSave implementation
-  - GDK and Win32 platform support
-  - Sync manager and providers
-  - Platform-specific code
-- Added PFLocalUser API
-- Added platform-specific implementations (Android, Steam, GDK)
-- Added file I/O and archive operations
-- Added compression support with libarchive
-- Updated shared internal libraries
+#### GameSave Merge (Major Update)
+- **Gamesave Merge Pt3: Pipelines** (May 20)
+  - Updated official and PR pipelines
+  - Added PlayFab.C.GameSave.GDK.yml
+  - Updated all build scripts
+- **Gamesave Merge Pt2: GameSave** (May 17)
+  - Added complete GameSave implementation
+  - Added GDK and Win32 samples
+  - Added Steam Win32 sample
+  - Added automated and manual test suites
+  - Added sync manager, providers, and platform-specific code
+- **Gamesave Merge Pt1: Core** (May 15)
+  - Added PFLocalUser API
+  - Added platform-specific implementations (Android, Steam, GDK)
+  - Added file I/O and archive operations
+  - Added compression support with libarchive
+  - Updated shared internal libraries
 
 #### Build & Infrastructure
-- Fixed errors in GameSave automated tests
-- Updated GameSave to latest service data JSON
-- Added more test coverage for metadata support
-- Adding version stamping for LHC in Win32 builds
+- **Added GameSave resource compile files** (May 30)
+- **Bug 57620601**: Fixed errors in Gamesave automated tests (May 29)
+- **Fixes for Gamesave GDK Build** in Unified SDK Pipelines (May 29)
+- **Task 57724105**: Updated GameSave to latest service data JSON (May 29)
+- **Task 57565375**: Added more test flushout for metadata support (May 23)
+- **SDKs.All Android Fix** (May 22)
+- **Unreferenced params fix for Windows Builds** (May 21)
+- **Adding version stamping for LHC** in Win32 builds and refactored version setting (May 20)
+- **Removed deprecated PkgESSetupBuild task** (May 19)
 
 ### April 2025
 
 #### API & Documentation
-- Fixed PFCore incorrect GetResultSize ref doc for AuthenticateGameServer
-- Exposed LoginWithXbox on GDK for Unreal OSS
-- Fixed missing reference docs for PFHttpConfig
-- Fixed minor tracing issues
+- **Bug 57049820**: Fixed PFCore incorrect ...GetResultSize ref doc for AuthenticateGameServer (May 12)
+- **Exposed LoginWithXbox on GDK** for Unreal OSS (Apr 24)
+- **Bug 56897740**: Fixed missing reference docs for PFHttpConfig (Apr 24)
+- **Set isNativeCode in Official build** for CyberEO for Windows Undocked (Apr 11)
+- **Task 53006110**: Fixed minor tracing issues (Apr 3)
+- **Task 56949160**: Deduplicated PF make.js to support maintenance and extensibility (Apr 2)
 
 ---
 
 ## Summary of Major Changes
 
 ### New Features
-- **PFGameSave System**: Complete game save implementation with multi-device sync, Steam integration, and cross-platform support
-- **Expanded GDK API Surface**: New APIs for Experimentation, Friends, Localization, PlatformSpecific, PushNotifications
-- **PFLocalUser API**: Platform-specific local user management
-- **Exception Handling**: Added to all public APIs including GameSave
+- **PFGameSave System**: Complete game save implementation with multi-device sync, GRTS support, Steam integration
+- **Steam Extension**: New Steam platform support for LocalUser and authentication
+- **3PP Authentication**: Third-party authentication support in PFGameSave
+- **Expanded GDK API**: Additional APIs for Unified SDK integration
+- **Exception Handling**: Comprehensive exception handling across all public APIs
 
 ### Platform Support
-- GDK (Xbox/Windows)
-- Win32
-- Android
-- SteamDeck/Linux
-- iOS/macOS
+- **Removed Win32 projects** in favor of GDK
+- **Enhanced Android support** with updated Gradle and build system
+- **SteamDeck support** with proper path and telemetry handling
+- **macOS updates** with image and build improvements
+
+### Infrastructure
+- **NuGet Central Package Management** enabled
+- **Version stamping** for all binaries
+- **Centralized file lists** via shared props
+- **Updated libHttpClient** to latest version
+- **GitHub release pipeline** improvements
+
+### Quality & Testing
+- **Cross-platform test automation suite**
+- **AI review integration**
+- **Comprehensive unit tests** for GameSave
+- **Stress testing tools**
+- **Folder monitoring tools** for GameSave validation
+
+### Bug Fixes
+- 50+ bug fixes across authentication, game saves, telemetry, and platform support
+- Memory management improvements
+- Crash fixes for various edge cases
+- Build and linking issue resolutions
+
+### Breaking Changes
+- Removal of Win32-specific projects (replaced with GDK)
+- LocalUser API restructuring for platform-specific implementations
+- Removal of deprecated PkgESSetupBuild task

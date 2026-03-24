@@ -1,0 +1,26 @@
+id: GRTS-01-GetId
+name: GRTS 01 - XUser GetId
+tags:
+  - grts
+description: Initialize XGameRuntime, create task queue, add user, and get user ID.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  get-user-id:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XUserGetId
+executionOrder:
+  - role: DeviceA
+    block: get-user-id
+cleanup:
+  DeviceA:
+    - command: XUserCloseHandle
+    - command: XTaskQueueCloseHandle

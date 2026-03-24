@@ -1,0 +1,169 @@
+id: Scenario-28-Set-Description-Offline-After-AddUser
+name: 28. SetSaveDescription Offline After AddUser (Connected=True)
+tags:
+  - gamesaves
+  - passing
+description: |
+  Tests PFGameSaveFilesSetSaveDescriptionAsync behavior when called offline AFTER a successful AddUser.
+  AddUser succeeds normally (connected=true), then network goes down before SetSaveDescriptionAsync is called.
+  This reproduces a customer-reported crash/hang when calling SetSaveDescriptionAsync while offline.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  initialize-and-adduser-online:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    # Add user successfully - should be connected to cloud
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    # Verify we're online
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+
+  go-offline-and-test-setdescription:
+    # Create payload while still online
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    # Now configure HTTP mocks to simulate network failure
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/InitiateUpload"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/FinalizeManifest"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/UpdateManifest"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/SetSaveDescription"
+        statusCode: 503
+    # IsConnectedToCloud should still be true because we successfully added user earlier
+    # The SDK doesn't know the network is down until we try to make a call
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    # THIS IS THE KEY TEST: Call SetSaveDescriptionAsync while network is down
+    # Customer reports this causes crash or hang - SDK should return S_OK and store description locally
+    # The SDK catches network failures and stores the description locally with dirty flag for later sync
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Test description while offline (after AddUser)"
+      timeoutSeconds: 60
+    # Verify we're still in a good state (SDK should not crash after failed SetSaveDescription)
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    # Configure sync failed auto-response for upload attempt
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    # Try upload - should fail with network error but not crash
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+        # Expecting user cancelled since we auto-respond with Cancel to sync failed
+        expectedHr: "0x800704c7"
+      timeoutSeconds: 120
+    # Verify we're still connected (AddUser succeeded earlier, so should remain true)
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+
+  restore-connectivity-and-verify:
+    # Clear HTTP mocks to restore connectivity
+    - command: ClearHttpMocks
+    # Clear sync-failed auto-response
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    # SetSaveDescription should work now
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Test description after connectivity restored"
+      timeoutSeconds: 60
+    # Verify we're still connected before upload
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    # Upload should work now
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    # Verify we're still connected after upload
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    # Verify the description was set
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Test description after connectivity restored"
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+
+executionOrder:
+  - role: DeviceA
+    block: initialize-and-adduser-online
+  - role: DeviceA
+    block: go-offline-and-test-setdescription
+  - role: DeviceA
+    block: restore-connectivity-and-verify
+
+cleanup:
+  DeviceA:
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

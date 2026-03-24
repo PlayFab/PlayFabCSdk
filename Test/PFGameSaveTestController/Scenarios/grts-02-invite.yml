@@ -1,0 +1,72 @@
+id: GRTS-02-Invite
+name: GRTS 02 - Send Invite
+tags:
+  - grts
+description: Initialize XGameRuntime, XSAPI, add user, and send multiplayer activity invite.
+devices:
+  DeviceA: {}
+  DeviceB: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  send-invite:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076b1590e"
+    - command: XUserPlatformRemoteConnectSetEventHandlers
+    - command: XUserPlatformSpopPromptSetEventHandlers
+    - command: XUserAddAsync
+    - command: XUserGetId
+    - command: XblContextCreateHandle
+    - command: XblMultiplayerActivitySendInvitesAsync
+      parameters:
+        xuids:
+          - "2814632956486799"
+  receive-invite:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076b1590e"
+    - command: XUserPlatformRemoteConnectSetEventHandlers
+    - command: XUserPlatformSpopPromptSetEventHandlers
+    - command: XUserAddAsync
+    - command: XUserGetId
+    - command: XblContextCreateHandle
+    - command: XGameInviteRegisterForEvent
+    - command: XGameInviteRegisterForPendingEvent
+    - command: WaitForXGameInviteRegisterForPendingEvent
+      parameters:
+        timeoutSeconds: 600
+    - command: XGameInviteAcceptPendingInvite
+    - command: WaitForXGameInviteRegisterForEvent
+      parameters:
+        timeoutSeconds: 600
+executionOrder:
+  - role: DeviceA
+    block: receive-invite
+  - role: DeviceB
+    block: send-invite
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle
+  DeviceB:
+    - command: XGameInviteUnregisterForEvent
+    - command: XGameInviteUnregisterForPendingEvent
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

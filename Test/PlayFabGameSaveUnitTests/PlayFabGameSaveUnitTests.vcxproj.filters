@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="FilePAL_Win32.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="HttpMock.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSuiteMisc.cpp" />
+    <ClCompile Include="actions.cpp" />
+    <ClCompile Include="TestSuiteFileSync.cpp" />
+    <ClCompile Include="TestSuiteAPIs.cpp" />
+    <ClCompile Include="MemoryManager.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FilePAL.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpMock.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="actions.h" />
+    <ClInclude Include="MemoryManager.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Support">
+      <UniqueIdentifier>{cf91d2af-b82a-417c-b79d-08fe9774dc3e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <Filter>Support</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,5 @@
+#ITEM,ID,X,Y,DX,DY,PARAMETERS
+CUSTOM_OVERLAY,2000,0,0,1920,1080,SUPPRESS_CANCEL
+LEGEND,2001,82,850,262,300,[Menu] or Tab - Sign in|[A] - Add user to Game Saves|[X] - Save 10MB file|[Y] - Load/verify save|[B] - Delete save|[View] - Upload (release device)|[LB] - Upload (keep active)|[RThumb] - Exit
+LABEL,2002,960,150,300,50,Log,LEFT;SMALL
+# LABEL 2003 removed (Results was deprecated)

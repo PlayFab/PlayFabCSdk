@@ -1,0 +1,220 @@
+id: Scenario-34-SetDescription-Offline-After-Saves
+name: 34. SetSaveDescription Offline After Save (Must Work Offline)
+tags:
+  - passing
+  - gamesaves
+description: |
+  Reproduces customer-reported issue: Start online, AddUser succeeds, do a save,
+  then lose connectivity mid-gameplay. SetSaveDescriptionAsync should still work
+  offline to update the LOCAL save description, but currently fails with E_FAIL.
+  
+  Customer report: "SetSaveDescriptionAsync no longer hangs, which is great, but they
+  still consistently fail with E_FAIL. I assume this is not intentional, since we need
+  to be able to update the local save description while offline."
+  
+  Expected behavior: SetSaveDescriptionAsync should succeed offline and update the
+  local description. When connectivity is restored, the description should sync to cloud.
+devices:
+  DeviceA: {}
+  DeviceB: {}
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  online-session-with-save:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    # Add user - online
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    
+    # One save - success
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateTextFile
+            relativePath: progress/save1.txt
+            content: "SAVE_1_DATA"
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    
+    # Set description while still online - should succeed
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Online save description"
+      timeoutSeconds: 60
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Online save description"
+
+  lose-connectivity-test-setdescription:
+    # Simulate connectivity loss - block all GameSave API endpoints
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/SetSaveDescription"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/InitiateUpload"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/FinalizeManifest"
+        statusCode: 503
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/UpdateManifest"
+        statusCode: 503
+    
+    # KEY TEST: SetSaveDescriptionAsync while offline AFTER a successful save
+    # This SHOULD SUCCEED - it should update the LOCAL description while offline
+    # Customer reports E_FAIL (0x80004005) which is a bug - it should work offline
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Offline description update"
+      timeoutSeconds: 60
+    
+    # Verify the local description was updated
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Offline description update"
+    
+    # Try a second SetSaveDescription call - should also succeed offline
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Second offline description"
+      timeoutSeconds: 60
+    
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Second offline description"
+    
+    # Mutate save data while offline
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateTextFile
+            relativePath: progress/save2.txt
+            content: "OFFLINE_SAVE_2"
+
+  restore-connectivity-and-sync:
+    # Clear HTTP mocks to restore connectivity
+    - command: ClearHttpMocks
+    
+    # Upload the offline changes - description should sync to cloud
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    
+    # Verify description persisted after upload
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Second offline description"
+
+  deviceb-verifies-cloud-description:
+    # DeviceB connects fresh and verifies the description was synced to cloud
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+    # Add user - downloads from cloud
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    # KEY VERIFICATION: Description from DeviceA's offline update should be in cloud
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Second offline description"
+
+executionOrder:
+  - role: DeviceA
+    block: online-session-with-save
+  - role: DeviceA
+    block: lose-connectivity-test-setdescription
+  - role: DeviceA
+    block: restore-connectivity-and-sync
+  - role: DeviceB
+    block: deviceb-verifies-cloud-description
+
+cleanup:
+  DeviceA:
+    - command: ClearHttpMocks
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+  DeviceB:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"

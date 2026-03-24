@@ -1,0 +1,20 @@
+id: Scenario-00-Smoke
+name: 0. Smoke E2E Transport Verification
+tags:
+  - harness
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  smokeSequence:
+    - command: SmokeCommandEcho
+      parameters:
+        payload: "ping"
+    - command: SmokeDelay
+      parameters:
+        durationMs: 1000
+executionOrder:
+  - role: DeviceA
+    block: smokeSequence
+cleanup:

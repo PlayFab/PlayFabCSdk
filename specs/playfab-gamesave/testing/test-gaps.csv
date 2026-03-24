@@ -1,0 +1,149 @@
+Gap ID,Gap Title,Priority,Category,Description,Platform Support,Manual Coverage,Automated Coverage,Triage Status,Estimated Effort,Dependencies,Risk Level
+1,File Compression Testing,P1,Compression & File Management,Verify 64MB chunk compression boundaries manifest size and failure recovery,All platforms,No,No,Open,High,None,High
+2,Zip Reuse Optimization,P1,Compression & File Management,Ensure unchanged compressed blobs are reused and not re-uploaded,All platforms,No,No,Open,High,Gap #1,High
+3,Large File Handling,P2,Compression & File Management,Attempt >64MB single file and validate clean rejection or chunking,All platforms,No,No,Open,Medium,Gap #1,Medium
+4,Compression Rollback,P3,Compression & File Management,Simulate mid-archive failure and verify cleanup and retry safety,All platforms,No,No,Open,Medium,Gap #1-3,Medium
+5,Extended Manifest Validation,P4,Compression & File Management,Validate extended manifest schema versioning and backward compat,All platforms,No,No,Open,Low,None,Low
+6,Atomic Unit Boundaries,P1,Conflict Resolution & Atomic Units,Conflicts only within modified root folders; others auto-merge,All platforms,No,No,Open,High,None,High
+7,Root Folder Isolation,P2,Conflict Resolution & Atomic Units,Conflict in one root folder must not block untouched folders,All platforms,No,No,Open,Medium,Gap #6,Medium
+8,Partial Folder Merge,P3,Conflict Resolution & Atomic Units,Mixed conflict and clean folders resolve independently,All platforms,No,No,Open,Medium,Gap #6-7,Medium
+9,Delete Replication,P1,Conflict Resolution & Atomic Units,Deleted files propagate remotely without reappearing,All platforms,No,No,Open,High,None,High
+10,OpenID Connect Flow,P2,Authentication & Cross-Platform Identity,Exercise LoginWithOpenIdConnect token validation and errors,Non-Xbox platforms,No,No,Open,High,None,Medium
+11,Custom ID Authentication,P3,Authentication & Cross-Platform Identity,Custom identity stability across sessions and bad ID handling,All platforms,No,No,Open,Medium,None,Medium
+12,Xbox Live Cross-Platform,P4,Authentication & Cross-Platform Identity,Consistent XUser based identity across platforms,All platforms,No,No,Open,Low,None,Low
+13,Token Refresh,P2,Authentication & Cross-Platform Identity,Force expiry ensure silent refresh or surfaced failure,All platforms,No,No,Open,Medium,None,Medium
+14,Upload Resumption,P1,Upload Reliability & Recovery,Interrupt upload and confirm safe resume or restart,All platforms,No,No,Open,High,None,High
+15,Upload Progress Persistence,P3,Upload Reliability & Recovery,Persist progress metadata to avoid full re-upload,All platforms,No,No,Open,Medium,Gap #14,Medium
+16,Manifest State Recovery,P1,Upload Reliability & Recovery,Corrupt local state detect rebuild no data loss,All platforms,No,No,Open,High,None,High
+17,Partial Upload Cleanup,P4,Upload Reliability & Recovery,Remove orphan temp artifacts on next start,All platforms,No,No,Open,Low,Gap #14-16,Low
+18,Active Device Release,P2,Device Management,Release active lock then verify new device can claim,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+19,Device Lock Timeout,P3,Device Management,Stale lock triggers contention or takeover flow,All platforms,No,No,Open,Medium,Gap #18,Medium
+20,Concurrent Device Detection,P4,Device Management,Simultaneous AddUser leads to single active device,All platforms,No,No,Open,Low,Gap #18-19,Low
+21,Filename Validation,P2,File System Validation & Limits,Systematically reject invalid reserved and overlong names,All platforms,No,No,Open,Medium,None,Medium
+22,Path Length Limits,P4,File System Validation & Limits,Boundary test max path lengths with clean failure,All platforms,No,No,Open,Low,None,Low
+23,Nested Folder Depth,P4,File System Validation & Limits,Deep hierarchy handling or explicit depth error,All platforms,No,No,Open,Low,None,Low
+24,Single File Size Limits,P3,File System Validation & Limits,Accept just under limit reject over limit cleanly,All platforms,No,No,Open,Medium,None,Medium
+25,Max Files Per Manifest,P4,File System Validation & Limits,Hit file count cap then verify error and performance,All platforms,No,No,Open,Low,None,Low
+26,Memory Usage Limits,P4,Memory & Performance,Profile peak memory for large multi-file upload,All platforms,No,No,Open,Low,None,Low
+27,Compression Memory,P4,Memory & Performance,Bound memory spikes during bulk compression,All platforms,No,No,Open,Low,Gap #1,Low
+28,Upload/Download Speed Validation,P4,Memory & Performance,Record throughput and detect regressions,All platforms,No,No,Open,Low,None,Low
+29,E_PF_GAMESAVE_USER_CANCELLED,P2,Error Handling & Recovery,Cancel paths return USER_CANCELLED with clean state,All platforms,No,No,Open,Medium,None,Medium
+30,E_PF_GAMESAVE_NOT_INITIALIZED,P1,Error Handling & Recovery,All public APIs pre init return NOT_INITIALIZED,All platforms,No,No,Open,High,None,High
+31,E_PF_GAMESAVE_ALREADY_INITIALIZED,P2,Error Handling & Recovery,Second initialize call returns ALREADY_INITIALIZED,All platforms,No,No,Open,Medium,None,Medium
+32,E_PF_GAMESAVE_USER_ALREADY_ADDED,P2,Error Handling & Recovery,Repeat AddUser returns USER_ALREADY_ADDED only,All platforms,No,No,Open,Medium,None,Medium
+33,E_PF_GAMESAVE_USER_NOT_ADDED,P1,Error Handling & Recovery,User dependent APIs before AddUser fail properly,All platforms,No,No,Open,High,None,High
+34,E_PF_GAMESAVE_DOWNLOAD_IN_PROGRESS,P2,Error Handling & Recovery,Upload during AddUser fails with DOWNLOAD_IN_PROGRESS,All platforms,No,No,Open,Medium,None,Medium
+35,E_PF_GAMESAVE_DEVICE_NO_LONGER_ACTIVE,P1,Error Handling & Recovery,Mid upload device loss returns DEVICE_NO_LONGER_ACTIVE,All platforms,No,No,Open,High,Gap #18,High
+36,E_PF_GAMESAVE_DISK_FULL,P1,Error Handling & Recovery,Disk exhaustion triggers callback and DISK_FULL,All platforms,No,No,Open,High,None,High
+37,UI Progress Cancel Response,P1,UI Response & Callback Testing,Cancel halts operation promptly with correct code,All platforms,No,No,Open,High,None,High
+38,UI Sync Failed Retry Response,P1,UI Response & Callback Testing,Retry recovers transient failures without drift,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+39,UI Sync Failed UseOffline Response,P1,UI Response & Callback Testing,UseOffline sets disconnected state and proper errors,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+40,UI Out of Storage Retry Response,P1,UI Response & Callback Testing,Free space then Retry resumes successfully,All platforms,No,No,Open,High,Gap #36,High
+41,UI Callbacks on Background Queue,P3,UI Response & Callback Testing,Callbacks fire only on provided custom queue,All platforms,No,No,Open,Medium,None,Medium
+42,Custom vs Platform UI Selection,P2,UI Response & Callback Testing,Custom callbacks suppress or augment stock dialogs, Xbox/PC only,No,No,Open,Medium,None,Medium
+43,PFGameSaveFilesResetCloudAsync,P2,Advanced APIs & Integration,Reset clears cloud and next AddUser re-downloads,All platforms,No,No,Open,Medium,None,Medium
+44,PFGameSaveFilesUninitializeAsync,P1,Advanced APIs & Integration,Uninitialize leaves no dangling handles or leaks,All platforms,No,No,Open,High,None,High
+45,Active Device Changed Callback,P1,Advanced APIs & Integration,Takeover fires single accurate descriptor callback,All platforms,No,No,Open,High,Gap #18,High
+46,PFGameSaveFilesGetFolderSize,P3,Advanced APIs & Integration,Reported size matches actual file aggregate,All platforms,No,No,Open,Medium,None,Medium
+47,Background Queue Configuration,P3,Advanced APIs & Integration,Custom queue types do not deadlock or starve,All platforms,No,No,Open,Medium,None,Medium
+48,Save Folder Path Validation,P1,Advanced APIs & Integration,Reject missing relative or forbidden save paths,Non-Xbox platforms,No,No,Open,High,None,High
+49,PFInitialize Auto-Management,P2,Advanced APIs & Integration,Library auto init/uninit sequences are stable,All platforms,No,No,Open,Medium,None,Medium
+50,Screenshot Thumbnail Integration,P3,ShamWow-Identified Features,Thumbnail creation replacement absence correctness,All platforms,No,No,Open,Medium,None,Medium
+51,Save Description with Metadata,P2,ShamWow-Identified Features,Descriptions including Unicode propagate to UI,All platforms,No,No,Open,Medium,None,Medium
+52,PFX API vs Standard API,P3,ShamWow-Identified Features,Parity or documented differences between PFX and PF,All platforms,No,No,Open,Medium,None,Medium
+53,Release Device Active Flag,P2,ShamWow-Identified Features,Upload option toggles future upload ability correctly,All platforms,No,No,Open,Medium,Gap #18,Medium
+54,Cross-System File Operations,P3,ShamWow-Identified Features,Interop with XGameSave maintains integrity, Xbox/PC only,No,No,Open,Medium,None,Medium
+55,Folder Statistics and Enumeration,P4,ShamWow-Identified Features,Enumeration counts sizes timestamps accurate,All platforms,No,No,Open,Low,None,Low
+56,Rollback API Integration,P1,ShamWow-Identified Features,Each rollback flag selects expected manifest safely,All platforms,No,No,Open,High,None,High
+57,Auto-Init After Login,P3,ShamWow-Identified Features,Post login auto init occurs once no races,All platforms,No,No,Open,Medium,None,Medium
+58,Service Rate Limiting (100 requests/2min),P1,Service Limits & Platform Requirements,Burst to exceed limit triggers throttle/backoff,All platforms,No,No,Open,High,None,High
+59,Storage Quota Enforcement (256MB per title),P1,Service Limits & Platform Requirements,Approach and exceed quota gives negative remainder and block,All platforms,Yes,Yes,Open,High,None,High
+60,Double-Buffering Implementation,P2,Implementation Best Practices & Patterns,Crash mid write leaves prior version intact,All platforms,No,No,Open,Medium,None,Medium
+61,Cross-Storefront Compatibility,P2,Implementation Best Practices & Patterns,Mismatched builds migrate or fail gracefully,All platforms,No,No,Open,Medium,None,Medium
+62,Atomic Unit Conflict Resolution,P1,Implementation Best Practices & Patterns,Retired duplicate of Gap #6 use Gap #6,All platforms,No,No,Retired,Low,Gap #6,Retired
+63,Conflict UI Decision Application,P1,Implementation Best Practices & Patterns,One decision applies atomically to all conflicts,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+64,Steam-Specific Authentication,P1,Service Limits & Platform Requirements,Steam user creation path validates prereqs,Steam platforms,No,No,Retired,Low,Manual Test Cases,Retired
+65,Platform-Specific UI Requirements,P1,Service Limits & Platform Requirements,In-proc platforms require custom UI callbacks,Non-Xbox platforms,No,No,Open,High,None,High
+66,In-Process Upload Warnings,P1,Service Limits & Platform Requirements,Attempt exit mid upload shows prevention warning,Non-Xbox platforms,No,No,Retired,Low,Manual Test Cases,Retired
+67,Single Point of Presence (SPOP),P2,Service Limits & Platform Requirements,Duplicate sign-in aligns with active device logic,Xbox platforms,No,No,Open,Medium,Gap #18,Medium
+68,Offline-to-Online Transition,P1,Offline/Online Mode Transitions & Identity,Retry from offline performs full sync and connects,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+69,Connection Status Monitoring,P1,Offline/Online Mode Transitions & Identity,IsConnected matches real connectivity states,All platforms,No,No,Open,High,None,High
+70,Persistent Local Identity,P1,Offline/Online Mode Transitions & Identity,Local user reused offline online without loops,All platforms,No,No,Open,High,None,High
+71,Service Config Validation,P1,Offline/Online Mode Transitions & Identity,Bad titleId or URL fails fast no side effects,All platforms,No,No,Open,High,None,High
+72,Incremental Upload Optimization,P2,Implementation Best Practices & Patterns,Only changed files uploaded network diff minimal,All platforms,No,No,Open,Medium,None,Medium
+73,File Timestamp Preservation,P2,Implementation Best Practices & Patterns,Unmodified files retain original mtimes,All platforms,No,No,Open,Medium,None,Medium
+74,Once-Per-Session Limitation,P1,Implementation Best Practices & Patterns,Second AddUser blocked until Uninitialize,All platforms,No,No,Open,High,None,High
+75,Title Update Compatibility,P3,Implementation Best Practices & Patterns,Older and newer saves load or migrate as spec,All platforms,No,No,Open,Medium,None,Medium
+76,UI Automation for Conflict Resolution,P1,Test Automation & Platform Validation,Automate conflict and contention UI flows,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+77,Power State Testing Automation,P1,Test Automation & Platform Validation,Automate suspend resume power loss scenarios,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+78,Network Failure Recovery Automation,P1,Test Automation & Platform Validation,Automate network interruption and recovery,All platforms,No,No,Open,High,None,High
+79,Background Upload Timing Validation,P2,Test Automation & Platform Validation,Validate 30 minute background upload trigger,All platforms,No,Yes,Open,Medium,None,Medium
+80,Cross-Platform UI Validation,P2,Test Automation & Platform Validation,Automate platform specific UI behavior checks,Non-Xbox platforms,No,No,Open,Medium,None,Medium
+81,Stress Testing for Large Operations,P2,Test Automation & Platform Validation,Large operations and quota edge stress,All platforms,No,No,Open,Medium,Gap #59,Medium
+82,Edge Case Device Switching,P4,Test Automation & Platform Validation,Rapid device switching multi operations race,All platforms,No,No,Open,Low,Gap #18-20,Low
+83,Callback Queue Thread Safety,P1,Thread Safety & Concurrency,Callbacks under load show no races or ordering bugs,All platforms,No,No,Open,High,None,Critical
+84,Save Folder Path Injection/Security,P1,Security & File System Integrity,Reject traversal reserved names null chars,Non-Xbox platforms,No,No,Open,High,None,Critical
+85,File System Permission Changes,P1,Security & File System Integrity,Mid operation permission loss handled cleanly,All platforms,No,No,Open,High,None,High
+86,Corrupted Local Save Handling,P1,Data Corruption & Recovery,Local corrupt bytes detected with recovery path,All platforms,No,No,Open,High,None,High
+87,Cloud Save Corruption Detection,P1,Data Corruption & Recovery,Tampered remote content detected abort safely,All platforms,No,No,Open,High,None,High
+88,Manifest File Corruption,P1,Data Corruption & Recovery,Truncated or invalid manifest triggers rebuild,All platforms,No,No,Open,High,None,High
+89,Multiple User Session Conflicts,P1,Thread Safety & Concurrency,Sequential user switches clean resources,All platforms,No,No,Open,High,None,High
+90,API Call During Uninitialization,P1,Thread Safety & Concurrency,APIs during uninit return guarded failures,All platforms,No,No,Open,High,Gap #44,High
+91,Concurrent API Call Safety,P1,Thread Safety & Concurrency,Parallel API calls stable no deadlocks,All platforms,No,No,Open,High,None,Critical
+92,Resource Cleanup on Failure,P1,Data Corruption & Recovery,Failures free temp files handles locks,All platforms,No,No,Open,High,None,High
+93,Save Folder Deletion During Operation,P1,Security & File System Integrity,Mid transfer folder removal detected gracefully,All platforms,No,No,Open,High,None,High
+94,Disk Space Changes During Upload,P1,System Resource & Environmental,Mid transfer disk exhaustion aborts cleanly,All platforms,No,No,Open,High,None,High
+95,Network Interface Changes,P1,System Resource & Environmental,Adapter switch retries or fails predictably,All platforms,No,No,Open,High,None,High
+96,System Clock Changes,P2,System Resource & Environmental,Large clock skew does not corrupt logic,All platforms,No,No,Open,Medium,None,Medium
+97,File Handle Exhaustion,P2,System Resource & Environmental,Artificial handle cap produces clear error,All platforms,No,No,Open,Medium,None,Medium
+98,Memory Pressure Scenarios,P1,System Resource & Environmental,Constrained memory shows fail path no leaks,All platforms,No,No,Open,High,Gap #1,High
+99,Callback Exception Handling,P1,System Resource & Environmental,Exceptions in callbacks contained and surfaced,All platforms,No,No,Open,High,None,Critical
+100,Thumbnail File Validation,P2,System Resource & Environmental,Reject oversized corrupt or wrong format thumbnails,All platforms,No,No,Open,Medium,Gap #50,Medium
+101,Antivirus Interference,P2,System Resource & Environmental,AV lock or scan handled without corruption,PC platforms,No,No,Open,Medium,None,Medium
+102,Unicode/International Path Support,P1,System Resource & Environmental,Unicode emoji RTL paths sync intact,All platforms,No,No,Open,High,None,High
+103,Very Large Manifest Files,P2,System Resource & Environmental,Thousands of files within perf and memory budgets,All platforms,No,No,Open,Medium,Gap #25,Medium
+104,Save Descriptor Field Validation,P1,System Resource & Environmental,Max length invalid UTF-8 handled safely,All platforms,No,No,Open,High,None,High
+105,Rapid Initialize/Uninitialize Cycling,P2,System Resource & Environmental,Loop init/uninit leaves no leaks or races,All platforms,No,No,Open,Medium,Gap #44,Medium
+106,October 2025 GDK Folder Layout Compatibility,P1,October 2025 GDK & Steam Deck Integration,New GDK layouts load correctly errors clear,All platforms,No,No,Open,High,None,High
+107,XGameRuntime DLL Deployment,P1,October 2025 GDK & Steam Deck Integration,Missing xgameruntime DLL yields specific failure,Steam platforms,No,No,Open,High,None,High
+108,Unified SDK DLL Deployment,P1,October 2025 GDK & Steam Deck Integration,Omitted DLLs produce distinct load messages,Steam platforms,No,No,Open,High,None,High
+109,Steam Deck In-Process Sync Behavior,P1,October 2025 GDK & Steam Deck Integration,Process exit stops sync no background linger,Steam Deck,No,No,Open,High,None,High
+110,Steam Deck Frequent Sync Requirements,P1,October 2025 GDK & Steam Deck Integration,Periodic sync prevents unsynced progress window,Steam Deck,No,No,Retired,Low,Manual Test Cases,Retired
+111,Steam Deck Platform Detection,P2,October 2025 GDK & Steam Deck Integration,Detection toggles code paths accurately,Steam Deck,No,No,Open,Medium,None,Medium
+112,Steam Deck Registry Configuration,P2,October 2025 GDK & Steam Deck Integration,Sandbox registry value applied and revert safe,Steam Deck,No,No,Open,Medium,None,Medium
+113,Steam Deck QR Code Authentication UI,P1,October 2025 GDK & Steam Deck Integration,QR login handles cancel timeout clearly,Steam Deck,No,No,Retired,Low,Manual Test Cases,Retired
+114,Cross-Storefront Version Compatibility,P1,October 2025 GDK & Steam Deck Integration,Mixed versions migrate or conflict cleanly,All platforms,No,No,Open,High,None,High
+115,Active Device Changed During Gameplay,P1,Active Device Management,Mid gameplay takeover pauses and recovers,All platforms,No,No,Open,High,Gap #18,High
+116,Active Device Changed UI Messaging,P2,Active Device Management,User messaging clear and localizable,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+117,Active Device Changed Recovery Flow,P1,Active Device Management,Re-init after active change works cleanly,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+118,Multiple Device Simultaneous Active Attempts,P1,Active Device Management,Race for active state yields single winner,All platforms,No,No,Open,High,Gap #18-20,High
+119,Offline Mode API Behavior Validation,P1,Offline Mode & Connectivity,APIs offline return expected codes or no-op,All platforms,No,No,Open,High,None,High
+120,Network Failure During Active Upload,P1,Offline Mode & Connectivity,Mid upload network loss triggers failure UI,All platforms,No,No,Open,High,Gap #78,High
+121,Sync Failure UI Response Handling,P1,Offline Mode & Connectivity,Cover Retry success loop and UseOffline branch,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+122,Offline Mode Storage Operations,P2,Offline Mode & Connectivity,Offline create modify later syncs correct delta,All platforms,No,No,Open,Medium,None,Medium
+123,Reconnection After Extended Offline,P2,Offline Mode & Connectivity,Long offline plus remote changes conflicts detected,All platforms,No,No,Retired,Low,Manual Test Cases,Retired
+124,Partial Network Connectivity,P2,Offline Mode & Connectivity,High latency loss shows progress and retries,All platforms,No,No,Open,Medium,None,Medium
+125,Network Interface Switching During Sync,P1,Offline Mode & Connectivity,Switch networks resume or fail gracefully,All platforms,No,No,Open,High,Gap #95,High
+126,Root Folder Atomic Unit Enforcement,P1,Atomic Unit & Conflict Resolution,Retired duplicate of Gap #6,All platforms,No,No,Retired,Low,Gap #6,Retired
+127,Atomic Unit Conflict Decision Application,P1,Atomic Unit & Conflict Resolution,Retired duplicate of Gap #63,All platforms,No,No,Retired,Low,Gap #63,Retired
+128,Independent Atomic Unit Merging,P1,Atomic Unit & Conflict Resolution,Retired duplicate of Gap #8,All platforms,No,No,Retired,Low,Gap #8,Retired
+129,Atomic Unit Folder Structure Validation,P2,Atomic Unit & Conflict Resolution,Complex nesting still groups correctly,All platforms,No,No,Open,Medium,Gap #6,Medium
+130,Cross-Atomic Unit File Dependencies,P2,Atomic Unit & Conflict Resolution,Logical links do not create false conflicts,All platforms,No,No,Open,Medium,Gap #6,Medium
+131,XUserPlatformStorage Event Handler Error Recovery,P1,Platform Integration,Handler failures propagate with recovery,All platforms,No,No,Open,High,None,High
+132,UI Callback Threading Model Validation,P1,UI Integration,Callbacks run on expected thread safely,All platforms,No,No,Open,High,Gap #83,High
+133,Controller Input During Game Save Operations,P1,Input Integration,Controller navigation functional during UI,All platforms,No,No,Open,High,None,High
+134,Registry Manipulation Testing (ForceUseInprocGameSaves),P2,Testing Infrastructure,Registry override toggles InProc mode safely,All platforms,No,No,Open,Medium,None,Medium
+135,Steam Deck Remote Connect Flow Cancellation,P1,Steam Integration,Cancel remote connect cleans up gracefully,Steam Deck,No,No,Open,High,Gap #113,High
+136,Sync Progress Cancellation Mid-Operation,P1,Sync Operations,User cancel terminates each phase cleanly,All platforms,No,No,Open,High,Gap #37,High
+137,UI Response Timing Edge,P2,UI Response & Callback Testing,Delayed or absent user response handled safely,All platforms,Yes,Yes,Open,Medium,Gaps #37-40,Medium
+138,XAsync Cancellation Phases,P1,Thread Safety & Concurrency,Cancel queued running committing yields cleanup,All platforms,No,No,Open,High,Gap #136,High
+139,Concurrent Upload Guard Rails,P1,Thread Safety & Concurrency,Parallel uploads gate to one active safely,All platforms,No,No,Open,High,Gaps #14 #91,High
+140,AddUser Re-entry Protection,P2,Error Handling & Recovery,Second AddUser while first running guarded,All platforms,No,No,Open,Medium,Gap #74,Medium
+141,Descriptor Boundary & Truncation,P2,System Resource & Environmental,Long Unicode descriptor fields truncate safely,All platforms,Yes,Yes,Open,Medium,Gap #104,Medium
+142,Long Unicode Save Descriptions,P2,ShamWow-Identified Features,Long emoji RTL descriptions display intact,All platforms,Yes,Yes,Open,Medium,Gap #51,Medium
+143,Thumbnail Lifecycle Integrity,P2,ShamWow-Identified Features,Add replace remove thumbnail updates descriptor,All platforms,Yes,Yes,Open,Medium,Gap #50,Medium
+144,Quota Edge Condition Handling,P1,Service Limits & Platform Requirements,Near quota transitions to block with correct value,All platforms,Yes,Yes,Open,High,Gap #59,High
+145,Crash Residue Cleanup,P1,Upload Reliability & Recovery,Crash temp artifacts purged or resumed,All platforms,No,No,Open,High,Gaps #14 #17,High
+146,Queue Starvation & Shutdown Safety,P1,Thread Safety & Concurrency,Starved closing queue avoids deadlock,All platforms,No,No,Open,High,Gaps #44 #105,High
+147,Invalid UI Response Robustness,P2,UI Response & Callback Testing,Out-of-window responses ignored safely,All platforms,No,No,Open,Medium,Gaps #37-40,Medium
+148,Pre-AddUser Folder/Size Access Guards,P1,Error Handling & Recovery,Folder and size calls pre AddUser return USER_NOT_ADDED,All platforms,No,No,Open,High,Gaps #30 #33,High

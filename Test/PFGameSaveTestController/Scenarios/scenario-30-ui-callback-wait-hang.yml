@@ -1,0 +1,156 @@
+id: Scenario-30-UI-Callback-Wait-Hang
+name: 30. UI Callback Wait Hang Regression Test
+tags:
+  - passing
+  - gamesaves
+description: |
+  Regression test for the UI callback wait hang bug.
+  
+  BUG: When a sync fails and the syncFailedCallback is invoked, if the game delays before
+  calling PFGameSaveFilesSetUiSyncFailedResponse, the SDK would immediately complete the
+  async operation instead of waiting. This caused the operation to "succeed" incorrectly
+  or hang during cleanup.
+  
+  FIX: The SDK now returns E_PENDING from HandleFailedUI when no action has been set yet,
+  keeping the async operation alive until the user responds.
+  
+  This test forces a sync failure, configures a 3-second delay before the auto-response,
+  and verifies that:
+  1. The operation waits for the delayed response (doesn't complete immediately)
+  2. After the delay, the operation completes correctly with the expected result
+  
+  WITHOUT THE FIX: The test will timeout because the SDK completes immediately without
+  the user's response, leaving the operation in an inconsistent state.
+  
+  WITH THE FIX: The test passes because the SDK properly waits for the delayed response.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  initialize:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "PFGameSaveTestHarness"
+        customId: "PFGameSaveTestHarness"
+        createAccount: true
+
+  test-delayed-sync-failed-response:
+    # First, successfully add the user to establish cloud connection
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    
+    # Create some data to upload
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: test/data.bin
+            bytes: 1024
+            pattern: [0xDE, 0xAD, 0xBE, 0xEF]
+    
+    # Upload successfully first to establish a baseline
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    
+    # Now configure HTTP mock to force sync failures on the next operation
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/ListManifests"
+        statusCode: 503
+    
+    # Configure auto-response with a 3-second delay.
+    # This simulates a game that takes time to show UI and get user input.
+    # BUG: Without the fix, the SDK would complete immediately before this delay finishes.
+    # FIX: With the fix, the SDK waits (returns E_PENDING) until the delayed response arrives.
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: UseOffline
+        delayMs: 3000
+    
+    # Modify local data to trigger an upload
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: test/data2.bin
+            bytes: 512
+            pattern: [0xCA, 0xFE]
+    
+    # Attempt upload - this should:
+    # 1. Fail to ListManifests (mocked 503)
+    # 2. Invoke syncFailedCallback
+    # 3. Wait 3 seconds (the callback has a delay configured)
+    # 4. Receive UseOffline response
+    # 5. Return E_CANCELLED (0x800704C7) because the upload is cancelled when switching to offline
+    #
+    # WITHOUT THE FIX: SDK completes immediately, test hangs or fails
+    # WITH THE FIX: SDK waits for the delayed response, then cancels correctly
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+        expectedHr: "0x800704C7"
+      timeoutSeconds: 30
+    
+    # Verify we're now in offline mode (the delayed UseOffline response worked)
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+
+  cleanup:
+    - command: ClearHttpMocks
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: initialize
+  - role: DeviceA
+    block: test-delayed-sync-failed-response
+  - role: DeviceA
+    block: cleanup
+cleanup:
+  DeviceA:
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
