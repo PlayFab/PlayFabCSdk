@@ -75,9 +75,9 @@ XM_ALIGNED_STRUCT(16) SpriteBatch::Impl : public AlignedNew<SpriteBatch::Impl>
 {
 public:
     Impl(_In_ ID3D12Device* device,
-         ResourceUploadBatch& upload,
-         const SpriteBatchPipelineStateDescription& psoDesc,
-         const D3D12_VIEWPORT* viewport);
+        ResourceUploadBatch& upload,
+        const SpriteBatchPipelineStateDescription& psoDesc,
+        _In_opt_ const D3D12_VIEWPORT* viewport);
 
     Impl(const Impl&) = delete;
     Impl& operator=(const Impl&) = delete;
@@ -350,10 +350,10 @@ void SpriteBatch::Impl::DeviceResources::CreateRootSignatures(_In_ ID3D12Device*
         | D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS
         | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS
         | D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS
-#ifdef _GAMING_XBOX_SCARLETT
+    #ifdef _GAMING_XBOX_SCARLETT
         | D3D12_ROOT_SIGNATURE_FLAG_DENY_AMPLIFICATION_SHADER_ROOT_ACCESS
         | D3D12_ROOT_SIGNATURE_FLAG_DENY_MESH_SHADER_ROOT_ACCESS
-#endif
+    #endif
         ;
 
     const CD3DX12_DESCRIPTOR_RANGE textureSRV(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
@@ -428,7 +428,10 @@ std::vector<short> SpriteBatch::Impl::DeviceResources::CreateIndexValues()
 
 // Per-SpriteBatch constructor.
 _Use_decl_annotations_
-SpriteBatch::Impl::Impl(ID3D12Device* device, ResourceUploadBatch& upload, const SpriteBatchPipelineStateDescription& psoDesc, const D3D12_VIEWPORT* viewport)
+SpriteBatch::Impl::Impl(ID3D12Device* device,
+        ResourceUploadBatch& upload,
+        const SpriteBatchPipelineStateDescription& psoDesc,
+        const D3D12_VIEWPORT* viewport)
     : mRotation(DXGI_MODE_ROTATION_IDENTITY),
     mSetViewport(false),
     mViewPort{},
@@ -441,13 +444,18 @@ SpriteBatch::Impl::Impl(ID3D12Device* device, ResourceUploadBatch& upload, const
     mVertexSegment{},
     mVertexPageSize(sizeof(VertexPositionColorTexture) * MaxBatchSize * VerticesPerSprite),
     mSpriteCount(0),
-    mDeviceResources(deviceResourcesPool.DemandCreate(device, upload))
+    mDeviceResources{}
 {
+    if (!device)
+        throw std::invalid_argument("Direct3D device is null");
+
     if (viewport != nullptr)
     {
         mViewPort = *viewport;
         mSetViewport = true;
     }
+
+    mDeviceResources = deviceResourcesPool.DemandCreate(device, upload);
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC d3dDesc = {};
     d3dDesc.InputLayout = s_DefaultInputLayoutDesc;
@@ -1046,8 +1054,7 @@ SpriteBatch::SpriteBatch(ID3D12Device* device,
     const SpriteBatchPipelineStateDescription& psoDesc,
     const D3D12_VIEWPORT* viewport)
     : pImpl(std::make_unique<Impl>(device, upload, psoDesc, viewport))
-{
-}
+{}
 
 
 SpriteBatch::SpriteBatch(SpriteBatch&&) noexcept = default;

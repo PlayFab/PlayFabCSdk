@@ -144,36 +144,6 @@ Result<ServerGetPlayerSegmentsOperation::ResultType> ServerGetPlayerSegmentsOper
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
-ServerGetPlayersInSegmentOperation::ServerGetPlayersInSegmentOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
-    XAsyncOperation{ std::move(rc) },
-    m_entity{ std::move(entity) },
-    m_request{ std::move(request) }
-{
-}
-
-AsyncOp<ServerGetPlayersInSegmentOperation::ResultType> ServerGetPlayersInSegmentOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
-{
-    return RunOperation(MakeUnique<ServerGetPlayersInSegmentOperation>(std::move(entity), std::move(request), std::move(rc)));
-}
-
-HRESULT ServerGetPlayersInSegmentOperation::OnStarted(XAsyncBlock* async) noexcept
-{
-    return PFSegmentsServerGetPlayersInSegmentAsync(m_entity.Handle(), &m_request.Model(), async);
-}
-
-Result<ServerGetPlayersInSegmentOperation::ResultType> ServerGetPlayersInSegmentOperation::GetResult(XAsyncBlock* async) noexcept
-{
-    size_t resultSize;
-    RETURN_IF_FAILED(PFSegmentsServerGetPlayersInSegmentGetResultSize(async, &resultSize));
-    Vector<char> resultBuffer(resultSize);
-    PFSegmentsGetPlayersInSegmentResult* result;
-    RETURN_IF_FAILED(PFSegmentsServerGetPlayersInSegmentGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
-    return ResultType{ *result };
-}
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-
 ServerGetPlayerTagsOperation::ServerGetPlayerTagsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
     m_entity{ std::move(entity) },

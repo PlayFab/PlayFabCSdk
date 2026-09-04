@@ -44,7 +44,7 @@ public:
 
     // Get result payload. Asserts if there is no payload
     const T& Payload() const;
-    T&& ExtractPayload();
+    T ExtractPayload();
 
 private:
     std::optional<T> m_payload{};
@@ -184,10 +184,12 @@ const T& Result<T>::Payload() const
 }
 
 template<typename T>
-T&& Result<T>::ExtractPayload()
+T Result<T>::ExtractPayload()
 {
     assert(m_payload.has_value());
-    return std::move(*m_payload);
+    T payload = std::move(m_payload.value());
+    m_payload.reset();
+    return payload;
 }
 
 inline Result<void>::Result() :

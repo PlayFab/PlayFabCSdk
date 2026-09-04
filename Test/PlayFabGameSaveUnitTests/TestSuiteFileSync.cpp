@@ -199,6 +199,48 @@ TEST_F(TestSuiteFileSync, OfflineTestDownloadFile)
     AHS(verify_cloud_connected(false));
 }
 
+// Data-loss regression test.
+//
+// CompareStep only populates remoteFileFolderSet by downloading extended-<N>-manifest.json. If
+// that blob is absent from storage, GetManifestDownloadDetails does not list it, CompareStep takes
+// its "not found so skip processing it" branch, and ReadLocalManifest then runs MarkFilesToSync
+// against a remote set that was NEVER populated.
+//
+// Nothing downstream distinguishes "the cloud has no files" from "we never learned what the cloud
+// has". MarkFilesToDeleteUponDownload queues every local file whose lastSyncFileSize != 0 (they all
+// look absent from the cloud) and MarkFoldersToDeleteUponDownload queues every folder with
+// hasLastSync, so DownloadStep then deletes the player's entire synced save - reported as success.
+//
+// Every manifest UploadStep finalizes has an extended manifest (UploadStep.cpp:580-604), so a
+// missing one is always an anomaly, never a legitimate empty-cloud state. A genuinely emptied
+// cloud still HAS an extended manifest listing zero files, and that case must still delete.
+TEST_F(TestSuiteFileSync, MissingExtendedManifestDoesNotWipeLocalSave)
+{
+    AHS(pfgamesave_download("DeviceA"));
+    AHS(write_file("save01", "save1.dat", "testdata1"));
+    AHS(write_file("save02", "save3.dat", "testdata3"));
+    AHS(pfgamesave_upload());
+
+    // DeviceB syncs it down, establishing the lastSync baseline that makes an empty remote set
+    // destructive: every local file now has lastSyncFileSize != 0.
+    AHS(pfgamesave_download("DeviceB"));
+    AHS(verify_file("save01", "save1.dat", "testdata1"));
+    AHS(verify_file("save02", "save3.dat", "testdata3"));
+    AHS(pfgamesave_upload());
+
+    // The manifest record survives, but its extended manifest blob is gone from storage.
+    AHS(delete_mock_extended_manifests());
+
+    // Re-sync. The client cannot learn the cloud's file set, so it must not conclude the cloud is
+    // empty and delete everything the player has.
+    g_gameState.uiActiveDeviceContentionCallbackTriggered = false;
+    g_gameState.uiActiveDeviceContentionCallbackExpected = true;
+    AHS(pfgamesave_download("DeviceB", false));
+
+    AHS(verify_file("save01", "save1.dat", "testdata1"));
+    AHS(verify_file("save02", "save3.dat", "testdata3"));
+}
+
 TEST_F(TestSuiteFileSync, SyncBetweeenDevices)
 {
     AHS(pfgamesave_download("DeviceA"));
@@ -412,6 +454,61 @@ TEST_F(TestSuiteFileSync, DeleteFolderTest)
     AHS(verify_folder_exists("save01"));
     AHS(verify_num_files("save01", 0));
     ASSERT_TRUE(FAILED(verify_folder_exists("save02")));
+}
+
+// Regression test for Bug 63588283.
+//
+// When the cloud deletes a folder, DownloadStep::DeleteFolders used to call
+// FilePAL::DeletePath(), which recursively destroys the whole directory tree.
+// That recursion ignored the per-file decisions made moments earlier by
+// MarkFilesToDeleteUponDownload, which deliberately SPARES local files that have
+// never synced (lastSyncFileSize == 0). The result was silent, unrecoverable loss
+// of brand-new local saves, with no conflict UI raised (ScanForConflicts only looks
+// at folders with INCOMING downloads, so a remotely-deleted folder never shows up).
+TEST_F(TestSuiteFileSync, DeleteFolderPreservesNewLocalFile)
+{
+    // DeviceA publishes save01/ containing one file.
+    AHS(pfgamesave_download("DeviceA"));
+    AHS(create_folder("save01"));
+    AHS(write_file("save01", "synced.dat", "syncedbaseline"));
+    AHS(pfgamesave_upload());
+
+    // DeviceB syncs it down, which establishes last-sync state for save01/.
+    // That state is what later makes MarkFoldersToDeleteUponDownload queue the folder.
+    AHS(pfgamesave_download("DeviceB"));
+    AHS(verify_file("save01", "synced.dat", "syncedbaseline"));
+    AHS(pfgamesave_upload());
+
+    // DeviceA deletes save01/ entirely and publishes a new manifest version.
+    g_gameState.uiActiveDeviceContentionCallbackTriggered = false;
+    g_gameState.uiActiveDeviceContentionCallbackExpected = true;
+    AHS(pfgamesave_download("DeviceA", false));
+    AHS(delete_file("save01", "synced.dat"));
+    AHS(delete_folder("save01"));
+    AHS(pfgamesave_upload());
+
+    // DeviceB creates a brand-new file inside the folder the cloud has since deleted.
+    // Written without game state so it is planted before the next sync begins.
+    AHS(write_file_no_gamestate("DeviceB", "save01\\newfile.dat", "localnew"));
+
+    // The sync must prune the previously-synced file but keep the never-synced one,
+    // and must therefore keep save01/ itself.
+    g_gameState.uiActiveDeviceContentionCallbackTriggered = false;
+    g_gameState.uiActiveDeviceContentionCallbackExpected = true;
+    AHS(pfgamesave_download("DeviceB", false));
+    AHS(verify_folder_exists("save01"));
+    AHS(verify_file("save01", "newfile.dat", "localnew"));
+    AHS(verify_num_files("save01", 1));
+
+    // The spared file must also converge rather than being stranded locally: uploading from
+    // DeviceB republishes save01/, and DeviceA picks it up on its next sync.
+    AHS(pfgamesave_upload());
+
+    g_gameState.uiActiveDeviceContentionCallbackTriggered = false;
+    g_gameState.uiActiveDeviceContentionCallbackExpected = true;
+    AHS(pfgamesave_download("DeviceA", false));
+    AHS(verify_file("save01", "newfile.dat", "localnew"));
+    AHS(verify_num_files("save01", 1));
 }
 
 //TEST_F(TestSuiteFileSync, DISABLED_MEMBUG_MemoryDeleteFolderTest)

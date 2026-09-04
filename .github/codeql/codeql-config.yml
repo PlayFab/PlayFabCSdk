@@ -1,0 +1,17 @@
+# CodeQL configuration for PlayFab.C
+# Excludes vendored third-party code that is not part of the shipping SDK.
+#
+# Context: libHttpClient is checked out as a build dependency and contains
+# vendored upstream pyca/cryptography test-vector generators that trigger
+# security findings (SM04389, SM04458, SM04468, SM04472, SM04388, SM04456,
+# SM04457, SM04469, SM04470, SM04471). These are dev-only scripts from
+# upstream OpenSSL/pyca and are never compiled or shipped.
+
+name: "PlayFab.C CodeQL Config"
+
+paths-ignore:
+  # Vendored third-party: libHttpClient externals (openssl, pyca-cryptography, etc.)
+  - "libHttpClient/External/openssl/**"
+  - "libHttpClient/External/**"
+  # Any other vendored external dependencies
+  - "External/**"

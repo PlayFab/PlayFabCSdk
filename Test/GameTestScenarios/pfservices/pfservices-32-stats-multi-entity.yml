@@ -1,0 +1,49 @@
+id: PFServices-32-Stats-Multi-Entity
+name: PFServices 32 - Get Statistics for Multiple Entities
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Gets statistics for multiple entities in a single call.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFStatisticsGetStatisticsForEntitiesAsync
+      expectFailure: true  # E_PF_INVALID_PARAMS (0x89235421) - empty request, entities required
+    - command: PFStatisticsGetStatisticsForEntitiesGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

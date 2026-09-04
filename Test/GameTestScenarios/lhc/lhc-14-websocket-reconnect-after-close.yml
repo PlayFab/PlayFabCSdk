@@ -1,0 +1,77 @@
+id: LHC-14-WebSocket-Reconnect-After-Close
+name: LHC 14 - WebSocket Reconnect After Server-Initiated Close
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Connect a WebSocket, trigger a server-initiated close, verify the close
+  callback fires, then reconnect and send/receive again.  Validates handle
+  reuse and close-callback plumbing end-to-end.
+  Uses the controller's WebSocketTestServer with a close trigger command.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  ws-reconnect:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Start local WebSocket echo server
+    - command: StartWebSocketTestServer
+
+    # First connection
+    - command: HCWebSocketCreate
+    - command: HCWebSocketConnectAsync
+      parameters:
+        uri: "ws://localhost:{{wsTestPort}}/echo"
+        subProtocol: ""
+    - command: HCGetWebSocketConnectResult
+
+    - command: HCWebSocketSendMessageAsync
+      parameters:
+        message: "ping-before-close"
+    - command: HCGetWebSocketSendMessageResult
+
+    # Trigger server-initiated close
+    - command: WebSocketServerClose
+    # Brief wait for close callback to fire
+    - command: Sleep
+      parameters:
+        durationMs: 500
+
+    # Close the old handle and create a new one for reconnect
+    - command: HCWebSocketCloseHandle
+    - command: HCWebSocketCreate
+
+    # Reconnect
+    - command: HCWebSocketConnectAsync
+      parameters:
+        uri: "ws://localhost:{{wsTestPort}}/echo"
+        subProtocol: ""
+    - command: HCGetWebSocketConnectResult
+
+    # Send/receive after reconnect
+    - command: HCWebSocketSendMessageAsync
+      parameters:
+        message: "ping-after-reconnect"
+    - command: HCGetWebSocketSendMessageResult
+
+    - command: HCWebSocketDisconnect
+    - command: HCWebSocketCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: ws-reconnect
+cleanup:
+  DeviceA:
+    - command: StopWebSocketTestServer
+    - command: XTaskQueueCloseHandle

@@ -68,6 +68,13 @@ private:
         _In_ const String& shortSaveDescription
         );
 
+    void ReconcileMetadataLoss(
+        _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
+        _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet,
+        _In_ const String& saveFolder,
+        _In_ const String& shortSaveDescription,
+        _In_ bool descriptionDirty);
+
     static void MarkFilesToSync(
         _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
         _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet,
@@ -77,7 +84,7 @@ private:
     static void MarkFilesToTransferUponUpload(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet);
     static void MarkFilesToTransferUponDownload(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet, _In_ const String& saveFolder);
     static void ScanForConflicts(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet, _Out_ bool& conflictFound);
-    static void ScanForConflictHelper(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const FileDetail* localFileToUpload, _In_ const Set<String>& topLevelFoldersNeedingDownload, _Out_ bool& conflictFound);
+    static void ScanForConflictHelper(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const FileDetail* localFileToUpload, _In_ const Set<String>& topLevelFoldersNeedingDownload, _Inout_ bool& conflictFound);
 
     static void MarkFilesToDeleteUponUpload(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet);
     static void MarkFilesToDeleteUponDownload(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet);
@@ -87,7 +94,7 @@ private:
     static void MarkFoldersToDeleteUponDownload(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet);
 
     static void MarkCompressedFilesToKeep(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet);
-    static void HasLocalFileChanged(_In_ const FileDetail& localFile, _Out_ bool& localFileDeleted, _Out_ bool& localFileChanged);
+    static void HasLocalFileChanged(_In_ const FileDetail& localFile, _Out_ bool& localFileChanged, _Out_ bool& localFileDeleted);
     static bool HasRemoteFileChanged(_In_ const FileDetail& localFile, _In_ const FileDetail& remoteFile);
 
     LocalUser m_localUser;
@@ -101,6 +108,7 @@ private:
     bool m_conflictRequiresUpload{ false };    // Signals FolderSyncManager to perform single upload finalize
     String m_loadedShortSaveDescription;       // Description loaded from localstate.json during compare
     bool m_loadedDescriptionDirty{ false };    // True if description was set offline and not yet uploaded
+    HRESULT m_extendedManifestFailureHR{ S_OK }; // Non-S_OK once an extended manifest download failed for this activation
 };
 
 } // namespace GameSave

@@ -1,0 +1,46 @@
+id: PFCore-11-Login-PlayFab
+name: PFCore 11 - Login with PlayFab Credentials
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Logs in with PlayFab username/password credentials.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFAuthenticationLoginWithPlayFabAsync
+      parameters:
+        username: "pfcoretest"
+        password: "pfcoretest123!"
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

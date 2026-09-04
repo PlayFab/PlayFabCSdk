@@ -109,10 +109,11 @@ inline TimePoint Iso8601StringToTimePoint(const String& input)
 inline void StrCpy(char* destination, size_t destinationSize, char const* source)
 {
 #if _WIN32
-    strcpy_s(destination, destinationSize, source);
+    strncpy_s(destination, destinationSize, source, _TRUNCATE);
 #else
-    std::strncpy(destination, source, destinationSize);
-    destination[destinationSize - 1] = '\0';  // Ensure null-termination
+    if (destinationSize == 0) return;
+    std::strncpy(destination, source, destinationSize - 1);
+    destination[destinationSize - 1] = '\0';
 #endif
 }
 

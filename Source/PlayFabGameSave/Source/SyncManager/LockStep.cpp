@@ -251,7 +251,7 @@ HRESULT LockStep::AcquireActiveDevice(
                             }
                             catch(...)
                             {
-                                // Leave unlimited on parse failure per spec (missing/invalid -> unlimited)
+                                TRACE_WARNING("[GAME SAVE] LockStep: Failed to parse per-player quota, defaulting to unlimited");
                                 m_parsedPerPlayerQuotaBytes = std::numeric_limits<int64_t>::max();
                             }
                         }
@@ -431,6 +431,9 @@ HRESULT LockStep::AcquireActiveDevice(
                         newManifestVersion++; // don't use 0 as that mess with other logic in our client
                     }
                     baseManifestVersion = finalizedVersion;
+                    // m_baselineFinalizedManifest is already the data-selection baseline
+                    // (winner/non-conflict, or rollback target). Use it directly as the base.
+                    // It was set by TryGetLatestFinalizedManifest or SelectBaselineManifest.
                     if (baseManifestVersion == 0)
                     {
                         baseManifestVersion = newManifestVersion; // if no finalized manifest, set base version as itself
@@ -454,6 +457,8 @@ HRESULT LockStep::AcquireActiveDevice(
                     newManifestVersion++; // don't use 0 as that mess with other logic in our client
                 }
                 baseManifestVersion = StringToUint64(m_baselineFinalizedManifest.GetVersion());
+                // m_baselineFinalizedManifest is already the data-selection baseline
+                // (winner/non-conflict, or rollback target). Use it directly as the base.
                 if (baseManifestVersion == 0)
                 {
                     baseManifestVersion = newManifestVersion; // if no finalized manifest, set base version as itself
@@ -486,9 +491,54 @@ HRESULT LockStep::AcquireActiveDevice(
                         // {"code":409,"status":"Conflict","error":"GameSaveManifestVersionAlreadyExists","errorCode":20301,"errorMessage":"GameSaveManifestVersionAlreadyExists"}
                         if (result.hr == E_PF_GAME_SAVE_MANIFEST_VERSION_ALREADY_EXISTS)
                         {
-                            m_stage = LockStage::CreatePendingManifest;
-                            m_manifestVersionOffset++;
-                            task.ScheduleNow();
+                            // Bounded like BASE_VERSION_NOT_AVAILABLE below. Without a cap a
+                            // service that keeps returning 409 turns this into a hot retry loop
+                            // that never completes the async op and never notifies the title.
+                            constexpr uint32_t maxVersionExistsRetries = 5;
+                            m_versionExistsRetryCount++;
+                            if (m_versionExistsRetryCount <= maxVersionExistsRetries)
+                            {
+                                m_telemetryManager->ResetContextActivation();
+                                m_stage = LockStage::CreatePendingManifest;
+                                m_manifestVersionOffset++;
+                                task.ScheduleNow();
+                            }
+                            else
+                            {
+                                TRACE_ERROR("[GAME SAVE] LockStep: MANIFEST_VERSION_ALREADY_EXISTS retry limit exceeded (%u attempts)", m_versionExistsRetryCount);
+                                m_stage = LockStage::WaitForFailedUI_CreatePendingManifest;
+                                if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::PreparingForDownload))
+                                {
+                                    m_stage = LockStage::LockStepFailure;
+                                    m_failureHR = result.hr;
+                                    task.ScheduleNow();
+                                }
+                            }
+                        }
+                        else if (result.hr == E_PF_GAME_SAVE_BASE_VERSION_NOT_AVAILABLE)
+                        {
+                            constexpr uint32_t maxBaseVersionRetries = 3;
+                            m_baseVersionRetryCount++;
+                            if (m_baseVersionRetryCount <= maxBaseVersionRetries)
+                            {
+                                // Base version is stale - re-fetch manifests to discover actual current version
+                                TRACE_WARNING("[GAME SAVE] LockStep: BASE_VERSION_NOT_AVAILABLE (attempt %u/%u), re-fetching manifests",
+                                    m_baseVersionRetryCount, maxBaseVersionRetries);
+                                m_stage = LockStage::ListManifests;
+                                m_manifestVersionOffset = 0;
+                                task.ScheduleNow();
+                            }
+                            else
+                            {
+                                TRACE_ERROR("[GAME SAVE] LockStep: BASE_VERSION_NOT_AVAILABLE retry limit exceeded (%u attempts)", m_baseVersionRetryCount);
+                                m_stage = LockStage::WaitForFailedUI_CreatePendingManifest;
+                                if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::PreparingForDownload))
+                                {
+                                    m_stage = LockStage::LockStepFailure;
+                                    m_failureHR = result.hr;
+                                    task.ScheduleNow();
+                                }
+                            }
                         }
                         else
                         {
@@ -605,6 +655,8 @@ HRESULT LockStep::AcquireActiveDevice(
             return uiCallbackManager.HandleFailedUI(task,
                 [this]() { 
                     TRACE_INFORMATION("[GAME SAVE] LockStep - WaitForFailedUI_CreatePendingManifest: user chose RETRY");
+                    m_baseVersionRetryCount = 0;
+                    m_versionExistsRetryCount = 0;
                     m_stage = LockStage::CreatePendingManifest; 
                 },
                 [this]() { 
@@ -681,7 +733,7 @@ ManifestWrap LockStep::SelectBaselineManifest(const ManifestWrap& latestFinalize
     // LastConflict intent
     if ((m_addUserOptions & PFGameSaveFilesAddUserOptions::RollbackToLastConflict) == PFGameSaveFilesAddUserOptions::RollbackToLastConflict)
     {
-        uint64_t bestPairVersion = 0; // max(manifestVersion, conflictingVersion)
+        uint64_t bestLoserVersion = 0; // highest own version among conflict losers
         ManifestWrap bestLoser;
         bool foundLoser = false;
         for (size_t i = 0; i < m_manifests.size(); ++i)
@@ -708,11 +760,11 @@ ManifestWrap LockStep::SelectBaselineManifest(const ManifestWrap& latestFinalize
             }
 
             uint64_t thisVer = StringToUint64(manifest.GetVersion());
-            uint64_t conflictVer = conflictingVersion.empty() ? 0 : StringToUint64(conflictingVersion.c_str());
-            uint64_t pairHigh = (thisVer > conflictVer) ? thisVer : conflictVer;
-            if (pairHigh > bestPairVersion)
+            // Service defines "last conflict loser" as the loser with the highest own version.
+            // Use the loser's own version as the ranking key (not max of pair versions).
+            if (thisVer > bestLoserVersion)
             {
-                bestPairVersion = pairHigh;
+                bestLoserVersion = thisVer;
                 bestLoser = manifest;
                 foundLoser = true;
             }
@@ -790,6 +842,9 @@ void LockStep::Reset()
     m_entity.reset();
     m_latestPendingPFManifest = ManifestWrap();
     m_baselineFinalizedManifest = ManifestWrap();
+    m_manifestVersionOffset = 0;
+    m_baseVersionRetryCount = 0;
+    m_versionExistsRetryCount = 0;
 }
 
 } // namespace GameSave

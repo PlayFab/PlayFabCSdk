@@ -1,0 +1,37 @@
+id: PFCore-39-Before-Init
+name: PFCore 39 - API Calls Before Init Fail Gracefully
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # SDK bug: PFServiceConfigCreateHandle succeeds before PFInitialize (no prerequisite check)
+  psx: ignore
+description: >
+  Calls API functions before PFInitialize, verifying they return
+  appropriate error codes rather than crashing.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  test:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+        expectedHr: "0x8000FFFF"
+
+executionOrder:
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

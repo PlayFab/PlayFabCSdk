@@ -1,0 +1,50 @@
+id: PFCore-08-Relogin-XUser
+name: PFCore 08 - Re-login with XUser After Token Refresh
+tags:
+  - pfcore
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  After initial login, calls ReLoginWithXUserAsync to refresh credentials
+  and verifies the entity remains valid.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserLoginAsync
+
+  test:
+    - command: PFAuthenticationReLoginWithXUserAsync
+    - command: PFLocalUserTryGetEntityHandle
+    - command: PFEntityGetEntityKey
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

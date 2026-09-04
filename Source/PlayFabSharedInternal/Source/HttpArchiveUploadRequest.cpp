@@ -95,7 +95,6 @@ protected:
         requestOp->SetIsPlayfabCall(false);
 
         // Progress reporting across all requests, not within each one
-        m_uncompressedCurrentSizeBytes += m_archiveContext->GetTotalUncompressedSize();
         requestOp->SetProgressReportCallback(true, m_progressCallbackContext, m_progressCallback);
         requestOp->SetDynamicSize(m_uncompressedTotalSizeBytes, m_uncompressedCurrentSizeBytes);
         requestOp->SetHeader("Content-Type", "application/octet-stream");

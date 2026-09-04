@@ -1,0 +1,91 @@
+id: Scenario-PC-47-Cloud-Quota-Exhaustion
+name: GameSave PC 47 - Cloud Quota Exhaustion 300 MB Random Write
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Write 300 MB of incompressible random data (exceeds 256 MB cloud quota). Upload should be rejected by the service. Currently ignored because test title E18D7 has no quota enforcement — 315MB uploads succeed with hr=0x00000000.
+brief: Cloud quota exceeded — not enforced on test title
+group: G. Out of Storage
+devices:
+  DeviceA:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 600
+blocks:
+  write-and-upload-300mb:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    # Write 300 MB total (3 x 100 MB random files) — incompressible, exceeds 256 MB quota
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateRandomBinaryFile
+            relativePath: quota/big1.bin
+            bytes: 104857600
+          - verb: CreateRandomBinaryFile
+            relativePath: quota/big2.bin
+            bytes: 104857600
+          - verb: CreateRandomBinaryFile
+            relativePath: quota/big3.bin
+            bytes: 104857600
+    # Upload 300 MB of incompressible data — service should reject with quota error
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+      timeoutSeconds: 600
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: write-and-upload-300mb
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

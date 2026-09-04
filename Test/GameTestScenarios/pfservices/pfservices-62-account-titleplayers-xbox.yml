@@ -1,0 +1,48 @@
+id: PFServices-62-Account-TitlePlayers-Xbox
+name: PFServices 62 - Title Players from Xbox Live IDs
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # E_FAIL (0x80004005) - GetTitlePlayersFromXboxLiveIDs fails, sandbox/Xbox configuration issue
+  psx: ignore
+description: >
+  Looks up title players by Xbox Live ID.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFAccountManagementGetTitlePlayersFromXboxLiveIDsAsync
+    - command: PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

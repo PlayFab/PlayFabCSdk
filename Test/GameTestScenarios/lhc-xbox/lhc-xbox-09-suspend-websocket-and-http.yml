@@ -1,0 +1,162 @@
+id: LHC-Xbox-09-Suspend-Tears-Down-Websocket-And-Http
+name: LHC Xbox 09 - Suspend Tears Down WebSocket And HTTP Together
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Verifies that PLM suspend destroys WebSocket resources as well as HTTP ones.
+
+  Quick Resume requires *all* network resources to be gone before the process is snapshotted,
+  not just the HTTP ones. On GDK the WebSocket provider and the HTTP provider are both backed
+  by WinHttpProvider, and every connection of either kind is tracked in the same list, so a
+  single Suspend tears down both.
+
+  That is only true because both providers share one WinHttpProvider instance. Previously the
+  WebSocket provider constructed its own second instance, which meant an HTTP suspend never
+  closed WebSocket connections and each instance registered separately for PLM notifications.
+  This scenario is the regression guard for that: with a per-provider instance the WebSocket
+  would survive suspend, and the post-resume reconnect would behave differently.
+
+  An open WebSocket plus an in-flight HTTP request are both live when suspend lands, and both
+  must resolve rather than hang, with the library still usable afterwards.
+brief: A single suspend must tear down both WebSocket and HTTP connections
+group: B. Suspend / PLM
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  connect-websocket-and-start-http:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Open a WebSocket and confirm it is genuinely connected before suspending; suspending a
+    # socket that never connected would not exercise the teardown path.
+    # The controller hosts the echo endpoint. The console reaches it over the LAN via
+    # {{wsTestHost}}; a public internet echo service is not usable here because the title's
+    # network policy only permits approved endpoints.
+    - command: StartWebSocketTestServer
+
+    - command: HCWebSocketCreate
+    - command: HCWebSocketConnectAsync
+      parameters:
+        uri: "{{wsTestUrl}}"
+        subProtocol: ""
+    - command: HCWebSocketSendMessageAsync
+      parameters:
+        message: "pre-suspend"
+
+    # An HTTP request in flight at the same time, so one suspend has to handle both kinds of
+    # connection from the shared tracking list.
+    # A deliberately slow endpoint, so the request below is still outstanding when the event
+    # under test arrives. Against a normal endpoint it completes first, leaving nothing in
+    # flight, and this scenario passes without testing anything.
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/slow"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "slow-response"
+        delayMs: 30000
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/slow"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    - command: HCHttpCallPerformStart
+
+    # Precondition: the request must actually still be outstanding here, otherwise whatever
+    # follows is not being observed against an in-flight request at all.
+    - command: HCHttpCallPerformAssertPending
+
+  suspend-resume:
+    # If the WebSocket connection is not torn down, the drain never reaches zero and the title
+    # is watchdog-terminated here.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+
+  verify-both-resolved:
+    # The HTTP request was torn down by suspend, so it fails; the requirement is that it
+    # resolves at all.
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 60000
+        allowFailedResult: true
+    - command: HCHttpCallCloseHandle
+
+    # Prove the socket really was torn down by suspend rather than inferring it. libHttpClient
+    # delivers a close event on the socket's close callback; the harness records it, so this asserts
+    # the observable signal instead of relying on a later operation happening to fail.
+    - command: HCWebSocketAssertClosed
+      parameters:
+        expectClosed: true
+        timeoutMs: 30000
+
+    # The socket was closed by suspend, so this handle is finished with. Closing it must not
+    # hang or fault even though the underlying connection is already gone.
+    - command: HCWebSocketCloseHandle
+
+  verify-usable-after-resume:
+    # Sessions were destroyed during suspend and are lazily recreated, so both paths must work
+    # again from scratch. A stuck suspend gate would fail both of these.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    - command: HCWebSocketCreate
+    - command: HCWebSocketConnectAsync
+      parameters:
+        uri: "{{wsTestUrl}}"
+        subProtocol: ""
+    - command: HCWebSocketSendMessageAsync
+      parameters:
+        message: "post-resume"
+    - command: HCWebSocketDisconnect
+    - command: HCWebSocketCloseHandle
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: connect-websocket-and-start-http
+  - role: DeviceA
+    block: suspend-resume
+  - role: DeviceA
+    block: verify-both-resolved
+  - role: DeviceA
+    block: verify-usable-after-resume
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle
+    # Release the controller-hosted echo endpoint.
+    - command: StopWebSocketTestServer
+    # Release the controller-hosted slow endpoint.
+    - command: StopHttpTestServer

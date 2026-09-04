@@ -14,7 +14,7 @@ namespace GameSave
 uint32_t ActiveDevicePollWorker::s_interval = 1000 * 60 * 10; // 10 Minutes
 bool ActiveDevicePollWorker::s_debugForceChange = false;
 
-#if _DEBUG 
+#if defined(_DEBUG) 
 extern "C" PF_API_ATTRIBUTES HRESULT PFGameSaveFilesSetActiveDevicePollForceChangeForDebug()
 {
     TRACE_INFORMATION("[GAME SAVE] PFGameSaveFilesSetActiveDevicePollForceChangeForDebug called");
@@ -76,6 +76,12 @@ void ActiveDevicePollWorker::Run()
 
 HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
 {
+    // Superseded by a newer worker (or torn down): stop without resubmitting.
+    if (m_stopped.load())
+    {
+        return S_OK;
+    }
+
     SharedPtr<GameSaveGlobalState> state;
     RETURN_IF_FAILED(GameSaveGlobalState::Get(state));
 
@@ -90,11 +96,19 @@ HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
         return E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD;
     }
 
-    auto& uiInfo = GetGameSaveUiCallbackInfo();
-    if (uiInfo.activeDeviceChangedCallback == nullptr)
+    bool hasCallback = false;
+    {
+        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        auto& uiInfo = GetGameSaveUiCallbackInfo();
+        hasCallback = (uiInfo.activeDeviceChangedCallback != nullptr);
+    }
+    if (!hasCallback)
     {
         // No callback set so just reschedule ourselves in case it gets set later
-        m_rc.TaskQueueSubmitWork(shared_from_this(), s_interval);
+        if (!m_stopped.load())
+        {
+            m_rc.TaskQueueSubmitWork(shared_from_this(), s_interval);
+        }
         return S_OK;
     }
     auto pThis = shared_from_this();
@@ -102,7 +116,22 @@ HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
     ListManifestsRequest request{};
     GameSaveServiceSelector::ListManifests(m_entity, request, m_rc)
     .Finally([folderSync, pThis](Result<ListManifestsResponse> result)
-    {            
+    {
+        // Stopped while this call was in flight: drop the result entirely.
+        //
+        // The reschedule guard below is not enough, because everything above it has side effects
+        // that outlive this worker - it forces the manager offline and fires the title's
+        // active-device-changed callback. A stopped worker is either torn down or superseded by a
+        // newer one, and the supersede path (FolderSyncManager, where Stop() is called before
+        // installing the replacement) runs on a re-AddUser that has just CLEARED a forced
+        // disconnect. Acting on a stale result there would re-disconnect the user immediately
+        // after they reconnected, and report an active-device change the new worker never saw.
+        if (pThis->m_stopped.load())
+        {
+            TRACE_VERBOSE("[GAME SAVE] ActiveDevicePollWorker stopped, ignoring in-flight result and not rescheduling");
+            return;
+        }
+
         if (SUCCEEDED(result.hr)) // ignore network failures here
         {
             ManifestWrapVector manifests = result.Payload().GetManifests();
@@ -115,7 +144,7 @@ HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
             LockStep::TryGetLatestFinalizedManifest(manifests, latestFinalizedPFManifest);
             const ManifestWrap* latestPendingManifest = LockStep::TryGetLatestPendingManifest(manifests, latestFinalizedPFManifest);
             bool deviceIdChanged = false;
-            if (latestPendingManifest != nullptr)
+            if (latestPendingManifest != nullptr && latestPendingManifest->GetMetadata().has_value())
             {
                 // compare with the device id in the manifests
                 const String& latestPendingDeviceId = latestPendingManifest->GetMetadata()->GetDeviceId();
@@ -146,6 +175,7 @@ HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
 
             if (deviceIdChanged || ActiveDevicePollWorker::s_debugForceChange)
             {
+                ActiveDevicePollWorker::s_debugForceChange = false; // Reset after use to prevent infinite disconnect loop
                 // if different device id, then:
                 // a) force go offline
                 folderSync->SetForcedDisconnectFromCloud(true);
@@ -160,6 +190,11 @@ HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
 
         // Reschedule ourselves.
         // Note that with this implementation the TokenExpiredHandler will be invoked every s_interval until TODO
+        if (pThis->m_stopped.load())
+        {
+            TRACE_VERBOSE("[GAME SAVE] ActiveDevicePollWorker stopped, not rescheduling");
+            return;
+        }
         TRACE_VERBOSE("[GAME SAVE] ActiveDevicePollWorker rescheduling with interval=%ums", s_interval);
         pThis->m_rc.TaskQueueSubmitWork(pThis, s_interval);
     });

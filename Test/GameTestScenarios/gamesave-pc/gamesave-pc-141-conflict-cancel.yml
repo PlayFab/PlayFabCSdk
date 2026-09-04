@@ -1,0 +1,490 @@
+id: Scenario-PC-141-Conflict-Cancel
+name: GameSave PC 141 - Conflict Cancel Behavior
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: failing
+  psx: ignore
+description: |
+  Tests what happens when a user cancels/dismisses the conflict UI without
+  choosing TakeRemote or TakeLocal.
+
+  Key questions:
+    1. What HRESULT does AddUserWithUiAsync return on Cancel?
+    2. Can the game retry AddUser after Cancel and resolve the conflict?
+    3. What state is the session left in after Cancel?
+
+  Uses SDK inproc engine (both devices) with dirty local data pattern
+  (proven in test 140) to trigger conflicts reliably.
+
+  Flow:
+    Phase 1: DeviceA (inproc) seeds cloud with BASELINE
+    Phase 2: DeviceB (inproc) syncs, writes INITIAL, uploads,
+             then writes DIVERGENT locally (dirty state for conflict)
+    Phase 3: DeviceA (inproc) advances cloud to CLOUD_V2
+    Phase 4: DeviceB (inproc) re-inits (keeps dirty folder), conflict → Cancel
+             Expect AddUserWithUiAsync to fail → observe HRESULT
+    Phase 5: DeviceB (inproc) uninit, re-init → conflict → UseCloud → resolve
+             Write POST_CONFLICT data, upload
+    Phase 6: DeviceA verifies POST_CONFLICT data
+brief: What happens when conflict UI is cancelled?
+group: V. Bug Regression
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+  DeviceB:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  # ==========================================================================
+  # Phase 1: DeviceA seeds cloud with BASELINE
+  # ==========================================================================
+  phase1-seeds-cloud:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: slotA/character.sav
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: GetDebugStats
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ==========================================================================
+  # Phase 2: DeviceB syncs, uploads INITIAL, then writes DIVERGENT (dirty)
+  # ==========================================================================
+  phase2-sync-and-dirty:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: slotA/character.sav
+            bytes: 10240
+            pattern: [0x11, 0x22, 0x33, 0x44]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    # Write DIVERGENT data AFTER upload — creates dirty local state
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: slotA/character.sav
+            bytes: 10240
+            pattern: [0x55, 0x66, 0x77, 0x88]
+    - command: GetDebugStats
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ==========================================================================
+  # Phase 3: DeviceA advances cloud to CLOUD_V2
+  # ==========================================================================
+  phase3-advances-cloud:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: slotA/character.sav
+            bytes: 10240
+            pattern: [0xCC, 0xDD, 0xEE, 0xFF]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: GetDebugStats
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ==========================================================================
+  # Phase 4: DeviceB re-inits → conflict → CANCEL → observe error
+  # DO NOT delete local folder — dirty data from Phase 2 needed for conflict.
+  # ==========================================================================
+  phase4-conflict-cancel:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    # DO NOT delete local folder — need dirty data for conflict
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # KEY: Set conflict auto-response to Cancel
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # AddUser should detect conflict, auto-Cancel, and fail
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      expectFailure: true
+    - command: GetDebugStats
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ==========================================================================
+  # Phase 5: DeviceB re-inits → conflict → UseCloud → resolve
+  # Proves game can recover from Cancel via uninit/re-init/retry.
+  # DO NOT delete local folder — still need dirty data for conflict.
+  # ==========================================================================
+  phase5-conflict-resolve:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    # DO NOT delete local folder — need dirty data for re-conflict
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # Now UseCloud to resolve
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Write POST_CONFLICT data and upload
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: slotA/character.sav
+            bytes: 10240
+            pattern: [0xFF, 0xEE, 0xDD, 0xCC]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: GetDebugStats
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ==========================================================================
+  # Phase 6: DeviceA verifies POST_CONFLICT data
+  # ==========================================================================
+  phase6-verify:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+        ignoreEmptyDirectories: true
+    - command: GetDebugStats
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: phase1-seeds-cloud
+  - role: DeviceB
+    block: phase2-sync-and-dirty
+  - role: DeviceA
+    block: phase3-advances-cloud
+  - role: DeviceB
+    block: phase4-conflict-cancel
+  - role: DeviceB
+    block: phase5-conflict-resolve
+  - role: DeviceA
+    block: phase6-verify
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  DeviceB:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

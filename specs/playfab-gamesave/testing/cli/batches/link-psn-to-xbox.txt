@@ -1,0 +1,39 @@
+# Link a PSN identity to an Xbox-backed PlayFab account.
+#
+# Run this on the PlayStation device ONLY if init-device-psx.txt failed
+# at PFLocalUserLoginAsync with E_PF_ACCOUNT_NOT_FOUND (meaning the PSN
+# identity has never been linked).
+#
+# This follows Strategy 1 (Required Primary Identity Linking) from
+# playfab-docs/player-progression/game-saves/linking.md:
+#
+#   1. Login with Xbox identity (primary linking identity) — createAccount=true
+#      creates the PlayFab account if it doesn't exist yet.
+#   2. Link the PSN account to that Xbox-backed entity.
+#   3. Re-login with PSN to bind the entity to the PSN local user.
+#
+# After this completes, both platforms share the same PlayFab entity and
+# cloud save data.
+#
+# ┌──────────────────────────────────────────────────────────────────┐
+# │ NOTE: PFAuthenticationLoginWithPSNAsync and                      │
+# │ PFAccountManagementClientLinkPSNAccountAsync are ASSUMED to      │
+# │ exist in GameTestAppPS. Confirm exact command names against the  │
+# │ GameTestAppPS command registry before first use.                 │
+# └──────────────────────────────────────────────────────────────────┘
+
+# Step 1: Login with Xbox (primary linking identity)
+# The Xbox XUserHandle must be available on the PSN device — in practice
+# this means the test title on PSN has an Xbox/MSA sign-in flow embedded,
+# or the test harness can supply Xbox credentials.
+PFAuthenticationLoginWithXboxAsync --createAccount=true
+
+# Step 2: Link PSN to the Xbox-backed PlayFab entity   [ASSUMED — verify command name]
+PFAccountManagementClientLinkPSNAccountAsync --forceLink=false
+
+# Step 3: Re-login with PSN to bind the entity to the local user
+PFLocalUserLoginAsync --createAccount=false
+
+# Verify game saves are accessible
+PFGameSaveFilesAddUserWithUiAsync
+PFGameSaveFilesGetFolder

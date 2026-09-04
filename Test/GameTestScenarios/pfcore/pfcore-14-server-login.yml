@@ -1,0 +1,46 @@
+id: PFCore-14-Server-Login
+name: PFCore 14 - Server Login with Custom ID
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # 0x8923553A E_PF_DEVELOPER_KEY_IS_INVALID — needs secret key for server login
+  psx: ignore
+description: >
+  Calls server login with a server custom ID and verifies success.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFAuthenticationServerLoginWithServerCustomIdAsync
+      parameters:
+        serverCustomId: "pfcore-server-test-14"
+        createAccount: true
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

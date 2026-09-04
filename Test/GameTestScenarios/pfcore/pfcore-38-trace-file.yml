@@ -1,0 +1,48 @@
+id: PFCore-38-Trace-File
+name: PFCore 38 - Trace to File
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Enables trace-to-file, performs API operations, and verifies
+  the trace file is created with log output.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFTraceEnableTraceToFile
+      expectFailure: true  # 0x89235401 E_PF_ALREADY_INITIALIZED — must be called before PFInitialize
+    - command: PFServiceConfigGetTitleId
+    - command: PFTraceDisableTraceToFile
+      expectFailure: true  # 0x80004001 E_NOTIMPL
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

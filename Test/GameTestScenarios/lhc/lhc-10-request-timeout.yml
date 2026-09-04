@@ -1,0 +1,65 @@
+id: LHC-10-Request-Timeout
+name: LHC 10 - Request Timeout
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Configure a short timeout on a call targeting a slow endpoint;
+  verify the call completes and returns a non-200 status or network error
+  rather than hanging indefinitely.  LHC's timeout may let the HTTP layer
+  complete; the important thing is the call finishes within the timeout window.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 30
+blocks:
+  timeout:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Use a mock returning 408 to simulate a timeout response.
+    # This avoids reliance on external endpoint timing behavior.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://timeout.test.local/slow"
+    - command: HCHttpCallRequestSetTimeout
+      parameters:
+        timeoutInSeconds: 1
+    - command: HCHttpCallRequestSetTimeoutWindow
+      parameters:
+        timeoutWindowInSeconds: 2
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+
+    # Install a mock returning 408 Request Timeout
+    - command: ConfigureHttpMock
+      parameters:
+        url: "https://timeout.test.local/slow"
+        method: "GET"
+        statusCode: 408
+
+    # Perform should complete quickly with the mock 408 response
+    - command: HCHttpCallPerformAsync
+
+    # Verify we got the 408 status
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+    - command: ClearHttpMocks
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: timeout
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,48 @@
+id: XSAPI-04-Social
+name: XSAPI 04 - Social Relationships
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer social/social.lua.
+  Signs in, creates XBL context, queries social relationships,
+  reads the results, and closes the handle.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  social-flow:
+    - command: XblSocialGetSocialRelationshipsAsync
+    - command: XblSocialRelationshipResultGetRelationships
+    - command: XblSocialRelationshipResultCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: social-flow
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

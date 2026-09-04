@@ -1,0 +1,53 @@
+id: PFServices-50-Groups-Membership
+name: PFServices 50 - Is Member and List Membership
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Checks membership status and lists groups the entity belongs to.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFGroupsIsMemberAsync
+      expectFailure: true  # E_PF_PROFILE_DOES_NOT_EXIST (0x8923553F) - title_player_account entity is not a group type
+    - command: PFGroupsIsMemberGetResult
+    - command: PFGroupsListMembershipAsync
+    - command: PFGroupsListMembershipGetResult
+    - command: PFGroupsListMembershipOpportunitiesAsync
+    - command: PFGroupsListMembershipOpportunitiesGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

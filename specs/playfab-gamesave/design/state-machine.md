@@ -70,7 +70,7 @@ Top-level sequencing in `FolderSyncManager::DoWorkFolderUpload`:
      - `CompressFiles` (create zips, extended manifest pre-pass; writes to temp `cloudsync` folder only)
      - `InitiateUpload` (service call → presigned URLs / session)
      - `UploadFile` (loops through each compressed file + final extended manifest; progress updates; deletes local zips after each successful file in `UploadFileFinally`)
-     - `FinalizeManifest` (service call; may trigger full set retry or force disconnect) — on success updates local manifest: `LocalStateManifest::WriteLocalManifest`
+     - `FinalizeManifest` (service call; may trigger full set retry or force disconnect) -- on success updates local manifest: `LocalStateManifest::WriteLocalManifest`
      - `ListManifestsAfterUpload` (refresh manifest set)
      - `TakeLockAfterUpload` (re-create pending manifest if `KeepDeviceActive`; otherwise skip)
      - `UploadDone`
@@ -107,7 +107,7 @@ Preferred minimal-intrusion hook locations (one per flow):
    - File: `FolderSyncManager.cpp`
    - Function: `FolderSyncManager::DoWorkFolderDownload`
    - After final call to `SetSyncStateProgress(PFGameSaveFilesSyncState::SyncComplete, ...)` and before returning `S_OK`.
-   - Just below: triggering of `ActiveDevicePollWorker::MakeAndStart` (safe — no more save root writes).
+   - Just below: triggering of `ActiveDevicePollWorker::MakeAndStart` (safe -- no more save root writes).
 2. Upload completion:
    - File: `FolderSyncManager.cpp`
    - Function: `FolderSyncManager::DoWorkFolderUpload`

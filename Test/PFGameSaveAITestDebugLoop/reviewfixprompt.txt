@@ -1,0 +1,75 @@
+Two independent code reviews of {{REVIEW_SCOPE}} have just completed. Your job is to VERIFY their
+findings against the current source, FIX the real ones, and report what you did.
+
+The reports from this round:
+
+{{REVIEW_REPORTS}}
+
+All reports from this review loop live under {{REVIEW_DIR}}.
+Repo root: {{REPO}}
+
+## Step 1 — verify before you touch anything
+
+Read BOTH reports in full, then open the actual source for every finding and confirm it against the
+current code. Reviewers make mistakes: line numbers drift, a "bug" is already guarded by a caller, or
+a path is unreachable. For each finding decide:
+
+- **real** — you can see the defect in the current code and explain its trigger.
+- **not-real** — the code is correct, the guard exists elsewhere, or the path is unreachable. Say why
+  in the JSON. Do NOT change code for these.
+- **duplicate** — the two reviewers found the same defect. Count it ONCE.
+
+Both reviewers seeing the same thing raises confidence, but it is not proof; verify it anyway.
+
+## Step 2 — fix the real ones
+
+- Fix the underlying defect, not the symptom. Prefer the smallest change that is actually correct.
+- Follow the existing code conventions of the file you are editing (error handling via HRESULT and
+  the RETURN_IF_FAILED / RETURN_HR_IF macros, the flat C `PF` public API surface, the XAsync pattern,
+  existing naming and comment style).
+- Comment WHY the fix is needed where it isn't obvious — the next reviewer round reads this code, and
+  a bare change with no rationale tends to get re-reported or reverted.
+- Do NOT hand-edit generated code (`Source\PlayFabServices\Source\Generated\`,
+  `Source\PlayFabGameSave\Source\Generated\`); fix the template and regenerate, or report it as
+  deferred.
+- Do NOT weaken or delete a test to make a fix look clean.
+- If a finding is real but the correct fix is a design change (a redesign, a new subsystem, an API
+  break) that is too large or too risky for one automated round, do NOT force a partial fix. Put it
+  in "deferred" with a short rationale, and add it to the standing exclusions discussion in "notes"
+  so later rounds stop re-reporting it.
+- Do NOT run the build and do NOT run the tests. The loop builds and validates after you finish, and
+  hands you any build errors separately.
+
+## Step 3 — write the result JSON
+
+When done, write {{AIREVIEW}} as a fresh, valid JSON file in exactly this shape:
+
+{
+  "unique_findings": 4,
+  "fixed": [
+    { "id": "CR-1", "severity": "Critical", "file": "Source\\PlayFabGameSave\\Source\\SyncManager\\CompareStep.cpp", "summary": "one line: the defect and the fix" }
+  ],
+  "rejected": [
+    { "id": "II-3", "reason": "why this is not a real defect in the current code" }
+  ],
+  "deferred": [
+    { "id": "CR-2", "reason": "why it needs a design change", "suggest_exclusion": true }
+  ],
+  "needs_build": true,
+  "notes": "optional free text"
+}
+
+Rules for the JSON:
+- "unique_findings": the number of DISTINCT REAL defects this round after de-duplicating across the
+  two reports and dropping the rejected ones. This is the loop's convergence signal, so it must be
+  accurate. Count `fixed` + `deferred`, not the raw finding count in the reports.
+- "fixed": one entry per defect you actually changed code for. Keep "summary" to one line — it is fed
+  to the next round's reviewers as "already fixed, do not re-report".
+- "rejected": findings you verified as NOT real. Always give the reason; this is how false positives
+  stop coming back.
+- "deferred": real defects you deliberately did not fix. Set "suggest_exclusion" to true if later
+  rounds should stop reporting it (the operator can then add it to the exclusions file).
+- "needs_build": true if you changed any compiled code (you almost certainly did), so the loop
+  rebuilds and re-validates.
+- Write this file LAST, only once every finding has been dispositioned. Overwrite any existing
+  aireviewresult.json.

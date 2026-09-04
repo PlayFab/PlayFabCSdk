@@ -8,6 +8,7 @@
 #include "CloudScriptTests.h"
 #include "SegmentsTests.h"
 #include "TitleDataManagementTests.h"
+#include "PlayStreamTests.h"
 #include "PushNotificationsTests.h"
 #include "DataTests.h"
 #include "InventoryTests.h"
@@ -40,6 +41,7 @@ List<SharedPtr<TestClass>> GetGeneratedTestClasses(TestTitleData& testTitleData)
         MakeShared<CloudScriptTests>(testTitleData),
         MakeShared<SegmentsTests>(testTitleData),
         MakeShared<TitleDataManagementTests>(testTitleData),
+        MakeShared<PlayStreamTests>(testTitleData),
         MakeShared<PushNotificationsTests>(testTitleData),
         MakeShared<DataTests>(testTitleData),
         MakeShared<InventoryTests>(testTitleData),

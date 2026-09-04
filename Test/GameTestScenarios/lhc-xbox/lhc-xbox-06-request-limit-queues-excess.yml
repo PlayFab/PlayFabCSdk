@@ -1,0 +1,164 @@
+id: LHC-Xbox-06-Request-Limit-Queues-Excess
+name: LHC Xbox 06 - Requests Beyond The Limit Are Queued, Never Failed
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Verifies the core contract of the global request limit: a title may submit as many requests
+  as it likes, and only the configured number reach WinHTTP at once. Excess requests are
+  queued in the provider and started as earlier ones complete.
+
+  The distinction that matters is queued vs failed. The cap must never surface an error to
+  the caller and must never drop a request -- doing either would make the limit a breaking
+  change for any title that bursts requests. So every request must complete successfully even
+  when the burst is several times the cap.
+
+  Completion alone is not enough, though. "Everything completed" stays true even if admission
+  control were deleted outright, so it cannot distinguish an enforced cap from no cap at all.
+  Concurrency has to be observed where it is actually visible: at the server. The bursts
+  therefore target the controller-hosted HttpTestServer rather than a live service, each route
+  holds the request open for a fixed window, and the server records the peak number of
+  simultaneously in-flight requests. AssertHttpMaxConcurrency then checks that peak against
+  the configured cap.
+
+  Using the local server also removes a second weakness of pointing at a live endpoint: a
+  service-side 429 completes with S_OK and would be counted as a success by the burst.
+
+  Each assertion is two-sided. expectedMax catches over-concurrency (the cap not enforced);
+  atLeast catches the degenerate opposite, where the requests never actually overlapped and a
+  cap of N passes trivially without exercising queueing at all.
+
+  Failure modes this catches:
+    - the cap not enforced, or enforced at the wrong value (peak in-flight exceeds the cap)
+    - a queued request never promoted (burst reports outstanding > 0 and times out)
+    - a slot leaked on a completion path, shrinking the budget until everything stalls
+    - the cap wired to fail-fast instead of queueing (burst reports failures)
+    - requests not overlapping at all, which would make the whole scenario vacuous
+brief: A burst well over the cap must fully complete AND never exceed the cap concurrently
+group: C. Request Limit
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  burst-over-limit:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Controller-hosted endpoint, LAN-reachable from the console. Deterministic in a way a live
+    # service is not, and the only place concurrency can be counted.
+    - command: StartHttpTestServer
+    # The hold is what creates overlap: without it each request finishes before the next starts
+    # and the peak in-flight count would be 1 no matter what the cap is.
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/burst"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "ok"
+        delayMs: 750
+
+    # Well below the burst size so the queue path is guaranteed to be hit.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 3
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 3
+
+    # 12 concurrent requests against a cap of 3: at least 9 must be queued and later promoted.
+    # All 12 must still succeed.
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "{{httpTestUrl}}/burst"
+        requestCount: 12
+        expectedSuccesses: 12
+        timeoutMs: 120000
+
+    # The assertion that gives this scenario teeth. expectedMax: 3 fails if more than 3 requests
+    # were ever in flight at once; atLeast: 2 fails if they never overlapped, which would mean
+    # the burst degenerated into serial requests and proved nothing. Reset so the next block
+    # measures its own peak.
+    - command: AssertHttpMaxConcurrency
+      parameters:
+        expectedMax: 3
+        atLeast: 2
+        reset: true
+
+  burst-at-default-limit:
+    # Restore the shipping default and repeat with a burst that still exceeds it, confirming
+    # the default configuration also queues rather than failing.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 12
+
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "{{httpTestUrl}}/burst"
+        requestCount: 20
+        expectedSuccesses: 20
+        timeoutMs: 120000
+
+    - command: AssertHttpMaxConcurrency
+      parameters:
+        expectedMax: 12
+        atLeast: 2
+        reset: true
+
+  verify-budget-not-leaked:
+    # Drop the cap to 1 before the final burst. This is what makes a leak detectable: admission
+    # is "active >= limit", so if even a single slot was never released the active count is >= 1
+    # and every request queues forever. Checking with the original cap of 3 would only catch a
+    # TOTAL leak of all three slots -- a leak of one or two still leaves capacity free and the
+    # burst merely serializes, passing whether or not accounting is correct.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 1
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 1
+
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "{{httpTestUrl}}/burst"
+        requestCount: 15
+        expectedSuccesses: 15
+        timeoutMs: 120000
+
+    # A cap of 1 means strictly serial: any overlap at all is a violation. No atLeast here --
+    # with a cap of 1 the correct peak IS 1, so requiring overlap would contradict the cap.
+    - command: AssertHttpMaxConcurrency
+      parameters:
+        expectedMax: 1
+
+    - command: StopHttpTestServer
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: burst-over-limit
+  - role: DeviceA
+    block: burst-at-default-limit
+  - role: DeviceA
+    block: verify-budget-not-leaked
+cleanup:
+  DeviceA:
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0
+    - command: StopHttpTestServer
+    - command: XTaskQueueCloseHandle

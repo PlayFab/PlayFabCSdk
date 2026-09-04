@@ -45,5 +45,6 @@ PF_API PFServicesUninitializeAsync(
     _In_ XAsyncBlock* async
 ) noexcept
 {
+    RETURN_HR_INVALIDARG_IF_NULL(async);
     return GlobalState::CleanupAsync(async);
 }

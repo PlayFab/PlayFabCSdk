@@ -1,0 +1,98 @@
+id: LHC-20-No-Retry-On-Client-Error
+name: LHC 20 - No Retry on Client Error (400/401)
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Mock a 400 Bad Request response with retry enabled.  Verify that
+  performCount stays at 1 — the retry logic must not retry client errors
+  (4xx).  Only server errors (408, 429, 500, 502, 503, 504) should trigger
+  retry.  Catches regressions where retry logic is too broad.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  no-retry-400:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Mock returning 400 Bad Request
+    - command: HCMockCallCreate
+    - command: HCMockResponseSetStatusCode
+      parameters:
+        statusCode: 400
+    - command: HCMockResponseSetResponseBodyBytes
+      parameters:
+        body: "{\"error\":\"BadRequest\",\"errorMessage\":\"Invalid parameter\"}"
+    - command: HCMockAddMock
+      parameters:
+        method: "POST"
+        url: "https://mock.playfab.com/api/client-error"
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "POST"
+        url: "https://mock.playfab.com/api/client-error"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: true
+    - command: HCHttpCallRequestSetRetryDelay
+      parameters:
+        retryDelayInSeconds: 0
+
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallGetPerformCount
+
+    # Also test 401 Unauthorized (common PlayFab token expiry)
+    - command: HCHttpCallCloseHandle
+    - command: HCMockClearMocks
+
+    - command: HCMockCallCreate
+    - command: HCMockResponseSetStatusCode
+      parameters:
+        statusCode: 401
+    - command: HCMockResponseSetResponseBodyBytes
+      parameters:
+        body: "{\"error\":\"NotAuthenticated\"}"
+    - command: HCMockAddMock
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/auth-error"
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/auth-error"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: true
+    - command: HCHttpCallRequestSetRetryDelay
+      parameters:
+        retryDelayInSeconds: 0
+
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallGetPerformCount
+
+    - command: HCHttpCallCloseHandle
+    - command: HCMockClearMocks
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: no-retry-400
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

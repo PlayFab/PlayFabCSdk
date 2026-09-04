@@ -11,6 +11,8 @@ import android.widget.Button;
 import java.io.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.google.android.gms.games.AuthenticationResult;
 import com.google.android.gms.games.PlayGames;
@@ -37,11 +39,17 @@ public class AndroidTestClient extends Activity {
 
         String playerId = "NonDurableAndroidPlayerId";
         try {
-            AuthenticationResult authResult = Tasks.await(gamesSignInClient.isAuthenticated());
+            AuthenticationResult authResult = Tasks.await(
+                gamesSignInClient.isAuthenticated(),
+                3,
+                TimeUnit.SECONDS);
             if (authResult.isAuthenticated()) {
                 Log.i(TAG, "Authentication Success");
 
-                playerId = Tasks.await(PlayGames.getPlayersClient(this).getCurrentPlayerId());
+                playerId = Tasks.await(
+                    PlayGames.getPlayersClient(this).getCurrentPlayerId(),
+                    3,
+                    TimeUnit.SECONDS);
                 Log.i(TAG, "PlayerId: " + playerId);
             }
         }
@@ -84,21 +92,62 @@ public class AndroidTestClient extends Activity {
         });
     }
 
-    public boolean StartTests() {
-        boolean ret = RunTests();
-        finish();
-        return ret;
+    // Set to true on the UI thread once the background test thread has
+    // finished running RunTests() and posted the result back. The JUnit
+    // harness in androidTest/ polls this to know when to assert the result.
+    public volatile boolean testsCompleted = false;
+    public volatile boolean testsPassed = false;
+    private Thread testThread;
+
+    public void StartTests() {
+        if (testThread != null) {
+            return;
+        }
+        // Run the native test loop on a background thread so the activity's
+        // main thread stays responsive. Running RunTests() directly on the UI
+        // thread blocks input dispatch for the full duration of the test suite
+        // and trips Android's keyDispatchingTimedOut ANR watchdog (~5s),
+        // causing the instrumentation harness to kill the test before it can
+        // complete. When the native call returns, post back to the UI thread
+        // to publish the result and finish() the activity.
+        testThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean ret = false;
+                try {
+                    ret = RunTests();
+                }
+                catch (Throwable t) {
+                    Log.e(TAG, "RunTests threw: " + t.getMessage());
+                }
+                final boolean finalRet = ret;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        testsPassed = finalRet;
+                        testsCompleted = true;
+                        finish();
+                    }
+                });
+            }
+        }, "PlayFabTestRunner");
+        testThread.start();
     }
 
     public byte[] GetBufferFromFile(String filename) throws IOException {
         AssetManager assetManager = getApplicationContext().getAssets();
         try (InputStream is = assetManager.open(filename);
              ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-            int size = is.available();
+            // Do not trust InputStream.available(): it is documented as an
+            // approximation and for compressed Android assets it has been seen
+            // to under-report, causing the previous fixed-size buffer to leak
+            // trailing uninitialised bytes (e.g. a stray U+FFFD past the
+            // closing '}' of testTitleData.json) when copied into the output.
+            // Read in fixed-size chunks until EOF instead.
+            byte[] chunk = new byte[4096];
             int nRead;
-            byte[] data = new byte[size];
-            while ((nRead = is.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
+            while ((nRead = is.read(chunk, 0, chunk.length)) != -1) {
+                buffer.write(chunk, 0, nRead);
             }
             return buffer.toByteArray();
         }
@@ -119,7 +168,13 @@ public class AndroidTestClient extends Activity {
                 return "";
             }
         } else {
-            return Tasks.await(getServerAuthCodeTask);
+            try {
+                return Tasks.await(getServerAuthCodeTask, 10, TimeUnit.SECONDS);
+            }
+            catch (TimeoutException e) {
+                Log.e(TAG, "Timed out waiting for Google Play Games server auth token");
+                return "";
+            }
         }
     }
 

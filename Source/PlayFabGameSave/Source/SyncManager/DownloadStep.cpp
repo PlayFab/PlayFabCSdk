@@ -1,5 +1,7 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 #include "stdafx.h"
+#include "Common/GameSaveGlobalState.h"
+#include "Platform/PFGameSaveFilesAPIProvider.h"
 #include "LocalStateManifest.h"
 #include "DownloadStep.h"
 #include "ZipUtils.h"
@@ -60,7 +62,21 @@ HRESULT DownloadStep::UncompressFile(
         case CompressionType::GZip: // should be handled at HTTP layer
         {
             const Vector<FileDetail>& files = remoteFileFolderSet->GetFiles();
+
+            // Count first: the downloaded blob IS the file content for these compression types, so
+            // it can only be moved to one destination. Validating after the moves let a malformed
+            // remote manifest overwrite a real save file at the first destination before the
+            // "exactly one" rule rejected it - local data destroyed by a manifest we then failed.
             int numExtractedFiles = 0;
+            for (const FileDetail& extractedFile : files)
+            {
+                if (extractedFile.compressedFileIndex == remoteFile.compressedFileIndex)
+                {
+                    numExtractedFiles++;
+                }
+            }
+            RETURN_HR_IF(E_UNEXPECTED, numExtractedFiles != 1); // exactly 1 extracted file expected for None/GZip
+
             for (const FileDetail& extractedFile : files)
             {
                 if (extractedFile.compressedFileIndex == remoteFile.compressedFileIndex)
@@ -72,25 +88,62 @@ HRESULT DownloadStep::UncompressFile(
                     TRACE_INFORMATION("[GAME SAVE] DownloadStep: Move to %s", fullExtractedFilePath.c_str());
                     RETURN_IF_FAILED(FilePAL::MoveLocalFile(fullCompressedFilePath, fullExtractedFilePath));
                     RETURN_IF_FAILED(FilePAL::SetFileLastModifiedTime(fullExtractedFilePath, extractedFile.timeCreated, extractedFile.timeLastModified));
-
-                    numExtractedFiles++;
+                    break;
                 }
             }
-            assert(numExtractedFiles == 1); // should be 1 extracted file in CompressionType::None file
             break;
         }
 
         case CompressionType::Zip:
-            RETURN_IF_FAILED(ZipUtils::UnzipFilesFromSingleZip(remoteFile.archiveContext, fullCompressedFilePath));
-            m_telemetryManager->AddContextSyncFileCount(static_cast<uint32_t>(remoteFile.archiveContext->GetFiles().size()));
-            // Ensure the zip file is deleted after it has been unzipped
+        {
+            HRESULT unzipHr = ZipUtils::UnzipFilesFromSingleZip(remoteFile.archiveContext, fullCompressedFilePath);
+            // Always attempt to clean up the zip file, even if extraction failed
             TRACE_INFORMATION("[GAME SAVE] DownloadStep: Deleting zip file after extraction: %s", fullCompressedFilePath.c_str());
-            RETURN_IF_FAILED(FilePAL::DeleteLocalFile(fullCompressedFilePath));
+            HRESULT deleteHr = FilePAL::DeleteLocalFile(fullCompressedFilePath);
+            if (FAILED(deleteHr))
+            {
+                TRACE_WARNING("[GAME SAVE] DownloadStep: Failed to delete zip file hr=0x%08X: %s", deleteHr, fullCompressedFilePath.c_str());
+            }
+            RETURN_IF_FAILED(unzipHr);
+            m_telemetryManager->AddContextSyncFileCount(static_cast<uint32_t>(remoteFile.archiveContext->GetFiles().size()));
             break;
+        }
+
+        default:
+            TRACE_ERROR("[GAME SAVE] DownloadStep: Unsupported compression type %d", static_cast<int>(remoteFile.compression));
+            return E_NOTIMPL;
     }
 
     return S_OK;
 }
+
+namespace
+{
+
+// Sums the bytes still to be fetched. Split out so the total can be reported with the very first
+// Downloading progress update, before any of the slower QueryStorage work runs.
+void ComputeDownloadTotals(
+    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet,
+    _Out_ uint64_t& totalUncompressedSizeBytes,
+    _Out_ uint64_t& totalCompressedSizeBytes)
+{
+    totalUncompressedSizeBytes = 0;
+    totalCompressedSizeBytes = 0;
+
+    const Vector<size_t>& remoteFileIndexToDownload = remoteFileFolderSet->GetCompressedFilesToDownload();
+    const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
+    for (size_t iRemoteFile = 0; iRemoteFile < remoteFileIndexToDownload.size(); iRemoteFile++)
+    {
+        const CompressedFile& remoteCompressedFile = compressedFiles[remoteFileIndexToDownload[iRemoteFile]];
+        if (!remoteCompressedFile.hasDownloadedLocally)
+        {
+            totalUncompressedSizeBytes += remoteCompressedFile.uncompressedSizeBytes;
+            totalCompressedSizeBytes += remoteCompressedFile.compressedSizeBytes;
+        }
+    }
+}
+
+} // anonymous namespace
 
 HRESULT DownloadStep::Download(
     _In_ const RunContext& runContext,
@@ -103,7 +156,8 @@ HRESULT DownloadStep::Download(
     _In_ std::recursive_mutex& folderSyncMutex,
     _In_ ProgressCallback progressCallback,
     _In_ void* progressCallbackContext,
-    _In_ const String& shortSaveDescription
+    _In_ const String& shortSaveDescription,
+    _In_ bool descriptionDirty
     )
 {
     UNREFERENCED_PARAMETER(syncProgress);
@@ -117,9 +171,15 @@ HRESULT DownloadStep::Download(
             m_telemetryManager->SetContextSyncStartTime();
             m_telemetryManager->SetContextSyncSyncDownload(true);
             m_telemetryManager->SetContextSyncSyncErrorSource(SyncErrorSource::SER_DownloadData);
+            // Compute the download total up front so the first Downloading progress update -- the
+            // one that triggers the title's progress callback below -- already carries a real total.
+            // Titles read progress inside that callback to size a progress bar, and a total of 0
+            // leaves them unable to show anything but an indeterminate spinner.
+            ComputeDownloadTotals(remoteFileFolderSet, m_totalUncompressedSizeBytes, m_totalCompressedSizeBytes);
+
             // Use progress callback to set sync state with proper mutex protection
             // This fixes a thread-safety bug where direct assignment could race with GetSyncProgress()
-            progressCallback(PFGameSaveFilesSyncState::Downloading, 0, 0, progressCallbackContext);
+            progressCallback(PFGameSaveFilesSyncState::Downloading, 0, m_totalUncompressedSizeBytes, progressCallbackContext);
             uiCallbackManager.ShowProgressUI(task, m_localUser, PFGameSaveFilesSyncState::Downloading); // no issue if callback not set
             this->m_stage = DownloadStage::QueryStorage;
             task.ScheduleNow();
@@ -128,9 +188,9 @@ HRESULT DownloadStep::Download(
 
         case DownloadStage::QueryStorage:
         {
-            // Create cloudsync folder if it doesn't exist
+            // Determine cloudsync folder path - use temp storage on platforms that support it
             String cloudSyncFolder;
-            RETURN_IF_FAILED(JoinPathHelper(saveFolder, "cloudsync", cloudSyncFolder));
+            RETURN_IF_FAILED(GetCloudSyncFolder(saveFolder, cloudSyncFolder));
             RETURN_IF_FAILED(FilePAL::CreatePath(cloudSyncFolder));
             
             // Clean up any existing zip files in the cloudsync folder
@@ -140,7 +200,7 @@ HRESULT DownloadStep::Download(
                 Vector<String> existingFiles = existingFilesResult.ExtractPayload();
                 for (const String& fileName : existingFiles)
                 {
-                    if (fileName.find(".zip") != String::npos)
+                    if (fileName.size() >= 4 && fileName.compare(fileName.size() - 4, 4, ".zip") == 0)
                     {
                         String fullFilePath;
                         RETURN_IF_FAILED(JoinPathHelper(cloudSyncFolder, fileName, fullFilePath));
@@ -149,7 +209,7 @@ HRESULT DownloadStep::Download(
                         HRESULT deleteResult = FilePAL::DeleteLocalFile(fullFilePath);
                         if (FAILED(deleteResult))
                         {
-                            TRACE_ERROR("[GAME SAVE] UploadStep: Failed to delete old zip file %s, HR:0x%0.8x", fullFilePath.c_str(), deleteResult);
+                            TRACE_ERROR("[GAME SAVE] DownloadStep: Failed to delete old zip file %s, HR:0x%0.8x", fullFilePath.c_str(), deleteResult);
                             // don't bother failing here, just log the error
                         }
                     }
@@ -158,19 +218,8 @@ HRESULT DownloadStep::Download(
             
             m_totalUncompressedSizeBytes = 0;
             m_totalCompressedSizeBytes = 0;
-            const Vector<size_t>& remoteFileIndexToDownload = remoteFileFolderSet->GetCompressedFilesToDownload();
-            const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
-            for (int iRemoteFile = 0; iRemoteFile < remoteFileIndexToDownload.size(); iRemoteFile++)
-            {
-                size_t index = remoteFileIndexToDownload[iRemoteFile];
-                const CompressedFile& remoteCompressedFile = compressedFiles[index];
-
-                if (!remoteCompressedFile.hasDownloadedLocally)
-                {
-                    m_totalUncompressedSizeBytes += remoteCompressedFile.uncompressedSizeBytes;
-                    m_totalCompressedSizeBytes += remoteCompressedFile.compressedSizeBytes;
-                }
-            }
+            // Recomputed here because the set may have changed since DownloadStart.
+            ComputeDownloadTotals(remoteFileFolderSet, m_totalUncompressedSizeBytes, m_totalCompressedSizeBytes);
 
             m_telemetryManager->SetContextSyncTotalSize(m_totalUncompressedSizeBytes);
 
@@ -192,7 +241,7 @@ HRESULT DownloadStep::Download(
             else
             {
                 this->m_stage = DownloadStage::Download;
-                progressCallback(PFGameSaveFilesSyncState::Downloading, 0, m_totalCompressedSizeBytes, progressCallbackContext);
+                progressCallback(PFGameSaveFilesSyncState::Downloading, 0, m_totalUncompressedSizeBytes, progressCallbackContext);
                 task.ScheduleNow();
             }
 
@@ -213,7 +262,7 @@ HRESULT DownloadStep::Download(
             const Vector<size_t>& remoteFileIndexToDownload = remoteFileFolderSet->GetCompressedFilesToDownload();
             const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
             TRACE_INFORMATION("[GAME SAVE] DownloadStep: Files to download %llu", remoteFileIndexToDownload.size());
-            for (int iRemoteFile = 0; iRemoteFile < remoteFileIndexToDownload.size(); iRemoteFile++)
+            for (size_t iRemoteFile = 0; iRemoteFile < remoteFileIndexToDownload.size(); iRemoteFile++)
             {
                 size_t index = remoteFileIndexToDownload[iRemoteFile];
                 const CompressedFile& remoteCompressedFile = compressedFiles[index];
@@ -225,9 +274,13 @@ HRESULT DownloadStep::Download(
 
                     TRACE_TASK("DownloadFileFromCloud");
                     String cloudSyncFolder, filePath;
-                    RETURN_IF_FAILED(JoinPathHelper(saveFolder, "cloudsync", cloudSyncFolder));
+                    RETURN_IF_FAILED(GetCloudSyncFolder(saveFolder, cloudSyncFolder));
                     RETURN_IF_FAILED(JoinPathHelper(cloudSyncFolder, remoteCompressedFile.fileName, filePath));
-                    assert(!remoteCompressedFile.downloadUrl.empty());
+                    if (remoteCompressedFile.downloadUrl.empty())
+                    {
+                        TRACE_ERROR("[GAME SAVE] DownloadStep: downloadUrl is empty for file '%s'", remoteCompressedFile.fileName.c_str());
+                        return E_UNEXPECTED;
+                    }
 
                     TRACE_INFORMATION("[GAME SAVE] DownloadStep: Downloading %s to %s", remoteCompressedFile.fileName.c_str(), filePath.c_str());
                     // Don't include archive context to force download to local file in case of download errors
@@ -235,8 +288,10 @@ HRESULT DownloadStep::Download(
                     downloadDetail.fullFilePath = filePath;
 
                     auto innerProgressContext = MakeShared<InnerProgressContext>(progressCallback, progressCallbackContext, task, m_localUser, PFGameSaveFilesSyncState::Downloading);
-                    
-                    // Use compressed totals for dynamic size to accurately reflect transfer progress
+                    innerProgressContext->totalUncompressedBytes = m_totalUncompressedSizeBytes;
+                    innerProgressContext->totalCompressedBytes = m_totalCompressedSizeBytes;
+
+                    // Pass compressed totals for HTTP dynamic size tracking (actual transfer units)
                     GameSaveServiceSelector::DownloadFileFromCloud(runContext, downloadDetail, remoteCompressedFile.downloadUrl, InnerProgressCallback, innerProgressContext.get(), m_totalCompressedSizeBytes, m_currentCompressedSizeBytes)
                     .Finally([this, &task, &remoteCompressedFile, filePath, saveFolder, remoteFileFolderSet, &uiCallbackManager, &folderSyncMutex, innerProgressContext](Result<void> result)
                     {
@@ -265,8 +320,7 @@ HRESULT DownloadStep::Download(
                             
                             if (remoteCompressedFile.archiveContext)
                             {
-                                // Report progress using compressed byte counts (actual transfer units)
-                                innerProgressContext->callback(PFGameSaveFilesSyncState::Downloading, m_currentCompressedSizeBytes, m_totalCompressedSizeBytes, innerProgressContext->callbackContext);
+                                innerProgressContext->callback(PFGameSaveFilesSyncState::Downloading, m_currentUncompressedSizeBytes, m_totalUncompressedSizeBytes, innerProgressContext->callbackContext);
                             }
 
                             remoteCompressedFile.hasDownloadedLocally = true; // loop until nothing left to download
@@ -296,7 +350,7 @@ HRESULT DownloadStep::Download(
             const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
             TRACE_INFORMATION("[GAME SAVE] DownloadStep: Uncompressing %llu downloaded files", remoteFileIndexToDownload.size());
             
-            for (int iRemoteFile = 0; iRemoteFile < remoteFileIndexToDownload.size(); iRemoteFile++)
+            for (size_t iRemoteFile = 0; iRemoteFile < remoteFileIndexToDownload.size(); iRemoteFile++)
             {
                 size_t index = remoteFileIndexToDownload[iRemoteFile];
                 const CompressedFile& remoteCompressedFile = compressedFiles[index];
@@ -308,9 +362,9 @@ HRESULT DownloadStep::Download(
                     m_telemetryManager->AddContextSyncOriginalSize(remoteCompressedFile.uncompressedSizeBytes);
 
                     String cloudSyncFolder, filePath;
-                    RETURN_IF_FAILED(JoinPathHelper(saveFolder, "cloudsync", cloudSyncFolder));
+                    RETURN_IF_FAILED(GetCloudSyncFolder(saveFolder, cloudSyncFolder));
                     RETURN_IF_FAILED(JoinPathHelper(cloudSyncFolder, remoteCompressedFile.fileName, filePath));
-                    
+
                     TRACE_INFORMATION("[GAME SAVE] DownloadStep: Uncompressing %s", remoteCompressedFile.fileName.c_str());
                     HRESULT hr = UncompressFile(remoteCompressedFile, saveFolder, filePath, remoteFileFolderSet);
                     if (FAILED(hr))
@@ -335,13 +389,15 @@ HRESULT DownloadStep::Download(
             HRESULT initHr = localFileFolderSet->InitWithLocalFilesAndFolders(saveFolder, nullptr, nullptr);
             if (FAILED(initHr))
             {
-                TRACE_ERROR("[GAME SAVE] DownloadStep: InitWithLocalFilesAndFolders FAILED hr=0x%08X", initHr);
-                return initHr;
+                TRACE_WARNING("[GAME SAVE] DownloadStep: InitWithLocalFilesAndFolders failed hr=0x%08X (may be expected for new saves)", initHr);
+                // Don't fail here - continue with empty manifest (this is expected for new saves
+                // where no localstate.json exists yet after the first download)
+                localFileFolderSet->Clear();
             }
 
             const Vector<size_t>& remoteFileIndexToDownload = remoteFileFolderSet->GetCompressedFilesToDownload();
             const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
-            for (int iRemoteFile = 0; iRemoteFile < remoteFileIndexToDownload.size(); iRemoteFile++)
+            for (size_t iRemoteFile = 0; iRemoteFile < remoteFileIndexToDownload.size(); iRemoteFile++)
             {
                 size_t index = remoteFileIndexToDownload[iRemoteFile];
                 const CompressedFile& remoteCompressedFile = compressedFiles[index];
@@ -359,12 +415,23 @@ HRESULT DownloadStep::Download(
                     }
                 }
             }
-            HRESULT writeManifestHr = LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, shortSaveDescription);
+            // Carry the dirty flag through: a description set while offline is not yet on the
+            // service, and persisting it as clean here would make the next launch adopt the cloud
+            // description and silently drop the local edit.
+            HRESULT writeManifestHr = LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, shortSaveDescription, descriptionDirty);
             if (FAILED(writeManifestHr))
             {
                 TRACE_ERROR("[GAME SAVE] DownloadStep: WriteLocalManifest FAILED hr=0x%08X", writeManifestHr);
                 return writeManifestHr;
             }
+
+            // Clean up temp storage files if available
+            CleanupTempCloudSyncFiles();
+
+            // On platforms with separate metadata storage, write a sentinel marker into
+            // game storage so we can detect if the game container is deleted externally.
+            RETURN_IF_FAILED(EnsureGameStorageMarker(saveFolder));
+
             this->m_stage = DownloadStage::DownloadDone;
             task.ScheduleNow();
             return S_OK;
@@ -380,6 +447,7 @@ HRESULT DownloadStep::Download(
                 },
                 [this]() { 
                     TRACE_WARNING("[GAME SAVE] DownloadStep - WaitForFailedUI_Download: user chose OFFLINE MODE. Download will be skipped.");
+                    m_forceDisconnectFromCloud = true;
                     m_stage = DownloadStage::DownloadDone; 
                 }
             );
@@ -393,7 +461,7 @@ HRESULT DownloadStep::Download(
             if (uiAction == UIAction::UIOutOfStorageSpaceCleared)
             {
                 TRACE_INFORMATION("[GAME SAVE] DownloadStep - WaitForOutOfStorageUI: user cleared storage space, retrying download");
-                m_stage = DownloadStage::Download;
+                m_stage = DownloadStage::QueryStorage; // Re-check storage before proceeding
                 task.ScheduleNow();
             }
             else if (uiAction == UIAction::UIOutOfStorageCancel)
@@ -421,6 +489,12 @@ HRESULT DownloadStep::Download(
             assert(false);
             return S_OK;
         }
+
+        default:
+        {
+            TRACE_ERROR("[GAME SAVE] DownloadStep: unexpected stage %d", static_cast<int>(m_stage));
+            return E_UNEXPECTED;
+        }
     }
 
     return S_OK;
@@ -438,7 +512,11 @@ HRESULT DownloadStep::DeleteFiles(
         String fullFilePath;
         RETURN_IF_FAILED(JoinPathHelper(saveFolder, relPath, fullFilePath));
         TRACE_INFORMATION("[GAME SAVE] Delete file %s", fullFilePath.c_str());
-        FilePAL::DeleteLocalFile(fullFilePath);
+        HRESULT deleteHr = FilePAL::DeleteLocalFile(fullFilePath);
+        if (FAILED(deleteHr))
+        {
+            TRACE_WARNING("[GAME SAVE] DownloadStep: Failed to delete file %s, HR:0x%0.8x", fullFilePath.c_str(), deleteHr);
+        }
     }
     return S_OK;
 }
@@ -454,7 +532,24 @@ HRESULT DownloadStep::DeleteFolders(
         String fullFolderPath;
         RETURN_IF_FAILED(JoinPathHelper(saveFolder, folderToDeleteUponDownload->relFolderPath, fullFolderPath));
         TRACE_INFORMATION("[GAME SAVE] Delete folder %s", fullFolderPath.c_str());
-        FilePAL::DeletePath(fullFolderPath);
+
+        // Prune rather than recursively destroy. DeleteFiles has already removed every file in
+        // this folder that the compare step marked for deletion, so anything still on disk is
+        // content MarkFilesToDeleteUponDownload deliberately spared - most importantly local
+        // files that have never synced (lastSyncFileSize == 0). A recursive delete would
+        // silently destroy those, and ScanForConflicts cannot catch it because a remotely
+        // deleted folder has no incoming downloads and so never lands in
+        // changedRemoteFolderIndexes. See Bug 63588283.
+        bool fullyDeleted = false;
+        HRESULT deleteHr = FilePAL::DeletePathIfEmpty(fullFolderPath, fullyDeleted);
+        if (FAILED(deleteHr))
+        {
+            TRACE_WARNING("[GAME SAVE] DownloadStep: Failed to delete folder %s, HR:0x%0.8x", fullFolderPath.c_str(), deleteHr);
+        }
+        else if (!fullyDeleted)
+        {
+            TRACE_WARNING("[GAME SAVE] DownloadStep: Folder %s was deleted in the cloud but still holds local content that was not marked for deletion; keeping the folder and its remaining files.", fullFolderPath.c_str());
+        }
     }
 
     return S_OK;
@@ -468,7 +563,11 @@ HRESULT DownloadStep::CreateEmptyFolders(_In_ const String& saveFolder, _In_ con
         String fullFilePath;
         RETURN_IF_FAILED(JoinPathHelper(saveFolder, folderToCreateUponDownload->relFolderPath, fullFilePath));
         TRACE_INFORMATION("[GAME SAVE] Create empty folder %s", fullFilePath.c_str());
-        FilePAL::CreatePath(fullFilePath);
+        HRESULT createHr = FilePAL::CreatePath(fullFilePath);
+        if (FAILED(createHr))
+        {
+            TRACE_WARNING("[GAME SAVE] DownloadStep: Failed to create folder %s, HR:0x%0.8x", fullFilePath.c_str(), createHr);
+        }
     }
     return S_OK;
 }

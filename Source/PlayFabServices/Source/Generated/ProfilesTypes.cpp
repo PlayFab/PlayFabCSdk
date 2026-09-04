@@ -19,6 +19,7 @@ JsonValue GetEntityProfileRequest::ToJson(const PFProfilesGetEntityProfileReques
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DataAsObject", input.dataAsObject);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
+    JsonUtils::ObjectAddMember(output, "IncludeStatistics", input.includeStatistics);
     return output;
 }
 
@@ -325,6 +326,89 @@ HRESULT EntityStatisticValue::Copy(const PFEntityStatisticValue& input, PFEntity
     return S_OK;
 }
 
+HRESULT StatisticColumn::FromJson(const JsonValue& input)
+{
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "AggregationMethod", this->m_model.aggregationMethod));
+
+    String name{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Name", name));
+    this->SetName(std::move(name));
+
+    return S_OK;
+}
+
+size_t StatisticColumn::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFStatisticColumn const*> StatisticColumn::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<StatisticColumn>(&this->Model());
+}
+
+size_t StatisticColumn::RequiredBufferSize(const PFStatisticColumn& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.name)
+    {
+        requiredSize += (std::strlen(model.name) + 1);
+    }
+    return requiredSize;
+}
+
+HRESULT StatisticColumn::Copy(const PFStatisticColumn& input, PFStatisticColumn& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.name);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.name = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
+HRESULT StatisticColumnCollection::FromJson(const JsonValue& input)
+{
+    ModelVector<StatisticColumn> columns{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<StatisticColumn>(input, "Columns", columns));
+    this->SetColumns(std::move(columns));
+
+    return S_OK;
+}
+
+size_t StatisticColumnCollection::RequiredBufferSize() const
+{
+    return RequiredBufferSize(this->Model());
+}
+
+Result<PFStatisticColumnCollection const*> StatisticColumnCollection::Copy(ModelBuffer& buffer) const
+{
+    return buffer.CopyTo<StatisticColumnCollection>(&this->Model());
+}
+
+size_t StatisticColumnCollection::RequiredBufferSize(const PFStatisticColumnCollection& model)
+{
+    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    requiredSize += (alignof(PFStatisticColumn*) + sizeof(PFStatisticColumn*) * model.columnsCount);
+    for (size_t i = 0; i < model.columnsCount; ++i)
+    {
+        requiredSize += StatisticColumn::RequiredBufferSize(*model.columns[i]);
+    }
+    return requiredSize;
+}
+
+HRESULT StatisticColumnCollection::Copy(const PFStatisticColumnCollection& input, PFStatisticColumnCollection& output, ModelBuffer& buffer)
+{
+    output = input;
+    {
+        auto propCopyResult = buffer.CopyToArray<StatisticColumn>(input.columns, input.columnsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.columns = propCopyResult.ExtractPayload();
+    }
+    return S_OK;
+}
+
 HRESULT EntityProfileBody::FromJson(const JsonValue& input)
 {
     String avatarUrl{};
@@ -378,6 +462,10 @@ HRESULT EntityProfileBody::FromJson(const JsonValue& input)
     ModelDictionaryEntryVector<EntityStatisticValue> statistics{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember<EntityStatisticValue>(input, "Statistics", statistics));
     this->SetStatistics(std::move(statistics));
+
+    ModelDictionaryEntryVector<StatisticColumnCollection> statisticsColumnDetails{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember<StatisticColumnCollection>(input, "StatisticsColumnDetails", statisticsColumnDetails));
+    this->SetStatisticsColumnDetails(std::move(statisticsColumnDetails));
 
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "VersionNumber", this->m_model.versionNumber));
 
@@ -449,6 +537,12 @@ size_t EntityProfileBody::RequiredBufferSize(const PFProfilesEntityProfileBody& 
         requiredSize += (std::strlen(model.statistics[i].key) + 1);
         requiredSize += EntityStatisticValue::RequiredBufferSize(*model.statistics[i].value);
     }
+    requiredSize += (alignof(PFStatisticColumnCollectionDictionaryEntry) + sizeof(PFStatisticColumnCollectionDictionaryEntry) * model.statisticsColumnDetailsCount);
+    for (size_t i = 0; i < model.statisticsColumnDetailsCount; ++i)
+    {
+        requiredSize += (std::strlen(model.statisticsColumnDetails[i].key) + 1);
+        requiredSize += StatisticColumnCollection::RequiredBufferSize(*model.statisticsColumnDetails[i].value);
+    }
     return requiredSize;
 }
 
@@ -510,6 +604,11 @@ HRESULT EntityProfileBody::Copy(const PFProfilesEntityProfileBody& input, PFProf
         RETURN_IF_FAILED(propCopyResult.hr);
         output.statistics = propCopyResult.ExtractPayload();
     }
+    {
+        auto propCopyResult = buffer.CopyToDictionary<StatisticColumnCollection>(input.statisticsColumnDetails, input.statisticsColumnDetailsCount);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.statisticsColumnDetails = propCopyResult.ExtractPayload();
+    }
     return S_OK;
 }
 
@@ -567,6 +666,7 @@ JsonValue GetEntityProfilesRequest::ToJson(const PFProfilesGetEntityProfilesRequ
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "DataAsObject", input.dataAsObject);
     JsonUtils::ObjectAddMemberArray<EntityKey>(output, "Entities", input.entities, input.entitiesCount);
+    JsonUtils::ObjectAddMember(output, "IncludeStatistics", input.includeStatistics);
     return output;
 }
 

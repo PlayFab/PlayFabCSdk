@@ -1,0 +1,136 @@
+id: Scenario-Xbox-44-Storage-Full-Init
+name: GameSave Xbox 44 - Storage Full During Init
+tags:
+  - xboxgamesaves
+  - failing
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: SimulateOutOfStorage before init. AddUserWithUiAsync triggers out-of-storage callback, auto-respond Cancel. StopStorageSimulation, retry AddUser succeeds.
+brief: Storage full during init cancel then retry succeeds
+group: G. Out of Storage
+devices:
+  DeviceA:
+    engine: [xbox, pc-grts]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  storage-full-cancel:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: CleanSaveFolder
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Simulate out-of-storage before AddUser
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: SimulateOutOfStorage
+        mode: forceOutOfStorage
+    - command: PFGameSaveFilesSetUiOutOfStorageAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    # AddUser triggers sync; out-of-storage fires; auto-responds Cancel
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectedHr: "0x800704C7,0x80004005"
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: StopStorageSimulation
+    - command: PFGameSaveFilesSetUiOutOfStorageAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  retry-after-recovery:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Retry AddUser — succeeds with storage restored
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+executionOrder:
+  - role: DeviceA
+    block: storage-full-cancel
+  - role: DeviceA
+    block: retry-after-recovery
+cleanup:
+  DeviceA:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: StopStorageSimulation
+    - command: PFGameSaveFilesSetUiOutOfStorageAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

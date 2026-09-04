@@ -1,0 +1,69 @@
+id: Controller-Action-05-Evict-Game
+name: Controller Action 05 - Evict Game / Relaunch
+tags:
+  - xboxactions
+platforms:
+  xbox: untested
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: Verify EvictGame evicts the title by launching a stub and Relaunch recovers.
+devices:
+  DeviceA:
+    engine: xbox
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  init:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+  test:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EvictGame
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Relaunch
+    - command: SmokeDelay
+      parameters:
+        durationMs: 10000
+  post-relaunch:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+  cleanup:
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: init
+  - role: DeviceA
+    block: test
+  - role: DeviceA
+    block: post-relaunch
+  - role: DeviceA
+    block: cleanup

@@ -1,0 +1,79 @@
+id: LHC-08-Retry-Transient-Failure
+name: LHC 08 - Retry on Transient Failure with Mock
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Install a mock that returns HTTP 503 for the first call and 200 for
+  subsequent calls; perform with retry enabled and verify the final
+  response is 200.  Catches regressions in automatic retry.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  retry-transient:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # First mock — returns 503 (consumed once, then falls through to next)
+    - command: HCMockCallCreate
+    - command: HCMockResponseSetStatusCode
+      parameters:
+        statusCode: 503
+    - command: HCMockResponseSetResponseBodyBytes
+      parameters:
+        body: "{\"error\":\"ServiceUnavailable\"}"
+    - command: HCMockAddMock
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/retry-test"
+
+    # Second mock — returns 200 (repeats indefinitely as last mock)
+    - command: HCMockCallCreate
+    - command: HCMockResponseSetStatusCode
+      parameters:
+        statusCode: 200
+    - command: HCMockResponseSetResponseBodyBytes
+      parameters:
+        body: "{\"status\":\"OK\"}"
+    - command: HCMockAddMock
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/retry-test"
+
+    # Create call with retry enabled
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/retry-test"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: true
+    - command: HCHttpCallRequestSetRetryDelay
+      parameters:
+        retryDelayInSeconds: 0
+
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallGetPerformCount
+
+    - command: HCHttpCallCloseHandle
+    - command: HCMockClearMocks
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: retry-transient
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

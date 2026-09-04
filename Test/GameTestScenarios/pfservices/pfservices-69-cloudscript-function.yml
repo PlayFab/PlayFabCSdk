@@ -1,0 +1,48 @@
+id: PFServices-69-CloudScript-Function
+name: PFServices 69 - Execute Azure Function
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # E_PF_INVALID_REQUEST (0x89235468) - Azure Functions not configured for this title
+  psx: ignore
+description: >
+  Invokes an Azure Function via PlayFab and verifies the result.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFCloudScriptExecuteFunctionAsync
+    - command: PFCloudScriptExecuteFunctionGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

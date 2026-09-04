@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eo pipefail
+
 log () {
     echo "***** $1 *****"
 }
@@ -61,7 +63,6 @@ log "CONFIGURATION = ${CONFIGURATION}"
 log "LHC_PATH = ${LHC_PATH}"
 log "BUILD_PF = ${BUILD_PF}"
 
-make TestApp
 sudo cmake -S "$SCRIPT_DIR" -B "$SCRIPT_DIR"/../../../Int/CMake/PlayFabTestApp.Linux -D CMAKE_BUILD_TYPE=$CONFIGURATION -D LHC_PATH=$LHC_PATH
 sudo make VERBOSE=1 -C "$SCRIPT_DIR"/../../../Int/CMake/PlayFabTestApp.Linux
 sudo cp "$TEST_TITLE_JSON" "${SCRIPT_DIR}/../../../Out/x64/$CONFIGURATION/PlayFabTestApp.Linux/"

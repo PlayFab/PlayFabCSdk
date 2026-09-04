@@ -1,0 +1,37 @@
+id: LHC-02-Custom-Memory-Hooks
+name: LHC 02 - Custom Memory Hooks
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Verify custom memory hooks installed at app startup are active: HCMemGetFunctions
+  succeeds, HCMemSetFunctions is rejected after init, and HCMemGetAllocStats shows
+  non-zero alloc/free counts proving the custom allocator is in use.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  memory-hooks:
+    # Getting memory functions should succeed (custom hooks were set at startup)
+    - command: HCMemGetFunctions
+
+    # Setting memory hooks after init must fail with E_HC_ALREADY_INITIALISED
+    - command: HCMemSetFunctions
+      parameters:
+        expectedHr: "0x89235004"
+
+    # Trigger an HC allocation by creating and closing a call handle
+    - command: HCHttpCallCreate
+    - command: HCHttpCallCloseHandle
+
+    # Verify custom allocator was actually invoked
+    - command: HCMemGetAllocStats
+executionOrder:
+  - role: DeviceA
+    block: memory-hooks
+cleanup:

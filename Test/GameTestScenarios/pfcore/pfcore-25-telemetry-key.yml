@@ -1,0 +1,49 @@
+id: PFCore-25-Telemetry-Key
+name: PFCore 25 - Telemetry Pipeline with Key
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Creates a telemetry pipeline with key, emits an event,
+  verifies it completes, and closes the pipeline.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom.playfab.events"
+        eventName: "pfcore_test_telemetry_key"
+    - command: PFEventPipelineCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,207 @@
+id: Scenario-Xbox-112-No-False-Conflict-Local-Only-Change
+name: GameSave Xbox 112 - No false conflict when only local changed
+tags:
+  - xboxgamesaves
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: |
+  Guards against conflict dialogs firing when they should not (reported by a partner alongside
+  ADO 63185188). Per the conflict design (specs/playfab-gamesave/design/client-dev-spec.md):
+
+    | Local Changes | Remote Changes | Operation      |
+    |---------------|----------------|----------------|
+    | N             | N              | No op          |
+    | N             | Y              | Download       |
+    | Y             | N              | Upload needed  |
+    | Y             | Y              | CONFLICT       |
+
+  A conflict requires BOTH sides to have changed. Here a single console uploads a baseline, then
+  in a later session modifies local data WITHOUT uploading. That is Local=Y / Remote=N, so the
+  next AddUserWithUiAsync must resolve to "Upload needed" and must NOT raise the conflict TCUI.
+
+  Detection is by data outcome rather than by watching for a dialog: the conflict auto-response is
+  deliberately armed as UseCloud (a booby trap). If a false conflict fires, the local edits are
+  replaced by the cloud baseline and the snapshot comparison fails. If no conflict fires (correct),
+  the local edits survive and the snapshots match.
+
+  Deliberately does NOT DeleteSaveRoot before the final session: wiping local also destroys the
+  local state file that records what was last uploaded, after which every file legitimately looks
+  changed - that would be a test artifact, not a product defect.
+brief: Local-only change must not raise a conflict
+group: E. Conflict Resolution
+devices:
+  DeviceA:
+    engine: [xbox, pc-grts]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  seed-baseline:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    # Cloud and local now match, and the local state file records this upload.
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  local-change-only-no-upload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Local-only edit. NOT uploaded, so the cloud still holds the baseline: Local=Y / Remote=N.
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 12288
+            pattern: [0x10, 0xCA, 0x1]
+    # Expected end state for the next session.
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  verify-no-conflict-on-readd:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    # BOOBY TRAP: if a conflict wrongly fires, take the CLOUD copy, which destroys the local edit
+    # and makes the comparison below fail. Correct behavior raises no conflict at all.
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Local=Y / Remote=N -> "Upload needed". No conflict TCUI may appear here.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    # Local edits must have survived: a mismatch means a false conflict took the cloud copy.
+    - command: CompareSaveContainerSnapshots
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: seed-baseline
+  - role: DeviceA
+    block: local-change-only-no-upload
+  - role: DeviceA
+    block: verify-no-conflict-on-readd
+cleanup:
+  DeviceA:
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

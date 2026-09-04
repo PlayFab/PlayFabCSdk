@@ -1,0 +1,66 @@
+id: LHC-22-Deferred-Perform-Start-Wait
+name: LHC 22 - Deferred Perform (Start / Wait)
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Covers the deferred-perform harness commands used by the console suspend scenarios:
+  HCHttpCallPerformStart begins HCHttpCallPerformAsync without waiting, leaving the request
+  in flight while other commands run, and HCHttpCallPerformWait later joins it with a bounded
+  timeout. Here the task queue is dispatched normally, so the request drains on its own and
+  the wait returns success -- this pins the happy path of those commands so that a failure in
+  the console scenarios points at provider suspend behavior rather than at the harness.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 120
+blocks:
+  deferred-perform:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        path: "/deferred"
+        method: "GET"
+        statusCode: 200
+        body: "deferred-response"
+        contentType: "text/plain"
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "http://localhost:{{httpTestPort}}/deferred"
+
+    # Start without waiting; the request is now in flight.
+    - command: HCHttpCallPerformStart
+
+    # Unrelated work happens while the request is outstanding.
+    - command: HCGetLibVersion
+
+    # Join the in-flight request.
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 30000
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: deferred-perform
+cleanup:
+  DeviceA:
+    - command: StopHttpTestServer
+    - command: XTaskQueueCloseHandle

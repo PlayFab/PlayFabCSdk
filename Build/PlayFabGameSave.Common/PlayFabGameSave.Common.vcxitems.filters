@@ -63,6 +63,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\LockStep.cpp">
       <Filter>Source\SyncManager</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\RelockStep.cpp">
+      <Filter>Source\SyncManager</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\CompareStep.cpp">
       <Filter>Source\SyncManager</Filter>
     </ClCompile>
@@ -159,6 +162,9 @@
       <Filter>Source\SyncManager</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\LockStep.h">
+      <Filter>Source\SyncManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\RelockStep.h">
       <Filter>Source\SyncManager</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\CompareStep.h">

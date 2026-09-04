@@ -1,0 +1,25 @@
+id: Scenario-00-Smoke
+name: Harness 0 - Smoke E2E Transport Verification
+tags:
+  - controller
+platforms:
+  xbox: passing
+  pc-grts: passing
+  pc-inproc: passing
+  psx: ignore
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  smokeSequence:
+    - command: SmokeCommandEcho
+      parameters:
+        payload: "ping"
+    - command: SmokeDelay
+      parameters:
+        durationMs: 1000
+executionOrder:
+  - role: DeviceA
+    block: smokeSequence
+cleanup:

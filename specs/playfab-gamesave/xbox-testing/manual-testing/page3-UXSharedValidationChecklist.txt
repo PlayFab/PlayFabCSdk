@@ -1,0 +1,100 @@
+[VALIDATE‑CONFLICT‑DIALOG]		
+		
+Triggered when cloud and local saves diverge — the player must choose which data to keep.		
+		
+Validation Checklist		
+		
+#	Validation Item	What to Check
+1	Dialog visible & foreground	Dialog renders on top of the game window (not behind it — especially on Steam). Use Alt+Tab on PC to confirm.
+2	Title text	Header reads “Choose your saved data” or equivalent GRTS conflict text. Correct locale/language for signed‑in user.
+3	Two options presented	One option for “This device” (local) and one for “Cloud” — both clearly labeled.
+4	Timestamps on each option	Both options show last‑modified date/time. Accurate within ±5 minutes. Format matches user locale.
+5	Save metadata	Each option shows save size, description, or game‑state summary (e.g., “Campaign 45%”). If the title uses [SET‑DESCRIPTION], verify it renders correctly (including Unicode).
+6	Thumbnails	If supported, thumbnails render correctly — no broken images, correct aspect ratio, not stretched.
+7	Device name	Each option identifies the source device (e.g., Xbox Series X, DESKTOP‑ABC123). Matches actual hardware.
+8	Buttons interactable	A / Enter selects highlighted option. B / Escape cancels or is blocked (modal). Controller and keyboard input work.
+9	No auto‑dismiss	Dialog does not timeout or auto‑resolve. Remains until player makes a choice.
+10	Selection applies correctly	After selection, the game loads the correct data. Cross‑verify using [VERIFY‑SAVE].
+11	Screenshot	Capture a screenshot for records.
+		
+Platform Notes		
+		
+PC (Steam): Verify dialog is not behind Steam overlay or game window (Bug 61056197 regression)		
+Console: Verify controller navigation (D‑pad + A)		
+xCloud: Verify dialog renders in stream and accepts input		
+		
+		
+		
+✅ [VALIDATE‑CONTENTION‑DIALOG]		
+		
+Triggered when another device currently holds the active device lock — the player must decide ownership.		
+		
+Validation Checklist		
+		
+#	Validation Item	What to Check
+1	Dialog visible & foreground	Renders on top of game and overlays.
+2	Title text	Header reads “Your saved data is in use on another device” or equivalent GRTS contention text. Correct locale.
+3	Active device identified	Dialog identifies which device currently holds the lock (e.g., Xbox Series X, PC).
+4	Options presented	At minimum: “Use this device” (take over) and “Keep other device” (back off). May include offline mode. Document exact labels.
+5	Timestamps	Last sync time for the active device’s save is shown. Accurate within ±5 minutes.
+6	Save metadata	Description or summary of the save currently held by the other device, if available.
+7	No rapid dismiss / re‑show	Dialog does not flicker, flash, or loop (Bug 61173408 regression).
+8	“Take over” works	Selecting Use this device transfers ownership. Other device receives notification or closes gracefully.
+9	“Keep other” works	Selecting Keep other device backs off cleanly — offline mode or main menu. No hang.
+10	No AddUser hang	After selection, AddUser completes within 60s. No soft‑lock (Bug 61456073 regression).
+11	Screenshot	Capture for records.
+		
+Platform Notes		
+		
+PC (Desktop GDK): Same‑device contention after crash is possible — validate dialog		
+Console: If dialog auto‑cancels after ~6.5 minutes, note as potential bug		
+xCloud: Some contention scenarios not applicable (no local lock)		
+		
+		
+		
+✅ [VALIDATE‑STORAGE‑DIALOG]		
+		
+Triggered when local storage is full during download or init — player must free space.		
+		
+Validation Checklist		
+		
+#	Validation Item	What to Check
+1	Dialog / notification appears	Error prompt, toast, or system notification indicates insufficient storage. Document exact delivery method.
+2	Error text is clear	Player‑friendly language (e.g., “Not enough storage space”). No raw error codes.
+3	Required space indicated	Dialog states required space, or at least save size and available space.
+4	Recovery path offered	At least one actionable option: Try again, Manage storage, or clear guidance.
+5	No crash on error	Game remains responsive — no crash, hang, or unrecoverable state.
+6	No partial writes	No corrupted or partial save containers written after error.
+7	Retry works	After [FREE‑STORAGE], retry or relaunch successfully completes init/download.
+8	Correct error per context	DOWNLOAD → references download; INIT → references sync; UPLOAD → document behavior (may be silent).
+9	Screenshot	Capture exact error dialog.
+		
+Platform Notes		
+		
+PC: Error may come from Windows OS instead of GRTS		
+Console: Validate both system‑level and game‑level prompts (may redirect to Manage Storage)		
+xCloud: N/A — no local storage		
+		
+		
+		
+✅ [VALIDATE‑PROGRESS‑DIALOG]		
+		
+Shown during large cloud downloads — player sees sync progress.		
+		
+Validation Checklist		
+		
+#	Validation Item	What to Check
+1	Dialog visible	Progress indicator appears (bar, %, spinner, or text).
+2	Progress updates	Progress advances incrementally — not stuck at 0% or jumping to 100%.
+3	Accurate completion	If % shown, reaches 100% before dismissal.
+4	Time / size info	If present, values are plausible (no negatives, no TB for MB saves).
+5	Clean dismissal	Dialog closes smoothly — no flicker or residual overlay.
+6	Cancel / quit behavior	Cancel aborts cleanly if supported. If modal, B/Escape does nothing.
+7	Interruption recovery	After suspend / Quick Resume / network drop, dialog reappears correctly.
+8	Screenshot	Capture mid‑download.
+		
+Platform Notes		
+		
+Forte: Naturally large saves — ideal for visible progress		
+ShamWOW: Seed 50MB+ via PFGSMode → CreateFile		
+xCloud: Progress UI may differ — verify legibility in stream		

@@ -1,0 +1,156 @@
+id: Scenario-PC-143-Entity-Auth-Only-GRTS
+name: GameSave PC 143 - Entity Auth Only on GRTS (No XUser)
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing  # Entity-auth-only (no XUser) — validates bug 61675369 fix. 3/3 passes (pass237-239)
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Validates that GRTS works with entity-auth-only (PFLocalUserCreateHandleWithPersistedLocalId)
+  without any XUserHandle. This exercises the code path fixed by bug 61675369 where GRTS UI
+  response APIs crashed on null XUserHandle. Single-device upload, teardown, relaunch, verify
+  sync — identical to test 01 but without Xbox Live auth.
+brief: Entity-auth-only GRTS save/load (no XUser)
+group: L. Auth / SPOP / Entity Auth
+devices:
+  DeviceA:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  session-one-upload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # Entity-auth only — NO XUserAddAsync, NO PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Entity Auth Only - Test 143"
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+    - command: PFLocalUserCloseHandle
+    # No XUserCloseHandle — there is no XUser
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  session-two-download:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # Entity-auth only — NO XUserAddAsync
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+        ignoreEmptyDirectories: true
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-one-upload
+  - role: DeviceA
+    block: session-two-download
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

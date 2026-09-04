@@ -3,6 +3,7 @@
 #include "LocalUserCache.h"
 #include "Platform/Platform.h"
 #include "Trace/TraceState.h"
+#include "SdkVersion.h"
 #include <httpClient/httpClient.h>
 
 using namespace PlayFab;
@@ -126,6 +127,12 @@ HRESULT PFCoreGlobalState::Create(XTaskQueueHandle backgroundQueue, HCInitArgs* 
         // it is needed elsewhere, there should be a single shared instance hanging off of PFCoreGlobalState
         RETURN_IF_FAILED(TraceState::Create(RunContext::Root(backgroundQueue), LocalStorage()));
 
+        // Version banner: logged once at init so every trace self-identifies the
+        // PlayFab.C build (SDK version + build date/time), and captures the title-
+        // supplied background queue identity for diagnosing dispatch/queue issues.
+        TRACE_IMPORTANT("PlayFab.C initializing. SDK=%s%s built=%s %s backgroundQueue=%p",
+            PlayFab::versionString, PlayFab::sdkVersion, __DATE__, __TIME__, static_cast<void*>(backgroundQueue));
+
         RETURN_IF_FAILED(HCInitialize(args));
 
         PFPlatformType platformType;
@@ -190,7 +197,7 @@ HRESULT CALLBACK PFCoreGlobalState::CleanupAsyncProvider(XAsyncOp op, XAsyncProv
     case XAsyncOp::Begin:
     try
     {
-        TRACE_VERBOSE("PlayFabCore::PFCoreGlobalState::CleanupAsyncProvider::Begin");
+        TRACE_WARNING("PlayFabCore::PFCoreGlobalState::CleanupAsyncProvider::Begin - starting PFCore termination");
         UniquePtr<CleanupContext> context{ static_cast<CleanupContext*>(data->context) };
 
         RETURN_IF_FAILED(AccessPFCoreGlobalState(AccessMode::Cleanup, context->state));
@@ -199,6 +206,7 @@ HRESULT CALLBACK PFCoreGlobalState::CleanupAsyncProvider(XAsyncOp op, XAsyncProv
         // Clear the local user cache early in the cleanup process to prevent resource leaks
         Core::LocalUserCache::Instance().ClearAllLocalUsers();
 
+        TRACE_WARNING("PlayFabCore::PFCoreGlobalState - calling m_runContext.Terminate()");
         context->state->m_runContext.Terminate(*context->state, context.get());
         context.release();
         return S_OK;
@@ -279,7 +287,7 @@ void CALLBACK HCCleanupComplete(XAsyncBlock* async)
 
 void PFCoreGlobalState::OnTerminated(void* c) noexcept
 {
-    TRACE_VERBOSE(__FUNCTION__);
+    TRACE_WARNING("PFCoreGlobalState::OnTerminated - RunContext termination complete, proceeding to HCCleanupAsync");
 
     UniquePtr<CleanupContext> context{ static_cast<CleanupContext*>(c) };
     XAsyncBlock* asyncBlock{ context->clientAsyncBlock }; // Keep copy of asyncBlock pointer to complete after cleaning up context

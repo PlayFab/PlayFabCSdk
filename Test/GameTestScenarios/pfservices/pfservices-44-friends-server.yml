@@ -1,0 +1,51 @@
+id: PFServices-44-Friends-Server
+name: PFServices 44 - Server Friends Management
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # SDK crash: PFFriendsServerGetFriendsListAsync likely crashes same as client version
+  psx: ignore
+description: >
+  Tests server-side friend add, list, and remove operations.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFFriendsServerAddFriendAsync
+      expectFailure: true  # E_PF_NOSECRETKEY (0x89235412) - Server API requires secret key
+    - command: PFFriendsServerGetFriendsListAsync  # SDK BUG: likely crashes like client version
+    - command: PFFriendsServerGetFriendsListGetResult
+    - command: PFFriendsServerRemoveFriendAsync
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

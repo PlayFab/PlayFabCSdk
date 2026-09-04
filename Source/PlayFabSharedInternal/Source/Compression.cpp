@@ -2,6 +2,7 @@
 
 #include "Compression.h"
 #include <algorithm>
+#include <cstdint>
 
 #if HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH
 
@@ -11,6 +12,10 @@
 
 namespace PlayFab
 {
+
+// Zip bomb protection limits (must fit in non-Zip64 ZIP, which uses 32-bit size/offset fields)
+static constexpr uint64_t kMaxIndividualFileSize = 3ULL * 1024 * 1024 * 1024;   // 3 GB (below Zip64 threshold)
+static constexpr uint64_t kMaxTotalUncompressedSize = 3ULL * 1024 * 1024 * 1024; // 3 GB total (below Zip64 threshold)
 
 static int ArchiveEmptyCallback(archive*, void*)
 {
@@ -108,15 +113,22 @@ HRESULT ArchiveContext::ConvertLibarchiveResult(int ar, const char* message) noe
     if (ar < ARCHIVE_OK)
     {
         auto internalArchive = reinterpret_cast<archive*>(m_archive);
+        // m_archive is null while Initialize is still setting the archive up, and
+        // archive_error_string can itself return null - neither is safe to hand to "%s".
+        const char* errorString = internalArchive ? archive_error_string(internalArchive) : nullptr;
+        if (errorString == nullptr)
+        {
+            errorString = "<no error string>";
+        }
 
         if (ar < ARCHIVE_WARN)
         {
-            TRACE_ERROR("Error - %s: (%d) %s", message, ar, archive_error_string(internalArchive));
+            TRACE_ERROR("Error - %s: (%d) %s", message, ar, errorString);
             hr = E_FAIL;
         }
         else
         {
-            TRACE_WARNING("Warning - %s: (%d) %s", message, ar, archive_error_string(internalArchive));
+            TRACE_WARNING("Warning - %s: (%d) %s", message, ar, errorString);
         }
     }
 
@@ -169,18 +181,59 @@ HRESULT ArchiveContext::Initialize(ArchiveOpenMode mode, ArchiveSource source, S
     int ar{};
     archive* internalArchive{};
 
+    // Publish the allocation (and the mode it was allocated with) before any fallible setup call,
+    // so error logging has a real archive to read its message from and every failure path below
+    // can free it instead of leaking it.
+    m_mode = mode;
+    m_source = source;
+
+    auto freeArchiveOnFailure = [&]()
+    {
+        if (internalArchive != nullptr)
+        {
+            if (mode == ArchiveOpenMode::Decompress)
+            {
+                archive_read_free(internalArchive);
+            }
+            else
+            {
+                archive_write_free(internalArchive);
+            }
+            internalArchive = nullptr;
+            m_archive = nullptr;
+        }
+    };
+
     if (mode == ArchiveOpenMode::Decompress)
     {
         internalArchive = archive_read_new();
+        if (internalArchive == nullptr)
+        {
+            return E_OUTOFMEMORY;
+        }
+        m_archive = reinterpret_cast<pfarchive*>(internalArchive);
+
         ar = archive_read_support_format_zip(internalArchive);
-        RETURN_IF_FAILED(ConvertLibarchiveResult(ar, "Failed to set archive format"));
+        if (FAILED(ConvertLibarchiveResult(ar, "Failed to set archive format")))
+        {
+            freeArchiveOnFailure();
+            return E_FAIL;
+        }
         ar = archive_read_support_filter_gzip(internalArchive);
-        RETURN_IF_FAILED(ConvertLibarchiveResult(ar, "Failed to set archive compression"));
+        if (FAILED(ConvertLibarchiveResult(ar, "Failed to set archive compression")))
+        {
+            freeArchiveOnFailure();
+            return E_FAIL;
+        }
 
         if (source == ArchiveSource::File)
         {
             auto fileResult = FilePAL::OpenFile(zipFilePath, FileOpenMode::Read);
-            RETURN_IF_FAILED(fileResult.hr);
+            if (FAILED(fileResult.hr))
+            {
+                freeArchiveOnFailure();
+                return fileResult.hr;
+            }
             libArchiveContext.zipFileHandle = fileResult.ExtractPayload();
             libArchiveContext.dataBuffer.resize(FILEPAL_MAX_BYTES_AVAILABLE);
         }
@@ -189,16 +242,34 @@ HRESULT ArchiveContext::Initialize(ArchiveOpenMode mode, ArchiveSource source, S
     {
         TRACE_INFORMATION("ArchiveContext::Initialize Compress");
         internalArchive = archive_write_new();
+        if (internalArchive == nullptr)
+        {
+            return E_OUTOFMEMORY;
+        }
+        m_archive = reinterpret_cast<pfarchive*>(internalArchive);
+
         ar = archive_write_set_format_zip(internalArchive);
-        RETURN_IF_FAILED(ConvertLibarchiveResult(ar, "Failed to set archive format"));
+        if (FAILED(ConvertLibarchiveResult(ar, "Failed to set archive format")))
+        {
+            freeArchiveOnFailure();
+            return E_FAIL;
+        }
         ar = archive_write_set_options(internalArchive, "compression=deflate,!zip64");
-        RETURN_IF_FAILED(ConvertLibarchiveResult(ar, "Failed to set archive compression"));
+        if (FAILED(ConvertLibarchiveResult(ar, "Failed to set archive compression")))
+        {
+            freeArchiveOnFailure();
+            return E_FAIL;
+        }
 
         TRACE_INFORMATION("ArchiveContext::Initialize Compress Source:%d", source);
         if (source == ArchiveSource::File)
         {
             auto fileResult = FilePAL::OpenFile(zipFilePath, FileOpenMode::Write);
-            RETURN_IF_FAILED(fileResult.hr);
+            if (FAILED(fileResult.hr))
+            {
+                freeArchiveOnFailure();
+                return fileResult.hr;
+            }
             libArchiveContext.zipFileHandle = fileResult.ExtractPayload();
         }
         else
@@ -206,15 +277,19 @@ HRESULT ArchiveContext::Initialize(ArchiveOpenMode mode, ArchiveSource source, S
             // Set the block size to 1MB (up from 10KB default) when compressing to memory to reduce upload requests
             // libarchive will trigger ArchiveWriteCallback only when the compressed data reaches this size
             ar = archive_write_set_bytes_per_block(internalArchive, 1024 * 1024);
-            RETURN_IF_FAILED(ConvertLibarchiveResult(ar, "Failed to set archive block size"));
+            if (FAILED(ConvertLibarchiveResult(ar, "Failed to set archive block size")))
+            {
+                freeArchiveOnFailure();
+                return E_FAIL;
+            }
             ar = archive_write_set_bytes_in_last_block(internalArchive, 1);
-            RETURN_IF_FAILED(ConvertLibarchiveResult(ar, "Failed to set archive last block size"));
+            if (FAILED(ConvertLibarchiveResult(ar, "Failed to set archive last block size")))
+            {
+                freeArchiveOnFailure();
+                return E_FAIL;
+            }
         }
     }
-
-    m_mode = mode;
-    m_source = source;
-    m_archive = reinterpret_cast<pfarchive*>(internalArchive);
 
     return S_OK;
 }
@@ -228,10 +303,66 @@ HRESULT ArchiveContext::AddFile(String& relativePath, ArchiveFileDetail&& file) 
         relativePath.erase(0, trimPos);
     }
 
-    m_totalUncompressedSize += file.uncompressedSize;
+    // Path traversal protection: reject ".." only as a path segment, not as a substring (e.g., "foo..bar" is valid).
+    // Each segment is trimmed of trailing spaces/dots first, because Win32 path normalization
+    // strips those - ".. " and "..." both resolve to the parent directory.
+    size_t segmentStart = 0;
+    while (segmentStart <= relativePath.length())
+    {
+        size_t segmentEnd = relativePath.find('/', segmentStart);
+        if (segmentEnd == String::npos)
+        {
+            segmentEnd = relativePath.length();
+        }
+
+        String segment = relativePath.substr(segmentStart, segmentEnd - segmentStart);
+        if (!segment.empty())
+        {
+            size_t lastValid = segment.find_last_not_of(" .");
+            if (lastValid == String::npos || segment.substr(0, lastValid + 1) == "..")
+            {
+                // Segment is all dots/spaces, or trims down to "..".
+                return E_INVALIDARG;
+            }
+        }
+
+        segmentStart = segmentEnd + 1;
+    }
+
+    // Individual file size limit
+    if (file.uncompressedSize > kMaxIndividualFileSize)
+    {
+        return E_INVALIDARG;
+    }
+
+    // Replacing an existing entry must not double-count its size against the archive limits.
+    auto existing = m_fileMap.find(relativePath);
+    uint64_t supersededSize = (existing != m_fileMap.end()) ? existing->second.uncompressedSize : 0;
+    uint64_t currentTotal = m_totalUncompressedSize - supersededSize;
+
+    // Integer overflow check
+    if (currentTotal > UINT64_MAX - file.uncompressedSize)
+    {
+        return E_INVALIDARG;
+    }
+
+    // Total archive size limit (check before updating running total)
+    if (currentTotal + file.uncompressedSize > kMaxTotalUncompressedSize)
+    {
+        return E_INVALIDARG;
+    }
+
+    m_totalUncompressedSize = currentTotal + file.uncompressedSize;
+
     m_fileMap.insert_or_assign(relativePath, file);
 
     return S_OK;
+}
+
+void ArchiveContext::ClearFiles() noexcept
+{
+    m_fileMap.clear();
+    m_totalUncompressedSize = 0;
 }
 
 UnorderedMap<String, ArchiveFileDetail>& ArchiveContext::GetFiles() noexcept
@@ -247,6 +378,11 @@ uint64_t ArchiveContext::GetTotalUncompressedSize() const noexcept
 uint64_t ArchiveContext::GetTotalCompressedSize() const noexcept
 {
     return m_totalCompressedSize;
+}
+
+uint64_t ArchiveContext::GetUncompressedBytesProcessed() const noexcept
+{
+    return m_uncompressedBytesWritten;
 }
 
 void ArchiveContext::AddCompressedBytesSize(uint64_t size) noexcept
@@ -311,7 +447,9 @@ HRESULT ArchiveContext::CompressBytesGetAnyData(String& destination, size_t* unc
 
 HRESULT ArchiveContext::CompressBytesGetData(size_t bytesAvailable, char* destination, size_t* bytesWritten, size_t* uncompressedBytesWritten, bool* finishedCompressing) noexcept
 {
-    RETURN_HR_IF(E_INVALIDARG, !destination || !bytesWritten || !uncompressedBytesWritten || bytesAvailable == 0);
+    RETURN_HR_IF(E_INVALIDARG, !destination || !bytesWritten || !uncompressedBytesWritten || !finishedCompressing || bytesAvailable == 0);
+
+    *finishedCompressing = false;
 
     // Leftover data from previous buffer
     if (!m_remainingBuffer.empty())
@@ -372,7 +510,7 @@ HRESULT ArchiveContext::CompressBytesGetData(size_t bytesAvailable, char* destin
         // Copy all data
         auto bytesToCopy = std::min(bytesAvailable, libArchiveContext.dataBufferLength);
         memcpy(destination, libArchiveContext.dataBuffer.data(), bytesToCopy);
-        *bytesWritten = libArchiveContext.dataBufferLength;
+        *bytesWritten = bytesToCopy;
         Vector<char>().swap(libArchiveContext.dataBuffer);
         *uncompressedBytesWritten = m_uncompressedBytesWritten;
         m_uncompressedBytesWritten = 0;
@@ -439,7 +577,7 @@ HRESULT ArchiveContext::CompressBytes() noexcept
         auto& file = it->second;
 
         m_fileRemainingSize = file.uncompressedSize;
-        TRACE_INFORMATION("ArchiveContext::CompressBytes FileRemainingSize:%llu", m_fileRemainingSize);
+        TRACE_INFORMATION("ArchiveContext::CompressBytes FileRemainingSize:%llu", m_fileRemainingSize.load());
 
         if (!internalEntry)
         {
@@ -459,20 +597,9 @@ HRESULT ArchiveContext::CompressBytes() noexcept
         // GRTS extracts ZIP files treating mtime as UTC, so we must offset by timezone.
         struct tm utcTm{};
         time_t adjustedTime{};
-#ifdef _WIN32
-        if (gmtime_s(&utcTm, &file.timeLastModified) == 0)
+#if HC_PLATFORM_IS_PLAYSTATION
+        if (gmtime_s(&file.timeLastModified, &utcTm) == 0)
         {
-            adjustedTime = _mkgmtime(&utcTm);
-        }
-        else
-        {
-            TRACE_WARNING("Failed to convert time to UTC using gmtime_s");
-        }
-#else
-        // Non-GNU platforms use gmtime_s with POSIX signature: struct tm* gmtime_s(const time_t*, struct tm*)
-        if (gmtime_s(&file.timeLastModified, &utcTm) != nullptr)
-        {
-            // timegm is a GNU extension not available on PlayStation; use portable equivalent
             time_t localTime = mktime(&utcTm);
             struct tm localTm{};
             gmtime_s(&localTime, &localTm);
@@ -482,6 +609,28 @@ HRESULT ArchiveContext::CompressBytes() noexcept
         else
         {
             TRACE_WARNING("Failed to convert time to UTC using gmtime_s");
+        }
+#elif defined(_WIN32)
+        if (gmtime_s(&utcTm, &file.timeLastModified) == 0)
+        {
+            adjustedTime = _mkgmtime(&utcTm);
+        }
+        else
+        {
+            TRACE_WARNING("Failed to convert time to UTC using gmtime_s");
+        }
+#else
+        if (gmtime_r(&file.timeLastModified, &utcTm) != nullptr)
+        {
+            time_t localTime = mktime(&utcTm);
+            struct tm localTm{};
+            gmtime_r(&localTime, &localTm);
+            time_t utcOffset = mktime(&localTm) - localTime;
+            adjustedTime = localTime - utcOffset;
+        }
+        else
+        {
+            TRACE_WARNING("Failed to convert time to UTC using gmtime_r");
         }
 #endif
         if (adjustedTime != static_cast<time_t>(-1))
@@ -517,7 +666,30 @@ HRESULT ArchiveContext::CompressBytes() noexcept
         RETURN_IF_FAILED(CheckNotifyResult(hr, "Unable to read from archive entry file"));
 
         m_uncompressedBytesWritten += fileBytesRead;
-        m_fileRemainingSize -= fileBytesRead;
+
+        if (fileBytesRead == 0)
+        {
+            // The file on disk is shorter than the size recorded when it was scanned (it was
+            // truncated or rewritten between the metadata scan and this compression pass).
+            // ReadFileBytes reports EOF as S_OK with zero bytes, so without this guard nothing is
+            // subtracted from m_fileRemainingSize, the entry file is never closed and
+            // reachedZipEof is never set - leaving the caller's
+            // "while (SUCCEEDED(hr) && !IsArchiveOperationDone())" loop spinning forever with the
+            // sync mutex held. Fail the upload instead; this mirrors the truncated-entry handling
+            // on the decompress side.
+            TRACE_ERROR("[GAME SAVE] ArchiveContext: archive entry source file ended with %llu bytes still expected",
+                m_fileRemainingSize.load());
+            FilePAL::CloseFile(m_entryFile);
+            m_entryFile.reset();
+            m_fileRemainingSize = 0;
+            return CheckNotifyResult(E_UNEXPECTED, "Truncated archive entry source file");
+        }
+
+        if (static_cast<uint64_t>(fileBytesRead) > m_fileRemainingSize.load())
+        {
+            return E_UNEXPECTED;
+        }
+        m_fileRemainingSize -= static_cast<uint64_t>(fileBytesRead);
 
         auto lastBytesWritten = archive_write_data(internalArchive, fileBuffer.data(), fileBytesRead);
         RETURN_IF_FAILED(ConvertLibarchiveResult(static_cast<int>(lastBytesWritten), "Failed to write data to archive"));
@@ -585,6 +757,9 @@ HRESULT ArchiveContext::DecompressBytes() noexcept
         m_open = true;
         auto readCallback = m_source == ArchiveSource::File ? ArchiveReadFromFileCallback : ArchiveReadCallback;
         ar = archive_read_open2(internalArchive, this, ArchiveEmptyCallback, readCallback, nullptr, ArchiveEmptyCallback);
+        // Opening is fallible (bad source, allocation failure). Continuing against an unopened
+        // archive just produces confusing downstream errors.
+        RETURN_IF_FAILED(ConvertLibarchiveResult(ar, "Failed to open archive for read"));
     }
 
     if (m_skipEntry)
@@ -659,7 +834,31 @@ HRESULT ArchiveContext::DecompressBytes() noexcept
         auto hr = FilePAL::WriteFileBytes(m_entryFile, outBuffer.data(), static_cast<size_t>(bytesRead));
         RETURN_IF_FAILED(CheckNotifyResult(hr, "Unable to write to archive entry file"));
         m_uncompressedBytesWritten += bytesRead;
-        m_fileRemainingSize -= bytesRead;
+
+        if (static_cast<uint64_t>(bytesRead) > m_fileRemainingSize.load())
+        {
+            return E_UNEXPECTED;
+        }
+        m_fileRemainingSize -= static_cast<uint64_t>(bytesRead);
+    }
+    else if (m_fileRemainingSize > 0 && bytesRead == 0)
+    {
+        // The entry ended before the size the (untrusted) manifest advertised. Neither completion
+        // condition below would fire, so the caller's decompress loop would spin forever. Fail the
+        // extraction instead.
+        //
+        // The partial file is deliberately NOT deleted: the destination is the title's real save
+        // file, and removing it turns a recoverable "download failed, keep retrying" into
+        // permanent data loss. It is left in place exactly like every other extraction failure.
+        TRACE_ERROR("[GAME SAVE] ArchiveContext: archive entry '%s' ended with %llu bytes still expected",
+            m_entryFilePath.c_str(), m_fileRemainingSize.load());
+        if (m_entryFile)
+        {
+            FilePAL::CloseFile(m_entryFile);
+            m_entryFile.reset();
+        }
+        m_fileRemainingSize = 0;
+        return CheckNotifyResult(E_UNEXPECTED, "Truncated archive entry");
     }
 
     // We've reached the end of the entry
@@ -690,31 +889,53 @@ void ArchiveContext::Close() noexcept
         libArchiveContext.zipFileHandle.reset();
     }
 
-    if (!m_open)
-    {
-        return;
-    }
-
+    // m_open only becomes true on the first Compress/DecompressBytes call, but Initialize()
+    // allocates the archive (and, in compress mode, the entry) before that. Skipping the whole
+    // block here leaked both whenever a context was initialized and then abandoned - so only the
+    // close calls are conditional on m_open; the frees always run.
+    const bool wasOpen = m_open;
     m_open = false;
 
     auto internalArchive = reinterpret_cast<archive*>(m_archive);
 
     if (internalArchive)
     {
+        // m_archive has to be cleared BEFORE the result is logged: ConvertLibarchiveResult
+        // dereferences m_archive to call archive_error_string(), so logging a failing free result
+        // while m_archive still points at the just-released block is a read of freed memory.
+        // Log the numeric code directly instead - libarchive's error string dies with the object.
         if (m_mode == ArchiveOpenMode::Decompress)
         {
-            auto ar = archive_read_close(internalArchive);
-            ConvertLibarchiveResult(ar, "Failed to close archive read");
-            ar = archive_read_free(internalArchive);
-            ConvertLibarchiveResult(ar, "Failed to free archive read");
+            if (wasOpen)
+            {
+                auto closeResult = archive_read_close(internalArchive);
+                ConvertLibarchiveResult(closeResult, "Failed to close archive read");
+            }
+            auto ar = archive_read_free(internalArchive);
+            m_archive = nullptr;
+            if (ar < ARCHIVE_OK)
+            {
+                TRACE_ERROR("Error - Failed to free archive read: (%d)", ar);
+            }
         }
         else
         {
             auto ar = archive_write_free(internalArchive);
-            ConvertLibarchiveResult(ar, "Failed to free archive write");
+            m_archive = nullptr;
+            if (ar < ARCHIVE_OK)
+            {
+                TRACE_ERROR("Error - Failed to free archive write: (%d)", ar);
+            }
         }
+    }
 
-        m_archive = nullptr;
+    // Only free entries we own (created via archive_entry_new in compress mode).
+    // In decompress mode, m_archiveEntry is owned by libarchive and must not be freed.
+    auto internalEntry = reinterpret_cast<archive_entry*>(m_archiveEntry);
+    if (internalEntry && m_mode == ArchiveOpenMode::Compress)
+    {
+        archive_entry_free(internalEntry);
+        m_archiveEntry = nullptr;
     }
 }
 

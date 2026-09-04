@@ -1,0 +1,51 @@
+id: XSAPI-13-Stats
+name: XSAPI 13 - User Statistics
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer stats/stats.lua.
+  Signs in, creates XBL context, tracks statistics, registers change handler,
+  then queries single user stat, multiple stats, and multi-user multi-SC stats.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblUserStatisticsTrackStatistics
+    - command: XblUserStatisticsAddStatisticChangedHandler
+    - command: XblUserStatisticsGetSingleUserStatisticAsync
+    - command: XblUserStatisticsGetSingleUserStatisticsAsync
+    - command: XblUserStatisticsGetMultipleUserStatisticsAsync
+    - command: XblUserStatisticsGetMultipleUserStatisticsForMultipleServiceConfigurationsAsync
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

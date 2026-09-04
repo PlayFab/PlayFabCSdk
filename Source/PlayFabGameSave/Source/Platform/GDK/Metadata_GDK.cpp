@@ -1,5 +1,5 @@
-#include <windows.h>
 #include "stdafx.h"
+#include <windows.h>
 #include "Metadata.h"
 
 namespace PlayFab
@@ -13,7 +13,7 @@ typedef UINT (WINAPI *PFN_GetSystemDirectoryW)(LPWSTR lpBuffer, UINT uSize);
 typedef DWORD (WINAPI *PFN_GetFileVersionInfoSizeExW)(DWORD dwFlags, LPCWSTR lpwstrFilename, LPDWORD lpdwHandle);
 typedef BOOL (WINAPI *PFN_GetFileVersionInfoExW)(DWORD dwFlags, LPCWSTR lpwstrFilename, DWORD dwHandle, DWORD dwLen, LPVOID lpData);
 typedef BOOL (WINAPI *PFN_VerQueryValueA)(LPCVOID pBlock, LPCSTR lpSubBlock, LPVOID *lplpBuffer, PUINT puLen);
-typedef BOOL (WINAPI *PFN_GetComputerNameA)(LPSTR lpBuffer, LPDWORD nSize);
+typedef BOOL (WINAPI *PFN_GetComputerNameW)(LPWSTR lpBuffer, LPDWORD nSize);
 
 // Struct to hold function pointers
 struct WindowsApiFunctions
@@ -22,7 +22,7 @@ struct WindowsApiFunctions
     PFN_GetFileVersionInfoSizeExW pfnGetFileVersionInfoSizeExW;
     PFN_GetFileVersionInfoExW pfnGetFileVersionInfoExW;
     PFN_VerQueryValueA pfnVerQueryValueA;
-    PFN_GetComputerNameA pfnGetComputerNameA;
+    PFN_GetComputerNameW pfnGetComputerNameW;
     HMODULE hKernel32;
     HMODULE hVersion;
     
@@ -31,7 +31,7 @@ struct WindowsApiFunctions
         pfnGetFileVersionInfoSizeExW(nullptr),
         pfnGetFileVersionInfoExW(nullptr),
         pfnVerQueryValueA(nullptr),
-        pfnGetComputerNameA(nullptr),
+        pfnGetComputerNameW(nullptr),
         hKernel32(nullptr),
         hVersion(nullptr)
     {
@@ -61,7 +61,7 @@ static void InitializeFunctionPointers(WindowsApiFunctions& apiFunctions)
         if (apiFunctions.hKernel32)
         {
             apiFunctions.pfnGetSystemDirectoryW = (PFN_GetSystemDirectoryW)GetProcAddress(apiFunctions.hKernel32, "GetSystemDirectoryW");
-            apiFunctions.pfnGetComputerNameA = (PFN_GetComputerNameA)GetProcAddress(apiFunctions.hKernel32, "GetComputerNameA");
+            apiFunctions.pfnGetComputerNameW = (PFN_GetComputerNameW)GetProcAddress(apiFunctions.hKernel32, "GetComputerNameW");
         }
     }
 
@@ -141,24 +141,26 @@ String GetDeviceFriendlyName()
     WindowsApiFunctions apiFunctions;
     InitializeFunctionPointers(apiFunctions);
     
-    char name[MAX_COMPUTERNAME_LENGTH + 1] = {};
+    wchar_t wname[MAX_COMPUTERNAME_LENGTH + 1] = {};
     DWORD dwSize = MAX_COMPUTERNAME_LENGTH + 1;
     BOOL success = FALSE;
     
-    if (apiFunctions.pfnGetComputerNameA)
+    if (apiFunctions.pfnGetComputerNameW)
     {
-        success = apiFunctions.pfnGetComputerNameA(name, &dwSize);
+        success = apiFunctions.pfnGetComputerNameW(wname, &dwSize);
     }
     
     if (success)
     {
-        return String(name);
+        int utf8Len = WideCharToMultiByte(CP_UTF8, 0, wname, -1, nullptr, 0, nullptr, nullptr);
+        if (utf8Len > 0)
+        {
+            String result(static_cast<size_t>(utf8Len - 1), '\0');
+            WideCharToMultiByte(CP_UTF8, 0, wname, -1, &result[0], utf8Len, nullptr, nullptr);
+            return result;
+        }
     }
-    else
-    {
-        // If we can't get the computer name, just return blank
-        return String("");
-    }
+    return String("");
 }
 
 #endif

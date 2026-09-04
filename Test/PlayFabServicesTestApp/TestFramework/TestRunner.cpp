@@ -339,6 +339,11 @@ bool TestRunner::Cleanup()
     return m_testReport.AllTestsPassed();
 }
 
+bool TestRunner::AllTestsPassed() const
+{
+    return m_testReport.AllTestsPassed();
+}
+
 String TestRunner::GenerateTestSummary()
 {
     Stringstream summaryStream;

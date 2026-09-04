@@ -1,0 +1,49 @@
+id: PFServices-79-TitleData-Server
+name: PFServices 79 - Server Title Data Round-Trip
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # E_PF_NOSECRETKEY (0x89235412) - Server API requires secret key
+  psx: ignore
+description: >
+  Sets title data from server, reads it back to verify.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFTitleDataManagementServerSetTitleDataAsync
+    - command: PFTitleDataManagementServerGetTitleDataAsync
+    - command: PFTitleDataManagementServerGetTitleDataGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

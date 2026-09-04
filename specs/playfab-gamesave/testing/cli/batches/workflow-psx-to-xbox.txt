@@ -1,0 +1,33 @@
+# Workflow: PlayStation to Xbox
+#
+# DeviceA = Xbox dev kit (GameTestAppXbox)
+# DeviceB = PlayStation dev kit (GameTestAppPS)
+#
+# Xbox connects first (DeviceA) to establish the primary linking identity.
+# PlayStation connects second (DeviceB) and links to the Xbox-backed account.
+# Upload from Xbox, download and verify on PlayStation.
+#
+# First-time setup: If DeviceB's login fails with E_PF_ACCOUNT_NOT_FOUND,
+# uncomment the link-psn-to-xbox line below.
+
+# --- DeviceA (Xbox): Initialize, upload ---
+target DeviceA
+batch specs\playfab-gamesave\testing\cli\batches\set-auto-responses.txt
+batch specs\playfab-gamesave\testing\cli\batches\init-device-xbox.txt
+batch specs\playfab-gamesave\testing\cli\batches\reset-cloud.txt
+batch specs\playfab-gamesave\testing\cli\batches\upload-golden-path.txt
+
+# --- DeviceB (PlayStation): Initialize, link if needed, download, verify ---
+target DeviceB
+batch specs\playfab-gamesave\testing\cli\batches\set-auto-responses.txt
+batch specs\playfab-gamesave\testing\cli\batches\init-device-psx.txt
+# Uncomment the next line on first run if login failed with E_PF_ACCOUNT_NOT_FOUND:
+# batch specs\playfab-gamesave\testing\cli\batches\link-psn-to-xbox.txt
+batch specs\playfab-gamesave\testing\cli\batches\download-and-verify.txt
+
+# --- Tear down both ---
+batch specs\playfab-gamesave\testing\cli\batches\teardown-device.txt
+target DeviceA
+batch specs\playfab-gamesave\testing\cli\batches\teardown-device.txt
+
+target auto

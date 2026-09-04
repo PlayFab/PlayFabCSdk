@@ -10,6 +10,11 @@
 #include "TestRunner.h"
 #include "../PlatformUtils.h"
 
+#include <chrono>
+#include <future>
+#include <memory>
+#include <thread>
+
 namespace AndroidTestApp
 {
 
@@ -100,17 +105,42 @@ void TestApp::UpdateInstances(JNIEnv* env, jobject activityInstance, jobject con
 
 bool TestApp::RunTests()
 {
-    PlayFab::Test::TestRunner testRunner;
-    THROW_IF_FAILED(testRunner.Initialize());
+    auto testRunner = std::make_shared<PlayFab::Test::TestRunner>();
+    THROW_IF_FAILED(testRunner->Initialize());
 
-    while (!testRunner.Update())
+    while (!testRunner->Update())
     {
         PlayFab::Test::Platform::Sleep(10);
     }
 
-    bool allTestsPassed = testRunner.Cleanup();
+    bool const allTestsPassed = testRunner->AllTestsPassed();
 
-    return allTestsPassed ? true : false;
+    // Workaround for a known SDK cleanup wedge on the Android x86_64 emulator:
+    // XTaskQueueTerminate's async completion callback (see
+    // Source/PlayFabSharedInternal/Source/RunContext.cpp) occasionally never
+    // fires. Run cleanup on a separate thread so the finalized test result can
+    // still return through JUnit. Killing the process here disconnects the
+    // instrumentation runner and leaves connectedAndroidTest waiting.
+    constexpr auto kCleanupWatchdogTimeout = std::chrono::seconds(30);
+    std::packaged_task<bool()> cleanupTask{ [testRunner]() {
+        return testRunner->Cleanup();
+    } };
+    auto cleanupResult = cleanupTask.get_future();
+    std::thread cleanupThread{ std::move(cleanupTask) };
+
+    if (cleanupResult.wait_for(kCleanupWatchdogTimeout) == std::future_status::ready)
+    {
+        bool const cleanupPassed = cleanupResult.get();
+        cleanupThread.join();
+        return cleanupPassed;
+    }
+
+    LOGE(
+        "testRunner.Cleanup() exceeded %lld s watchdog; returning finalized test result.",
+        static_cast<long long>(kCleanupWatchdogTimeout.count())
+    );
+    cleanupThread.detach();
+    return allTestsPassed;
 }
 
 TestApp::TestApp()

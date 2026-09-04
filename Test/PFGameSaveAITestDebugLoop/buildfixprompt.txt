@@ -1,0 +1,33 @@
+The test harness build FAILED. Read the build output at {{BUILDRESULT}} and fix the compile errors.
+
+The build command is {{TESTS_BUILD}}. It compiles the C++ test device ({{TEST_APP}}) and the C# test controller ({{TEST_CONTROLLER}}) from the PlayFab.C repo.
+
+Fix ONLY what is needed to make the build succeed:
+- Focus on the compile/link errors shown in buildresult.txt (file, line, and message).
+- These are almost always in the test code you just changed. Correct the syntax/type/reference errors.
+- Do NOT run the build yourself and do NOT run any tests. The automation loop rebuilds after you finish.
+- Do NOT change product/platform code to work around a test compile error.
+
+When done, write results to json at {{AIDEBUG}} in exactly this shape:
+
+This file is MANDATORY and is the only way you can talk back to the automation loop. Write it in
+BOTH outcomes - whether you fixed the build or concluded you cannot. If you cannot fix it, that is a
+legitimate result (for example the missing symbol comes from a dependency outside this repo): say so
+in "notes" and set "rebuild" to false. Writing nothing is the one unrecoverable answer, because the
+loop then cannot tell "gave up deliberately" from "crashed", and just rebuilds an unchanged tree
+until it runs out of attempts.
+
+{
+  "rerun": ["18", "20"],
+  "rebuild": true,
+  "resolved": [
+    { "test_id": "18", "classification": "build-fix", "action": "what you changed to fix the build" }
+  ],
+  "platform_issues": [],
+  "notes": "optional free text"
+}
+
+Rules for the JSON:
+- "rebuild": set true if you made changes that need compiling (you should have — you just fixed build errors), so the loop rebuilds. If you could NOT fix the build, set rebuild to false so the loop stops instead of looping. The loop reads this flag and halts immediately on false, so use it deliberately rather than guessing "true" to look productive — a false "true" just burns another build cycle on an unchanged tree.
+- "rerun": keep the same list of test IDs that still need to be re-run once the build succeeds (the tests you were originally fixing). Do not drop them just because the build failed.
+- Write this file LAST, only once you are finished. Overwrite any existing aidebugresult.json.

@@ -17,10 +17,10 @@ The following work items are listed in priority order.
 
 ---
 
-## Milestone 1 – Mid-December 2025
+## Milestone 1 - Mid-December 2025
 
 ### Test Controller Application [Complete]
-- C# WinForms application with WebSocket server on port 5000
+- C# WinForms application with WebSocket server on port 15080
 - YAML scenario loading and execution engine
 - Device connection management and assignment
 - Real-time logging and result collection
@@ -69,7 +69,7 @@ The following work items are listed in priority order.
 
 ---
 
-## Milestone 2 – End of January 2026
+## Milestone 2 - End of January 2026
 
 ### ADO Pipeline for Automated Test Execution
 - ADO pipeline running Scenarios 1-5 autonomously without manual intervention
@@ -80,7 +80,7 @@ The following work items are listed in priority order.
 
 ---
 
-## Milestone 3 – End of Feb 2026
+## Milestone 3 - End of Feb 2026
 
 ### Platform Coverage: PC GRTS and Xbox Console
 - Fix any issues running test device on PC GRTS (out-of-process service)
@@ -89,8 +89,8 @@ The following work items are listed in priority order.
 - Cross-platform sync validation: Xbox ↔ Windows PC
 
 ### Additional P1 Scenarios (6-15)
-- Scenario 6: Conflict Resolution – Local Wins
-- Scenario 7: Conflict Resolution – Cloud Wins
+- Scenario 6: Conflict Resolution - Local Wins
+- Scenario 7: Conflict Resolution - Cloud Wins
 - Scenario 8: Multi-Atomic Conflict Decision
 - Scenario 9: Rollback to Last Known Good
 - Scenario 10: Rollback to Last Conflict
@@ -115,7 +115,7 @@ The following work items are listed in priority order.
 
 ---
 
-## Milestone 4 – End of March 2026
+## Milestone 4 - End of March 2026
 
 ### P2/P3 Scenarios (16-27)
 - Scenario 16: Large Payload Incremental Sync

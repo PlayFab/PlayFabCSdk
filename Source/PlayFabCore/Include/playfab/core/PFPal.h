@@ -18,7 +18,7 @@
 
 #if HC_PLATFORM_IS_MICROSOFT || HC_PLATFORM_IS_PLAYSTATION
 #define PF_API_ATTRIBUTES __declspec(dllexport)
-#elif HC_PLATFORM == HC_PLATFORM_LINUX
+#elif HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM_IS_APPLE
 #define PF_API_ATTRIBUTES __attribute__((visibility("default")))
 #else
 #define PF_API_ATTRIBUTES

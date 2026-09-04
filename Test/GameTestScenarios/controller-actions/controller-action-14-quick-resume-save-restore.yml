@@ -1,0 +1,81 @@
+id: Controller-Action-14-Quick-Resume-Save-Restore
+name: Controller Action 14 - Quick Resume Save / Restore
+tags:
+  - xboxactions
+platforms:
+  xbox: untested
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: Verify QuickResumeSave captures QR state and QuickResumeRestore relaunches from it.
+devices:
+  DeviceA:
+    engine: xbox
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  init:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+  test:
+    # Save QR state
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QuickResumeSave
+        state: actiontest
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5000
+    # Restore from QR state (app relaunches from saved state)
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QuickResumeRestore
+        state: actiontest
+    - command: SmokeDelay
+      parameters:
+        durationMs: 10000
+  post-restore:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+  qr-cleanup:
+    # Clean up the QR state
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QuickResumeDelete
+        state: actiontest
+  cleanup:
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: init
+  - role: DeviceA
+    block: test
+  - role: DeviceA
+    block: post-restore
+  - role: DeviceA
+    block: qr-cleanup
+  - role: DeviceA
+    block: cleanup

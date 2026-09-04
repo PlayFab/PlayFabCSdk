@@ -44,7 +44,7 @@ void operator delete[](void* pointer, const std::nothrow_t&) throw()
     }
 }
 
-void operator delete[](void* pointer, unsigned __int64) throw()
+void operator delete[](void* pointer, size_t) throw()
 {
     if (pointer != nullptr)
     {
@@ -60,7 +60,7 @@ void operator delete(void* pointer, const std::nothrow_t&) throw()
     }
 }
 
-void operator delete(void* pointer, unsigned __int64) throw()
+void operator delete(void* pointer, size_t) throw()
 {
     if (pointer != nullptr)
     {

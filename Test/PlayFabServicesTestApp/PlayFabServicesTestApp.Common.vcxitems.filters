@@ -87,6 +87,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PushNotificationsTestsImpl.cpp">
       <Filter>Source\Tests\Services</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlayStreamTestsImpl.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\SegmentsTestsImpl.cpp">
       <Filter>Source\Tests\Services</Filter>
     </ClCompile>

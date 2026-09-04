@@ -109,12 +109,13 @@ AsyncOp<ServiceResponse> ServicesHttpClient::MakeEntityRequest(
     RunContext&& runContext
 )
 {
+    auto derivedContext = runContext.Derive();
     return RunOperation(MakeUnique<GetEntityTokenOperation>(entity, runContext.Derive())).Then(
         [
             cacheId,
             url = GetUrl(entity.APIEndpoint(), path),
             body = JsonUtils::WriteToString(requestBody),
-            runContextDerived{ runContext.Derive() }
+            runContextDerived{ std::move(derivedContext) }
         ]
     (Result<String> result) mutable -> AsyncOp<ServiceResponse>
     {

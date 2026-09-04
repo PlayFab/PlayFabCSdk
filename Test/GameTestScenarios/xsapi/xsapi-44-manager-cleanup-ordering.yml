@@ -1,0 +1,58 @@
+id: XSAPI-44-Manager-Cleanup-Ordering
+name: XSAPI 44 - Manager Cleanup Ordering
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Adds a local user to Achievements Manager, Social Manager, and
+  Multiplayer Manager simultaneously, then removes in reverse order
+  to verify no crashes or leaks.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    # Add to all managers
+    - command: XblMultiplayerManagerInitialize
+    - command: XblAchievementsManagerAddLocalUser
+    - command: XblSocialManagerAddLocalUser
+    - command: XblMultiplayerManagerLobbySessionAddLocalUser
+    - command: XblMultiplayerManagerDoWork
+    - command: XblAchievementsManagerDoWork
+    - command: XblSocialManagerDoWork
+    # Remove in reverse order
+    - command: XblMultiplayerManagerLobbySessionRemoveLocalUser
+    - command: XblMultiplayerManagerDoWork
+    - command: XblSocialManagerRemoveLocalUser
+    - command: XblAchievementsManagerRemoveLocalUser
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

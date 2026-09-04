@@ -1,0 +1,52 @@
+id: PFServices-18-Inventory-Transactions
+name: PFServices 18 - Get Transaction History
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Performs inventory operations then retrieves transaction history to verify recording.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFInventoryAddInventoryItemsAsync
+      expectFailure: true  # E_PF_INVALID_PARAMS (0x89235421) - empty request, items are required
+    - command: PFInventoryAddInventoryItemsGetResult
+    - command: PFInventoryGetTransactionHistoryAsync
+      expectFailure: true  # E_PF_INVALID_REQUEST (0x89235468) - empty request missing required fields
+    - command: PFInventoryGetTransactionHistoryGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

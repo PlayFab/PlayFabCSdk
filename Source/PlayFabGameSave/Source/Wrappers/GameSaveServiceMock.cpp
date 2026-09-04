@@ -503,7 +503,7 @@ String GameSaveServiceMock::GetMockGlobalPath(const Entity& entity, const String
     {
         String root = state->GetDebugRootFolderOverride();
         String pathA, pathB, pathC;
-        if (SUCCEEDED(JoinPathHelper(root, "MockPFGameSave", pathA)))
+        if (SUCCEEDED(JoinPathHelper(root, kMockSaveFolderName, pathA)))
         {
             if (SUCCEEDED(JoinPathHelper(pathA, entity.EntityKey().Model().id, pathB)))
             {
@@ -647,7 +647,11 @@ void GameSaveServiceMock::WriteManifestsFile(const String& manifestsPath, const 
     String str = JsonUtils::WriteToString(lsJson);
     Vector<char> vData;
     std::copy(str.begin(), str.end(), std::back_inserter(vData));
-    WriteEntireFile(manifestsPath, vData);
+    HRESULT writeHr = WriteEntireFile(manifestsPath, vData);
+    if (FAILED(writeHr))
+    {
+        TRACE_WARNING("[GAME SAVE] GameSaveServiceMock: WriteEntireFile failed for manifests hr=0x%08X", writeHr);
+    }
 }
 
 String GameSaveServiceMock::GetMockDataFolder()
@@ -680,7 +684,7 @@ AsyncOp<void> GameSaveServiceMock::DownloadFileFromCloud(RunContext runContext, 
     {
         Vector<char> fileData;
         RETURN_IF_FAILED(ReadEntireFile(downloadUrl, fileData));
-        WriteEntireFile(filePath, fileData);
+        RETURN_IF_FAILED(WriteEntireFile(filePath, fileData));
     }
 
     return AsyncOp<void>(S_OK);
@@ -710,7 +714,7 @@ AsyncOp<void> GameSaveServiceMock::UploadFileFromStringToCloud(RunContext runCon
         }
 
         Vector<char> fileData(fileContent.begin(), fileContent.end());
-        WriteEntireFile(fullPath, fileData);
+        RETURN_IF_FAILED(WriteEntireFile(fullPath, fileData));
     }
 
     return AsyncOp<void>(S_OK);
@@ -768,7 +772,7 @@ AsyncOp<void> GameSaveServiceMock::UploadFileToCloud(RunContext runContext, cons
             }
         }
 
-        WriteEntireFile(fullPath, fileData);
+        RETURN_IF_FAILED(WriteEntireFile(fullPath, fileData));
     }
 
     return AsyncOp<void>(S_OK);

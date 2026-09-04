@@ -1,0 +1,53 @@
+id: PFServices-36-PlayerData-Client-RoundTrip
+name: PFServices 36 - Client User Data Round-Trip
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Sets key/value user data from client, reads it back, and verifies values match.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFPlayerDataManagementClientUpdateUserDataAsync
+      parameters:
+        key: "pfservices_test_key"
+        value: "pfservices_test_value"
+    - command: PFPlayerDataManagementClientUpdateUserDataGetResult
+    - command: PFPlayerDataManagementClientGetUserDataAsync
+    - command: PFPlayerDataManagementClientGetUserDataGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

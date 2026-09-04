@@ -1,0 +1,158 @@
+id: Scenario-Xbox-53-Suspend-Resume-Init
+name: GameSave Xbox 53 - Suspend/Resume During Init
+tags:
+  - xboxgamesaves
+  - failing
+platforms:
+  xbox: passing  # Restructured: init online first, then PLM suspend/resume, full reinit, verify data recovery
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Restructured for Xbox CS: Initializes and syncs normally, writes save data, uploads,
+  then undergoes a PLM suspend/resume cycle. Verifies game save state survives the
+  suspend (GetFolder still works, data still readable, upload still succeeds).
+  Original test tested suspend during contention dialog which is N/A on Xbox CS
+  (atomic sync, no interruptible contention phase).
+brief: Suspend and resume with active game save session
+group: I. Suspend / Resume
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  session-a-init-and-upload:
+    # Initialize, sync, and establish save data
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+  session-a-suspend-resume:
+    # PLM suspend/resume cycle
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 30000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+  session-a-verify-after-resume:
+    # After PLM resume, CS context is invalidated — full reinit required
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: XUserCloseHandle
+    # Re-initialize everything
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Re-add user — syncs with cloud, should recover data from pre-suspend upload
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    # Verify data matches pre-suspend state
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+    # Verify upload still works after reinit
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    # Clean teardown
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-a-init-and-upload
+  - role: DeviceA
+    block: session-a-suspend-resume
+  - role: DeviceA
+    block: session-a-verify-after-resume
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

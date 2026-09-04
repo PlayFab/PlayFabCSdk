@@ -879,6 +879,10 @@ HRESULT UserPsnInfo::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PsnOnlineId", psnOnlineId));
     this->SetPsnOnlineId(std::move(psnOnlineId));
 
+    String psnSandboxId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PsnSandboxId", psnSandboxId));
+    this->SetPsnSandboxId(std::move(psnSandboxId));
+
     return S_OK;
 }
 
@@ -903,6 +907,10 @@ size_t UserPsnInfo::RequiredBufferSize(const PFUserPsnInfo& model)
     {
         requiredSize += (std::strlen(model.psnOnlineId) + 1);
     }
+    if (model.psnSandboxId)
+    {
+        requiredSize += (std::strlen(model.psnSandboxId) + 1);
+    }
     return requiredSize;
 }
 
@@ -918,6 +926,11 @@ HRESULT UserPsnInfo::Copy(const PFUserPsnInfo& input, PFUserPsnInfo& output, Mod
         auto propCopyResult = buffer.CopyTo(input.psnOnlineId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.psnOnlineId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.psnSandboxId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.psnSandboxId = propCopyResult.ExtractPayload();
     }
     return S_OK;
 }

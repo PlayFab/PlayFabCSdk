@@ -1,0 +1,58 @@
+id: LHC-18-Empty-Response-204
+name: LHC 18 - Empty Response (204 No Content)
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Mock a 204 No Content response with no body.  Verify that
+  GetResponseBodyBytesSize returns 0, GetResponseString returns empty,
+  and GetNumHeaders succeeds without crashing.  Catches nullptr/zero-size
+  regressions in response body getters.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  empty-response:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Mock returning 204 with no body
+    - command: HCMockCallCreate
+    - command: HCMockResponseSetStatusCode
+      parameters:
+        statusCode: 204
+    - command: HCMockAddMock
+      parameters:
+        method: "DELETE"
+        url: "https://mock.playfab.com/api/empty-response"
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "DELETE"
+        url: "https://mock.playfab.com/api/empty-response"
+
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallResponseGetResponseBodyBytesSize
+    - command: HCHttpCallResponseGetNumHeaders
+
+    - command: HCHttpCallCloseHandle
+    - command: HCMockClearMocks
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: empty-response
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,288 @@
+id: Scenario-PC-02-Two-Device-Golden-Path
+name: GameSave PC 02 - Two-Device Golden Path Sync
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Device A uploads, Device B downloads and publishes an update, then Device A confirms the propagated payload. Uses Xbox Live authentication with linked CustomID for shared cloud data.
+brief: Two-device upload then download propagation verification
+group: A. Golden Path / Smoke
+devices:
+  DeviceA:
+    engine: pc-grts
+  DeviceB:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  session-a-initial-upload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    # Get Xbox user (required for game saves on Xbox)
+    - command: XUserAddAsync
+    # Login with shared CustomID to establish shared PlayFab entity
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    # Link Xbox account to the shared CustomID entity (unlinkIfNeeded handles account already linked)
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    # Create local user from Xbox (required for game saves)
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    # Set save description before upload
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Device A - Initial Upload"
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    # Verify description was set
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Device A - Initial Upload"
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  wait-for-sync:
+    # Poll GRTS until the upload is fully synced before the next device reads
+    - command: WaitForGameSaveSync
+      parameters:
+        scid: "E18D7"
+        timeoutSeconds: 600
+  session-a-final-download:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    # Get Xbox user (required for game saves on Xbox)
+    - command: XUserAddAsync
+    # Login with shared CustomID to establish shared PlayFab entity
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    # Link Xbox account to the shared CustomID entity (unlinkIfNeeded handles account already linked)
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    # Create local user from Xbox (required for game saves)
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Verify DeviceB's description was propagated
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Device B - Updated Save"
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+        ignoreEmptyDirectories: true
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+  session-b-download-upload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    # Get Xbox user (required for game saves on Xbox)
+    - command: XUserAddAsync
+    # Login with shared CustomID to establish shared PlayFab entity
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    # Link Xbox account to the shared CustomID entity (unlinkIfNeeded handles account already linked)
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    # Create local user from Xbox (required for game saves)
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Verify DeviceA's description was propagated
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Device A - Initial Upload"
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateRandomBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 12288
+    # Set new description before upload
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Device B - Updated Save"
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    # Verify description was set
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Device B - Updated Save"
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-a-initial-upload
+  - role: DeviceA
+    block: wait-for-sync
+  - role: DeviceB
+    block: session-b-download-upload
+  - role: DeviceB
+    block: wait-for-sync
+  - role: DeviceA
+    block: session-a-final-download
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  DeviceB:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

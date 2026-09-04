@@ -83,7 +83,7 @@ AsyncOp<CombinedLoginResult> LoginWithXUserHandler::Login(
         RETURN_IF_FAILED(result.hr);
 
         auto serviceResponse = result.ExtractPayload();
-        if (serviceResponse.HttpCode == 200)
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
         {
             return Authentication::CombinedLoginResult::FromJson(serviceResponse.Data, state, serviceConfig, loginHandler);
         }
@@ -124,7 +124,7 @@ AsyncOp<void> LoginWithXUserHandler::ReLogin(
         RETURN_IF_FAILED(result.hr);
 
         auto serviceResponse = result.ExtractPayload();
-        if (serviceResponse.HttpCode == 200)
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
         {
             Authentication::EntityTokenResponse entityToken;
             RETURN_IF_FAILED(JsonUtils::ObjectGetMember(serviceResponse.Data, "EntityToken", entityToken));
@@ -192,6 +192,7 @@ extern "C" PF_API PFAuthenticationLoginWithXUserGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
+    *entityHandle = nullptr;
 
     Vector<char> tempBuffer;
     if (!bufferSize || !buffer)

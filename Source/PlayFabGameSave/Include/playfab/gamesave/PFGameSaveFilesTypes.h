@@ -89,14 +89,37 @@ extern "C"
 /// There is not enough space on the disk.
 /// 
 /// This is returned when the game is trying to download a file and there is not enough space on the disk.
-/// The game can call PFGameSaveFilesUploadWithUiAsync() again as desired without issue.
+/// The game should prompt the user to free up disk space, then retry the operation.
 /// </summary>
 #define E_PF_GAMESAVE_DISK_FULL                MAKE_E_HC(0x7008L)   // 0x89237008
 
 /// <summary>
+/// A conflicting operation is already in progress for this user.
+///
+/// Covers any operation rejected because another mutually exclusive one holds the user's sync
+/// state. It is returned by:
+/// - PFGameSaveFilesUploadWithUiAsync() when an upload for the same user has not completed yet, or
+///   when a cloud reset is in progress.
+/// - PFGameSaveFilesAddUserWithUiAsync() when a cloud reset is in progress.
+/// - PFGameSaveFilesResetCloudAsync() when another cloud reset is already in progress.
+///
+/// In every case the operation was not started and nothing was modified. Wait for the in-flight
+/// operation to complete, then retry.
+/// </summary>
+#define E_PF_GAMESAVE_OPERATION_IN_PROGRESS    MAKE_E_HC(0x7009L)   // 0x89237009
+
+/// <summary>
+/// The maximum length, in characters, of the short save description passed to
+/// PFGameSaveFilesSetSaveDescriptionAsync(). The description is Base64 encoded before it is sent to
+/// the service, which caps the encoded value at 1024 characters, so the raw value is limited to the
+/// largest length that still encodes within that cap.
+/// </summary>
+#define PF_GAMESAVE_MAX_SHORT_SAVE_DESCRIPTION_LENGTH 768
+
+/// <summary>
 /// Options to use when initializing the game save system.
 /// </summary>
-enum class PFGameSaveInitOptions : uint32_t
+enum class PFGameSaveInitOptions : uint64_t
 {
     /// <summary>
     /// Other options might be added in future release
@@ -182,12 +205,15 @@ enum class PFGameSaveFilesSyncState : uint32_t
     Downloading,
 
     /// <summary>
-    /// Preparing for upload
+    /// The system is reading and compressing local save files in preparation
+    /// for upload. Do not modify files in the save folder during this state.
     /// </summary>
     PreparingForUpload,
 
     /// <summary>
-    /// Uploading
+    /// Local save files have been captured and the upload to the cloud is in
+    /// progress. It is safe to write to the save folder again during this
+    /// state; the system no longer reads from the original files.
     /// </summary>
     Uploading,
 

@@ -1,0 +1,52 @@
+id: PFServices-71-Data-File-Upload
+name: PFServices 71 - File Upload Lifecycle
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # FinalizeFileUploads fails - no actual file data uploaded to the URL
+  psx: ignore
+description: >
+  Initiates a file upload, finalizes it, then retrieves the file to verify.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFDataInitiateFileUploadsAsync
+    - command: PFDataInitiateFileUploadsGetResult
+    - command: PFDataFinalizeFileUploadsAsync
+    - command: PFDataFinalizeFileUploadsGetResult
+    - command: PFDataGetFilesAsync
+    - command: PFDataGetFilesGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

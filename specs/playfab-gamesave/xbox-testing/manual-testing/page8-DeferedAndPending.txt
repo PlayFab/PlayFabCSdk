@@ -1,0 +1,9 @@
+#	Item	Status	Details
+
+9	Multiple in-game uploads in one session	Deferred	Valid gap but non-prioritized — Forte does not rely on in-game uploads in XP. Pattern: [LAUNCH] → [CREATE-SAVE] → [UPLOAD] → [MODIFY-SAVE] → [UPLOAD] → [CLOSE-APP] → verify on Device 2.
+
+10	Upload with ReleaseDeviceAsActive	Recommend Automation	Not feasible for manual testers to hit reliably. Should be automated test: Device A uploads with ReleaseDeviceAsActive → Device B launches → verify no contention dialog.
+
+20	Forte-specific considerations	Pending Forte Team	Need confirmation: (1) Forte save structure — root-level subfolders or single blob? (2) Approximate save size. (3) Save trigger mechanism — does pause trigger save? (4) Does Forte expose explicit in-game upload? (5) How do deletions propagate in Forte?
+
+21	Negative / guard-rail SDK tests	Automated Only	Better suited for automation: UploadWithUiAsync before AddUserWithUiAsync, AddUserWithUiAsync twice, GetFolder before AddUserWithUiAsync.

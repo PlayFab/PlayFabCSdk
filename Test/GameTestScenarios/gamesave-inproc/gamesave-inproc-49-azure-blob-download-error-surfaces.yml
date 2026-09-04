@@ -1,0 +1,248 @@
+# Scenario 49: Azure Blob download failure during extended-manifest fetch must fail the sync
+#
+# REGRESSION TEST for Bug 63475452 (fix: Source/PlayFabSharedInternal/Source/HttpRequest.cpp).
+#
+# The defect:
+#   HCHttpCall::GetResult never turned an HTTP status code into a failing HRESULT when
+#   m_isPlayfabCall == false. The status was read only for telemetry and never consulted; the
+#   only failure path in that branch was ServiceResponse::FromVector, which always returns S_OK.
+#
+#   Extended-manifest blob transfers take exactly that branch:
+#     GameSaveServiceSelector::DownloadFileFromCloudToBytes -> SetIsPlayfabCall(false)  (:174)
+#     GameSaveServiceSelector::UploadFileFromStringToCloud  -> SetIsPlayfabCall(false)  (:327)
+#
+#   So an Azure Blob 404/403/409/503 on the extended-manifest GET was handed to the sync state
+#   machine as SUCCESS, with Azure's XML <Error> document as the payload.
+#
+# What this test pins, end to end:
+#   CompareStep (CompareStep.cpp:150) fetches the extended manifest via
+#   DownloadFileFromCloudToBytes and branches on result.hr:
+#     FAILED  -> WaitForFailedUI_GetExtendedManifest -> ShowSyncFailedUI  (the correct path)
+#     SUCCESS -> InitWithExtendedManifest(bytes)                          (the defect path)
+#
+#   With the fix   : the mocked 404 surfaces as a failing HRESULT, the SyncFailed UI callback
+#                    fires, the auto-responder answers Cancel, and AddUser returns
+#                    E_PF_GAMESAVE_USER_CANCELLED (0x800704C7).
+#   Without the fix: result.hr is S_OK, no SyncFailed callback ever fires, and Azure's XML error
+#                    document is fed to InitWithExtendedManifest as if it were the manifest.
+#                    AddUser then fails deep in manifest parsing with an unrelated HRESULT (or
+#                    proceeds on bogus state) -- never 0x800704C7 -- so this test fails.
+#
+# Why a mock and not a real outage: Azure blob errors cannot be provoked against live storage,
+# and this is precisely the layer the bug lived in. The LHC mock intercepts by URL prefix
+# (DoesMockCallMatch in lhc_mock.cpp compares url.substr(0, mock.url.size())), so mocking
+# "https://pfgsprod" captures the PlayFab GameSave blob account without touching any
+# *.playfabapi.com service call.
+
+id: Scenario-Inproc-49-Azure-Blob-Download-Error-Surfaces
+name: GameSave Inproc 49 - Azure Blob Download Error Must Fail Sync (bug 63475452)
+tags:
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: ignore
+description: >
+  Mocks an Azure Blob 404 on the extended-manifest download and verifies the GameSave sync
+  surfaces it as a failure (SyncFailed UI -> Cancel -> E_PF_GAMESAVE_USER_CANCELLED) instead of
+  treating the Azure XML error document as a valid manifest.
+brief: Azure blob download error must fail the sync, not be swallowed
+group: J. Service error handling
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  # Seed the cloud so that a finalized manifest exists with an extended-manifest blob for the
+  # next session to fetch. Without this there is no extended-manifest GET to intercept.
+  # ResetCloudAsync first, so the baseline is known-good regardless of what earlier runs left
+  # behind -- notably, running this suite against the UNFIXED SDK finalizes manifests whose
+  # extended-manifest blob was never stored, which would otherwise 404 here for real.
+  seed-cloud-save:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario49"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseLocal
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    # A poisoned baseline makes the pre-mock AddUser fail on a real 404, so tolerate that here
+    # and wipe the cloud immediately afterwards.
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectedHr: "0x00000000,0x800704C7"
+    - command: PFGameSaveFilesResetCloudAsync
+    # ResetCloud requires a full re-init to pick up the fresh (empty) manifest set.
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario49"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.bin
+            bytes: 8192
+            pattern: [0x49, 0x4E, 0x50, 0x52]
+    # Finalizes a manifest and writes its extended-manifest blob to Azure.
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  azure-download-fails:
+    # Fresh local state, so this session must pull the extended manifest from the cloud.
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario49"
+    - command: XGameRuntimeInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario49"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+
+    # Fail every request to the GameSave blob account. 404 (not 503) is deliberate: 4xx other
+    # than 408/429 is not retried by libHttpClient, so the failure is immediate and
+    # deterministic. The body is the verbatim shape Azure returns for a missing blob -- with the
+    # defect this is what got parsed as the extended manifest.
+    - command: ConfigureHttpMock
+      parameters:
+        method: GET
+        url: "https://pfgsprod"
+        statusCode: 404
+        responseBody: "<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobNotFound</Code><Message>The specified blob does not exist.</Message></Error>"
+
+    # A real title shows the sync-failed dialog here; the harness answers Cancel. Reaching this
+    # responder at all is the thing under test -- with the defect the callback never fires.
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+
+    # THE ASSERTION.
+    # 0x800704C7 (E_PF_GAMESAVE_USER_CANCELLED) is only reachable by way of the SyncFailed UI,
+    # which is only reached when the blob download reports failure. With the defect the download
+    # reports S_OK, the SyncFailed path is skipped entirely, and AddUser cannot return this code.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectedHr: "0x800704C7"
+
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+
+    # With the mock gone the same session must sync cleanly, proving the failure was surfaced
+    # and recovered from rather than leaving the sync state machine wedged.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: seed-cloud-save
+  - role: DeviceA
+    block: azure-download-fails
+cleanup:
+  DeviceA:
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario49"

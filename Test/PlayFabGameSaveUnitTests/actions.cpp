@@ -307,6 +307,71 @@ HRESULT debug_reset_cloud(std::string deviceName)
     return S_OK;
 }
 
+// Simulates an administrative cloud wipe: GameSave's DeleteAllManifests / the Game Manager
+// "Delete all" button, which runs CleanupPlayerExecutor server-side and removes every blob,
+// every manifest (including Quarantined and PendingDeletion), and the file map.
+//
+// Deliberately leaves every device folder untouched, so the player's save files AND their
+// cloudsync\localstate.json survive exactly as they would on a real console after a
+// support-initiated wipe. This is what makes it different from debug_reset_cloud(), which
+// clears the device folder instead.
+HRESULT debug_wipe_cloud_only()
+{
+    RIF(clear_folder(FilePALTestApp::AppendPath(g_gameState.localRoot, "MockPFEntityFiles")));
+    RIF(clear_folder(FilePALTestApp::AppendPath(g_gameState.localRoot, "MockPFGameSave")));
+    return S_OK;
+}
+
+// Removes cloudsync\localstate.json for a device while leaving the save files in place.
+// This is the "safe sequencing" step: without a lastSync baseline the client cannot mistake a
+// wiped cloud for a set of remote deletions.
+HRESULT delete_localstate(std::string deviceFolderName)
+{
+    std::string folderPath = FilePALTestApp::AppendPath(g_gameState.localRoot, deviceFolderName);
+    std::string filePath = FilePALTestApp::AppendPath(folderPath, "cloudsync\\localstate.json");
+    return FilePALTestApp::DeleteLocalFile(filePath);
+}
+
+// True when cloudsync\localstate.json exists and parses to at least one non-zero
+// lastSyncFileSize. That single condition is what CompareStep uses to decide whether the
+// metadata-loss recovery path applies, and what MarkFilesToDeleteUponDownload keys off of.
+HRESULT verify_localstate_has_sync_baseline(std::string deviceFolderName, bool expected)
+{
+    std::string folderPath = FilePALTestApp::AppendPath(g_gameState.localRoot, deviceFolderName);
+    std::string filePath = FilePALTestApp::AppendPath(folderPath, "cloudsync\\localstate.json");
+    std::vector<char> vData = FilePALTestApp::ReadBinaryFile(filePath);
+
+    bool hasBaseline = false;
+    if (vData.size() > 0)
+    {
+        std::string str(vData.begin(), vData.end());
+        // Any lastSyncFileSize that is not literally zero counts as a usable baseline.
+        size_t pos = str.find("\"lastSyncFileSize\"");
+        while (pos != std::string::npos)
+        {
+            size_t colon = str.find(':', pos);
+            if (colon != std::string::npos)
+            {
+                size_t i = colon + 1;
+                while (i < str.size() && (str[i] == ' ' || str[i] == '\t' || str[i] == '\r' ||
+                                          str[i] == '\n' || str[i] == '"')) { i++; }
+                // Parse the whole value rather than testing the first character, so a size
+                // written as "0" is distinguished from one that merely starts with a zero.
+                size_t end = i;
+                while (end < str.size() && str[end] >= '0' && str[end] <= '9') { end++; }
+                if (end > i && str.substr(i, end - i).find_first_not_of('0') != std::string::npos)
+                {
+                    hasBaseline = true;
+                    break;
+                }
+            }
+            pos = str.find("\"lastSyncFileSize\"", pos + 1);
+        }
+    }
+
+    return (hasBaseline == expected) ? S_OK : E_FAIL;
+}
+
 HRESULT reset_all()
 {
     g_gameState.uiProgressCallbackTriggered = false;
@@ -521,6 +586,32 @@ HRESULT delete_folder(std::string folderName)
     std::string folderPath = FilePALTestApp::AppendPath(g_gameState.saveFolder, folderName);
     FilePALTestApp::DeletePath(folderPath);
     return S_OK;
+}
+
+HRESULT delete_mock_extended_manifests()
+{
+    std::string folderPath = FilePALTestApp::AppendPath(g_gameState.localRoot, "MockPFEntityFiles");
+    std::error_code ec;
+    int deleted = 0;
+    for (const auto& entry : std::filesystem::directory_iterator(folderPath, ec))
+    {
+        if (ec)
+        {
+            break;
+        }
+        const std::string name = entry.path().filename().string();
+        if (name.rfind("extended-", 0) == 0 && name.find("-manifest.json") != std::string::npos)
+        {
+            std::error_code removeEc;
+            std::filesystem::remove(entry.path(), removeEc);
+            if (!removeEc)
+            {
+                ++deleted;
+            }
+        }
+    }
+    TEST_COUT << "delete_mock_extended_manifests removed " << deleted << " file(s)";
+    return (deleted > 0) ? S_OK : E_FAIL;
 }
 
 HRESULT debug_get_last_write_time(_Out_ std::filesystem::file_time_type& lastWriteTime, std::string folderName, std::string fileName)

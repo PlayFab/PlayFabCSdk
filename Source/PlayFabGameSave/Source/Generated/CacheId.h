@@ -477,7 +477,6 @@ enum class ServicesCacheId : uint32_t
     InventoryGetInventoryCollectionIds = 2460,
     InventoryGetInventoryItems = 2461,
     InventoryGetInventoryOperationStatus = 2462,
-    InventoryGetMicrosoftStoreAccessTokens = 2463,
     InventoryGetReceiptIssuerCertificateAsJwk = 2464,
     InventoryGetReceiptIssuerCertificateAsPem = 2465,
     InventoryGetTransactionHistory = 2466,

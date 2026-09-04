@@ -4,8 +4,11 @@
     <ProjectGuid>{d5c6a9a7-da63-4032-8ab2-3350f89162fc}</ProjectGuid>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
-    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <GDKExtLibNames>;</GDKExtLibNames>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetName>PlayFabCore</TargetName>
   </PropertyGroup>
   <Import Project="..\Shared\PlayFabCore.SharedFiles.props" Condition="Exists('..\Shared\PlayFabCore.SharedFiles.props')" />
   <Import Project="$([MSBuild]::GetPathOfFileAbove(PlayFab.C.GDK.props))" />
@@ -15,27 +18,25 @@
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.Common\PlayFabCore.Common.vcxitems" Label="Shared" />
   <Import Project="$(PlayFabBuildRoot)\PlayFabCore.ServiceWrappers\PlayFabCore.ServiceWrappers.vcxitems" Label="Shared" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  
   <!-- Disable incremental linking when /PROFILE is enabled to avoid LNK4075 warnings -->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-
   <ItemDefinitionGroup>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(Console_SdkLibPath)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies);Appnotify.lib</AdditionalDependencies>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">/profile /opt:ref /opt:icf /guard:cf /DYNAMICBASE /CETCOMPAT %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">/profile /opt:ref /opt:icf /guard:cf /DYNAMICBASE /CETCOMPAT %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/profile /opt:ref /opt:icf /guard:cf /DYNAMICBASE /CETCOMPAT %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/profile /opt:ref /opt:icf /guard:cf /DYNAMICBASE /CETCOMPAT %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Desktop.x64'">/Zi /guard:cf /Qspectre %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/Zi /guard:cf /Qspectre %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Desktop.x64'">/Zi /guard:cf /Qspectre %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/Zi /guard:cf /Qspectre %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

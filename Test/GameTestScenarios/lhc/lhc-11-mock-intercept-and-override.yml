@@ -1,0 +1,83 @@
+id: LHC-11-Mock-Intercept-And-Override
+name: LHC 11 - Mock Intercept and Response Override
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Install a URL-specific mock with custom status, body, and headers;
+  perform a request and verify the mock response is returned; remove
+  the mock and verify a subsequent request goes to the real network.
+  This is the primary pattern for offline SDK testing.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  mock-intercept:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Install a mock for a specific URL
+    - command: HCMockCallCreate
+    - command: HCMockResponseSetStatusCode
+      parameters:
+        statusCode: 200
+    - command: HCMockResponseSetResponseBodyBytes
+      parameters:
+        body: "{\"mocked\":true,\"playFabId\":\"MOCK123\"}"
+    - command: HCMockResponseSetHeader
+      parameters:
+        headerName: "X-Mock"
+        headerValue: "true"
+    - command: HCMockAddMock
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/entity"
+
+    # Perform against mocked URL — should get mock response
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/entity"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallResponseGetHeader
+      parameters:
+        headerName: "X-Mock"
+    - command: HCHttpCallCloseHandle
+
+    # Remove mock
+    - command: HCMockClearMocks
+
+    # Perform against a real URL to verify network path still works
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://raw.githubusercontent.com/microsoft/libHttpClient/refs/heads/main/README.md"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "User-Agent"
+        headerValue: "libHttpClient-test"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: mock-intercept
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

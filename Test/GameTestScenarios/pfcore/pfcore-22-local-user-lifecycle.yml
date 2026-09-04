@@ -1,0 +1,53 @@
+id: PFCore-22-Local-User-Lifecycle
+name: PFCore 22 - Local User Handle Lifecycle
+tags:
+  - pfcore
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Creates a local user, duplicates the handle, compares handles,
+  gets local ID, gets service config, closes both handles.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserLoginAsync
+
+  test:
+    - command: PFLocalUserDuplicateHandle
+    - command: PFLocalUserHandleCompare
+    - command: PFLocalUserGetLocalId
+    - command: PFLocalUserGetServiceConfigHandle
+    - command: PFServiceConfigCloseHandle
+    - command: PFLocalUserCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,87 @@
+id: Interactive-05-Inproc-Upload-Util-Download
+name: 5. Inproc Upload -> pfgamesaveutil Download & Verify
+tags:
+  - interactive
+  - gamesaves
+  - transfer
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: ignore
+description: >
+  An inproc SDK device uploads a dataset (with files and subfolders) loaded from a
+  known source folder. After this scenario completes, pfgamesaveutil downloads the
+  cloud save for the harness player and verifies (out-of-band, in the Python runner)
+  that the same files and subfolders transferred intact.
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  load-and-upload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\xfer2"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\xfer2"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Replace the local save with the known source folder (files + subfolders) and upload.
+    - command: DeleteSaveRoot
+    - command: CopyTargetFolderToSaveFolder
+      parameters:
+        sourceFolder: "C:\\temp\\pfgs-xfer\\inproc-to-util"
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: load-and-upload
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

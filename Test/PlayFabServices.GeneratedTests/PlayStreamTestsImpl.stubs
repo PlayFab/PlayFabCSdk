@@ -1,0 +1,43 @@
+#include "TestAppPch.h"
+#include "PlayStreamTests.h"
+#include "PlayStreamOperations.h"
+
+namespace PlayFab
+{
+namespace Test
+{
+
+AsyncOp<void> PlayStreamTests::Initialize()
+{
+    return ServicesTestClass::Initialize();
+}
+
+AsyncOp<void> PlayStreamTests::Uninitialize()
+{
+    return ServicesTestClass::Uninitialize();
+}
+
+#if 0
+void PlayStreamTests::TestServerExportPlayersInSegment(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayStreamTests::TestServerGetSegmentExport(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void PlayStreamTests::TestServerGetSegmentPlayerCount(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+
+}
+}

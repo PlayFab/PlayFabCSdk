@@ -1,0 +1,45 @@
+id: XSAPI-09-Profile-Multiple
+name: XSAPI 09 - Get Multiple User Profiles
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer profile/GetUserProfiles.lua.
+  Signs in, creates XBL context, and retrieves multiple user profiles.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblProfileGetUserProfilesAsync
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

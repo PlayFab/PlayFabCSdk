@@ -27,6 +27,10 @@ public:
     void SetEntity(_In_ const Entity& entity);
 
     bool IsResetDone() const;
+    // True once ResetCloud has started and has not finished. Callers use this to reject a second,
+    // overlapping ResetCloud rather than resetting the state machine underneath the running one.
+    bool IsResetInProgress() const;
+    void Reset();
     HRESULT ResetCloud(
         _In_ const RunContext& runContext,
         _In_ ISchedulableTask& task,
@@ -38,7 +42,9 @@ private:
     LocalUser m_localUser;
     std::optional<Entity> m_entity;
     ResetCloudStage m_stage{ ResetCloudStage::Login };
+    bool m_started{ false }; // set once ResetCloud() has been entered; cleared by Reset()
     HRESULT m_resetHR{ S_OK };
+    HRESULT m_deleteFailureHR{ S_OK }; // first DeleteManifest failure seen during this reset
     ManifestWrapVector m_manifests;
     String m_nextAvailableVersion;
     uint64_t m_manifestDeleteIndex{ 0 };

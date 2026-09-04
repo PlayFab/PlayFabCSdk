@@ -2929,6 +2929,7 @@ public:
         ModelWrapper<PFMultiplayerServerRequestPartyServiceResponse, Alloc>{ model },
         m_invitationId{ SafeString(model.invitationId) },
         m_partyId{ SafeString(model.partyId) },
+        m_region{ SafeString(model.region) },
         m_serializedNetworkDescriptor{ SafeString(model.serializedNetworkDescriptor) }
     {
         SetModelPointers();
@@ -2959,6 +2960,7 @@ public:
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_invitationId, rhs.m_invitationId);
         swap(lhs.m_partyId, rhs.m_partyId);
+        swap(lhs.m_region, rhs.m_region);
         swap(lhs.m_serializedNetworkDescriptor, rhs.m_serializedNetworkDescriptor);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
@@ -2986,6 +2988,17 @@ public:
         this->m_model.partyId =  m_partyId.empty() ? nullptr : m_partyId.data();
     }
 
+    String const& GetRegion() const
+    {
+        return m_region;
+    }
+
+    void SetRegion(String value)
+    {
+        m_region = std::move(value);
+        this->m_model.region =  m_region.empty() ? nullptr : m_region.data();
+    }
+
     String const& GetSerializedNetworkDescriptor() const
     {
         return m_serializedNetworkDescriptor;
@@ -3002,11 +3015,13 @@ private:
     {
         this->m_model.invitationId = m_invitationId.empty() ? nullptr : m_invitationId.data();
         this->m_model.partyId = m_partyId.empty() ? nullptr : m_partyId.data();
+        this->m_model.region = m_region.empty() ? nullptr : m_region.data();
         this->m_model.serializedNetworkDescriptor = m_serializedNetworkDescriptor.empty() ? nullptr : m_serializedNetworkDescriptor.data();
     }
 
     String m_invitationId;
     String m_partyId;
+    String m_region;
     String m_serializedNetworkDescriptor;
 };
 

@@ -1,0 +1,52 @@
+id: PFServices-94-Edge-Concurrent-Search
+name: PFServices 94 - Concurrent Catalog Operations
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Runs multiple catalog search calls sequentially to verify no errors or data corruption.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFCatalogSearchItemsAsync
+    - command: PFCatalogSearchItemsGetResult
+    - command: PFCatalogSearchItemsAsync
+    - command: PFCatalogSearchItemsGetResult
+    - command: PFCatalogSearchItemsAsync
+    - command: PFCatalogSearchItemsGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

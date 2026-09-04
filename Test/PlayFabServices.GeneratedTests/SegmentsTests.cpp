@@ -20,9 +20,6 @@ void SegmentsTests::AddTests()
     AddTest("TestServerGetPlayerSegments", &SegmentsTests::TestServerGetPlayerSegments, true);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    AddTest("TestServerGetPlayersInSegment", &SegmentsTests::TestServerGetPlayersInSegment, true);
-#endif
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerGetPlayerTags", &SegmentsTests::TestServerGetPlayerTags);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC

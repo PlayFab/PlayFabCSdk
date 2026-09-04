@@ -20,6 +20,15 @@ public:
 
     void SetRemoteFileDetails(DownloadDetailsWrapVector&& remoteFileDetails) { m_remoteFileDetails = std::move(remoteFileDetails); m_gotRemoteFileDetails = true; }
     bool GotRemoteFileDetails() const { return m_gotRemoteFileDetails; }
+    // Drops the cached download details so the next pass re-issues GetManifestDownloadDetails and
+    // obtains fresh download URLs. Needed when a URL from a previous fetch is no longer usable -
+    // for example an expired SAS token - because retrying the identical URL fails identically
+    // every time (Bug 63588284).
+    //
+    // Clearing m_gotRemoteFileDetails is the point of this call, not just freeing the vector:
+    // CompareStage::GetManifestDownloadDetails skips straight to ReadLocalManifest while the flag
+    // is set, so without resetting it a retry would silently bypass the extended manifest entirely.
+    void ClearRemoteFileDetails() { m_remoteFileDetails.clear(); m_gotRemoteFileDetails = false; }
     const DownloadDetailsWrapVector& GetRemoteFileDetails() { return m_remoteFileDetails; }
     static String GetDownloadUrlForFile(const String& fileName, const DownloadDetailsWrapVector& remoteFileDetails);
 

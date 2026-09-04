@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{ca9b7e43-d3bd-4482-9718-4c31d045958f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{a94fddf3-8568-4f3c-8050-67921394d9ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{d4e8f1a2-5b3c-4d9e-8f7a-1c2b3d4e5f6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{e5f9a2b3-6c4d-5e0f-9a8b-2d3c4e5f6a7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\GameChat2">
+      <UniqueIdentifier>{ad341761-014b-4876-bb67-f6772e740a5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PFGameSaveFiles">
+      <UniqueIdentifier>{e04cd3ab-2284-4d19-98d4-4df80014e6f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\libHttpClient">
+      <UniqueIdentifier>{8b5e6924-4f3d-4b99-af3d-b6041aebe746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\TestHarness">
+      <UniqueIdentifier>{ccd84b10-9449-4fc3-9917-895582ae2b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PFCore">
+      <UniqueIdentifier>{e36649d8-28da-44fc-904d-e7944de7c20c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PFMultiplayer">
+      <UniqueIdentifier>{a0b452c1-5142-49f4-a263-5ceab8f1b117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PFParty">
+      <UniqueIdentifier>{47879481-e91c-4243-8efd-49ad20f128fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PFServices">
+      <UniqueIdentifier>{0263af82-4f47-4cb7-a521-ab40ad1a14cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\XGameRuntime">
+      <UniqueIdentifier>{f610ce83-93d6-4131-9d1e-f70fdd26259a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\XSAPI">
+      <UniqueIdentifier>{e05be223-b355-4162-8186-a420bb4b9b08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Misc">
+      <UniqueIdentifier>{6456d2df-6120-4fdb-b011-4b0f4ad76fe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Misc">
+      <UniqueIdentifier>{422e3a29-b3f4-44ed-abcf-8d04e0b42e2a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Platform\Windows\pch.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Windows\DeviceWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\CaptureSaveContainerSnapshot.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\ChaosModeHandler.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\ConsumeDiskSpace.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\CopyTargetFolderToSaveFolder.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\DeleteLocalFolder.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\DeleteSaveRoot.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\GatherLogs.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\GatherSnapshot.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\GetDebugStats.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\HttpMockHandlers.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFCore\PFCommandHandlers.h">
+      <Filter>Common\PFCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\SmokeCommandHandlers.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\WriteGameSaveData.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameRuntimeHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XTaskQueueHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XUserHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\GameChat2\GameChat2Handlers.h">
+      <Filter>Common\GameChat2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\GameInputHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCAsyncHandlers.h">
+      <Filter>Common\libHttpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCGlobalHandlers.h">
+      <Filter>Common\libHttpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCHttpCallHandlers.h">
+      <Filter>Common\libHttpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCMockHandlers.h">
+      <Filter>Common\libHttpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCTraceHandlers.h">
+      <Filter>Common\libHttpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCWebSocketHandlers.h">
+      <Filter>Common\libHttpClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFParty\PartyHandlers.h">
+      <Filter>Common\PFParty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFAccountManagementHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFCore\PFAuthenticationHandlers.h">
+      <Filter>Common\PFCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFCatalogHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFCloudScriptHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFDataHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFCore\PFEntityHandlers.h">
+      <Filter>Common\PFCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFExperimentationHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFFriendsHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFGroupsHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFInventoryHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFLeaderboardsHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFLocalizationHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFMultiplayer\PFMultiplayerHandlers.h">
+      <Filter>Common\PFMultiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFMultiplayerServerHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFCore\PFPlatformSpecificHandlers.h">
+      <Filter>Common\PFCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFPlayerDataManagementHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFProfilesHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFPushNotificationsHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFSegmentsHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFStatisticsHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFTitleDataManagementHandlers.h">
+      <Filter>Common\PFServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XAccessibilityHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XAppCaptureHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblAchievementsHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblContextSettingsHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblEventsHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblGameInviteHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblGlobalHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblHttpCallHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblLeaderboardHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblLocalStorageHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblMatchmakingHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblMultiplayerActivityHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblMultiplayerHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblNotificationHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblPresenceHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblPrivacyHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblProfileHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblRealTimeActivityHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblSocialHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblStatsHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblStorageHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblStringHandlers.h">
+      <Filter>Common\XSAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XDisplayHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XErrorHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameEventHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameProtocolHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameSaveFilesHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameSaveHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameStreamingHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameUIHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XLauncherHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XNetworkingHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XPackageHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XPersistentLocalStorageHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XSpeechSynthesizerHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XStoreHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XSystemHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XThreadHandlers.h">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\CommandRegistry.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\CommandHandlerShared.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceApplication.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceCommandHandlers.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\DeviceFileSystem.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceCommandProcessor.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceGameSave.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceGameSaveState.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceLogging.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceWebSocketClient.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceWebSocketConnection.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\HarnessHash.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\Misc\HttpMock.h">
+      <Filter>Common\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\PFGameSaveFiles\PFGameSaveFilesHandlers.h">
+      <Filter>Common\PFGameSaveFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\ResolveSaveRoot.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Platform\Windows\DeviceApplication_Win32.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\DeviceLogging_Win32.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\DeviceFileSystem_Win32.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\DeviceWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\pch.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\Main.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\DeviceGameSaveState_Win32.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\CaptureSaveContainerSnapshot.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\ChaosModeHandler.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\ConsumeDiskSpace.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\CopyTargetFolderToSaveFolder.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\DeleteLocalFolder.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\DeleteSaveRoot.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\GatherLogs.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\GatherSnapshot.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\GetDebugStats.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\HttpMockHandlers.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFCore\PFCommandHandlers.cpp">
+      <Filter>Common\PFCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\SmokeCommandHandlers.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\WriteGameSaveData.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameRuntimeHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XTaskQueueHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XUserHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\GameChat2\GameChat2Handlers.cpp">
+      <Filter>Common\GameChat2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\GameInputHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCAsyncHandlers.cpp">
+      <Filter>Common\libHttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCGlobalHandlers.cpp">
+      <Filter>Common\libHttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCHttpCallHandlers.cpp">
+      <Filter>Common\libHttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCMockHandlers.cpp">
+      <Filter>Common\libHttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCTraceHandlers.cpp">
+      <Filter>Common\libHttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCWebSocketHandlers.cpp">
+      <Filter>Common\libHttpClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFParty\PartyHandlers.cpp">
+      <Filter>Common\PFParty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFAccountManagementHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFCore\PFAuthenticationHandlers.cpp">
+      <Filter>Common\PFCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFCatalogHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFCloudScriptHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFDataHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFCore\PFEntityHandlers.cpp">
+      <Filter>Common\PFCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFExperimentationHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFFriendsHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFGroupsHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFInventoryHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFLeaderboardsHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFLocalizationHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFMultiplayer\PFMultiplayerHandlers.cpp">
+      <Filter>Common\PFMultiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFMultiplayerServerHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFCore\PFPlatformSpecificHandlers.cpp">
+      <Filter>Common\PFCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFPlayerDataManagementHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFProfilesHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFPushNotificationsHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFSegmentsHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFStatisticsHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFTitleDataManagementHandlers.cpp">
+      <Filter>Common\PFServices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XAccessibilityHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XAppCaptureHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblAchievementsHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblContextSettingsHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblEventsHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblGameInviteHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblGlobalHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblHttpCallHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblLeaderboardHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblLocalStorageHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblMatchmakingHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblMultiplayerActivityHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblMultiplayerHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblNotificationHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblPresenceHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblPrivacyHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblProfileHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblRealTimeActivityHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblSocialHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblStatsHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblStorageHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblStringHandlers.cpp">
+      <Filter>Common\XSAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XDisplayHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XErrorHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameEventHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameProtocolHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameSaveFilesHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameSaveHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameStreamingHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameUIHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XLauncherHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XNetworkingHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XPackageHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XPersistentLocalStorageHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XSpeechSynthesizerHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XStoreHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XSystemHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XThreadHandlers.cpp">
+      <Filter>Common\XGameRuntime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceCommandHandlers.cpp">
+      <Filter>Common\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceCommandProcessor.cpp">
+      <Filter>Common\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceGameSave.cpp">
+      <Filter>Common\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceWebSocketClient.cpp">
+      <Filter>Common\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceWebSocketConnection.cpp">
+      <Filter>Common\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\Misc\HarnessHash.cpp">
+      <Filter>Common\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\Misc\HttpMock.cpp">
+      <Filter>Common\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\PFGameSaveFiles\PFGameSaveFilesHandlers.cpp">
+      <Filter>Common\PFGameSaveFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\ResolveSaveRoot.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <Filter>Assets</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <MGCCompile Include="MicrosoftGameConfig.mgc">
+      <Filter>Assets</Filter>
+    </MGCCompile>
+  </ItemGroup>
+</Project>

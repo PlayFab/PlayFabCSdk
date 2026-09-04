@@ -1,0 +1,78 @@
+id: LHC-07-Multiple-Concurrent-Requests
+name: LHC 07 - Multiple Concurrent HTTP Requests
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Create three call handles targeting different URLs, perform them all,
+  then read each response independently.  Verifies per-call state
+  isolation and concurrent async completion.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  concurrent-requests:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # First request — GET zen quote
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://httpbin.org/get?req=1"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "User-Agent"
+        headerValue: "libHttpClient-test"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    # Second request — GET different path
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://httpbin.org/get?req=2"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "User-Agent"
+        headerValue: "libHttpClient-test"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    # Third request — GET yet another path
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://httpbin.org/get?req=3"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "User-Agent"
+        headerValue: "libHttpClient-test"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: concurrent-requests
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

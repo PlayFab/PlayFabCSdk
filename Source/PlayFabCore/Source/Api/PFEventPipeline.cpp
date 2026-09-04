@@ -191,6 +191,7 @@ PF_API PFEventPipelineDuplicateHandle(
 {
     return ApiImpl(XASYNC_IDENTITY(PFEventPipelineDuplicateHandle), [&](PFCoreGlobalState& state)
     {
+        RETURN_HR_INVALIDARG_IF_NULL(eventPipelineHandle);
         RETURN_HR_INVALIDARG_IF_NULL(duplicatedEventPipelineHandle);
 
         SharedPtr<EventPipeline> pipeline;
@@ -218,6 +219,9 @@ PF_API PFEventPipelineEmitEvent(
     return ApiImpl(XASYNC_IDENTITY(PFEventPipelineEmitEvent), [&](PFCoreGlobalState& state)
     {
         RETURN_HR_INVALIDARG_IF_NULL(event);
+        RETURN_HR_INVALIDARG_IF_NULL(event->eventNamespace);
+        RETURN_HR_INVALIDARG_IF_NULL(event->name);
+        RETURN_HR_INVALIDARG_IF_NULL(event->payloadJson);
 
         SharedPtr<EventPipeline> pipeline;
         RETURN_IF_FAILED(state.ClientEventPipelines().FromHandle(eventPipelineHandle, pipeline));

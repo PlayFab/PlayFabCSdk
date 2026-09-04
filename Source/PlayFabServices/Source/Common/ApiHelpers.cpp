@@ -13,7 +13,7 @@ HRESULT CALLBACK AsyncErrorProvider(XAsyncOp op, XAsyncProviderData const* data)
 
     if (op == XAsyncOp::Begin)
     {
-        HRESULT* resultPtr{ static_cast<HRESULT*>(data->context) };
+        UniquePtr<HRESULT> resultPtr{ static_cast<HRESULT*>(data->context) };
         XAsyncComplete(data->async, *resultPtr, 0);
     }
     return S_OK;
@@ -21,7 +21,9 @@ HRESULT CALLBACK AsyncErrorProvider(XAsyncOp op, XAsyncProviderData const* data)
 
 HRESULT CompleteAsyncWithError(XAsyncBlock* async, const char* apiIdentity, HRESULT hr)
 {
-    RETURN_IF_FAILED(XAsyncBegin(async, &hr, nullptr, apiIdentity, AsyncErrorProvider));
+    auto resultPtr = MakeUnique<HRESULT>(hr);
+    RETURN_IF_FAILED(XAsyncBegin(async, resultPtr.get(), nullptr, apiIdentity, AsyncErrorProvider));
+    resultPtr.release();
     return S_OK;
 }
 

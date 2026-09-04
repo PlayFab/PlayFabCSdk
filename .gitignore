@@ -12,6 +12,9 @@
 target/
 Int/
 
+# Per-developer config (copy from .template)
+Test/GameTestAppXbox/controllerip.txt
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -352,6 +355,9 @@ local.properties
 /Test/PlayFabServicesTestApp/Android/app/libs
 /Test/PlayFabServicesTestApp/Android/app/src/main/assets
 
+Gaming.Xbox.Scarlett.x64/
+Gaming.Xbox.XboxOne.x64/
+
 #XCode 
 .DS_Store
 *.swp
@@ -365,3 +371,9 @@ xcuserdata
 # PlayFab test app logs
 **/PFTestAppEventsLog.txt
 **/PFTestAppSummary.txt
+
+# Engram bootstrap temp file
+.engram-bootstrap.md
+
+# don't check in private key for tests
+Utilities/Scripts/tests-setkey.cmd

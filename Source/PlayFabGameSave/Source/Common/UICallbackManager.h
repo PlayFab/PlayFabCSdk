@@ -47,9 +47,10 @@ public:
     void CancelPendingUIWait();
 
 private:
-    UIAction m_action{ UIAction::UINone };
-    ISchedulableTask* m_activeTask{ nullptr };
+    std::atomic<UIAction> m_action{ UIAction::UINone };
+    std::atomic<ISchedulableTask*> m_activeTask{ nullptr };
     std::atomic<bool> m_progressCancelRequested{ false };
+    std::atomic<bool> m_shutdown{ false };
 };
 
 } // namespace GameSave

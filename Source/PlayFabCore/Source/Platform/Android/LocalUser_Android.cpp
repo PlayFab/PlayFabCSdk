@@ -131,7 +131,24 @@ Result<SharedPtr<AndroidLocalUser>> AndroidLocalUser::Make(
         return E_FAIL;
     }
 
-    jobject signInClientGlobalRef = reinterpret_cast<jclass>(jniEnv->NewGlobalRef(androidContext.signinClient));
+    jobject signInClientGlobalRef = jniEnv->NewGlobalRef(androidContext.signinClient);
+    if (jniEnv->ExceptionCheck())
+    {
+        jniEnv->ExceptionClear();
+        if (isThreadAttached)
+        {
+            jvm->DetachCurrentThread();
+        }
+        return E_FAIL;
+    }
+    if (!signInClientGlobalRef)
+    {
+        if (isThreadAttached)
+        {
+            jvm->DetachCurrentThread();
+        }
+        return E_OUTOFMEMORY;
+    }
 
     Allocator<AndroidLocalUser> a;
     SharedPtr<AndroidLocalUser> user{ new (a.allocate(1)) AndroidLocalUser(
@@ -266,16 +283,45 @@ AsyncOp<Authentication::CombinedLoginResult> AndroidLocalUserLoginHandler::Login
         "(Lcom/google/android/gms/games/GamesSignInClient;Ljava/lang/String;J)V"
     );
 
+    if (jniEnv->ExceptionCheck())
+    {
+        jniEnv->ExceptionClear();
+    }
     if (getTokenMethodId == NULL)
     {
         TRACE_ERROR("Unable to get GetServerAuthTokenAsync methodId");
+        if (isThreadAttached)
+        {
+            jvm->DetachCurrentThread();
+        }
         return E_FAIL;
     }
 
     UniquePtr<GetServerAuthTokenContext> context{ MakeUnique<GetServerAuthTokenContext>(localUser) };
 
     jstring oauthToken = jniEnv->NewStringUTF(localUser->m_OAuth2WebClientId.data());
+    if (jniEnv->ExceptionCheck())
+    {
+        jniEnv->ExceptionClear();
+        if (isThreadAttached)
+        {
+            jvm->DetachCurrentThread();
+        }
+        return E_FAIL;
+    }
     jniEnv->CallStaticVoidMethod(state->PlatformComponents()->GetLocalUserClass(), getTokenMethodId, localUser->m_signinClient, oauthToken, reinterpret_cast<jlong>(context.get()));
+
+    jniEnv->DeleteLocalRef(oauthToken);
+
+    if (jniEnv->ExceptionCheck())
+    {
+        jniEnv->ExceptionClear();
+        if (isThreadAttached)
+        {
+            jvm->DetachCurrentThread();
+        }
+        return E_FAIL;
+    }
 
     if (isThreadAttached)
     {
@@ -364,16 +410,45 @@ AsyncOp<void> AndroidLocalUserLoginHandler::ReLogin(
         "(Lcom/google/android/gms/games/GamesSignInClient;Ljava/lang/String;J)V"
     );
 
+    if (jniEnv->ExceptionCheck())
+    {
+        jniEnv->ExceptionClear();
+    }
     if (getTokenMethodId == NULL)
     {
         TRACE_ERROR("Unable to get GetServerAuthTokenAsync methodId");
+        if (isThreadAttached)
+        {
+            jvm->DetachCurrentThread();
+        }
         return E_FAIL;
     }
 
     UniquePtr<GetServerAuthTokenContext> context{ MakeUnique<GetServerAuthTokenContext>(localUser) };
 
     jstring oauthToken = jniEnv->NewStringUTF(localUser->m_OAuth2WebClientId.data());
+    if (jniEnv->ExceptionCheck())
+    {
+        jniEnv->ExceptionClear();
+        if (isThreadAttached)
+        {
+            jvm->DetachCurrentThread();
+        }
+        return E_FAIL;
+    }
     jniEnv->CallStaticVoidMethod(localUser->m_platformComponents->GetLocalUserClass(), getTokenMethodId, localUser->m_signinClient, oauthToken, reinterpret_cast<jlong>(context.get()));
+
+    jniEnv->DeleteLocalRef(oauthToken);
+
+    if (jniEnv->ExceptionCheck())
+    {
+        jniEnv->ExceptionClear();
+        if (isThreadAttached)
+        {
+            jvm->DetachCurrentThread();
+        }
+        return E_FAIL;
+    }
 
     if (isThreadAttached)
     {

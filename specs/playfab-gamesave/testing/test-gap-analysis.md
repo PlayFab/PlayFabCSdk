@@ -11,7 +11,7 @@ PlayFab Game Saves (PFGameSave) provides cross-platform game save synchronizatio
 
 - **PlayFabGameSaveFolderMonitor**: Chaos testing tool with automated random file operations for stress testing
 
-## Manual vs Automated Coverage – Principles, Rubric, and Examples
+## Manual vs Automated Coverage - Principles, Rubric, and Examples
 
 This strategy picks automation vs manual based on risk, determinism, and user perception. We assume a multi‑device automation lab (Xbox Gen8/Gen9, Windows MSIXVC, Steam PC, Steam Deck) with network/disk fault injection and basic lifecycle control.
 
@@ -25,9 +25,9 @@ Principles:
 
 - Use hybrid where platform nuance matters: scripts set state and capture logs; humans verify visual/behavioral expectations on real hardware.
 
-- Note: manual testers are not technical—avoid steps that require filesystem spelunking or developer tools. File system/manifest structure verification belongs in automation; manual checks should rely on in‑title UX and observable outcomes.
+- Note: manual testers are not technical--avoid steps that require filesystem spelunking or developer tools. File system/manifest structure verification belongs in automation; manual checks should rely on in‑title UX and observable outcomes.
 
-Decision rubric (first “Yes” wins):
+Decision rubric (first "Yes" wins):
 
 - Fully observable, deterministic outcome? → Automate.
 
@@ -39,9 +39,9 @@ Decision rubric (first “Yes” wins):
 
 Defaults:
 
-- Automate: 1–9, 14–20, 21–28, 29–36, 58–60, 63, 68–75, 81–92, 93–105, 106–112, 114, 137–141, 144–148.
+- Automate: 1-9, 14-20, 21-28, 29-36, 58-60, 63, 68-75, 81-92, 93-105, 106-112, 114, 137-141, 144-148.
 
-- Manual: 37–40, 51, 60 (visual crash survival), 63 (choice clarity), 64, 66, 76–77, 106–113 (UX), 109–110 (perception), 115–118, 121, 142–143.
+- Manual: 37-40, 51, 60 (visual crash survival), 63 (choice clarity), 64, 66, 76-77, 106-113 (UX), 109-110 (perception), 115-118, 121, 142-143.
 
 - Hybrid: 39, 59, 69, 73, 110, 116, 119, 123, 144, 145.
 
@@ -435,7 +435,7 @@ Cadence:
 
 **Gap #83 - Callback Thread Safety** {P1}: Fire callbacks under load; assert no race, re-entrancy, or ordering violations.
 
-**Gap #84 - Path Security (Traversal/Injection)** {P1}: Attempt traversal, reserved names, null chars—ensure rejection, no escape.
+**Gap #84 - Path Security (Traversal/Injection)** {P1}: Attempt traversal, reserved names, null chars--ensure rejection, no escape.
 
 **Gap #85 - Mid-Operation Permission Loss** {P1}: Flip to read-only; operation aborts gracefully with surfaced error.
 
@@ -471,7 +471,7 @@ Cadence:
 
 **Gap #101 - AV Interference Handling** {P2}: Simulate AV lock/slow scan; timeouts & retries behave correctly.
 
-**Gap #102 - Comprehensive Unicode Paths** {P1}: Mixed normalization forms, emoji, RTL scripts—persist & sync intact.
+**Gap #102 - Comprehensive Unicode Paths** {P1}: Mixed normalization forms, emoji, RTL scripts--persist & sync intact.
 
 **Gap #103 - Huge Manifest Performance** {P2}: Thousands files; measure parse/memory time within acceptable bounds.
 
@@ -541,7 +541,7 @@ Active:
 
 **Gap #130 - Cross-Unit Dependency Effects** {P2}: Simulate coupled data across units; ensure unexpected conflicts not created.
 
-### Newly Added Gaps (137–148)
+### Newly Added Gaps (137-148)
 
 **Gap #137 - UI Response Timing & Timeout Handling** {P1}: Delay / omit user responses; ensure state machine waits safely or applies timeout policy.
 
@@ -967,9 +967,9 @@ Action Applied:
 
 1. Duplicates removed / marked retired inline (matrix & gap list updated).
 2. Canonical gaps (#6, #8, #63) implicitly cover merged semantics; verbose expansion deferred.
-3. Active gap count recalculated (now 144 after additions #137–#148 and retirements).
+3. Active gap count recalculated (now 144 after additions #137-#148 and retirements).
 
-## Newly Identified Important Gaps (Proposed IDs #137–#148)
+## Newly Identified Important Gaps (Proposed IDs #137-#148)
 
 These arose from deeper pass over public headers & docs (UI callback lifecycles, async cancellation, descriptor sizing, quota edge behavior, concurrency).
 
@@ -977,8 +977,8 @@ These arose from deeper pass over public headers & docs (UI callback lifecycles,
 |-------|-------|----------|----------|-------------------|
 | 137 | UI Response Timing & Timeout Handling | P1 | UI Response & Callback Testing | Verify behavior when user response to any UI callback is delayed, never given, or provided after async cancelled (state machine stalls vs graceful timeout). |
 | 138 | XAsync Cancellation Paths | P1 | Error Handling & Recovery | Cancel AddUser / Upload at each PFGameSaveFilesSyncState; ensure correct HRESULT (E_PF_GAMESAVE_USER_CANCELLED) and cleanup (no leaked temp/locks). |
-| 139 | Concurrent Upload Invocation Protection | P1 | Thread Safety & Concurrency | Call PFGameSaveFilesUploadWithUiAsync concurrently (same user) – ensure second call fails deterministically & first remains valid. |
-| 140 | AddUser Re-entry While In-Progress | P2 | Error Handling & Recovery | Invoke PFGameSaveFilesAddUserWithUiAsync again before first completes – expect E_PF_GAMESAVE_DOWNLOAD_IN_PROGRESS (or documented error) without corruption. |
+| 139 | Concurrent Upload Invocation Protection | P1 | Thread Safety & Concurrency | Call PFGameSaveFilesUploadWithUiAsync concurrently (same user) - ensure second call fails deterministically & first remains valid. |
+| 140 | AddUser Re-entry While In-Progress | P2 | Error Handling & Recovery | Invoke PFGameSaveFilesAddUserWithUiAsync again before first completes - expect E_PF_GAMESAVE_DOWNLOAD_IN_PROGRESS (or documented error) without corruption. |
 | 141 | Descriptor Field Boundary Truncation | P2 | Data Integrity & Metadata | Populate deviceType/deviceId/deviceFriendlyName/thumbnailUri/shortSaveDescription at max lengths; validate truncation, UTF-8 safety, no buffer overrun. (Extends #104). |
 | 142 | Save Description Length & Unicode Variants | P2 | Metadata & Advanced | Long (4095 bytes), multi-byte, emoji, RTL text in PFGameSaveFilesSetSaveDescriptionAsync; ensure storage & UI rendering, and rejection of > buffer size. |
 | 143 | Thumbnail Lifecycle Ordering | P3 | Metadata & Advanced | Change / delete pfthumbnail.png between AddUser and Upload; ensure descriptor thumbnailUri updates or clears appropriately. Complements #100. |
@@ -990,11 +990,11 @@ These arose from deeper pass over public headers & docs (UI callback lifecycles,
 
 Rationale Highlights:
 
-- Strengthens cancellation and concurrency assurance (137–140, 146, 147).
+- Strengthens cancellation and concurrency assurance (137-140, 146, 147).
 
-- Closes metadata integrity and boundary handling (141–143, 142 deep Unicode).
+- Closes metadata integrity and boundary handling (141-143, 142 deep Unicode).
 
-- Improves reliability around edge storage & crash recovery (144–145).
+- Improves reliability around edge storage & crash recovery (144-145).
 
 - Validates defensive error paths explicitly exposed via public headers (148).
 
@@ -1004,7 +1004,7 @@ Impact on Totals:
 
 Next Steps (suggested):
 
-1. Insert new gap IDs into coverage matrix (future edit) – for now they are additive and unreferenced by the big matrix above.
+1. Insert new gap IDs into coverage matrix (future edit) - for now they are additive and unreferenced by the big matrix above.
 2. Create work items with concise acceptance criteria mirroring descriptions.
 3. Prioritize P1 gaps (137, 138, 139, 144) for early automation where feasible.
 

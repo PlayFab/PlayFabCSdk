@@ -1,0 +1,13 @@
+# Tear down a device session.
+# Run this when you are done testing on a device to release handles
+# and uninitialize the runtime cleanly.
+# Note: XUserCloseHandle is included for Xbox devices; it is a no-op
+# on platforms that don't use XUser.
+
+PFLocalUserCloseHandle
+XUserCloseHandle
+PFGameSaveFilesUninitializeAsync
+PFServicesUninitializeAsync
+PFUninitializeAsync
+PFServiceConfigCloseHandle
+XTaskQueueCloseHandle

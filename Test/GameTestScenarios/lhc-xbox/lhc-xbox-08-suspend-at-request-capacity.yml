@@ -1,0 +1,145 @@
+id: LHC-Xbox-08-Suspend-At-Request-Capacity
+name: LHC Xbox 08 - Suspend While At Request Capacity Restores The Budget
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Exercises the interaction between the concurrent request limit and PLM suspend teardown.
+
+  Suspend force-closes every live connection. Each of those connections holds a slot in the
+  global request budget, and those slots are normally released as requests complete. Suspend
+  short-circuits that path, so CloseAllConnections resets the active-request count in bulk and
+  completes anything still queued rather than relying on per-request release.
+
+  If that reset were missing, every slot held at suspend time would leak permanently: the
+  budget would shrink on each suspend/resume cycle until no request could ever start again.
+  With a cap of 1 that failure is immediate and unambiguous -- the single slot is consumed by
+  the suspended request and never returned, so all later work stalls.
+
+  NOTE: this covers suspend while at capacity, with the request in flight. Suspending *mid-burst*,
+  with requests still parked in the pending queue and never started, takes a different code path
+  (CloseAllConnections abandons them with E_ABORT) and is covered by scenario 15.
+brief: Budget must be restored after suspending while at capacity
+group: B. Suspend / PLM
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  occupy-the-only-slot:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # A cap of 1 makes budget accounting directly observable: one in-flight request consumes
+    # the entire budget, so any failure to return its slot stalls everything afterwards.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 1
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 1
+
+    # A deliberately slow endpoint, so the request still holds the only slot when the suspend
+    # lands. Against a normal endpoint the request finishes first and its slot is returned the
+    # ordinary way, so the suspend-path accounting this scenario exists to check is never run.
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/slow"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "slow-response"
+        delayMs: 30000
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/slow"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+
+    # Occupies the only slot and stays in flight into the suspend below.
+    - command: HCHttpCallPerformStart
+
+    # The precondition: the slot must actually still be held when we suspend. Without this the
+    # scenario silently degrades into "suspend with nothing in flight" and proves nothing.
+    - command: HCHttpCallPerformAssertPending
+
+  suspend-resume:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+
+  verify-request-resolved:
+    # The request was still holding the only slot at the suspend boundary (asserted above), so
+    # this exercises the suspend teardown path. Whether it returns a transport failure from the
+    # torn-down connection or a completed response is timing dependent and not asserted; what
+    # matters is that it resolved instead of hanging.
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 60000
+        allowFailedResult: true
+    - command: HCHttpCallCloseHandle
+
+  verify-budget-restored:
+    # With a cap of 1 still in force, a single request must be able to start again. If the slot
+    # held at suspend time was leaked, the budget is now zero and this never completes.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    # Restore the default and confirm sustained throughput, which also re-checks that queued
+    # promotion still works after a suspend cycle.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "https://E18D7.playfabapi.com/"
+        requestCount: 15
+        expectedSuccesses: 15
+        timeoutMs: 120000
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: occupy-the-only-slot
+  - role: DeviceA
+    block: suspend-resume
+  - role: DeviceA
+    block: verify-request-resolved
+  - role: DeviceA
+    block: verify-budget-restored
+cleanup:
+  DeviceA:
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0
+    - command: XTaskQueueCloseHandle
+    # Release the controller-hosted slow endpoint.
+    - command: StopHttpTestServer

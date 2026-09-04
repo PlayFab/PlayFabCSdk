@@ -1,0 +1,61 @@
+id: Controller-Action-10-Switch-User
+name: Controller Action 10 - Switch User
+tags:
+  - xboxactions
+platforms:
+  xbox: untested
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: Verify SwitchUser signs out one user and signs in another without closing the app.
+devices:
+  DeviceA:
+    engine: xbox
+defaults:
+  stepTimeoutSeconds: 120
+blocks:
+  init:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+  test:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: SwitchUser
+        signOutEmail: userA@xboxtest.com
+        signInEmail: userB@xboxtest.com
+        password: password
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5000
+    # Switch back to original user
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: SwitchUser
+        signOutEmail: userB@xboxtest.com
+        signInEmail: userA@xboxtest.com
+        password: password
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5000
+  cleanup:
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: init
+  - role: DeviceA
+    block: test
+  - role: DeviceA
+    block: cleanup

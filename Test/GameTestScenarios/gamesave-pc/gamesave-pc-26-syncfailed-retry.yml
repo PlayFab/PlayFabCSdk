@@ -1,0 +1,117 @@
+id: Scenario-PC-26-SyncFailed-Retry
+name: GameSave PC 26 - SyncFailed Retry Response
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Go offline, init, trigger sync failure, auto-respond Retry while still offline (fails again after maxRetries), then go online and retry AddUser — verify sync succeeds.
+brief: SyncFailed retry while offline then online success
+group: D. Sync Failure / Offline
+devices:
+  DeviceA:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  offline-retry-fails:
+    # Stop GRTS, clear cache, disable network, start GRTS cold —
+    # ensures AddUser hits SyncFailed instead of using stale cache
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: FlushGrtsAndGoOffline
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # Use stock TCUI (not callbacks) for SyncFailed — GRTS has a bug where
+    # PFXGameSaveSetSyncFailedUiResponse(UseOffline) via callback API doesn't
+    # complete GetFolderWithUiAsync. Stock TCUI + UiNavigator works correctly.
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+        maxRetries: 1
+    # Cancel the Progress dialog if GRTS gets stuck retrying while offline
+    - command: PFGameSaveFilesSetUiProgressAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Sync fails → Retry → still offline → fails again → enters offline mode
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+  online-retry-succeeds:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5000
+    # Now that network is back, retry with Retry auto-response
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+executionOrder:
+  - role: DeviceA
+    block: offline-retry-fails
+  - role: DeviceA
+    block: online-retry-succeeds
+cleanup:
+  DeviceA:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: StartGamingServices
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

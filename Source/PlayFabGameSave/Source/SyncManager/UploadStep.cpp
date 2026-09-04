@@ -5,8 +5,10 @@
 #include "ApiHelpers.h"
 #include "ProgressHelpers.h"
 #include "ZipUtils.h"
+#include "Compression.h"
 #include "LockStep.h" // for TryGetLatestFinalizedManifest signature
 #include "PlatformUtils.h"
+#include "Platform/PFGameSaveFilesAPIProvider.h"
 
 using namespace PlayFab::GameSaveWrapper;
 
@@ -33,6 +35,7 @@ void UploadStep::Reset()
     m_initiateResult = {};
     m_stage = UploadStage::UploadStart;
     m_deleteManifestStage = DeleteManifestStage::DeleteManifestStart;
+    m_deleteManifestFailureHR = S_OK;
     m_hasStartedFinalizeManifest = false; // reset finalize tracking
     m_conflictMetadata = ConflictMetadata(); // reset conflict metadata
 
@@ -41,12 +44,16 @@ void UploadStep::Reset()
     m_totalCompressedSizeBytes = 0;
     m_currentCompressedSizeBytes = 0;
     m_manifests.clear();
+    m_nextAvailableVersion.clear();
     m_postUploadPendingPFManifest = ManifestWrap();
     m_postUploadLatestFinalizedPFManifest = ManifestWrap();
     m_originalActivationBaselineVersion = 0;
     m_originalBaselinePromoted = false;
+    m_manifestVersionOffset = 0;
+    m_baseVersionRetryCount = 0;
+    m_versionExistsRetryCount = 0;
 
-#if _DEBUG // just for debug stats
+#if defined(_DEBUG) // just for debug stats
     m_numFilesInFinalizedManifest = 0;
 #endif
 }
@@ -101,17 +108,37 @@ const FileDetail* UploadStep::PopThumbnail(
     return nullptr;
 }
 
+namespace
+{
+
+// Sums the uncompressed bytes that will be pushed through the PreparingForUpload phase. Split out
+// so the total can be reported with the very first PreparingForUpload update, before compression
+// starts. Includes the thumbnail, which CompressFiles pops off the list but still accounts for.
+uint64_t ComputeExpectedUploadTotal(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet)
+{
+    uint64_t expectedTotalUncompressedSize = 0;
+    for (const FileDetail* f : localFileFolderSet->GetFilesToUpload())
+    {
+        expectedTotalUncompressedSize += f->fileSizeBytes;
+    }
+    return expectedTotalUncompressedSize;
+}
+
+} // anonymous namespace
+
 Result<Vector<ExtendedManifestCompressedFileDetail>> UploadStep::CompressFiles(
     _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
     _In_ const String& saveFolder,
-    _In_ const String& version)
+    _In_ const String& version,
+    _In_ ProgressCallback progressCallback,
+    _In_ void* progressCallbackContext)
 {
     Vector<const FileDetail*> filesToUpload = localFileFolderSet->GetFilesToUpload();
     const FileDetail* thumbnail = PopThumbnail(filesToUpload);    
     
-    // Create cloudsync folder if it doesn't exist
+    // Determine cloudsync folder path - use temp storage on platforms that support it
     String cloudSyncFolder;
-    RETURN_IF_FAILED(JoinPathHelper(saveFolder, "cloudsync", cloudSyncFolder));
+    RETURN_IF_FAILED(GetCloudSyncFolder(saveFolder, cloudSyncFolder));
     RETURN_IF_FAILED(FilePAL::CreatePath(cloudSyncFolder));
     
     // Clean up any existing zip files in the cloudsync folder
@@ -121,7 +148,7 @@ Result<Vector<ExtendedManifestCompressedFileDetail>> UploadStep::CompressFiles(
         Vector<String> existingFiles = existingFilesResult.ExtractPayload();
         for (const String& fileName : existingFiles)
         {
-            if (fileName.find(".zip") != String::npos)
+            if (fileName.size() >= 4 && fileName.compare(fileName.size() - 4, 4, ".zip") == 0)
             {
                 String fullFilePath;
                 RETURN_IF_FAILED(JoinPathHelper(cloudSyncFolder, fileName, fullFilePath));
@@ -135,7 +162,22 @@ Result<Vector<ExtendedManifestCompressedFileDetail>> UploadStep::CompressFiles(
             }
         }
     }
-    
+
+    // Calculate total uncompressed size across all files before compression begins.
+    // This provides a meaningful denominator for PreparingForUpload progress. In the normal flow
+    // this matches the total already reported at UploadStart, so the value a title is showing does
+    // not jump mid-phase. Exception: the SetToUploadFullSet retry path (E_PF_INVALID_PARAMS / 100+
+    // zips) swaps in the full local file set, calls Reset(), and re-enters at UploadStage::CompressFiles
+    // rather than UploadStart -- so it intentionally recomputes a larger total and restarts the
+    // phase's cumulative byte count at 0.
+    uint64_t expectedTotalUncompressedSize = ComputeExpectedUploadTotal(localFileFolderSet);
+
+    // Report initial PreparingForUpload progress with the known total
+    progressCallback(PFGameSaveFilesSyncState::PreparingForUpload, 0, expectedTotalUncompressedSize, progressCallbackContext);
+
+    // Track cumulative uncompressed bytes across all batches for smooth progress
+    uint64_t cumulativeUncompressedBytes = 0;
+
     Vector<ExtendedManifestCompressedFileDetail> uploads;
     Vector<Vector<const FileDetail*>> zipBatchSets = SplitUploadsIntoZipBatches(filesToUpload);
     for (const Vector<const FileDetail*>& zipBatchSet : zipBatchSets)
@@ -145,7 +187,7 @@ Result<Vector<ExtendedManifestCompressedFileDetail>> UploadStep::CompressFiles(
         String fileId = CreateGUID();
         String zipFileName = FormatString("%s.zip", fileId.c_str());
         String fullZipFilePath;
-        JoinPathHelper(cloudSyncFolder, zipFileName, fullZipFilePath);
+        RETURN_IF_FAILED(JoinPathHelper(cloudSyncFolder, zipFileName, fullZipFilePath));
         TRACE_INFORMATION("[GAME SAVE] UploadStep: Compressing to %s", fullZipFilePath.c_str());
         u.fileName = zipFileName.c_str();
         u.fullFilePath = fullZipFilePath;
@@ -157,15 +199,57 @@ Result<Vector<ExtendedManifestCompressedFileDetail>> UploadStep::CompressFiles(
         for (const FileDetail* fileToUpload : zipBatchSet)
         {
             u.uncompressedSizeBytes += fileToUpload->fileSizeBytes;
-            AddCompressedFile(localFileFolderSet, fileToUpload, saveFolder, u);
+            RETURN_IF_FAILED(AddCompressedFile(localFileFolderSet, fileToUpload, saveFolder, u));
         }
 
-        RETURN_IF_FAILED(ZipUtils::ZipFilesIntoSingleZip(u.archiveContext, fullZipFilePath));
+        // Inline the zip compression loop (instead of ZipFilesIntoSingleZip) so we can
+        // report per-chunk progress during the compression of each batch.
+        RETURN_IF_FAILED(u.archiveContext->Initialize(ArchiveOpenMode::Compress, ArchiveSource::File, fullZipFilePath));
+        {
+            // Ensure Close() is called on all exit paths (success or failure)
+            struct ArchiveGuard {
+                SharedPtr<ArchiveContext>& ctx;
+                ~ArchiveGuard() { ctx->Close(); }
+            } archiveGuard{ u.archiveContext };
+
+            // Snapshot the total uncompressed size for this batch to scale progress
+            uint64_t batchTotalUncompressed = u.uncompressedSizeBytes;
+            uint64_t lastReportedBatchBytes = 0;
+            HRESULT hr{};
+            while (SUCCEEDED(hr) && !u.archiveContext->IsArchiveOperationDone())
+            {
+                hr = u.archiveContext->CompressBytes();
+
+                // Report granular progress based on uncompressed input bytes consumed.
+                // GetUncompressedBytesProcessed() tracks cumulative bytes read from source files,
+                // giving accurate progress regardless of compression ratio.
+                uint64_t uncompressedProcessed = u.archiveContext->GetUncompressedBytesProcessed();
+                uint64_t estimatedBatchBytes = (uncompressedProcessed < batchTotalUncompressed)
+                    ? uncompressedProcessed : batchTotalUncompressed;
+
+                // Only fire callback when progress meaningfully changes (avoid flooding)
+                if (estimatedBatchBytes > lastReportedBatchBytes)
+                {
+                    lastReportedBatchBytes = estimatedBatchBytes;
+                    progressCallback(
+                        PFGameSaveFilesSyncState::PreparingForUpload,
+                        cumulativeUncompressedBytes + estimatedBatchBytes,
+                        expectedTotalUncompressedSize,
+                        progressCallbackContext);
+                }
+            }
+            RETURN_IF_FAILED(hr);
+        }
+
         u.compressedSizeBytes = u.archiveContext->GetTotalCompressedSize();
         TRACE_INFORMATION("[GAME SAVE] UploadStep: Compressed zip %s. size %llu", fullZipFilePath.c_str(), u.compressedSizeBytes);
 
         m_totalUncompressedSizeBytes += u.uncompressedSizeBytes;
         m_totalCompressedSizeBytes += u.compressedSizeBytes;
+
+        // Update cumulative progress after batch completes
+        cumulativeUncompressedBytes += u.uncompressedSizeBytes;
+        progressCallback(PFGameSaveFilesSyncState::PreparingForUpload, cumulativeUncompressedBytes, expectedTotalUncompressedSize, progressCallbackContext);
 
         uploads.push_back(std::move(u));
     }
@@ -174,7 +258,7 @@ Result<Vector<ExtendedManifestCompressedFileDetail>> UploadStep::CompressFiles(
     {
         ExtendedManifestCompressedFileDetail u{};
         String fullZipFilePath;
-        JoinPathHelper(saveFolder, THUMBNAIL_FILE_NAME, fullZipFilePath);
+        RETURN_IF_FAILED(JoinPathHelper(saveFolder, THUMBNAIL_FILE_NAME, fullZipFilePath));
         TRACE_INFORMATION("[GAME SAVE] UploadStep: Thumbnail at %s", fullZipFilePath.c_str());
         u.fileName = FormatString("pfthumbnail_%s.png", version.c_str());
         u.fullFilePath = fullZipFilePath;
@@ -197,6 +281,10 @@ Result<Vector<ExtendedManifestCompressedFileDetail>> UploadStep::CompressFiles(
         u.extractedFiles.push_back(std::move(efd));
 
         uploads.push_back(std::move(u));
+
+        // Thumbnail is not compressed, so count it immediately for progress
+        cumulativeUncompressedBytes += thumbnail->fileSizeBytes;
+        progressCallback(PFGameSaveFilesSyncState::PreparingForUpload, cumulativeUncompressedBytes, expectedTotalUncompressedSize, progressCallbackContext);
     }
 
     Vector<ExtendedManifestCompressedFileDetail> uploadsCopy = uploads;
@@ -221,8 +309,6 @@ HRESULT UploadStep::AddCompressedFile(
     efd.uncompressedSizeBytes = fileToUpload->fileSizeBytes;
     efd.timeLastModified = fileToUpload->timeLastModified;
     efd.timeCreated = fileToUpload->timeCreated;
-    u.extractedFiles.push_back(std::move(efd));
-
     ArchiveFileDetail afd{};
     String relFilePath = localFileFolderSet->GetRelFilePath(fileToUpload);
     RETURN_IF_FAILED(JoinPathHelper(saveFolder, relFilePath, afd.fullPath));
@@ -230,7 +316,12 @@ HRESULT UploadStep::AddCompressedFile(
     afd.timeLastModified = fileToUpload->timeLastModified;
     afd.timeCreated = fileToUpload->timeCreated;
     TRACE_INFORMATION("[GAME SAVE] UploadStep: Compressing file %s. size %llu", afd.fullPath.c_str(), afd.uncompressedSize);
-    u.archiveContext->AddFile(relFilePath, std::move(afd));
+    // AddFile enforces path-traversal and archive size limits. If it rejects the entry the file
+    // will never be in the archive, so the manifest must not advertise it either.
+    RETURN_IF_FAILED(u.archiveContext->AddFile(relFilePath, std::move(afd)));
+
+    // Push metadata only after all fallible operations succeed to avoid phantom entries
+    u.extractedFiles.push_back(std::move(efd));
     return S_OK;
 }
 
@@ -318,6 +409,8 @@ Vector<Vector<const FileDetail*>> UploadStep::SplitUploadsIntoZipBatches(
             {
                 // If there was nothing yet in set but files remain, meaning the remaining file(s) 
                 // are bigger than size limit so just push it to a new batch all by itself
+                TRACE_WARNING("[GAME SAVE] UploadStep: File size (%llu bytes) exceeds max batch size (%llu bytes), creating oversized single-file batch",
+                    filesToUpload.back()->fileSizeBytes, maxUncompressedSize);
                 fileZipBatchSet.push_back(filesToUpload.back());
                 filesToUpload.pop_back();
             }
@@ -353,27 +446,6 @@ void UploadStep::UploadFileFinally(
     TRACE_TASK(FormatString("UploadFileFinally HR:0x%0.8x", hr));
 
     auto& detail = m_compressedFilesToUpload[m_compressedFilesToUploadCurIndex];
-    // Always accumulate progress for both uncompressed (telemetry) and compressed (actual transfer) sizes
-    m_currentUncompressedSizeBytes += detail.uncompressedSizeBytes;
-    m_currentCompressedSizeBytes += detail.compressedSizeBytes;
-    if (detail.archiveContext)
-    {
-        // Temporary zip cleanup after successful upload attempt (we still delete even if subsequent logic fails)
-        HRESULT deleteResult = FilePAL::DeleteLocalFile(detail.fullFilePath);
-        if (FAILED(deleteResult))
-        {
-            m_telemetryManager->SetContextSyncHResult(deleteResult);
-            m_telemetryManager->EmitContextSyncErrorEvent();
-            m_stage = UploadStage::WaitForFailedUI_UploadFile;
-            if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, deleteResult, PFGameSaveFilesSyncState::Uploading))
-            {
-                m_stage = UploadStage::UploadStepFailure;
-                m_failureHR = deleteResult;
-                task.ScheduleNow();
-            }
-            return;
-        }
-    }
 
     if (FAILED(hr))
     {
@@ -387,35 +459,49 @@ void UploadStep::UploadFileFinally(
             m_failureHR = hr;
             task.ScheduleNow();
         }
+        return;
+    }
+
+    // Only accumulate progress and clean up zip after a successful upload
+    m_currentUncompressedSizeBytes += detail.uncompressedSizeBytes;
+    m_currentCompressedSizeBytes += detail.compressedSizeBytes;
+    if (detail.archiveContext)
+    {
+        // Temporary zip cleanup after successful upload
+        // Non-fatal: the upload already succeeded on the server, so don't treat
+        // a local file deletion failure as a sync failure (would incorrectly retry upload)
+        HRESULT deleteResult = FilePAL::DeleteLocalFile(detail.fullFilePath);
+        if (FAILED(deleteResult))
+        {
+            TRACE_WARNING("[GAME SAVE] UploadStep: Failed to delete temp zip after upload %s, HR:0x%0.8x (non-fatal)", detail.fullFilePath.c_str(), deleteResult);
+        }
+    }
+
+    if (m_compressedFilesToUploadCurIndex == m_compressedFilesToUpload.size() - 1)
+    {
+        // uploaded last file (extended manifest)
+        m_stage = UploadStage::FinalizeManifest;
+        m_currentUncompressedSizeBytes = m_totalUncompressedSizeBytes;
+        m_currentCompressedSizeBytes = m_totalCompressedSizeBytes;
     }
     else
     {
-        if (m_compressedFilesToUploadCurIndex == m_compressedFilesToUpload.size() - 1)
+        if (detail.archiveContext)
         {
-            // uploaded last file (extended manifest)
-            m_stage = UploadStage::FinalizeManifest;
-            m_currentUncompressedSizeBytes = m_totalUncompressedSizeBytes;
-            m_currentCompressedSizeBytes = m_totalCompressedSizeBytes;
-        }
-        else
-        {
-            if (detail.archiveContext)
-            {
-                m_telemetryManager->AddContextSyncFileCount(static_cast<uint32_t>(detail.archiveContext->GetFiles().size()));
-            }
-            
-            m_telemetryManager->IncrementContextSyncBlockCount();
-            m_telemetryManager->AddContextSyncOriginalSize(detail.uncompressedSizeBytes);
-            m_telemetryManager->AddContextSyncSyncSize(detail.compressedSizeBytes);
-
-            // loop until done
-            m_compressedFilesToUploadCurIndex++;
+            m_telemetryManager->AddContextSyncFileCount(static_cast<uint32_t>(detail.archiveContext->GetFiles().size()));
         }
         
-        // Report progress using compressed byte counts (actual transfer units)
-        innerProgressContext->callback(PFGameSaveFilesSyncState::Uploading, m_currentCompressedSizeBytes, m_totalCompressedSizeBytes, innerProgressContext->callbackContext);
-        task.ScheduleNow();
+        m_telemetryManager->IncrementContextSyncBlockCount();
+        m_telemetryManager->AddContextSyncOriginalSize(detail.uncompressedSizeBytes);
+        m_telemetryManager->AddContextSyncSyncSize(detail.compressedSizeBytes);
+
+        // loop until done
+        m_compressedFilesToUploadCurIndex++;
     }
+    
+    // Report progress using uncompressed byte counts for consistency across all sync phases
+    innerProgressContext->callback(PFGameSaveFilesSyncState::Uploading, m_currentUncompressedSizeBytes, m_totalUncompressedSizeBytes, innerProgressContext->callbackContext);
+    task.ScheduleNow();
 }
 
 HRESULT UploadStep::Upload(
@@ -449,10 +535,14 @@ HRESULT UploadStep::Upload(
             m_conflictMetadata = conflictMetadata; // Store conflict metadata for later use in FinalizeManifest
             m_telemetryManager->SetContextSyncSyncErrorSource(SyncErrorSource::SER_RegisterUpload);
             m_telemetryManager->SetContextSyncContextVersion(latestPendingManifest->GetManifest().GetVersion());
+            // Compute the upload total up front so the first PreparingForUpload update -- the one
+            // that triggers the title's progress callback below -- already carries a real total.
+            // Otherwise the single notification a title receives for this state reports 0/0 and
+            // cannot size a progress bar.
             // Use progress callback to set sync state with proper mutex protection
             // This fixes a thread-safety bug where direct assignment could race with GetSyncProgress()
-            progressCallback(PFGameSaveFilesSyncState::Uploading, 0, 0, progressCallbackContext);
-            uiCallbackManager.ShowProgressUI(task, m_localUser, PFGameSaveFilesSyncState::Uploading); // no issue if callback not set
+            progressCallback(PFGameSaveFilesSyncState::PreparingForUpload, 0, ComputeExpectedUploadTotal(localFileFolderSet), progressCallbackContext);
+            uiCallbackManager.ShowProgressUI(task, m_localUser, PFGameSaveFilesSyncState::PreparingForUpload); // no issue if callback not set
             this->m_stage = UploadStage::CompressFiles;
             task.ScheduleNow();
             break;
@@ -470,7 +560,7 @@ HRESULT UploadStep::Upload(
 
             m_compressedFilesToUpload.clear();
             m_compressedFilesToUploadCurIndex = 0;
-            auto compressResult = CompressFiles(localFileFolderSet, saveFolder, latestPendingManifest->VersionString());
+            auto compressResult = CompressFiles(localFileFolderSet, saveFolder, latestPendingManifest->VersionString(), progressCallback, progressCallbackContext);
             RETURN_IF_FAILED(compressResult.hr);
             m_compressedFilesToUpload = compressResult.ExtractPayload();
             if (m_compressedFilesToUpload.size() == 0 &&
@@ -485,10 +575,12 @@ HRESULT UploadStep::Upload(
             }
 
             m_telemetryManager->SetContextSyncTotalSize(m_totalUncompressedSizeBytes);
+            
+            // Determine where to write the extended manifest - use temp storage if available
             String metadataFolderPath, extendedManifestFullFilePath;
-            RETURN_IF_FAILED(JoinPathHelper(saveFolder, "cloudsync", metadataFolderPath));
-            FilePAL::CreatePath(metadataFolderPath);
-            String extendedManifestName = FormatString("extended-%u-manifest.json", static_cast<uint32_t>(latestPendingManifest->Version()));
+            RETURN_IF_FAILED(GetCloudSyncFolder(saveFolder, metadataFolderPath));
+            RETURN_IF_FAILED(FilePAL::CreatePath(metadataFolderPath));
+            String extendedManifestName = FormatString("extended-%llu-manifest.json", static_cast<uint64_t>(latestPendingManifest->Version()));
             RETURN_IF_FAILED(JoinPathHelper(metadataFolderPath, extendedManifestName, extendedManifestFullFilePath));
 
             auto manifestResult = ExtendedManifest::WriteExtendedManifest(
@@ -522,8 +614,25 @@ HRESULT UploadStep::Upload(
 
             m_compressedFilesToUpload.push_back(std::move(detail));
 
+            // Release game file storage early - compression is done, files are in zip buffers.
+            // This allows the platform to free game storage while the network upload proceeds.
+            SharedPtr<GameSaveGlobalState> globalState;
+            if (SUCCEEDED(GameSaveGlobalState::Get(globalState)))
+            {
+                HRESULT releaseHr = globalState->ApiProvider().ReleaseGameStorage();
+                if (FAILED(releaseHr))
+                {
+                    TRACE_WARNING("[GAME SAVE] UploadStep: ReleaseGameStorage failed hr=0x%08X (non-fatal)", releaseHr);
+                }
+                else
+                {
+                    TRACE_INFORMATION("[GAME SAVE] UploadStep: Released game storage after compression");
+                }
+            }
+
             m_stage = UploadStage::InitiateUpload;
             progressCallback(PFGameSaveFilesSyncState::Uploading, 0, m_totalUncompressedSizeBytes, progressCallbackContext);
+            uiCallbackManager.ShowProgressUI(task, m_localUser, PFGameSaveFilesSyncState::Uploading);
             task.ScheduleNow();
             return S_OK;
         }
@@ -632,6 +741,7 @@ HRESULT UploadStep::Upload(
                     saveFolder,
                     true);
 
+                RETURN_IF_FAILED(manifestResult.hr);
                 String manifest = manifestResult.ExtractPayload();
                 manifestDetail.uncompressedSizeBytes = manifest.size();
                 manifestDetail.compressedSizeBytes = manifest.size();
@@ -652,6 +762,8 @@ HRESULT UploadStep::Upload(
             else
             {
                 auto innerProgressContext = MakeShared<InnerProgressContext>(progressCallback, progressCallbackContext, task, m_localUser, PFGameSaveFilesSyncState::Uploading);
+                innerProgressContext->totalUncompressedBytes = m_totalUncompressedSizeBytes;
+                innerProgressContext->totalCompressedBytes = m_totalCompressedSizeBytes;
 
                 TRACE_TASK("UploadSingleFileToCloud");
                 TRACE_INFORMATION("[GAME SAVE] UploadStep: file %s path %s", fileDetail.fileName.c_str(), fileDetail.fullFilePath.c_str());
@@ -708,7 +820,7 @@ HRESULT UploadStep::Upload(
                 fileToRequest.SetFileSizeBytes(Uint64ToString(compressedSize));
                 filesToRequestList.push_back(std::move(fileToRequest));
             }
-#if _DEBUG // just for debug stats
+#if defined(_DEBUG) // just for debug stats
             m_numFilesInFinalizedManifest = filesToRequestList.size();
 #endif
             finalizeRequest.SetFilesToFinalize(std::move(filesToRequestList));
@@ -761,14 +873,33 @@ HRESULT UploadStep::Upload(
                         // To handle, re-upload entire local file set re-compressed
                         // This should cause there to be less than 100 64MB zips due to quota
 
-                        // Delete all prior compressed files
+                        // Delete all prior compressed files. Only the temp zips: the vector also
+                        // carries the uncompressed thumbnail entry, whose fullFilePath is the
+                        // title's real <saveFolder>\pfthumbnail.png (the success path below guards
+                        // this too).
                         for (const ExtendedManifestCompressedFileDetail& uploadDetail : m_compressedFilesToUpload)
                         {
-                            FilePAL::DeleteLocalFile(uploadDetail.fullFilePath);
+                            if (uploadDetail.compression != CompressionType::Zip)
+                            {
+                                continue;
+                            }
+
+                            HRESULT deleteHr = FilePAL::DeleteLocalFile(uploadDetail.fullFilePath);
+                            if (FAILED(deleteHr))
+                            {
+                                TRACE_WARNING("[GAME SAVE] UploadStep: Failed to delete compressed file %s, HR:0x%0.8x", uploadDetail.fullFilePath.c_str(), deleteHr);
+                            }
                         }
 
                         SetToUploadFullSet(localFileFolderSet, remoteFileFolderSet);
+                        ConflictMetadata savedConflictMetadata = m_conflictMetadata; // Preserve conflict metadata across Reset
+                        uint64_t savedBaseline = m_originalActivationBaselineVersion; // Preserve baseline for KnownGood promotion
                         Reset(); // clear out all previous upload data
+                        m_conflictMetadata = savedConflictMetadata; // Restore conflict metadata for FinalizeManifest
+                        if (savedBaseline != 0)
+                        {
+                            m_originalActivationBaselineVersion = savedBaseline; // Restore baseline for KnownGood promotion
+                        }
 
                         this->m_uploadFullSetRetryCount++;
                         this->m_stage = UploadStage::CompressFiles;
@@ -801,7 +932,11 @@ HRESULT UploadStep::Upload(
                     {
                         if (uploadDetail.compression == CompressionType::Zip)
                         {
-                            FilePAL::DeleteLocalFile(uploadDetail.fullFilePath);
+                            HRESULT deleteHr = FilePAL::DeleteLocalFile(uploadDetail.fullFilePath);
+                            if (FAILED(deleteHr))
+                            {
+                                TRACE_WARNING("[GAME SAVE] UploadStep: Failed to delete zip after finalize %s, HR:0x%0.8x", uploadDetail.fullFilePath.c_str(), deleteHr);
+                            }
                         }
                         else 
                         {
@@ -823,6 +958,12 @@ HRESULT UploadStep::Upload(
                         task.ScheduleNow();
                         return;
                     }
+                    // Save the pending manifest as the preliminary post-finalize manifest.
+                    // If ListManifestsAfterUpload fails and the user cancels, this ensures
+                    // FolderSyncManager has the correct finalized version for RelockStep.
+                    // PromoteIfNeeded will overwrite this with the authoritative server data.
+                    m_postUploadLatestFinalizedPFManifest = latestPendingManifest->GetManifest();
+
                     m_stage = UploadStage::ListManifestsAfterUpload;
                     task.ScheduleNow();
                 }
@@ -841,6 +982,12 @@ HRESULT UploadStep::Upload(
             ListManifestsRequest request{};
 
             // Clean up all zip files in the cloudsync folder since upload is complete
+            // Check both temp storage (if available) and saveFolder/cloudsync
+
+            // Clean up temp storage files if available
+            CleanupTempCloudSyncFiles();
+
+            // Also clean up saveFolder/cloudsync
             String cloudSyncFolder;
             RETURN_IF_FAILED(JoinPathHelper(saveFolder, "cloudsync", cloudSyncFolder));
             
@@ -850,12 +997,16 @@ HRESULT UploadStep::Upload(
                 Vector<String> existingFiles = existingFilesResult.ExtractPayload();
                 for (const String& fileName : existingFiles)
                 {
-                    if (fileName.find(".zip") != String::npos)
+                    if (fileName.size() >= 4 && fileName.compare(fileName.size() - 4, 4, ".zip") == 0)
                     {
                         String fullFilePath;
                         RETURN_IF_FAILED(JoinPathHelper(cloudSyncFolder, fileName, fullFilePath));
                         TRACE_INFORMATION("[GAME SAVE] UploadStep: Cleaning up zip file after upload: %s", fullFilePath.c_str());
-                        FilePAL::DeleteLocalFile(fullFilePath);
+                        HRESULT deleteResult = FilePAL::DeleteLocalFile(fullFilePath);
+                        if (FAILED(deleteResult))
+                        {
+                            TRACE_WARNING("[GAME SAVE] UploadStep: Failed to delete zip file after upload %s, HR:0x%0.8x", fullFilePath.c_str(), deleteResult);
+                        }
                     }
                 }
             }
@@ -883,6 +1034,7 @@ HRESULT UploadStep::Upload(
                 else
                 {
                     m_manifests = result.Payload().GetManifests();
+                    m_nextAvailableVersion = result.Payload().GetNextAvailableVersion();
                     m_stage = UploadStage::PromoteIfNeeded;
                     task.ScheduleNow();
                 }
@@ -915,12 +1067,25 @@ HRESULT UploadStep::Upload(
                         TRACE_TASK(FormatString("BaselinePromotion UpdateManifestFinally HR:0x%0.8x", result.hr));
                         if (FAILED(result.hr))
                         {
-                            m_stage = UploadStage::WaitForFailedUI_PromoteIfNeeded;
-                            if(false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading))
+                            // Promotion is non-critical (upload already succeeded). If the baseline
+                            // is quarantined or no longer finalized, skip promotion and continue to
+                            // TakeLock rather than blocking the user in a retry loop.
+                            if (result.hr == E_PF_GAME_SAVE_NOT_FINALIZED_MANIFEST_NOT_ELIGIBLE_AS_KNOWN_GOOD ||
+                                result.hr == E_PF_GAME_SAVE_MANIFEST_UPDATES_NOT_ALLOWED)
                             {
-                                m_stage = UploadStage::UploadStepFailure;
-                                m_failureHR = result.hr;
+                                TRACE_WARNING("[GAME SAVE] UploadStep PromoteIfNeeded: baseline not eligible for KnownGood (HR:0x%0.8x), skipping promotion", static_cast<uint32_t>(result.hr));
+                                m_stage = UploadStage::TakeLock;
                                 task.ScheduleNow();
+                            }
+                            else
+                            {
+                                m_stage = UploadStage::WaitForFailedUI_PromoteIfNeeded;
+                                if(false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading))
+                                {
+                                    m_stage = UploadStage::UploadStepFailure;
+                                    m_failureHR = result.hr;
+                                    task.ScheduleNow();
+                                }
                             }
                         }
                         else
@@ -965,8 +1130,33 @@ HRESULT UploadStep::Upload(
             if (option == PFGameSaveFilesUploadOption::KeepDeviceActive)
             {
                 InitializeManifestRequest initManifestRequest;
-                uint64_t newManifestVersion = StringToUint64(m_postUploadLatestFinalizedPFManifest.GetVersion()) + 1;
+                // Base version = the winner/non-conflict manifest (the logical data ancestor).
+                // m_postUploadLatestFinalizedPFManifest was set by TryGetLatestFinalizedManifest
+                // which skips conflict losers — this is the correct base for the version chain.
                 uint64_t baseManifestVersion = StringToUint64(m_postUploadLatestFinalizedPFManifest.GetVersion());
+                // New version from service-provided NextAvailableVersion (accounts for all manifests
+                // including filtered-out PendingDeletion/Quarantined). Falls back to max(visible)+1.
+                uint64_t newManifestVersion = 0;
+                if (!m_nextAvailableVersion.empty())
+                {
+                    newManifestVersion = StringToUint64(m_nextAvailableVersion);
+                    if (newManifestVersion == 0)
+                    {
+                        TRACE_WARNING("[GAME SAVE] UploadStep TakeLock: Invalid NextAvailableVersion '%s', computing from manifest list", m_nextAvailableVersion.c_str());
+                    }
+                }
+                if (newManifestVersion == 0)
+                {
+                    for (const auto& m : m_manifests)
+                    {
+                        uint64_t v = StringToUint64(m.GetVersion());
+                        if (v >= newManifestVersion) newManifestVersion = v + 1;
+                    }
+                }
+                if (newManifestVersion == 0) newManifestVersion = baseManifestVersion + 1;
+                // Defensive: ensure new version is always greater than base to avoid
+                // unnecessary E_PF_GAME_SAVE_MANIFEST_VERSION_ALREADY_EXISTS round-trips.
+                newManifestVersion = std::max(newManifestVersion, baseManifestVersion + 1);
                 LockStep::CreateInitManifestRequest(m_entity.value(), initManifestRequest, baseManifestVersion, newManifestVersion, m_manifestVersionOffset, saveFolder);
 
                 TRACE_TASK("TakeLock InitializeManifest");
@@ -984,9 +1174,52 @@ HRESULT UploadStep::Upload(
 
                         if (result.hr == E_PF_GAME_SAVE_MANIFEST_VERSION_ALREADY_EXISTS)
                         {
-                            m_stage = UploadStage::TakeLock; // retry with incremented offset
-                            m_manifestVersionOffset++;
-                            task.ScheduleNow();
+                            // Bounded like BASE_VERSION_NOT_AVAILABLE below - an uncapped immediate
+                            // retry would spin on the service and never complete the async op.
+                            constexpr uint32_t maxVersionExistsRetries = 5;
+                            m_versionExistsRetryCount++;
+                            if (m_versionExistsRetryCount <= maxVersionExistsRetries)
+                            {
+                                m_stage = UploadStage::TakeLock; // retry with incremented offset
+                                m_manifestVersionOffset++;
+                                task.ScheduleNow();
+                            }
+                            else
+                            {
+                                TRACE_ERROR("[GAME SAVE] UploadStep TakeLock: MANIFEST_VERSION_ALREADY_EXISTS retry limit exceeded (%u attempts)", m_versionExistsRetryCount);
+                                m_stage = UploadStage::WaitForFailedUI_TakeLock;
+                                if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading))
+                                {
+                                    m_stage = UploadStage::UploadStepFailure;
+                                    m_failureHR = result.hr;
+                                    task.ScheduleNow();
+                                }
+                            }
+                        }
+                        else if (result.hr == E_PF_GAME_SAVE_BASE_VERSION_NOT_AVAILABLE)
+                        {
+                            constexpr uint32_t maxBaseVersionRetries = 3;
+                            m_baseVersionRetryCount++;
+                            if (m_baseVersionRetryCount <= maxBaseVersionRetries)
+                            {
+                                // Base version is stale - re-fetch manifests to discover actual current version
+                                TRACE_WARNING("[GAME SAVE] UploadStep TakeLock: BASE_VERSION_NOT_AVAILABLE (attempt %u/%u), refreshing manifests",
+                                    m_baseVersionRetryCount, maxBaseVersionRetries);
+                                m_stage = UploadStage::ListManifestsAfterUpload;
+                                m_manifestVersionOffset = 0;
+                                task.ScheduleNow();
+                            }
+                            else
+                            {
+                                TRACE_ERROR("[GAME SAVE] UploadStep TakeLock: BASE_VERSION_NOT_AVAILABLE retry limit exceeded (%u attempts)", m_baseVersionRetryCount);
+                                m_stage = UploadStage::WaitForFailedUI_TakeLock;
+                                if(false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading))
+                                {
+                                    m_stage = UploadStage::UploadStepFailure;
+                                    m_failureHR = result.hr;
+                                    task.ScheduleNow();
+                                }
+                            }
                         }
                         else
                         {
@@ -1033,7 +1266,8 @@ HRESULT UploadStep::Upload(
                 [this]() { 
                     TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_InitiateUpload: user chose OFFLINE (unexpected during upload)");
                     assert(false); 
-                    m_stage = UploadStage::UploadDone; 
+                    m_stage = UploadStage::UploadStepFailure;
+                    m_failureHR = E_ABORT;
                 });
         }
 
@@ -1048,7 +1282,8 @@ HRESULT UploadStep::Upload(
                 [this]() { 
                     TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_UploadFile: user chose OFFLINE (unexpected during upload)");
                     assert(false); 
-                    m_stage = UploadStage::UploadDone; 
+                    m_stage = UploadStage::UploadStepFailure;
+                    m_failureHR = E_ABORT;
                 });
         }
 
@@ -1063,7 +1298,8 @@ HRESULT UploadStep::Upload(
                 [this]() { 
                     TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_FinalizeManifest: user chose OFFLINE (unexpected during upload)");
                     assert(false); 
-                    m_stage = UploadStage::UploadDone; 
+                    m_stage = UploadStage::UploadStepFailure;
+                    m_failureHR = E_ABORT;
                 });
         }
 
@@ -1078,7 +1314,8 @@ HRESULT UploadStep::Upload(
                 [this]() { 
                     TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_ListManifestsAfterUpload: user chose OFFLINE (unexpected during upload)");
                     assert(false); 
-                    m_stage = UploadStage::UploadDone; 
+                    m_stage = UploadStage::UploadStepFailure;
+                    m_failureHR = E_ABORT;
                 });
         }
 
@@ -1093,7 +1330,8 @@ HRESULT UploadStep::Upload(
                 [this]() { 
                     TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_PromoteIfNeeded: user chose OFFLINE (unexpected during upload)");
                     assert(false); 
-                    m_stage = UploadStage::UploadDone; 
+                    m_stage = UploadStage::UploadStepFailure;
+                    m_failureHR = E_ABORT;
                 });
         }
 
@@ -1103,12 +1341,15 @@ HRESULT UploadStep::Upload(
             return uiCallbackManager.HandleFailedUI(task, 
                 [this]() { 
                     TRACE_INFORMATION("[GAME SAVE] UploadStep - WaitForFailedUI_TakeLock: user chose RETRY");
+                    m_baseVersionRetryCount = 0;
+                    m_versionExistsRetryCount = 0;
                     m_stage = UploadStage::TakeLock; 
-                }, 
+                },
                 [this]() { 
                     TRACE_WARNING("[GAME SAVE] UploadStep - WaitForFailedUI_TakeLock: user chose OFFLINE (unexpected during upload)");
                     assert(false); 
-                    m_stage = UploadStage::UploadDone; 
+                    m_stage = UploadStage::UploadStepFailure;
+                    m_failureHR = E_ABORT;
                 });
         }
 
@@ -1171,8 +1412,8 @@ UploadStep::KnownGoodPromotionResult UploadStep::EvaluateKnownGoodPromotionEligi
         }
     }
 
-    TRACE_WARNING("[GAME SAVE] KnownGoodPromotion skipped: baseline v:%llu missing from enumeration", m_originalActivationBaselineVersion);
-    return KnownGoodPromotionResult::NotApplicable;
+    TRACE_WARNING("[GAME SAVE] KnownGoodPromotion: baseline v:%llu not in enumeration, attempting promotion anyway (service may have pruned it)", m_originalActivationBaselineVersion);
+    return KnownGoodPromotionResult::NeedsUpdateCall;
 }
 
 void UploadStep::SetToUploadFullSet(
@@ -1183,18 +1424,30 @@ void UploadStep::SetToUploadFullSet(
     const Vector<FolderDetail>& localFolders = localFileFolderSet->GetFolders();
 
     // change FilesToUpload to full set of local files
+    // Only files that were actually seen on disk: local state can still carry records for files
+    // the game deleted, and re-advertising them would resurrect them in the rebuilt manifest and
+    // recreate them on every other device (as well as failing the retry when compression tries to
+    // open a path that no longer exists).
     Vector<const FileDetail*> filesToUpload;
     for (const FileDetail& localFile : localFiles)
     {
+        if (!localFile.existsLocally)
+        {
+            continue;
+        }
         filesToUpload.push_back(&localFile);
     }
     localFileFolderSet->SetFilesToUpload(std::move(filesToUpload));
 
-    // Change FilesToDeleteUponUpload to empty
+    // Change FilesToDeleteUponUpload to empty. A full-set upload rewrites the manifest from
+    // filesToUpload alone, so locally deleted files are already absent from the new manifest and
+    // must not also be sent as explicit deletions.
     Vector<const FileDetail*> filesToDeleteUponUpload;
     localFileFolderSet->SetFilesToDeleteUponUpload(std::move(filesToDeleteUponUpload));
 
     // Change FoldersToCreateUponUpload to all folders except root
+    // Only folders still on disk: local state can carry records for folders the game deleted, and
+    // re-advertising them would recreate them on every other device.
     Vector<const FolderDetail*> foldersToCreateUponUpload;
     for (const FolderDetail& localFolder : localFolders)
     {
@@ -1203,13 +1456,18 @@ void UploadStep::SetToUploadFullSet(
             continue; // skip the root folder
         }
 
+        if (!localFolder.existsLocally)
+        {
+            continue;
+        }
+
         foldersToCreateUponUpload.push_back(&localFolder);
     }
     localFileFolderSet->SetFoldersToCreateUponUpload(std::move(foldersToCreateUponUpload));
 
     // Change CompressedFilesToKeep to empty
-    Vector<size_t> compressedFileIndies;
-    remoteFileFolderSet->SetCompressedFilesToKeep(std::move(compressedFileIndies));
+    Vector<size_t> compressedFileIndices;
+    remoteFileFolderSet->SetCompressedFilesToKeep(std::move(compressedFileIndices));
 }
 
 HRESULT UploadStep::DeletePendingManifest(
@@ -1240,6 +1498,11 @@ HRESULT UploadStep::DeletePendingManifest(
                 TRACE_TASK(FormatString("DeleteManifestFinally HR:0x%0.8x", result.hr));
                 m_telemetryManager->SetContextDeleteHttpInfo(result.httpResult);
 
+                if (FAILED(result.hr))
+                {
+                    TRACE_ERROR("[GAME SAVE] UploadStep: DeleteManifest failed HR:0x%0.8x", result.hr);
+                    m_deleteManifestFailureHR = result.hr;
+                }
                 m_deleteManifestStage = DeleteManifestStage::DeleteDone;
                 task.ScheduleNow();
             });

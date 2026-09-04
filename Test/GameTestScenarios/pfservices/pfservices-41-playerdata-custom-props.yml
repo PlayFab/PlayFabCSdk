@@ -1,0 +1,57 @@
+id: PFServices-41-PlayerData-Custom-Props
+name: PFServices 41 - Player Custom Properties CRUD
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Creates, lists, gets, and deletes player custom properties.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFPlayerDataManagementClientUpdatePlayerCustomPropertiesAsync
+    - command: PFPlayerDataManagementClientUpdatePlayerCustomPropertiesGetResult
+    - command: PFPlayerDataManagementClientListPlayerCustomPropertiesAsync
+      expectFailure: true  # E_FAIL (0x80004005) - custom properties feature not available for this title
+    - command: PFPlayerDataManagementClientListPlayerCustomPropertiesGetResult
+    - command: PFPlayerDataManagementClientGetPlayerCustomPropertyAsync
+      expectFailure: true  # E_FAIL (0x80004005) - custom properties feature not available
+    - command: PFPlayerDataManagementClientGetPlayerCustomPropertyGetResult
+    - command: PFPlayerDataManagementClientDeletePlayerCustomPropertiesAsync
+      expectFailure: true  # E_FAIL (0x80004005) - custom properties feature not available
+    - command: PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

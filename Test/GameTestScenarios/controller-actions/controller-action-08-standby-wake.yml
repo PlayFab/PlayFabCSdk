@@ -1,0 +1,60 @@
+id: Controller-Action-08-Standby-Wake
+name: Controller Action 08 - Connected Standby / Wake / QueryPowerState
+tags:
+  - xboxactions
+platforms:
+  xbox: untested
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: Verify Standby puts console in connected standby, Wake wakes it up, and QueryPowerState reports status.
+devices:
+  DeviceA:
+    engine: xbox
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  init:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+  test:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QueryPowerState
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Standby
+    - command: SmokeDelay
+      parameters:
+        durationMs: 10000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Wake
+    - command: SmokeDelay
+      parameters:
+        durationMs: 15000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QueryPowerState
+  cleanup:
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: init
+  - role: DeviceA
+    block: test
+  - role: DeviceA
+    block: cleanup

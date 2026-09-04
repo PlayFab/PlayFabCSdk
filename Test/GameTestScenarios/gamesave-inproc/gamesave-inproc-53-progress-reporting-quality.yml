@@ -1,0 +1,253 @@
+id: Scenario-Inproc-53-Progress-Reporting-Quality
+name: GameSave Inproc 53 - Progress Reporting Quality (Upload and Download)
+tags:
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: ignore
+description: >
+  Verify the values a title would use to render a sync progress bar are usable.
+  PFGameSaveFilesUiProgressCallback is only a state-change notification, so the values behind a
+  progress bar come from polling PFGameSaveFilesUiProgressGetProgress. This scenario samples that
+  poll on a background thread across a real upload and a real download and asserts that total is
+  never reported as 0, current starts at 0 and reaches total (100%), current never moves backwards
+  or exceeds total, and there are enough intermediate values for a bar to visibly animate.
+  It also asserts the snapshot taken at the moment the callback fires is already usable, which is
+  what a title that reads progress inside the callback will see.
+  The download half must run against a genuinely fresh save folder. Wiping the uploading session's
+  save root instead leaves the DeleteSaveRoot sentinel behind with a newer timestamp and no local
+  sync state, which the compare step reads as a locally-modified file and turns the sync into a
+  conflict, so nothing is ever downloaded and there is no download progress to sample.
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  session-one-upload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario53A"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario53A"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    # Neither half of this scenario should ever hit a save conflict. Leaving the auto-responder
+    # disabled makes an unexpected conflict fail the sync loudly instead of silently resolving it
+    # with whatever action an earlier scenario in the same process happened to leave configured.
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Drop whatever a previous scenario left in the cloud so the upload below publishes exactly
+    # the payload this scenario measures.
+    - command: DeleteSaveRoot
+    # Multiple multi-megabyte files so progress advances in many observable steps rather
+    # than jumping straight from 0 to complete.
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateRandomBinaryFile
+            relativePath: progress/chunk01.bin
+            bytes: 2097152
+          - verb: CreateRandomBinaryFile
+            relativePath: progress/chunk02.bin
+            bytes: 2097152
+          - verb: CreateRandomBinaryFile
+            relativePath: progress/chunk03.bin
+            bytes: 2097152
+          - verb: CreateRandomBinaryFile
+            relativePath: progress/chunk04.bin
+            bytes: 2097152
+          - verb: CreateRandomBinaryFile
+            relativePath: progress/chunk05.bin
+            bytes: 2097152
+          - verb: CreateRandomBinaryFile
+            relativePath: progress/chunk06.bin
+            bytes: 2097152
+          - verb: CreateRandomBinaryFile
+            relativePath: progress/chunk07.bin
+            bytes: 2097152
+          - verb: CreateRandomBinaryFile
+            relativePath: progress/chunk08.bin
+            bytes: 2097152
+    # Record what the callback itself observes, and poll in the background the way a title would.
+    - command: PFGameSaveFilesSetUiProgressStateRecording
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesStartProgressSampler
+      parameters:
+        intervalMs: 10
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFGameSaveFilesStopProgressSampler
+    # A title showing an upload bar must get a real total and see current walk to 100%.
+    - command: PFGameSaveFilesVerifyProgressQuality
+      parameters:
+        source: polled
+        state: Uploading
+        requireNonZeroTotal: true
+        requireStartAtZero: true
+        requireReachTotal: true
+        requireMonotonic: true
+        minDistinctCurrent: 3
+    # The snapshot available at callback time must already be usable, not 0/0.
+    - command: PFGameSaveFilesVerifyProgressQuality
+      parameters:
+        source: callback
+        state: Uploading
+        requireNonZeroTotal: true
+        requireStartAtZero: true
+        requireReachTotal: false
+        requireMonotonic: true
+        minDistinctCurrent: 1
+    # The compression phase is reported as its own state and gets its own callback, so it needs a
+    # real total too -- otherwise a title's bar goes indeterminate for the whole of PreparingForUpload.
+    - command: PFGameSaveFilesVerifyProgressQuality
+      parameters:
+        source: polled
+        state: PreparingForUpload
+        requireNonZeroTotal: true
+        requireStartAtZero: true
+        requireReachTotal: true
+        requireMonotonic: true
+        minDistinctCurrent: 3
+        # UploadWithUiAsync flips the sync state synchronously to reject concurrent uploads, before
+        # the save folder has been enumerated, so the byte total is briefly the documented
+        # "not yet known" value. Once published it must stay determinate.
+        allowLeadingUnknownTotal: true
+    - command: PFGameSaveFilesVerifyProgressQuality
+      parameters:
+        source: callback
+        state: PreparingForUpload
+        requireNonZeroTotal: true
+        requireStartAtZero: true
+        requireReachTotal: false
+        requireMonotonic: true
+        minDistinctCurrent: 1
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  session-two-download:
+    - command: XGameRuntimeInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    # A separate, empty save folder is what makes this half a real download: the sync has no local
+    # files and no local sync state, so every byte the upload published has to come back over the
+    # wire and the title-visible progress series covers a full download.
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario53B"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario53B"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesSetUiProgressStateRecording
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesStartProgressSampler
+      parameters:
+        intervalMs: 10
+    # The sync that pulls the 16 MB written above runs inside AddUser.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesStopProgressSampler
+    # This is the customer-reported path: a title showing a download bar saw current=0 total=0.
+    - command: PFGameSaveFilesVerifyProgressQuality
+      parameters:
+        source: polled
+        state: Downloading
+        requireNonZeroTotal: true
+        requireStartAtZero: true
+        requireReachTotal: true
+        requireMonotonic: true
+        minDistinctCurrent: 3
+    - command: PFGameSaveFilesVerifyProgressQuality
+      parameters:
+        source: callback
+        state: Downloading
+        requireNonZeroTotal: true
+        requireStartAtZero: true
+        requireReachTotal: false
+        requireMonotonic: true
+        minDistinctCurrent: 1
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-one-upload
+  - role: DeviceA
+    block: session-two-download
+cleanup:
+  DeviceA:
+    - command: PFGameSaveFilesStopProgressSampler
+    - command: PFGameSaveFilesSetUiProgressStateRecording
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario53A"
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario53B"

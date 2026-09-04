@@ -1,0 +1,57 @@
+id: LHC-05-Post-Json-Read-Response
+name: LHC 05 - POST JSON and Read JSON Response
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Simulate a typical SDK API call: POST a JSON body to httpbin.org,
+  read back the status code and response body, verify response headers
+  are present.  This is the most common customer pattern.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  post-json:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "POST"
+        url: "https://httpbin.org/post"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "Content-Type"
+        headerValue: "application/json"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "User-Agent"
+        headerValue: "libHttpClient-test"
+    - command: HCHttpCallRequestSetRequestBodyString
+      parameters:
+        body: "{\"titleId\":\"ABCD\",\"buildVersion\":\"1.0\",\"test\":true}"
+
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallResponseGetNumHeaders
+    - command: HCHttpCallResponseGetResponseBodyBytesSize
+
+    - command: HCHttpCallCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: post-json
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

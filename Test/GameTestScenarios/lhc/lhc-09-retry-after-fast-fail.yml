@@ -1,0 +1,80 @@
+id: LHC-09-Retry-After-Fast-Fail
+name: LHC 09 - Retry-After Header Fast-Fail
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Install a mock returning HTTP 429 with a Retry-After header and a
+  retry cache ID; perform the first call, then verify a second call
+  with the same cache ID is handled according to the retry-after window.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  retry-after:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Mock returning 429 with Retry-After
+    - command: HCMockCallCreate
+    - command: HCMockResponseSetStatusCode
+      parameters:
+        statusCode: 429
+    - command: HCMockResponseSetHeader
+      parameters:
+        headerName: "Retry-After"
+        headerValue: "10"
+    - command: HCMockResponseSetResponseBodyBytes
+      parameters:
+        body: "{\"error\":\"TooManyRequests\"}"
+    - command: HCMockAddMock
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/rate-limit"
+
+    # First call — gets 429, triggers retry-after caching
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/rate-limit"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    - command: HCHttpCallRequestSetRetryCacheId
+      parameters:
+        retryAfterCacheId: 100
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    # Second call with same cache ID — should fast-fail during retry-after
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/rate-limit"
+    - command: HCHttpCallRequestSetRetryCacheId
+      parameters:
+        retryAfterCacheId: 100
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    - command: HCMockClearMocks
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: retry-after
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

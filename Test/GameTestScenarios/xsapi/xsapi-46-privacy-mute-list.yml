@@ -1,0 +1,45 @@
+id: XSAPI-46-Privacy-Mute-List
+name: XSAPI 46 - Privacy Get Mute List
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Calls XblPrivacyGetMuteListAsync to verify it returns successfully.
+  Complements xsapi-05 which covers avoid list and permission checks.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblPrivacyGetMuteListAsync
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

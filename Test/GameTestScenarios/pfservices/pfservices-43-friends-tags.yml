@@ -1,0 +1,53 @@
+id: PFServices-43-Friends-Tags
+name: PFServices 43 - Set Friend Tags
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # SDK crash: PFFriendsClientGetFriendsListAsync causes access violation
+  psx: ignore
+description: >
+  Adds a friend, sets tags on them, then verifies tags in friends list.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFFriendsClientAddFriendAsync
+      expectFailure: true  # E_PF_INVALID_PARAMS (0x89235422) - fake friendPlayFabId
+    - command: PFFriendsClientAddFriendGetResult
+    - command: PFFriendsClientSetFriendTagsAsync
+    - command: PFFriendsClientGetFriendsListAsync  # SDK BUG: crashes with access violation
+    - command: PFFriendsClientGetFriendsListGetResult
+    - command: PFFriendsClientRemoveFriendAsync
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,97 @@
+id: Scenario-Xbox-67-SignOut-Init
+name: GameSave Xbox 67 - Sign-Out During Init
+tags:
+  - xboxgamesaves
+  - failing
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Single-device test. Init and AddUser for game saves, then sign out the Xbox user. Verify graceful handling of user loss. Sign in again, re-add user, and verify recovery.
+brief: Sign-out during init with graceful recovery
+group: K. Sign-Out / User Management
+devices:
+  DeviceA:
+    engine: xbox
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  session-init-and-signout:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: CleanSaveFolder
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # AddUserWithUi begins game-save init / sync
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    # Sign out the Xbox user — app should detect user loss gracefully
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: SignOut
+  session-re-signin-verify:
+    # Sign the user back in (controller auto-detects the previously signed-out user)
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: SignIn
+    - command: SmokeDelay
+      parameters:
+        durationMs: 10000
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-init-and-signout
+  - role: DeviceA
+    block: session-re-signin-verify
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+

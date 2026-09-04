@@ -1534,10 +1534,11 @@ PF_API PFAuthenticationLoginWithPSNAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENCRYPTION_KEY_MISSING,
-/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PSN_AUTH_CODE,
-/// E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
-/// E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PARAMS,
+/// E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_PSN_INACCESSIBLE, E_PF_PSN_NEXT_GEN_NOT_CONFIGURED_FOR_TITLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFAuthenticationLoginWithPSNGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -1556,10 +1557,11 @@ PF_API PFAuthenticationLoginWithPSNGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENCRYPTION_KEY_MISSING,
-/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PSN_AUTH_CODE,
-/// E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
-/// E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PARAMS,
+/// E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_PSN_INACCESSIBLE, E_PF_PSN_NEXT_GEN_NOT_CONFIGURED_FOR_TITLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// If the PFAuthenticationLoginWithPSNAsync call fails, entityHandle with be null. Otherwise, the handle must be closed with PFEntityCloseHandle
@@ -2268,10 +2270,11 @@ PF_API PFAuthenticationServerLoginWithPSNAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENCRYPTION_KEY_MISSING,
-/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PSN_AUTH_CODE,
-/// E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
-/// E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PARAMS,
+/// E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_PSN_INACCESSIBLE, E_PF_PSN_NEXT_GEN_NOT_CONFIGURED_FOR_TITLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFAuthenticationServerLoginWithPSNGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -2290,10 +2293,11 @@ PF_API PFAuthenticationServerLoginWithPSNGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ENCRYPTION_KEY_MISSING,
-/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PSN_AUTH_CODE,
-/// E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
-/// E_PF_PSN_INACCESSIBLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_PARAMS,
+/// E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID, E_PF_PLAYER_SECRET_ALREADY_CONFIGURED, E_PF_PLAYER_SECRET_NOT_CONFIGURED,
+/// E_PF_PSN_INACCESSIBLE, E_PF_PSN_NEXT_GEN_NOT_CONFIGURED_FOR_TITLE, E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// If the PFAuthenticationServerLoginWithPSNAsync call fails, entityHandle with be null. Otherwise, the handle must be closed with PFEntityCloseHandle
@@ -2764,12 +2768,9 @@ PF_API PFAuthenticationDeleteAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Windows, Linux, and macOS.
-/// This API must be called with X-SecretKey, X-Authentication or X-EntityToken headers. An optional
-/// EntityKey may be included to attempt to set the resulting EntityToken to a specific entity, however
-/// the entity must be a relation of the caller, such as the master_player_account of a character. If
-/// sending X-EntityToken the account will be marked as freshly logged in and will issue a new token.
-/// If using X-Authentication or X-EntityToken the header must still be valid and cannot be expired or
-/// revoked.
+/// This API must be called with X-SecretKey, X-Authentication or X-EntityToken headers. The header must
+/// still be valid and cannot be expired or revoked.If successful, it will issue a new entity token and
+/// emit the 'entity_logged_in' PlayStream event.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationGetEntityGetResult"/> to
 /// get the result.
@@ -2813,12 +2814,9 @@ PF_API PFAuthenticationGetEntityGetResult(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Windows, Linux, and macOS.
-/// This API must be called with X-SecretKey, X-Authentication or X-EntityToken headers. An optional
-/// EntityKey may be included to attempt to set the resulting EntityToken to a specific entity, however
-/// the entity must be a relation of the caller, such as the master_player_account of a character. If
-/// sending X-EntityToken the account will be marked as freshly logged in and will issue a new token.
-/// If using X-Authentication or X-EntityToken the header must still be valid and cannot be expired or
-/// revoked.
+/// This API must be called with X-SecretKey, X-Authentication or X-EntityToken headers. The header must
+/// still be valid and cannot be expired or revoked.If successful, it will issue a new entity token and
+/// emit the 'entity_logged_in' PlayStream event.
 ///
 /// When the asynchronous task is complete, call <see cref="PFAuthenticationGetEntityWithSecretKeyGetResult"/>
 /// to get the result.

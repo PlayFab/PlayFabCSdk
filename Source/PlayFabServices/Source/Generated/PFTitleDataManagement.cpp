@@ -54,6 +54,7 @@ PF_API PFTitleDataManagementClientGetPublisherDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetPublisherDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFTitleDataManagementGetPublisherDataResult*>(buffer);
@@ -133,6 +134,7 @@ PF_API PFTitleDataManagementClientGetTitleDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFTitleDataManagementGetTitleDataResult*>(buffer);
@@ -183,6 +185,7 @@ PF_API PFTitleDataManagementClientGetTitleNewsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementClientGetTitleNewsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFTitleDataManagementGetTitleNewsResult*>(buffer);
@@ -234,6 +237,7 @@ PF_API PFTitleDataManagementServerGetPublisherDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetPublisherDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFTitleDataManagementGetPublisherDataResult*>(buffer);
@@ -317,6 +321,7 @@ PF_API PFTitleDataManagementServerGetTitleDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFTitleDataManagementGetTitleDataResult*>(buffer);
@@ -369,6 +374,7 @@ PF_API PFTitleDataManagementServerGetTitleInternalDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleInternalDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFTitleDataManagementGetTitleDataResult*>(buffer);
@@ -421,6 +427,7 @@ PF_API PFTitleDataManagementServerGetTitleNewsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFTitleDataManagementServerGetTitleNewsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFTitleDataManagementGetTitleNewsResult*>(buffer);

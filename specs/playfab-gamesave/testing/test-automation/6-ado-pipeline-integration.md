@@ -1,7 +1,7 @@
 # ADO Pipeline Integration for Test Automation
 
 ## Purpose
-Define the approach for integrating the PFGameSave test controller and PFGameSaveTestDeviceWindows.exe into Azure DevOps (ADO) pipelines to enable automated regression testing on every PR and nightly builds. This document covers the pipeline modifications, artifact packaging, and phased rollout plan.
+Define the approach for integrating the PFGameSave test controller and GameTestAppWindows.exe into Azure DevOps (ADO) pipelines to enable automated regression testing on every PR and nightly builds. This document covers the pipeline modifications, artifact packaging, and phased rollout plan.
 
 ## Goals
 - **Automated Regression**: Run smoke tests automatically on every PR to catch regressions before merge
@@ -23,7 +23,7 @@ Define the approach for integrating the PFGameSave test controller and PFGameSav
 ## Phase 1: Single-Machine Automation
 
 ### Overview
-The build machine runs both the test controller and 1-2 PFGameSaveTestDeviceWindows.exe instances. All apps use:
+The build machine runs both the test controller and 1-2 GameTestAppWindows.exe instances. All apps use:
 - **In-proc PFGameSaves** (no external service dependencies for save operations)
 - **CustomID authentication** (no Xbox Live sign-in UI required)
 - **Local file system** for save folder simulation
@@ -35,7 +35,7 @@ This configuration is fully headless and can run in a standard ADO build agent w
 ┌─────────────────────────────────────────────────────────┐
 │                   ADO Build Agent                       │
 │  ┌─────────────────────────────────────────────────┐   │
-│  │          PFGameSaveTestController.exe           │   │
+│  │          GameTestController.exe           │   │
 │  │  - Loads scenario YAML files                    │   │
 │  │  - Orchestrates test execution                  │   │
 │  │  - Reports pass/fail to stdout + log files      │   │
@@ -52,17 +52,17 @@ This configuration is fully headless and can run in a standard ADO build agent w
 └─────────────────────────────────────────────────────────┘
 ```
 
-### PFGameSaveTestDeviceWindows.exe Configuration
-Each PFGameSaveTestDeviceWindows.exe instance is launched with command-line parameters:
+### GameTestAppWindows.exe Configuration
+Each GameTestAppWindows.exe instance is launched with command-line parameters:
 ```
-PFGameSaveTestDeviceWindows.exe --controller-ip 127.0.0.1 --device-name DeviceA
-PFGameSaveTestDeviceWindows.exe --controller-ip 127.0.0.1 --device-name DeviceB
+GameTestAppWindows.exe --controller-ip 127.0.0.1 --device-name DeviceA
+GameTestAppWindows.exe --controller-ip 127.0.0.1 --device-name DeviceB
 ```
 
 ### Test Controller Configuration
 The controller is launched with parameters to run in headless/automated mode:
 ```
-PFGameSaveTestController.exe --headless --run-tag passing --exit-on-complete --results-file results.json
+GameTestController.exe --headless --run-tag passing --exit-on-complete --results-file results.json
 ```
 
 ---
@@ -80,7 +80,7 @@ Extends Phase 1 by adding an Xbox devkit as a second device. This validates:
 ┌───────────────────────────────────────┐     ┌──────────────────────┐
 │           ADO Build Agent             │     │    Xbox Console      │
 │  ┌─────────────────────────────────┐  │     │  ┌────────────────┐  │
-│  │     PFGameSaveTestController    │◄─┼─────┼─►│  TestDevice B  │  │
+│  │     GameTestController    │◄─┼─────┼─►│  TestDevice B  │  │
 │  └─────────────────────────────────┘  │     │  │  GRTS mode     │  │
 │                   │                   │     │  │  XUser auth    │  │
 │                   ▼                   │     │  └────────────────┘  │
@@ -102,7 +102,7 @@ Extends Phase 1 by adding an Xbox devkit as a second device. This validates:
 
 ### 1. Modify Existing PR Pipeline (`PlayFab.C.PullRequest.yml`)
 
-The existing GDK build job already compiles the test controller and PFGameSaveTestDeviceWindows.exe. Modify the artifact packaging step to include these binaries.
+The existing GDK build job already compiles the test controller and GameTestAppWindows.exe. Modify the artifact packaging step to include these binaries.
 
 #### Changes to `gdk-vs2022-build.yml`
 
@@ -119,13 +119,13 @@ Add a new section after the SDK packaging to collect test binaries:
     mkdir "%testArtifactDir%\Scenarios" 2>nul
     
     REM Copy test controller (C# .NET app)
-    xcopy /E /Y "$(Build.SourcesDirectory)\Out\x64\${{ parameters.configuration }}\PFGameSaveTestController\*" "%testArtifactDir%\Controller\"
+    xcopy /E /Y "$(Build.SourcesDirectory)\Out\x64\${{ parameters.configuration }}\GameTestController\*" "%testArtifactDir%\Controller\"
     
-    REM Copy PFGameSaveTestDeviceWindows.exe (C++ GDK app)
-    xcopy /E /Y "$(Build.SourcesDirectory)\Out\Gaming.Desktop.x64\${{ parameters.configuration }}\PFGameSaveTestDeviceWindows\*" "%testArtifactDir%\Device\"
+    REM Copy GameTestAppWindows.exe (C++ GDK app)
+    xcopy /E /Y "$(Build.SourcesDirectory)\Out\Gaming.Desktop.x64\${{ parameters.configuration }}\GameTestAppWindows\*" "%testArtifactDir%\Device\"
     
     REM Copy scenario YAML files
-    xcopy /E /Y "$(Build.SourcesDirectory)\Test\PFGameSaveTestController\Scenarios\*" "%testArtifactDir%\Scenarios\"
+    xcopy /E /Y "$(Build.SourcesDirectory)\Test/GameTestScenarios\*" "%testArtifactDir%\Scenarios\"
     
     echo Test harness packaging completed
     dir /s "%testArtifactDir%"
@@ -144,7 +144,7 @@ Add a new section after the SDK packaging to collect test binaries:
 
 Create a new pipeline file that:
 1. Downloads the TestHarness artifact from the PR build
-2. Launches PFGameSaveTestDeviceWindows.exe instances
+2. Launches GameTestAppWindows.exe instances
 3. Runs the test controller in headless mode
 4. Publishes results and logs
 5. Fails if any test fails
@@ -195,12 +195,12 @@ jobs:
             $resultsDir = "$(Pipeline.Workspace)\TestResults"
             New-Item -ItemType Directory -Path $resultsDir -Force
             
-            # Start PFGameSaveTestDeviceWindows.exe instances in background
-            $deviceAProcess = Start-Process -FilePath "$testRoot\Device\PFGameSaveTestDeviceWindows.exe" `
+            # Start GameTestAppWindows.exe instances in background
+            $deviceAProcess = Start-Process -FilePath "$testRoot\Device\GameTestAppWindows.exe" `
               -ArgumentList "--controller-ip", "127.0.0.1", "--device-name", "DeviceA" `
               -PassThru -RedirectStandardOutput "$resultsDir\DeviceA-stdout.txt" -RedirectStandardError "$resultsDir\DeviceA-stderr.txt"
             
-            $deviceBProcess = Start-Process -FilePath "$testRoot\Device\PFGameSaveTestDeviceWindows.exe" `
+            $deviceBProcess = Start-Process -FilePath "$testRoot\Device\GameTestAppWindows.exe" `
               -ArgumentList "--controller-ip", "127.0.0.1", "--device-name", "DeviceB" `
               -PassThru -RedirectStandardOutput "$resultsDir\DeviceB-stdout.txt" -RedirectStandardError "$resultsDir\DeviceB-stderr.txt"
             
@@ -216,7 +216,7 @@ jobs:
               "--log-file", "$resultsDir\controller.log"
             )
             
-            $controllerProcess = Start-Process -FilePath "$testRoot\Controller\PFGameSaveTestController.exe" `
+            $controllerProcess = Start-Process -FilePath "$testRoot\Controller\GameTestController.exe" `
               -ArgumentList $controllerArgs `
               -PassThru -NoNewWindow -Wait
             
@@ -256,7 +256,7 @@ jobs:
 
 ### Test Controller New Parameters
 
-Add the following command-line parameters to `PFGameSaveTestController`:
+Add the following command-line parameters to `GameTestController`:
 
 | Parameter | Description | Example |
 |-----------|-------------|---------|
@@ -278,9 +278,9 @@ Add the following command-line parameters to `PFGameSaveTestController`:
 | 3 | Timeout waiting for devices |
 | 4 | Fatal error during execution |
 
-### PFGameSaveTestDeviceWindows.exe Parameters
+### GameTestAppWindows.exe Parameters
 
-Add/verify the following command-line parameters for `PFGameSaveTestDeviceWindows.exe`:
+Add/verify the following command-line parameters for `GameTestAppWindows.exe`:
 
 | Parameter | Description | Example |
 |-----------|-------------|---------|
@@ -297,12 +297,12 @@ Add/verify the following command-line parameters for `PFGameSaveTestDeviceWindow
 ```
 TestHarness/
 ├── Controller/
-│   ├── PFGameSaveTestController.exe
-│   ├── PFGameSaveTestController.dll
+│   ├── GameTestController.exe
+│   ├── GameTestController.dll
 │   ├── *.dll (dependencies)
 │   └── appsettings.json
 ├── Device/
-│   ├── PFGameSaveTestDeviceWindows.exe
+│   ├── GameTestAppWindows.exe
 │   ├── *.dll (PlayFab SDK, libHttpClient, etc.)
 │   └── *.pdb (for debugging)
 └── Scenarios/
@@ -401,9 +401,9 @@ The following scenarios are currently tagged `passing` and will run in automated
 
 ### Phase 2 Tasks
 
-- [ ] **PFGameSaveTestDeviceXbox**: Create Xbox console version of the test device app by porting PFGameSaveTestDeviceWindows to DXToolkit (use PlayFabGameSaveSample-XboxConsole as baseline)
-- [ ] **Xbox Deployment**: Create pipeline task to deploy PFGameSaveTestDeviceXbox to Xbox via `xbrun`
-- [ ] **Xbox Launch**: Script to launch PFGameSaveTestDeviceXbox on Xbox via `xbrun`
+- [ ] **GameTestAppXbox**: Create Xbox console version of the test device app by porting GameTestAppWindows to DXToolkit (use PlayFabGameSaveSample-XboxConsole as baseline)
+- [ ] **Xbox Deployment**: Create pipeline task to deploy GameTestAppXbox to Xbox via `xbrun`
+- [ ] **Xbox Launch**: Script to launch GameTestAppXbox on Xbox via `xbrun`
 - [ ] **GRTS Scenarios**: Tag scenarios that require GRTS with `grts` tag
 - [ ] **Mixed Mode Tests**: Create scenarios that test inproc ↔ GRTS interop
 

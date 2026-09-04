@@ -15,6 +15,7 @@
 #include <playfab/services/PFCloudScript.h>
 #include <playfab/services/PFSegments.h>
 #include <playfab/services/PFTitleDataManagement.h>
+#include <playfab/services/PFPlayStream.h>
 #include <playfab/services/PFPushNotifications.h>
 #include <playfab/services/PFData.h>
 #include <playfab/services/PFInventory.h>

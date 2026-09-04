@@ -37,12 +37,11 @@ The October 2025 GDK uses a flat, platform-centric directory structure. Understa
 **October 2025 GDK Layout**:
 ```
 \Microsoft GDK\251000\windows\include
-\Microsoft GDK\251000\xbox_gen9\lib\x64
-\Microsoft GDK\251000\xbox_gen8\bin\x64
+\Microsoft GDK\251000\xbox\lib\x64
+\Microsoft GDK\251000\xbox\bin\x64
 ```
 
-> [!NOTE]
-> **Migrating from earlier GDK?** The previous folder structure (`$(GDK)\GRDK\ and $(GDK)\GXDK\`) has been replaced. Update your build scripts accordingly.
+**Migrating from earlier GDK?** The previous folder structure (`$(GDK)\GRDK\ and $(GDK)\GXDK\`) has been replaced. Update your build scripts accordingly.
 
 ### Setting Up Your Build System
 
@@ -57,9 +56,9 @@ Configure your build system to use the correct platform-specific paths:
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(GDK_INCLUDE_DIR "${GDK_PATH}/windows/include")
     set(GDK_LIB_DIR "${GDK_PATH}/windows/lib/x64")
-elseif(STEAMOS)
-    set(GDK_INCLUDE_DIR "${GDK_PATH}/steamos/include")
-    set(GDK_LIB_DIR "${GDK_PATH}/steamos/lib/aarch64")
+elseif(XBOX)
+    set(GDK_INCLUDE_DIR "${GDK_PATH}/xbox/include")
+    set(GDK_LIB_DIR "${GDK_PATH}/xbox/lib/x64")
 endif()
 ```
 
@@ -70,12 +69,9 @@ endif()
 <LibraryPath>$(GDK)\windows\lib\x64;$(LibraryPath)</LibraryPath>
 ```
 
-> [!TIP]
-> **Migrating from earlier GDK?** Replace old paths like `$(GDK)\GRDK\...\include` with the new structure shown above.
-
 #### Platform Support Details
-- **Xbox**: Uses `xbox_gen8` and `xbox_gen9` folders for different console generations
-- **Windows**: All Windows platforms (PC, Steam PC, Steam Deck) use the `windows` folder
+- **Xbox**: Uses `xbox` folders for all recent Xbox console generations
+- **Windows**: All Windows platforms (PC, Steam PC, Steam Deck-Proton) use the `windows` folder
 - **Steam Deck**: Despite running SteamOS, uses the `windows` folder for compatibility with Proton emulation
 
 ### Implementation Steps
@@ -182,8 +178,7 @@ The PlayFab Unified SDK is a modern, cohesive SDK that brings together all PlayF
 - Integrated tracing and diagnostics
 - Modular component loading (include only what you need)
 
-> [!NOTE]
-> **New to PlayFab?** The Unified SDK simplifies integration by providing a single, consistent API pattern across all PlayFab services. If you're implementing Game Saves or any other PlayFab services for the first time, you'll want to start with this modern architecture.
+**New to PlayFab?** The Unified SDK simplifies integration by providing a single, consistent API pattern across all PlayFab services. If you're implementing Game Saves or any other PlayFab services for the first time, you'll want to start with this modern architecture.
 
 ### Required SDK Components
 
@@ -202,20 +197,20 @@ Game Saves implementations need these Unified SDK components:
 #### Required Libraries for Linking
 ```
 Link these .lib files in your project:
-- libHttpClient.GDK.lib
-- PlayFabCore.GDK.lib 
-- PlayFabServices.GDK.lib (optional, but recommended for additional PlayFab features)
-- PlayFabGameSave.GDK.lib
+- libHttpClient.lib
+- PlayFabCore.lib 
+- PlayFabServices.lib (optional, but recommended for additional PlayFab features)
+- PlayFabGameSave.lib
 - xgameruntime.lib
 ```
 
 #### Required DLLs for Deployment
 ```
 Deploy these .dll files with Steam builds:
-- libHttpClient.GDK.dll
-- PlayFabCore.GDK.dll
-- PlayFabServices.GDK.dll (optional, but recommended)
-- PlayFabGameSave.GDK.dll
+- libHttpClient.dll
+- PlayFabCore.dll
+- PlayFabServices.dll (optional, but recommended)
+- PlayFabGameSave.dll
 - xgameruntime.dll
 ```
 
@@ -227,10 +222,10 @@ Configure your Visual Studio project to link the Unified SDK:
 ```xml
 <!-- Link all required Unified SDK libraries -->
 <AdditionalDependencies>
-  libHttpClient.GDK.lib;
-  PlayFabCore.GDK.lib;
-  PlayFabServices.GDK.lib;
-  PlayFabGameSave.GDK.lib;
+  libHttpClient.lib;
+  PlayFabCore.lib;
+  PlayFabServices.lib;
+  PlayFabGameSave.lib;
   xgameruntime.lib;
   %(AdditionalDependencies)
 </AdditionalDependencies>
@@ -238,15 +233,18 @@ Configure your Visual Studio project to link the Unified SDK:
 <!-- Automatically deploy DLLs for Steam builds -->
 <Target Name="CopyUnifiedSDKDlls" AfterTargets="Build" Condition="'$(SteamBuild)'=='true'">
   <ItemGroup>
-    <UnifiedSDKDlls Include="$(GDK)\windows\bin\libHttpClient.GDK.dll" />
-    <UnifiedSDKDlls Include="$(GDK)\windows\bin\PlayFabCore.GDK.dll" />
-    <UnifiedSDKDlls Include="$(GDK)\windows\bin\PlayFabServices.GDK.dll" />
-    <UnifiedSDKDlls Include="$(GDK)\windows\bin\PlayFabGameSave.GDK.dll" />
+    <UnifiedSDKDlls Include="$(GDK)\windows\bin\libHttpClient.dll" />
+    <UnifiedSDKDlls Include="$(GDK)\windows\bin\PlayFabCore.dll" />
+    <UnifiedSDKDlls Include="$(GDK)\windows\bin\PlayFabServices.dll" />
+    <UnifiedSDKDlls Include="$(GDK)\windows\bin\PlayFabGameSave.dll" />
     <UnifiedSDKDlls Include="$(GDK)\windows\bin\xgameruntime.dll" />
+  </ItemGroup>
   </ItemGroup>
   <Copy SourceFiles="@(UnifiedSDKDlls)" DestinationFolder="$(OutDir)" />
 </Target>
 ```
+
+**Migrating from earlier GDK?** Replace old paths like `$(GDK)\GRDK\...\include` with the new structure shown above.
 
 #### CMake Setup
 For CMake-based projects, configure dependencies and deployment:
@@ -254,20 +252,20 @@ For CMake-based projects, configure dependencies and deployment:
 ```cmake
 # Link all required Unified SDK libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    libHttpClient.GDK
-    PlayFabCore.GDK
-    PlayFabServices.GDK
-    PlayFabGameSave.GDK
+    libHttpClient
+    PlayFabCore
+    PlayFabServices
+    PlayFabGameSave
     xgameruntime
 )
 
 # Automatically deploy DLLs for Steam builds
 if(STEAM_BUILD)
     set(UNIFIED_SDK_DLLS
-        "${GDK_PATH}/windows/bin/libHttpClient.GDK.dll"
-        "${GDK_PATH}/windows/bin/PlayFabCore.GDK.dll"
-        "${GDK_PATH}/windows/bin/PlayFabServices.GDK.dll"
-        "${GDK_PATH}/windows/bin/PlayFabGameSave.GDK.dll"
+        "${GDK_PATH}/windows/bin/libHttpClient.dll"
+        "${GDK_PATH}/windows/bin/PlayFabCore.dll"
+        "${GDK_PATH}/windows/bin/PlayFabServices.dll"
+        "${GDK_PATH}/windows/bin/PlayFabGameSave.dll"
         "${GDK_PATH}/windows/bin/xgameruntime.dll"
     )
     
@@ -361,7 +359,8 @@ hr = XAsyncGetStatus(&async, true);  // Wait for completion
 hr = PFUninitializeAsync(&async);
 hr = XAsyncGetStatus(&async, true);  // Wait for completion
 
-// XGameRuntime cleanup is automatic
+// Clean up XGameRuntime
+XGameRuntimeUninitialize();
 ```
 
 > [!IMPORTANT]
@@ -389,17 +388,14 @@ While not directly required for Game Saves functionality, the October 2025 GDK a
 - Unified memory management and async operation patterns
 
 > [!NOTE]
-> **Not using Party or Multiplayer?** These changes don't affect Game Saves implementations. You can safely ignore this section if your game only uses Game Saves functionality.
-
-> [!TIP]
-> **Using Party or Multiplayer?** Consider migrating to the new unified APIs for improved integration, but this is not required for Game Saves functionality.
+> **Party and Multiplayer Components**: If your game uses PlayFab Party or Multiplayer, consider migrating to the new unified APIs that accept `PFEntityHandle` directly for improved integration. However, this is not required for Game Saves functionality - you can safely skip section 4 if you only use Game Saves.
 
 ## 5. Steam Deck Implementation
 
 Steam Deck support for PlayFab Game Saves requires significant additional implementation beyond standard PC builds, including custom authentication flows, comprehensive UI callbacks, and careful sync strategies.
 
 > [!IMPORTANT]
-> **Steam Deck Implementation Complexity**: Steam Deck integration involves custom authentication flows, extensive UI callback implementation, local storage management, and critical sync behavior differences. Due to the complexity and length of implementation requirements, Steam Deck implementation has been moved to a dedicated guide.
+> **Steam Deck Implementation Complexity**: Steam Deck integration involves custom authentication flows, UI callback implementation, and critical sync behavior differences. Due to the complexity and length of implementation requirements, Steam Deck implementation is in its own [dedicated guide](steam-deck-implementation.md).
 
 ### Key Steam Deck Considerations
 
@@ -411,7 +407,6 @@ Steam Deck support for PlayFab Game Saves requires significant additional implem
 - All Unified SDK DLLs must be deployed with your Steam build
 - Custom XUser authentication flow with UI callbacks
 - Registry configuration for non-retail sandbox testing
-- Local storage implementation for credential persistence
 - Frequent sync patterns to prevent data loss
 
 **Universal Sync Recommendations** (beneficial for all platforms):
@@ -426,7 +421,6 @@ While these patterns are required for Steam Deck, they're highly recommended for
 For comprehensive Steam Deck implementation details, including:
 - Detailed authentication flow setup
 - Complete UI callback implementation
-- XUser file storage requirements
 - Step-by-step initialization sequence
 - Troubleshooting guide
 - Sample code references
@@ -489,22 +483,7 @@ For comprehensive Steam Deck implementation details, including:
 - [Steam Deck Implementation Guide](steam-deck-implementation.md)
 
 ### Sample Code References
-- **Windows Game Saves Sample**: `samples/PlayFabGameSaveSample-Windows/`
+- **Windows Game Saves Sample**: [PlayFabGameSaveSample-Windows](https://github.com/PlayFab/PlayFab-Samples/tree/master/Samples/All/PlayFabGameSaveSample-Windows)
   - `GameSaveIntegration.cpp/.h` - Core Game Saves integration
   - `SteamIntegration.cpp/.h` - Steam Deck specific implementation (see Steam Deck guide)
-  - `XUserFileStorage.cpp/.h` - Local storage for Steam Deck (see Steam Deck guide)
   - `GameSaveIntegrationUI.cpp/.h` - UI callback implementations (see Steam Deck guide)
-
-### Important Timeline
-- **October 2025**: New layout and Unified SDK become default
-- **2610 GDK**: Legacy layout will be removed
-- **Recommendation**: Migrate immediately to avoid disruption
-
-### Key Migration Notes
-- **Unified SDK Preview**: Currently in public preview, contact Microsoft representative for access
-- **Breaking Changes**: Code changes required for initialization and cleanup sequences of Party and Multiplayer
-
----
-
-> [!NOTE]
-> This guide covers implementing PlayFab Game Saves with the October 2025 GDK architecture. Whether you're starting fresh or migrating an existing implementation, these requirements apply to all projects using Game Saves with October 2025 GDK and later. For complete GDK information, consult the official Microsoft GDK documentation.

@@ -1,0 +1,55 @@
+Read {{TESTRESULT}} and debug the failures using ETL and logs and source at {{CONNECTEDSTORAGE}}.
+
+Work through the failures ONE AT A TIME. For each failing test:
+1. Read its evidence FIRST: the per-test logs and ETL live under the run's pass<N>\<test-id>\ folder (the pass<N> path is the "Logs:" line in testresult.txt). Cross-reference the platform source at {{CONNECTEDSTORAGE}}.
+2. Classify based on evidence, not a guess. A failure can be FAIL, TIMEOUT, or NO_RESULTS — treat them all the same way (read the logs/ETL to find out why).
+
+If the failure is a TEST ISSUE (bad scenario YAML, wrong assertion, harness timing/flake, compile/logic error in the test code), fix it but don't run the test again. If your fix changes test *code* that must be compiled (C++ in {{TEST_APP}}, or C# in {{TEST_CONTROLLER}}), set "rebuild" to true so the loop rebuilds the harness before re-running. If you only edited scenario YAML, data, or other non-compiled files, leave "rebuild" false.
+
+If the failure is a PLATFORM ISSUE (a real GRTS / ConnectedStorage / service bug), decide whether it is NEW or EXISTING by looking ONLY at the folders that currently exist under {{INVESTIGATIONS}}. That directory listing is the single source of truth for "already logged" — do NOT rely on memory, prior iterations, git history, or your own earlier work in this session. Scan the current subfolders of {{INVESTIGATIONS}} and read their root-cause.md files:
+  - If a folder already describes THIS bug (same test ID + same root cause) → EXISTING. Just continue on to the next test failure; do not create a duplicate.
+  - If NO current folder describes this bug (including the case where you or a previous run logged it before but the folder has since been deleted) → NEW. Log it fresh and copy the full evidence in (see "Evidence to copy" below — NOT just the ETL).
+This means a deliberately deleted investigation is treated as new and gets recreated — that is intended, so re-appearing (regressed) bugs are visible. Do NOT try to fix product code.
+
+Rules:
+- Do NOT work around product/platform bugs to work around a test failure. If a test is failing because the platform is broken, that is a PLATFORM ISSUE — log it; do not paper over it by weakening the test, loosening an assertion, or editing product code.
+- {{CONNECTEDSTORAGE}} (and any SDK/product source) is READ-ONLY reference. Never modify it. You only change test code ({{TEST_APP}}, {{TEST_CONTROLLER}}) and scenario/data files.
+- Only touch the test that is failing. Do NOT modify or delete unrelated tests to make the suite pass.
+- When you are unsure whether a failure is a test issue or a platform issue, prefer logging it as a platform issue (safer than a false "fixed") and leave it out of "rerun". Explain the uncertainty in "notes".
+- When logging a platform issue, create a dated folder under {{INVESTIGATIONS}} (e.g. MM-DD-short-slug) with a root-cause.md containing: the test ID, symptom, key log/ETL evidence (timestamps, event names, error codes), your root-cause reasoning, and code references into {{CONNECTEDSTORAGE}}. Copy the full evidence in (see "Evidence to copy" below).
+- Duplicate detection for BOTH platform and blocked investigations is based SOLELY on the folders that currently exist under {{INVESTIGATIONS}}. Always list that directory and read the relevant root-cause.md files before deciding an issue is "already logged". Never treat an issue as a duplicate from memory, a previous iteration, or git history. If the matching folder is not there right now (e.g. it was deleted), log the issue again as new. This lets a deleted investigation resurface when the underlying bug recurs.
+- If a failure is a TEST ISSUE you CANNOT solve on your own (blocked, missing information, needs a design decision, or you don't know how to fix it), do NOT guess or force a change. Log it for human triage: create a folder under {{INVESTIGATIONS}} with a "-blocked" postfix on the name (e.g. MM-DD-short-slug-blocked) containing a root-cause.md with the test ID, what you tried, why you're blocked, and exactly what help/decision you need. Copy the full evidence in (see "Evidence to copy" below) if it's new (judged by the current {{INVESTIGATIONS}} folders, per the rule above). Do NOT put a blocked test in "rerun".
+
+- Evidence to copy (whenever you create a NEW investigation or -blocked folder): copy the WHOLE per-test evidence set from the run's pass<N>\<test-id>\ folder — NOT just the ETL. The SDK/device logs are frequently the only place the actual failure is visible (e.g. an SDK-RPC error, or a hung device whose ETL only captured the aftermath). Copy all of these that exist for the failing test:
+    * controller.log (and controller-stdout.txt / controller-stderr.txt)
+    * device-*-log.txt and device-*-fetched-log.txt (per-device SDK logs, both DeviceA and DeviceB)
+    * device-*-summary.txt and device-*-fetched-summary.txt
+    * test-results.json
+    * the entire etl\ subtree (including every DeviceX_* subfolder and both .etl and decoded .json files)
+  Preserve the pass<N>\<test-id> layout inside the investigation folder (e.g. copy into {{INVESTIGATIONS}}\MM-DD-slug\ keeping the etl\ subfolder). If the failing/hung device's own device-*-log.txt is missing (it was force-disconnected), that is itself evidence — copy whatever IS present (controller.log and the peer device's logs) and note the missing device log in root-cause.md. Never copy ONLY the ETL.
+
+When done, write results to json at {{AIDEBUG}} with info which tests should be re-run.
+
+The aidebugresult.json MUST be a fresh, valid JSON file in exactly this shape:
+
+{
+  "rerun": ["18", "20"],
+  "rebuild": false,
+  "resolved": [
+    { "test_id": "18", "classification": "test-issue", "action": "what you changed" }
+  ],
+  "platform_issues": [
+    { "test_id": "20", "investigation": "path under {{INVESTIGATIONS}} or existing bug id", "new_etl_copied": true }
+  ],
+  "blocked": [
+    { "test_id": "22", "investigation": "path under {{INVESTIGATIONS}} ending in -blocked", "needs": "what help or decision is required" }
+  ],
+  "notes": "optional free text"
+}
+
+Rules for the JSON:
+- "rerun": the list of test IDs (as strings, e.g. "18") that you actually FIXED as test issues and that should be re-run next. Only include a test if you made a concrete fix for it. Platform issues and blocked tests do NOT go in "rerun".
+- "rebuild": true if any fix you made changed compiled test code (C++ / C#) and the test harness must be rebuilt before the next run; false otherwise. When true, the loop runs {{TESTS_BUILD}} before re-running the tests. Do NOT run the build yourself.
+- "blocked": test issues you could NOT solve and logged for human triage (folder name ends in -blocked). These are not re-run.
+- If nothing should be re-run (all remaining failures are platform issues or blocked items you have logged), set "rerun" to an empty list [].
+- Write this file LAST, only once you are finished with all failures. The automation loop reads "rerun" to decide the next test run, so it must be accurate.

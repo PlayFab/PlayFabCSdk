@@ -1,0 +1,35 @@
+# Link an Xbox Live identity to a CustomID-backed PlayFab account.
+#
+# Run this on the Xbox or PC-Xbox device ONLY if the Xbox Live user's
+# PlayFab entity needs to share cloud saves with a device that was
+# initialized using a CustomID user (init-device.txt).
+#
+# This follows Strategy 1 (Required Primary Identity Linking) from
+# playfab-docs/player-progression/game-saves/linking.md:
+#
+#   1. Login with CustomID (primary linking identity) — createAccount=true
+#      ensures the PlayFab account exists.
+#   2. Link the Xbox Live account to that CustomID-backed entity.
+#   3. Re-login with Xbox to bind the entity to the Xbox local user.
+#
+# After this completes, both the CustomID device and the Xbox device
+# share the same PlayFab entity and cloud save data.
+#
+# Prerequisites:
+#   - Device already initialized with init-device-xbox.txt or
+#     init-device-pc-xbox.txt (XUserHandle available)
+#   - The CustomID account already exists (run init-device.txt on
+#     the other device first, or createAccount=true handles it below)
+
+# Step 1: Login with CustomID (primary linking identity)
+PFAuthenticationLoginWithCustomIDAsync --customId=GameTestHarness --createAccount=true
+
+# Step 2: Link Xbox Live to the CustomID-backed PlayFab entity
+PFAccountManagementClientLinkXboxAccountAsync --forceLink=false
+
+# Step 3: Re-login with Xbox to bind the entity to the local user
+PFLocalUserLoginAsync --createAccount=false
+
+# Verify game saves are accessible
+PFGameSaveFilesAddUserWithUiAsync
+PFGameSaveFilesGetFolder

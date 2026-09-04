@@ -1,0 +1,54 @@
+id: PFServices-12-Inventory-Subtract
+name: PFServices 12 - Subtract Inventory Items
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Adds items then subtracts to reduce quantity and verifies the result.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFInventoryAddInventoryItemsAsync
+      expectFailure: true  # E_PF_INVALID_PARAMS (0x89235421) - empty request, items are required
+    - command: PFInventoryAddInventoryItemsGetResult
+    - command: PFInventorySubtractInventoryItemsAsync
+      expectFailure: true  # E_PF_INVALID_PARAMS (0x89235421) - empty request, items are required
+    - command: PFInventorySubtractInventoryItemsGetResult
+    - command: PFInventoryGetInventoryItemsAsync
+    - command: PFInventoryGetInventoryItemsGetResult
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

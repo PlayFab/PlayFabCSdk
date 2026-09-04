@@ -1,0 +1,222 @@
+id: Scenario-PC-107-Multi-User-Multi-Device-Isolation
+name: GameSave PC 107 - Multi-User Multi-Device Cross-User Isolation Under Contention
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Console 1 (DeviceA Xbox) has User A and User B initialized. Console 2 (DeviceB) has User A. User A uploads from Console 1, User A on Console 2 triggers contention. Verify User B on Console 1 is completely unaffected.
+brief: Cross-user isolation unaffected by same-user contention
+group: T. Multi-User Xbox
+devices:
+  DeviceA:
+    engine: pc-grts
+  DeviceB:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  console1-init-both-users:
+    # Console 1: Initialize both User A and User B, upload data for both
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # --- User A: init, write, upload with KeepDeviceActive ---
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xAA, 0xAA, 0xAA]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # --- User B: init on same console ---
+    - command: XUserAddAsync
+      parameters:
+        userIndex: 1
+    - command: PFLocalUserCreateHandleWithXboxUser
+      parameters:
+        userIndex: 1
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        localUserIndex: 1
+    - command: PFGameSaveFilesGetFolder
+      parameters:
+        localUserIndex: 1
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xBB, 0xBB, 0xBB, 0xBB]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+        localUserIndex: 1
+    # Snapshot User B's data for later verification
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+        localUserIndex: 1
+  console2-user-a-contention:
+    # Console 2: User A triggers contention against Console 1's User A lock
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Contention fires — Console 2 takes over User A's active device
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  console1-verify-user-b-unaffected:
+    # Verify User B on Console 1 is completely unaffected by User A's contention
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        localUserIndex: 1
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+        localUserIndex: 1
+    # User B's snapshot should still match — contention was only for User A
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+    # Cleanup User B
+        ignoreEmptyDirectories: true
+    - command: PFLocalUserCloseHandle
+      parameters:
+        localUserIndex: 1
+    - command: XUserCloseHandle
+      parameters:
+        userIndex: 1
+    # Cleanup User A
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    # System cleanup
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: console1-init-both-users
+  - role: DeviceB
+    block: console2-user-a-contention
+  - role: DeviceA
+    block: console1-verify-user-b-unaffected
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+      parameters:
+        localUserIndex: 1
+    - command: XUserCloseHandle
+      parameters:
+        userIndex: 1
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  DeviceB:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

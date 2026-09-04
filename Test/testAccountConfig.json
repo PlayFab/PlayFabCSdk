@@ -1,0 +1,92 @@
+{
+  "description": "Xbox test account configuration for GameSave tests. Accounts are Xbox Live test accounts in the XDKS.1 sandbox.",
+  "sandbox": "XDKS.1",
+  "accountDomain": "xboxtest.com",
+  "accountPrefix": "test",
+
+  "constraints": {
+    "noAccountOverlap": {
+      "rule": "No Xbox Live account may be signed into both the PC and Xbox simultaneously.",
+      "reason": "Xbox Live shows a blocking 'Signed in on another device' dialog that halts automation. The test harness cannot dismiss this dialog programmatically.",
+      "enforcement": "Each account must appear in exactly one device group (pc OR xbox, never both)."
+    },
+    "xboxMinimumAccounts": {
+      "rule": "At least 2 Xbox Live accounts must be provisioned and signed in on the Xbox devkit.",
+      "reason": "Multi-user tests (70, 104, 105, 106) require switching between two users on the same console. Single-user tests use only the primary account.",
+      "enforcement": "PrerequisiteChecker validates signed-in user count via 'xbuser list' before multi-user tests."
+    },
+    "sandboxAlignment": {
+      "rule": "All devices and all accounts must be in the same Xbox Live sandbox.",
+      "reason": "Xbox Live services partition data by sandbox. Mismatched sandboxes cause silent authentication failures and empty game save containers.",
+      "enforcement": "PrerequisiteChecker validates sandbox via 'xbconfig SandboxId' on each Xbox device."
+    },
+    "sharedPlayFabEntity": {
+      "rule": "All devices must log into PlayFab with the same customId (e.g., 'GameTestHarness').",
+      "reason": "Game save sync is keyed on PlayFab entity ID, not Xbox XUID. Different Xbox accounts work because they link to the same PlayFab entity via PFAuthenticationLoginWithCustomIDAsync. The call uses forceLink=true and unlinkIfNeeded=true to re-link the entity to whichever Xbox account is current.",
+      "enforcement": "The --custom-id-prefix CLI argument plus the scenario's customId field ensure all devices share the same PlayFab entity."
+    },
+    "accountProvisioning": {
+      "rule": "Test accounts must be provisioned in Xbox Partner Center for the target sandbox before use.",
+      "reason": "Unprovisioned accounts cannot sign in on devkits. Provisioning requires Partner Center access and may take a few minutes to propagate.",
+      "steps": [
+        "1. Create the account in Xbox Partner Center (or use an existing test account).",
+        "2. Ensure the account is authorized for the target sandbox (e.g., XDKS.1).",
+        "3. On the devkit: xbuser /X <ip> add <email>",
+        "4. On the devkit: xbuser /X <ip> signin <email>",
+        "5. Verify: xbuser /X <ip> list — should show 'Signed in: Yes' for the account."
+      ]
+    }
+  },
+
+  "accounts": {
+    "pc": {
+      "email": "test1@xboxtest.com",
+      "password": "replacepassword",
+      "role": "Primary PC account. Signs in on the Windows development machine only.",
+      "device": "pc"
+    },
+    "xboxPrimary": {
+      "email": "test2@xboxtest.com",
+      "password": "replacepassword",
+      "role": "Primary Xbox account. Must be signed in on the Xbox devkit at all times. Used by all single-user and two-device tests.",
+      "device": "xbox"
+    },
+    "xboxSecondary": {
+      "email": "test3@xboxtest.com",
+      "password": "replacepassword",
+      "role": "Secondary Xbox account on the Xbox devkit. Required for multi-user tests (70, 104, 105, 106). Must be signed in before running multi-user tests.",
+      "device": "xbox"
+    }
+  },
+
+  "excludedTests": {
+    "sflashRequired": {
+      "ids": [56, 57, 58, 90, 91, 92, 93, 94, 95, 96, 97],
+      "reason": "These tests require sflash.exe for hardware-level Xbox device control (connected standby, shutdown, power-loss simulation). They will be skipped automatically if sflash.exe is not on the PATH.",
+      "prerequisite": "sflash: true in YAML prerequisites"
+    },
+    "notes": "Tests 13, 42, 98, and 103 were previously excluded but do not require sflash.exe. They now use standard test accounts and run in automation."
+  },
+
+  "toolRequirements": {
+    "sflash": {
+      "description": "sflash.exe provides hardware-level control of Xbox devkits: connected standby (instant-on), graceful shutdown, and hard power-loss simulation.",
+      "requiredFor": "Tests 56-58 (connected standby), 90-93 (shutdown), 94-97 (power-loss)",
+      "installation": "sflash.exe is part of the Xbox Developer Kit tools. Ensure it is on the system PATH.",
+      "enforcement": "PrerequisiteChecker validates sflash.exe availability before tests that declare sflash: true in their YAML prerequisites. Tests are skipped with guidance if sflash.exe is not found."
+    }
+  },
+
+  "setupChecklist": [
+    "1. Ensure Xbox devkit is on and reachable at the expected IP (e.g., 10.0.0.105).",
+    "2. Verify sandbox: xbconfig /X <xbox-ip> SandboxId  →  must show XDKS.1",
+    "3. Sign in xboxPrimary:   xbuser /X <xbox-ip> signin /i:<userId>",
+    "4. For multi-user tests, also sign in xboxSecondary: xbuser /X <xbox-ip> signin /i:<userId>",
+    "5. Verify signed in: xbuser /X <xbox-ip> list  →  users with 'Signed in: Yes'",
+    "6. On the PC, sign in with the pc account (NOT an Xbox account used on the devkit).",
+    "7. Set PC sandbox: xbconfig SandboxId=XDKS.1  (then restart the PC test app if running)",
+    "8. Kill any leftover GameTestAppWindows processes on the PC before starting.",
+    "9. For standby/shutdown/power-loss tests (56-58, 90-97): ensure sflash.exe is on the PATH.",
+    "10. Run: dotnet run -- --headless --run-tag xboxgamesaves --custom-id-prefix <prefix>"
+  ]
+}

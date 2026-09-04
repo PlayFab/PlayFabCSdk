@@ -1,0 +1,49 @@
+id: XSAPI-37-Social-Leaderboard
+name: XSAPI 37 - Social Leaderboard Query (Friends Only)
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Queries a leaderboard with a social group filter set to friends,
+  verifies results contain only friends' entries.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblLeaderboardGetLeaderboardAsync
+      parameters:
+        socialGroup: 1
+        leaderboardName: "TotalPuzzlesSolvedLB"
+    - command: XblLeaderboardResultHasNext
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

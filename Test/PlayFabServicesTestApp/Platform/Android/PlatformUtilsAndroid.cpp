@@ -59,9 +59,9 @@ HRESULT GetTestTitleData(TestTitleData& testTitleData) noexcept
 
     try
     {
-        if (fileBuffer.data())
+        if (!fileBuffer.empty())
         {
-            titleDataJson = JsonValue::parse(fileBuffer.data());
+            titleDataJson = JsonValue::parse(fileBuffer.cbegin(), fileBuffer.cend());
         }
         else
         {

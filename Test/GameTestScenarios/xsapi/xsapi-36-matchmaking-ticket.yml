@@ -1,0 +1,55 @@
+id: XSAPI-36-Matchmaking-Ticket
+name: XSAPI 36 - Create and Query Match Ticket
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer mp/matchmaking_single_device.lua.
+  Creates a multiplayer session, creates a match ticket, queries
+  ticket details, gets hopper statistics, then deletes the ticket.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblMultiplayerSessionReferenceCreate
+    - command: XblMultiplayerSessionCreateHandle
+    - command: XblMultiplayerSessionJoin
+    - command: XblMultiplayerWriteSessionAsync
+    - command: XblMatchmakingCreateMatchTicketAsync
+    - command: XblMatchmakingGetMatchTicketDetailsAsync
+    - command: XblMatchmakingGetHopperStatisticsAsync
+    - command: XblMatchmakingDeleteMatchTicketAsync
+    - command: XblMultiplayerSessionLeave
+    - command: XblMultiplayerSessionCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>..\..\Out\$(PlatformTarget)\$(Configuration)\GameTestController\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="System.Net" />
+    <Using Include="System.Net.WebSockets" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="OpenCvSharp4" />
+    <PackageReference Include="OpenCvSharp4.Extensions" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" />
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\GameTestScenarios\**\*.yml">
+      <Link>Scenarios\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XboxDialogTemplates\*.png">
+      <Link>XboxDialogTemplates\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- XGameSaveEnumAPI.dll comes from the native C++ XGameSaveEnumAPI project.
+         Build XGameSaveEnumAPI first (or build the full solution) so this DLL exists.
+         The Condition guard prevents build errors when the DLL hasn't been built yet. -->
+    <Content Include="..\..\Out\$(PlatformTarget)\$(Configuration)\XGameSaveEnumAPI\XGameSaveEnumAPI.dll" Condition="Exists('..\..\Out\$(PlatformTarget)\$(Configuration)\XGameSaveEnumAPI\XGameSaveEnumAPI.dll')">
+      <Link>XGameSaveEnumAPI.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- XTF DLLs from GDK (required for Xbox screenshot capture and virtual gamepad input) -->
+  <PropertyGroup>
+    <GdkBinDir>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\GDK', 'InstallPath', '', RegistryView.Registry32))bin\</GdkBinDir>
+    <GdkBinDirFallback>C:\Program Files (x86)\Microsoft GDK\bin\</GdkBinDirFallback>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(GdkBinDir)XtfConsoleControl.dll')">
+    <None Include="$(GdkBinDir)XtfConsoleControl.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>XtfConsoleControl.dll</Link>
+    </None>
+    <None Include="$(GdkBinDir)XtfInput.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>XtfInput.dll</Link>
+    </None>
+    <None Include="$(GdkBinDir)XtfConsoleManager.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>XtfConsoleManager.dll</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition="!Exists('$(GdkBinDir)XtfConsoleControl.dll') and Exists('$(GdkBinDirFallback)XtfConsoleControl.dll')">
+    <None Include="$(GdkBinDirFallback)XtfConsoleControl.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>XtfConsoleControl.dll</Link>
+    </None>
+    <None Include="$(GdkBinDirFallback)XtfInput.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>XtfInput.dll</Link>
+    </None>
+    <None Include="$(GdkBinDirFallback)XtfConsoleManager.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>XtfConsoleManager.dll</Link>
+    </None>
+  </ItemGroup>
+</Project>

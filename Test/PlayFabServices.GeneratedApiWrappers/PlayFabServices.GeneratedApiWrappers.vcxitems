@@ -28,6 +28,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)SegmentsOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)TitleDataManagementOperations.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)TitleDataManagementOperations.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayStreamOperations.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayStreamOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DataOperations.h" />

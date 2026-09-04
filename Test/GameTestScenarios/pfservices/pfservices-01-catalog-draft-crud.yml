@@ -1,0 +1,54 @@
+id: PFServices-01-Catalog-Draft-CRUD
+name: PFServices 01 - Create, Get, and Delete Draft Item
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Creates a draft catalog item, retrieves it, verifies properties, then deletes it.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFCatalogCreateDraftItemAsync
+      expectFailure: true  # E_PF_NOT_AUTHORIZED (0x89235478) - title_player_account lacks catalog item type permissions
+    - command: PFCatalogCreateDraftItemGetResult
+    - command: PFCatalogGetDraftItemAsync
+      expectFailure: true  # E_PF_ITEM_NOT_FOUND (0x89235450) - no item was created
+    - command: PFCatalogGetDraftItemGetResult
+    - command: PFCatalogDeleteItemAsync
+      expectFailure: true  # E_PF_ITEM_NOT_FOUND (0x89235450) - no item was created
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

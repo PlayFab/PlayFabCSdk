@@ -180,17 +180,10 @@ HRESULT TraceState::Create(RunContext&& runContext, LocalStorage localStorage) n
 
     auto hr = AccessTraceState(AccessMode::Initialize, traceState);
 
-    if (SUCCEEDED(hr))
+    if (FAILED(hr))
     {
-        // Init LibHttpClient Tracing
-        HCTraceInit();
-#ifdef _DEBUG
-        HCSettingsSetTraceLevel(HCTraceLevel::Verbose);
-#endif
-#if HC_PLATFORM_IS_MICROSOFT
-        HCTraceSetEtwEnabled(true);
-#endif
-        HCTraceSetClientCallback(traceState->TraceCallback);
+        HCTraceSetClientCallback(nullptr);
+        HCTraceCleanup();
     }
 
     return hr;
@@ -233,6 +226,9 @@ HRESULT CALLBACK TraceState::CleanupAsyncProvider(XAsyncOp op, XAsyncProviderDat
     {
         // After this no other thread will be able to access TraceState if they don't already have a reference to it
         RETURN_IF_FAILED(AccessTraceState(AccessMode::Cleanup, context->traceState));
+
+        // Clear the callback after successful cleanup so we don't disable tracing if cleanup fails
+        HCTraceSetClientCallback(nullptr);
         context->asyncBlock = data->async;
 
         return XAsyncSchedule(data->async, 0);
@@ -335,6 +331,9 @@ void CALLBACK TraceState::TraceCallback(
         "V",
     };
 
+    size_t levelIndex = static_cast<size_t>(level);
+    if (levelIndex >= std::size(traceLevelNames)) levelIndex = 0;
+
     std::time_t timeTInSec = static_cast<std::time_t>(timestamp / 1000);
     uint32_t fractionMSec = static_cast<uint32_t>(timestamp % 1000);
     std::tm fmtTime = {};
@@ -349,7 +348,7 @@ void CALLBACK TraceState::TraceCallback(
 
     String formattedMessage = FormatString("[%04llX][%s][%02d:%02d:%02d.%03u][%s] %s",
         threadId,
-        traceLevelNames[static_cast<size_t>(level)],
+        traceLevelNames[levelIndex],
         fmtTime.tm_hour,
         fmtTime.tm_min,
         fmtTime.tm_sec,

@@ -1,0 +1,117 @@
+id: Scenario-PC-28-Upload-Offline
+name: GameSave PC 28 - Upload in Offline Mode
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Go offline, enter offline mode via UseOffline, write save data, call UploadWithUiAsync, verify it returns E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD (0x89237004). Verify local data intact.
+brief: Upload rejected in offline mode preserves local data
+group: D. Sync Failure / Offline
+devices:
+  DeviceA:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  enter-offline-mode:
+    # Stop GRTS, clear cache, disable network, start GRTS cold —
+    # ensures AddUser hits SyncFailed instead of using stale cache
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: FlushGrtsAndGoOffline
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # UiNavigator clicks "Play offline" on SyncFailed dialog
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: UseOffline
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Sync fails; UiNavigator clicks "Play offline"; enters offline mode
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+  write-and-upload-offline:
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    # Upload in offline mode — inproc returns E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD;
+    # GRTS shows SyncFailed stock TCUI → Cancel → returns E_GS_USER_CANCELED (0x80830004).
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+        expectedHr: "0x89237004, 0x80830004"
+    # Verify local data is still intact after failed upload
+    - command: PFGameSaveFilesGetFolder
+  cleanup-and-reconnect:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+executionOrder:
+  - role: DeviceA
+    block: enter-offline-mode
+  - role: DeviceA
+    block: write-and-upload-offline
+  - role: DeviceA
+    block: cleanup-and-reconnect
+cleanup:
+  DeviceA:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: StartGamingServices
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

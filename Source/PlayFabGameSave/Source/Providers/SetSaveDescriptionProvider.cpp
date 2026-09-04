@@ -13,7 +13,7 @@ namespace GameSave
 HRESULT SetSaveDescriptionProvider::DoWork(RunContext runContext)
 {
     std::lock_guard<std::recursive_mutex> lock(m_folderSyncMutex); // Prevent any of the Finally blocks from changing the state while the DoWork thread is active
-#if _DEBUG
+#if defined(_DEBUG)
     SingleThreadProviderValidationScope threadScope(m_singleThreadProvider);
 #endif
 
@@ -39,7 +39,7 @@ HRESULT SetSaveDescriptionProvider::DoWork(RunContext runContext)
         else
         {
             // Timed out; treat as deferred for next upload - just cache description and complete.
-            m_folderSync->SetLastShortSaveDescription(m_shortSaveDescription);
+            m_folderSync->SetLastShortSaveDescription(m_shortSaveDescription, true);
             TRACE_WARNING("SetSaveDescriptionProvider timed out waiting for FinalizeManifest; description cached for next upload");
             m_waitingForFinalize = false; // reset stale wait state after timeout
             this->Complete(0);

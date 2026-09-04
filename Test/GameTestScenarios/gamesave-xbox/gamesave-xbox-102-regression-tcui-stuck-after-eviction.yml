@@ -1,0 +1,140 @@
+id: Scenario-Xbox-102-Regression-TCUI-Stuck-After-Eviction
+name: GameSave Xbox 102 - Bug Regression TCUI Dialog Stuck After Eviction Mid-Sync
+tags:
+  - xboxgamesaves
+  - failing
+platforms:
+  xbox: passing  # Restructured: init online → terminate offline → relaunch → verify clean
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Initializes and syncs normally, then disables network, terminates the app (simulating eviction),
+  re-enables network, and relaunches. Verifies no stuck TCUI dialog and a clean sync on relaunch.
+  Regression test for Bug 61173408. Uses Terminate+Relaunch instead of EvictGame (equivalent
+  disruption without requiring a stub package).
+brief: "Regression: TCUI dialog stuck after mid-sync eviction"
+group: R. Bug Regressions
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  session-a-init-online:
+    # Initialize and add user with network up — establish synced state
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Sync succeeds with network up — baseline state established
+    - command: PFGameSaveFilesAddUserWithUiAsync
+  session-a-offline-terminate:
+    # Go offline, then terminate (simulates eviction during network disruption)
+    # DisableNetwork is followed only by controller commands → no offline batch needed
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: DisableNetwork
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Terminate
+    # Wait for termination to settle
+    - command: SmokeDelay
+      parameters:
+        durationMs: 10000
+    # Restore network before relaunch
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    # Relaunch the game — framework waits for WebSocket reconnection
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Relaunch
+  session-a-verify-clean:
+    # Re-initialize and verify clean sync — no stuck TCUI dialog
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Verify: game syncs normally — no residual TCUI error state
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    # Clean teardown
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-a-init-online
+  - role: DeviceA
+    block: session-a-offline-terminate
+  - role: DeviceA
+    block: session-a-verify-clean
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

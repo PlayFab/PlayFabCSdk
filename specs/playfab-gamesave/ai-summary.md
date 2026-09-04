@@ -12,15 +12,15 @@ PlayFab Game Saves provides cross‑device, cross‑platform synchronized save d
 1. Initialize PlayFab Core (PFInitialize) if not already.
 2. Create `PFServiceConfigHandle` (endpoint + Title ID).
 3. Create / obtain platform identity -> `PFLocalUserHandle` (Xbox, Steam, custom).
-4. Call `PFGameSaveFilesInitialize(&PFGameSaveInitArgs)` (set `saveFolder` on platforms that require explicit location—e.g., Steam Deck; ignored on Xbox/Windows).
+4. Call `PFGameSaveFilesInitialize(&PFGameSaveInitArgs)` (set `saveFolder` on platforms that require explicit location--e.g., Steam Deck; ignored on Xbox/Windows).
 5. (Optional / required on non-Xbox & for custom UI) Set UI callbacks via `PFGameSaveFilesSetUiCallbacks`.
-6. Call `PFGameSaveFilesAddUserWithUiAsync` (the “download dance”):
+6. Call `PFGameSaveFilesAddUserWithUiAsync` (the "download dance"):
    - Acquire/confirm active device
    - Resolve conflicts / contention
    - Download changed data
    - Provide root folder path via `PFGameSaveFilesGetFolder`
 7. Game reads/writes normal files inside that root (organize by top-level subfolders to define atomic units).
-8. Periodic or event-driven `PFGameSaveFilesUploadWithUiAsync` (the “upload dance”) with option:
+8. Periodic or event-driven `PFGameSaveFilesUploadWithUiAsync` (the "upload dance") with option:
    - `KeepDeviceActive` (continue playing & future uploads)
    - `ReleaseDeviceAsActive` (end-of-session / main menu transition)
 9. (Optional) Set short save description (`PFGameSaveFilesSetSaveDescriptionAsync`) before upload to improve remote UI context.
@@ -28,14 +28,14 @@ PlayFab Game Saves provides cross‑device, cross‑platform synchronized save d
 11. Uninitialize if you need to tear down: `PFGameSaveFilesUninitializeAsync`.
 
 ## Key Concepts
-- Active Device: Only one device “owns” ongoing progression; others must explicitly take over (device contention UI).
+- Active Device: Only one device "owns" ongoing progression; others must explicitly take over (device contention UI).
 - Atomic Unit = each root-level subfolder under the save root. Conflicts operate at this level: if any file in that subfolder needs both upload & download, the entire unit is in conflict.
 - Manifest + Compression:
   - Files grouped into ZIP bundles (≤ 64 MB) for efficient transfer.
-  - Extended manifest tracks each compressed payload and internal extracted files, with “SkipFile” flags to reuse previously uploaded compressed blobs.
+  - Extended manifest tracks each compressed payload and internal extracted files, with "SkipFile" flags to reuse previously uploaded compressed blobs.
   - New saves may re-upload only changed bundles; old bundles reused or eventually compacted (future heuristic).
 - Local State JSON (in-proc client) tracks last synced file size + timestamp to detect local modifications (not shared across devices).
-- Offline Mode: User can elect “UseOffline” when initial sync fails. Cloud ops then return `E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD` until re-AddUser attempt succeeds.
+- Offline Mode: User can elect "UseOffline" when initial sync fails. Cloud ops then return `E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD` until re-AddUser attempt succeeds.
 
 ## Platform Differences
 | Aspect | Xbox / Windows (GRTS) | Steam Deck / Other In-Process |
@@ -90,15 +90,15 @@ Upload Option Enum:
 | Active Device Changed (separate callback) | Async background event | Title may return to menu or let offline continue |
 
 ## Error Codes (Selected)
-- `E_PF_GAMESAVE_NOT_INITIALIZED` – Forgot to initialize library.
-- `E_PF_GAMESAVE_USER_NOT_ADDED` – Called folder/quota/upload before successful AddUser completion.
-- `E_PF_GAMESAVE_USER_ALREADY_ADDED` – Attempted second AddUser without re-init.
-- `E_PF_GAMESAVE_DOWNLOAD_IN_PROGRESS` – Tried upload before AddUser finished.
-- `E_PF_GAMESAVE_USER_CANCELLED` – User canceled via UI response.
-- `E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD` – Operating offline (expected in offline mode).
-- `E_PF_GAMESAVE_NETWORK_FAILURE` – Upload attempt failed while nominally connected.
-- `E_PF_GAMESAVE_DEVICE_NO_LONGER_ACTIVE` – Device lost active status (other device took over).
-- `E_PF_GAMESAVE_DISK_FULL` – Local storage insufficient during download.
+- `E_PF_GAMESAVE_NOT_INITIALIZED` - Forgot to initialize library.
+- `E_PF_GAMESAVE_USER_NOT_ADDED` - Called folder/quota/upload before successful AddUser completion.
+- `E_PF_GAMESAVE_USER_ALREADY_ADDED` - Attempted second AddUser without re-init.
+- `E_PF_GAMESAVE_DOWNLOAD_IN_PROGRESS` - Tried upload before AddUser finished.
+- `E_PF_GAMESAVE_USER_CANCELLED` - User canceled via UI response.
+- `E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD` - Operating offline (expected in offline mode).
+- `E_PF_GAMESAVE_NETWORK_FAILURE` - Upload attempt failed while nominally connected.
+- `E_PF_GAMESAVE_DEVICE_NO_LONGER_ACTIVE` - Device lost active status (other device took over).
+- `E_PF_GAMESAVE_DISK_FULL` - Local storage insufficient during download.
 
 ## Conflict Semantics
 Conflict = (Local changed since last upload) AND (Cloud changed since last sync) within same root-level subfolder. Resolution applies to all conflicting atomic units in one user choice:
@@ -141,19 +141,19 @@ Releasing active device early is strongly encouraged when user returns to menus 
 - Out-of-process pipeline converts PF callbacks into underlying PFX (platform) callbacks.
 - `AddUser` builds a PFX config (apiUrl + titleId + requesting XUser) and defers to `PFXGameSaveFilesGetFolderWithUiAsync`.
 - Maintains an internal context with up to 16 users (PF/GRTS user state array).
-- `IsConnectedToCloud` always returns true in this provider (out-of-proc model doesn’t surface offline path here).
+- `IsConnectedToCloud` always returns true in this provider (out-of-proc model doesn't surface offline path here).
 - Many debug / mock methods are no-ops or `E_NOTIMPL` (e.g., ResetCloudAsync not implemented yet in this provider).
 
 ## Limits (Current Public Preview)
 - 256 MB per title per player (cloud quota).
 - 100 service endpoint requests / rolling 2 minutes (≈ 10 uploads per minute headroom).
-(Broader size/file/path constraints still “TBD” in dev spec; future doc likely to finalize.)
+(Broader size/file/path constraints still "TBD" in dev spec; future doc likely to finalize.)
 
 ## Best Practice Summary
 - Organize saves into root-level subfolders aligned with independently mergeable units (slots, profiles, etc.).
-- Upload often (level end, checkpoints, menu transitions, before quit) — essential on in-process platforms.
+- Upload often (level end, checkpoints, menu transitions, before quit) -- essential on in-process platforms.
 - Use `ReleaseDeviceAsActive` at natural session boundaries (reduces contention friction).
-- Provide clear, minimal UI when conflicts or contention occur; let players understand impact (“this device” vs “cloud data”).
+- Provide clear, minimal UI when conflicts or contention occur; let players understand impact ("this device" vs "cloud data").
 - Always respond to UI callbacks (except progress if you don't cancel).
 - Use offline mode gracefully: still allow play; surface reconnect options.
 - Consider double-buffer local files (robustness against corruption).
@@ -181,8 +181,7 @@ Releasing active device early is strongly encouraged when user returns to menus 
 ## Open / Not Fully Finalized Areas (from dev spec)
 - Additional limits (file count, path length, compaction thresholds) still listed as TBD.
 - Heuristics for manifest compaction not yet codified.
-- Rollback option via `PFGameSaveFilesAddUserOptions::Rollback` still “being designed”.
-- Some debug & mock APIs stubbed out in GRTS provider.
+- Some debug & mock APIs stubbed out in GRTS provider (e.g., `ResetCloudAsync` returns `E_NOTIMPL`).
 
 ## Mental Model Cheat Sheet
 Download (AddUser):

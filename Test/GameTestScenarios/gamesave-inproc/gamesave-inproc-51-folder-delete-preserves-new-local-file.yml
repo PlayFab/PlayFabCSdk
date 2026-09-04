@@ -1,0 +1,295 @@
+id: Scenario-Inproc-51-Folder-Delete-Preserves-New-Local-File
+name: GameSave Inproc 51 - Folder Delete On Download Preserves New Local File
+tags:
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: ignore
+description: |
+  Regression test for Bug 63588283.
+
+  When the cloud deletes a folder, DownloadStep::DeleteFolders used to call
+  FilePAL::DeletePath() which recursively destroys the whole directory tree.
+  That recursion did not consult the per-file decisions made moments earlier by
+  MarkFilesToDeleteUponDownload, which deliberately SPARES local files that have
+  never been synced (lastSyncFileSize == 0). The result was silent, unrecoverable
+  loss of brand-new local saves, with no conflict UI raised.
+
+  ScanForConflicts cannot catch this: it only compares local changes against
+  changedRemoteFolderIndexes (folders with INCOMING downloads). A remotely-deleted
+  folder has no incoming downloads, so it never appears there.
+
+  Expected: subfolder/ is pruned of its previously-synced content, but the
+  never-synced local file inside it survives and the folder is retained.
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+  DeviceB:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  devicea-setup-baseline:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    # Baseline: one file inside the folder that will later be deleted in the cloud,
+    # plus an untouched control folder that must survive the whole scenario.
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateTextFile
+            relativePath: subfolder/synced.sav
+            content: "SYNCED_BASELINE"
+          - verb: CreateTextFile
+            relativePath: keep/preserve.txt
+            content: "PRESERVED"
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  deviceb-initial-sync:
+    # DeviceB pulls the baseline so it has last-sync state for subfolder/.
+    # That last-sync state (hasLastSync == true) is what later makes
+    # MarkFoldersToDeleteUponDownload queue the folder for deletion.
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    # Confirm the baseline actually landed, otherwise the rest of the test is meaningless.
+    - command: VerifyFileExists
+      parameters:
+        relativePath: subfolder/synced.sav
+    - command: VerifyFileExists
+      parameters:
+        relativePath: keep/preserve.txt
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  devicea-delete-folder:
+    # DeviceA removes subfolder/ entirely and publishes a new manifest version.
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: DeleteFolder
+            relativePath: subfolder
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  deviceb-new-file-then-sync:
+    # DeviceB keeps its existing local state (NO DeleteLocalFolder here) and creates a
+    # brand-new file inside the folder that the cloud has since deleted. The file has
+    # never synced, so lastSyncFileSize == 0 and MarkFilesToDeleteUponDownload spares it.
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    # Insurance against a UI hang. Per code analysis ScanForConflicts cannot fire for a
+    # remotely-deleted folder, so this should never be exercised; if it ever is, UseLocal
+    # also preserves the file, and the RED run would surface that by unexpectedly passing.
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseLocal
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    # Write the new local file BEFORE AddUser, so it is present on disk when the
+    # sync comparison and the subsequent folder delete run.
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateTextFile
+            relativePath: subfolder/newfile.sav
+            content: "LOCAL_NEW_NEVER_SYNCED"
+    # This triggers the download/compare/delete pass that contains the bug.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    # THE ASSERTION: the never-synced local file must survive the folder delete.
+    - command: VerifyFileExists
+      parameters:
+        relativePath: subfolder/newfile.sav
+    - command: VerifyFileContent
+      parameters:
+        relativePath: subfolder/newfile.sav
+        expectedContent: "LOCAL_NEW_NEVER_SYNCED"
+    # The previously-synced file WAS deleted in the cloud, so it must be gone locally.
+    # This proves the fix prunes real deletions instead of skipping folder deletes wholesale.
+    - command: VerifyFileExists
+      expectFailure: true
+      parameters:
+        relativePath: subfolder/synced.sav
+    # Untouched control folder must be unaffected.
+    - command: VerifyFileContent
+      parameters:
+        relativePath: keep/preserve.txt
+        expectedContent: "PRESERVED"
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: devicea-setup-baseline
+  - role: DeviceB
+    block: deviceb-initial-sync
+  - role: DeviceA
+    block: devicea-delete-folder
+  - role: DeviceB
+    block: deviceb-new-file-then-sync
+cleanup:
+  DeviceA:
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+  DeviceB:
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"

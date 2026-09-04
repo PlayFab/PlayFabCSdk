@@ -1,0 +1,37 @@
+id: PFCore-37-Local-Storage
+name: PFCore 37 - Local Storage Handlers
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Sets custom local storage read/write/clear handlers and verifies
+  they are registered. Tests platform integration hooks.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  test:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFUninitializeAsync  # Ensure PF is fully uninitialized from previous scenarios
+    - command: PFPlatformLocalStorageSetHandlers
+    - command: PFInitialize
+    - command: PFServicesInitialize
+
+executionOrder:
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

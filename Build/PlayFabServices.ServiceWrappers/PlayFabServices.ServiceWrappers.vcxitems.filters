@@ -196,6 +196,30 @@
     <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFTitleDataManagement.cpp" >
       <Filter>Source\Generated</Filter>
     </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPlayStreamTypes.h" >
+      <Filter>Include\Generated\playfab\services</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\PlayStreamTypeWrappers.h" >
+      <Filter>Include\Generated\playfab\services\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayStreamTypes.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayStreamTypes.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayStream.h" >
+      <Filter>Source\Generated</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayStream.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPlayStream.h" >
+      <Filter>Include\Generated\playfab\services</Filter>
+    </ClInclude>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFPlayStream.cpp" >
+      <Filter>Source\Generated</Filter>
+    </ClCompile>
     <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPushNotificationsTypes.h" >
       <Filter>Include\Generated\playfab\services</Filter>
     </ClInclude>

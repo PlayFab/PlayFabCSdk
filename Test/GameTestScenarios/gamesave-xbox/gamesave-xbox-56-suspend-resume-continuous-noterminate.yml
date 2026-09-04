@@ -1,0 +1,235 @@
+id: Scenario-Xbox-56-Suspend-Resume-Continuous-NoTerminate
+name: GameSave Xbox 56 - Suspend/Resume Continuous (No Terminate)
+tags:
+  - xboxgamesaves
+  - soak
+platforms:
+  xbox: passing  # In-session suspend->resume loop (NO terminate between iterations); resumes mid-upload
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Controller-framework port of the ConnectedStorage ScenarioTests
+  Invoke_PlayFab_SuspendResume_ContinuousNoTerminate stress test.
+
+  Original command:
+    runtest.cmd /select:"@Name='*Invoke_PlayFab_SuspendResume_ContinuousNoTerminate*'"
+      /p:ContinuousQuiesceIterations=100 /p:ContinuousQuiesceBaseDelayMs=1080
+      /p:ContinuousQuiesceDelayStep=10
+
+  The defining trait of ContinuousNoTerminate (vs. test 53, which waits ~30s for the
+  upload to finish before resuming, and test 55, which lets PLM terminate the app) is
+  that the game process is started ONCE and survives every suspend/resume cycle — only
+  the PlayFab/CS stack re-inits per cycle (mirroring the C++ test's URI-activation
+  re-init), and the app RESUMES WHILE THE SUSPEND-TRIGGERED UPLOAD IS STILL IN FLIGHT.
+
+  This is expressed natively by the controller manifest: XGameRuntimeInitialize runs
+  once in the baseline block, and because no block terminates/relaunches the app, the
+  process stays alive across every iteration. The single loop block
+  (session-a-iterate-suspend-resume-verify) is listed N times in executionOrder, so the
+  N suspend/resume cycles all run in one continuous process lifetime — exactly the
+  "no terminate between iterations" semantics. Each iteration writes divergent data
+  (dirtying the save so suspend kicks a GRTS upload), suspends, waits only ~1080ms
+  (ContinuousQuiesceBaseDelayMs) so resume lands mid-upload, resumes, full PF/CS
+  re-init, then a snapshot compare as the DATA-LOSS DETECTOR: a wiped/empty save folder
+  (the REQ#789 empty-folder bug) mismatches the pre-suspend snapshot and fails the test.
+
+  Notes on fidelity / how to scale iterations:
+   - executionOrder below lists the loop block 10x (a readable in-file soak count). To
+     reach the original 100, either add more entries (the in-session, no-terminate loop
+     count is what matters), or multiply with the runner:
+       py tests-run.py <suite> --repeat 10
+     NOTE: tests-run.py --repeat re-runs the whole scenario with a FULL process
+     teardown between repeats, so for TRUE no-terminate continuity prefer increasing the
+     in-file executionOrder repetitions over --repeat.
+   - ContinuousQuiesceDelayStep (the original's +10ms per iteration) is approximated as a
+     constant 1080ms base delay here; the manifest schema has no per-iteration parameter,
+     so a growing delay would require distinct blocks (one per delay) — omitted for
+     readability since the dominant stressor is the mid-upload resume itself.
+brief: Suspend then resume mid-upload, looped in one process lifetime; verify no save data loss
+group: I. Suspend / Resume
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  session-a-init-and-baseline:
+    # Start the app ONCE (XGameRuntimeInitialize is process-level and is NOT repeated —
+    # this is what keeps the process alive across every suspend/resume iteration).
+    # Establish a known-good baseline upload, then leave an ACTIVE session for the loop.
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+
+  session-a-iterate-suspend-resume-verify:
+    # ===== ONE no-terminate iteration. Listed N times in executionOrder. =====
+    # Precondition: an ACTIVE PF/CS session exists (left by baseline or the previous
+    # iteration). The process is NEVER terminated here — only PF/CS is torn down and
+    # re-initialized, exactly like the C++ test's URI-activation re-init.
+
+    # 1) Write DIVERGENT data. The rewrite bumps the file's lastWriteTime so GRTS sees
+    #    the save folder as dirty and the suspend triggers a fresh upload to interrupt.
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xDE, 0xAD, 0xBE, 0xEF]
+    # 2) Capture the post-write expected state BEFORE suspend (data-loss baseline).
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    # 3) PLM suspend triggers the GRTS upload of the dirty save folder.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    # 4) Short delay (1080ms = ContinuousQuiesceBaseDelayMs) so the upload is almost
+    #    certainly STILL IN FLIGHT when we resume. Do NOT wait for completion.
+    - command: SmokeDelay
+      parameters:
+        durationMs: 1080
+    # 5) Resume WITHOUT terminating — process stays alive; CS context is invalidated.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+    # 6) Tear down ONLY the PF/CS stack (NOT XGameRuntime — the process must persist).
+    #    Close the local + xbox user handles too so iterations don't leak handles.
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: XUserCloseHandle
+    # 7) Re-initialize the PF/CS stack (post-resume reinit, mirrors test 53).
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Re-add user — syncs with cloud; must recover the divergent save, NOT an empty folder.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # 8) Capture post-resume state and assert it matches the pre-suspend write.
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    # DATA-LOSS DETECTOR: an empty/wiped save folder (REQ#789) mismatches here and fails.
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+    # Leaves an ACTIVE session for the next iteration (no terminate, no XGameRuntime reinit).
+
+  session-a-final-teardown:
+    # Final clean release after the last iteration. The session is still ACTIVE here.
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-a-init-and-baseline
+  # ----- 10 no-terminate suspend/resume iterations (scale up for more soak) -----
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  - role: DeviceA
+    block: session-a-iterate-suspend-resume-verify
+  # -----------------------------------------------------------------------------
+  - role: DeviceA
+    block: session-a-final-teardown
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

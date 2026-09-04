@@ -1,5 +1,6 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 #pragma once
+#include "FolderSyncManager.h"
 
 namespace PlayFab
 {
@@ -12,10 +13,13 @@ public:
     template<size_t n>
     UploadAsyncProvider(RunContext&& rc, PFGameSaveFilesUploadOption option, XAsyncBlock* async, const char(&identityName)[n], SharedPtr<FolderSyncManager>&& folderSync) :
         GameSaveAsyncProvider{ std::move(rc), async, identityName },
-        m_folderSync{ folderSync },
+        m_folderSync{ std::move(folderSync) },
         m_option{ option }
     {
         TRACE_TASK("UploadAsyncProvider ctor");
+        // Under the manager's lock: this resets the compare/upload/relock steps, which another
+        // provider for the same user can be reading concurrently on a worker thread.
+        std::lock_guard<std::recursive_mutex> lock(m_folderSync->GetSyncMutex());
         m_folderSync->InitForUpload();
     }
 
@@ -40,7 +44,7 @@ public:
     void ScheduleNow() override
     {
         TRACE_TASK("UploadAsyncProvider.ScheduleNow");
-#if _DEBUG
+#if defined(_DEBUG)
         m_singleThreadProvider.AssertUponSchedule();
 #endif
         Schedule(0);
@@ -50,8 +54,9 @@ protected:
     HRESULT DoWork(RunContext runContext) override;
     SharedPtr<FolderSyncManager> m_folderSync;
     PFGameSaveFilesUploadOption m_option{ PFGameSaveFilesUploadOption::KeepDeviceActive };
-    std::recursive_mutex m_folderSyncMutex;
-#if _DEBUG
+    // Owned by the FolderSyncManager, not by this provider: see FolderSyncManager::GetSyncMutex().
+    std::recursive_mutex& m_folderSyncMutex{ m_folderSync->GetSyncMutex() };
+#if defined(_DEBUG)
     SingleThreadProviderValidation m_singleThreadProvider;
 #endif
 };

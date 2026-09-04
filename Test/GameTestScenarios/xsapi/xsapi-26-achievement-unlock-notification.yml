@@ -1,0 +1,48 @@
+id: XSAPI-26-Achievement-Unlock-Notification
+name: XSAPI 26 - Achievement Unlock Notification Handler
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer achievements/achievements_progress_notification.lua.
+  Registers an unlock notification handler, updates achievement progress,
+  and removes the handler.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblAchievementUnlockAddNotificationHandler
+    - command: XblAchievementsUpdateAchievementAsync
+    - command: XblAchievementUnlockRemoveNotificationHandler
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

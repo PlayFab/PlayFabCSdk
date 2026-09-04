@@ -1,0 +1,129 @@
+id: LHC-21-Parallel-HTTP-Performs
+name: LHC 21 - Parallel HTTP Performs
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Create 5 call handles targeting distinct URLs on the local HTTP test
+  server, perform all 5, then read each response independently.
+  Verifies thread-safety in the WinHTTP provider and per-call state
+  isolation under concurrent load.  Catches race conditions and
+  handle corruption that only appear under parallelism.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 120
+blocks:
+  parallel-performs:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Start a local HTTP server with 5 distinct routes
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        path: "/parallel/1"
+        method: "GET"
+        statusCode: 200
+        body: "response-1"
+        contentType: "text/plain"
+    - command: ConfigureHttpRoute
+      parameters:
+        path: "/parallel/2"
+        method: "GET"
+        statusCode: 200
+        body: "response-2"
+        contentType: "text/plain"
+    - command: ConfigureHttpRoute
+      parameters:
+        path: "/parallel/3"
+        method: "GET"
+        statusCode: 200
+        body: "response-3"
+        contentType: "text/plain"
+    - command: ConfigureHttpRoute
+      parameters:
+        path: "/parallel/4"
+        method: "GET"
+        statusCode: 200
+        body: "response-4"
+        contentType: "text/plain"
+    - command: ConfigureHttpRoute
+      parameters:
+        path: "/parallel/5"
+        method: "GET"
+        statusCode: 200
+        body: "response-5"
+        contentType: "text/plain"
+
+    # Request 1
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "http://localhost:{{httpTestPort}}/parallel/1"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    # Request 2
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "http://localhost:{{httpTestPort}}/parallel/2"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    # Request 3
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "http://localhost:{{httpTestPort}}/parallel/3"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    # Request 4
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "http://localhost:{{httpTestPort}}/parallel/4"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    # Request 5
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "http://localhost:{{httpTestPort}}/parallel/5"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: parallel-performs
+cleanup:
+  DeviceA:
+    - command: StopHttpTestServer
+    - command: XTaskQueueCloseHandle

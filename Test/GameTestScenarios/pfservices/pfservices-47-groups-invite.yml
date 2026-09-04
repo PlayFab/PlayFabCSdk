@@ -1,0 +1,56 @@
+id: PFServices-47-Groups-Invite
+name: PFServices 47 - Group Invitation Flow
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # InviteToGroup fails - needs a second entity to invite
+  psx: ignore
+description: >
+  Creates a group, invites an entity, lists invitations, accepts the invite, verifies membership.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFGroupsCreateGroupAsync
+    - command: PFGroupsCreateGroupGetResult
+    - command: PFGroupsInviteToGroupAsync
+    - command: PFGroupsInviteToGroupGetResult
+    - command: PFGroupsListGroupInvitationsAsync
+    - command: PFGroupsListGroupInvitationsGetResult
+    - command: PFGroupsAcceptGroupInvitationAsync
+    - command: PFGroupsListGroupMembersAsync
+    - command: PFGroupsListGroupMembersGetResult
+    - command: PFGroupsDeleteGroupAsync
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

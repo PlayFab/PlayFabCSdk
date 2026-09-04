@@ -7,24 +7,24 @@ This document describes the PFGameSave test controller and device harnesses. It 
 - Lifecycle of commands issued to device agents
 - Command reference, including parameters and expected behaviour
 
-The guidance below applies to the Win32 test device located under `Test/PFGameSaveTestDeviceWindows` and the .NET 8 controller in `Test/PFGameSaveTestController`.
+The guidance below applies to the Win32 test device located under `Test/GameTestAppWindows` and the .NET 8 controller in `Test/GameTestController`.
 
 ## Setup and Connection
 
 ### Controller Setup
 
-Launch the controller (`PFGameSaveTestController.exe`) which starts a WebSocket server on port 5000. The controller GUI displays its IP address in the top-left panel, which remote devices will need to connect.
+Launch the controller (`GameTestController.exe`) which starts a WebSocket server on port 15080. The controller GUI displays its IP address in the top-left panel, which remote devices will need to connect.
 
 #### Windows Firewall Configuration
 
-For remote device connections, Windows Firewall must allow incoming connections on TCP port 5000:
+For remote device connections, Windows Firewall must allow incoming connections on TCP port 15080:
 
 - **First-time setup**: Windows may prompt to allow the application when the controller first starts. Click "Allow access" for the appropriate network types (Private and/or Public).
 
 - **Manual configuration**: If the prompt doesn't appear or was dismissed, create a firewall rule manually:
   ```powershell
   # Run PowerShell as Administrator
-  New-NetFirewallRule -DisplayName "PFGameSave Test Controller" -Direction Inbound -Protocol TCP -LocalPort 5000 -Action Allow
+  New-NetFirewallRule -DisplayName "PFGameSave Test Controller" -Direction Inbound -Protocol TCP -Localport 15080 -Action Allow
   ```
 
 - **Troubleshooting**: If remote devices cannot connect, verify the firewall rule exists:
@@ -48,7 +48,7 @@ Register a URL ACL to allow the controller to run without Administrator privileg
 
 ```powershell
 # Run PowerShell as Administrator (one-time setup)
-netsh http add urlacl url=http://+:5000/ws/ user=Everyone
+netsh http add urlacl url=http://+:15080/ws/ user=Everyone
 ```
 
 After this, the controller can run without elevation.
@@ -60,10 +60,10 @@ After this, the controller can run without elevation.
 netsh http show urlacl
 
 # Show specific URL ACL
-netsh http show urlacl url=http://+:5000/ws/
+netsh http show urlacl url=http://+:15080/ws/
 
 # Remove URL ACL (cleanup)
-netsh http delete urlacl url=http://+:5000/ws/
+netsh http delete urlacl url=http://+:15080/ws/
 ```
 
 **Note**: The URL in the ACL must match exactly what the controller uses, including the trailing slash.
@@ -74,13 +74,13 @@ Launch the test device with optional controller IP address:
 
 ```powershell
 # Local connection (default)
-PFGameSaveTestDeviceWindows.exe
+GameTestAppWindows.exe
 
 # Remote connection
-PFGameSaveTestDeviceWindows.exe /controller 192.168.1.100
+GameTestAppWindows.exe /controller 192.168.1.100
 ```
 
-The `/controller` parameter specifies the IP address where the controller is running. If omitted, the device defaults to `localhost`. The device will automatically attempt to connect to the controller's WebSocket server at `ws://<controller-ip>:5000/ws/` and will retry every 2 seconds until successful.
+The `/controller` parameter specifies the IP address where the controller is running. If omitted, the device defaults to `localhost`. The device will automatically attempt to connect to the controller's WebSocket server at `ws://<controller-ip>:15080/ws/` and will retry every 2 seconds until successful.
 
 ## Controller Modes
 
@@ -88,7 +88,7 @@ The test controller supports two operational modes:
 
 ### GUI Mode (Default)
 
-Launch `PFGameSaveTestController.exe` without arguments to start the Windows Forms GUI. The GUI provides:
+Launch `GameTestController.exe` without arguments to start the Windows Forms GUI. The GUI provides:
 
 - **Chaos Testing**: Automated random mutation testing with configurable parameters
 - **Test Harness**: Execute individual test scenarios with device selection
@@ -100,7 +100,7 @@ Launch `PFGameSaveTestController.exe` without arguments to start the Windows For
 Launch with the `-cli` argument to enter command-line interface mode:
 
 ```powershell
-PFGameSaveTestController.exe -cli
+GameTestController.exe -cli
 ```
 
 The CLI provides a PowerShell-like experience with:
@@ -155,7 +155,7 @@ manual> SmokeDelay --delayMs=1000
 
 ## Scenario Manifest Overview
 
-Scenarios live under `Test/PFGameSaveTestController/Scenarios/` and are authored in YAML. Each manifest defines the devices that participate in a run, the ordered blocks of commands for each role, and optional cleanup steps.
+Scenarios live under `Test/GameTestScenarios/` and are authored in YAML. Each manifest defines the devices that participate in a run, the ordered blocks of commands for each role, and optional cleanup steps.
 
 ### Top-Level Fields
 
@@ -271,7 +271,7 @@ The controller dispatches commands to device agents over WebSockets. Most comman
 | `PFGameSaveFilesSetUiCallbacks` | `enable` (bool, default `true`) | Registers or clears the built-in UI callbacks for conflict, sync failed, progress, etc. When disabled the harness will not receive those notifications. |
 | `PFGameSaveFilesSetActiveDeviceChangedCallback` | none | Registers a callback that fires when the active device changes. |
 | `PFGameSaveFilesResetCloudAsync` | none | Resets cloud state for the active GameSave container. |
-| `PFGameSaveFilesAddUserWithUiAsync` | fields covering mount behaviour (e.g., `rollbackOption`) | Mounts a user’s save container via interactive UI flow. |
+| `PFGameSaveFilesAddUserWithUiAsync` | fields covering mount behaviour (e.g., `rollbackOption`) | Mounts a user's save container via interactive UI flow. |
 | `PFGameSaveFilesSetUiSyncFailedResponse` | `action` (string enum) | Sets the scripted response to SyncFailed callbacks (`Retry`, `UseOffline`, `Cancel`). |
 | `PFGameSaveFilesSetUiActiveDeviceContentionResponse` | `action` (enum) | Sets response to contention prompts (`Retry`, `SyncLastSavedData`, `Cancel`). |
 | `PFGameSaveFilesSetUiConflictResponse` | `action` (enum) | Chooses how to resolve conflict prompts (`UseLocal`, `UseCloud`, `Cancel`). |
@@ -316,7 +316,7 @@ When an auto-response command is disabled (`enable: false`) the harness clears t
 | Command | Parameters | Description |
 |---------|------------|-------------|
 | `WriteGameSaveData` | Either `operations` array or `chaos` object | Performs deterministic or random file mutations inside the save root. `operations` supports verbs such as `CreateBinaryFile`, `RenameFile`, `DeleteFolder`, etc. `chaos` describes a PRNG-based mutation batch with `operationCount`, optional `seed`, and verb filters. |
-| `DoChaosMode` | `scenarios` (object) | Applies the chaos plan emitted by `Test/PFGameSaveTestController/ChaosModeScenarioParameters`, allowing randomized stress of GameSave APIs during a scenario. |
+| `DoChaosMode` | `scenarios` (object) | Applies the chaos plan emitted by `Test/GameTestController/ChaosModeScenarioParameters`, allowing randomized stress of GameSave APIs during a scenario. |
 | `DeleteSaveRoot` | `preserveManifest` (bool, optional) | Recursively deletes the harness-managed save root. Optional flag preserves manifests so later comparisons remain possible. |
 | `DeleteLocalFolder` | `folderPath` (string) | Removes an arbitrary folder on disk; useful for clearing auxiliary data that sits outside the save root. |
 | `ConsumeDiskSpace` | `bytes` (int64), optional `scope` (`user`, `system`, `custom`), optional `customPath`, optional `token` | Uses a mock API to reserve disk space and report allocation details. Emits a token used to release the reservation. |
@@ -330,6 +330,7 @@ When an auto-response command is disabled (`enable: false`) the harness clears t
 | `GatherSnapshot` | none | Produces a `.zip` archive (capped at 16 MiB) of the current save root so the controller can persist a forensic package (returned as base64 plus device metadata). A legacy alias `GatherSnapsnot` maps to the same handler. |
 | `GatherLogs` | `maxBytes` (optional) | Flushes the device log, streams back up to 512 KiB from the log tail, and reports the originating file path. |
 | `GetDebugStats` | none | Calls `PFGameSaveFilesGetStatsJsonForDebug` and returns the raw JSON plus device metadata for post-scenario auditing. |
+| `AssertDebugStats` | `filesToUploadCount` (int, opt), `filesToDownloadCount` (int, opt), `compressedFilesToUploadCount` (int, opt), `compressedFilesToDownloadCount` (int, opt), `skippedFilesCount` (int, opt), `numFilesInFinalizedManifest` (int, opt) | Calls `PFGameSaveFilesGetStatsJsonForDebug`, parses the JSON, and asserts that specified fields match expected counts. Only parameters present in the YAML are checked; omitted fields are skipped. Returns `E_FAIL` if any assertion fails. Useful for verifying that uploads were truly no-ops or that expected file counts match after sync operations. |
 
 ### Snapshot Comparison Support Types
 
@@ -349,4 +350,4 @@ The controller persists the raw JSON in-memory for later comparisons and logs it
 5. Controller logs the action result (verbose channel retains the raw JSON) and moves to the next step.
 6. After all primary steps finish, cleanup commands run as best-effort tasks.
 
-Refer to the source under `Test/PFGameSaveTestController` and `Test/PFGameSaveTestDeviceWindows` for implementation details and the most current list of commands.
+Refer to the source under `Test/GameTestController` and `Test/GameTestAppWindows` for implementation details and the most current list of commands.

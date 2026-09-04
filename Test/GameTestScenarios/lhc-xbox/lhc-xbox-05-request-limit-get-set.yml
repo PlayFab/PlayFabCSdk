@@ -1,0 +1,84 @@
+id: LHC-Xbox-05-Request-Limit-Get-Set
+name: LHC Xbox 05 - Global Request Limit Get/Set Round Trip
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Covers the new HCSettingsSetGlobalRequestLimit / HCSettingsGetGlobalRequestLimit APIs.
+
+  The limit caps how many HTTP requests reach the platform HTTP stack at once. It is
+  process-wide state deliberately kept outside http_singleton so a title can configure it
+  before HCInitialize, which is what the first block verifies.
+
+  Three contracts are checked:
+    1. The default is 12 when nothing has been set.
+    2. A set value round-trips, both before and after HCInitialize.
+    3. Passing 0 restores the default rather than wedging the title. A literal cap of zero
+       would park every request forever with no completion able to release a slot, so the
+       API treats it as "reset" instead.
+brief: Request limit set/get round-trips and 0 restores the default
+group: C. Request Limit
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  before-initialize:
+    # Deliberately before HCInitialize: these APIs must not require initialization, because a
+    # title needs to size the cap before any request can be issued.
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 12
+
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 4
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 4
+
+  after-initialize:
+    - command: HCInitialize
+    - command: HCIsInitialized
+
+    # The value set before init must survive initialization; the provider reads the global
+    # rather than snapshotting it at construction.
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 4
+
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 20
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 20
+
+  zero-restores-default:
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 12
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: before-initialize
+  - role: DeviceA
+    block: after-initialize
+  - role: DeviceA
+    block: zero-restores-default
+cleanup:
+  DeviceA:
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0

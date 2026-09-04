@@ -45,6 +45,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlatformSpecificTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlayerDataManagementTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\ProfilesTestsImpl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlayStreamTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PushNotificationsTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\SegmentsTestsImpl.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\StatisticsTestsImpl.cpp" />

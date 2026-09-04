@@ -1,0 +1,70 @@
+id: Controller-Action-06-Reboot
+name: Controller Action 06 - Reboot Console
+tags:
+  - xboxactions
+platforms:
+  xbox: untested
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: Verify Reboot reboots the console and WaitForBoot waits for it to come back. Relaunch restarts the test app.
+devices:
+  DeviceA:
+    engine: xbox
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  init:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+  test:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Reboot
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: WaitForBoot
+        timeoutSeconds: 120
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Relaunch
+    - command: SmokeDelay
+      parameters:
+        durationMs: 15000
+  post-reboot:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+  cleanup:
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: init
+  - role: DeviceA
+    block: test
+  - role: DeviceA
+    block: post-reboot
+  - role: DeviceA
+    block: cleanup

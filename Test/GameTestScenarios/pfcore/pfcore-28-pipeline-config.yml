@@ -1,0 +1,57 @@
+id: PFCore-28-Pipeline-Config
+name: PFCore 28 - Event Pipeline Configuration Update
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Creates a pipeline, updates batch size and upload interval,
+  emits events, and verifies they batch accordingly.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineUpdateConfiguration
+      parameters:
+        maxEventsPerBatch: 5
+        maxWaitTimeInSeconds: 2
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom.playfab.events"
+        eventName: "pfcore_test_config_update"
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom.playfab.events"
+        eventName: "pfcore_test_config_update_2"
+    - command: PFEventPipelineCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

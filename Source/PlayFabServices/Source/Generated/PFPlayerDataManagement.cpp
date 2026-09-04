@@ -54,6 +54,7 @@ PF_API PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementClientDeletePlayerCustomPropertiesResult*>(buffer);
@@ -104,6 +105,7 @@ PF_API PFPlayerDataManagementClientGetPlayerCustomPropertyGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementClientGetPlayerCustomPropertyGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementClientGetPlayerCustomPropertyResult*>(buffer);
@@ -154,6 +156,7 @@ PF_API PFPlayerDataManagementClientGetUserDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementClientGetUserDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementClientGetUserDataResult*>(buffer);
@@ -204,6 +207,7 @@ PF_API PFPlayerDataManagementClientGetUserPublisherDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementClientGetUserPublisherDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementClientGetUserDataResult*>(buffer);
@@ -254,6 +258,7 @@ PF_API PFPlayerDataManagementClientGetUserPublisherReadOnlyDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementClientGetUserPublisherReadOnlyDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementClientGetUserDataResult*>(buffer);
@@ -304,6 +309,7 @@ PF_API PFPlayerDataManagementClientGetUserReadOnlyDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementClientGetUserReadOnlyDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementClientGetUserDataResult*>(buffer);
@@ -352,6 +358,7 @@ PF_API PFPlayerDataManagementClientListPlayerCustomPropertiesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementClientListPlayerCustomPropertiesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementClientListPlayerCustomPropertiesResult*>(buffer);
@@ -496,6 +503,7 @@ PF_API PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerDeletePlayerCustomPropertiesResult*>(buffer);
@@ -548,6 +556,7 @@ PF_API PFPlayerDataManagementServerGetPlayerCustomPropertyGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerGetPlayerCustomPropertyGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerGetPlayerCustomPropertyResult*>(buffer);
@@ -600,6 +609,7 @@ PF_API PFPlayerDataManagementServerGetUserDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerGetUserDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerGetUserDataResult*>(buffer);
@@ -652,6 +662,7 @@ PF_API PFPlayerDataManagementServerGetUserInternalDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerGetUserInternalDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerGetUserDataResult*>(buffer);
@@ -704,6 +715,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerGetUserPublisherDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerGetUserDataResult*>(buffer);
@@ -756,6 +768,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherInternalDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerGetUserPublisherInternalDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerGetUserDataResult*>(buffer);
@@ -808,6 +821,7 @@ PF_API PFPlayerDataManagementServerGetUserPublisherReadOnlyDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerGetUserPublisherReadOnlyDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerGetUserDataResult*>(buffer);
@@ -860,6 +874,7 @@ PF_API PFPlayerDataManagementServerGetUserReadOnlyDataGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerGetUserReadOnlyDataGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerGetUserDataResult*>(buffer);
@@ -912,6 +927,7 @@ PF_API PFPlayerDataManagementServerListPlayerCustomPropertiesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerListPlayerCustomPropertiesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerListPlayerCustomPropertiesResult*>(buffer);
@@ -964,6 +980,7 @@ PF_API PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFPlayerDataManagementServerUpdatePlayerCustomPropertiesResult*>(buffer);

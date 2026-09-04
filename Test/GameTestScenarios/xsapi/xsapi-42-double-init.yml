@@ -1,0 +1,51 @@
+id: XSAPI-42-Double-Init
+name: XSAPI 42 - Double Init is Safe
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Verifies XblInitialize is reference-counted. Calls it twice,
+  then cleans up twice to match.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+
+  test:
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+      expectFailure: true
+    - command: XblContextCreateHandle
+    - command: XblContextGetXboxUserId
+    - command: XblContextCloseHandle
+    - command: XblCleanupAsync
+    - command: XblCleanupAsync
+      expectFailure: true
+
+executionOrder:
+  - role: DeviceA
+    block: init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XUserCloseHandle
+    - command: XTaskQueueCloseHandle

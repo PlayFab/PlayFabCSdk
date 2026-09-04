@@ -1,0 +1,27 @@
+# Initialize an XBOX device for PFGameSave testing.
+#
+# Uses XUserAddAsync to sign in the Xbox Live user, then
+# PFLocalUserCreateHandleWithXboxUser to create the local user from
+# the signed-in XUserHandle. On Xbox the GRTS (Game Runtime Service)
+# manages the save folder, so no saveFolder is passed to Initialize.
+#
+# Prerequisites:
+#   - GameTestAppXbox deployed and running on an Xbox dev kit
+#   - An Xbox Live user signed in on the dev kit
+#   - Device connected to the controller (e.g., /controller 10.124.184.53)
+#   - controllerip.txt updated with the controller PC's IP address
+
+XGameRuntimeInitialize
+PFInitialize
+PFServicesInitialize
+PFServiceConfigCreateHandle --endpoint=https://E18D7.playfabapi.com --titleId=E18D7
+XTaskQueueCreate --workMode=ThreadPool --completionMode=ThreadPool --setAsProcessQueue=true
+PFGameSaveFilesInitialize
+PFGameSaveFilesSetUiCallbacks --enable=true
+PFGameSaveFilesSetActiveDeviceChangedCallback
+
+# Sign in the Xbox Live user and create PlayFab local user handle
+XUserAddAsync
+PFLocalUserCreateHandleWithXboxUser
+PFGameSaveFilesAddUserWithUiAsync
+PFGameSaveFilesGetFolder

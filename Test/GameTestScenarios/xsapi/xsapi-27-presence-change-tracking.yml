@@ -1,0 +1,51 @@
+id: XSAPI-27-Presence-Change-Tracking
+name: XSAPI 27 - Presence Change Tracking
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer presence/presence_rta.lua.
+  Registers device and title presence changed handlers,
+  starts tracking users, then stops tracking and removes handlers.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblPresenceTrackUsers
+    - command: XblPresenceAddDevicePresenceChangedHandler
+    - command: XblPresenceAddTitlePresenceChangedHandler
+    - command: XblPresenceStopTrackingUsers
+    - command: XblPresenceRemoveDevicePresenceChangedHandler
+    - command: XblPresenceRemoveTitlePresenceChangedHandler
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,195 @@
+﻿id: Scenario-PSX-15-Mid-Operation-Disk-Exhaustion-Recovery
+name: GameSave PSX 15 - Mid-Operation Disk Exhaustion Recovery (DeviceA=PC inproc, DeviceB=PS5)
+tags:
+  - psx
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: passing
+description: |
+  Force out-of-storage error during download via debug API, trigger recovery callback, verify resumed download after clearing error.
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+  DeviceB:
+    engine: psx
+defaults:
+  stepTimeoutSeconds: 30
+blocks:
+  cloud-reset:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesResetCloudAsync
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+  seed-payload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateMultipleBinaryFiles
+            baseDirectory: payload
+            fileCount: 5
+            bytesPerFile: 16384
+            pattern: [0xBA, 0x01, 0x0A, 0x0D]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+      timeoutSeconds: 120
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  exhaust-disk-during-download:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    # Force out-of-storage error to trigger mid-download failure
+    - command: PFGameSaveFilesSetForceOutOfStorageErrorForDebug
+      parameters:
+        forceError: true
+    # Set auto-response to Retry
+    - command: PFGameSaveFilesSetUiOutOfStorageAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+    # Clear forced error so retry succeeds
+    - command: PFGameSaveFilesSetForceOutOfStorageErrorForDebug
+      parameters:
+        forceError: false
+    # Download should trigger out-of-storage, auto-retry, then succeed
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 60
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: cloud-reset
+  - role: DeviceA
+    block: seed-payload
+  - role: DeviceB
+    block: exhaust-disk-during-download
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+  DeviceB:
+    - command: PFGameSaveFilesSetForceOutOfStorageErrorForDebug
+      parameters:
+        forceError: false
+    - command: PFGameSaveFilesSetUiOutOfStorageAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"

@@ -50,18 +50,20 @@ WriteEventsResponse::WriteEventsResponse(ServiceResponse&& serviceResponse) :
 
                 for (auto iter = ServiceResponse::ErrorDetails.begin(); iter != ServiceResponse::ErrorDetails.end(); ++iter)
                 {
-                    char* errorDetail = const_cast<char*>(iter.key().c_str());
+                    String keyStr = iter.key();
+                    const char* errorDetail = keyStr.c_str();
                     const char* prefix = "Events[";
 
                     if (strncmp(prefix, errorDetail, strlen(prefix)) == 0)
                     {
-                        char* nextToken;
-                        char* eventIndex = StrTok(errorDetail, "]", &nextToken);
-                        eventIndex = StrTok(errorDetail, "[", &nextToken);
-                        eventIndex = StrTok(NULL, " ", &nextToken);
+                        const char* open = strchr(errorDetail, '[');
+                        const char* close = strchr(errorDetail, ']');
 
-                        int index = std::atoi(eventIndex);
-                        failedEventIndexes.push_back(index);
+                        if (open && close && close > open + 1)
+                        {
+                            int index = std::atoi(open + 1);
+                            failedEventIndexes.push_back(index);
+                        }
                     }
                 }
 
@@ -92,7 +94,7 @@ private:
     std::mutex m_mutex;
     std::mutex m_configMutex;
     Deque<Event> m_deque;
-    size_t m_bufferSize;
+    std::atomic<size_t> m_bufferSize;
 
 };
 
@@ -130,7 +132,6 @@ public:
     void Stop();
     void SetUploadingEntity(SharedPtr<Entity> entity);
     void SetConfiguration(PFEventPipelineConfig eventPipelineConfig);
-    void ExponentialBackoff(uint32_t retryCount);
     PFEventPipelineType EventPipelineType() const { return m_eventPipelineType; }
     PlayFab::String TelemetryKey() { return m_telemetryKey; }
     SharedPtr<ServiceConfig> ServiceConfig() { return m_serviceConfig; }
@@ -156,13 +157,13 @@ private:
     uint32_t m_pollDelayInMs;
     HCCompressionLevel m_compressionLevel;
     bool m_retryOnDisconnect;
-    uint32_t m_retryCount = 0;
+    std::atomic<uint32_t> m_retryCount{ 0 };
     EventPipelineEventHandlers const m_eventHandlers;
     Vector<Event> m_pendingPayload;
     SharedPtr<Queue<Vector<Event>>> m_retryPayloads;
     time_t m_oldestEventTimeStamp{ 0 };
-    bool m_telemetryKeyInvalid{ false };
-    bool m_telemetryKeyDeactivated{ false };
+    std::atomic<bool> m_telemetryKeyInvalid{ false };
+    std::atomic<bool> m_telemetryKeyDeactivated{ false };
     std::mutex m_mutex;
     std::mutex m_configMutex;
 };
@@ -307,7 +308,8 @@ HRESULT EventBuffer::PushBack(Vector<Event>&& events) noexcept
 {
     for (size_t i = 0; i < events.size(); i++)
     {
-        PushBack(std::move(events[i]));
+        HRESULT hr = PushBack(std::move(events[i]));
+        RETURN_IF_FAILED(hr);
     }
 
     return S_OK;
@@ -341,7 +343,8 @@ HRESULT EventBuffer::PushFront(Vector<Event>&& events) noexcept
 {
     for (size_t i = 0; i < events.size(); i++)
     {
-        PushFront(std::move(events[i]));
+        HRESULT hr = PushFront(std::move(events[i]));
+        RETURN_IF_FAILED(hr);
     }
 
     return S_OK;
@@ -481,14 +484,15 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
 {
     std::unique_lock<std::mutex> lock{ m_configMutex };
     JsonValue requestBody = BuildRequestBody(events);
+    SharedPtr<Entity> entity = m_entity;
 
     const char* path{ m_eventPipelineType == PFEventPipelineType::PlayStream ? "/Event/WriteEvents" : "/Event/WriteTelemetryEvents" };
     CacheId retryCacheId = m_eventPipelineType == PFEventPipelineType::PlayStream ? CacheId::EventsWriteEvents : CacheId::EventsWriteTelemetryEvents;
 
-    if (m_entity)
+    if (entity)
     {
-        auto requestOp = m_entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
-            m_entity,
+        auto requestOp = entity->ServiceConfig()->HttpClient()->MakeEntityRequest(
+            entity,
             path,
             requestBody,
             retryCacheId,
@@ -496,7 +500,6 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
             m_compressionLevel
         );
 
-        // Release lock after making entity request to avoid crashes if entity is removed.
         lock.unlock();
 
         return requestOp.Then([](Result<ServiceResponse> result) -> Result<WriteEventsResponse>
@@ -539,11 +542,22 @@ AsyncOp<WriteEventsResponse> EventUploader::WriteEvents(
 
 void EventUploader::ProcessResponse(Result<WriteEventsResponse> result, Vector<Event> payload, EventPipelineEventHandlers eventHandlers, bool isRetry)
 {
-    if (FAILED(result.hr) && m_retryOnDisconnect)
+    if (FAILED(result.hr) && m_retryOnDisconnect && !m_rc.CancellationToken().IsCancelled())
     {
         // We assume network failure and if retries are enabled, we count the retries to delay the normal periodic schedule and add the events back to the buffer
         m_retryCount++;
-        m_buffer->PushFront(std::move(payload));
+        HRESULT pushHr = m_buffer->PushFront(std::move(payload));
+        if (FAILED(pushHr))
+        {
+            TRACE_ERROR("EventPipeline EventUploader failed to re-queue events after network failure (hr=0x%08x)", pushHr);
+        }
+    }
+    else if (FAILED(result.hr))
+    {
+        // Pipeline is being cancelled/torn down, or retryOnDisconnect is disabled. Drop events via failure handler.
+        TRACE_WARNING("EventPipeline EventUploader dropping events during cancellation (hr=0x%08x, retryOnDisconnect=%s, cancelled=%s)",
+            result.hr, m_retryOnDisconnect ? "true" : "false", m_rc.CancellationToken().IsCancelled() ? "true" : "false");
+        eventHandlers.InvokeBatchFailed(result.hr, "EventPipeline cancelled during shutdown", FailedBatch{ std::move(payload) });
     }
     else
     {
@@ -578,6 +592,10 @@ void EventUploader::ProcessResponse(Result<WriteEventsResponse> result, Vector<E
                     if (!isRetry)
                     {
                         Vector<int> failedEventIndexes = response.FailedEventIndexes();
+                        failedEventIndexes.erase(
+                            std::remove_if(failedEventIndexes.begin(), failedEventIndexes.end(),
+                                [&payload](int idx) { return idx < 0 || static_cast<size_t>(idx) >= payload.size(); }),
+                            failedEventIndexes.end());
                         Vector<Event> failedEvents, retryEvents;
 
                         for (size_t i = 0; i < payload.size(); i++)
@@ -645,7 +663,20 @@ void EventUploader::ExecutePendingRetries()
 {
     if (!m_retryPayloads->empty())  // Are there any payloads pending for retry? If so, proceed to do the retry
     {
-        for (size_t i = 0; i < m_retryPayloads->size(); i++)
+        // If cancelled, don't attempt retries - they'll just fail immediately and create a spin loop
+        if (m_rc.CancellationToken().IsCancelled())
+        {
+            EventPipelineEventHandlers eventHandlers = m_eventHandlers;
+            while (!m_retryPayloads->empty())
+            {
+                Vector<Event> payload = m_retryPayloads->front();
+                m_retryPayloads->pop();
+                eventHandlers.InvokeBatchFailed(E_ABORT, "EventPipeline cancelled during shutdown", FailedBatch{ std::move(payload) });
+            }
+            return;
+        }
+
+        while (!m_retryPayloads->empty())
         {
             Vector<Event> payload = m_retryPayloads->front();
 
@@ -718,12 +749,22 @@ void EventUploader::Run() noexcept
             // Keep track of eventIds of the batch for use in callbacks
             Vector<Event> payload{ std::move(m_pendingPayload) };
             assert(m_pendingPayload.empty());
-            auto payloadCopy = payload;
-            WriteEvents(std::move(payload), m_rc.Derive()).Finally([payload = std::move(payloadCopy), sharedThis = shared_from_this(), eventHandlers = m_eventHandlers](Result<WriteEventsResponse> result) mutable
+
+            // If cancelled, don't attempt the HTTP call - it will just fail immediately.
+            // Report the batch as failed to avoid an infinite retry loop during shutdown.
+            if (cancelled)
             {
-                sharedThis->ProcessResponse(std::move(result), std::move(payload), eventHandlers, false);
+                EventPipelineEventHandlers eventHandlers = m_eventHandlers;
+                eventHandlers.InvokeBatchFailed(E_ABORT, "EventPipeline cancelled during shutdown", FailedBatch{ std::move(payload) });
             }
-            );
+            else
+            {
+                WriteEvents(payload, m_rc.Derive()).Finally([payload = std::move(payload), sharedThis = shared_from_this(), eventHandlers = m_eventHandlers](Result<WriteEventsResponse> result) mutable
+                {
+                    sharedThis->ProcessResponse(std::move(result), std::move(payload), eventHandlers, false);
+                }
+                );
+            }
         }
     }
 
@@ -735,7 +776,8 @@ void EventUploader::Run() noexcept
     // If a network failure has been detected, a backoff exponential delay will be added to the scheduling
     if (!cancelled)
     {
-        m_rc.TaskQueueSubmitWork(shared_from_this(), m_pollDelayInMs + (m_retryCount * m_retryCount * 1000));
+        uint32_t cappedRetry = std::min(m_retryCount.load(), 10u);
+        m_rc.TaskQueueSubmitWork(shared_from_this(), m_pollDelayInMs + (cappedRetry * cappedRetry * 1000));
     }
 }
 }

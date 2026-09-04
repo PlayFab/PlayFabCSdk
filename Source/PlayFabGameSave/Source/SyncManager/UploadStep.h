@@ -60,10 +60,11 @@ public:
 
     bool IsUploadDone() const;
     bool IsDeletePendingManifestDone() const;
+    HRESULT GetDeleteManifestFailureHR() const { return m_deleteManifestFailureHR; }
     const ManifestWrap& GetPostUploadPendingPFManifest() const;
     const ManifestWrap& GetPostUploadLatestFinalizedPFManifest() const;
     uint64_t GetTotalCompressedSizeBytesUploaded() const;
-#if _DEBUG // just for debug stats
+#if defined(_DEBUG) // just for debug stats
     size_t GetNumFilesInFinalizedManifest() const { return m_numFilesInFinalizedManifest; }
 #endif
     const FileDetail* PopThumbnail(_In_ Vector<const FileDetail*>& filesToUpload);
@@ -89,7 +90,7 @@ public:
 
     // Returns true once we have first entered the FinalizeManifest stage for the current upload sequence.
     // This remains true until Reset() is called.
-    bool HasStartedFinalizeManifest() const { return m_hasStartedFinalizeManifest; }
+    bool HasStartedFinalizeManifest() const { return m_hasStartedFinalizeManifest.load(); }
 
     void SetToUploadFullSet(const SharedPtr<FileFolderSet>& localFileFolderSet, const SharedPtr<FileFolderSet>& remoteFileFolderSet);
 
@@ -102,9 +103,11 @@ public:
 
 private:
     Result<Vector<ExtendedManifestCompressedFileDetail>> CompressFiles(
-        _In_ const SharedPtr<FileFolderSet>& localFileFolderSet, 
+        _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
         _In_ const String& saveFolder,
-        _In_ const String& version);
+        _In_ const String& version,
+        _In_ ProgressCallback progressCallback,
+        _In_ void* progressCallbackContext);
 
     static Vector<Vector<const FileDetail*>> SplitUploadsIntoZipBatches(
         _In_ Vector<const FileDetail*> filesToUpload);
@@ -148,6 +151,7 @@ private:
     PlayFab::GameSaveWrapper::InitiateUploadResponse m_initiateResult;
     UploadStage m_stage{ UploadStage::UploadStart };
     HRESULT m_failureHR{ S_OK };
+    HRESULT m_deleteManifestFailureHR{ S_OK };
     DeleteManifestStage m_deleteManifestStage{ DeleteManifestStage::DeleteManifestStart };
 
     uint64_t m_totalUncompressedSizeBytes{};
@@ -156,8 +160,11 @@ private:
     // Cumulative compressed bytes successfully uploaded so far. Used for accurate dynamic progress.
     uint64_t m_currentCompressedSizeBytes{};
     uint64_t m_manifestVersionOffset{ 0 };
+    uint32_t m_versionExistsRetryCount{ 0 }; // Retry cap for MANIFEST_VERSION_ALREADY_EXISTS
+    uint32_t m_baseVersionRetryCount{ 0 }; // Retry cap for BASE_VERSION_NOT_AVAILABLE
     uint64_t m_uploadFullSetRetryCount{ 0 };
     ManifestWrapVector m_manifests;
+    String m_nextAvailableVersion; // From ListManifestsAfterUpload response
     ManifestWrap m_postUploadPendingPFManifest;
     ManifestWrap m_postUploadLatestFinalizedPFManifest;
     SharedPtr<GameSaveTelemetryManager> m_telemetryManager;
@@ -166,9 +173,9 @@ private:
     ConflictMetadata m_conflictMetadata; // Conflict metadata for FinalizeManifest
 
     // Becomes true the first time we transition into UploadStage::FinalizeManifest for a given upload run.
-    bool m_hasStartedFinalizeManifest{ false };
+    std::atomic<bool> m_hasStartedFinalizeManifest{ false };
 
-#if _DEBUG // just for debug stats
+#if defined(_DEBUG) // just for debug stats
     size_t m_numFilesInFinalizedManifest{ 0 };
 #endif
 };

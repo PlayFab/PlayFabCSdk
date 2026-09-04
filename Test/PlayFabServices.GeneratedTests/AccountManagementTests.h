@@ -178,6 +178,9 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestClientUpdateUserTitleDisplayName(TestContext& testContext);
 #endif
+#if 0
+    void TestServerAddOrUpdateContactEmail(TestContext& testContext);
+#endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestServerBanUsers(TestContext& testContext);
 #endif
@@ -213,6 +216,9 @@ private:
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK
     void TestServerGetPlayFabIDsFromPSNOnlineIDs(TestContext& testContext);
+#endif
+#if 0
+    void TestServerGetPlayFabIDsFromServerCustomIDs(TestContext& testContext);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestServerGetPlayFabIDsFromSteamIDs(TestContext& testContext);
@@ -280,6 +286,9 @@ private:
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestServerSendEmailFromTemplate(TestContext& testContext);
 #endif
+#if 0
+    void TestServerUnlinkApple(TestContext& testContext);
+#endif
 #if HC_PLATFORM == HC_PLATFORM_GDK
     void TestServerUnlinkBattleNetAccount(TestContext& testContext);
 #endif
@@ -288,6 +297,9 @@ private:
 #endif
 #if 0
     void TestServerUnlinkFacebookInstantGamesId(TestContext& testContext);
+#endif
+#if 0
+    void TestServerUnlinkGameCenterAccount(TestContext& testContext);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestServerUnlinkNintendoServiceAccount(TestContext& testContext);

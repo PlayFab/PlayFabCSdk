@@ -1,0 +1,49 @@
+id: XSAPI-05-Privacy
+name: XSAPI 05 - Privacy Checks
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer privacy/privacy.lua.
+  Signs in, creates XBL context, then exercises all privacy check APIs:
+  avoid list, single permission, anonymous permission, and batch permission.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  privacy-flow:
+    - command: XblPrivacyGetAvoidListAsync
+    - command: XblPrivacyCheckPermissionAsync
+    - command: XblPrivacyCheckPermissionForAnonymousUserAsync
+    - command: XblPrivacyBatchCheckPermissionAsync
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: privacy-flow
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

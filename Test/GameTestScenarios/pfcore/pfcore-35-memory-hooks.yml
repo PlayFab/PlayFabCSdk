@@ -1,0 +1,40 @@
+id: PFCore-35-Memory-Hooks
+name: PFCore 35 - Custom Memory Functions
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Sets custom alloc/free hooks before init, verifies
+  PFMemGetFunctions returns the custom hooks.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  test:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFUninitializeAsync  # Ensure PF is fully uninitialized from previous scenarios
+    - command: PFMemSetFunctions
+    - command: PFMemGetFunctions
+    - command: PFMemIsUsingCustomMemoryFunctions
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFMemGetFunctions
+
+executionOrder:
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

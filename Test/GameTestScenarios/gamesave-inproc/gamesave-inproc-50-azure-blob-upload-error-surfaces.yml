@@ -1,0 +1,215 @@
+# Scenario 50: Azure Blob upload failure on the extended manifest must fail the sync
+#
+# REGRESSION TEST for Bug 63475452 (fix: Source/PlayFabSharedInternal/Source/HttpRequest.cpp).
+# Companion to scenario 49, which covers the download (GET) half of the same defect.
+#
+# The defect:
+#   HCHttpCall::GetResult never turned an HTTP status code into a failing HRESULT when
+#   m_isPlayfabCall == false, so an Azure Blob error on a non-PlayFab transfer was reported to
+#   the sync state machine as SUCCESS.
+#
+# Why the upload half is the dangerous one:
+#   GameSaveServiceSelector::UploadFileFromStringToCloud (:327) writes the extended manifest and
+#   its continuation is only `return result.hr;` -- there is no IsHttpSuccess() guard at the call
+#   site. (The two archive-upload sites in HttpArchiveUploadRequest.cpp:95/:246 DO carry such a
+#   guard, which is why they never manifested this bug.) With the defect, a 403/409/503 on the
+#   extended-manifest PUT did not trip UploadStep's failure gate, so UploadStep advanced to
+#   FinalizeManifest and finalized a manifest that referenced an extended-manifest blob which had
+#   never been written -- leaving the player permanently unable to sync.
+#
+# Isolating the right request:
+#   libHttpClient matches mocks by URL PREFIX only and ignores the HTTP method
+#   (DoesMockCallMatch, lhc_mock.cpp:12), so a mock on the blob account captures every blob
+#   request, not just the one under test. Two others always run first:
+#     1. CompareStep GETs the previous extended manifest at the start of every upload whenever a
+#        finalized cloud manifest exists.
+#     2. UploadStep uploads payload zips before the extended manifest ("Extended manifest is
+#        last file in list", UploadStep.cpp:697); those use UploadSingleFileToCloud ->
+#        HCHttpFileUploadCall, which has always checked the status (HttpFileUploadRequest.cpp:148).
+#   Either would trip an already-correct path and prove nothing. The mock below therefore uses
+#   "urlContains: extended-", which fails ONLY the extended-manifest blob request and answers
+#   every other blob request on the same host with 200, leaving the zip uploads to behave
+#   normally. That makes the extended-manifest PUT the only failing request in the flow.
+#
+# Expected behavior:
+#   With the fix   : the mocked 403 becomes a failing HRESULT, the SyncFailed UI fires, the
+#                    auto-responder answers Cancel, and Upload returns 0x800704C7.
+#   Without the fix: the PUT reports S_OK, no SyncFailed callback fires, and the upload reports
+#                    success for a manifest whose blob was never stored.
+
+id: Scenario-Inproc-50-Azure-Blob-Upload-Error-Surfaces
+name: GameSave Inproc 50 - Azure Blob Upload Error Must Fail Sync (bug 63475452)
+tags:
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: ignore
+description: >
+  Wipes cloud state and then mocks an Azure Blob 403 on a folder-only upload, where the extended
+  manifest is the sole blob write, verifying the upload fails instead of finalizing a manifest
+  that references a blob which was never stored.
+brief: Azure blob upload error must fail the sync, not finalize a phantom manifest
+group: J. Service error handling
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  reset-cloud-baseline:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario50"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseLocal
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    # Running this suite against the UNFIXED SDK finalizes manifests whose extended-manifest blob
+    # was never stored, so this first AddUser can legitimately hit a real 404 on a poisoned
+    # baseline. Tolerate it; ResetCloudAsync immediately below restores a clean baseline.
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectedHr: "0x00000000,0x800704C7"
+    - command: PFGameSaveFilesGetFolder
+      parameters:
+        expectedHr: "0x00000000,0x89237003"
+    # Removes every finalized manifest, so the next upload's CompareStep has no previous
+    # extended manifest to GET -- the mock below can then only hit the PUT.
+    - command: PFGameSaveFilesResetCloudAsync
+    # ResetCloud requires a full re-init to pick up the fresh (empty) manifest set.
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario50"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+
+  upload-with-manifest-put-failing:
+    # Real file content, so the flow includes payload zips as well as the extended manifest --
+    # the mock's urlContains filter is what keeps the zips succeeding.
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.bin
+            bytes: 4096
+            pattern: [0x50, 0x55, 0x54, 0x21]
+
+    # Fail ONLY the extended-manifest blob request; every other blob request (the payload zips)
+    # is answered 200 so it proceeds normally. 403 is what Azure returns once a SAS token is no
+    # longer valid, and unlike 5xx it is not retried by libHttpClient, so the failure is immediate.
+    - command: ConfigureHttpMock
+      parameters:
+        method: PUT
+        url: "https://pfgsprod"
+        urlContains: "extended-"
+        statusCode: 403
+        otherStatusCode: 200
+        responseBody: "<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>AuthenticationFailed</Code><Message>Server failed to authenticate the request.</Message></Error>"
+
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+
+    # THE ASSERTION.
+    # 0x800704C7 is only reachable through the SyncFailed UI, which is only reached when the
+    # extended-manifest PUT reports failure. With the defect the PUT reports S_OK, UploadStep
+    # proceeds to FinalizeManifest, and the upload does not surface an error at all.
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+        expectedHr: "0x800704C7"
+
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+
+    # With the mock gone the retry must succeed, proving the failed upload left the sync state
+    # machine recoverable rather than wedged.
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: reset-cloud-baseline
+  - role: DeviceA
+    block: upload-with-manifest-put-failing
+cleanup:
+  DeviceA:
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario50"

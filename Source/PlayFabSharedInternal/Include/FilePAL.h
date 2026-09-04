@@ -34,6 +34,10 @@ public:
 
     static HRESULT CreatePath(const String& directoryPath) noexcept;
     static HRESULT DeletePath(const String& directoryPath) noexcept;
+    // Deletes directoryPath only if no files survive beneath it. Empty subdirectories are
+    // removed bottom-up; any directory that still holds a file is kept, along with its
+    // ancestors. Sets fullyDeleted to true when the entire tree was removed.
+    static HRESULT DeletePathIfEmpty(const String& directoryPath, bool& fullyDeleted) noexcept;
     static Result<String> JoinPath(const String& pathHead, const String& pathTail) noexcept;
     static Result<String> GetParentPath(const String& path) noexcept;
     static char GetPathSeparatorChar() noexcept;

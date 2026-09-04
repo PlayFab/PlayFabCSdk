@@ -1,0 +1,38 @@
+id: PFCore-03-Init-Invalid-Params
+name: PFCore 03 - Init with Invalid Parameters
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # SDK bug: PFServicesInitialize succeeds before PFInitialize (no prerequisite check)
+  psx: ignore
+description: >
+  Calls PFServicesInitialize before PFInitialize, verifies it fails
+  gracefully with an error code rather than crashing.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  test:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFServicesInitialize
+      parameters:
+        expectedHr: "0x8000FFFF"
+    - command: PFInitialize
+    - command: PFServicesInitialize
+
+executionOrder:
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

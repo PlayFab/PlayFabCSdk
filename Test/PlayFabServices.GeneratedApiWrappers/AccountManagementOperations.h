@@ -806,7 +806,7 @@ private:
 class ClientUnlinkAppleOperation : public XAsyncOperation<void>
 {
 public:
-    using RequestType = Wrappers::PFAccountManagementUnlinkAppleRequestWrapper<Allocator>;
+    using RequestType = Wrappers::PFAccountManagementClientUnlinkAppleRequestWrapper<Allocator>;
 
     ClientUnlinkAppleOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
 
@@ -894,7 +894,7 @@ private:
 class ClientUnlinkGameCenterAccountOperation : public XAsyncOperation<void>
 {
 public:
-    using RequestType = Wrappers::PFAccountManagementUnlinkGameCenterAccountRequestWrapper<Allocator>;
+    using RequestType = Wrappers::PFAccountManagementClientUnlinkGameCenterAccountRequestWrapper<Allocator>;
 
     ClientUnlinkGameCenterAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
 
@@ -1138,6 +1138,24 @@ private:
 };
 #endif
 
+#if 0
+class ServerAddOrUpdateContactEmailOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFAccountManagementServerAddOrUpdateContactEmailRequestWrapper<Allocator>;
+
+    ServerAddOrUpdateContactEmailOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerBanUsersOperation : public XAsyncOperation<Wrappers::PFAccountManagementBanUsersResultWrapper<Allocator>>
 {
@@ -1366,6 +1384,26 @@ public:
     ServerGetPlayFabIDsFromPSNOnlineIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
 
     static AsyncOp<Wrappers::PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if 0
+class ServerGetPlayFabIDsFromServerCustomIDsOperation : public XAsyncOperation<Wrappers::PFAccountManagementGetPlayFabIDsFromServerCustomIDsResultWrapper<Allocator>>
+{
+public:
+    using RequestType = Wrappers::PFAccountManagementGetPlayFabIDsFromServerCustomIDsRequestWrapper<Allocator>;
+    using ResultType = Wrappers::PFAccountManagementGetPlayFabIDsFromServerCustomIDsResultWrapper<Allocator>;
+
+    ServerGetPlayFabIDsFromServerCustomIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<Wrappers::PFAccountManagementGetPlayFabIDsFromServerCustomIDsResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
 
 private:
     HRESULT OnStarted(XAsyncBlock* async) noexcept override;
@@ -1790,6 +1828,24 @@ private:
 };
 #endif
 
+#if 0
+class ServerUnlinkAppleOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFAccountManagementServerUnlinkAppleRequestWrapper<Allocator>;
+
+    ServerUnlinkAppleOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_GDK
 class ServerUnlinkBattleNetAccountOperation : public XAsyncOperation<void>
 {
@@ -1833,6 +1889,24 @@ public:
     using RequestType = Wrappers::PFAccountManagementServerUnlinkFacebookInstantGamesIdRequestWrapper<Allocator>;
 
     ServerUnlinkFacebookInstantGamesIdOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
+
+    static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
+
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
+
+    Entity m_entity;
+    RequestType m_request;
+};
+#endif
+
+#if 0
+class ServerUnlinkGameCenterAccountOperation : public XAsyncOperation<void>
+{
+public:
+    using RequestType = Wrappers::PFAccountManagementServerUnlinkGameCenterAccountRequestWrapper<Allocator>;
+
+    ServerUnlinkGameCenterAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
 
     static AsyncOp<void> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
 

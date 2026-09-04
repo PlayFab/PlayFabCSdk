@@ -54,6 +54,7 @@ function(GET_PLAYFAB_SERVICES_TEST_APP_COMMMON_FILES
         "${PATH_TO_SOURCE}/Tests/Services/PlatformSpecificTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/PlayerDataManagementTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/ProfilesTestsImpl.cpp"
+        "${PATH_TO_SOURCE}/Tests/Services/PlayStreamTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/PushNotificationsTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/SegmentsTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/StatisticsTestsImpl.cpp"

@@ -11,6 +11,46 @@ namespace PlayFab
 namespace GameSave
 {
 
+namespace
+{
+
+// The extended manifest is an opaque JSON blob written by another device, so every name taken
+// from it that becomes part of a local path has to be validated. Names whose spelling changes
+// under Win32 path normalization are rejected outright: two logically distinct manifest entries
+// that normalize to the same destination (e.g. "save.dat" and "save.dat. ") are tracked and
+// conflict-compared separately but open the same file, so whichever is extracted last silently
+// overwrites the other player save.
+bool IsUnsafeManifestName(const String& name)
+{
+    // Embedded NUL/control characters would be truncated by the C-string path APIs downstream,
+    // so a name like "..\0x" could pass the checks below and still resolve to "..".
+    for (char c : name)
+    {
+        if (static_cast<unsigned char>(c) < 0x20)
+        {
+            return true;
+        }
+    }
+
+    // Win32 strips trailing dots and spaces during path normalization, so any name carrying them
+    // aliases the trimmed spelling. This also rejects the pure-traversal forms, since ".", ".."
+    // and ".. " are all nothing but dots and spaces.
+    auto lastValid = name.find_last_not_of(" .");
+    if (lastValid == String::npos || lastValid != name.size() - 1)
+    {
+        return true;
+    }
+
+    // Separators would escape the intended folder. A colon anywhere selects an NTFS alternate
+    // data stream ("save.dat:x" writes a stream of save.dat) or a drive ("C:..."), both of which
+    // are further spellings that resolve onto something other than the intended file.
+    return name.find('/') != String::npos ||
+        name.find('\\') != String::npos ||
+        name.find(':') != String::npos;
+}
+
+} // anonymous namespace
+
 HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestBytes, const DownloadDetailsWrapVector& remoteFileDetails, const String& saveFolder)
 {
     Clear();
@@ -65,9 +105,13 @@ HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestByte
             if (foldersJson.is_array())
             {
                 String curPath = "";
-                ExtendedManifestParseFolderJson(json, curPath, true, saveFolder);
+                RETURN_IF_FAILED(ExtendedManifestParseFolderJson(json, curPath, true, saveFolder));
             }
         }
+
+        // Log folder map state after folder parsing completes
+        TRACE_INFORMATION("[GAME SAVE] ExtendedManifest: After folder parsing, folderIdMap has %zu entries, folders vector has %zu entries",
+            m_folderFolderIdMap.size(), m_folders.size());
 
         if (json.contains("Files"))
         {
@@ -78,16 +122,39 @@ HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestByte
                 {
                     CompressedFile f{};
                     JsonUtils::ObjectGetMember(fileJson, "Name", f.fileName);
+
+                    // The compressed file name is joined onto the local cloudsync folder to build
+                    // the download destination, so it needs the same traversal validation the
+                    // extracted-file and folder names get.
+                    //
+                    // Reject the whole manifest rather than dropping the entry: a partially
+                    // populated remote set looks to CompareStep like the cloud deleted those
+                    // files, which would delete the healthy local copies.
+                    if (IsUnsafeManifestName(f.fileName))
+                    {
+                        TRACE_ERROR("[GAME SAVE] ExtendedManifest: Rejecting manifest - unsafe compressed file name '%s'", f.fileName.c_str());
+                        return E_INVALIDARG;
+                    }
+
                     JsonUtils::ObjectGetMember(fileJson, "FileId", f.fileId);
                     JsonUtils::ObjectGetMember(fileJson, "CompressSize", f.compressedSizeBytes);
                     JsonUtils::ObjectGetMember(fileJson, "Size", f.uncompressedSizeBytes);
                     String lastModifiedStr;
                     JsonUtils::ObjectGetMember(fileJson, "LastModified", lastModifiedStr);
                     f.timeLastModified = Iso8601StringToTimeT(lastModifiedStr);
+                    if (f.timeLastModified == 0 && !lastModifiedStr.empty())
+                    {
+                        TRACE_WARNING("[GAME SAVE] ExtendedManifest: Failed to parse LastModified timestamp '%s' for file '%s'", lastModifiedStr.c_str(), f.fileName.c_str());
+                    }
                     String compressionTypeStr;
                     JsonUtils::ObjectGetMember(fileJson, "Compression", compressionTypeStr);
                     f.downloadUrl = ManifestInternal::GetDownloadUrlForFile(f.fileName, remoteFileDetails);
-                    f.compression = ExtendedManifest::ConvertStringToCompression(compressionTypeStr);
+                    if (FAILED(ExtendedManifest::ConvertStringToCompression(compressionTypeStr, f.compression)))
+                    {
+                        TRACE_ERROR("[GAME SAVE] ExtendedManifest: Rejecting manifest - unsupported Compression '%s' for file '%s'", compressionTypeStr.c_str(), f.fileName.c_str());
+                        return E_INVALIDARG;
+                    }
+                    CompressionType compression = f.compression;
                     f.archiveContext = MakeShared<ArchiveContext>();
                     size_t compressionFileIndex = AddCompressedFile(std::move(f));
 
@@ -102,9 +169,24 @@ HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestByte
                             String folderId;
                             String dateStr;
                             JsonUtils::ObjectGetMember(extractedFileJson, "Name", e.fileName);
+
+                            // Validate file name against path traversal. As above, a bad entry
+                            // fails the whole manifest: silently omitting it would be read as a
+                            // cloud-side deletion of a file that is still there.
+                            if (IsUnsafeManifestName(e.fileName))
+                            {
+                                TRACE_ERROR("[GAME SAVE] ExtendedManifest: Rejecting manifest - unsafe file name '%s'", e.fileName.c_str());
+                                return E_INVALIDARG;
+                            }
+
                             JsonUtils::ObjectGetMember(extractedFileJson, "FileId", e.fileId);
                             JsonUtils::ObjectGetMember(extractedFileJson, "FolderId", folderId);
                             e.folderIndex = GetFolderDetailIndexFromFolderId(folderId);
+                            if (e.folderIndex == SIZE_MAX)
+                            {
+                                TRACE_ERROR("[GAME SAVE] ExtendedManifest: Rejecting manifest - unknown folderId '%s' for file '%s'", folderId.c_str(), e.fileName.c_str());
+                                return E_INVALIDARG;
+                            }
                             JsonUtils::ObjectGetMember(extractedFileJson, "Size", e.fileSizeBytes);
                             JsonUtils::ObjectGetMember(extractedFileJson, "SkipFile", e.skipFile);
                             JsonUtils::ObjectGetMember(extractedFileJson, "LastModified", dateStr);
@@ -115,14 +197,28 @@ HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestByte
 
                             if (!e.skipFile) // don't bother recording skipped files
                             {
-                                AddFileDetail(std::move(e));
+                                if (AddFileDetail(std::move(e)) == SIZE_MAX)
+                                {
+                                    TRACE_ERROR("[GAME SAVE] ExtendedManifest: Rejecting manifest - AddFileDetail failed for file in compressed bundle");
+                                    return E_INVALIDARG;
+                                }
                             }
                         }
+                    }
+                    else if (compression == CompressionType::None || compression == CompressionType::GZip)
+                    {
+                        TRACE_ERROR("[GAME SAVE] ExtendedManifest: %s entry has no extracted files — malformed manifest", compressionTypeStr.c_str());
+                        return E_UNEXPECTED;
                     }
                 }
             }
         }
     }
+
+    // Only now is this set an authoritative picture of what the cloud holds. Callers use this to
+    // distinguish "the cloud has no files" from "we never learned what the cloud has", which is the
+    // difference between a correct deletion and wiping the player's save.
+    m_initializedFromExtendedManifest = true;
 
     return S_OK;
 }
@@ -167,7 +263,12 @@ void ExtendedManifest::CreateNestedStructure(const SharedPtr<FileFolderSet>& loc
         if (!folder.existsLocally)
         {
             String fullPath;
-            JoinPathHelper(saveFolder, folder.relFolderPath, fullPath);
+            HRESULT hr = JoinPathHelper(saveFolder, folder.relFolderPath, fullPath);
+            if (FAILED(hr))
+            {
+                TRACE_WARNING("[GAME SAVE] ExtendedManifest: JoinPathHelper failed for folder '%s', hr=0x%08X", folder.relFolderPath.c_str(), hr);
+                continue;
+            }
             folder.existsLocally = FilePAL::DoesDirectoryExist(fullPath);
             assert(folder.existsLocally == false);
         }
@@ -179,28 +280,51 @@ void ExtendedManifest::CreateNestedStructure(const SharedPtr<FileFolderSet>& loc
     }
 }
 
-JsonValue ExtendedManifest::CreateNestedFolderJson(const SharedPtr<FileFolderSet>& localFileFolderSet, const String& parentPath, const String& folderName, ExtendedManifestNestedFolder& nestedFolder)
+JsonValue ExtendedManifest::CreateNestedFolderJson(const SharedPtr<FileFolderSet>& localFileFolderSet, const SharedPtr<FileFolderSet>& remoteFileFolderSet, const String& parentPath, const String& folderName, ExtendedManifestNestedFolder& nestedFolder)
 {
     JsonValue foldersJson = JsonValue::object();
     if (!folderName.empty())
     {
-        JoinPathHelper(parentPath, folderName, nestedFolder.relFolderPath);
+        HRESULT hr = JoinPathHelper(parentPath, folderName, nestedFolder.relFolderPath);
+        if (FAILED(hr))
+        {
+            TRACE_WARNING("[GAME SAVE] ExtendedManifest: JoinPathHelper failed for folder '%s/%s', hr=0x%08X", parentPath.c_str(), folderName.c_str(), hr);
+        }
     }
     else
     {
         nestedFolder.relFolderPath = parentPath;
     }
 
-    // Map to an existing folder GUID from local manifest
-    const Vector<FolderDetail>& folders = localFileFolderSet->GetFolders();
-    for (const FolderDetail& localFolder : folders)
+    // Map to an existing folder GUID from local manifest first.
+    // Only consider folders that actually exist on disk — stale local entries (existsLocally == false)
+    // may have outdated folder IDs that conflict with the remote manifest's IDs.
+    const Vector<FolderDetail>& localFolders = localFileFolderSet->GetFolders();
+    for (const FolderDetail& localFolder : localFolders)
     {
-        if (localFolder.relFolderPath == nestedFolder.relFolderPath)
+        if (localFolder.existsLocally && localFolder.relFolderPath == nestedFolder.relFolderPath)
         {
             nestedFolder.folderId = localFolder.folderId;
             break;
         }
     }
+    
+    // If not found in local, check remote manifest (for kept remote files)
+    if (nestedFolder.folderId.empty() && remoteFileFolderSet)
+    {
+        const Vector<FolderDetail>& remoteFolders = remoteFileFolderSet->GetFolders();
+        for (const FolderDetail& remoteFolder : remoteFolders)
+        {
+            if (remoteFolder.relFolderPath == nestedFolder.relFolderPath)
+            {
+                nestedFolder.folderId = remoteFolder.folderId;
+                TRACE_VERBOSE("[GAME SAVE] ExtendedManifest: Using remote folderId '%s' for path '%s'",
+                    nestedFolder.folderId.c_str(), nestedFolder.relFolderPath.c_str());
+                break;
+            }
+        }
+    }
+    
     if (nestedFolder.folderId.empty())
     {
         nestedFolder.folderId = CreateGUID();
@@ -212,49 +336,12 @@ JsonValue ExtendedManifest::CreateNestedFolderJson(const SharedPtr<FileFolderSet
     JsonValue subfoldersJsonArray = JsonValue::array();
     for (auto& subfolder : nestedFolder.subfolders)
     {
-        JsonValue subfolderJson = CreateNestedFolderJson(localFileFolderSet, nestedFolder.relFolderPath, subfolder.first, subfolder.second);
+        JsonValue subfolderJson = CreateNestedFolderJson(localFileFolderSet, remoteFileFolderSet, nestedFolder.relFolderPath, subfolder.first, subfolder.second);
         subfoldersJsonArray.push_back(subfolderJson);
     }
     JsonUtils::ObjectAddMember(foldersJson, "Folders", std::move(subfoldersJsonArray));
 
     return foldersJson;
-}
-
-const ExtendedManifestNestedFolder* FindNestedFolder(const ExtendedManifestNestedFolder& root, const String& folderName)
-{
-    Vector<const ExtendedManifestNestedFolder*> stack;
-    stack.push_back(&root);
-
-    while (!stack.empty())
-    {
-        const ExtendedManifestNestedFolder* currentFolder = stack.back();
-        stack.pop_back();
-
-        if (currentFolder->relFolderPath == folderName)
-        {
-            return currentFolder; // Found the folder, return its address
-        }
-
-        // Not found, push all subfolders into the stack for further search
-        for (const auto& subfolder : currentFolder->subfolders)
-        {
-            stack.push_back(&(subfolder.second));
-        }
-    }
-
-    return nullptr; // Folder not found
-}
-
-String GetFolderId(const ExtendedManifestNestedFolder& nested, const String& folderPath)
-{
-    const ExtendedManifestNestedFolder* foundFolder = FindNestedFolder(nested, folderPath);
-    if (foundFolder)
-    {
-        return foundFolder->folderId;
-    }
-
-    assert(false);
-    return String();
 }
 
 Result<String> ExtendedManifest::WriteExtendedManifest(
@@ -269,30 +356,96 @@ Result<String> ExtendedManifest::WriteExtendedManifest(
     // Convert local state folder structure (foldersToUpload) to a nested folder JSON extended manifest
     ExtendedManifestNestedFolder nested;
     CreateNestedStructure(localFileFolderSet, nested, saveFolder);
-    JsonValue foldersRootJson = CreateNestedFolderJson(localFileFolderSet, "", "", nested);
+    // Note: We don't generate the folder JSON yet - we need to first collect folder IDs from files
+    // and potentially add missing remote folders to the nested structure
 
     Set<String> folderIdsInFiles;
 
     JsonValue fileJsonArray = JsonValue::array();
-    int32_t numCompressedFiles = (int32_t)compressedFilesToUpload.size();
-    if (compressedIncludesExtendedManifest)
+    size_t numCompressedFiles = compressedFilesToUpload.size();
+    if (compressedIncludesExtendedManifest && numCompressedFiles > 0)
     {
         numCompressedFiles--;
     }
-    for (int32_t i = 0; i < (int32_t)numCompressedFiles; ++i)
+    for (size_t i = 0; i < numCompressedFiles; ++i)
     {
         const ExtendedManifestCompressedFileDetail& compressedFile = compressedFilesToUpload[i];
         JsonValue jsonObj = JsonValue::object();
-        WriteCompressedFileJson(jsonObj, compressedFile, nested, folderIdsInFiles);
+        WriteCompressedFileJson(jsonObj, compressedFile, folderIdsInFiles);
         fileJsonArray.push_back(jsonObj);
     }
 
     for (size_t compressedFileIndex : compressedFilesToKeep)
     {
         JsonValue jsonObj = JsonValue::object();
-        WriteCompressedFileIndexJson(jsonObj, compressedFileIndex, remoteFileFolderSet, nested, folderIdsInFiles);
+        WriteCompressedFileIndexJson(jsonObj, compressedFileIndex, localFileFolderSet, remoteFileFolderSet, folderIdsInFiles);
         fileJsonArray.push_back(jsonObj);
     }
+
+    // Check for folderId mismatches between Files and Folders sections.
+    // This can happen when keeping remote files whose folders don't exist locally.
+    // We need to add those missing remote folder paths to the nested structure before
+    // regenerating the JSON, so that proper folder hierarchy is preserved.
+    const Vector<FolderDetail>& localFolders = localFileFolderSet->GetFolders();
+    const Vector<FolderDetail>& remoteFolders = remoteFileFolderSet->GetFolders();
+    
+    // Build a set of local folder IDs that actually exist locally (match what CreateNestedStructure writes).
+    // Folders that are in the local manifest but deleted on disk (existsLocally == false) are NOT
+    // written to the Folders JSON by CreateNestedStructure, so we must not include them here.
+    Set<String> localFolderIds;
+    for (const FolderDetail& localFolder : localFolders)
+    {
+        if (localFolder.existsLocally)
+        {
+            localFolderIds.insert(localFolder.folderId);
+        }
+    }
+    
+    // Build a map of remote folder IDs to their full paths for quick lookup
+    Map<String, const FolderDetail*> remoteFolderById;
+    for (const FolderDetail& remoteFolder : remoteFolders)
+    {
+        remoteFolderById[remoteFolder.folderId] = &remoteFolder;
+    }
+    
+    // Find missing folders and add their paths to the nested structure
+    for (const String& folderIdInFile : folderIdsInFiles)
+    {
+        // Skip if already in local folders that exist on disk
+        if (localFolderIds.find(folderIdInFile) != localFolderIds.end())
+        {
+            continue;
+        }
+        
+        // Skip the root folder (empty guid)
+        if (folderIdInFile == "{00000000-0000-0000-0000-000000000000}")
+        {
+            continue;
+        }
+        
+        // Look for this folder in remote folders
+        auto remoteIt = remoteFolderById.find(folderIdInFile);
+        if (remoteIt != remoteFolderById.end())
+        {
+            const FolderDetail* remoteFolder = remoteIt->second;
+            TRACE_INFORMATION("[GAME SAVE] ExtendedManifest: Adding remote folder path '%s' (folderId='%s') to nested structure for kept files",
+                remoteFolder->relFolderPath.c_str(), folderIdInFile.c_str());
+            
+            // Add the full path to the nested structure. This properly handles nested folders
+            // like "saves/profiles" by adding each path segment in order (saves -> profiles).
+            // The nested structure will then be serialized correctly by CreateNestedFolderJson.
+            AddPath(nested, remoteFolder->relFolderPath);
+        }
+        else
+        {
+            TRACE_WARNING("[GAME SAVE] ExtendedManifest: FolderId '%s' not found in local or remote folders - orphaned file reference",
+                folderIdInFile.c_str());
+        }
+    }
+    
+    // Regenerate the folders JSON now that we've added any missing remote folder paths.
+    // Pass remoteFileFolderSet so we can look up folder IDs for paths that came from remote.
+    JsonValue foldersRootJson = CreateNestedFolderJson(localFileFolderSet, remoteFileFolderSet, "", "", nested);
 
     JsonValue v1Json = JsonValue::object();
     JsonUtils::ObjectAddMember(v1Json, "Files", std::move(fileJsonArray));
@@ -301,26 +454,6 @@ Result<String> ExtendedManifest::WriteExtendedManifest(
         auto& subFoldersJson = foldersRootJson["Folders"];
         if (subFoldersJson.is_array())
         {
-            const Vector<FolderDetail>& localFolders = localFileFolderSet->GetFolders();
-            assert(folderIdsInFiles.size() <= localFolders.size());
-            for (auto it = folderIdsInFiles.begin(); it != folderIdsInFiles.end(); it++)
-            {
-                String folderIdsInFile = *it;
-                bool found = false;
-                for (const FolderDetail& folderDetail : localFolders)
-                {
-                    if (folderDetail.folderId == folderIdsInFile)
-                    {
-                        found = true;
-                    }
-                }
-                TRACE_INFORMATION("[GAME SAVE] found: %d", found);
-                if (!found)
-                {
-                    assert(false);
-                }
-            }
-
             JsonUtils::ObjectAddMember(v1Json, "Folders", std::move(subFoldersJson));
         }
     }
@@ -341,20 +474,34 @@ String ExtendedManifest::ConvertCompressionToString(CompressionType compression)
     }
 }
 
-CompressionType ExtendedManifest::ConvertStringToCompression(const String& compressionStr)
+HRESULT ExtendedManifest::ConvertStringToCompression(const String& compressionStr, _Out_ CompressionType& compression)
 {
+    // Compression is untrusted manifest input and must be parsed strictly. Defaulting an
+    // unrecognized value (or a missing field) to None made the download path move the raw bundle
+    // blob straight onto the advertised save-file path, so a bundle that is really a zip but
+    // labelled e.g. "zstd" replaced valid save content with archive bytes and then recorded it as
+    // synchronized. Anything outside the schema fails the manifest instead.
     if (compressionStr == "zip")
     {
-        return CompressionType::Zip;
+        compression = CompressionType::Zip;
+        return S_OK;
     }
-    else if (compressionStr == "gzip")
+    if (compressionStr == "gzip")
     {
-        return CompressionType::GZip;
+        compression = CompressionType::GZip;
+        return S_OK;
     }
-    return CompressionType::None;
+    if (compressionStr == "none")
+    {
+        compression = CompressionType::None;
+        return S_OK;
+    }
+
+    compression = CompressionType::None;
+    return E_INVALIDARG;
 }
 
-void ExtendedManifest::WriteCompressedFileIndexJson(JsonValue& jsonObj, size_t compressedFileIndex, const SharedPtr<FileFolderSet>& remoteFileFolderSet, const ExtendedManifestNestedFolder& nested, Set<String>& folderIdsInFiles)
+void ExtendedManifest::WriteCompressedFileIndexJson(JsonValue& jsonObj, size_t compressedFileIndex, const SharedPtr<FileFolderSet>& localFileFolderSet, const SharedPtr<FileFolderSet>& remoteFileFolderSet, Set<String>& folderIdsInFiles)
 {
     const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
     const CompressedFile& compressedFile = compressedFiles[compressedFileIndex];
@@ -386,7 +533,19 @@ void ExtendedManifest::WriteCompressedFileIndexJson(JsonValue& jsonObj, size_t c
         }
         else
         {
-            String folderId = GetFolderId(nested, folderDetail.relFolderPath); // need to fetch local FolderID
+            // Use the remote folder's ID, but normalize to the local folder's ID if the same
+            // path exists locally. This ensures the Files section matches the Folders section
+            // (which is generated from CreateNestedFolderJson, which prefers local IDs).
+            String folderId = folderDetail.folderId;
+            const Vector<FolderDetail>& localFolders = localFileFolderSet->GetFolders();
+            for (const FolderDetail& localFolder : localFolders)
+            {
+                if (localFolder.existsLocally && localFolder.relFolderPath == folderDetail.relFolderPath)
+                {
+                    folderId = localFolder.folderId;
+                    break;
+                }
+            }
             folderIdsInFiles.insert(folderId);
             JsonUtils::ObjectAddMember(jsonFileObj, "FolderId", folderId);
         }
@@ -399,7 +558,7 @@ void ExtendedManifest::WriteCompressedFileIndexJson(JsonValue& jsonObj, size_t c
     JsonUtils::ObjectAddMember(jsonObj, "Extract", std::move(extractedFilesJsonArray));
 }
 
-void ExtendedManifest::WriteCompressedFileJson(JsonValue& jsonObj, const ExtendedManifestCompressedFileDetail& compressedFile, const ExtendedManifestNestedFolder& nested, Set<String>& folderIdsInFiles)
+void ExtendedManifest::WriteCompressedFileJson(JsonValue& jsonObj, const ExtendedManifestCompressedFileDetail& compressedFile, Set<String>& folderIdsInFiles)
 {
     JsonUtils::ObjectAddMember(jsonObj, "Name", compressedFile.fileName);
     JsonUtils::ObjectAddMember(jsonObj, "FileId", compressedFile.fileId);
@@ -414,9 +573,11 @@ void ExtendedManifest::WriteCompressedFileJson(JsonValue& jsonObj, const Extende
         JsonValue jsonFileObj = JsonValue::object();
         JsonUtils::ObjectAddMember(jsonFileObj, "Name", extractedFileDetail.fileName);
         JsonUtils::ObjectAddMember(jsonFileObj, "FileId", extractedFileDetail.fileId);
-        String folderId = GetFolderId(nested, extractedFileDetail.relFolderPath);
+        String folderId = extractedFileDetail.skipFile ? "{00000000-0000-0000-0000-000000000000}" : extractedFileDetail.folderId;
         JsonUtils::ObjectAddMember(jsonFileObj, "FolderId", folderId);
-        folderIdsInFiles.insert(folderId);
+        if (!extractedFileDetail.skipFile) {
+            folderIdsInFiles.insert(folderId);
+        }
         JsonUtils::ObjectAddMember(jsonFileObj, "Size", extractedFileDetail.uncompressedSizeBytes);
         JsonUtils::ObjectAddMember(jsonFileObj, "SkipFile", extractedFileDetail.skipFile);
         JsonUtils::ObjectAddMember(jsonFileObj, "LastModified", TimeTToIso8601String(extractedFileDetail.timeLastModified));
@@ -426,8 +587,17 @@ void ExtendedManifest::WriteCompressedFileJson(JsonValue& jsonObj, const Extende
     JsonUtils::ObjectAddMember(jsonObj, "Extract", std::move(extractedFilesJsonArray));
 }
 
-HRESULT FileFolderSet::ExtendedManifestParseFolderJson(const JsonValue& folderJson, const String& curPath, bool isRoot, const String& saveFolder)
+HRESULT FileFolderSet::ExtendedManifestParseFolderJson(const JsonValue& folderJson, const String& curPath, bool isRoot, const String& saveFolder, uint32_t depth)
 {
+    // The manifest is untrusted cross-device input and this walk is recursive, so bound it.
+    // Real saves nest a handful of levels; anything deeper is malformed or hostile.
+    constexpr uint32_t kMaxFolderDepth = 64;
+    if (depth > kMaxFolderDepth)
+    {
+        TRACE_ERROR("[GAME SAVE] ExtendedManifestParseFolderJson: folder nesting exceeds %u levels, rejecting manifest", kMaxFolderDepth);
+        return E_INVALIDARG;
+    }
+
     FolderDetail f{};
 
     if (isRoot)
@@ -438,12 +608,23 @@ HRESULT FileFolderSet::ExtendedManifestParseFolderJson(const JsonValue& folderJs
         f.folderName = "";
         f.existsOnRemote = true;
         f.existsLocally = true;
+        TRACE_VERBOSE("[GAME SAVE] ExtendedManifestParseFolderJson: Processing ROOT folder");
     }
     else
     {
         JsonUtils::ObjectGetMember(folderJson, "Name", f.folderName);
         JsonUtils::ObjectGetMember(folderJson, "Id", f.folderId);
         f.existsOnRemote = true;
+
+        // Validate folder name against path traversal: reject "..", absolute paths, and path separators.
+        if (!f.folderName.empty() && IsUnsafeManifestName(f.folderName))
+        {
+            TRACE_ERROR("[GAME SAVE] ExtendedManifestParseFolderJson: Rejecting unsafe folder name '%s'", f.folderName.c_str());
+            return E_INVALIDARG;
+        }
+
+        TRACE_VERBOSE("[GAME SAVE] ExtendedManifestParseFolderJson: Processing folder name='%s' folderId='%s'", 
+            f.folderName.c_str(), f.folderId.c_str());
         if (f.folderName.empty())
         {
             f.relFolderPath = curPath;
@@ -452,7 +633,7 @@ HRESULT FileFolderSet::ExtendedManifestParseFolderJson(const JsonValue& folderJs
         {
             RETURN_IF_FAILED(JoinPathHelper(curPath, f.folderName, f.relFolderPath));
             String fullPath;
-            JoinPathHelper(saveFolder, f.relFolderPath, fullPath);
+            RETURN_IF_FAILED(JoinPathHelper(saveFolder, f.relFolderPath, fullPath));
             f.existsLocally = FilePAL::DoesDirectoryExist(fullPath);
         }
     }
@@ -462,13 +643,16 @@ HRESULT FileFolderSet::ExtendedManifestParseFolderJson(const JsonValue& folderJs
         auto& subFoldersJson = folderJson["Folders"];
         if (subFoldersJson.is_array() && subFoldersJson.size() > 0)
         {
+            TRACE_VERBOSE("[GAME SAVE] ExtendedManifestParseFolderJson: Folder '%s' has %zu subfolders", 
+                f.relFolderPath.c_str(), subFoldersJson.size());
             for (const auto& subFolderJson : subFoldersJson.get<Vector<JsonValue>>())
             {
-                ExtendedManifestParseFolderJson(subFolderJson, f.relFolderPath, false, saveFolder);
+                RETURN_IF_FAILED(ExtendedManifestParseFolderJson(subFolderJson, f.relFolderPath, false, saveFolder, depth + 1));
             }
         }
     }
-    TRACE_INFORMATION("[GAME SAVE] ExtManifestParseJson AddFolderDetail: %s", f.relFolderPath.c_str());
+    TRACE_INFORMATION("[GAME SAVE] ExtManifestParseJson AddFolderDetail: path='%s' folderId='%s'", 
+        f.relFolderPath.c_str(), f.folderId.c_str());
     AddFolderDetail(std::move(f));
 
     return S_OK;

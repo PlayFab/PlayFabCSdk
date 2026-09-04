@@ -1,0 +1,122 @@
+id: Scenario-Xbox-35-Write-During-Upload
+name: GameSave Xbox 35 - Write to Save Folder During Upload
+tags:
+  - failing
+  - xboxgamesaves
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Init, write initial data, start upload. Monitor progress for Uploading state. When Uploading
+  detected, write new data to save folder. Verify first upload has pre-write data. Upload again
+  to capture new data. Verify second upload reflects the new data.
+brief: Write to save folder during active upload
+group: E. Progress, Cancel, Mid-Sync
+devices:
+  DeviceA:
+    engine: [xbox, pc-grts]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  init-and-write-initial:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    # Write initial save data
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateTextFile
+            relativePath: saves/save.dat
+            content: "initial_data_v1"
+  upload-and-write-during:
+    # Enable progress auto-response that writes new data when Uploading state is detected
+    - command: PFGameSaveFilesSetUiProgressAutoWriteOnUpload
+      parameters:
+        enable: true
+        operations:
+          - verb: CreateTextFile
+            relativePath: saves/save.dat
+            content: "updated_data_v2"
+    # Start first upload — progress callback detects Uploading, then writes new data
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+      timeoutSeconds: 600
+    # First upload should contain pre-write data (initial_data_v1)
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+  upload-new-data:
+    # Disable progress auto-write
+    - command: PFGameSaveFilesSetUiProgressAutoWriteOnUpload
+      parameters:
+        enable: false
+    # Second upload captures the new data written during the first upload
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+      timeoutSeconds: 600
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+        expectedContent:
+          "saves/save.dat": "updated_data_v2"
+  cleanup-session:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: init-and-write-initial
+  - role: DeviceA
+    block: upload-and-write-during
+  - role: DeviceA
+    block: upload-new-data
+  - role: DeviceA
+    block: cleanup-session
+cleanup:
+  DeviceA:
+    - command: PFGameSaveFilesSetUiProgressAutoWriteOnUpload
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

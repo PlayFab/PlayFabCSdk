@@ -62,13 +62,6 @@ void InventoryTests::TestGetInventoryOperationStatus(TestContext& tc)
 #endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-void InventoryTests::TestGetMicrosoftStoreAccessTokens(TestContext& tc)
-{
-    tc.Skip();
-}
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestGetTransactionHistory(TestContext& tc)
 {
     tc.Skip();

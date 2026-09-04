@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include "AsyncOp.h"
 #include <playfab/core/cpp/AuthenticationTypeWrappers.h>
 
@@ -20,8 +21,22 @@ class User
 public:
     // XUsers must be copied with User::Duplicate
     User(const User& other) = delete;
-    User(User&& other) noexcept = default;
-    User& operator=(User&& other) noexcept = default;
+    User(User&& other) noexcept
+        : m_user(std::move(other.m_user))
+        , m_id(other.m_id.load())
+    {
+        other.m_id.store(0);
+    }
+    User& operator=(User&& other) noexcept
+    {
+        if (this != &other)
+        {
+            m_user = std::move(other.m_user);
+            m_id.store(other.m_id.load());
+            other.m_id.store(0);
+        }
+        return *this;
+    }
     ~User() noexcept = default;
 
     static Result<User> Wrap(XUserHandle userHandle) noexcept;
@@ -44,7 +59,7 @@ private:
     HRESULT Initialize() noexcept;
 
     PlayFab::Wrappers::XUser m_user;
-    mutable uint64_t m_id{ 0 };
+    mutable std::atomic<uint64_t> m_id{ 0 };
 };
 
 } // namespace Platform

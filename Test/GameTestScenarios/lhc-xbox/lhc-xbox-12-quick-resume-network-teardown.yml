@@ -1,0 +1,159 @@
+id: LHC-Xbox-12-Quick-Resume-Network-Teardown
+name: LHC Xbox 12 - Quick Resume Save/Restore With Network Work In Flight
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  The strictest form of the suspend contract, and the reason the drain exists at all.
+
+  Ordinary suspend/resume happens within one boot of the process. Quick Resume snapshots the
+  title's memory to disk and restores it later, potentially after a reboot or days later. The
+  gen9 console network stack cannot survive that round trip: a restored socket or WinHTTP
+  handle is not merely stale, it is invalid in a way the stack cannot recover from. So every
+  network resource must be genuinely destroyed before the snapshot is taken, not merely marked
+  closed.
+
+  Scenario 07 verifies the drain runs on a normal suspend. This scenario verifies the same
+  teardown holds across an actual Quick Resume save/restore, which is the case that turns a
+  surviving handle into a hard failure after restore rather than a leak.
+
+  Both an HTTP request and a WebSocket are live when the snapshot is taken, so both connection
+  kinds must be destroyed. After restore the library must be fully usable, which requires that
+  WinHTTP sessions -- destroyed during the teardown -- are lazily recreated correctly.
+brief: Network resources must be destroyed before a Quick Resume snapshot and usable after
+group: B. Suspend / PLM
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  establish-network-state:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # A completed request first, so a WinHTTP session handle definitely exists and is cached
+    # in the provider. The session is what must be destroyed during teardown and lazily
+    # recreated after restore; without this the session cache might be empty and the most
+    # interesting part of the path would be skipped.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    # A live WebSocket, so the snapshot is taken with a persistent connection open.
+    # The controller hosts the echo endpoint. The console reaches it over the LAN via
+    # {{wsTestHost}}; a public internet echo service is not usable here because the title's
+    # network policy only permits approved endpoints.
+    - command: StartWebSocketTestServer
+
+    - command: HCWebSocketCreate
+    - command: HCWebSocketConnectAsync
+      parameters:
+        uri: "{{wsTestUrl}}"
+        subProtocol: ""
+
+    # And an HTTP request still in flight.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    - command: HCHttpCallPerformStart
+
+  quick-resume-round-trip:
+    # Snapshot to disk. If the teardown left any network resource alive, this is where Quick
+    # Resume captures invalid state.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QuickResumeSave
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+    # Restore from the snapshot.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QuickResumeRestore
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+
+  verify-inflight-resolved:
+    # Torn down by the snapshot teardown, so failure is expected; the requirement is that it
+    # resolves rather than hanging on a handle that no longer means anything.
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 60000
+        allowFailedResult: true
+    - command: HCHttpCallCloseHandle
+    - command: HCWebSocketCloseHandle
+
+  verify-network-usable-after-restore:
+    # THE ASSERTION. If a stale WinHTTP session or connection handle survived the snapshot,
+    # requests after restore fail in ways that do not recover. Everything here must be rebuilt
+    # from scratch and work.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    # WebSockets must be reconnectable too, not just HTTP.
+    - command: HCWebSocketCreate
+    - command: HCWebSocketConnectAsync
+      parameters:
+        uri: "{{wsTestUrl}}"
+        subProtocol: ""
+    - command: HCWebSocketSendMessageAsync
+      parameters:
+        message: "post-quick-resume"
+    - command: HCWebSocketDisconnect
+    - command: HCWebSocketCloseHandle
+
+    # Sustained concurrency after restore: proves the request budget is intact and the
+    # recreated session is shared correctly across many simultaneous requests.
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "https://E18D7.playfabapi.com/"
+        requestCount: 15
+        expectedSuccesses: 15
+        timeoutMs: 120000
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: establish-network-state
+  - role: DeviceA
+    block: quick-resume-round-trip
+  - role: DeviceA
+    block: verify-inflight-resolved
+  - role: DeviceA
+    block: verify-network-usable-after-restore
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle
+    # Release the controller-hosted echo endpoint.
+    - command: StopWebSocketTestServer

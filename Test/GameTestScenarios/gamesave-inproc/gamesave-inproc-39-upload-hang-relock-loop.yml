@@ -1,0 +1,283 @@
+# Scenario 39: Upload recovery after cancel during rate-limited ListManifests
+#
+# Tests two bugs triggered by cancelling an upload whose ListManifestsAfterUpload
+# was rate-limited (HTTP 429):
+#
+# Bug A (BASE_VERSION_NOT_AVAILABLE):
+#   FinalizeManifest succeeds but ListManifests fails → PromoteIfNeeded never reached →
+#   m_postUploadLatestFinalizedPFManifest is empty → post-finalize handler skips updating
+#   m_latestFinalizedManifest → RelockStep uses stale base version → service returns
+#   E_PF_GAME_SAVE_BASE_VERSION_NOT_AVAILABLE (0x89235798).
+#   Reference: bug-reports/bug-base-version-not-available-after-listmanifests-cancel.md
+#
+# Bug B (infinite re-acquire loop):
+#   After cancel, m_latestPendingManifest is null, so next upload enters the re-acquire
+#   path (RelockStep). If InitializeManifest continues to fail, the code retries
+#   infinitely without surfacing WaitForFailedUI — the upload hangs forever.
+#   Reference: bug-reports/upload-hang-after-relock-loop.md
+#
+# Block flow:
+#   1. Baseline upload
+#   2. Mock ListManifests → cancel (triggers bug A state)
+#   3. Force relock failure → cancel (tests bug B: WaitForFailedUI, not hang)
+#   4. Repeated relock failure → cancel (tests repeated failures)
+#   5. Clear errors → upload succeeds (confirms both fixes work)
+#   6. Verify upload persisted
+
+id: Scenario-Inproc-39-Upload-Relock-After-ListManifests-Cancel
+name: GameSave Inproc 39 - Upload Recovery After Cancel During Rate-Limited ListManifests
+tags:
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: passing
+description: |
+  Reproduces two bugs after cancelling a rate-limited ListManifestsAfterUpload:
+  (A) Stale base version → E_PF_GAME_SAVE_BASE_VERSION_NOT_AVAILABLE on re-lock
+  (B) Infinite re-acquire loop with no WaitForFailedUI escape
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  # ── Block 1: Establish baseline ──────────────────────────────────────────────
+  setup-and-baseline-upload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario39"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario39"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+
+  # ── Block 2: Mock ListManifests to fail, trigger cancel ────────────────────
+  # FinalizeManifest succeeds, ListManifests mocked to 429 → SyncFailed → cancel.
+  # BUG A: m_latestFinalizedManifest stays at old version (stale).
+  # FIXED: Falls back to pending manifest version as new finalized base.
+  cancel-at-listmanifests:
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.bin
+            bytes: 10240
+            pattern: [0x11, 0x22, 0x33, 0x44]
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/ListManifests"
+        statusCode: 429
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        expectedHr: "0x800704C7"
+        mode: KeepDeviceActive
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+
+  # ── Block 3: Force relock failure → cancel ─────────────────────────────────
+  # m_latestPendingManifest is null from block 2 → next upload enters re-acquire.
+  # ForceSyncFailed makes InitializeManifest appear to fail.
+  # BUG B: infinite loop, no WaitForFailedUI.
+  # FIXED: SyncFailed fires, auto-cancel returns USER_CANCELLED (0x800704C7).
+  relock-forced-failure:
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.bin
+            bytes: 10240
+            pattern: [0x22, 0x33, 0x44, 0x55]
+    - command: PFGameSaveFilesSetForceSyncFailedErrorForDebug
+      parameters:
+        forceError: true
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: PFGameSaveFilesUploadWithUiAsync
+      timeoutSeconds: 30
+      parameters:
+        expectedHr: "0x800704C7"
+        mode: KeepDeviceActive
+    # DO NOT clear force error — block 4 tests repeated relock failure
+
+  # ── Block 4: Repeated relock failure → cancel ──────────────────────────────
+  # m_latestPendingManifest still null (cancel didn't restore it).
+  # ForceSyncFailed still active → repeated re-acquire failures.
+  # Tests that repeated failures are all surfaced via WaitForFailedUI.
+  relock-repeated-failure:
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.bin
+            bytes: 10240
+            pattern: [0x33, 0x44, 0x55, 0x66]
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: PFGameSaveFilesUploadWithUiAsync
+      timeoutSeconds: 30
+      parameters:
+        expectedHr: "0x800704C7"
+        mode: KeepDeviceActive
+    - command: PFGameSaveFilesSetForceSyncFailedErrorForDebug
+      parameters:
+        forceError: false
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+
+  # ── Block 5: Retry upload with errors cleared ──────────────────────────────
+  # Re-acquire should succeed, upload should succeed.
+  retry-upload-after-clear:
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.bin
+            bytes: 10240
+            pattern: [0x99, 0xAA, 0xBB, 0xCC]
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+
+  # ── Block 6: Verify upload persisted ───────────────────────────────────────
+  verify-upload-persisted:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: XGameRuntimeInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario39"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario39"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: CompareSaveContainerSnapshots
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+
+executionOrder:
+  - role: DeviceA
+    block: setup-and-baseline-upload
+  - role: DeviceA
+    block: cancel-at-listmanifests
+  - role: DeviceA
+    block: relock-forced-failure
+  - role: DeviceA
+    block: relock-repeated-failure
+  - role: DeviceA
+    block: retry-upload-after-clear
+  - role: DeviceA
+    block: verify-upload-persisted
+
+cleanup:
+  DeviceA:
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetForceNullPendingManifestForDebug
+      parameters:
+        force: false
+    - command: PFGameSaveFilesSetForceSyncFailedErrorForDebug
+      parameters:
+        forceError: false
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario39"

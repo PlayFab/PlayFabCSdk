@@ -35,9 +35,6 @@ private:
     void TestGetInventoryOperationStatus(TestContext& testContext);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    void TestGetMicrosoftStoreAccessTokens(TestContext& testContext);
-#endif
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     void TestGetTransactionHistory(TestContext& testContext);
 #endif
     void TestPurchaseInventoryItems(TestContext& testContext);

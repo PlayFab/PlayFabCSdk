@@ -23,15 +23,24 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <stdexcept>
 
 #include <wrl/client.h>
 
 #ifndef DIRECTX_TOOLKIT_API
 #ifdef DIRECTX_TOOLKIT_EXPORT
+#ifdef __GNUC__
+#define DIRECTX_TOOLKIT_API __attribute__ ((dllexport))
+#else
 #define DIRECTX_TOOLKIT_API __declspec(dllexport)
+#endif
 #elif defined(DIRECTX_TOOLKIT_IMPORT)
+#ifdef __GNUC__
+#define DIRECTX_TOOLKIT_API __attribute__ ((dllimport))
+#else
 #define DIRECTX_TOOLKIT_API __declspec(dllimport)
+#endif
 #else
 #define DIRECTX_TOOLKIT_API
 #endif
@@ -45,23 +54,22 @@ namespace DirectX
     {
     public:
         DIRECTX_TOOLKIT_API DescriptorHeap(
-            _In_ ID3D12DescriptorHeap* pExistingHeap) noexcept;
+            _In_ ID3D12DescriptorHeap* pExistingHeap);
         DIRECTX_TOOLKIT_API DescriptorHeap(
             _In_ ID3D12Device* device,
-            _In_ const D3D12_DESCRIPTOR_HEAP_DESC* pDesc) noexcept(false);
+            _In_ const D3D12_DESCRIPTOR_HEAP_DESC* pDesc);
         DIRECTX_TOOLKIT_API DescriptorHeap(
             _In_ ID3D12Device* device,
             D3D12_DESCRIPTOR_HEAP_TYPE type,
             D3D12_DESCRIPTOR_HEAP_FLAGS flags,
-            size_t count) noexcept(false);
+            size_t count);
         DIRECTX_TOOLKIT_API inline DescriptorHeap(
             _In_ ID3D12Device* device,
-            size_t count) noexcept(false) :
+            size_t count) :
             DescriptorHeap(device,
                 D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
                 D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, count)
-        {
-        }
+        {}
 
         DescriptorHeap(DescriptorHeap&&) = default;
         DescriptorHeap& operator=(DescriptorHeap&&) = default;
@@ -161,7 +169,7 @@ namespace DirectX
 
         DIRECTX_TOOLKIT_API inline DescriptorPile(
             _In_ ID3D12DescriptorHeap* pExistingHeap,
-            size_t reserve = 0) noexcept(false)
+            size_t reserve = 0)
             : DescriptorHeap(pExistingHeap),
             m_top(reserve)
         {
@@ -174,7 +182,7 @@ namespace DirectX
         DIRECTX_TOOLKIT_API inline DescriptorPile(
             _In_ ID3D12Device* device,
             _In_ const D3D12_DESCRIPTOR_HEAP_DESC* pDesc,
-            size_t reserve = 0) noexcept(false)
+            size_t reserve = 0)
             : DescriptorHeap(device, pDesc),
             m_top(reserve)
         {
@@ -189,7 +197,7 @@ namespace DirectX
             D3D12_DESCRIPTOR_HEAP_TYPE type,
             D3D12_DESCRIPTOR_HEAP_FLAGS flags,
             size_t capacity,
-            size_t reserve = 0) noexcept(false)
+            size_t reserve = 0)
             : DescriptorHeap(device, type, flags, capacity),
             m_top(reserve)
         {
@@ -202,12 +210,11 @@ namespace DirectX
         DIRECTX_TOOLKIT_API inline DescriptorPile(
             _In_ ID3D12Device* device,
             size_t count,
-            size_t reserve = 0) noexcept(false) :
+            size_t reserve = 0) :
             DescriptorPile(device,
                 D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
                 D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, count, reserve)
-        {
-        }
+        {}
 
         DescriptorPile(DescriptorPile&&) = default;
         DescriptorPile& operator=(DescriptorPile&&) = default;

@@ -1,0 +1,305 @@
+id: Scenario-Xbox-89-GRTS-Error-Codes
+name: GameSave Xbox 89 - GRTS Error Codes Validation
+tags:
+  - failing
+  - xboxgamesaves
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Trigger and verify multiple GRTS error codes in a single test — E_PF_GAMESAVE_USER_CANCELLED, E_GS_PLAYFAB_INVALID_LOCATION, E_PF_GAMESAVE_NOT_INITIALIZED, E_PF_GAMESAVE_USER_NOT_ADDED, E_PF_GAMESAVE_ALREADY_INITIALIZED, E_PF_GAMESAVE_USER_ALREADY_ADDED.
+brief: Validate multiple GRTS error codes
+group: P. GRTS API Edge Cases
+devices:
+  DeviceA:
+    engine: [xbox, pc-grts]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  error-cancel:
+    # 72a. E_PF_GAMESAVE_USER_CANCELLED — cancel during large download
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: CleanSaveFolder
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10485760
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+      timeoutSeconds: 600
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  seed-wait-for-upload:
+    - command: SmokeDelay
+      parameters:
+        durationMs: 180000
+  error-cancel-trigger:
+    # Device A re-inits and cancels during download of the 10 MB payload
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiProgressAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+    # AddUser triggers download — progress auto-cancel fires
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectedHr: "0x800704C7,0x80004005"
+    - command: PFGameSaveFilesSetUiProgressAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  error-invalid-location:
+    # 72b. E_GS_PLAYFAB_INVALID_LOCATION — invalid saveFolder
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "Z:\\nonexistent\\badpath\\"
+        # Xbox Connected Storage ignores saveFolder, so Initialize succeeds
+        expectedHr: "0x80832305,0x00000000"
+    - command: PFGameSaveFilesUninitializeAsync
+      parameters:
+        # Succeeds on Xbox (was initialized), returns NOT_INITIALIZED on PC (init failed)
+        expectedHr: "0x00000000,0x89237000"
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  error-not-initialized:
+    # 72c. E_PF_GAMESAVE_NOT_INITIALIZED — call AddUser without Initialize
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Call AddUser without PFGameSaveFilesInitialize — expect E_PF_GAMESAVE_NOT_INITIALIZED
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectedHr: "0x89237000"
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  error-user-not-added:
+    # 72d. E_PF_GAMESAVE_USER_NOT_ADDED — call GetFolder without AddUser
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Call GetFolder without AddUser — expect E_PF_GAMESAVE_USER_NOT_ADDED
+    - command: PFGameSaveFilesGetFolder
+      parameters:
+        expectedHr: "0x89237003"
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  error-already-initialized:
+    # 72e. E_PF_GAMESAVE_ALREADY_INITIALIZED — double init
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    # Call Initialize again without uninitializing — expect E_PF_GAMESAVE_ALREADY_INITIALIZED
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+        expectedHr: "0x89237001"
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  error-user-already-added:
+    # 72f. E_PF_GAMESAVE_USER_ALREADY_ADDED — double AddUser
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    # Call AddUser again with same user — expect E_PF_GAMESAVE_USER_ALREADY_ADDED
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectedHr: "0x89237002,0x80004005"
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: error-cancel
+  - role: DeviceA
+    block: seed-wait-for-upload
+  - role: DeviceA
+    block: error-cancel-trigger
+  - role: DeviceA
+    block: error-invalid-location
+  - role: DeviceA
+    block: error-not-initialized
+  - role: DeviceA
+    block: error-user-not-added
+  - role: DeviceA
+    block: error-already-initialized
+  - role: DeviceA
+    block: error-user-already-added
+cleanup:
+  DeviceA:
+    - command: PFGameSaveFilesSetUiProgressAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

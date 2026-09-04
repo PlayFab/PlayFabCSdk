@@ -1,0 +1,28 @@
+# Workflow: In-Proc to Xbox
+#
+# DeviceA = local in-proc (GameTestAppWindows)
+# DeviceB = Xbox dev kit (GameTestAppXbox)
+#
+# Uploads from DeviceA (local), downloads and verifies on DeviceB (Xbox).
+# DeviceA must be launched locally; DeviceB must be connected from the Xbox.
+#
+# Note: In-proc uses a synthetic CustomID user. For the two devices to share
+# a cloud save, they must resolve to the same PlayFab entity. The test harness
+# persisted local ID maps to the same title player account.
+
+# --- DeviceA (in-proc): Initialize, upload, tear down ---
+target DeviceA
+batch specs\playfab-gamesave\testing\cli\batches\set-auto-responses.txt
+batch specs\playfab-gamesave\testing\cli\batches\init-device.txt
+batch specs\playfab-gamesave\testing\cli\batches\reset-cloud.txt
+batch specs\playfab-gamesave\testing\cli\batches\upload-golden-path.txt
+batch specs\playfab-gamesave\testing\cli\batches\teardown-device.txt
+
+# --- DeviceB (Xbox): Initialize, download, verify, tear down ---
+target DeviceB
+batch specs\playfab-gamesave\testing\cli\batches\set-auto-responses.txt
+batch specs\playfab-gamesave\testing\cli\batches\init-device-xbox.txt
+batch specs\playfab-gamesave\testing\cli\batches\download-and-verify.txt
+batch specs\playfab-gamesave\testing\cli\batches\teardown-device.txt
+
+target auto

@@ -33,6 +33,8 @@
 #if defined(_GAMING_DESKTOP)
 #include <SDKDDKVer.h>
 #define WIN32_LEAN_AND_MEAN
+#include <XGameRuntimeInit.h>
+#include <XTaskQueue.h>
 #endif
 
 // PlayFabSharedInternal includes

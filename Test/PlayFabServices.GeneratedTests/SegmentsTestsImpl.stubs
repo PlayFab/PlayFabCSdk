@@ -49,13 +49,6 @@ void SegmentsTests::TestServerGetPlayerSegments(TestContext& tc)
 #endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-void SegmentsTests::TestServerGetPlayersInSegment(TestContext& tc)
-{
-    tc.Skip();
-}
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void SegmentsTests::TestServerGetPlayerTags(TestContext& tc)
 {
     tc.Skip();

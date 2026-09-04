@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include <playfab/core/cpp/TypeWrapperHelpers.h>
 
 namespace PlayFab
@@ -10,7 +11,13 @@ class ModelBuffer
 public:
     ModelBuffer(void* buffer, size_t bufferSize);
     ModelBuffer(const ModelBuffer&) = delete;
-    ModelBuffer(ModelBuffer&&) = default;
+    ModelBuffer(ModelBuffer&& other) noexcept
+        : m_bufferPtr(other.m_bufferPtr)
+        , m_remaining(other.m_remaining)
+    {
+        other.m_bufferPtr = nullptr;
+        other.m_remaining = 0;
+    }
     ~ModelBuffer() = default;
 
     size_t RemainingSpace() const;
@@ -54,6 +61,10 @@ private:
 template<typename T>
 Result<T*> ModelBuffer::Alloc(size_t n)
 {
+    if (n > 0 && n > (std::numeric_limits<size_t>::max)() / sizeof(T))
+    {
+        return E_OUTOFMEMORY;
+    }
     size_t const size = sizeof(T) * n;
 #if _M_IX86
     // Ignore alignment requirements on x86 builds because of a Visual Studio bug where stack variables don't always honor alignment.

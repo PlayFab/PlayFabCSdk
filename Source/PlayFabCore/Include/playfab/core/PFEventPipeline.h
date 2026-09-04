@@ -260,7 +260,7 @@ PF_API PFEventPipelineCreatePlayStreamPipelineHandle(
 /// </remarks>
 PF_API PFEventPipelineDuplicateHandle(
     _In_ PFEventPipelineHandle eventPipelineHandle,
-    _In_ PFEventPipelineHandle* duplicatedEventPipelineHandle
+    _Out_ PFEventPipelineHandle* duplicatedEventPipelineHandle
 ) noexcept;
 
 /// <summary>

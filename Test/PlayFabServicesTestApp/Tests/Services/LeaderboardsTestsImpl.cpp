@@ -39,7 +39,13 @@ AsyncOp<void> CreateStatisticDefinitionFromLeaderboardsTests(Entity entity, RunC
     return CreateStatisticDefinitionOperation::Run(entity, request, rc);
 }
 
-AsyncOp<void> CreateLeaderboardDefinition(Entity entity, RunContext rc, String leaderboardName, String linkedStatisticName = "", String linkedStatisticColumnName = "")
+AsyncOp<void> CreateLeaderboardDefinition(
+    Entity entity,
+    RunContext rc,
+    String leaderboardName,
+    String linkedStatisticName = "",
+    String linkedStatisticColumnName = "",
+    String entityType = "title")
 {
     CreateLeaderboardDefinitionOperation::RequestType request;
     request.SetName(leaderboardName);
@@ -69,7 +75,7 @@ AsyncOp<void> CreateLeaderboardDefinition(Entity entity, RunContext rc, String l
 
     request.SetColumns(columns);
     request.SetSizeLimit(100);
-    request.SetEntityType("title");
+    request.SetEntityType(entityType);
 
     Wrappers::PFVersionConfigurationWrapper<Allocator> versionConfiguration;
     versionConfiguration.SetMaxQueryableVersions(1);
@@ -414,7 +420,7 @@ void LeaderboardsTests::TestUnlinkLeaderboardFromStatistic(TestContext& tc)
     columns.push_back(column);
 
     request.SetColumns(columns);
-    request.SetEntityType("title");
+    request.SetEntityType("title_player_account");
 
     Wrappers::PFVersionConfigurationWrapper<Allocator> versionConfiguration;
     versionConfiguration.SetMaxQueryableVersions(1);
@@ -426,7 +432,13 @@ void LeaderboardsTests::TestUnlinkLeaderboardFromStatistic(TestContext& tc)
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
-        return CreateLeaderboardDefinition(TitleEntity(), RunContext(), leaderboardNameStr, statisticNameStr, "PlayerScoreStatistic");
+        return CreateLeaderboardDefinition(
+            TitleEntity(),
+            RunContext(),
+            leaderboardNameStr,
+            statisticNameStr,
+            "PlayerScoreStatistic",
+            "title_player_account");
     })
     .Then([&, statisticNameStr, leaderboardNameStr](Result<void> result) -> AsyncOp<void>
     {

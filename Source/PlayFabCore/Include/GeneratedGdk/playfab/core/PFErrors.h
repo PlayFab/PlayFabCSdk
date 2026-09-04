@@ -508,7 +508,6 @@ extern "C"
 #define E_PF_INSIGHTS_MANAGEMENT_GET_OPERATION_STATUS_INVALID_PARAMETER         MAKE_E_HC(0x55fcL) // 0x892355fc
 #define E_PF_DUPLICATE_PURCHASE_TRANSACTION_ID                                  MAKE_E_HC(0x55fdL) // 0x892355fd
 #define E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED                              MAKE_E_HC(0x55feL) // 0x892355fe
-#define E_PF_GET_PLAYERS_IN_SEGMENT_RATE_LIMIT_EXCEEDED                         MAKE_E_HC(0x55ffL) // 0x892355ff
 #define E_PF_CLOUD_SCRIPT_FUNCTION_NAME_SIZE_EXCEEDED                           MAKE_E_HC(0x5600L) // 0x89235600
 #define E_PF_PAID_INSIGHTS_FEATURES_NOT_ENABLED                                 MAKE_E_HC(0x5601L) // 0x89235601
 #define E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_QUEUE_REQUEST_ERROR                   MAKE_E_HC(0x5602L) // 0x89235602
@@ -630,6 +629,10 @@ extern "C"
 #define E_PF_PARENT_CUSTOMER_ACCOUNT_NOT_FOUND                                  MAKE_E_HC(0x57d5L) // 0x892357d5
 #define E_PF_ACCOUNT_LINKED_TO_A_BANNED_PLAYER                                  MAKE_E_HC(0x57d7L) // 0x892357d7
 #define E_PF_AZURE_SUBSCRIPTION_NOT_ELIGIBLE_FOR_LINKING                        MAKE_E_HC(0x57d8L) // 0x892357d8
+#define E_PF_ENTITY_IS_NOT_A_MEMBER                                             MAKE_E_HC(0x57deL) // 0x892357de
+#define E_PF_IP_ADDRESS_NOT_FOUND                                               MAKE_E_HC(0x57dfL) // 0x892357df
+#define E_PF_PSN_NEXT_GEN_NOT_CONFIGURED_FOR_TITLE                              MAKE_E_HC(0x57e0L) // 0x892357e0
+#define E_PF_INVALID_NINTENDO_ISSUER                                            MAKE_E_HC(0x57e1L) // 0x892357e1
 #define E_PF_MATCHMAKING_ENTITY_INVALID                                         MAKE_E_HC(0x5646L) // 0x89235646
 #define E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID                              MAKE_E_HC(0x5647L) // 0x89235647
 #define E_PF_MATCHMAKING_QUEUE_NOT_FOUND                                        MAKE_E_HC(0x5648L) // 0x89235648
@@ -674,6 +677,7 @@ extern "C"
 #define E_PF_CATALOG_BAD_REQUEST                                                MAKE_E_HC(0x566fL) // 0x8923566f
 #define E_PF_CATALOG_TOO_MANY_REQUESTS                                          MAKE_E_HC(0x5670L) // 0x89235670
 #define E_PF_INVALID_CATALOG_ITEM_CONFIGURATION                                 MAKE_E_HC(0x5711L) // 0x89235711
+#define E_PF_LEGACY_ECONOMY_DISABLED                                            MAKE_E_HC(0x57dbL) // 0x892357db
 #define E_PF_EXPORT_INVALID_STATUS_UPDATE                                       MAKE_E_HC(0x5671L) // 0x89235671
 #define E_PF_EXPORT_INVALID_PREFIX                                              MAKE_E_HC(0x5672L) // 0x89235672
 #define E_PF_EXPORT_BLOB_CONTAINER_DOES_NOT_EXIST                               MAKE_E_HC(0x5673L) // 0x89235673
@@ -746,6 +750,8 @@ extern "C"
 #define E_PF_EXPERIMENTATION_EXCLUSION_GROUP_INVALID_NAME                       MAKE_E_HC(0x56b6L) // 0x892356b6
 #define E_PF_EXPERIMENTATION_LEGACY_EXPERIMENT_INVALID_OPERATION                MAKE_E_HC(0x57a0L) // 0x892357a0
 #define E_PF_EXPERIMENTATION_EXPERIMENT_STOP_FAILED                             MAKE_E_HC(0x57d9L) // 0x892357d9
+#define E_PF_EXPERIMENTATION_EXPERIMENT_DELETE_FAILED                           MAKE_E_HC(0x57e2L) // 0x892357e2
+#define E_PF_EXPERIMENTATION_EXPERIMENT_START_FAILED                            MAKE_E_HC(0x57e3L) // 0x892357e3
 #define E_PF_MAX_ACTION_DEPTH_EXCEEDED                                          MAKE_E_HC(0x56b7L) // 0x892356b7
 #define E_PF_TITLE_NOT_ON_UPDATED_PRICING_PLAN                                  MAKE_E_HC(0x56b8L) // 0x892356b8
 #define E_PF_SEGMENT_MANAGEMENT_TITLE_NOT_IN_FLIGHT                             MAKE_E_HC(0x56b9L) // 0x892356b9
@@ -763,7 +769,8 @@ extern "C"
 #define E_PF_ASYNC_EXPORT_NOT_FOUND                                             MAKE_E_HC(0x56c5L) // 0x892356c5
 #define E_PF_ASYNC_EXPORT_RATE_LIMIT_EXCEEDED                                   MAKE_E_HC(0x56c6L) // 0x892356c6
 #define E_PF_ANALYTICS_SEGMENT_COUNT_OVER_LIMIT                                 MAKE_E_HC(0x56c7L) // 0x892356c7
-#define E_PF_GET_PLAYERS_IN_SEGMENT_DEPRECATED                                  MAKE_E_HC(0x57cdL) // 0x892357cd
+#define E_PF_GET_SEGMENT_PLAYER_COUNT_NOT_IN_FLIGHT                             MAKE_E_HC(0x57e4L) // 0x892357e4
+#define E_PF_GET_SEGMENT_PLAYER_COUNT_RATE_LIMIT_EXCEEDED                       MAKE_E_HC(0x57e5L) // 0x892357e5
 #define E_PF_SNAPSHOT_NOT_FOUND                                                 MAKE_E_HC(0x56c8L) // 0x892356c8
 #define E_PF_INVENTORY_API_NOT_IMPLEMENTED                                      MAKE_E_HC(0x56c9L) // 0x892356c9
 #define E_PF_INVENTORY_COLLECTION_DELETION_DISALLOWED                           MAKE_E_HC(0x579dL) // 0x8923579d
@@ -839,8 +846,6 @@ extern "C"
 #define E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_DOES_NOT_EXIST                   MAKE_E_HC(0x5705L) // 0x89235705
 #define E_PF_ADDON_ALREADY_EXISTS                                               MAKE_E_HC(0x5706L) // 0x89235706
 #define E_PF_ADDON_DOESNT_EXIST                                                 MAKE_E_HC(0x5707L) // 0x89235707
-#define E_PF_COPILOT_DISABLED                                                   MAKE_E_HC(0x5708L) // 0x89235708
-#define E_PF_COPILOT_INVALID_REQUEST                                            MAKE_E_HC(0x5709L) // 0x89235709
 #define E_PF_TRUE_SKILL_UNAUTHORIZED                                            MAKE_E_HC(0x570fL) // 0x8923570f
 #define E_PF_TRUE_SKILL_INVALID_TITLE_ID                                        MAKE_E_HC(0x5742L) // 0x89235742
 #define E_PF_TRUE_SKILL_INVALID_SCENARIO_ID                                     MAKE_E_HC(0x5743L) // 0x89235743
@@ -943,6 +948,11 @@ extern "C"
 #define E_PF_GAME_SAVE_CONFLICT                                                 MAKE_E_HC(0x57c6L) // 0x892357c6
 #define E_PF_GAME_SAVE_MANIFEST_NOT_ELIGIBLE_FOR_ROLLBACK                       MAKE_E_HC(0x57c7L) // 0x892357c7
 #define E_PF_GAME_SAVE_TITLE_CLIENT_ANONYMOUS_ACCOUNT_CREATION_NOT_DISABLED     MAKE_E_HC(0x57d6L) // 0x892357d6
+#define E_PF_GAME_SAVE_TITLE_CONFIG_NO_UPDATES_REQUESTED                        MAKE_E_HC(0x57e6L) // 0x892357e6
+#define E_PF_GAME_SAVE_PLAYER_NOT_ELIGIBLE_FOR_TRANSFER                         MAKE_E_HC(0x57e7L) // 0x892357e7
+#define E_PF_GAME_SAVE_ALREADY_AUTO_ROLLED_BACK                                 MAKE_E_HC(0x57e8L) // 0x892357e8
+#define E_PF_GAME_SAVE_MANIFEST_NOT_ELIGIBLE_FOR_RESTORE                        MAKE_E_HC(0x57e9L) // 0x892357e9
+#define E_PF_GAME_SAVE_MANIFEST_ARCHIVED                                        MAKE_E_HC(0x57eaL) // 0x892357ea
 #define E_PF_STATE_SHARE_FORBIDDEN                                              MAKE_E_HC(0x5769L) // 0x89235769
 #define E_PF_STATE_SHARE_TITLE_NOT_IN_FLIGHT                                    MAKE_E_HC(0x576aL) // 0x8923576a
 #define E_PF_STATE_SHARE_STATE_NOT_FOUND                                        MAKE_E_HC(0x5723L) // 0x89235723
@@ -968,6 +978,8 @@ extern "C"
 #define E_PF_ENTITY_TYPE_SPECIFIED_REQUIRES_AGGREGATION_SOURCE                  MAKE_E_HC(0x57d1L) // 0x892357d1
 #define E_PF_PLAY_FAB_ERROR_EVENT_NOT_SUPPORTED_FOR_ENTITY_TYPE                 MAKE_E_HC(0x57d2L) // 0x892357d2
 #define E_PF_METADATA_LENGTH_EXCEEDED                                           MAKE_E_HC(0x57daL) // 0x892357da
+#define E_PF_MAX_QUERYABLE_VERSIONS_EXCEEDED                                    MAKE_E_HC(0x57ddL) // 0x892357dd
+#define E_PF_STATISTIC_VERSION_INCREMENT_NOT_ALLOWED_WHILE_LINKED               MAKE_E_HC(0x57ebL) // 0x892357eb
 #define E_PF_STORE_METRICS_REQUEST_INVALID_INPUT                                MAKE_E_HC(0x57caL) // 0x892357ca
 #define E_PF_STORE_METRICS_ERROR_RETRIEVING_METRICS                             MAKE_E_HC(0x57d3L) // 0x892357d3
 

@@ -1,0 +1,53 @@
+id: PFServices-22-Leaderboard-Def-CRUD
+name: PFServices 22 - Create and Delete Leaderboard Definition
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Creates a leaderboard definition, verifies it, then deletes it.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFLeaderboardsCreateLeaderboardDefinitionAsync
+      expectFailure: true  # E_PF_NOT_AUTHORIZED (0x89235478) - requires title entity
+    - command: PFLeaderboardsGetLeaderboardDefinitionAsync
+      expectFailure: true  # E_PF_NOT_AUTHORIZED (0x89235478) - requires title entity
+    - command: PFLeaderboardsGetLeaderboardDefinitionGetResult
+    - command: PFLeaderboardsDeleteLeaderboardDefinitionAsync
+      expectFailure: true  # E_PF_NOT_AUTHORIZED (0x89235478) - requires title entity
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

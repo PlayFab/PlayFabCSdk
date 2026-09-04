@@ -1,0 +1,137 @@
+id: Scenario-PC-104-Two-Users-Isolation
+name: GameSave PC 104 - Two Users Data Isolation
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Single Xbox with two signed-in users. User A writes data, User B initializes separately and writes different data. Verify save isolation — User B cannot see User A's data and vice versa.
+brief: Two users on one Xbox, data isolation verified
+group: T. Multi-User Xbox
+devices:
+  DeviceA:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  multi-user-isolation-test:
+    # System init (once for both users)
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # --- User A: init, write, upload ---
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xAA, 0xAA, 0xAA]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    # --- User B: init on same device without uninitializing User A ---
+    - command: XUserAddAsync
+      parameters:
+        userIndex: 1
+    - command: PFLocalUserCreateHandleWithXboxUser
+      parameters:
+        userIndex: 1
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        localUserIndex: 1
+    # Verify User B gets a separate save folder
+    - command: PFGameSaveFilesGetFolder
+      parameters:
+        localUserIndex: 1
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xBB, 0xBB, 0xBB, 0xBB]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+        localUserIndex: 1
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    # --- Verify isolation: snapshots must NOT match (different users, different data) ---
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        expectMismatch: true
+    # --- Cleanup User B ---
+        ignoreEmptyDirectories: true
+    - command: PFLocalUserCloseHandle
+      parameters:
+        localUserIndex: 1
+    - command: XUserCloseHandle
+      parameters:
+        userIndex: 1
+    # --- Cleanup User A ---
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    # --- System cleanup ---
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: multi-user-isolation-test
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+      parameters:
+        localUserIndex: 1
+    - command: XUserCloseHandle
+      parameters:
+        userIndex: 1
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

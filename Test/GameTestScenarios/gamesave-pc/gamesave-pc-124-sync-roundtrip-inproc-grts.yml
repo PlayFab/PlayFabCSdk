@@ -1,0 +1,280 @@
+id: Scenario-PC-124-Sync-Roundtrip-InProc-GRTS
+name: GameSave PC 124 - Cross-Platform Sync Round-Trip (InProc ↔ GRTS)
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: untested
+  pc-grts: passing
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Cross-platform sync round-trip: inproc engine creates Version 1, uploads,
+  closes. GRTS engine launches, syncs down Version 1, verifies data integrity
+  via snapshot comparison and description check, modifies to Version 2,
+  uploads, closes. Inproc engine relaunches, syncs down Version 2, verifies
+  data integrity via snapshot comparison and description check. Proves saves
+  created on one platform (inproc/Steam Deck) survive a full round-trip
+  through a second platform (GRTS/Xbox/PC).
+brief: Inproc creates → GRTS syncs & modifies → inproc verifies round-trip
+group: U. Cross-Platform
+devices:
+  # DeviceA = inproc engine (simulates Steam Deck / direct-to-service)
+  DeviceA:
+    engine: pc-inproc-gamesaves
+  # DeviceB = GRTS engine (simulates Xbox / PC with Gaming Runtime Services)
+  DeviceB:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  # ── Phase 1: Inproc creates Version 1 and uploads ──
+  inproc-create-v1:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    # Inproc auth — persisted local ID with CustomID login
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    # Write Version 1: repeating 0x11 pattern
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: roundtrip/save.bin
+            bytes: 10240
+            pattern: [0x11, 0x11, 0x11, 0x11]
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Version 1 - Created by InProc"
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    # Verify description was set
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Version 1 - Created by InProc"
+    # Capture snapshot for later comparison on GRTS side
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    # Teardown inproc session
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ── Phase 2: GRTS syncs down Version 1, verifies, modifies to Version 2 ──
+  grts-sync-verify-modify-v2:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    # Clear GRTS internal state so it downloads fresh from cloud
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: DeleteStorage
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    # GRTS auth — Xbox user + shared CustomID link
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Sync down — should pull Version 1 from cloud
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # VERIFY: Data matches inproc's snapshot (hash compare)
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+        ignoreEmptyDirectories: true
+    # VERIFY: Description matches Version 1
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Version 1 - Created by InProc"
+    # ── Now modify to Version 2 ──
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: roundtrip/save.bin
+            bytes: 12288
+            pattern: [0x22, 0x22, 0x22, 0x22]
+    - command: PFGameSaveFilesSetSaveDescriptionAsync
+      parameters:
+        description: "Version 2 - Modified by GRTS"
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    # Verify description was set
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Version 2 - Modified by GRTS"
+    # Capture Version 2 snapshot for final comparison
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    # Teardown GRTS session
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ── Phase 3: Inproc relaunches, syncs down Version 2, verifies ──
+  inproc-verify-v2:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    # Inproc auth — same shared entity
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # VERIFY: Data matches GRTS's snapshot (hash compare)
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+        ignoreEmptyDirectories: true
+    # VERIFY: Description matches Version 2 (GRTS's update)
+    - command: PFGameSaveFilesGetSaveDescription
+      parameters:
+        expectedDescription: "Version 2 - Modified by GRTS"
+    # Clean up save data
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+
+executionOrder:
+  - role: DeviceA
+    block: inproc-create-v1
+  - role: DeviceB
+    block: grts-sync-verify-modify-v2
+  - role: DeviceA
+    block: inproc-verify-v2
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  DeviceB:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

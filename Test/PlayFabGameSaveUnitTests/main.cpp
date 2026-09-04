@@ -4,8 +4,10 @@
 #include "main.h"
 #include "actions.h"
 #include "MemoryManager.h"
+#include "PFGameSaveFilesForDebug.h"
 
 GameState g_gameState;
+XTaskQueueHandle g_taskQueue{ nullptr };
 
 class FooEnvironment : public ::testing::Environment
 {
@@ -14,7 +16,23 @@ public:
 
     void SetUp() override
     {
+        XGameRuntimeInitialize();
+
+        HRESULT hr = XTaskQueueCreate(XTaskQueueDispatchMode::ThreadPool, XTaskQueueDispatchMode::ThreadPool, &g_taskQueue);
+        if (SUCCEEDED(hr))
+        {
+            XTaskQueueSetCurrentProcessTaskQueue(g_taskQueue);
+        }
+
         HCTraceSetTraceToDebugger(false);
+
+        // Resolved dynamically — this export doesn't exist in older GDK builds (2510).
+        {
+            using SetForceInprocFn = HRESULT(STDAPIVCALLTYPE*)(bool);
+            HMODULE hMod = GetModuleHandleW(L"PlayFabGameSave.dll");
+            auto pfn = hMod ? reinterpret_cast<SetForceInprocFn>(GetProcAddress(hMod, "PFGameSaveFilesSetForceInprocForDebug")) : nullptr;
+            if (pfn) { pfn(true); }
+        }
         g_gameState.customPlayerId = "cloudsave-player-automated1";
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
         std::string saveFolder;
@@ -38,6 +56,13 @@ public:
 
     void TearDown() override
     {
+        XTaskQueueSetCurrentProcessTaskQueue(nullptr);
+        if (g_taskQueue)
+        {
+            XTaskQueueCloseHandle(g_taskQueue);
+            g_taskQueue = nullptr;
+        }
+        XGameRuntimeUninitialize();
     }
 };
 

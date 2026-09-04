@@ -1,0 +1,54 @@
+id: XSAPI-28-Social-Manager-Filter
+name: XSAPI 28 - Social Manager Online Friends Filter
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer social/social_manager_filter.lua.
+  Adds local user to Social Manager, polls DoWork, creates a filtered
+  social user group, reads group users, and cleans up.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblSocialManagerAddLocalUser
+    - command: XblSocialManagerDoWork
+    - command: XblSocialManagerGetLocalUsers
+    - command: XblSocialManagerSetRichPresencePollingStatus
+    - command: XblSocialManagerCreateSocialUserGroupFromFilters
+    - command: XblSocialManagerUserGroupGetUsers
+    - command: XblSocialManagerPresenceRecordIsUserPlayingTitle
+    - command: XblSocialManagerDestroySocialUserGroup
+    - command: XblSocialManagerRemoveLocalUser
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

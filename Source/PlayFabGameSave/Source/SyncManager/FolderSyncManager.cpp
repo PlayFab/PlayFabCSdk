@@ -25,6 +25,7 @@ FolderSyncManager::FolderSyncManager(_In_ LocalUser const& localUser) :
     m_localUser{ localUser },
     m_telemetryManager{ MakeShared<GameSaveTelemetryManager>() },
     m_lockStep(localUser, m_telemetryManager),
+    m_relockStep(localUser),
     m_compareStep(localUser, m_telemetryManager),
     m_downloadStep(localUser, m_telemetryManager),
     m_uploadStep(localUser, m_telemetryManager),
@@ -42,7 +43,7 @@ FolderSyncManager::FolderSyncManager(_In_ LocalUser const& localUser) :
         }
         else
         {
-            m_saveFolder = state->GetInitArgsSaveRootFolder(); // Might be empty if not set by init args on some platforms
+            m_saveFolder = state->GetInitArgsSaveRootFolder(); // Might be empty if not set by init args on some platforms.
         }
     }
 
@@ -81,6 +82,7 @@ void FolderSyncManager::FireActivationFailedTelemetry(HRESULT hr, bool offline)
 
 HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContext, _In_ ISchedulableTask& task, _In_ std::recursive_mutex& folderSyncMutex)
 {
+    std::lock_guard<std::recursive_mutex> lock(folderSyncMutex); // Prevent any of the Finally blocks from changing the state while the DoWork thread is active
     ScopeTracer scopeTracer("FolderSyncManager::DoWorkFolderDownload");
 
     // Early cancellation check (user called XAsyncCancel on AddUserWithUiAsync)
@@ -101,11 +103,11 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
             FireActivationFailedTelemetry(hr, m_lockStep.IsForceDisconnectFromCloud());
             return hr;
         }
-
         return E_PENDING;
     }
 
     m_isForcedDisconnectFromCloud = m_lockStep.IsForceDisconnectFromCloud();
+
     if (m_isForcedDisconnectFromCloud)
     {
         // Even when offline, create local file folder set so SetSaveDescription can persist to localstate.json
@@ -244,6 +246,7 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
                 {
                     SetForcedDisconnectFromCloud(true);
                 }
+                FireActivationFailedTelemetry(hrUp, false);
                 return hrUp; // propagate failure or pending
             }
             return E_PENDING; // continue pumping until upload completes
@@ -264,13 +267,62 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
         {
             m_latestPendingManifest = MakeShared<ManifestInternal>(postPending);
         }
+
+        // Re-acquire game storage if it was released during the conflict upload's compression step.
+        // The download step needs access to game files to write downloaded content.
+        SharedPtr<GameSaveGlobalState> globalState;
+        if (SUCCEEDED(GameSaveGlobalState::Get(globalState)))
+        {
+            String acquiredPath;
+            HRESULT acquireHr = globalState->ApiProvider().AcquireGameStorage(acquiredPath);
+            if (FAILED(acquireHr))
+            {
+                TRACE_ERROR("[GAME SAVE] Failed to re-acquire game storage after conflict upload hr=0x%08X", acquireHr);
+                return acquireHr;
+            }
+            // Update save folder in case the mount point changed (e.g., /savedata0 -> /savedata1)
+            if (!acquiredPath.empty())
+            {
+                m_saveFolder = acquiredPath;
+                TRACE_INFORMATION("[GAME SAVE] Updated save folder to '%s' after re-acquiring game storage", m_saveFolder.c_str());
+            }
+        }
     }
 
     m_telemetryManager->EmitContextActivationEvent();
 
+    // Ensure game storage is fully acquired before local file operations begin.
+    // Some platforms defer write preparation until this point so that the storage
+    // transaction window does not span earlier network/UI steps.
+    if (!m_downloadStep.IsLocalOperationsDone())
+    {
+        SharedPtr<GameSaveGlobalState> gsAcquire;
+        if (FAILED(GameSaveGlobalState::Get(gsAcquire)))
+        {
+            TRACE_ERROR("[GAME SAVE] Failed to get global state before local operations");
+            return E_UNEXPECTED;
+        }
+
+        String acquiredPath;
+        HRESULT acquireHr = gsAcquire->ApiProvider().AcquireGameStorage(acquiredPath);
+        if (FAILED(acquireHr))
+        {
+            TRACE_ERROR("[GAME SAVE] Failed to acquire game storage before local operations hr=0x%08X", acquireHr);
+            return acquireHr;
+        }
+        if (!acquiredPath.empty())
+        {
+            m_saveFolder = acquiredPath;
+        }
+
+        // Persist device ID to info.json if it was generated before storage was writable
+        EnsureDeviceIdPersisted(m_saveFolder);
+    }
+
     if (!m_downloadStep.IsLocalOperationsDone())
     {
         m_telemetryManager->ResetContextSync();
+        m_telemetryManager->SetContextSyncStartTime();
         m_telemetryManager->SetContextSyncContextVersion(m_latestFinalizedManifest->GetManifest().GetVersion());
 
         m_telemetryManager->ResetContextDelete();
@@ -331,7 +383,7 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
                 ? m_lastShortSaveDescription
                 : m_latestFinalizedManifest->GetDecodedManifestDescription();
 
-            HRESULT hr = m_downloadStep.Download(runContext, task, m_saveFolder, m_uiManager, m_localFileFolderSet, m_remoteFileFolderSet, m_syncProgress, folderSyncMutex, FolderSyncManagerProgressCallback, this, shortSaveDescription);
+            HRESULT hr = m_downloadStep.Download(runContext, task, m_saveFolder, m_uiManager, m_localFileFolderSet, m_remoteFileFolderSet, m_syncProgress, folderSyncMutex, FolderSyncManagerProgressCallback, this, shortSaveDescription, m_descriptionDirty);
             if (FAILED(hr))
             {
                 m_telemetryManager->SetContextSyncHResult(hr);
@@ -358,6 +410,17 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
 
     m_telemetryManager->EmitContextSyncEvent();
 
+    // Ensure the game storage marker exists. This covers the case where no files
+    // were downloaded (e.g. new user with no cloud data), which skips DownloadStep
+    // entirely and would otherwise leave the marker missing. Without the marker,
+    // IsGameStorageWiped() cannot distinguish a genuinely wiped container from one
+    // that was never marked.
+    HRESULT markerHr = EnsureGameStorageMarker(m_saveFolder);
+    if (FAILED(markerHr))
+    {
+        TRACE_WARNING("[GAME SAVE] FolderSyncManager: EnsureGameStorageMarker failed hr=0x%08X (non-fatal)", markerHr);
+    }
+
     SetSyncStateProgress(PFGameSaveFilesSyncState::SyncComplete, 0, 0);
     SetStatsForDebug();
     m_pollingForActiveDeviceChange = true;
@@ -366,11 +429,24 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
     HRESULT hr = GameSaveGlobalState::Get(state);
     if (SUCCEEDED(hr))
     {
+        // Stop the previous poller before replacing it. A re-AddUser that isn't an offline
+        // reconnect (e.g. after Upload(ReleaseDeviceAsActive)) leaves the old worker running -
+        // it resubmits itself after every poll and its only other exit is a forced disconnect,
+        // which this AddUser just cleared - so each cycle would add one more permanent poller.
+        if (m_tokenRefreshWorker)
+        {
+            m_tokenRefreshWorker->Stop();
+        }
+
         // runContext is created via state->RunContext().DeriveOnQueue(async->queue));
         // so use original glboal's RunContext() for background queue
         auto backgroundRunContext = state->RunContext().Derive();
         std::optional<Entity> entity = m_lockStep.GetEntity();
         m_tokenRefreshWorker = ActiveDevicePollWorker::MakeAndStart(entity.value(), m_localUser, std::move(backgroundRunContext));
+    }
+    else
+    {
+        TRACE_ERROR("[GAME SAVE] Failed to get GameSaveGlobalState for starting ActiveDevicePollWorker, hr=0x%08X", hr);
     }
 
     return S_OK;
@@ -378,7 +454,7 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
 
 void FolderSyncManager::SetStatsForDebug()
 {
-#if _DEBUG
+#if defined(_DEBUG)
     JsonValue rootJson = JsonValue::object();
 
     JsonValue fileDownloadJsonArray = JsonValue::array();
@@ -496,6 +572,57 @@ HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ 
         return E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD;
     }
 
+    // ForDebug: simulate post-TakeLock-cancel state by nulling pending manifest
+    {
+        bool fnp = GetForceNullPendingManifest();
+        if (fnp && m_latestPendingManifest != nullptr && m_latestFinalizedManifest != nullptr)
+        {
+            m_latestPendingManifest = nullptr;
+            ClearForceNullPendingManifest();
+        }
+    }
+
+    if (m_latestPendingManifest == nullptr && m_latestFinalizedManifest != nullptr)
+    {
+        // Previous upload's TakeLock failed/cancelled after FinalizeManifest.
+        // Re-acquire a pending manifest via RelockStep before upload can proceed.
+        if (m_relockStep.IsRelockDone())
+        {
+            if (m_relockStep.IsForceDisconnectFromCloud())
+            {
+                TRACE_INFORMATION("[GAME SAVE] DoWorkFolderUpload: RelockStep completed with UseOffline, disconnecting");
+                SetForcedDisconnectFromCloud(true);
+                m_relockStep.Reset();
+                return E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD;
+            }
+            m_latestPendingManifest = m_relockStep.ExtractPendingManifest();
+            m_relockStep.Reset();
+            TRACE_INFORMATION("[GAME SAVE] DoWorkFolderUpload: RelockStep completed, pending manifest re-acquired");
+        }
+        else
+        {
+            auto entity = m_lockStep.GetEntity();
+            if (!entity.has_value())
+            {
+                TRACE_ERROR("[GAME SAVE] DoWorkFolderUpload: cannot re-acquire lock, no entity");
+                return E_UNEXPECTED;
+            }
+
+            HRESULT hr = m_relockStep.Relock(runContext, task, m_uiManager, folderSyncMutex,
+                m_saveFolder, entity.value(), m_latestFinalizedManifest->Version());
+            if (FAILED(hr))
+            {
+                if (m_relockStep.IsForceDisconnectFromCloud())
+                {
+                    SetForcedDisconnectFromCloud(true);
+                }
+                m_relockStep.Reset();
+                return hr;
+            }
+            return E_PENDING;
+        }
+    }
+
     if (m_latestPendingManifest == nullptr || m_latestFinalizedManifest == nullptr)
     {
         TRACE_ERROR("DoWorkFolderUpload null manifest");
@@ -525,6 +652,9 @@ HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ 
         );
         if (FAILED(hr))
         {
+            m_telemetryManager->SetContextSyncHResult(hr);
+            m_telemetryManager->EmitContextSyncErrorEvent();
+            m_telemetryManager->EmitContextSyncEvent();
             return hr;
         }
 
@@ -540,9 +670,9 @@ HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ 
         if (!m_uploadStep.IsUploadDone())
         {
             HRESULT hr = m_uploadStep.Upload(
-                runContext, task, 
-                m_latestPendingManifest, m_localFileFolderSet, m_remoteFileFolderSet, 
-                m_saveFolder, option, m_uiManager, m_syncProgress, 
+                runContext, task,
+                m_latestPendingManifest, m_localFileFolderSet, m_remoteFileFolderSet,
+                m_saveFolder, option, m_uiManager, m_syncProgress,
                 folderSyncMutex, FolderSyncManagerProgressCallback, this,
                 m_lastShortSaveDescription, ConflictMetadata()); // No conflict metadata for normal uploads
             if (hr == E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD)
@@ -557,10 +687,32 @@ HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ 
                 FolderSyncManager::ConvertToPFGameSaveDescriptor(m_latestPendingManifest->GetManifest(), activeDevice);
                 UICallbackManager::TriggerActiveDeviceChangedCallback(runContext, m_localUser, activeDevice); // no issue if callback not set
 
+                m_telemetryManager->SetContextSyncHResult(hr);
+                m_telemetryManager->EmitContextSyncErrorEvent();
+                m_telemetryManager->EmitContextSyncEvent();
                 return hr;
             }
             else if (FAILED(hr))
             {
+                // If data was already finalized (FinalizeManifest succeeded) but a post-finalize
+                // step (TakeLock) failed or was cancelled, update the finalized manifest pointer
+                // and clear the pending manifest. The re-lock path at the top of this function
+                // will create a new pending manifest on the next upload attempt.
+                if (m_uploadStep.HasStartedFinalizeManifest())
+                {
+                    const ManifestWrap& postFinal = m_uploadStep.GetPostUploadLatestFinalizedPFManifest();
+                    if (!postFinal.GetVersion().empty())
+                    {
+                        m_latestFinalizedManifest = MakeShared<ManifestInternal>(postFinal);
+                    }
+                    m_latestPendingManifest = nullptr;
+                    m_remoteFileFolderSet = MakeShared<FileFolderSet>();
+                    m_descriptionDirty = false;
+                    m_compareStep.Reset();
+                    m_uploadStep.Reset();
+                    TRACE_WARNING("[GAME SAVE] DoWorkFolderUpload: upload failed post-finalize (HR:0x%0.8x), cleared stale pending manifest and reset steps", hr);
+                }
+
                 m_telemetryManager->SetContextDeleteHResult(hr);
                 m_telemetryManager->EmitContextDeleteEvent();
                 m_telemetryManager->SetContextSyncHResult(hr);
@@ -576,15 +728,81 @@ HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ 
         m_telemetryManager->EmitContextSyncEvent();
 
         m_latestFinalizedManifest = MakeShared<ManifestInternal>(m_uploadStep.GetPostUploadLatestFinalizedPFManifest());
-        m_latestPendingManifest = MakeShared<ManifestInternal>(m_uploadStep.GetPostUploadPendingPFManifest());
+        // TakeLock deliberately skips creating a new pending manifest when the device is being
+        // released as active, which leaves a version-less manifest here. Wrapping it anyway would
+        // produce a non-null pending manifest whose version is "", and a later SetSaveDescription
+        // would send UpdateManifest with an empty Version (rejected by the service, description
+        // silently lost). Mirror the post-finalize failure path and null it out instead.
+        const ManifestWrap& postUploadPending = m_uploadStep.GetPostUploadPendingPFManifest();
+        if (!postUploadPending.GetVersion().empty())
+        {
+            m_latestPendingManifest = MakeShared<ManifestInternal>(postUploadPending);
+        }
+        else
+        {
+            m_latestPendingManifest = nullptr;
+        }
         m_remoteFileFolderSet = MakeShared<FileFolderSet>(); // this will be automatically filled next time upload is done in CompareStep
-        
+
         // Clear dirty flag - description is now synced to cloud
         m_descriptionDirty = false;
     }
     else
     {
-        // There's no changes, so nothing to upload
+        // There's no changes to upload, but a description set while offline (or otherwise not yet
+        // pushed) still has to reach the cloud - otherwise other devices keep showing stale save
+        // metadata until the next time a file happens to change.
+        //
+        // Skipped for ReleaseDeviceAsActive: that path deletes the pending manifest a few lines
+        // below, so writing the description into it would throw the update away and clearing the
+        // dirty flag would stop any later session from retrying it.
+        if (m_descriptionDirty &&
+            option != PFGameSaveFilesUploadOption::ReleaseDeviceAsActive &&
+            m_latestPendingManifest != nullptr && m_latestPendingManifest->HasVersion())
+        {
+            if (!m_setSaveDescriptionStep.IsSetDone())
+            {
+                HRESULT hr = m_setSaveDescriptionStep.SetSaveDescription(
+                    runContext,
+                    task,
+                    folderSyncMutex,
+                    m_lastShortSaveDescription,
+                    m_latestPendingManifest
+                );
+                if (FAILED(hr))
+                {
+                    // Leave the description cached and dirty so the next upload retries it; a
+                    // failed metadata update must not fail the upload itself.
+                    TRACE_WARNING("[GAME SAVE] DoWorkFolderUpload: flushing dirty description failed (HR:0x%0.8x), keeping it cached", hr);
+                    m_setSaveDescriptionStep.Reset();
+                }
+                else
+                {
+                    return E_PENDING;
+                }
+            }
+            else
+            {
+                m_descriptionDirty = false;
+                m_setSaveDescriptionStep.Reset();
+
+                // Persist the cleared flag. Otherwise localstate.json still says "dirty" on the
+                // next launch, so the SDK re-pushes an already-synced description and refuses to
+                // adopt a newer one written by another device.
+                if (m_localFileFolderSet != nullptr && !m_saveFolder.empty())
+                {
+                    HRESULT writeHr = LocalStateManifest::WriteLocalManifest(m_saveFolder, m_localFileFolderSet, m_lastShortSaveDescription, false /*descriptionDirty*/);
+                    if (FAILED(writeHr))
+                    {
+                        // Couldn't record that the description is synced - keep it dirty so the
+                        // in-memory state matches what will be reloaded from disk.
+                        TRACE_WARNING("[GAME SAVE] DoWorkFolderUpload: WriteLocalManifest failed after description flush (HR:0x%0.8x)", writeHr);
+                        m_descriptionDirty = true;
+                    }
+                }
+            }
+        }
+
         if (option == PFGameSaveFilesUploadOption::ReleaseDeviceAsActive)
         {
             // if we are releasing the device as active, we need to delete the pending manifest
@@ -601,10 +819,26 @@ HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ 
                 return E_PENDING;
             }
 
+            // Check if the async delete succeeded
+            HRESULT deleteHr = m_uploadStep.GetDeleteManifestFailureHR();
+            if (FAILED(deleteHr))
+            {
+                m_telemetryManager->SetContextDeleteHResult(deleteHr);
+                m_telemetryManager->EmitContextDeleteEvent();
+                return deleteHr;
+            }
+
             m_telemetryManager->EmitContextDeleteEvent();
 
-            m_deviceReleasedAsActive = true;
+            // The pending manifest no longer exists on the service; keeping the pointer would let
+            // a later SetSaveDescription issue UpdateManifest against a deleted version.
+            m_latestPendingManifest = nullptr;
         }
+    }
+
+    if (option == PFGameSaveFilesUploadOption::ReleaseDeviceAsActive)
+    {
+        m_deviceReleasedAsActive = true;
     }
 
     SetSyncStateProgress(PFGameSaveFilesSyncState::SyncComplete, 0, 0);
@@ -667,8 +901,17 @@ HRESULT FolderSyncManager::DoWorkSetSaveDescription(_In_ const RunContext& runCo
 
     if (m_latestPendingManifest == nullptr)
     {
-        // No manifest available yet - user may not have completed initial sync
-        TRACE_ERROR("DoWorkSetSaveDescription: no pending manifest available");
+        // No pending manifest available. This can happen in two cases:
+        // 1. User has not completed initial sync (AddUser) - m_latestFinalizedManifest is also nullptr
+        // 2. Previous upload's TakeLock failed/cancelled after FinalizeManifest - m_latestFinalizedManifest exists
+        // In case 2, cache the description locally; it will be synced when the next upload re-acquires the lock.
+        if (m_latestFinalizedManifest != nullptr)
+        {
+            TRACE_INFORMATION("DoWorkSetSaveDescription: pending manifest unavailable (post-finalize failure recovery), storing description locally (dirty=true)");
+            SetLastShortSaveDescription(shortSaveDescription, true);
+            return S_OK;
+        }
+        TRACE_ERROR("DoWorkSetSaveDescription: no pending manifest available - user not added");
         return E_PF_GAMESAVE_USER_NOT_ADDED;
     }
 
@@ -704,18 +947,31 @@ HRESULT FolderSyncManager::InitForDownload()
     m_lockStep.Reset();
     m_compareStep.Reset();
     m_downloadStep.Reset();
+    m_uploadStep.Reset();
+    m_conflictUploadStarted = false;
+    m_conflictUploadCompleted = false;
     m_isForcedDisconnectFromCloud = false;
     m_latestFinalizedManifest = nullptr;
     m_latestPendingManifest = nullptr;
     m_localFileFolderSet = nullptr;
     m_remoteFileFolderSet = nullptr;
+    m_deviceReleasedAsActive = false;
     return S_OK;
 }
 
 HRESULT FolderSyncManager::InitForUpload()
 {
     m_compareStep.Reset();
+    // Preserve originalActivationBaselineVersion across reset so
+    // PromoteIfNeeded can mark the prior baseline as IsKnownGood
+    // after a successor is finalized (same pattern as ConflictUpload path).
+    uint64_t origBaseline = m_uploadStep.GetOriginalActivationBaselineVersion();
     m_uploadStep.Reset();
+    if (origBaseline != 0)
+    {
+        m_uploadStep.SetOriginalActivationBaselineVersion(origBaseline);
+    }
+    m_relockStep.Reset();
     return S_OK;
 }
 
@@ -732,6 +988,12 @@ int64_t FolderSyncManager::GetRemainingQuota() const
     if (m_localFileFolderSet)
     {
         localSize = m_localFileFolderSet->GetTotalUncompressedSize();
+    }
+
+    // Clamp localSize to prevent undefined behavior from uint64_t -> int64_t conversion
+    if (localSize > static_cast<uint64_t>(std::numeric_limits<int64_t>::max()))
+    {
+        localSize = static_cast<uint64_t>(std::numeric_limits<int64_t>::max());
     }
 
     // Allow negative (over-quota) results per spec.
@@ -772,13 +1034,172 @@ FolderSyncManagerProgress FolderSyncManager::GetSyncProgress()
     return result;
 }
 
+HRESULT FolderSyncManager::TryReserveUpload(_Out_ PFGameSaveFilesSyncState& previousSyncState)
+{
+    // The admission test and the state transition have to happen in one critical section:
+    // separate GetSyncProgress()/SetSyncStateProgress() calls let two concurrent uploads both
+    // observe SyncComplete and both reserve, after which their providers call InitForUpload()
+    // on this manager and reset each other's step state machines.
+    std::lock_guard<std::mutex> lock{ m_progressMutex };
+
+    previousSyncState = m_syncProgress.syncState;
+
+    if (m_resetCloudReserved)
+    {
+        // A reset is snapshotting and deleting manifests; an upload finalizing a new manifest
+        // underneath it would survive the reset and be reported as deleted.
+        return E_PF_GAMESAVE_OPERATION_IN_PROGRESS;
+    }
+
+    if (m_syncProgress.syncState == PFGameSaveFilesSyncState::NotStarted)
+    {
+        return E_PF_GAMESAVE_USER_NOT_ADDED;
+    }
+
+    if (m_deviceReleasedAsActive)
+    {
+        return E_PF_GAMESAVE_DEVICE_NO_LONGER_ACTIVE;
+    }
+
+    if (m_syncProgress.syncState == PFGameSaveFilesSyncState::PreparingForDownload ||
+        m_syncProgress.syncState == PFGameSaveFilesSyncState::Downloading)
+    {
+        return E_PF_GAMESAVE_DOWNLOAD_IN_PROGRESS;
+    }
+
+    if (m_syncProgress.syncState == PFGameSaveFilesSyncState::PreparingForUpload ||
+        m_syncProgress.syncState == PFGameSaveFilesSyncState::Uploading)
+    {
+        return E_PF_GAMESAVE_OPERATION_IN_PROGRESS;
+    }
+
+    // The byte total is genuinely unknown until the save folder is enumerated on the async path.
+    // Reporting total == 0 is the documented "not yet known" signal; UploadStep replaces it with a
+    // real total before the title's progress callback ever fires.
+    m_syncProgress.syncState = PFGameSaveFilesSyncState::PreparingForUpload;
+    m_syncProgress.current = 0;
+    m_syncProgress.total = 0;
+    return S_OK;
+}
+
+HRESULT FolderSyncManager::TryReserveDownload(_In_ PFGameSaveFilesAddUserOptions options, _Out_ PFGameSaveFilesSyncState& previousSyncState, _Out_ bool& previousForcedDisconnectFromCloud)
+{
+    // Same reasoning as TryReserveUpload: the admission checks and the transition to
+    // PreparingForDownload have to be one critical section. Reading the reset reservation and the
+    // sync state through separate GetSyncProgress()/IsResetCloudReserved() calls let a ResetCloud
+    // reserve itself in the gap, after which both operations ran - the reset snapshotted the
+    // manifest list while this AddUser created a new pending manifest that survived the
+    // "successful" reset. It also let two concurrent AddUser calls both observe NotStarted.
+    std::lock_guard<std::mutex> lock{ m_progressMutex };
+
+    previousSyncState = m_syncProgress.syncState;
+
+    // Captured here, under the same lock, so the snapshot and the clear below are atomic with
+    // respect to other lock holders. The reconnect path clears this flag before the caller's
+    // provider has actually started; if provider startup then fails, the caller restores it,
+    // otherwise the manager reports "connected" while no reconnect ever ran.
+    previousForcedDisconnectFromCloud = m_isForcedDisconnectFromCloud.load();
+
+    if (m_resetCloudReserved)
+    {
+        return E_PF_GAMESAVE_OPERATION_IN_PROGRESS;
+    }
+
+    // Allow calling AddUserWithUiAsync if:
+    // 1. User has never been added (NotStarted state), OR
+    // 2. User is disconnected from cloud and wants to reconnect
+    //    (per documentation: "When disconnected from cloud, AddUserWithUiAsync() can be called again")
+    if (m_syncProgress.syncState != PFGameSaveFilesSyncState::NotStarted)
+    {
+        bool isReconnectAttempt = m_isForcedDisconnectFromCloud.load();
+        if (!isReconnectAttempt && !m_deviceReleasedAsActive)
+        {
+            // User already added and not in offline mode - reject duplicate AddUser
+            return E_PF_GAMESAVE_USER_ALREADY_ADDED;
+        }
+
+        if (m_deviceReleasedAsActive)
+        {
+            TRACE_INFORMATION("[GAME SAVE] AddUserWithUiAsync: allowing re-add after device release");
+        }
+
+        // User is disconnected from cloud - allow reconnection attempt
+        // Per documentation: "When disconnected from cloud, PFGameSaveFilesAddUserWithUiAsync()
+        // can be called again if you want to try connect to the cloud."
+        //
+        // The steps, manifests and file/folder sets are NOT reset here. This function holds only
+        // m_progressMutex, and those fields are protected by m_syncMutex, so resetting them from
+        // here races a concurrent SetSaveDescription that is reading them. That is the reason the
+        // call was removed; calling InitForDownload() bare is not itself a deadlock, since it takes
+        // no locks. (Taking m_syncMutex here to close the race WOULD deadlock, because it inverts
+        // the established order: the sync workers hold m_syncMutex and then call
+        // SetSyncStateProgress, which takes m_progressMutex.)
+        // DownloadAsyncProvider's constructor already calls InitForDownload() under m_syncMutex a
+        // few statements later, which is the correct place. Leaving it to the provider also means a
+        // failed provider creation no longer tears down usable state for a reservation that never
+        // ran.
+        m_isForcedDisconnectFromCloud.store(false);
+    }
+
+    m_syncProgress.syncState = PFGameSaveFilesSyncState::PreparingForDownload;
+    m_syncProgress.current = 0;
+    m_syncProgress.total = 0;
+    m_addUserOptions = options;
+    return S_OK;
+}
+
+bool FolderSyncManager::TryReserveResetCloud()
+{
+    std::lock_guard<std::mutex> lock{ m_progressMutex };
+    if (m_resetCloudReserved)
+    {
+        return false;
+    }
+
+    // Reset and sync work are mutually exclusive: an upload or download running across the
+    // reset's ListManifests snapshot would leave manifests behind that the reset reports as gone.
+    if (m_syncProgress.syncState == PFGameSaveFilesSyncState::PreparingForDownload ||
+        m_syncProgress.syncState == PFGameSaveFilesSyncState::Downloading ||
+        m_syncProgress.syncState == PFGameSaveFilesSyncState::PreparingForUpload ||
+        m_syncProgress.syncState == PFGameSaveFilesSyncState::Uploading)
+    {
+        return false;
+    }
+
+    m_resetCloudReserved = true;
+    m_resetCloudStep.Reset();
+    return true;
+}
+
+bool FolderSyncManager::IsResetCloudReserved()
+{
+    std::lock_guard<std::mutex> lock{ m_progressMutex };
+    return m_resetCloudReserved;
+}
+
+void FolderSyncManager::ReleaseResetCloudReservation(){
+    std::lock_guard<std::mutex> lock{ m_progressMutex };
+    m_resetCloudReserved = false;
+}
+
 void FolderSyncManager::ResetSetSaveDescriptionStep()
 {
     m_setSaveDescriptionStep.Reset();
 }
 
+void FolderSyncManager::ResetResetCloudStep()
+{
+    m_resetCloudStep.Reset();
+}
+
 void FolderSyncManager::SetLastShortSaveDescription(const String& shortSaveDescription, bool dirty)
 {
+    // Serialized with the sync workers: the deferred-description path writes these from the
+    // caller's API thread while an upload's FinalizeManifest reads them, and the persist below
+    // iterates m_localFileFolderSet, which CompareStep::ReadLocalManifest clears and rebuilds.
+    // Recursive, so the worker paths that already hold this lock can call in unchanged.
+    std::lock_guard<std::recursive_mutex> lock{ m_syncMutex };
+
     m_lastShortSaveDescription = shortSaveDescription;
     m_descriptionDirty = dirty;
     
@@ -861,6 +1282,14 @@ HRESULT FolderSyncManager::ConvertToPFGameSaveDescriptor(const ManifestWrap& man
     gameSave.thumbnailUri[0] = '\0'; // No thumbnail URI in manifest, might be set after
 
     return S_OK;
+}
+
+void FolderSyncManager::SetSaveFolderOverride(const String& folder)
+{
+    // This function internal to the SDK allows platforms that mount the underlying file system folder to override
+    // where the files are stored, as it might not correspond to the save folder specified in the public API calls.
+    // It is not supposed to be thread safe as it should only be called by the same task as the other functions of FolderSyncManager.
+    m_saveFolder = folder;
 }
 
 } // namespace GameSave

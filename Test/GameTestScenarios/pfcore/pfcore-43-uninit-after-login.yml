@@ -1,0 +1,316 @@
+id: PFCore-43-Uninit-After-Login
+name: PFCore 43 - PFUninitializeAsync After Login Lifecycle
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Reproduces the PFUninitializeAsync hang observed in gamesave scenario 08.
+  The pattern is: PFInitialize → Login → CloseUser → PFUninitializeAsync.
+  The Entity's TokenRefreshWorker creates a child RunContext with a 30-min
+  delayed poll callback. If PFUninitializeAsync can't terminate that child
+  RunContext, it will hang.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 30
+blocks:
+  single-login-uninit:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    # Create EventPipeline (adds child RunContext to PFCore root)
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    # Emit events to trigger background upload activity
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "uninit_test_event_1"
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "uninit_test_event_2"
+    - command: SmokeDelay
+      parameters:
+        durationMs: "3000"
+    # Close EventPipeline handle (but RunContext child may still be draining)
+    - command: PFEventPipelineCloseHandle
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+
+  double-login-same-pfcore:
+    # This pattern mirrors scenario 08: two logins on same PFCore instance
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    # First login
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "phase1_event"
+    - command: SmokeDelay
+      parameters:
+        durationMs: "2000"
+    - command: PFEventPipelineCloseHandle
+    - command: PFLocalUserCloseHandle
+    # Second login (same PFCore, no reinit)
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "phase2_event"
+    - command: SmokeDelay
+      parameters:
+        durationMs: "2000"
+    - command: PFEventPipelineCloseHandle
+    - command: PFLocalUserCloseHandle
+    # Full teardown
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+
+  stress-repeated-login-uninit:
+    # 8x init/login/event/uninit cycles — stress to reproduce accumulation issues
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    # Cycle 1 — immediate uninit while events pending
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle1_event"
+    - command: PFEventPipelineCloseHandle
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    # Cycle 2 — with drain wait
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle2_event_a"
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle2_event_b"
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle2_event_c"
+    - command: SmokeDelay
+      parameters:
+        durationMs: "1000"
+    - command: PFEventPipelineCloseHandle
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    # Cycle 3 — emit events then IMMEDIATELY uninit (tightest race)
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle3_race_event"
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle3_race_event2"
+    # Intentionally NO PFEventPipelineCloseHandle — force cleanup during PFUninitialize
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    # Cycle 4 — rapid fire no-delay
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle4_event"
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    # Cycle 5 — with multiple events and short delay
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle5_event_a"
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle5_event_b"
+    - command: SmokeDelay
+      parameters:
+        durationMs: "500"
+    - command: PFEventPipelineCloseHandle
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    # Cycle 6 — no pipeline at all (minimal)
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    # Cycle 7 — immediate uninit without close pipeline
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle7_burst_a"
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle7_burst_b"
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle7_burst_c"
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle7_burst_d"
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    # Cycle 8 — clean full cycle to confirm state is healthy
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "PFUninitHangTest"
+        createAccount: true
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom"
+        eventName: "cycle8_final_event"
+    - command: SmokeDelay
+      parameters:
+        durationMs: "2000"
+    - command: PFEventPipelineCloseHandle
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+
+executionOrder:
+  - role: DeviceA
+    block: single-login-uninit
+  - role: DeviceA
+    block: double-login-same-pfcore
+  - role: DeviceA
+    block: stress-repeated-login-uninit
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: XTaskQueueCloseHandle

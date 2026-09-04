@@ -1,0 +1,128 @@
+id: LHC-Xbox-03-Suspend-ThreadPool-Queue
+name: LHC Xbox 03 - Suspend With ThreadPool Queue (control - no Manual queue)
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Control case for the GDK console suspend/quiesce work (bug 63050439).
+
+  GDK uses the WinHTTP provider for HTTP (see PlatformComponents_GDK.cpp). This scenario is
+  the counterpart to lhc-xbox-02: both ports of the task queue are ThreadPool and the queue is
+  dispatched normally throughout, so the caller's dispatch behaviour cannot influence the
+  outcome. What is under test is purely the provider's own suspend teardown.
+
+  A request is started against a deliberately slow endpoint and asserted to still be in flight,
+  the title is really suspended and resumed via PLM, and the request must then resolve rather
+  than hang. Whether it comes back as a transport failure from the torn-down connection or as a
+  completed response is timing dependent and deliberately not asserted; still being pending at
+  the deadline is the failure.
+brief: In-flight request must resolve across PLM suspend on a normally dispatched queue
+group: B. Suspend / PLM
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  start-request-on-threadpool-queue:
+    - command: HCInitialize
+    - command: HCIsInitialized
+
+    # BOTH ports are ThreadPool: this is the control case, deliberately NOT a parked queue.
+    # The queue is dispatched normally throughout, so nothing about the caller's dispatch
+    # behaviour can influence the result -- what is under test is purely the provider's own
+    # suspend teardown of a request that is still in flight.
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # A deliberately slow endpoint, so the request below is still outstanding when the event
+    # under test arrives. Against a normal endpoint it completes first, leaving nothing in
+    # flight, and this scenario passes without testing anything.
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/slow"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "slow-response"
+        delayMs: 30000
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/slow"
+    # Retries would let the call restart after resume and muddy the signal.
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+
+    # Leaves the request in flight; does not wait.
+    - command: HCHttpCallPerformStart
+
+    # Precondition: the request must actually still be outstanding here, otherwise whatever
+    # follows is not being observed against an in-flight request at all.
+    - command: HCHttpCallPerformAssertPending
+
+    - command: SmokeDelay
+      parameters:
+        durationMs: 200
+
+  suspend-resume:
+    # Real PLM suspend/resume. The queue is dispatched normally the whole time, so anything
+    # that goes wrong here is the provider's own suspend teardown, not caller dispatch.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+
+  verify-request-drained:
+    # A real title parks its queue while suspending but resumes dispatching afterwards. Model
+    # that: pump the Work port again so the completion plumbing can run. NOTE this is not
+    # what is under test -- the defect is that the title never gets here at all, because the
+    # suspend handler hangs and the watchdog terminates it during Suspend above.
+
+    # The assertion: the request must RESOLVE rather than hang, and the title must survive suspend.
+    # Suspend tears down the WinHTTP session, so an in-flight request is cancelled rather than
+    # completing -- libHttpClient reports that through the network error code while the perform
+    # itself completes with S_OK and no HTTP response. What is under test is that the suspend
+    # handler does not deadlock (the defect kills the title via the PLM watchdog) and that the
+    # request does not park forever after resume.
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 45000
+    - command: HCHttpCallResponseGetStatusCode
+      parameters:
+        requireResponse: false
+    - command: HCHttpCallResponseGetNetworkErrorCode
+      parameters:
+        expectNetworkError: true
+    - command: HCHttpCallCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: start-request-on-threadpool-queue
+  - role: DeviceA
+    block: suspend-resume
+  - role: DeviceA
+    block: verify-request-drained
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle
+    # Release the controller-hosted slow endpoint.
+    - command: StopHttpTestServer

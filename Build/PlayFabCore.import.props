@@ -21,8 +21,13 @@
 
   <PropertyGroup>
     <PlayFabCoreProjectName>PlayFabCore.$(HCPlatform)</PlayFabCoreProjectName>
+    <PlayFabCoreTargetName>PlayFabCore</PlayFabCoreTargetName>
+    <!-- GDK vcxproj files use x64 platform, but consuming projects may build as Gaming.Xbox.*.
+         Map Xbox platforms to x64 to find the correct output directory. -->
+    <_PFCoreBuildPlatform Condition="'$(HCPlatform)' == 'GDK' AND $(Platform.StartsWith('Gaming.'))">x64</_PFCoreBuildPlatform>
+    <_PFCoreBuildPlatform Condition="'$(_PFCoreBuildPlatform)' == ''">$(Platform)</_PFCoreBuildPlatform>
     <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'Win32'">$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
-    <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\Gaming.Desktop.x64\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
+    <PlayFabCoreOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\$(_PFCoreBuildPlatform)\$(Configuration)\$(PlayFabCoreProjectName)\</PlayFabCoreOutDir>
   </PropertyGroup>
 
   <!--Add reference to appropriate PlayFabCore project-->
@@ -38,8 +43,8 @@
 
   <!--Copy PlayFabCore to OutDir-->
   <ItemGroup Label="CopyDependencies">
-    <ReferenceCopyLocalPaths Include="$(PlayFabCoreOutDir)\$(PlayFabCoreProjectName).dll" />
-    <ReferenceCopyLocalPaths Include="$(PlayFabCoreOutDir)\$(PlayFabCoreProjectName).pdb" />
+    <ReferenceCopyLocalPaths Include="$(PlayFabCoreOutDir)\$(PlayFabCoreTargetName).dll" />
+    <ReferenceCopyLocalPaths Include="$(PlayFabCoreOutDir)\$(PlayFabCoreTargetName).pdb" />
   </ItemGroup>
 
 </Project>

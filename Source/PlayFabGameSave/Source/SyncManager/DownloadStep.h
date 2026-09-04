@@ -47,7 +47,8 @@ public:
         _In_ std::recursive_mutex& folderSyncMutex,
         _In_ ProgressCallback progressCallback,
         _In_ void* progressCallbackContext,
-        _In_ const String& shortSaveDescription
+        _In_ const String& shortSaveDescription,
+        _In_ bool descriptionDirty
     );
 
     HRESULT DeleteFiles(

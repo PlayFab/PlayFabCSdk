@@ -1,0 +1,52 @@
+id: XSAPI-40-Game-Invite-Notification
+name: XSAPI 40 - Game Invite Notification Lifecycle
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Registers a game invite notification handler, sends an invite
+  via multiplayer session, then removes the handler.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblGameInviteAddNotificationHandler
+    - command: XblMultiplayerSessionReferenceCreate
+    - command: XblMultiplayerSessionCreateHandle
+    - command: XblMultiplayerSessionJoin
+    - command: XblMultiplayerWriteSessionAsync
+    - command: XblMultiplayerSendInvitesAsync
+    - command: XblGameInviteRemoveNotificationHandler
+    - command: XblMultiplayerSessionCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

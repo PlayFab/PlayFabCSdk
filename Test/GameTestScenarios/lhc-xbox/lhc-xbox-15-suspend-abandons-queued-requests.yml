@@ -1,0 +1,169 @@
+id: LHC-Xbox-15-Suspend-Abandons-Queued-Requests
+name: LHC Xbox 15 - Suspend Mid-Burst Abandons Queued Requests Without Hanging
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Covers the one suspend path the rest of this suite never reaches: requests that are still
+  QUEUED -- accepted by the caller but never started, because the concurrent request limit is
+  saturated -- at the moment a PLM suspend arrives.
+
+  Those requests are not torn down like live connections. CloseAllConnections abandons them by
+  completing each one with E_ABORT, which is separate code from the in-flight teardown that
+  scenario 07 and 08 exercise. It is also specifically the seam between the two features this
+  change introduces (the request limit and suspend handling), so it is the interaction most
+  likely to break and the least likely to be noticed.
+
+  Reaching it requires being genuinely mid-burst when the suspend lands, which the blocking
+  TestHCHttpCallPerformBurst cannot do -- it waits for every request before returning. The
+  non-blocking TestHCHttpCallPerformBurstStart exists for this: it fires the burst and returns,
+  leaving the requests outstanding across the suspend boundary.
+
+  The shape of the test: cap the limit at 1 and fire 12 requests at an endpoint that holds each
+  one for 30s. One request starts and occupies the entire budget; the other 11 can never start
+  and sit in the pending queue. Suspending here forces the abandon path for all 11 at once.
+
+  What is asserted is resolution, not success. After a suspend, whether any individual request
+  returns a response, a transport error, or E_ABORT is timing dependent and not interesting. The
+  contract that matters is that EVERY request resolves -- none may be left hanging -- and that
+  the budget is intact afterwards. A dropped queued request would show up as a burst that never
+  drains, and a leaked slot would show up as the follow-up request never starting.
+
+  Failure modes this catches:
+    - a queued request abandoned without completing its XAsyncBlock (burst never drains)
+    - the pending queue not cleared on suspend, so stale entries block later promotion
+    - slots reserved for queued requests never released, shrinking the budget permanently
+    - a crash or hang in CloseAllConnections when the pending queue is non-empty
+brief: Requests still queued at suspend must all resolve, and the budget must survive
+group: B. Suspend / PLM
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  saturate-then-queue:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # A cap of 1 is what guarantees a deep pending queue: exactly one of the burst's requests can
+    # be in flight, so the other 11 are queued and never start. A larger cap would let most of the
+    # burst drain and might leave the queue empty by the time the suspend lands.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 1
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 1
+
+    # The hold has to outlast the suspend/resume cycle below. If the single in-flight request
+    # completed early it would promote a queued request, and the queue could drain out from under
+    # the scenario before the suspend arrives.
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/slow"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "slow-response"
+        delayMs: 30000
+
+    # Non-blocking: returns with all 12 still outstanding, which is the entire point.
+    - command: TestHCHttpCallPerformBurstStart
+      parameters:
+        url: "{{httpTestUrl}}/slow"
+        requestCount: 12
+
+    # The precondition. Exactly one request may reach the server; the rest must be queued inside
+    # the provider. If this observed more than 1 the cap is not being enforced and the pending
+    # queue is not deep, so the abandon path below would not actually be exercised.
+    - command: AssertHttpMaxConcurrency
+      parameters:
+        expectedMax: 1
+
+  suspend-resume:
+    # Suspending here hits CloseAllConnections with 1 live connection and 11 queued requests.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+
+  verify-all-resolved:
+    # The assertion: every one of the 12 resolves, AND at least 11 of them were abandoned with
+    # E_ABORT rather than completing normally.
+    #
+    # The E_ABORT check is what makes this scenario able to fail. libHttpClient reports
+    # transport-level outcomes through the network error code while the XAsync status stays S_OK,
+    # so an abandoned request looks exactly like a successful one unless the network error is
+    # inspected. Asserting only "everything resolved" would stay true even if the abandon path
+    # never ran at all.
+    #
+    # 11 because the cap is 1: one request is in flight and may be torn down as a live connection
+    # instead, which is scenario 08's path. The other 11 can only have been queued.
+    #
+    # expectedSuccesses is deliberately omitted -- after a suspend the split between completed,
+    # cancelled and abandoned is timing dependent. A queued request dropped without completing its
+    # XAsyncBlock would leave the burst permanently outstanding and time out here.
+    - command: TestHCHttpCallPerformBurstWait
+      parameters:
+        timeoutMs: 120000
+        expectedAbortedAtLeast: 11
+
+  verify-budget-survived:
+    # Slots reserved for queued requests must have been released by the abandon path too. With the
+    # cap still at 1, a single leaked slot means the budget is zero and this never starts.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    # Restore the default and confirm sustained throughput, proving queued promotion still works
+    # after the pending queue was force-drained by a suspend.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "https://E18D7.playfabapi.com/"
+        requestCount: 15
+        expectedSuccesses: 15
+        timeoutMs: 120000
+
+    - command: StopHttpTestServer
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: saturate-then-queue
+  - role: DeviceA
+    block: suspend-resume
+  - role: DeviceA
+    block: verify-all-resolved
+  - role: DeviceA
+    block: verify-budget-survived
+cleanup:
+  DeviceA:
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0
+    - command: XTaskQueueCloseHandle
+    - command: StopHttpTestServer

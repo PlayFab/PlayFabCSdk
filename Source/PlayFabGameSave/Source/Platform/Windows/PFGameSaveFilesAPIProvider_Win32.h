@@ -96,6 +96,7 @@ public:
     ) noexcept override;
     HRESULT SetForceOutOfStorageErrorForDebug(_In_ bool forceError) noexcept override;
     HRESULT SetForceSyncFailedErrorForDebug(_In_ bool forceError) noexcept override;
+    HRESULT SetForceNullPendingManifestForDebug(_In_ bool force) noexcept override;
     HRESULT SetWriteManifestsToDiskForDebug(_In_ bool writeManifests) noexcept override;
     HRESULT PauseUploadForDebug() noexcept override;
     HRESULT SetMockForceOfflineForDebug(_In_ GameSaveServiceMockForcedOffline mode) noexcept override;

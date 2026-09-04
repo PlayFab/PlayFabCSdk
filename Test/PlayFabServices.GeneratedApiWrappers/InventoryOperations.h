@@ -155,26 +155,6 @@ private:
 #endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-class GetMicrosoftStoreAccessTokensOperation : public XAsyncOperation<Wrappers::PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper<Allocator>>
-{
-public:
-    using RequestType = Wrappers::PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper<Allocator>;
-    using ResultType = Wrappers::PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper<Allocator>;
-
-    GetMicrosoftStoreAccessTokensOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
-
-    static AsyncOp<Wrappers::PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
-
-private:
-    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
-    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
-
-    Entity m_entity;
-    RequestType m_request;
-};
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class GetTransactionHistoryOperation : public XAsyncOperation<Wrappers::PFInventoryGetTransactionHistoryResponseWrapper<Allocator>>
 {
 public:

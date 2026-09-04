@@ -1,0 +1,90 @@
+id: Scenario-PC-87-Custom-File-Location-Invalid
+name: GameSave PC 87 - Custom File Location Invalid Path
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore  # By-design: GRTS defers path validation to upload — architectural difference, not a bug
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Attempt PFGameSaveFilesInitialize with invalid saveFolder path. Verify E_GS_PLAYFAB_INVALID_LOCATION error, no crash. Retry with valid path and verify success.
+brief: Invalid custom file location error handling
+group: P. GRTS API Edge Cases
+devices:
+  DeviceA:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  attempt-invalid-path:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    # Invalid path — expect E_GS_PLAYFAB_INVALID_LOCATION (0x80832305)
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    # Note: no DeleteLocalFolder for Z:\ — drive doesn't exist, no cleanup needed
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "Z:\\nonexistent\\badpath\\"
+        expectedHr: "0x80832305"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+  retry-valid-path:
+    # Retry with valid saveFolder — should succeed
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: attempt-invalid-path
+  - role: DeviceA
+    block: retry-valid-path
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

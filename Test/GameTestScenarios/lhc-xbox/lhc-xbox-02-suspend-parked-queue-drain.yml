@@ -1,0 +1,160 @@
+id: LHC-Xbox-02-Suspend-Parked-Queue-Drain
+name: LHC Xbox 02 - Suspend With Parked Task Queue Must Drain In-Flight Request
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Regression test for bug 63050439 (GDK console suspend/quiesce hang).
+
+  Original root cause: on GDK console LHC selected the Curl provider, and CurlMulti drove
+  curl_multi_perform *only* by self-rescheduling a delayed callback on the Work port of the
+  caller-supplied task queue. A title that parks its own queue while suspended -- which is
+  legal, and what Forza does -- therefore stopped LHC's perform loop, xCurl's
+  Curl_multi::WaitForActiveHandles blocked INFINITE, the suspend handler timed out and the
+  watchdog terminated the title.
+
+  Current design: GDK console now uses the WinHttp provider, which registers for PLM
+  notifications (RegisterAppStateChangeNotification -> WinHttpProvider::Suspend) and tears
+  down its own connections during suspend. That teardown is driven by the provider, not by
+  the title's task queue, so a parked caller queue can no longer stall it. The Curl provider
+  is no longer built for GDK at all.
+
+  This scenario pins that property: a request is left in flight on a task queue whose Work
+  port is Manual and is never dispatched, so nothing title-side can drive completion, and the
+  title is then really suspended and resumed via PLM. The title must suspend cleanly rather
+  than being watchdog-terminated, and the in-flight request must resolve after resume rather
+  than parking forever. Suspend cancels it, so it resolves with a network error and no HTTP
+  response -- resolution, not success, is the property under test.
+brief: In-flight request must drain across PLM suspend when the caller queue is parked
+group: B. Suspend / PLM
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  start-request-on-parked-queue:
+    - command: HCInitialize
+    - command: HCIsInitialized
+
+    # Work port is Manual and nothing in the test app ever dispatches it beyond the bounded
+    # dispatch below, so this models a title that has parked its own queue. Completion stays on
+    # the thread pool so the async result can still be observed once the request does drain.
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: Manual
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # A deliberately slow endpoint. The request must still be outstanding when the suspend
+    # arrives; against a normal endpoint it completes in well under a second and the scenario
+    # passes having suspended with nothing in flight.
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/slow"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "slow-response"
+        delayMs: 30000
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/slow"
+    # Retries would re-arm the perform loop on the parked queue and muddy the signal.
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+
+    # Leaves the request in flight; does not wait.
+    - command: HCHttpCallPerformStart
+
+    # HCHttpCallPerformAsync schedules its own work on this queue's Work port, and the HTTP
+    # provider's PerformAsync runs as part of that work. If the port is never dispatched at all
+    # the request never reaches the provider, nothing is ever started, and there is nothing for
+    # the suspend-time teardown to act on. So dispatch a small bounded number of callbacks:
+    # enough to hand the request to the provider, and no more.
+    #
+    # Note this scenario was originally written against the Curl provider, where the perform
+    # loop itself was driven by repeated callbacks on this Work port and parking the queue was
+    # what stalled the transfer. On GDK the provider is WinHTTP, which is driven by its own
+    # callback threads, so a parked Work port no longer stalls an already-started request. What
+    # this still covers is a title that parks its queue across a suspend: the request must be
+    # handed off, survive the suspend teardown, and resolve rather than hang.
+    - command: XTaskQueueDispatch
+      parameters:
+        port: Work
+        maxCallbacks: 3
+        durationMs: 2000
+
+    # Precondition: the request must genuinely still be outstanding before the suspend below.
+    - command: HCHttpCallPerformAssertPending
+
+    # From here the queue is parked -- nothing dispatches it again for the rest of the test.
+    # Confirms the request cannot progress on its own while parked. If it completed here the
+    # scenario would not be testing anything.
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5000
+
+  suspend-resume:
+    # Real PLM suspend/resume. This is where the defect bit: suspend teardown must be driven by
+    # the provider itself, because the title's queue is parked and cannot drive anything.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+
+  verify-request-drained:
+    # A real title parks its queue while suspending but resumes dispatching afterwards. Model
+    # that: pump the Work port again so the completion plumbing can run. NOTE this is not
+    # what is under test -- the defect is that the title never gets here at all, because the
+    # suspend handler hangs and the watchdog terminates it during Suspend above.
+    - command: XTaskQueueDispatch
+      parameters:
+        port: Work
+        durationMs: 10000
+
+    # The assertion: the request must RESOLVE rather than hang, and the title must survive suspend.
+    # Suspend tears down the WinHTTP session, so an in-flight request is cancelled rather than
+    # completing -- libHttpClient reports that through the network error code while the perform
+    # itself completes with S_OK and no HTTP response. What is under test is that the suspend
+    # handler does not deadlock (the defect kills the title via the PLM watchdog) and that the
+    # request does not park forever after resume.
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 45000
+    - command: HCHttpCallResponseGetStatusCode
+      parameters:
+        requireResponse: false
+    - command: HCHttpCallResponseGetNetworkErrorCode
+      parameters:
+        expectNetworkError: true
+    - command: HCHttpCallCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: start-request-on-parked-queue
+  - role: DeviceA
+    block: suspend-resume
+  - role: DeviceA
+    block: verify-request-drained
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle
+    # Release the controller-hosted slow endpoint.
+    - command: StopHttpTestServer

@@ -85,6 +85,7 @@ PF_API PFFriendsClientGetFriendsListGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFFriendsClientGetFriendsListGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFFriendsGetFriendsListResult*>(buffer);
@@ -198,6 +199,7 @@ PF_API PFFriendsServerGetFriendsListGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFFriendsServerGetFriendsListGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFFriendsGetFriendsListResult*>(buffer);

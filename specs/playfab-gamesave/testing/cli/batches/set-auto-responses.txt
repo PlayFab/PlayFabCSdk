@@ -1,0 +1,12 @@
+# Pre-configure automatic UI responses so dialogs don't block testing.
+# Useful for unattended cross-device scenarios where you can't interact
+# with every dialog on every device.
+#
+# Change "SyncLastSavedData" / "UseLocal" / "Continue" to the response
+# you want to test.  Valid responses depend on the callback type.
+
+PFGameSaveFilesSetUiConflictResponse --response=UseLocal
+PFGameSaveFilesSetUiOutOfStorageResponse --response=Cancel
+PFGameSaveFilesSetUiProgressResponse --response=Continue
+PFGameSaveFilesSetUiSyncFailedResponse --response=Cancel
+PFGameSaveFilesSetUiActiveDeviceContentionResponse --response=SyncLastSavedData

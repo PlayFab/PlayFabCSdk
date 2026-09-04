@@ -138,7 +138,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdShow)
     HRESULT hr;
 
     // Initialize logging
-    LogToWindow("PlayFab Game Save Test starting...");
+    LogToWindow("Game Test starting...");
 
     hr = XGameRuntimeInitialize();
     if (FAILED(hr))
@@ -180,7 +180,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdShow)
     HWND hwnd = CreateWindowEx(
         0,                              // Optional window styles
         L"PlayFabGameSaveWindowClass",  // Window class
-        L"PlayFab Game Save Test",      // Window text
+        L"Game Test",      // Window text
         WS_OVERLAPPEDWINDOW,            // Window style
         CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
         nullptr,                        // Parent window    

@@ -421,6 +421,13 @@ void AccountManagementTests::TestClientUpdateUserTitleDisplayName(TestContext& t
 }
 #endif
 
+#if 0
+void AccountManagementTests::TestServerAddOrUpdateContactEmail(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void AccountManagementTests::TestServerBanUsers(TestContext& tc)
 {
@@ -500,6 +507,13 @@ void AccountManagementTests::TestServerGetPlayFabIDsFromPSNAccountIDs(TestContex
 
 #if HC_PLATFORM == HC_PLATFORM_GDK
 void AccountManagementTests::TestServerGetPlayFabIDsFromPSNOnlineIDs(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerGetPlayFabIDsFromServerCustomIDs(TestContext& tc)
 {
     tc.Skip();
 }
@@ -659,6 +673,13 @@ void AccountManagementTests::TestServerSendEmailFromTemplate(TestContext& tc)
 }
 #endif
 
+#if 0
+void AccountManagementTests::TestServerUnlinkApple(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_GDK
 void AccountManagementTests::TestServerUnlinkBattleNetAccount(TestContext& tc)
 {
@@ -675,6 +696,13 @@ void AccountManagementTests::TestServerUnlinkFacebookAccount(TestContext& tc)
 
 #if 0
 void AccountManagementTests::TestServerUnlinkFacebookInstantGamesId(TestContext& tc)
+{
+    tc.Skip();
+}
+#endif
+
+#if 0
+void AccountManagementTests::TestServerUnlinkGameCenterAccount(TestContext& tc)
 {
     tc.Skip();
 }

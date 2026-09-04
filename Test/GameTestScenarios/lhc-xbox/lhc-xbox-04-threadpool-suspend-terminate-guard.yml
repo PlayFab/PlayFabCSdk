@@ -1,0 +1,144 @@
+id: LHC-Xbox-04-ThreadPool-Suspend-Terminate-Guard
+name: LHC Xbox 04 - ThreadPool Queue Suspend Teardown Guard (Forza topology)
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Regression guard for the Forza topology in bug 63050439. Builds the customer's actual
+  configuration -- ThreadPool queue, in-flight request, blocking suspend-time teardown -- and
+  asserts the title survives suspend.
+
+  IMPORTANT -- WHAT THIS TEST CANNOT DO. It does NOT discriminate the PR #1009 Curl suspend fix.
+  It was measured PASSING both with and without that fix. Do not cite it as validation of #1009;
+  scenario 02 is the discriminating test.
+
+  Why it cannot discriminate: the Forza deadlock requires XAsync to suspend the task queue PORTS
+  (XTaskQueueGlobalSuspend -> TaskQueueImpl::OnSuspendResume(true) -> SuspendPort(), after which
+  SignalQueue/NotifyItemQueued/DrainOneItem all refuse to make progress for every non-Immediate
+  dispatch mode). That port suspension is what stops a ThreadPool queue -- not the title declining
+  to pump anything. But XTaskQueueGlobalSuspend is internal to the runtime: it is not declared in
+  the public GDK XTaskQueue.h and is not exported from xgameruntime.lib. A test app therefore
+  cannot put the ports into the suspended state, so the root condition never occurs here.
+
+  Measured on this devkit without the fix: the handle was correctly still active at the suspend
+  boundary, yet the provider's own suspend handling closed it (
+  CURLE_NO_CONNECTION_AVAILABLE) and the blocking terminate returned normally. That differs from
+  the Forza live-debug state, where m_activeHandlesCount stayed at 1 and WaitForActiveHandles
+  never signalled -- likely a provider version and/or connection-state difference (this request is
+  stalled in TCP connect rather than mid-transfer). Worth revisiting if an instrumented
+  XGameRuntime/GRTS build ever makes port suspension reachable from a test.
+
+  This is also why scenario 02 uses a Manual queue. That is not modelling title misuse: with
+  XTaskQueueGlobalSuspend unreachable, an unpumped Manual port is the only lever a test app has to
+  produce the same observable condition (queued work stops advancing) that port suspension imposes
+  on ThreadPool queues in production.
+
+  What this scenario still buys: it exercises a real path -- ThreadPool queue, active request
+  at the suspend boundary, and a synchronous XTaskQueueTerminate(wait=true) on the suspend path
+  (mirroring PubSubRouter::HandleSuspend -> ~WebRequestManagerImpl) -- and fails loudly if a future
+  change makes that combination hang or terminates the title.
+brief: Guard - ThreadPool queue + blocking suspend-time terminate must not hang (does not gate #1009)
+group: B. Suspend / PLM
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  start-request-on-threadpool-queue:
+    - command: HCInitialize
+    - command: HCIsInitialized
+
+    # Forza's topology: the default GameCore process queue is ThreadPool/ThreadPool. Nothing here
+    # is Manual, and nothing needs the title to pump anything -- XAsync dispatches this queue on
+    # its own right up until it suspends the port.
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    - command: HCHttpCallCreate
+    # TEST-NET-1 (RFC 5737) is reserved for documentation and is not routable, so the TCP connect
+    # hangs. That is deliberate: it guarantees the request is STILL ACTIVE at the suspend
+    # boundary (condition 1). Pointing at a real endpoint made this racy -- on a warm ThreadPool
+    # queue the request repeatedly completed in well under 200ms, leaving nothing in flight, and
+    # the test then passed even with the defect present.
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://192.0.2.1/"
+    # Retries would re-arm the perform loop and muddy the signal.
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    # Comfortably longer than the suspend window so the request cannot self-complete via timeout
+    # while the title is suspended.
+    - command: HCHttpCallRequestSetTimeout
+      parameters:
+        timeoutInSeconds: 120
+
+    # Condition 1 + 2: leave a transfer genuinely in flight so an active request still needs
+    # queued perform progress when suspension begins. Do NOT wait for it.
+    - command: HCHttpCallPerformStart
+
+    # Long enough for the ThreadPool queue to dispatch the provider's PerformAsync and start the`r`n    # request; the unreachable host guarantees it is still active afterwards.
+    - command: SmokeDelay
+      parameters:
+        durationMs: 1000
+
+    # Makes condition 1 an explicit assertion rather than an assumption about the unreachable
+    # host. If the request ever does resolve early, this fails instead of letting the scenario
+    # report a pass for a suspend that had nothing in flight.
+    - command: HCHttpCallPerformAssertPending
+
+  suspend-with-blocking-teardown:
+    # Condition 4: arm the app's PLM suspend handler to run a blocking
+    # XTaskQueueTerminate(wait=true), mirroring PubSubRouter::HandleSuspend -> ~WebRequestManagerImpl.
+    - command: ArmSuspendQueueTerminate
+      parameters:
+        armed: true
+
+    # Condition 3 + 5: real PLM suspend. XAsync suspends the port; the provider's suspend handler
+    # tears down active connections. This is the shape that originally deadlocked: a blocking
+    # terminate that cannot return while a request is still outstanding.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+
+  verify-survived-and-drained:
+    # Reaching here means suspend completed and the title was not watchdog-terminated. NOTE this
+    # currently passes with and without PR #1009 -- see the description: a test app cannot put the
+    # queue ports into XAsync's suspended state, so the root condition is not reproduced here.
+    #
+    # The assertion is that the transfer DRAINED, not that it succeeded -- the host is deliberately
+    # unreachable, so a transport error is the expected outcome. What must not happen is the
+    # request still sitting pending, which would mean the handle never closed.
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 45000
+        allowFailedResult: true
+    - command: HCHttpCallCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: start-request-on-threadpool-queue
+  - role: DeviceA
+    block: suspend-with-blocking-teardown
+  - role: DeviceA
+    block: verify-survived-and-drained
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

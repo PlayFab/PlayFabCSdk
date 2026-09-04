@@ -228,36 +228,6 @@ Result<GetInventoryOperationStatusOperation::ResultType> GetInventoryOperationSt
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
-GetMicrosoftStoreAccessTokensOperation::GetMicrosoftStoreAccessTokensOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
-    XAsyncOperation{ std::move(rc) },
-    m_entity{ std::move(entity) },
-    m_request{ std::move(request) }
-{
-}
-
-AsyncOp<GetMicrosoftStoreAccessTokensOperation::ResultType> GetMicrosoftStoreAccessTokensOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
-{
-    return RunOperation(MakeUnique<GetMicrosoftStoreAccessTokensOperation>(std::move(entity), std::move(request), std::move(rc)));
-}
-
-HRESULT GetMicrosoftStoreAccessTokensOperation::OnStarted(XAsyncBlock* async) noexcept
-{
-    return PFInventoryGetMicrosoftStoreAccessTokensAsync(m_entity.Handle(), &m_request.Model(), async);
-}
-
-Result<GetMicrosoftStoreAccessTokensOperation::ResultType> GetMicrosoftStoreAccessTokensOperation::GetResult(XAsyncBlock* async) noexcept
-{
-    size_t resultSize;
-    RETURN_IF_FAILED(PFInventoryGetMicrosoftStoreAccessTokensGetResultSize(async, &resultSize));
-    Vector<char> resultBuffer(resultSize);
-    PFInventoryGetMicrosoftStoreAccessTokensResponse* result;
-    RETURN_IF_FAILED(PFInventoryGetMicrosoftStoreAccessTokensGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
-    return ResultType{ *result };
-}
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-
 GetTransactionHistoryOperation::GetTransactionHistoryOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
     XAsyncOperation{ std::move(rc) },
     m_entity{ std::move(entity) },

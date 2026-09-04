@@ -1063,6 +1063,7 @@ JsonValue StatisticUpdate::ToJson() const
 JsonValue StatisticUpdate::ToJson(const PFStatisticsStatisticUpdate& input)
 {
     JsonValue output = JsonValue::object();
+    JsonUtils::ObjectAddMemberArray<EntityKey>(output, "AggregationTargetEntityKeys", input.aggregationTargetEntityKeys, input.aggregationTargetEntityKeysCount);
     JsonUtils::ObjectAddMember(output, "Metadata", input.metadata);
     JsonUtils::ObjectAddMember(output, "Name", input.name);
     JsonUtils::ObjectAddMemberArray(output, "Scores", input.scores, input.scoresCount);

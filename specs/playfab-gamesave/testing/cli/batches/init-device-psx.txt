@@ -1,0 +1,55 @@
+# Initialize a PLAYSTATION device for PFGameSave testing.
+#
+# Uses PFLocalUserCreateHandleWithPSNUser to create the local user from
+# the signed-in PSN account. After authenticating with PSN, the script
+# links the PSN identity to an Xbox-backed PlayFab account so both
+# platforms share the same cloud save.
+#
+# Linking flow (per linking.md — Strategy 1, Required Primary Identity):
+#   1. Create local user from PSN identity
+#   2. Attempt login — if E_PF_ACCOUNT_NOT_FOUND, the PSN identity
+#      has never been linked; proceed to link
+#   3. Login with Xbox (the primary linking identity) with createAccount=true
+#   4. Link the PSN account to the Xbox-backed PlayFab entity
+#   5. Re-login with PSN to bind the entity to the local user
+#
+# On subsequent runs, step 2 succeeds immediately (the link is already
+# in place) and steps 3-5 are skipped.
+#
+# See: playfab-docs/player-progression/game-saves/linking.md
+#
+# ┌──────────────────────────────────────────────────────────────────┐
+# │ NOTE: The PSN commands below (PFLocalUserCreateHandleWithPSNUser,│
+# │ PFAuthenticationLoginWithPSNAsync, and                           │
+# │ PFAccountManagementClientLinkPSNAccountAsync) are ASSUMED to     │
+# │ exist in GameTestAppPS. Confirm exact command names against the  │
+# │ GameTestAppPS command registry before first use.                 │
+# └──────────────────────────────────────────────────────────────────┘
+#
+# Prerequisites:
+#   - GameTestAppPS deployed and running on a PlayStation dev kit
+#   - A PSN user signed in on the dev kit
+#   - Device connected to the controller (e.g., /controller 192.168.1.100)
+#   - The Xbox-backed PlayFab account already exists (run init-device-xbox.txt
+#     on the Xbox device first, or ensure createAccount=true on the Xbox login)
+
+XGameRuntimeInitialize
+PFInitialize
+PFServicesInitialize
+PFServiceConfigCreateHandle --endpoint=https://E18D7.playfabapi.com --titleId=E18D7
+XTaskQueueCreate --workMode=ThreadPool --completionMode=ThreadPool --setAsProcessQueue=true
+# saveFolder path assumed — adjust for PlayStation's filesystem as needed
+PFGameSaveFilesInitialize --saveFolder=C:\gamesave
+PFGameSaveFilesSetUiCallbacks --enable=true
+PFGameSaveFilesSetActiveDeviceChangedCallback
+
+# Create local user from signed-in PSN identity   [ASSUMED — verify command name]
+PFLocalUserCreateHandleWithPSNUser
+
+# Attempt to login with PSN. If the PSN identity is already linked to
+# an Xbox-backed PlayFab account, this succeeds and we're done with auth.
+# If it fails with E_PF_ACCOUNT_NOT_FOUND, run link-psn-to-xbox.txt next.
+PFLocalUserLoginAsync --createAccount=false
+
+PFGameSaveFilesAddUserWithUiAsync
+PFGameSaveFilesGetFolder

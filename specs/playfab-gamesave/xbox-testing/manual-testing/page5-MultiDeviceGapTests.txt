@@ -1,0 +1,149 @@
+Test ID	Title	Step	Instruction	Notes / xCloud
+				
+MD-GAP-001	Device A offline → Device B offline: Init handles offline gracefully			
+		1	On Device A: [LAUNCH] while online	
+		2	[CREATE-SAVE]	
+		3	[DISCONNECT] Device A	
+		4	[MODIFY-SAVE] on Device A while offline	
+		5	On Device B (also offline): [LAUNCH] with same user	
+		6	Verify Device B handles offline init gracefully — shows offline prompt, no crash	
+		7	Verify local/cloud behavior is deterministic (no unexpected state)	
+				
+				
+MD-GAP-002	Multiple files on A → B clean local: Init/download loads all expected files			
+		1	On Device A: [LAUNCH] > [MULTI-SAVE]	
+		2	[NOTE-PROGRESS]	
+		3	[CLOSE-APP] and [WAIT-UPLOAD]	
+		4	On Device B: [DELETE-LOCAL]	
+		5	[LAUNCH] on Device B (triggers init/sync)	
+		6	[VERIFY-SYNC]	
+		7	[VERIFY-SAVE] — all files from A present, no partial state	
+			Continue MD-GAP-003	
+				
+MD-GAP-003	Multiple files on A → B clean: Out-of-game Upload preserves full state			
+		1	pre req MD-GAP-002	
+		2	On Device B: [MODIFY-SAVE]	
+		3	[CLOSE-APP] on Device B and [WAIT-UPLOAD]	
+		4	On Device A: [LAUNCH]	
+		5	[VERIFY-SAVE] — upload preserved full multi-file state including B additions	
+				
+				
+MD-GAP-004	Multiple files on A → B stale local: Init applies consistent state		
+        On Device B: [LAUNCH] > [CREATE-SAVE] (multi file) > [CLOSE-APP] > [WAIT-UPLOAD] (creates stale local)	
+		1	On Device A: [LAUNCH] > sync > [MODIFY-SAVE]  (multi file, now newer than B)	
+		2	On Device B (stale): [LAUNCH] (triggers init/sync)	
+		3	Verify all multi-file changes from A applied consistently	
+		4	[VERIFY-SAVE]	
+			continue MD-GAP-005	
+				
+MD-GAP-005	Multiple files on A → B stale: Out-of-game Upload ends coherent			
+		1	Prerequisits MD-GAP-004	
+		2	On Device B: [MODIFY-SAVE]	
+		3	[CLOSE-APP] and [WAIT-UPLOAD]	
+		4	On Device A: [LAUNCH] and [VERIFY-SAVE] — latest coherent state	
+				
+MD-GAP-006	A has active --> B closes dialog (plays offline)	
+        1	On Device A, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])	
+		2	On Device B: [DELETE LOCAL]	
+		3	On Device B: [LAUNCH] (download/sync in progress)	
+		4	While B is downloading, [LAUNCH] on Device A with same user  	
+		5	On Device A, when promted with active device contention, continue with last cloud save data 	
+		6	Observe Device B — title should terminate or fail gracefully	
+		7	Verify no data corruption on either device	
+		8	[VERIFY-SAVE] on A and B	
+				
+MD-GAP-007	A has active --> device B quits 			
+		1	On Device B: [LAUNCH] > [CREATE-SAVE] > [CLOSE-APP] (triggers upload)	
+		2	Immediately [LAUNCH] on Device A with same user 	
+		3	When promted with active device contention, continue with last cloud save data 	
+		4	[VERIFY-SAVE] on A — save should be last cloud data 	
+		5	on Device B [LAUNCH] and [VERIFY SAVE], the previous data from step 1 should still be available (a conflict may occur if new data was created on Device A)	
+				
+MD-GAP-008	A acquiring active → B loses active during Download	
+        1	On Device A, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])	
+		2	On Device B: [DELETE LOCAL]	
+		3	On Device B: [LAUNCH] (download/sync in progress)	
+		4	While B is downloading, [LAUNCH] on Device A with same user  	
+		5	On Device A, when promted with active device contention, continue with last cloud save data 	
+		6	Observe Device B — title should terminate or fail gracefully	
+		7	Verify no data corruption on either device	
+		8	[VERIFY-SAVE] on A and B	
+				
+MD-GAP-009	A acquiring active → B loses active during Upload			
+		1	On Device B: [LAUNCH] > [CREATE-SAVE] > [CLOSE-APP] (triggers upload)	
+		2	Immediately [LAUNCH] on Device A with same user 	
+		3	When promted with active device contention, continue with last cloud save data 	
+		4	[VERIFY-SAVE] on A — save should be last cloud data 	
+		5	on Device B [LAUNCH] and [VERIFY SAVE], the previous data from step 1 should still be available (a conflict may occur if new data was created on Device A)	
+				
+MD-GAP-010	Local newer than cloud → conflict at Init: conflict prompt and resolution			
+		1	On Device A: [LAUNCH] > [CREATE-SAVE] > [CLOSE-APP] >  [WAIT-UPLOAD]	
+		2	[DISCONNECT] Device B	
+		3	[LAUNCH] on B offline > [CREATE-SAVE] (local is now newer than cloud)	
+		4	[CLOSE-APP]	
+		5	[RECONNECT] Device B	
+		6	[LAUNCH] on B (triggers conflict)	
+		7	Verify conflict resolution prompt appears (local newer than cloud) +  [VALIDATE‑CONFLICT‑DIALOG]	
+		C1	CASE 1: Select local save → continue MD-GAP-011	
+		C2	CASE 2: Select cloud save → continue MD-GAP-012	
+		C3	CASE 3: Play offline --> Continue MD-GAP-013	
+
+MD-GAP-011	Local newer than cloud → conflict and subsequent upload after LOCAL			
+		1	Setup: B has newer local than cloud (see MD-GAP-010 steps 1–7) C1 SELECT LOCAL	
+		2	Validate local save is present after choosing local in conflict 	
+		3	[CREATE-SAVE] > [CLOSE-APP] >  [WAIT-UPLOAD]	
+		4	On Device A: [LAUNCH] and validate all latest saves from Device B transferred corerctly  	
+				
+MD-GAP-012	Local newer than cloud → conflict and subsequent upload after CLOUD			
+		1	Setup: B has newer local than cloud (see MD-GAP-010 steps 1–7) C2 SELECT CLOUD	
+		2	Validate cloud save is present after choosing cloud in conflict 	
+		3	[CREATE-SAVE] > [CLOSE-APP] >  [WAIT-UPLOAD]	
+		4	On Device A: [LAUNCH] and validate all latest saves from Device B transferred corerctly  	
+				
+MD-GAP-013	Local newer than cloud → conflict PLAY OFFLINE 			
+		1	Setup: B has newer local than cloud (see MD-GAP-010 steps 1–7) exit dialog via close button (top right or left X) or select 'play offline') 	
+		2	Validate cloud save is not present after playing offline and previous local save from that device is loaded 	
+		3	[CREATE-SAVE] > [CLOSE-APP] 	
+		4	[LAUNCH] and validate another conflict occurs when attempting to load save 	
+		C1	CASE 1: Select local save → continue MD-GAP-011	
+		C2	CASE 2: Select cloud save → continue MD-GAP-012				
+				
+MD-GAP-014	File/Folder Deletion Propagation Across Devices			
+		1	On Device A: [LAUNCH]	
+		2	[CREATE-SAVE] — create multiple distinct save items/containers	
+		3	[NOTE-PROGRESS] — record all items created (names, count)	⚠️ Requires manual file manipulation or ShamWOW PFGSMode to target specific subfolders. Confirm Forte save structure with Forte team (item 20).
+		4	[CLOSE-APP] > [WAIT-UPLOAD]	
+		5	On Device B: [LAUNCH] > sync — verify all items from step 2 are present	
+		6	[CLOSE-APP] on Device B	
+		7	On Device A: [LAUNCH]	
+		8	[DELETE-SAVE] — delete ONE specific save item (not all local data)	
+		9	[NOTE-PROGRESS] — record which item was deleted	
+		10	[CLOSE-APP] > [WAIT-UPLOAD]	
+		11	On Device B: [LAUNCH] > sync	
+		12	Verify deleted item is GONE on Device B, all remaining items intact	
+		13	[VERIFY-SAVE]	
+				
+MD-GAP-015	Large Dataset Sync (100MB+): no timeout/stall on real hardware			
+		1	On Device A: [LAUNCH]	⚠️ Needs PG assistance on understanding how deletions occur for Forte. ShamWOW: use PlayFab > Delete.
+		2	Create large save data — ShamWOW: PFGSMode > CreateFile to generate 100MB+; Forte: extensive gameplay (confirm save exceeds 100MB)	
+		3	[NOTE-PROGRESS] 	
+		4	[CLOSE-APP] > [WAIT-UPLOAD] 	
+		5	On Device B: [DELETE-LOCAL]	
+		6	[LAUNCH] on Device B — observe download progress dialog	
+		7	Verify progress dialog shows meaningful byte counts / percentage (not frozen)	
+		8	Note download duration — flag if timeout/stall occurs	
+		9	[VERIFY-SAVE] — all data intact, no corruption	
+        
+        Forte preferred (naturally large saves). ShamWOW: seed 100MB+ via PFGSMode > CreateFile.
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				

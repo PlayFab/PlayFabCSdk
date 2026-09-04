@@ -1,0 +1,49 @@
+id: PFServices-60-Account-Link-Xbox
+name: PFServices 60 - Link and Unlink Xbox Account
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # PFAccountManagementClientLinkXboxAccountAsync requires Xbox Live token, not available in CustomID login
+  psx: ignore
+description: >
+  Links Xbox credentials then unlinks them. GDK-specific test.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      expectFailure: true  # E_PF_INVALID_PARAMS (0x89235421) - Xbox token not available in test environment
+    - command: PFAccountManagementClientUnlinkXboxAccountAsync
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

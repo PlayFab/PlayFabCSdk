@@ -1,0 +1,46 @@
+id: PFCore-15-Game-Server-Auth
+name: PFCore 15 - Authenticate Game Server
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # 0x89235402 E_PF_NOT_AUTHORIZED — game server auth needs secret key
+  psx: ignore
+description: >
+  Authenticates a game server with custom ID and verifies the entity type.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFAuthenticationAuthenticateGameServerWithCustomIdAsync
+      parameters:
+        customId: "pfcore-gameserver-test-15"
+        createAccount: true
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

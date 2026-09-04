@@ -1,0 +1,404 @@
+id: Scenario-Xbox-85-Upload-SyncFailed-Rate-Limit
+name: GameSave Xbox 85 - Upload SyncFailed Rate Limit
+tags:
+  - xboxgamesaves
+  - verified
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Rapidly upload to hit rate limits during UploadWithUiAsync (not AddUser). Verify SyncFailed callback fires during upload. Test Retry response (eventually succeeds) and Cancel response (returns error, local data intact).
+brief: SyncFailed callback on upload rate limit
+group: O. Rate Limiting / Upload Stress
+devices:
+  DeviceA:
+    engine: [xbox, pc-grts]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  init-session:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+  burn-rate-limit-retry:
+    # Set SyncFailed auto-response to Retry — should eventually succeed after backoff
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+    # Rapid uploads with 2-second intervals to burn through rate limit
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x01]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x02]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x03]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x04]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x05]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x06]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x07]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x08]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x09]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x0A]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x0B]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x0C]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Verify Retry auto-response handled SyncFailed — upload eventually succeeds
+    - command: PFGameSaveFilesGetFolder
+  reset-for-cancel-test:
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5000
+  burn-rate-limit-cancel:
+    # Set SyncFailed auto-response to Cancel — should return error HRESULT
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    # Rapid uploads with 2-second intervals to trigger SyncFailed during upload
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x11]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x12]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x13]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x14]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x15]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x16]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x17]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x18]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x19]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x1A]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x1B]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: SmokeDelay
+      parameters:
+        durationMs: 2000
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/save.dat
+            bytes: 1024
+            pattern: [0x1C]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Verify Cancel response returned error, local data still intact
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+executionOrder:
+  - role: DeviceA
+    block: init-session
+  - role: DeviceA
+    block: burn-rate-limit-retry
+  - role: DeviceA
+    block: reset-for-cancel-test
+  - role: DeviceA
+    block: burn-rate-limit-cancel
+cleanup:
+  DeviceA:
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

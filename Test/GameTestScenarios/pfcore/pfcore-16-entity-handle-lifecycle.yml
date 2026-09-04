@@ -1,0 +1,55 @@
+id: PFCore-16-Entity-Handle-Lifecycle
+name: PFCore 16 - Entity Handle Lifecycle
+tags:
+  - pfcore
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Gets entity handle from login, duplicates it, reads properties from
+  both handles, closes both. Verifies no crashes.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserLoginAsync
+
+  test:
+    - command: PFLocalUserTryGetEntityHandle
+    - command: PFEntityGetEntityKey
+    - command: PFEntityGetAPIEndpoint
+    - command: PFEntityGetTitleId
+    - command: PFEntityDuplicateHandle
+    - command: PFEntityGetEntityKey
+    - command: PFEntityCloseHandle
+    - command: PFEntityCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

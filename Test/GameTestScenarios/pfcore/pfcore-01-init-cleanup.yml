@@ -1,0 +1,39 @@
+id: PFCore-01-Init-Cleanup
+name: PFCore 01 - Init, Services Init, and Cleanup Lifecycle
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Verifies PFInitialize and PFServicesInitialize succeed,
+  then PFServicesUninitializeAsync and PFUninitializeAsync complete cleanly.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  test:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFInitialize
+    - command: PFServicesInitialize
+
+executionOrder:
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

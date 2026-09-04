@@ -1,0 +1,101 @@
+id: LHC-04-Request-Configuration-Round-Trips
+name: LHC 04 - Request Configuration Round-Trips
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Create a call handle and verify every request-side setter/getter pair round-trips
+  correctly: headers by name and index, timeout, retry settings, buffer size,
+  dynamic body tracking, and progress report function.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  request-config:
+    - command: HCInitialize
+
+    - command: HCHttpCallCreate
+
+    # ── Headers ──
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "Content-Type"
+        headerValue: "application/json"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "X-Custom"
+        headerValue: "test-value"
+    - command: HCHttpCallRequestGetNumHeaders
+    - command: HCHttpCallRequestGetHeader
+      parameters:
+        headerName: "Content-Type"
+    - command: HCHttpCallRequestGetHeader
+      parameters:
+        headerName: "X-Custom"
+    - command: HCHttpCallRequestGetHeaderAtIndex
+      parameters:
+        headerIndex: 0
+    - command: HCHttpCallRequestGetHeaderAtIndex
+      parameters:
+        headerIndex: 1
+
+    # ── Timeout ──
+    - command: HCHttpCallRequestSetTimeout
+      parameters:
+        timeoutInSeconds: 45
+    - command: HCHttpCallRequestGetTimeout
+
+    # ── Retry allowed ──
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    - command: HCHttpCallRequestGetRetryAllowed
+
+    # ── Retry delay ──
+    - command: HCHttpCallRequestSetRetryDelay
+      parameters:
+        retryDelayInSeconds: 5
+    - command: HCHttpCallRequestGetRetryDelay
+
+    # ── Timeout window ──
+    - command: HCHttpCallRequestSetTimeoutWindow
+      parameters:
+        timeoutWindowInSeconds: 120
+    - command: HCHttpCallRequestGetTimeoutWindow
+
+    # ── Retry cache ID ──
+    - command: HCHttpCallRequestSetRetryCacheId
+      parameters:
+        retryAfterCacheId: 42
+    - command: HCHttpCallRequestGetRetryCacheId
+
+    # ── Max receive buffer size ──
+    - command: HCHttpCallRequestSetMaxReceiveBufferSize
+      parameters:
+        bufferSizeInBytes: 65536
+    - command: HCHttpCallRequestGetMaxReceiveBufferSize
+
+    # ── Dynamic body size tracking ──
+    - command: HCHttpCallRequestSetDynamicSize
+      parameters:
+        dynamicBodySize: 1024
+    - command: HCHttpCallRequestAddDynamicBytesWritten
+      parameters:
+        bytesWritten: 256
+    - command: HCHttpCallRequestAddDynamicBytesWritten
+      parameters:
+        bytesWritten: 128
+    - command: HCHttpCallRequestGetDynamicBytesWritten
+
+    # ── Cleanup ──
+    - command: HCHttpCallCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: request-config
+cleanup:

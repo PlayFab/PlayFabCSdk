@@ -134,17 +134,21 @@ UniquePtr<T> MakeUnique(TArgs&&... args)
 {
     // allocate
     Allocator<T> alloc{};
-    auto mem = alloc.allocate(1);
+    auto* mem = alloc.allocate(1);
 
     // construct (failure here only requires deallocation)
-    auto obj = new (mem) T(std::forward<TArgs>(args)...);
-
-    // destruction is required from here on
-    // pass ownership to correctly typed smart pointer
-    UniquePtr<T> ptr{ obj };
-
-    // success!
-    return ptr;
+    try
+    {
+        auto* obj = new (mem) T(std::forward<TArgs>(args)...);
+        // destruction is required from here on
+        // pass ownership to correctly typed smart pointer
+        return UniquePtr<T>{ obj };
+    }
+    catch (...)
+    {
+        alloc.deallocate(mem, 1);
+        throw;
+    }
 }
 
 }

@@ -389,9 +389,13 @@ void InventoryTests::TestGetInventoryItems(TestContext& tc)
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
+        // Inventory writes are eventually consistent.
+        Platform::Sleep(5000);
+
         GetInventoryItemsOperation::RequestType request;
         request.SetCollectionId(kCollectionId);
         request.SetEntity(DefaultTitlePlayer().EntityKey());
+        request.SetCount(1);
 
         return GetInventoryItemsOperation::Run(DefaultTitlePlayer(), request, RunContext());
     })
@@ -418,27 +422,7 @@ void InventoryTests::TestGetInventoryItems(TestContext& tc)
     });
 }
 
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-void InventoryTests::TestGetMicrosoftStoreAccessTokens(TestContext& tc)
-{
-    // TODO: This test is currently failing due to the PlayFab service currently being reworked
-    tc.Skip();
-    /*GetMicrosoftStoreAccessTokensOperation::Run(DefaultTitlePlayer(), GetMicrosoftStoreAccessTokensOperation::RequestType{}, RunContext()).Then([&](Result<GetMicrosoftStoreAccessTokensOperation::ResultType> result) -> Result<void>
-    {
-        RETURN_IF_FAILED_PLAYFAB(result);
-        
-        auto& model = result.Payload().Model();
-        tc.AssertTrue(model.collectionsAccessToken, "collectionsAccessToken");
-        tc.AssertTrue(model.collectionsAccessTokenExpirationDate, "collectionsAccessTokenExpirationDate");
 
-        return S_OK;
-    })
-    .Finally([&](Result<void> result)
-    {
-        tc.EndTest(std::move(result));
-    });*/
-}
-#endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void InventoryTests::TestGetTransactionHistory(TestContext& tc)

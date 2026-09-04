@@ -6,12 +6,16 @@ items:
   href: onboarding.md
 - name: Quickstart
   href: quickstart.md
+- name: Account Linking
+  href: linking.md
 - name: October 2025 GDK Implementation
   href: october-2025-gdk-changes.md
 - name: Steam Deck Implementation
   href: steam-deck-implementation.md
 - name: Conflicts
   href: conflicts.md
+- name: UI Callbacks
+  href: ui-callbacks.md
 - name: Offline Mode
   href: offline.md
 - name: Active Device Changes

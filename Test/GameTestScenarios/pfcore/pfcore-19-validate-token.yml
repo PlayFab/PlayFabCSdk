@@ -1,0 +1,48 @@
+id: PFCore-19-Validate-Token
+name: PFCore 19 - Validate Entity Token
+tags:
+  - pfcore
+platforms:
+  xbox: failing  # 0x89235478 — handler sends placeholder token string; needs PFEntityGetEntityTokenAsync to get real token
+  pc-grts: ignore
+  pc-inproc: failing  # 0x89235478 — handler sends placeholder token string; needs PFEntityGetEntityTokenAsync to get real token
+  psx: ignore
+description: >
+  Validates the current entity token via PFAuthenticationValidateEntityTokenAsync.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserLoginAsync
+
+  test:
+    - command: PFLocalUserTryGetEntityHandle
+    - command: PFAuthenticationValidateEntityTokenAsync
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

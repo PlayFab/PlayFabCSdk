@@ -39,8 +39,9 @@ PF_API PFExperimentationGetTreatmentAssignmentAsync(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_EXPERIMENTATION_CLIENT_TIMEOUT,
 /// E_PF_EXPERIMENTATION_TREATMENT_ASSIGNMENT_DISABLED, E_PF_EXPERIMENTATION_TREATMENT_ASSIGNMENT_FAILED,
-/// E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_ENTITY_TYPE or any of the global PlayFab Service
-/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_ENTITY_TYPE, E_PF_PRODUCT_DISABLED_FOR_TITLE or
+/// any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFExperimentationGetTreatmentAssignmentGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -58,8 +59,9 @@ PF_API PFExperimentationGetTreatmentAssignmentGetResultSize(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_EXPERIMENTATION_CLIENT_TIMEOUT,
 /// E_PF_EXPERIMENTATION_TREATMENT_ASSIGNMENT_DISABLED, E_PF_EXPERIMENTATION_TREATMENT_ASSIGNMENT_FAILED,
-/// E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_ENTITY_TYPE or any of the global PlayFab Service
-/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_ENTITY_TYPE, E_PF_PRODUCT_DISABLED_FOR_TITLE or
+/// any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

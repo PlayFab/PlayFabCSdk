@@ -1,0 +1,54 @@
+id: PFCore-26-Telemetry-Entity
+name: PFCore 26 - Telemetry Pipeline with Entity
+tags:
+  - pfcore
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  After login, creates a telemetry pipeline with entity,
+  emits events, and closes the pipeline.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserLoginAsync
+
+  test:
+    - command: PFLocalUserTryGetEntityHandle
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithEntity
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom.playfab.events"
+        eventName: "pfcore_test_telemetry_entity"
+    - command: PFEventPipelineCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

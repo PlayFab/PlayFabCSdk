@@ -161,7 +161,7 @@ public:
     static const char* Name(E value) noexcept
     {
         auto i{ static_cast<size_t>(value) };
-        if (i > maxValue)
+        if (i > maxValue || valueNames[i].length() == 0)
         {
             assert(false);
             return nullptr;

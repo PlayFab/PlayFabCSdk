@@ -1,0 +1,12 @@
+# Upload golden-path: write test data and upload to cloud.
+# Assumes the device has already been initialized (see init-device.txt).
+#
+# This creates a 10 KB binary file and uploads it, then releases
+# the active-device lock so another device can download.
+
+DeleteSaveRoot
+WriteGameSaveData
+PFGameSaveFilesSetSaveDescriptionAsync --description=CLI manual upload
+PFGameSaveFilesUploadWithUiAsync --mode=ReleaseDeviceAsActive
+PFGameSaveFilesGetSaveDescription
+CaptureSaveContainerSnapshot --slot=left

@@ -1,0 +1,51 @@
+id: PFCore-30-Pipeline-Duplicate
+name: PFCore 30 - Event Pipeline Handle Duplicate and Close
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # Test infra: handler tracks one pipeline handle; needs dual-handle support for original + duplicate lifecycle
+  psx: ignore
+description: >
+  Creates a pipeline, duplicates the handle, closes the original,
+  emits from the duplicate, then closes the duplicate.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFEventPipelineCreateTelemetryPipelineHandleWithKey
+    - command: PFEventPipelineDuplicateHandle
+    - command: PFEventPipelineCloseHandle
+    - command: PFEventPipelineEmitEvent
+      parameters:
+        eventNamespace: "custom.playfab.events"
+        eventName: "pfcore_test_duplicate"
+    - command: PFEventPipelineCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

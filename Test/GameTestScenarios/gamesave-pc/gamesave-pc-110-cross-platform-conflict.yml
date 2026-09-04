@@ -1,0 +1,416 @@
+id: Scenario-PC-110-Cross-Platform-Conflict
+name: GameSave PC 110 - Cross-Platform Conflict Resolution
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Cross-engine conflict resolution. PC seeds cloud, Xbox creates divergent local data offline, PC advances cloud, Xbox reconnects and triggers conflict. Verifies conflict detection and resolution across GRTS and in-proc engine boundaries.
+brief: Cross-platform conflict detection and resolution across engines
+group: U. Cross-Platform
+devices:
+  # PC runs in-proc game save engine
+  DeviceA: {}
+  # Xbox runs GRTS game save engine
+  DeviceB:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  setup-pc-seeds-cloud:
+    # PC (in-proc) uploads baseline data to seed the cloud
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    # PC auth - persisted local ID with CustomID login
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: save/data.bin
+            bytes: 10240
+            pattern: [0xAA, 0xAA, 0xAA, 0xAA]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  xbox-sync-and-offline-diverge:
+    # Xbox (GRTS) syncs cloud data and commits to GRTS internal storage (PGS)
+    # via Upload. This establishes the "committed" baseline. DeviceB process stays
+    # alive after this block — SDK active, GRTS tracking. The divergent write and
+    # Terminate happen in a later block (after DeviceA advances cloud).
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    # Handle stale GRTS manifest from prior runs — if GRTS fires a spurious
+    # conflict during sync, UseCloud downloads the cloud baseline properly.
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Sync PC's cloud data [0xAA]
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Upload synced data to commit to GRTS internal storage (PGS).
+    # This establishes the "committed" baseline that GRTS compares against.
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Block ends. DeviceB process stays alive — SDK active, GRTS tracking.
+  pc-advances-cloud:
+    # PC (in-proc) uploads newer data, advancing the cloud past Xbox's version.
+    # DeviceB is still alive from Phase 2 — SDK active, GRTS tracking, clean state.
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    # PC auth - persisted local ID with CustomID login
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: save/data.bin
+            bytes: 10240
+            pattern: [0xCC, 0xCC, 0xCC, 0xCC]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    # Disable network AFTER DeviceA finishes — DeviceB writes DIVERGENT offline.
+    # This prevents GRTS from uploading DeviceB's dirty data during Phase 3b.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: DisableNetwork
+  # ==========================================================================
+  # Phase 3b: DeviceB writes DIVERGENT data offline, then Terminate
+  #
+  # DeviceB's process is still alive from Phase 2 (no teardown was done).
+  # Network is disabled (end of Phase 3). DeviceB writes DIVERGENT [0xBB] to
+  # save folder. GRTS detects dirty data (save folder ≠ PGS committed state)
+  # but can't upload (offline) -> deferred dirty state.
+  # Then Terminate kills the process. GRTS packages the dirty change.
+  #
+  # Pattern from test 125: Write AFTER upload + Terminate = reliable dirty state.
+  # ==========================================================================
+  offline-write-and-terminate:
+    # Write DIVERGENT data [0xBB] while offline — save folder now differs
+    # from PGS committed state (0xAA from Phase 2 upload).
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: save/data.bin
+            bytes: 10240
+            pattern: [0xBB, 0xBB, 0xBB, 0xBB]
+    # Give GRTS time to detect the save folder change
+    - command: SmokeDelay
+      parameters:
+        durationMs: 3000
+    # Terminate process — GRTS detects exit, finds dirty data, can't upload
+    # (offline) -> deferred dirty state
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Terminate
+    # Give GRTS time to process the termination and defer the upload
+    - command: SmokeDelay
+      parameters:
+        durationMs: 10000
+  xbox-reconnect-resolve-conflict:
+    # Xbox reconnects — GRTS has deferred dirty state (0xBB) vs cloud (0xCC).
+    # Relaunch DeviceB offline, then EnableNetwork just before auth (Rule 5).
+    # GRTS detects version mismatch on sync -> CONFLICT -> UseLocal.
+    #
+    # Relaunch the terminated DeviceB process (offline — network disabled)
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Relaunch
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    # Do NOT delete local folder — GRTS needs to find stale local [0xBB] data to trigger conflict
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseLocal
+    # Enable network as late as possible — auth needs it, but keep the window
+    # before AddUser tight so GRTS can't race-upload dirty data (Rule 5).
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    # XAL needs ~3s after network restored before Xbox Live calls (Rule 11)
+    - command: SmokeDelay
+      parameters:
+        durationMs: 3000
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Conflict fires — local [0xBB] vs cloud [0xCC]; auto-resolve UseLocal (Xbox's local wins)
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # After UseLocal, PGS manifest synced to cloud version but save folder has 0xBB.
+    # Re-write 0xBB to mark data dirty vs PGS, enabling Upload to push it to cloud.
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: save/data.bin
+            bytes: 10240
+            pattern: [0xBB, 0xBB, 0xBB, 0xBB]
+    # Upload resolved state so cloud reflects Xbox's local data
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  pc-verify-resolution:
+    # PC re-syncs and verifies resolved data matches Xbox's local data [0xBB]
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    # PC auth - persisted local ID with CustomID login
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    # Verify resolved state matches Xbox's post-conflict snapshot
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+        ignoreEmptyDirectories: true
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+executionOrder:
+  - role: DeviceA
+    block: setup-pc-seeds-cloud
+  - role: DeviceB
+    block: xbox-sync-and-offline-diverge
+  - role: DeviceA
+    block: pc-advances-cloud
+  - role: DeviceB
+    block: offline-write-and-terminate
+  - role: DeviceB
+    block: xbox-reconnect-resolve-conflict
+  - role: DeviceA
+    block: pc-verify-resolution
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  DeviceB:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

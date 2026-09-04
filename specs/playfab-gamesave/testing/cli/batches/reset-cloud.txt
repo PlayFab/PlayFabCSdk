@@ -1,0 +1,5 @@
+# Reset cloud state for the current user.
+# WARNING: This deletes all cloud save data for the authenticated user.
+# Use this to start a test from a clean slate.
+
+PFGameSaveFilesResetCloudAsync

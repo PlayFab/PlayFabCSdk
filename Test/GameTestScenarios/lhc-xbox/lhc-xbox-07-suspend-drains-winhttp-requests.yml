@@ -1,0 +1,137 @@
+id: LHC-Xbox-07-Suspend-Drains-Winhttp-Requests
+name: LHC Xbox 07 - Suspend Drains In-Flight WinHTTP Requests Before Destroying Sessions
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Covers PLM suspend teardown on the WinHTTP provider, which is now the HTTP provider on GDK
+  console. Previously console selected a different provider, so the WinHTTP suspend path was
+  never exercised on Xbox by these tests.
+
+  Quick Resume requires that every network resource is destroyed before the process is
+  snapshotted: a restored socket or WinHTTP handle is not merely stale, the gen9 network
+  stack cannot recover it. So suspend must not be fire-and-forget. WinHttpProvider::Suspend
+  blocks new requests, force-closes every live connection, waits for each to report closed,
+  and only then destroys the WinHTTP session handles.
+
+  This scenario leaves a request genuinely in flight across a real PLM suspend/resume and
+  asserts the title survives and the request resolves. A title that is watchdog-terminated
+  during suspend fails at the Suspend step, which is the primary signal.
+
+  Note the request is expected to FAIL rather than succeed: suspend deliberately tears down
+  in-flight work. The contract is that it completes deterministically instead of hanging, and
+  that the title suspends within its budget.
+brief: In-flight request is torn down deterministically across PLM suspend
+group: B. Suspend / PLM
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  start-request:
+    - command: HCInitialize
+    - command: HCIsInitialized
+
+    # ThreadPool on both ports: unlike the parked-queue scenario, the point here is the
+    # provider's own teardown, not the caller's dispatch behaviour.
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # A deliberately slow endpoint. This is essential: pointing at a normal endpoint makes the
+    # test meaningless, because the request completes in well under a second while the suspend
+    # has to travel controller -> xbapp -> console and lands afterwards. The request is then
+    # already finished, nothing is in flight, and the scenario passes without ever exercising
+    # the drain. The delay must comfortably exceed the suspend round trip.
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/slow"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "slow-response"
+        delayMs: 30000
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/slow"
+    # Retries would let the call restart after resume and mask whether suspend actually tore
+    # the request down.
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+
+    # Leaves the request in flight; does not wait.
+    - command: HCHttpCallPerformStart
+
+    # Confirm the request is actually still outstanding before suspending. Without this the
+    # scenario cannot tell "suspend drained an in-flight request" from "there was nothing to
+    # drain", which is exactly how it used to pass while testing nothing.
+    - command: HCHttpCallPerformAssertPending
+
+  suspend-resume:
+    # The real assertion. If the drain deadlocks or never completes, the title exceeds its
+    # suspend budget and the watchdog kills it, failing this step.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+
+  verify-resolved:
+    # Must resolve rather than hang. The request was still outstanding at the suspend boundary
+    # (asserted above), so this genuinely exercises the drain. Whether it comes back as a
+    # transport failure from the torn-down connection or as a completed response is timing
+    # dependent and not asserted; allowFailedResult accepts either. Still being pending at the
+    # deadline means the drain never completed, and fails this step.
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 45000
+        allowFailedResult: true
+    - command: HCHttpCallCloseHandle
+
+  verify-usable-after-resume:
+    # The provider must be fully functional after resume: sessions were destroyed during
+    # suspend and have to be lazily recreated on the next request. This also proves the
+    # suspend gate was cleared, since a stuck m_isSuspended would fail every request from
+    # here on.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: start-request
+  - role: DeviceA
+    block: suspend-resume
+  - role: DeviceA
+    block: verify-resolved
+  - role: DeviceA
+    block: verify-usable-after-resume
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle
+    # Release the controller-hosted slow endpoint.
+    - command: StopHttpTestServer

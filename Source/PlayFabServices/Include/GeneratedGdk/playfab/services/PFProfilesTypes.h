@@ -27,6 +27,17 @@ enum class PFProfilesEffectType : uint32_t
 };
 
 /// <summary>
+/// StatisticAggregationMethod enum.
+/// </summary>
+enum class PFStatisticAggregationMethod : uint32_t
+{
+    Last,
+    Min,
+    Max,
+    Sum
+};
+
+/// <summary>
 /// PFProfilesGetEntityProfileRequest data model. Given an entity type and entity identifier will retrieve
 /// the profile from the entity store. If the profile being retrieved is the caller's, then the read operation
 /// is consistent, if not it is an inconsistent read. An inconsistent read means that we do not guarantee
@@ -58,6 +69,11 @@ typedef struct PFProfilesGetEntityProfileRequest
     /// entity.
     /// </summary>
     _Maybenull_ PFEntityKey const* entity;
+
+    /// <summary>
+    /// Determines whether the entity statistics will be returned in the entity profile. Default is false.
+    /// </summary>
+    bool includeStatistics;
 
 } PFProfilesGetEntityProfileRequest;
 
@@ -181,6 +197,40 @@ typedef struct PFEntityStatisticValue
 } PFEntityStatisticValue;
 
 /// <summary>
+/// PFStatisticColumn data model.
+/// </summary>
+typedef struct PFStatisticColumn
+{
+    /// <summary>
+    /// Aggregation method for calculating new value of a statistic.
+    /// </summary>
+    PFStatisticAggregationMethod aggregationMethod;
+
+    /// <summary>
+    /// Name of the statistic column, as originally configured.
+    /// </summary>
+    _Null_terminated_ const char* name;
+
+} PFStatisticColumn;
+
+/// <summary>
+/// PFStatisticColumnCollection data model.
+/// </summary>
+typedef struct PFStatisticColumnCollection
+{
+    /// <summary>
+    /// (Optional) Columns for the statistic defining the aggregation method for each column.
+    /// </summary>
+    _Maybenull_ _Field_size_(columnsCount) PFStatisticColumn const* const* columns;
+
+    /// <summary>
+    /// Count of columns
+    /// </summary>
+    uint32_t columnsCount;
+
+} PFStatisticColumnCollection;
+
+/// <summary>
 /// PFProfilesEntityProfileBody data model.
 /// </summary>
 typedef struct PFProfilesEntityProfileBody
@@ -274,6 +324,16 @@ typedef struct PFProfilesEntityProfileBody
     uint32_t statisticsCount;
 
     /// <summary>
+    /// (Optional) A mapping of statistic name to the columns defined in the corresponding definition.
+    /// </summary>
+    _Maybenull_ _Field_size_(statisticsColumnDetailsCount) struct PFStatisticColumnCollectionDictionaryEntry const* statisticsColumnDetails;
+
+    /// <summary>
+    /// Count of statisticsColumnDetails
+    /// </summary>
+    uint32_t statisticsColumnDetailsCount;
+
+    /// <summary>
     /// The version number of the profile in persistent storage at the time of the read. Used for optional
     /// optimistic concurrency during update.
     /// </summary>
@@ -326,6 +386,11 @@ typedef struct PFProfilesGetEntityProfilesRequest
     /// Count of entities
     /// </summary>
     uint32_t entitiesCount;
+
+    /// <summary>
+    /// Determines whether the entity statistics will be returned in the entity profile. Default is false.
+    /// </summary>
+    bool includeStatistics;
 
 } PFProfilesGetEntityProfilesRequest;
 
@@ -534,6 +599,15 @@ typedef struct PFEntityStatisticValueDictionaryEntry
     _Null_terminated_ const char* key;
     PFEntityStatisticValue const* value;
 } PFEntityStatisticValueDictionaryEntry;
+
+/// <summary>
+/// Dictionary entry for an associative array with PFProfilesStatisticColumnCollection values.
+/// </summary>
+typedef struct PFStatisticColumnCollectionDictionaryEntry
+{
+    _Null_terminated_ const char* key;
+    PFStatisticColumnCollection const* value;
+} PFStatisticColumnCollectionDictionaryEntry;
 
 #pragma pop_macro("IN")
 

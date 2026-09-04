@@ -1,0 +1,10 @@
+# Download and verify: pull cloud data to local and compare snapshots.
+# Assumes the device has already been initialized (see init-device.txt)
+# and that a "left" snapshot was captured on the uploading device.
+#
+# This captures a "right" snapshot and compares the two.
+
+PFGameSaveFilesAddUserWithUiAsync
+PFGameSaveFilesGetFolder
+CaptureSaveContainerSnapshot --slot=right
+CompareSaveContainerSnapshots --ignoreTimestamps=true

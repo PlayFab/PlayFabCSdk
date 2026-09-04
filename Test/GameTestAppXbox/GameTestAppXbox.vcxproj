@@ -1,0 +1,801 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Gaming.Xbox.Scarlett.x64">
+      <Configuration>Debug</Configuration>
+      <Platform>Gaming.Xbox.Scarlett.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Profile|Gaming.Xbox.Scarlett.x64">
+      <Configuration>Profile</Configuration>
+      <Platform>Gaming.Xbox.Scarlett.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Gaming.Xbox.Scarlett.x64">
+      <Configuration>Release</Configuration>
+      <Platform>Gaming.Xbox.Scarlett.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Gaming.Xbox.XboxOne.x64">
+      <Configuration>Release</Configuration>
+      <Platform>Gaming.Xbox.XboxOne.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Profile|Gaming.Xbox.XboxOne.x64">
+      <Configuration>Profile</Configuration>
+      <Platform>Gaming.Xbox.XboxOne.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Gaming.Xbox.XboxOne.x64">
+      <Configuration>Debug</Configuration>
+      <Platform>Gaming.Xbox.XboxOne.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Profile|x64">
+      <Configuration>Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <RootNamespace>GameTestAppXbox</RootNamespace>
+    <ProjectGuid>{20E1108F-9370-4685-B6BA-EB5D32EE3E9C}</ProjectGuid>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <Keyword>Win32Proj</Keyword>
+    <!-- - - - -->
+    <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
+    <TargetRuntime>Native</TargetRuntime>
+    <!-- Xbox.LibHttpClient is deliberately NOT listed here, and LibHttpClientBuildFromSource
+         is set below. That GDK extension ships a prebuilt libHttpClient.GDK.dll. Removing it
+         from this list alone is NOT enough: Xbox.Services.API.C\ExtensionLibrary.props
+         auto-imports Xbox.LibHttpClient\libHttpClientLibrary.props unless
+         LibHttpClientBuildFromSource is set, which injects libHttpClient.GDK.lib into the link
+         and prepends the GDK's LHC headers. The result was that the EXE's HCHttpCall* imports
+         bound to the prebuilt DLL rather than the repo-built one, so libHttpClient changes were
+         unreachable and untestable on console.
+
+         Xbox.XCurl.API is also absent: GDK now uses the WinHTTP provider (see
+         PlatformComponents_GDK.cpp), the Curl sources are no longer built for GDK, and nothing
+         loads XCurl.dll. -->
+    <GDKExtLibNames>Xbox.Services.API.C;Xbox.Game.Chat.2.Cpp.API;PlayFab.Multiplayer.Cpp;PlayFab.Party.Cpp;PlayFab.PartyXboxLive.Cpp</GDKExtLibNames>
+    <!-- Use the repo-built libHttpClient (Out\x64\$(Configuration)\libHttpClient.GDK.nosuffix)
+         instead of the GDK's prebuilt extension. Must be set before the GDK extension props
+         are imported. -->
+    <LibHttpClientBuildFromSource>true</LibHttpClientBuildFromSource>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <!-- Configuration groups before imports so PlatformToolset (if set by VS retarget) is
+       visible when Microsoft.Cpp.Default.props resolves VCToolsVersion. -->
+  <!-- Xbox One configurations -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.XboxOne.x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.XboxOne.x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.XboxOne.x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <!-- Scarlett configurations -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.Scarlett.x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.Scarlett.x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.Scarlett.x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <!-- Desktop configurations -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="..\..\Build\PlayFab.C.GDK.props" />
+  <!-- libHttpClient.GDK.props (imported via PlayFab.C.GDK.props) hardcodes WindowsTargetPlatformVersion
+       to 10.0.19041.0 for non-Scarlett platforms. The GDK 251002 Xbox One toolset requires >= 10.0.22000.0.
+       Override TargetPlatformVersion early to pass the GDK SDK version check. -->
+  <PropertyGroup Condition="'$(Platform)'=='Gaming.Xbox.XboxOne.x64'">
+    <_FixedSDKVersion>$(_LatestWindowsTargetPlatformVersion)</_FixedSDKVersion>
+    <WindowsTargetPlatformVersion>$(_FixedSDKVersion)</WindowsTargetPlatformVersion>
+    <TargetPlatformVersion>$(_FixedSDKVersion)</TargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(PlayFabBuildRoot)\PlayFabCore.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabGameSave.import.props" />
+  <Import Project="$(PlayFabBuildRoot)\PlayFabSharedInternal.import.props" />
+  <!-- For Xbox console platforms, remove project references added by import.props (those projects
+       only build for x64) and instead link directly against the Desktop-built import
+       libs. The Desktop DLLs work fine on Xbox. Suppress the PreBuildEvent that tries to build
+       libHttpClient for the Xbox platform. -->
+  <ItemGroup Condition="'$(Platform)'!='x64'">
+    <ProjectReference Remove="$(PlayFabBuildRoot)\PlayFabCore.GDK\PlayFabCore.GDK.vcxproj" />
+    <ProjectReference Remove="$(PlayFabBuildRoot)\PlayFabGameSave.GDK\PlayFabGameSave.GDK.vcxproj" />
+    <ProjectReference Remove="$(PlayFabBuildRoot)\PlayFabSharedInternal.GDK.143\PlayFabSharedInternal.GDK.143.vcxproj" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Platform)'!='x64'">
+    <!-- Redirect output dirs to Desktop-built libs so linker finds the import libs -->
+    <PlayFabCoreOutDir>$(PlayFabOutRoot)\x64\$(Configuration)\PlayFabCore.GDK\</PlayFabCoreOutDir>
+    <PlayFabGameSaveOutDir>$(PlayFabOutRoot)\x64\$(Configuration)\PlayFabGameSave.GDK\</PlayFabGameSaveOutDir>
+    <PlayFabServicesOutDir>$(PlayFabOutRoot)\x64\$(Configuration)\PlayFabServices.GDK\</PlayFabServicesOutDir>
+    <PlayFabSharedInternalOutDir>$(PlayFabOutRoot)\x64\$(Configuration)\PlayFabSharedInternal.GDK.143\</PlayFabSharedInternalOutDir>
+    <HCOutDir Condition="'$(LibHttpClientIncludeSuffix)' != 'false'">$(HCOutRoot)\x64\$(Configuration)\libHttpClient.GDK\</HCOutDir>
+    <HCOutDir Condition="'$(LibHttpClientIncludeSuffix)' == 'false'">$(HCOutRoot)\x64\$(Configuration)\libHttpClient.GDK.nosuffix\</HCOutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'!='x64'">
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(PlayFabCoreOutDir);$(PlayFabGameSaveOutDir);$(PlayFabSharedInternalOutDir);$(HCOutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PlayFabCore.lib;PlayFabGameSave.lib;PlayFabSharedInternal.GDK.143.lib;libHttpClient.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <!-- Property sheets -->
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.XboxOne.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.Scarlett.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.XboxOne.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.Scarlett.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.XboxOne.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.Scarlett.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <!-- Library paths: Xbox console platforms -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.XboxOne.x64'">
+    <LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Console_SdkIncludeRoot);$(IncludePath);$(HCPublicIncludeDir)</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.Scarlett.x64'">
+    <LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Console_SdkIncludeRoot);$(IncludePath);$(HCPublicIncludeDir)</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.XboxOne.x64'">
+    <LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Console_SdkIncludeRoot);$(IncludePath);$(HCPublicIncludeDir)</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.Scarlett.x64'">
+    <LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Console_SdkIncludeRoot);$(IncludePath);$(HCPublicIncludeDir)</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.XboxOne.x64'">
+    <LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Console_SdkIncludeRoot);$(IncludePath);$(HCPublicIncludeDir)</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.Scarlett.x64'">
+    <LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(Console_SdkIncludeRoot);$(IncludePath);$(HCPublicIncludeDir)</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <!-- Library paths: Desktop platform -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <!-- Compile/Link: Xbox console Release -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.XboxOne.x64'">
+    <Link>
+      <AdditionalDependencies>uuid.lib;kernel32.lib;$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Platform\Xbox\;$(ProjectDir)..\GameTestAppShared\;$(ProjectDir)..\GameTestAppShared\Misc\;..\..\Samples\Kits\LiveTK;..\..\Samples\Kits\DirectXTK12\Inc;..\..\Samples\Kits\ATGTK;..\..\Samples\Kits\ATGTelemetry\GDK;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\GeneratedGdk\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\GDK\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Source\Api\;$(NLohmannIncludeDir)\;$(PlayFabExternalDir)\libarchive\libarchive\;$(PlayFabExternalDir)\libarchive.config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;PF_GAMESAVE_USE_GDK_PROVIDER;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5204</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.Scarlett.x64'">
+    <Link>
+      <AdditionalDependencies>uuid.lib;kernel32.lib;$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Platform\Xbox\;$(ProjectDir)..\GameTestAppShared\;$(ProjectDir)..\GameTestAppShared\Misc\;..\..\Samples\Kits\LiveTK;..\..\Samples\Kits\DirectXTK12\Inc;..\..\Samples\Kits\ATGTK;..\..\Samples\Kits\ATGTelemetry\GDK;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\GeneratedGdk\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\GDK\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Source\Api\;$(NLohmannIncludeDir)\;$(PlayFabExternalDir)\libarchive\libarchive\;$(PlayFabExternalDir)\libarchive.config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;PF_GAMESAVE_USE_GDK_PROVIDER;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5204</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <!-- Compile/Link: Xbox console Profile -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.XboxOne.x64'">
+    <Link>
+      <AdditionalDependencies>uuid.lib;kernel32.lib;$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Platform\Xbox\;$(ProjectDir)..\GameTestAppShared\;$(ProjectDir)..\GameTestAppShared\Misc\;..\..\Samples\Kits\LiveTK;..\..\Samples\Kits\DirectXTK12\Inc;..\..\Samples\Kits\ATGTK;..\..\Samples\Kits\ATGTelemetry\GDK;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\GeneratedGdk\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\GDK\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Source\Api\;$(NLohmannIncludeDir)\;$(PlayFabExternalDir)\libarchive\libarchive\;$(PlayFabExternalDir)\libarchive.config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;PROFILE;PF_GAMESAVE_USE_GDK_PROVIDER;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5204</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.Scarlett.x64'">
+    <Link>
+      <AdditionalDependencies>uuid.lib;kernel32.lib;$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Platform\Xbox\;$(ProjectDir)..\GameTestAppShared\;$(ProjectDir)..\GameTestAppShared\Misc\;..\..\Samples\Kits\LiveTK;..\..\Samples\Kits\DirectXTK12\Inc;..\..\Samples\Kits\ATGTK;..\..\Samples\Kits\ATGTelemetry\GDK;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\GeneratedGdk\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\GDK\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Source\Api\;$(NLohmannIncludeDir)\;$(PlayFabExternalDir)\libarchive\libarchive\;$(PlayFabExternalDir)\libarchive.config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;PROFILE;PF_GAMESAVE_USE_GDK_PROVIDER;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5204</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <!-- Compile/Link: Xbox console Debug -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.XboxOne.x64'">
+    <Link>
+      <AdditionalDependencies>uuid.lib;kernel32.lib;$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Platform\Xbox\;$(ProjectDir)..\GameTestAppShared\;$(ProjectDir)..\GameTestAppShared\Misc\;..\..\Samples\Kits\LiveTK;..\..\Samples\Kits\DirectXTK12\Inc;..\..\Samples\Kits\ATGTK;..\..\Samples\Kits\ATGTelemetry\GDK;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\GeneratedGdk\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\GDK\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Source\Api\;$(NLohmannIncludeDir)\;$(PlayFabExternalDir)\libarchive\libarchive\;$(PlayFabExternalDir)\libarchive.config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;PF_GAMESAVE_USE_GDK_PROVIDER;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5204</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.Scarlett.x64'">
+    <Link>
+      <AdditionalDependencies>uuid.lib;kernel32.lib;$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Platform\Xbox\;$(ProjectDir)..\GameTestAppShared\;$(ProjectDir)..\GameTestAppShared\Misc\;..\..\Samples\Kits\LiveTK;..\..\Samples\Kits\DirectXTK12\Inc;..\..\Samples\Kits\ATGTK;..\..\Samples\Kits\ATGTelemetry\GDK;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\GeneratedGdk\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\GDK\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Source\Api\;$(NLohmannIncludeDir)\;$(PlayFabExternalDir)\libarchive\libarchive\;$(PlayFabExternalDir)\libarchive.config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;PF_GAMESAVE_USE_GDK_PROVIDER;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5204</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <!-- Compile/Link: Desktop Release -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(Console_Libs);$(XsapiThunksLib).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Platform\Xbox\;$(ProjectDir)..\GameTestAppShared\;$(ProjectDir)..\GameTestAppShared\Misc\;..\..\Samples\Kits\LiveTK;..\..\Samples\Kits\DirectXTK12\Inc;..\..\Samples\Kits\ATGTK;..\..\Samples\Kits\ATGTelemetry\GDK;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\GeneratedGdk\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\GDK\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Source\Api\;$(NLohmannIncludeDir)\;$(PlayFabExternalDir)\libarchive\libarchive\;$(PlayFabExternalDir)\libarchive.config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;__WRL_NO_DEFAULT_LIB__;PF_GAMESAVE_USE_GDK_PROVIDER;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5204</DisableSpecificWarnings>
+    </ClCompile>
+    <FXCompile>
+      <ShaderModel>6.0</ShaderModel>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+      <AdditionalOptions>/Fd "$(OutDir)%(Filename).pdb" %(AdditionalOptions)</AdditionalOptions>
+    </FXCompile>
+  </ItemDefinitionGroup>
+  <!-- Compile/Link: Desktop Profile -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(Console_Libs);$(XsapiThunksLib).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Platform\Xbox\;$(ProjectDir)..\GameTestAppShared\;$(ProjectDir)..\GameTestAppShared\Misc\;..\..\Samples\Kits\LiveTK;..\..\Samples\Kits\DirectXTK12\Inc;..\..\Samples\Kits\ATGTK;..\..\Samples\Kits\ATGTelemetry\GDK;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\GeneratedGdk\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\GDK\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Source\Api\;$(NLohmannIncludeDir)\;$(PlayFabExternalDir)\libarchive\libarchive\;$(PlayFabExternalDir)\libarchive.config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;__WRL_NO_DEFAULT_LIB__;PROFILE;PF_GAMESAVE_USE_GDK_PROVIDER;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5204</DisableSpecificWarnings>
+    </ClCompile>
+    <FXCompile>
+      <ShaderModel>6.0</ShaderModel>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+      <AdditionalOptions>/Fd "$(OutDir)%(Filename).pdb" %(AdditionalOptions)</AdditionalOptions>
+    </FXCompile>
+  </ItemDefinitionGroup>
+  <!-- Compile/Link: Desktop Debug -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(Console_Libs);$(XsapiThunksLib).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ClCompile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Platform\Xbox\;$(ProjectDir)..\GameTestAppShared\;$(ProjectDir)..\GameTestAppShared\Misc\;..\..\Samples\Kits\LiveTK;..\..\Samples\Kits\DirectXTK12\Inc;..\..\Samples\Kits\ATGTK;..\..\Samples\Kits\ATGTelemetry\GDK;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\;$(ProjectDir)\..\..\Source\PlayFabCore\Include\GeneratedGdk\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Include\GDK\;$(ProjectDir)\..\..\Source\PlayFabGameSave\Source\Api\;$(NLohmannIncludeDir)\;$(PlayFabExternalDir)\libarchive\libarchive\;$(PlayFabExternalDir)\libarchive.config\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;__WRL_NO_DEFAULT_LIB__;PF_GAMESAVE_USE_GDK_PROVIDER;LIBARCHIVE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5204</DisableSpecificWarnings>
+    </ClCompile>
+    <FXCompile>
+      <ShaderModel>6.0</ShaderModel>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+      <AdditionalOptions>/Fd "$(OutDir)%(Filename).pdb" %(AdditionalOptions)</AdditionalOptions>
+    </FXCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <CopyFileToFolders>
+      <DestinationFolders>$(OutDir)Assets</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemDefinitionGroup>
+  <!-- For Xbox console platforms, libarchive is needed by test harness code (GatherSnapshot.cpp).
+       On both Desktop and console it comes from the x64-built PlayFabSharedInternal static lib. -->
+  <!-- Header files -->
+  <ItemGroup>
+    <!-- ATG Kits -->
+    <ClInclude Include="..\..\Samples\Kits\ATGTK\TextConsole.h" />
+    <ClInclude Include="..\..\Samples\Kits\ATGTK\SampleGUI.h" />
+    <ClInclude Include="..\..\Samples\Kits\ATGTK\ControllerFont.h" />
+    <ClInclude Include="..\..\Samples\Kits\LiveTK\LiveInfoHUD.h" />
+    <ClInclude Include="..\..\Samples\Kits\LiveTK\LiveResources.h" />
+    <ClInclude Include="..\..\Samples\Kits\ATGTK\StringUtil.h" />
+    <ClInclude Include="..\..\Samples\Kits\ATGTelemetry\GDK\ATGTelemetry.h" />
+    <ClInclude Include="..\..\Samples\Kits\ATGTK\ATGColors.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\DeviceFileSystem.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\ResolveSaveRoot.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblAchievementsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblContextSettingsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblEventsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblGameInviteHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblGlobalHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblHttpCallHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblLeaderboardHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblLocalStorageHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblMatchmakingHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblMultiplayerActivityHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblMultiplayerHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblNotificationHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblPresenceHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblPrivacyHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblProfileHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblRealTimeActivityHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblSocialHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblStatsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblStorageHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblStringHandlers.h" />
+    <!-- Project files -->
+    <ClInclude Include="Platform\Xbox\pch.h" />
+    <ClInclude Include="Platform\Xbox\TestDeviceApp.h" />
+    <ClInclude Include="DeviceResources.h" />
+    <ClInclude Include="StepTimer.h" />
+    <!-- Shared files -->
+    <ClInclude Include="..\GameTestAppShared\TestHarness\ChaosModeHandler.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceApplication.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceCommandHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\HttpMock.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\HttpMockHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceCommandProcessor.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceGameSave.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceGameSaveState.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceLogging.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceWebSocketClient.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\DeviceWebSocketConnection.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\GatherLogs.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\GatherSnapshot.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\GetDebugStats.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\CopyTargetFolderToSaveFolder.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\DeleteLocalFolder.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\DeleteSaveRoot.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\ConsumeDiskSpace.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\CommandHandlerShared.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\CommandRegistry.h" />
+    <ClInclude Include="..\GameTestAppShared\PFCore\PFAuthenticationHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFCore\PFCommandHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFGameSaveFiles\PFGameSaveFilesHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFCore\PFEntityHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFAccountManagementHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFCatalogHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFCloudScriptHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFDataHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFExperimentationHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFFriendsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFGroupsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFInventoryHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFLeaderboardsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFLocalizationHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFMultiplayerServerHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFCore\PFPlatformSpecificHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFPlayerDataManagementHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFProfilesHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFPushNotificationsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFSegmentsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFStatisticsHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFServices\PFTitleDataManagementHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\GameChat2\GameChat2Handlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\GameInputHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XAccessibilityHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XAppCaptureHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XDisplayHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XErrorHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameEventHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameProtocolHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameSaveFilesHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameSaveHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameStreamingHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameUIHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XLauncherHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XNetworkingHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XPackageHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XPersistentLocalStorageHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XSpeechSynthesizerHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XStoreHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XSystemHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XThreadHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFMultiplayer\PFMultiplayerHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\PFParty\PartyHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\Misc\HarnessHash.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\CaptureSaveContainerSnapshot.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\SmokeCommandHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\OfflineBatchHandler.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\WriteGameSaveData.h" />
+    <ClInclude Include="..\GameTestAppShared\XSAPI\XblHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XGameRuntimeHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XTaskQueueHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\xgameruntime\XUserHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCGlobalHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCHttpCallHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCWebSocketHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCMockHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCTraceHandlers.h" />
+    <ClInclude Include="..\GameTestAppShared\libHttpClient\HCAsyncHandlers.h" />
+  </ItemGroup>
+  <!-- Source files -->
+  <ItemGroup>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\ResolveSaveRoot.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblAchievementsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblContextSettingsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblEventsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblGameInviteHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblGlobalHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblHttpCallHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblLeaderboardHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblLocalStorageHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblMatchmakingHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblMultiplayerActivityHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblMultiplayerHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblNotificationHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblPresenceHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblPrivacyHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblProfileHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblRealTimeActivityHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblSocialHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblStatsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblStorageHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblStringHandlers.cpp" />
+    <ClCompile Include="Platform\Xbox\DeviceFileSystem_Xbox.cpp" />
+    <ClCompile Include="Platform\Xbox\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.XboxOne.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.Scarlett.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.XboxOne.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Gaming.Xbox.Scarlett.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.XboxOne.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.Scarlett.x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <!-- ATG Kits -->
+    <ClCompile Include="..\..\Samples\Kits\ATGTK\TextConsole.cpp" />
+    <ClCompile Include="..\..\Samples\Kits\ATGTK\SampleGUI.cpp" />
+    <ClCompile Include="..\..\Samples\Kits\LiveTK\LiveInfoHUD.cpp" />
+    <ClCompile Include="..\..\Samples\Kits\LiveTK\LiveResources.cpp" />
+    <ClCompile Include="..\..\Samples\Kits\ATGTK\StringUtil.cpp" />
+    <ClCompile Include="..\..\Samples\Kits\ATGTelemetry\GDK\ATGTelemetry.cpp" />
+    <!-- Project files -->
+    <ClCompile Include="Platform\Xbox\Main_Xbox.cpp" />
+    <ClCompile Include="Platform\Xbox\TestDeviceApp.cpp" />
+    <ClCompile Include="Platform\Xbox\DeviceLogging_Xbox.cpp" />
+    <ClCompile Include="Platform\Xbox\DeviceGameSaveState_Xbox.cpp" />
+    <ClCompile Include="DeviceResources.cpp" />
+    <!-- Shared files -->
+    <ClCompile Include="..\GameTestAppShared\TestHarness\ChaosModeHandler.cpp" />
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceCommandHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\Misc\HttpMock.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\HttpMockHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceGameSave.cpp" />
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceCommandProcessor.cpp" />
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceWebSocketClient.cpp" />
+    <ClCompile Include="..\GameTestAppShared\Misc\DeviceWebSocketConnection.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\GatherLogs.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\GatherSnapshot.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\GetDebugStats.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\CopyTargetFolderToSaveFolder.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\DeleteLocalFolder.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\DeleteSaveRoot.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\ConsumeDiskSpace.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFCore\PFAuthenticationHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFCore\PFCommandHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFGameSaveFiles\PFGameSaveFilesHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFCore\PFEntityHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFAccountManagementHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFCatalogHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFCloudScriptHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFDataHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFExperimentationHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFFriendsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFGroupsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFInventoryHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFLeaderboardsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFLocalizationHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFMultiplayerServerHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFCore\PFPlatformSpecificHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFPlayerDataManagementHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFProfilesHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFPushNotificationsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFSegmentsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFStatisticsHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFServices\PFTitleDataManagementHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\GameChat2\GameChat2Handlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\GameInputHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XAccessibilityHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XAppCaptureHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XDisplayHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XErrorHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameEventHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameProtocolHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameSaveFilesHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameSaveHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameStreamingHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameUIHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XLauncherHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XNetworkingHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XPackageHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XPersistentLocalStorageHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XSpeechSynthesizerHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XStoreHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XSystemHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XThreadHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFMultiplayer\PFMultiplayerHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\PFParty\PartyHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\Misc\HarnessHash.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\CaptureSaveContainerSnapshot.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\SmokeCommandHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\OfflineBatchHandler.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\WriteGameSaveData.cpp" />
+    <ClCompile Include="..\GameTestAppShared\XSAPI\XblHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XGameRuntimeHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XTaskQueueHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\xgameruntime\XUserHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCGlobalHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCHttpCallHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCWebSocketHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCMockHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCTraceHandlers.cpp" />
+    <ClCompile Include="..\GameTestAppShared\libHttpClient\HCAsyncHandlers.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <MGCCompile Include="MicrosoftGameConfig.mgc" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\Samples\Media\Textures\GamerPic.png" Condition="Exists('..\..\Samples\Media\Textures\GamerPic.png')">
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\Samples\Media\Fonts\SegoeUI_18.spritefont" Condition="Exists('..\..\Samples\Media\Fonts\SegoeUI_18.spritefont')">
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="controllerip.txt" Condition="Exists('controllerip.txt')">
+      <DestinationFolders>$(OutDir)</DestinationFolders>
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Samples\Kits\DirectXTK12\DirectXTK12_GDKX_2022.vcxproj">
+      <Project>{052c4858-c76f-4cea-8a1a-e8e5559e67c2}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(PlayFabBuildRoot)\PlayFabServices.import.props" />
+  <!-- Re-override PlayFabServicesOutDir for Xbox console platforms. The import above sets it based on
+       $(Platform), which points to the Xbox output dir. Xbox builds link against Desktop-built libs. -->
+  <PropertyGroup Condition="'$(Platform)'!='x64'">
+    <PlayFabServicesOutDir>$(PlayFabOutRoot)\x64\$(Configuration)\PlayFabServices.GDK\</PlayFabServicesOutDir>
+  </PropertyGroup>
+  <!-- Fix Xbox One SDK paths: Replace hardcoded 10.0.19041.0 from libHttpClient.GDK.props with latest
+       installed SDK in all accumulated paths. Must be late (after all imports that append to paths). -->
+  <PropertyGroup Condition="'$(Platform)'=='Gaming.Xbox.XboxOne.x64'">
+    <IncludePath>$(IncludePath.Replace('10.0.19041.0','$(_FixedSDKVersion)'))</IncludePath>
+    <LibraryPath>$(LibraryPath.Replace('10.0.19041.0','$(_FixedSDKVersion)'))</LibraryPath>
+    <ExecutablePath>$(ExecutablePath.Replace('10.0.19041.0','$(_FixedSDKVersion)'))</ExecutablePath>
+    <Console_UCRTRedistDebug>$(Console_UCRTRedistDebug.Replace('10.0.19041.0','$(_FixedSDKVersion)'))</Console_UCRTRedistDebug>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- Remove PlayFabServices project reference for Xbox console platforms and link against Desktop-built lib -->
+  <ItemGroup Condition="'$(Platform)'!='x64'">
+    <ProjectReference Remove="$(PlayFabBuildRoot)\PlayFabServices.GDK\PlayFabServices.GDK.vcxproj" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'!='x64'">
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(PlayFabServicesOutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GameChat2.lib;GameInput.lib;Party.lib;PartyXboxLive.lib;PlayFabServices.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(GameDKCoreLatest)windows\bin\x64\$(XsapiThunksLib).dll" "$(OutDir)"
+xcopy /y /d "$(OutDir)$(XsapiThunksLib).dll" "$(OutDir)Microsoft.Xbox.Services.GDK.C.Thunks.dll*"
+xcopy /y /d "$(OutDir)libHttpClient.dll" "$(OutDir)libHttpClient.GDK.dll*"
+xcopy /y /d "$(GameDKCoreLatest)windows\bin\x64\xgameruntime.dll" "$(OutDir)"
+xcopy /y /d "$(GameDKCoreLatest)windows\bin\x64\GameChat2.dll" "$(OutDir)"
+xcopy /y /d "$(GameDKCoreLatest)windows\bin\x64\Party.dll" "$(OutDir)"
+xcopy /y /d "$(GameDKCoreLatest)windows\bin\x64\PartyXboxLive.dll" "$(OutDir)"
+xcopy /y /d "$(GameDKCoreLatest)windows\bin\x64\PlayFabMultiplayer.dll" "$(OutDir)"
+xcopy /y /d "$(GameDKCoreLatest)windows\bin\x64\XCurl.dll" "$(OutDir)"</Command>
+      <Message>Copying GDK extension library DLLs to output directory</Message>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>GameChat2.lib;GameInput.lib;PlayFabMultiplayer.lib;Party.lib;PartyXboxLive.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Target Name="EnsureGDK" BeforeTargets="_CheckForInvalidConfigurationAndPlatform" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(Platform)', 'Gaming\..+\.x64'))">
+    <PropertyGroup>
+      <ErrorText>This project requires the Microsoft GDK to be installed. If you have already installed the GDK, then run Repair to ensure proper integration with Visual Studio. The missing platform is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(VCTargetsPath)\Platforms\$(Platform)\Platform.props')" Text="$([System.String]::Format('$(ErrorText)', '$(Platform)'))" />
+  </Target>
+</Project>

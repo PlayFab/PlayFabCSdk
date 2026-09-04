@@ -164,6 +164,9 @@ void AccountManagementTests::AddTests()
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestClientUpdateUserTitleDisplayName", &AccountManagementTests::TestClientUpdateUserTitleDisplayName);
 #endif
+#if 0
+    AddTest("TestServerAddOrUpdateContactEmail", &AccountManagementTests::TestServerAddOrUpdateContactEmail);
+#endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerBanUsers", &AccountManagementTests::TestServerBanUsers);
 #endif
@@ -199,6 +202,9 @@ void AccountManagementTests::AddTests()
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestServerGetPlayFabIDsFromPSNOnlineIDs", &AccountManagementTests::TestServerGetPlayFabIDsFromPSNOnlineIDs);
+#endif
+#if 0
+    AddTest("TestServerGetPlayFabIDsFromServerCustomIDs", &AccountManagementTests::TestServerGetPlayFabIDsFromServerCustomIDs);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerGetPlayFabIDsFromSteamIDs", &AccountManagementTests::TestServerGetPlayFabIDsFromSteamIDs);
@@ -266,6 +272,9 @@ void AccountManagementTests::AddTests()
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerSendEmailFromTemplate", &AccountManagementTests::TestServerSendEmailFromTemplate);
 #endif
+#if 0
+    AddTest("TestServerUnlinkApple", &AccountManagementTests::TestServerUnlinkApple);
+#endif
 #if HC_PLATFORM == HC_PLATFORM_GDK
     AddTest("TestServerUnlinkBattleNetAccount", &AccountManagementTests::TestServerUnlinkBattleNetAccount);
 #endif
@@ -274,6 +283,9 @@ void AccountManagementTests::AddTests()
 #endif
 #if 0
     AddTest("TestServerUnlinkFacebookInstantGamesId", &AccountManagementTests::TestServerUnlinkFacebookInstantGamesId);
+#endif
+#if 0
+    AddTest("TestServerUnlinkGameCenterAccount", &AccountManagementTests::TestServerUnlinkGameCenterAccount);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestServerUnlinkNintendoServiceAccount", &AccountManagementTests::TestServerUnlinkNintendoServiceAccount);

@@ -1,0 +1,49 @@
+id: PFCore-04-Service-Config
+name: PFCore 04 - Service Config Create and Read Properties
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Creates a service config handle with endpoint and titleId,
+  reads them back, duplicates the handle, and closes both.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFServiceConfigGetAPIEndpoint
+    - command: PFServiceConfigGetAPIEndpointSize
+    - command: PFServiceConfigGetTitleId
+    - command: PFServiceConfigGetTitleIdSize
+    - command: PFServiceConfigDuplicateHandle
+    - command: PFServiceConfigCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

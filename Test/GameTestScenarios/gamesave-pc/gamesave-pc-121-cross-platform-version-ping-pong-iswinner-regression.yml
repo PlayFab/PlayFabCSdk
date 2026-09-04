@@ -1,0 +1,440 @@
+id: Scenario-PC-121-Cross-Platform-Version-Ping-Pong-IsWinner-Regression
+name: GameSave PC 121 - Cross-Platform Save Version Ping-Pong (isWinner Regression)
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing  # Service fix deployed — isWinner bug resolved, v4 data now survives correctly
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Validates isWinner fix: alternates saves between SDK (inproc, DeviceA) and Platform
+  (GRTS, DeviceB) across 5 phases, creating versions 1-4. Phase 4 the Platform device
+  writes version 4. Phase 5 verifies the SDK sees version 4's data — confirming the
+  service fix correctly preserves the latest version across cross-platform saves.
+brief: Cross-platform version ping-pong — proves isWinner flip loses Platform data
+group: B. Active Device Contention
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+  DeviceB:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  # ==========================================================================
+  # Phase 1: SDK device (DeviceA/inproc) plays, writes save v1, uploads
+  #
+  # Establishes version 1 in the cloud with pattern [0xAA, 0xBB, 0xCC, 0xDD].
+  # DeviceA uses XUser auth. DeleteSaveRoot clears all prior cloud state.
+  # KeepDeviceActive so DeviceA holds the active device lock.
+  # ==========================================================================
+  phase1-sdk-writes-v1:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Clear all cloud state — fresh start for the ping-pong sequence
+    - command: DeleteSaveRoot
+    # Version 1: SDK device writes [0xAA, 0xBB, 0xCC, 0xDD] x 10KB
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Full shutdown — preserves local data for later conflict detection
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ==========================================================================
+  # Phase 2: Platform device (DeviceB/GRTS) plays, writes save v2, uploads
+  #
+  # DeviceB encounters active device contention (DeviceA held lock).
+  # Auto-responds SyncLastSavedData to take over. Writes new pattern
+  # [0x11, 0x22, 0x33, 0x44] as version 2. KeepDeviceActive.
+  # DeleteLocalFolder only on FIRST use of DeviceB (here).
+  # ==========================================================================
+  phase2-platform-writes-v2:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    # First use of DeviceB — clean local folder
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    # DeviceB auth — persisted local ID (GRTS device)
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    # Contention fires — DeviceA holds cloud lock; auto-respond SyncLastSavedData
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Version 2: Platform device writes [0x11, 0x22, 0x33, 0x44] x 10KB
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0x11, 0x22, 0x33, 0x44]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Full shutdown — preserve local data for Phase 4 conflict detection
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ==========================================================================
+  # Phase 3: SDK device (DeviceA/inproc) plays again, writes save v3, uploads
+  #
+  # DeviceA encounters contention (DeviceB held lock), auto-responds
+  # SyncLastSavedData. Writes [0x55, 0x66, 0x77, 0x88] as version 3.
+  # NO DeleteLocalFolder — preserve DeviceA's local data for contention.
+  # Capture snapshot (right slot) — this is the EXPECTED final state
+  # if the isWinner bug causes v4 to be lost.
+  # ==========================================================================
+  phase3-sdk-writes-v3:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    # DO NOT delete local folder — DeviceA's prior data must remain for conflict path
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Contention fires — DeviceB holds cloud lock; auto-respond SyncLastSavedData
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Version 3: SDK device writes [0x55, 0x66, 0x77, 0x88] x 10KB
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0x55, 0x66, 0x77, 0x88]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Full shutdown — DeviceA keeps active device lock
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ==========================================================================
+  # Phase 4: Platform device (DeviceB/GRTS) plays again, writes save v4
+  #
+  # DeviceB encounters contention, auto-responds SyncLastSavedData.
+  # Writes [0xEE, 0xFF, 0x00, 0x11] as version 4.
+  #
+  # *** BUG EXPECTED HERE ***
+  # Platform marks version 4 as a conflict with base version 3. Because of
+  # the isWinner semantics inversion between GRTS and SDK, version 4 becomes
+  # the conflict LOSER instead of the winner. This means version 4 data will
+  # be silently lost — the cloud will still show version 3 as the latest.
+  #
+  # NO DeleteLocalFolder — preserve DeviceB's local data to trigger conflict.
+  # ==========================================================================
+  phase4-platform-writes-v4-bug:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    # DO NOT delete local folder — DeviceB's prior data must remain for conflict
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    # DeviceB auth — persisted local ID (GRTS device)
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    # Contention fires — DeviceA holds cloud lock; auto-respond SyncLastSavedData
+    # BUG: The conflict created here will mark v4 as LOSER due to isWinner flip
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Version 4: Platform device writes [0xEE, 0xFF, 0x00, 0x11] x 10KB
+    # This data will be LOST due to the isWinner regression
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xEE, 0xFF, 0x00, 0x11]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    # SNAPSHOT: Capture v4 data as "right" slot — with the service fix deployed,
+    # this is the latest version that should survive in the cloud.
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    # Full shutdown
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # ==========================================================================
+  # Phase 5: SDK device (DeviceA/inproc) reads saves — VERIFICATION
+  #
+  # DeviceA encounters contention, auto-responds SyncLastSavedData.
+  # Captures snapshot in "left" slot, then compares against Phase 4's "right"
+  # snapshot.
+  #
+  # With the service fix deployed (isWinner semantics corrected):
+  #   The snapshots MATCH — SDK sees version 4's data pattern
+  #   [0xEE, 0xFF, 0x00, 0x11], proving v4 survived correctly.
+  # ==========================================================================
+  phase5-sdk-reads-verification:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    # Clean local folder so we get a fresh pull from cloud
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Contention may fire — auto-respond SyncLastSavedData
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Capture what the SDK sees as the current cloud state
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    # Compare: left (current cloud v4) vs right (Phase 4 v4 data)
+    # Snapshots should MATCH — v4 data survives with the service fix
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+        ignoreEmptyDirectories: true
+    # Full shutdown
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+executionOrder:
+  # Phase 1: SDK device writes v1 [0xAA,0xBB,0xCC,0xDD]
+  - role: DeviceA
+    block: phase1-sdk-writes-v1
+  # Phase 2: Platform device writes v2 [0x11,0x22,0x33,0x44]
+  - role: DeviceB
+    block: phase2-platform-writes-v2
+  # Phase 3: SDK device writes v3 [0x55,0x66,0x77,0x88] + captures snapshot
+  - role: DeviceA
+    block: phase3-sdk-writes-v3
+  # Phase 4: Platform device writes v4 [0xEE,0xFF,0x00,0x11] — BUG: v4 becomes loser
+  - role: DeviceB
+    block: phase4-platform-writes-v4-bug
+  # Phase 5: SDK device reads — verifies v3 data is present (v4 lost)
+  - role: DeviceA
+    block: phase5-sdk-reads-verification
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  DeviceB:
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

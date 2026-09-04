@@ -61,6 +61,7 @@ PF_API PFServiceConfigDuplicateHandle(
 {
     return ApiImpl(XASYNC_IDENTITY(PFServiceConfigDuplicateHandle), [&](PFCoreGlobalState& state)
     {
+        RETURN_HR_INVALIDARG_IF_NULL(handle);
         RETURN_HR_INVALIDARG_IF_NULL(duplicatedHandle);
 
         SharedPtr<ServiceConfig> serviceConfig;
@@ -106,7 +107,7 @@ PF_API PFServiceConfigGetAPIEndpoint(
         RETURN_HR_INVALIDARG_IF_NULL(apiEndpointBuffer);
 
         String const& apiEndpoint = serviceConfig->HttpClient()->APIEndpoint();
-        RETURN_HR_IF(E_INVALIDARG, apiEndpointSize < apiEndpoint.size() + 1);
+        RETURN_HR_IF(E_INVALIDARG, apiEndpoint.size() >= apiEndpointSize);
 
         memcpy(apiEndpointBuffer, apiEndpoint.data(), apiEndpoint.size() + 1);
 
@@ -145,7 +146,7 @@ PF_API PFServiceConfigGetTitleId(
         RETURN_HR_INVALIDARG_IF_NULL(titleIdBuffer);
 
         String const& titleId = serviceConfig->TitleId();
-        RETURN_HR_IF(E_INVALIDARG, titleIdSize < titleId.size() + 1);
+        RETURN_HR_IF(E_INVALIDARG, titleId.size() >= titleIdSize);
 
         memcpy(titleIdBuffer, titleId.data(), titleId.size() + 1);
 

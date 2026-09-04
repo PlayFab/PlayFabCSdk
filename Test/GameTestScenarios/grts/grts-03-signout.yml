@@ -1,0 +1,38 @@
+id: Scenario-GRTS-003-Signout
+name: GRTS 3 - Signout
+tags:
+  - grts
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: Device A signs in and signs out
+brief: Device A signs in and signs out
+group: A. Golden Path / Smoke
+devices:
+  DeviceA:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  session-signin:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+      parameters:
+        allowUi: true
+    - command: XUserSignOutAsync
+    - command: XUserCloseHandle
+    - command: XUserAddAsync
+      parameters:
+        allowUi: true
+    - command: XUserCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-signin

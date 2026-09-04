@@ -2303,6 +2303,7 @@ public:
     PFAuthenticationLoginWithPSNRequestWrapper(const PFAuthenticationLoginWithPSNRequest& model) :
         ModelWrapper<PFAuthenticationLoginWithPSNRequest, Alloc>{ model },
         m_authCode{ SafeString(model.authCode) },
+        m_authVersion{ SafeString(model.authVersion) },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt },
         m_issuerId{ model.issuerId ? std::optional<int32_t>{ *model.issuerId } : std::nullopt },
@@ -2336,6 +2337,7 @@ public:
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_authCode, rhs.m_authCode);
+        swap(lhs.m_authVersion, rhs.m_authVersion);
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
         swap(lhs.m_issuerId, rhs.m_issuerId);
@@ -2354,6 +2356,17 @@ public:
     {
         m_authCode = std::move(value);
         this->m_model.authCode =  m_authCode.empty() ? nullptr : m_authCode.data();
+    }
+
+    String const& GetAuthVersion() const
+    {
+        return m_authVersion;
+    }
+
+    void SetAuthVersion(String value)
+    {
+        m_authVersion = std::move(value);
+        this->m_model.authVersion =  m_authVersion.empty() ? nullptr : m_authVersion.data();
     }
 
     bool GetCreateAccount() const
@@ -2426,6 +2439,7 @@ private:
     void SetModelPointers()
     {
         this->m_model.authCode = m_authCode.empty() ? nullptr : m_authCode.data();
+        this->m_model.authVersion = m_authVersion.empty() ? nullptr : m_authVersion.data();
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
         this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
@@ -2434,6 +2448,7 @@ private:
     }
 
     String m_authCode;
+    String m_authVersion;
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
     std::optional<int32_t> m_issuerId;
@@ -3612,6 +3627,7 @@ public:
     PFAuthenticationServerLoginWithPSNRequestWrapper(const PFAuthenticationServerLoginWithPSNRequest& model) :
         ModelWrapper<PFAuthenticationServerLoginWithPSNRequest, Alloc>{ model },
         m_authCode{ SafeString(model.authCode) },
+        m_authVersion{ SafeString(model.authVersion) },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_infoRequestParameters{ model.infoRequestParameters ? std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>>{ *model.infoRequestParameters } : std::nullopt },
         m_issuerId{ model.issuerId ? std::optional<int32_t>{ *model.issuerId } : std::nullopt },
@@ -3644,6 +3660,7 @@ public:
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_authCode, rhs.m_authCode);
+        swap(lhs.m_authVersion, rhs.m_authVersion);
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_infoRequestParameters, rhs.m_infoRequestParameters);
         swap(lhs.m_issuerId, rhs.m_issuerId);
@@ -3661,6 +3678,17 @@ public:
     {
         m_authCode = std::move(value);
         this->m_model.authCode =  m_authCode.empty() ? nullptr : m_authCode.data();
+    }
+
+    String const& GetAuthVersion() const
+    {
+        return m_authVersion;
+    }
+
+    void SetAuthVersion(String value)
+    {
+        m_authVersion = std::move(value);
+        this->m_model.authVersion =  m_authVersion.empty() ? nullptr : m_authVersion.data();
     }
 
     bool GetCreateAccount() const
@@ -3722,6 +3750,7 @@ private:
     void SetModelPointers()
     {
         this->m_model.authCode = m_authCode.empty() ? nullptr : m_authCode.data();
+        this->m_model.authVersion = m_authVersion.empty() ? nullptr : m_authVersion.data();
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.infoRequestParameters = m_infoRequestParameters ?  &m_infoRequestParameters->Model() : nullptr;
         this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
@@ -3729,6 +3758,7 @@ private:
     }
 
     String m_authCode;
+    String m_authVersion;
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFGetPlayerCombinedInfoRequestParamsWrapper<Alloc>> m_infoRequestParameters;
     std::optional<int32_t> m_issuerId;
@@ -4669,8 +4699,7 @@ public:
 
     PFAuthenticationGetEntityRequestWrapper(const PFAuthenticationGetEntityRequest& model) :
         ModelWrapper<PFAuthenticationGetEntityRequest, Alloc>{ model },
-        m_customTags{ model.customTags, model.customTags + model.customTagsCount },
-        m_entity{ model.entity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.entity } : std::nullopt }
+        m_customTags{ model.customTags, model.customTags + model.customTagsCount }
     {
         SetModelPointers();
     }
@@ -4699,7 +4728,6 @@ public:
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_customTags, rhs.m_customTags);
-        swap(lhs.m_entity, rhs.m_entity);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
@@ -4716,26 +4744,13 @@ public:
         this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
     }
 
-    std::optional<PFEntityKeyWrapper<Alloc>> const& GetEntity() const
-    {
-        return m_entity;
-    }
-
-    void SetEntity(std::optional<PFEntityKeyWrapper<Alloc>> value)
-    {
-        m_entity = std::move(value);
-        this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
-    }
-
 private:
     void SetModelPointers()
     {
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
-        this->m_model.entity = m_entity ?  &m_entity->Model() : nullptr;
     }
 
     StringDictionaryEntryVector<Alloc> m_customTags;
-    std::optional<PFEntityKeyWrapper<Alloc>> m_entity;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>

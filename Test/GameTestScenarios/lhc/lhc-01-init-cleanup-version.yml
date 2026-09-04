@@ -1,0 +1,51 @@
+id: LHC-01-Init-Cleanup-Version
+name: LHC 01 - Library Initialization, Cleanup, and Version
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Verify HCInitialize succeeds (reference-counted, so double-init also succeeds),
+  HCIsInitialized returns true, HCCleanup tears down state, HCCleanupAsync completes,
+  and HCGetLibVersion returns a well-formed string.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  init-cleanup-version:
+    # First init should succeed
+    - command: HCInitialize
+    - command: HCIsInitialized
+    - command: HCGetLibVersion
+
+    # Double init succeeds (reference-counted); needs matching cleanup
+    - command: HCInitialize
+    - command: HCCleanup
+
+    # Synchronous cleanup (balances the first init)
+    - command: HCCleanup
+    - command: HCIsInitialized
+
+    # Re-init for async cleanup path
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: HCInitialize
+    # App holds its own HCInitialize ref (via XGameRuntimeInitialize),
+    # so HCCleanupAsync correctly returns E_HC_INTERNAL_STILLINUSE.
+    - command: HCCleanupAsync
+      parameters:
+        expectedHr: "0x89235008"
+    - command: HCIsInitialized
+executionOrder:
+  - role: DeviceA
+    block: init-cleanup-version
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

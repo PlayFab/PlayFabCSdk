@@ -117,6 +117,7 @@ PF_API PFGameSaveFilesGetFolderSize(
 ) noexcept
 {
     return GSApiImpl("PFGameSaveFilesGetFolderSize", [&](GameSaveGlobalState& state) {
+        RETURN_HR_INVALIDARG_IF_NULL(saveRootFolderSize);
         return state.ApiProvider().GetFolderSize(localUserHandle, saveRootFolderSize);
     });
 }
@@ -169,6 +170,7 @@ PF_API PFGameSaveFilesGetRemainingQuota(
     _In_ PFLocalUserHandle localUserHandle,
     _Out_ int64_t* remainingQuota) noexcept
 {
+    RETURN_HR_INVALIDARG_IF_NULL(remainingQuota);
     return GSApiImpl("PFGameSaveFilesGetRemainingQuota", [&](GameSaveGlobalState& state) {
         return state.ApiProvider().GetRemainingQuota(localUserHandle, remainingQuota);
     });
@@ -178,6 +180,7 @@ PF_API PFGameSaveFilesIsConnectedToCloud(
     _In_ PFLocalUserHandle localUserHandle,
     _Out_ bool* isConnectedToCloud) noexcept
 {
+    RETURN_HR_INVALIDARG_IF_NULL(isConnectedToCloud);
     return GSApiImpl("PFGameSaveFilesIsConnectedToCloud", [&](GameSaveGlobalState& state) {
         return state.ApiProvider().IsConnectedToCloud(localUserHandle, isConnectedToCloud);
     });
@@ -215,6 +218,13 @@ PF_API PFGameSaveFilesSetSaveDescriptionAsync(
         RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
         RETURN_HR_INVALIDARG_IF_NULL(shortSaveDescription);
         RETURN_HR_INVALIDARG_IF_NULL(async);
+        // The description is Base64 encoded before it goes on the wire and the service rejects a
+        // ManifestDescription longer than 1024 characters. Reject oversized input here rather than
+        // caching a value that can never be uploaded.
+        if (strlen(shortSaveDescription) > PF_GAMESAVE_MAX_SHORT_SAVE_DESCRIPTION_LENGTH)
+        {
+            return E_INVALIDARG;
+        }
         return state.ApiProvider().SetSaveDescriptionAsync(localUserHandle, shortSaveDescription, async);
     }); 
 }
@@ -273,6 +283,7 @@ PF_API PFGameSaveFilesSetMockDeviceIdForDebug(_In_ const char* deviceId)
 
 PF_API PFGameSaveFilesSetMockRootFolderForDebug(_In_ const char* rootFolder)
 {
+    RETURN_HR_INVALIDARG_IF_NULL(rootFolder);
     return GSApiImpl("PFGameSaveFilesSetMockRootFolderForDebug", [&](GameSaveGlobalState& state) {
         state.SetDebugRootFolderOverride(rootFolder);
         return S_OK;
@@ -345,6 +356,13 @@ PF_API PFGameSaveFilesSetForceSyncFailedErrorForDebug(_In_ bool forceError)
     }); 
 }
 
+PF_API PFGameSaveFilesSetForceNullPendingManifestForDebug(_In_ bool force)
+{
+    return GSApiImpl("PFGameSaveFilesSetForceNullPendingManifestForDebug", [&](GameSaveGlobalState& state) {
+        return state.ApiProvider().SetForceNullPendingManifestForDebug(force);
+    });
+}
+
 PF_API PFGameSaveFilesSetWriteManifestsToDiskForDebug(_In_ bool writeManifests)
 {
     return GSApiImpl("PFGameSaveFilesSetWriteManifestsToDiskForDebug", [&](GameSaveGlobalState& state) {
@@ -389,5 +407,12 @@ PF_API PFGameSaveFilesResetCloudResult(
     return GSApiImpl("PFGameSaveFilesResetCloudResult", [&](GameSaveGlobalState& state) {
         return state.ApiProvider().ResetCloudResult(async);
     });
+}
+
+PF_API PFGameSaveFilesSetForceInprocForDebug(_In_ bool forceInproc)
+{
+    TRACE_INFORMATION("PFGameSaveFilesSetForceInprocForDebug: forceInproc=%s", forceInproc ? "true" : "false");
+    GameSaveGlobalState::SetPreInitForceInproc(forceInproc);
+    return S_OK;
 }
 

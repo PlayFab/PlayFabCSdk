@@ -17,7 +17,7 @@ To gain access to platforms supported through private repos, [Request Access](ht
 
 ## Requirements
 
-### GDK
+### Windows / GDK
 - A [PlayFab developer account](https://developer.playfab.com).
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) installed (to build from source).
 - (For GDK) [Microsoft Game Development Kit](https://learn.microsoft.com/gaming/gdk/) installed.
@@ -40,7 +40,7 @@ Download the most recent release of the SDK from [PlayFabCSdk releases](https://
 
 Each release package contains the required headers, binaries, and property sheet file (Win32 - PlayFabServicesSDK.Win32.props, GDK - PlayFabServicesSDK.GDK.props) that can be imported to your project to automatically add references.
 
-You can import the props file manually by editing the .vcxproj files directly or by opening the Property Manager window in Visual Studio, right clicking on the project, and choosing __Add Existing Property Sheet__. After importing the appropriate props file, the headers should be available in your include path and references to the PlayFabServices library and its dependecies will be automatically added.
+You can import the props file manually by editing the .vcxproj files directly or by opening the Property Manager window in Visual Studio, right clicking on the project, and choosing __Add Existing Property Sheet__. After importing the appropriate props file, the headers should be available in your include path and references to the PlayFabServices library and its dependencies will be automatically added.
 
 > __Note for GDK__: It is possible for other GDK extensions such as the Xbox Services API or libHttpClient to be included as references automatically in projects.
 Any duplicate references will need to be removed manually.
@@ -94,7 +94,7 @@ If you're building from source, add this list of headers from the PlayFab SDK re
     "libHttpClient/Include"
 ```
 
-3. Using __target_link_libraries__ or another equivalent function, link the locations of the .so files to your project.
+2. Using __target_link_libraries__ or another equivalent function, link the locations of the .so files to your project.
 
     For example:
 
@@ -148,7 +148,7 @@ To add a reference to the PlayFabServices projects to your own title, import the
 
 #### Building (Windows and GDK)
 
-To add a reference to the PlayFabServices projects to your own title, import the \Build\PlayFabServices.import.props file to your project. You can do this manually by editing the .vcxproj files directly or by opening the Property Manager window in Visual Studio, right clicking on the project, and choosing __Add Existing Property Sheet__. Note that the props file differs from the PlayFabServicesSDK.Win32.props mentioned above - it adds references to the projects instead of the prebuilt binaries.
+Open __PlayFab.C.vs2022.sln__ in Visual Studio 2022, select the desired platform configuration (e.g., __Gaming.Desktop.x64__), and build. After building, the binaries will be placed in a subdirectory within __\Out__.
 
 #### PlayFabServicesTestApp
 
@@ -361,8 +361,8 @@ This example shows how to make an asynchronous call to __PFDataGetFilesAsync__.
     };
 
     PFDataGetFilesRequest requestFiles{};
-    requestFiles.entity = m_pEntityKey;
-    HRESULT hr = PFDataGetFilesAsync(m_entityHandle, &requestFiles, async.get());
+    requestFiles.entity = pEntityKey;
+    HRESULT hr = PFDataGetFilesAsync(entityHandle, &requestFiles, async.get());
     if (SUCCEEDED(hr))
     {
         async.release(); // at this point, the callback will be called so release the unique ptr

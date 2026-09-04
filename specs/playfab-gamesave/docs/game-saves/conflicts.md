@@ -1,12 +1,12 @@
 ---
-title: Game Saves Conflicts and Atomic Units
+title: Game Saves conflicts
 author: jasonsandlin
-description: Understanding conflicts and atomic units in Game Saves
+description: Game Saves conflicts
 ms.author: jasonsa
 ms.date: 01/06/2026
 ms.topic: article
 ms.service: azure-playfab
-keywords: playfab, game saves, conflicts, atomic units, sync
+keywords: playfab, game saves
 ms.localizationpriority: medium
 ---
 
@@ -97,12 +97,6 @@ When conflicts occur, players choose between:
 ### Critical: Resolution is All-or-Nothing
 
 > ⚠️ **Important**: While atomic units determine *when* a conflict is detected, the user's conflict resolution choice applies to the **entire save**, not per-atomic-unit.
-
-When ANY conflict is detected (even in just one atomic unit):
-- **Keep Local**: ALL cloud downloads are skipped
-- **Keep Cloud**: ALL cloud downloads proceed, overwriting local changes
-
-**Non-conflicting atomic units do NOT merge independently during a conflict.**
 
 ### Example: Mixed Conflict Scenario
 

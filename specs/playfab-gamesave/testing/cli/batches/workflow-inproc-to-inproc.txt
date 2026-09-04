@@ -1,0 +1,21 @@
+# Workflow: In-Proc to In-Proc — two local devices
+#
+# Uploads from DeviceA, downloads and verifies on DeviceB.
+# Both devices must already be launched (run 'launch' twice).
+
+# --- DeviceA: Initialize, upload, tear down ---
+target DeviceA
+batch specs\playfab-gamesave\testing\cli\batches\set-auto-responses.txt
+batch specs\playfab-gamesave\testing\cli\batches\init-device.txt
+batch specs\playfab-gamesave\testing\cli\batches\reset-cloud.txt
+batch specs\playfab-gamesave\testing\cli\batches\upload-golden-path.txt
+batch specs\playfab-gamesave\testing\cli\batches\teardown-device.txt
+
+# --- DeviceB: Initialize, download, verify, tear down ---
+target DeviceB
+batch specs\playfab-gamesave\testing\cli\batches\set-auto-responses.txt
+batch specs\playfab-gamesave\testing\cli\batches\init-device.txt
+batch specs\playfab-gamesave\testing\cli\batches\download-and-verify.txt
+batch specs\playfab-gamesave\testing\cli\batches\teardown-device.txt
+
+target auto

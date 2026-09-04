@@ -210,9 +210,7 @@ namespace
             stats.totalPages = totalPageCount;
         }
 
-    #if !(defined(_XBOX_ONE) && defined(_TITLE)) && !defined(_GAMING_XBOX)
         ID3D12Device* GetDevice() const noexcept { return mDevice.Get(); }
-    #endif
 
     private:
         ComPtr<ID3D12Device> mDevice;
@@ -330,6 +328,8 @@ public:
         m_peakPages = 0;
     }
 
+    ID3D12Device* GetDevice() const noexcept { return mDeviceAllocator ? mDeviceAllocator->GetDevice() : nullptr; }
+
     GraphicsMemory* mOwner;
 #if (defined(_XBOX_ONE) && defined(_TITLE)) || defined(_GAMING_XBOX)
     static GraphicsMemory::Impl* s_graphicsMemory;
@@ -415,6 +415,14 @@ void GraphicsMemory::ResetStatistics()
     pImpl->ResetStatistics();
 }
 
+ID3D12Device* GraphicsMemory::GetDevice() const noexcept
+{
+    if (!pImpl)
+        return nullptr;
+
+    return pImpl->GetDevice();
+}
+
 #if (defined(_XBOX_ONE) && defined(_TITLE)) || defined(_GAMING_XBOX)
 GraphicsMemory& GraphicsMemory::Get(_In_opt_ ID3D12Device*)
 {
@@ -470,8 +478,7 @@ GraphicsResource::GraphicsResource() noexcept
     , mMemory(nullptr)
     , mBufferOffset(0)
     , mSize(0)
-{
-}
+{}
 
 GraphicsResource::GraphicsResource(
     _In_ LinearAllocatorPage* page,
@@ -506,9 +513,9 @@ GraphicsResource::~GraphicsResource()
 {
     if (mPage)
     {
-#ifdef USING_PIX_CUSTOM_MEMORY_EVENTS
+    #ifdef USING_PIX_CUSTOM_MEMORY_EVENTS
         PIXRecordMemoryFreeEvent(c_PIXAllocatorID, reinterpret_cast<void*>(mGpuAddress), mSize, 0);
-#endif
+    #endif
 
         mPage->Release();
         mPage = nullptr;
@@ -525,9 +532,9 @@ void GraphicsResource::Reset() noexcept
 {
     if (mPage)
     {
-#ifdef USING_PIX_CUSTOM_MEMORY_EVENTS
+    #ifdef USING_PIX_CUSTOM_MEMORY_EVENTS
         PIXRecordMemoryFreeEvent(c_PIXAllocatorID, reinterpret_cast<void*>(mGpuAddress), mSize, 0);
-#endif
+    #endif
 
         mPage->Release();
         mPage = nullptr;
@@ -544,9 +551,9 @@ void GraphicsResource::Reset(GraphicsResource&& alloc) noexcept
 {
     if (mPage)
     {
-#ifdef USING_PIX_CUSTOM_MEMORY_EVENTS
+    #ifdef USING_PIX_CUSTOM_MEMORY_EVENTS
         PIXRecordMemoryFreeEvent(c_PIXAllocatorID, reinterpret_cast<void*>(mGpuAddress), mSize, 0);
-#endif
+    #endif
 
         mPage->Release();
         mPage = nullptr;
@@ -574,27 +581,22 @@ void GraphicsResource::Reset(GraphicsResource&& alloc) noexcept
 
 SharedGraphicsResource::SharedGraphicsResource() noexcept
     : mSharedResource(nullptr)
-{
-}
+{}
 
 SharedGraphicsResource::SharedGraphicsResource(GraphicsResource&& resource) noexcept(false)
     : mSharedResource(std::make_shared<GraphicsResource>(std::move(resource)))
-{
-}
+{}
 
 SharedGraphicsResource::SharedGraphicsResource(SharedGraphicsResource&& resource) noexcept
     : mSharedResource(std::move(resource.mSharedResource))
-{
-}
+{}
 
 SharedGraphicsResource::SharedGraphicsResource(const SharedGraphicsResource& resource) noexcept
     : mSharedResource(resource.mSharedResource)
-{
-}
+{}
 
 SharedGraphicsResource::~SharedGraphicsResource()
-{
-}
+{}
 
 SharedGraphicsResource&& SharedGraphicsResource::operator= (SharedGraphicsResource&& resource) noexcept
 {

@@ -1,5 +1,6 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 #pragma once
+#include "FolderSyncManager.h"
 
 namespace PlayFab
 {
@@ -12,7 +13,7 @@ public:
     template<size_t n>
     SetSaveDescriptionProvider(RunContext&& rc, XAsyncBlock* async, const char(&identityName)[n], SharedPtr<FolderSyncManager>&& folderSync, String&& shortSaveDescription) :
         GameSaveAsyncProvider{ std::move(rc), async, identityName },
-        m_folderSync{ folderSync },
+        m_folderSync{ std::move(folderSync) },
         m_shortSaveDescription{ std::move(shortSaveDescription) }
     {
         TRACE_TASK("SetSaveDescriptionProvider ctor");
@@ -26,7 +27,7 @@ public:
     void ScheduleNow() override
     {
         TRACE_TASK("SetSaveDescriptionProvider.ScheduleNow");
-#if _DEBUG
+#if defined(_DEBUG)
         m_singleThreadProvider.AssertUponSchedule();
 #endif
         Schedule(0);
@@ -36,12 +37,13 @@ protected:
     HRESULT DoWork(RunContext runContext) override;
     SharedPtr<FolderSyncManager> m_folderSync;
     String m_shortSaveDescription;
-    std::recursive_mutex m_folderSyncMutex;
+    // Owned by the FolderSyncManager, not by this provider: see FolderSyncManager::GetSyncMutex().
+    std::recursive_mutex& m_folderSyncMutex{ m_folderSync->GetSyncMutex() };
     bool m_waitingForFinalize{ false };
     uint32_t m_waitElapsedMs{ 0 };
     static constexpr uint32_t c_waitSliceMs = 50;
     static constexpr uint32_t c_waitMaxMs = 5000; // cap wait at 5s
-#if _DEBUG
+#if defined(_DEBUG)
     SingleThreadProviderValidation m_singleThreadProvider;
 #endif
 };

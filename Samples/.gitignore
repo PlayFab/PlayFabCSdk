@@ -4,4 +4,7 @@ x64
 Gaming.Xbox.Scarlett.x64
 Gaming.Xbox.XboxOne.x64
 Gaming.Desktop.x64
+# Ignore all Compiled/ directories except shader headers needed for BWOI builds
 Compiled/
+!Kits/DirectXTK12/Src/Shaders/Compiled/*.inc
+Kits/DirectXTK12/Src/Shaders/Compiled/

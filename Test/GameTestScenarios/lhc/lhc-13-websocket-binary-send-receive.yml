@@ -1,0 +1,54 @@
+id: LHC-13-WebSocket-Binary-Send-Receive
+name: LHC 13 - WebSocket Binary Message Send and Receive
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Connect a WebSocket, send a binary payload, verify the send result,
+  and disconnect.  Catches regressions in binary framing distinct from text.
+  Uses the controller's StartWebSocketTestServer for a local echo endpoint.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  ws-binary:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Start local WebSocket echo server
+    - command: StartWebSocketTestServer
+
+    - command: HCWebSocketCreate
+
+    - command: HCWebSocketConnectAsync
+      parameters:
+        uri: "ws://localhost:{{wsTestPort}}/echo"
+        subProtocol: ""
+    - command: HCGetWebSocketConnectResult
+
+    # Send a binary message
+    - command: HCWebSocketSendBinaryMessageAsync
+      parameters:
+        payload: "DEADBEEF0102030405060708"
+    - command: HCGetWebSocketSendMessageResult
+
+    # Disconnect
+    - command: HCWebSocketDisconnect
+    - command: HCWebSocketCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: ws-binary
+cleanup:
+  DeviceA:
+    - command: StopWebSocketTestServer
+    - command: XTaskQueueCloseHandle

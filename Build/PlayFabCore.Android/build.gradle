@@ -22,8 +22,7 @@ android {
     externalNativeBuild {
         cmake {
             // CXX20 Standard is only available in CMake 3.18.1 and above.
-            // Navigate to SDK Manager > SDK Tools > CMake for the correct version.
-            version "3.18.1"
+            version "3.18.1+"
             path "CMakeLists.txt"
             buildStagingDirectory "${project.buildDir.getParentFile().getAbsolutePath()}/.cxx/${project.name}"
         }
@@ -75,7 +74,11 @@ dependencies {
     implementation project(":libHttpClient.Android")
     implementation project(":PlayFabSharedInternal.Android")
 
-    implementation "com.google.android.gms:play-services-games-v2:+"
+    // Pinned deliberately: 22.0.0 (published 2026-07-29) raises its minSdk to 24, which breaks
+    // the manifest merge against this library's minSdkVersion 21. 21.0.0 is the last release
+    // that supports minSdk 21. Do NOT use a floating '+' here - it makes the build
+    // non-reproducible and lets an upstream release break CI with no change on our side.
+    implementation "com.google.android.gms:play-services-games-v2:21.0.0"
 }
 
 // Ensure PlayFabSharedInternal.Android is evaluated before this project

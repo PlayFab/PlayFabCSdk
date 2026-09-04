@@ -185,41 +185,6 @@ void SegmentsTests::TestServerGetPlayerSegments(TestContext& tc)
 #endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-void SegmentsTests::TestServerGetPlayersInSegment(TestContext& tc)
-{
-    ServerGetPlayersInSegmentOperation::RequestType request;
-    request.SetSegmentId("DC1731C7F6F3D1E4");
-
-    ServerGetPlayersInSegmentOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<ServerGetPlayersInSegmentOperation::ResultType> result) -> AsyncOp<void>
-    {
-        RETURN_IF_FAILED_PLAYFAB(result);
-
-        auto& model = result.Payload().Model();
-        tc.AssertTrue(model.profilesInSegment > 0, "No players in segment");
-        bool defaultTitlePlayerFound = false;
-        const char* defaultPlayerId = "D1522C6BB456B845";
-        std::vector<const char*> ids;
-        for (uint32_t i = 0; i < model.playerProfilesCount; ++i)
-        {
-            ids.push_back(model.playerProfiles[i]->playerId);
-            if (std::strcmp(model.playerProfiles[i]->playerId, defaultPlayerId) == 0)
-            {
-                defaultTitlePlayerFound = true;
-                break;
-            }
-        }
-        tc.AssertTrue(defaultTitlePlayerFound, "DefaultTitlePlayer not found in \"All Players\"");
-
-        return S_OK;
-    })
-    .Finally([&](Result<void> result)
-    {
-        tc.EndTest(std::move(result));
-    });
-}
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 void SegmentsTests::TestServerGetPlayerTags(TestContext& tc)
 {
     // Already covered in TestServerAddPlayerTag

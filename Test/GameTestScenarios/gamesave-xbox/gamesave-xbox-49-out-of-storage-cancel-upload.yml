@@ -1,0 +1,110 @@
+id: Scenario-Xbox-49-Out-Of-Storage-Cancel-Upload
+name: GameSave Xbox 49 - Out of Storage Cancel During Upload
+tags:
+  - xboxgamesaves
+  - failing
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: SimulateOutOfStorage. Write data, start upload. If out-of-storage fires, auto-respond Cancel. Verify upload returns cancelled and local data remains intact. StopStorageSimulation.
+brief: Out-of-storage cancel during upload preserves local data
+group: G. Out of Storage
+devices:
+  DeviceA:
+    engine: [xbox, pc-grts]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  upload-under-storage-pressure:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    # Simulate out-of-storage before upload
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: SimulateOutOfStorage
+        mode: forceOutOfStorage
+    - command: PFGameSaveFilesSetUiOutOfStorageAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    # Upload — if out-of-storage fires, auto-responds Cancel (expect 0x800704C7).
+    # If GRTS does not need local free space for upload, it may succeed — document behavior.
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+      timeoutSeconds: 120
+    # Verify local data remains intact after upload under storage pressure
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: StopStorageSimulation
+    - command: PFGameSaveFilesSetUiOutOfStorageAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: upload-under-storage-pressure
+cleanup:
+  DeviceA:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: StopStorageSimulation
+    - command: PFGameSaveFilesSetUiOutOfStorageAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

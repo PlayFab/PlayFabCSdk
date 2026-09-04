@@ -1,0 +1,52 @@
+id: PFServices-42-Friends-Add-List-Remove
+name: PFServices 42 - Add, List, and Remove Friend
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # SDK crash: PFFriendsClientGetFriendsListAsync causes access violation
+  psx: ignore
+description: >
+  Adds a friend, lists friends to verify, then removes the friend.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFFriendsClientAddFriendAsync
+      expectFailure: true  # E_PF_INVALID_PARAMS (0x89235422) - fake friendPlayFabId not found
+    - command: PFFriendsClientAddFriendGetResult
+    - command: PFFriendsClientGetFriendsListAsync  # SDK BUG: crashes with access violation
+    - command: PFFriendsClientGetFriendsListGetResult
+    - command: PFFriendsClientRemoveFriendAsync
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

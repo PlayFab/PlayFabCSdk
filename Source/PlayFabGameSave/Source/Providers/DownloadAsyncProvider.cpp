@@ -14,7 +14,7 @@ namespace GameSave
 HRESULT DownloadAsyncProvider::DoWork(RunContext runContext)
 {
     std::lock_guard<std::recursive_mutex> lock(m_folderSyncMutex); // Prevent any of the Finally blocks from changing the state while the DoWork thread is active
-#if _DEBUG
+#if defined(_DEBUG)
     SingleThreadProviderValidationScope threadScope(m_singleThreadProviderValidation);
 #endif
 

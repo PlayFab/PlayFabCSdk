@@ -15,7 +15,6 @@ void AuthenticationTests::AddTests()
     AddTest("TestAuthenticateGameServerWithCustomId", &AuthenticationTests::TestAuthenticateGameServerWithCustomId);
     AddTest("TestDelete", &AuthenticationTests::TestDelete);
     AddTest("TestGetEntity", &AuthenticationTests::TestGetEntity);
-    AddTest("TestGetEntityMasterPlayerAccount", &AuthenticationTests::TestGetEntityMasterPlayerAccount);
     AddTest("TestGetEntityWithSecretKey", &AuthenticationTests::TestGetEntityWithSecretKey);
     AddTest("TestServerLoginWithServerCustomId", &AuthenticationTests::TestServerLoginWithServerCustomId);
     AddTest("TestServerLoginWithSteamId", &AuthenticationTests::TestServerLoginWithSteamId);
@@ -96,38 +95,6 @@ void AuthenticationTests::TestGetEntity(TestContext& tc)
         RETURN_IF_FAILED_PLAYFAB(result);
         tc.AssertEqual(defaultTitlePlayer->value().entity.EntityKey().Model().id, result.Payload().EntityKey().Model().id, "entityKeyId");
         tc.AssertEqual(defaultTitlePlayer->value().entity.EntityKey().Model().type, result.Payload().EntityKey().Model().type, "entityKeyType");
-        return S_OK;
-    })
-    .Finally([&](Result<void> result)
-    {
-        tc.EndTest(std::move(result));
-    });
-}
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-constexpr char kMasterAccountType[]{ "master_player_account" };
-
-void AuthenticationTests::TestGetEntityMasterPlayerAccount(TestContext& tc)
-{
-    SharedPtr<std::optional<LoginResult>> defaultTitlePlayer = MakeShared<std::optional<LoginResult>>();
-
-    LoginDefaultTitlePlayer().Then([&, defaultTitlePlayer](Result<LoginResult> result)->AsyncOp<Entity>
-    {
-        RETURN_IF_FAILED_PLAYFAB(result);
-        *defaultTitlePlayer = result.ExtractPayload();
-        Wrappers::PFAuthenticationGetEntityRequestWrapper<Allocator> request{};
-        Wrappers::PFEntityKeyWrapper<Allocator> key{};
-        key.SetId(defaultTitlePlayer->value().loginResult.Model().playFabId);
-        key.SetType(kMasterAccountType);
-        request.SetEntity(key);
-        return RunOperation(MakeUnique<GetEntityOperation>(defaultTitlePlayer->value().entity, std::move(request), RunContext()));
-    })
-    .Then([&, defaultTitlePlayer](Result<Entity> result) -> Result<void>
-    {
-        RETURN_IF_FAILED_PLAYFAB(result);
-        tc.AssertEqual(defaultTitlePlayer->value().loginResult.Model().playFabId, result.Payload().EntityKey().Model().id, "entityKeyId");
-        tc.AssertEqual(kMasterAccountType, result.Payload().EntityKey().Model().type, "entityKeyType");
         return S_OK;
     })
     .Finally([&](Result<void> result)

@@ -1,0 +1,194 @@
+﻿id: Scenario-PSX-11-Upload-Interruption-Recovery
+name: GameSave PSX 11 - Upload Interruption Recovery (PS5)
+tags:
+  - psx
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: passing
+description: |
+  Start upload, interrupt between InitiateUpload and FinalizeManifest via HTTP mock,
+  verify the SDK recovers cleanly and can successfully upload new data afterward.
+  
+  Flow:
+  1. Upload data successfully (establish cloud baseline)
+  2. Write additional data, then attempt upload with FinalizeManifest mocked to 500
+  3. Upload fails with E_CANCELLED (sync-failed auto-response cancels)
+  4. Full teardown and reinitialize
+  5. AddUser recovers from interrupted state
+  6. Write fresh data and upload â€” verifies recovery allows normal operation
+devices:
+  DeviceA:
+    engine: psx
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  setup-and-interrupted-upload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesResetCloudAsync
+    # After ResetCloud, must re-init gamesaves and re-add user to get fresh manifest
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: slotA/character.sav
+            bytes: 32768
+            pattern: [0xBA, 0x5E, 0x11, 0x1E]
+          - verb: CreateBinaryFile
+            relativePath: secondary/data.bin
+            bytes: 16384
+            pattern: [0x5E, 0xC0, 0x1D]
+    # First upload succeeds â€” establishes cloud baseline so recovery has data to sync
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Write an additional file so the second upload has something new to finalize
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: temp/pending-upload.bin
+            bytes: 512
+            pattern: [0xDE, 0xAD]
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    # Mock FinalizeManifest to fail, simulating interruption
+    - command: ConfigureHttpMock
+      parameters:
+        method: POST
+        url: "https://E18D7.playfabapi.com/GameSave/FinalizeManifest"
+        statusCode: 500
+    # Configure sync-failed auto-responder to not hang
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    # This upload should fail/interrupt
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        expectedHr: "0x800704C7"
+        mode: KeepDeviceActive
+    # Clear the mock and auto-responder
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    # Terminate and reinitialize
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  recover-and-retry-upload:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    # Sync should recover from interruption
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Verify local data survived the interruption + recovery cycle
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: CompareSaveContainerSnapshots
+    # Retry upload should succeed (proves SDK is operational after recovery)
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: setup-and-interrupted-upload
+  - role: DeviceA
+    block: recover-and-retry-upload
+cleanup:
+  DeviceA:
+    - command: ClearHttpMocks
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"

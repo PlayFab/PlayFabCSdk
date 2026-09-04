@@ -1,0 +1,54 @@
+id: XSAPI-29-Social-Manager-List
+name: XSAPI 29 - Social Manager Tracked List Group
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer social/social_manager_list.lua.
+  Creates a social user group from an explicit XUID list,
+  polls DoWork, reads users, updates the group, and destroys it.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblSocialManagerAddLocalUser
+    - command: XblSocialManagerDoWork
+    - command: XblSocialManagerGetLocalUsers
+    - command: XblSocialManagerCreateSocialUserGroupFromList
+    - command: XblSocialManagerUserGroupGetUsers
+    - command: XblSocialManagerUpdateSocialUserGroup
+    - command: XblSocialManagerUserGroupGetUsersTrackedByGroup
+    - command: XblSocialManagerDestroySocialUserGroup
+    - command: XblSocialManagerRemoveLocalUser
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

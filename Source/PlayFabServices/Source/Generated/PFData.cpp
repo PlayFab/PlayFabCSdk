@@ -54,6 +54,7 @@ PF_API PFDataAbortFileUploadsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFDataAbortFileUploadsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFDataAbortFileUploadsResponse*>(buffer);
@@ -104,6 +105,7 @@ PF_API PFDataDeleteFilesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFDataDeleteFilesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFDataDeleteFilesResponse*>(buffer);
@@ -154,6 +156,7 @@ PF_API PFDataFinalizeFileUploadsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFDataFinalizeFileUploadsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFDataFinalizeFileUploadsResponse*>(buffer);
@@ -204,6 +207,7 @@ PF_API PFDataGetFilesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFDataGetFilesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFDataGetFilesResponse*>(buffer);
@@ -254,6 +258,7 @@ PF_API PFDataGetObjectsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFDataGetObjectsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFDataGetObjectsResponse*>(buffer);
@@ -304,6 +309,7 @@ PF_API PFDataInitiateFileUploadsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFDataInitiateFileUploadsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFDataInitiateFileUploadsResponse*>(buffer);
@@ -354,6 +360,7 @@ PF_API PFDataSetObjectsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFDataSetObjectsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFDataSetObjectsResponse*>(buffer);

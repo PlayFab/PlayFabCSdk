@@ -1,0 +1,51 @@
+id: PFCore-05-Service-Config-Handles
+name: PFCore 05 - Service Config Handle Lifecycle
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # Test infra: handler tracks one pipeline handle; test needs original + duplicate tracked separately
+  psx: ignore
+description: >
+  Creates, duplicates, and closes service config handles in various
+  orders to verify handle safety.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFServiceConfigDuplicateHandle
+    - command: PFServiceConfigCloseHandle
+    - command: PFServiceConfigGetTitleId
+    - command: PFServiceConfigCloseHandle
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

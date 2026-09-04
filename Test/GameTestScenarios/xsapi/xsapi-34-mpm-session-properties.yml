@@ -1,0 +1,60 @@
+id: XSAPI-34-MPM-Session-Properties
+name: XSAPI 34 - Multiplayer Manager Session Properties
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer multiplayerManager/MPM_SingleDevice_SyncHostWrite.lua.
+  After lobby setup and game join, sets synchronized host and properties,
+  polls DoWork, and verifies.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblMultiplayerManagerInitialize
+    - command: XblMultiplayerManagerLobbySessionAddLocalUser
+    - command: XblMultiplayerManagerDoWork
+    - command: XblMultiplayerManagerJoinGameFromLobby
+    - command: XblMultiplayerManagerDoWork
+    - command: XblMultiplayerManagerGameSessionSetSynchronizedHost
+    - command: XblMultiplayerManagerDoWork
+    - command: XblMultiplayerManagerGameSessionSetSynchronizedProperties
+    - command: XblMultiplayerManagerDoWork
+    - command: XblMultiplayerManagerLobbySessionSetProperties
+    - command: XblMultiplayerManagerDoWork
+    - command: XblMultiplayerManagerLobbySessionPropertiesJson
+    - command: XblMultiplayerManagerLeaveGame
+    - command: XblMultiplayerManagerLobbySessionRemoveLocalUser
+    - command: XblMultiplayerManagerDoWork
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

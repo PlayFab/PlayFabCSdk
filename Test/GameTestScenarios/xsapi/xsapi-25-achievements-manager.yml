@@ -1,0 +1,55 @@
+id: XSAPI-25-Achievements-Manager
+name: XSAPI 25 - Achievements Manager Add User and Query
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer achievements/achievements_manager.lua.
+  Adds local user to Achievements Manager, polls DoWork,
+  queries achievements, reads results, and removes user.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblAchievementsManagerAddLocalUser
+    - command: XblAchievementsManagerDoWork
+    - command: XblAchievementsManagerIsUserInitialized
+    - command: XblAchievementsManagerGetAchievements
+    - command: XblAchievementsManagerResultGetAchievements
+    - command: XblAchievementsManagerResultCloseHandle
+    - command: XblAchievementsManagerGetAchievementsByState
+    - command: XblAchievementsManagerResultGetAchievements
+    - command: XblAchievementsManagerResultCloseHandle
+    - command: XblAchievementsManagerRemoveLocalUser
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

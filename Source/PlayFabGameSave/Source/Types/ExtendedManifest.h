@@ -20,12 +20,13 @@ public:
         bool compressedIncludesExtendedManifest);
 
     static String ConvertCompressionToString(CompressionType compression);
-    static CompressionType ConvertStringToCompression(const String& compressionStr);
+    // Returns E_INVALIDARG for any value outside the manifest schema's "none"/"gzip"/"zip".
+    static HRESULT ConvertStringToCompression(const String& compressionStr, _Out_ CompressionType& compression);
 
 private:
-    static void WriteCompressedFileJson(JsonValue& jsonObj, const ExtendedManifestCompressedFileDetail& compressedFile, const ExtendedManifestNestedFolder& nested, Set<String>& folderIdsInFiles);
-    static void WriteCompressedFileIndexJson(JsonValue& jsonObj, size_t compressedFileIndex, const SharedPtr<FileFolderSet>& remoteFileFolderSet, const ExtendedManifestNestedFolder& nested, Set<String>& folderIdsInFiles);
-    static JsonValue CreateNestedFolderJson(const SharedPtr<FileFolderSet>& localFileFolderSet, const String& parentPath, const String& folderName, ExtendedManifestNestedFolder& folder);
+    static void WriteCompressedFileJson(JsonValue& jsonObj, const ExtendedManifestCompressedFileDetail& compressedFile, Set<String>& folderIdsInFiles);
+    static void WriteCompressedFileIndexJson(JsonValue& jsonObj, size_t compressedFileIndex, const SharedPtr<FileFolderSet>& localFileFolderSet, const SharedPtr<FileFolderSet>& remoteFileFolderSet, Set<String>& folderIdsInFiles);
+    static JsonValue CreateNestedFolderJson(const SharedPtr<FileFolderSet>& localFileFolderSet, const SharedPtr<FileFolderSet>& remoteFileFolderSet, const String& parentPath, const String& folderName, ExtendedManifestNestedFolder& folder);
     static void CreateNestedStructure(const SharedPtr<FileFolderSet>& localFileFolderSet, ExtendedManifestNestedFolder& nestedStructure, const String& saveFolder);
     static void AddPath(ExtendedManifestNestedFolder& root, const String& path);
 };

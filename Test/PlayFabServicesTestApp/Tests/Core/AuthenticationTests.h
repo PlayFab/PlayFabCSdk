@@ -21,7 +21,6 @@ private:
     void TestAuthenticateGameServerWithCustomId(TestContext& testContext);
     void TestDelete(TestContext& testContext);
     void TestGetEntity(TestContext& testContext);
-    void TestGetEntityMasterPlayerAccount(TestContext& testContext);
     void TestGetEntityWithSecretKey(TestContext& testContext);
     void TestServerLoginWithServerCustomId(TestContext& testContext);
     void TestServerLoginWithSteamId(TestContext& testContext);

@@ -1,0 +1,241 @@
+id: Scenario-Xbox-47-Chaos-Repack
+name: GameSave Xbox 47 - Chaos Repack (Incremental, Run On Repeat)
+# One pass = one app run = ~1 committed cloud chunk (GRTS defers the real upload until
+# the app isn't running). Each pass is short; run it on --repeat to accumulate.
+runnerTimeoutSeconds: 600
+tags:
+  - xboxgamesaves
+  - chaos
+  - repack
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Two-device incremental chaos test for Xbox that drives the GRTS runtime's automatic
+  REPACK, adapted from gamesave-xbox-02-two-device-golden-path. Designed to be run on
+  REPEAT (`tests-run.py gamesave-xbox --only 47 --repeat N`) — each pass builds on the
+  previous pass's accumulated cloud save.
+
+  Why one chunk per pass (key GRTS behavior):
+    - The GRTS runtime defers the real cloud upload until the app isn't running, so a
+      single app session commits ~1 chunk regardless of how many UploadWithUi calls it
+      makes. You cannot batch many uploads into one pass to accumulate faster.
+    - GRTS also size-batches files into ~32MB chunks (confirmed against ConnectedStorage
+      Manifests.cpp), so writing several tiny files in a pass still produces ~1 chunk.
+    - Net: each PASS (= one app run) adds ~1 new chunk on top of the persistent,
+      additive manifest. The accumulated chunk count grows by ~1 per pass.
+
+  The runtime auto-repacks when manifestFiles.size() + 2 >= 100 (PF_UPLOAD_MAX_CHUNKS),
+  i.e. once ~98 game-data chunks have accumulated. So leave this on --repeat for ~98+
+  passes: each pass adds a chunk; around pass ~98 the GRTS runtime auto-repacks
+  (repackageAllData) and consolidates everything into a fresh compact set, after which
+  the count collapses and accumulation restarts (it will repack again every ~98 passes).
+
+  Each pass:
+    1. Device A authenticates, AddUser downloads the accumulated cloud save (NO reset —
+       this is what makes each pass build on the previous), writes a few tiny NEW files
+       via DoChaosMode (create-only so the file set only grows), and uploads as the
+       active device. The app then tears down, which is when GRTS commits the ~1 new
+       chunk. Captures the uploaded state as snapshot 'left'.
+    2. Device B authenticates, AddUser downloads the latest accumulated save, captures
+       snapshot 'right', and CompareSaveContainerSnapshots confirms it is intact.
+
+  Chaos is CREATE-ONLY (fileModify/fileDelete disabled): modifying/deleting files inside
+  existing chunks marks those chunks inactive and can drop them, stalling the count.
+  Pure creates guarantee the chunk count climbs ~+1 per pass toward the 98 threshold.
+
+  To start a FRESH accumulation (count from ~0), reset this customId's cloud data once
+  before starting the repeat loop; otherwise each pass simply builds on whatever is
+  already in the cloud (fine for an open-ended soak — it will keep repacking on cycle).
+
+  Validation signals (DeviceA / GRTS runtime logs), watch across the repeated passes:
+    - Manifest chunk count climbs by ~1 each pass.
+    - Around pass ~98: PFUploadPlanStart/Complete with repackageAllData going TRUE (the
+      repack firing), then the chunk count drops sharply.
+    - Every Device B verify matches (the save stays intact across accumulation + repack).
+
+  The seed is time-based per chaos run, so each pass writes different random files.
+brief: One chunk per pass; run on --repeat ~98+ to trip the GRTS 100-chunk repack
+group: Z. Chaos
+devices:
+  DeviceA:
+    engine: pc-grts
+  DeviceB:
+    engine: xbox
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  # Device A: one pass = add a few tiny NEW files on top of the accumulated cloud save
+  # and upload. NO reset -> builds on the previous pass. GRTS commits ~1 chunk per pass.
+  device-a-add-one-chunk:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+        maxRetries: 5
+        fallbackAction: Cancel
+    # Get Xbox user (required for game saves on Xbox; on PC auto-retries with UI if no default user)
+    - command: XUserAddAsync
+    # Login with shared CustomID to establish shared PlayFab entity
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness-ChaosXboxRepack"
+        createAccount: true
+    # Link Xbox account to the shared CustomID entity
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    # Create local user from Xbox (required for game saves)
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # NO reset: AddUser downloads the accumulated save so this pass builds on the last.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    # Add this pass's increment: a few tiny NEW files (create-only) -> ~1 new chunk.
+    # numUploads: 1 because GRTS commits ~1 chunk per app run regardless.
+    - command: DoChaosMode
+      parameters:
+        fileCreate: true
+        fileModify: false
+        fileDelete: false
+        folderCreate: false
+        folderDelete: false
+        binaryFiles: true
+        textFiles: true
+        largeFiles: false
+        unicodeFiles: false
+        unicodeFolders: false
+        operationsPerUpload: 3
+        numUploads: 1
+        mode: ReleaseDeviceAsActive
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # Device B: download the latest accumulated save and confirm it is intact (left == right).
+  device-b-verify-download:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+        maxRetries: 5
+        fallbackAction: Cancel
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness-ChaosXboxRepack"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # AddUser downloads the latest accumulated (and possibly just-repacked) save.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    # Verify the accumulated cloud save downloads intact.
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+        ignoreDirectories: true
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  # One pass = +1 chunk (A) then verify (B). Run on --repeat ~98+ to trip the repack.
+  - role: DeviceA
+    block: device-a-add-one-chunk
+  - role: DeviceB
+    block: device-b-verify-download
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+  DeviceB:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

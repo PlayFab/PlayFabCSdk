@@ -1,0 +1,209 @@
+﻿id: Scenario-PSX-41-Offline-AddUser-Network-Disabled
+name: GameSave PSX 41 - Offline AddUser with Network Adapter Disabled (PS5)
+tags:
+  - psx
+  - interactive
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: untested
+  psx: ignore
+description: >
+  Mirrors the single-device golden path (scenario 01), but disables the physical
+  network adapter before AddUser to force a true OS-level offline path.
+  The user auto-responds UseOffline via the SyncFailed callback, writes save data
+  locally, then the adapter is re-enabled and a second AddUser reconnects to the
+  cloud. An upload and re-download verify round-trip integrity.
+devices:
+  DeviceA:
+    engine: psx
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  initialize:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: XUserAddAsync
+      parameters:
+        allowUi: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+
+  disable-network-and-adduser-offline:
+    # Disable physical network adapters on the local machine
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: DisableNetwork
+
+    # Auto-respond to SyncFailed: go offline immediately
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: UseOffline
+
+    # AddUser should retry once, then enter offline mode
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 120
+
+    # Verify we are offline
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+
+    - command: PFGameSaveFilesGetFolder
+
+  offline-write-and-upload-attempt:
+    # Write save data while offline
+    - command: DeleteSaveRoot
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 10240
+            pattern: [0xAA, 0xBB, 0xCC, 0xDD]
+
+    # Upload attempt should return E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+        expectedHr: "0x89237004"
+
+  reenable-network-and-reconnect:
+    # Re-enable network adapters
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+
+    # Give the OS a moment to re-establish connectivity after the adapter comes back up.
+    # Without this, the AddUser below can race the adapter and fail to reach the service.
+    - command: Sleep
+      parameters:
+        durationMs: 5000
+
+    # Clear the auto-response so normal retry works
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Retry
+
+    # Re-AddUser to reconnect to cloud
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 120
+
+    # Verify we are back online
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+
+    # Upload the offline payload
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+
+    # Snapshot for comparison
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+
+  teardown-and-redownload:
+    # Full teardown
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+    # Fresh session to re-download
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+      parameters:
+        allowUi: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+
+    # Snapshot and compare
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: CompareSaveContainerSnapshots
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+
+executionOrder:
+  - role: DeviceA
+    block: initialize
+  - role: DeviceA
+    block: disable-network-and-adduser-offline
+  - role: DeviceA
+    block: offline-write-and-upload-attempt
+  - role: DeviceA
+    block: reenable-network-and-reconnect
+  - role: DeviceA
+    block: teardown-^nd-redownload
+
+cleanup:
+  DeviceA:
+    # Always re-enable network in cleanup to avoid leaving the machine offline
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

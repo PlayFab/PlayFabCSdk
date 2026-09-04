@@ -1,0 +1,54 @@
+id: LHC-16-Error-Handling-Edge-Cases
+name: LHC 16 - Error Handling and Edge Cases
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Exercise defensive-coding edge cases: perform a request without setting
+  a URL and verify a meaningful error; call APIs on a fresh handle without
+  full setup; verify cleanup is safe after partial setup.  Catches regressions
+  that would manifest as crashes in customer code with bad inputs.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  error-handling:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Perform without setting URL — should fail, not crash
+    - command: HCHttpCallCreate
+    - command: HCHttpCallPerformAsync
+      parameters:
+        expectFailure: true
+    - command: HCHttpCallCloseHandle
+
+    # Get response data on a handle that was never performed — should not crash
+    - command: HCHttpCallCreate
+    # No request was performed, so there is deliberately no response and the status is 0. The
+    # point of the step is that reading it is safe, not that a response arrived.
+    - command: HCHttpCallResponseGetStatusCode
+      parameters:
+        requireResponse: false
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallResponseGetNumHeaders
+    - command: HCHttpCallCloseHandle
+
+    # Double cleanup should be safe (ref-counted)
+    - command: HCCleanup
+    - command: HCIsInitialized
+executionOrder:
+  - role: DeviceA
+    block: error-handling
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

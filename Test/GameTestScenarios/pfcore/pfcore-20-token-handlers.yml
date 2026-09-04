@@ -1,0 +1,52 @@
+id: PFCore-20-Token-Handlers
+name: PFCore 20 - Entity Token Event Handlers
+tags:
+  - pfcore
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Registers token expired and token refreshed event handlers,
+  verifies they can be registered and unregistered cleanly.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserLoginAsync
+
+  test:
+    - command: PFLocalUserTryGetEntityHandle
+    - command: PFEntityRegisterTokenExpiredEventHandler
+    - command: PFEntityRegisterTokenRefreshedEventHandler
+    - command: PFEntityUnregisterTokenExpiredEventHandler
+    - command: PFEntityUnregisterTokenRefreshedEventHandler
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

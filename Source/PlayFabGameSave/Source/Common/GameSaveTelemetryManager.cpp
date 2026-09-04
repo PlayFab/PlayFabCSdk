@@ -34,7 +34,43 @@ HRESULT GameSaveTelemetryManager::CreateEntityTelemetryPipeline(const LocalUser&
     Vector<char> titleId(size, '\0');
     RETURN_IF_FAILED(PFEntityGetTitleId(entityHandle, size, &titleId[0], nullptr));
 
-    RETURN_IF_FAILED(PFPlatformGetPlatformType(&m_platformType));
+    {
+        PFPlatformType platformType{};
+        RETURN_IF_FAILED(PFPlatformGetPlatformType(&platformType));
+        switch (platformType)
+        {
+            case PFPlatformType::Windows:    m_platformType = "Windows"; break;
+            case PFPlatformType::Xbox:       m_platformType = "Xbox"; break;
+            case PFPlatformType::Linux:      m_platformType = "Linux"; break;
+            case PFPlatformType::Nintendo:   m_platformType = "Nintendo"; break;
+            case PFPlatformType::PlayStation: m_platformType = "PlayStation"; break;
+            case PFPlatformType::iOS:        m_platformType = "iOS"; break;
+            case PFPlatformType::Android:    m_platformType = "Android"; break;
+            case PFPlatformType::SteamPc:    m_platformType = "SteamPc"; break;
+            case PFPlatformType::SteamDeck:  m_platformType = "SteamDeck"; break;
+            default:                         m_platformType = "Unknown"; break;
+        }
+
+        // Override Windows -> WindowsInproc when ForceUseInprocGameSaves regkey is set
+#ifdef _WIN32
+        if (platformType == PFPlatformType::Windows)
+        {
+            HKEY hKey = nullptr;
+            LONG lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\GamingServices", 0, KEY_READ, &hKey);
+            if (lResult == ERROR_SUCCESS)
+            {
+                DWORD value = 0;
+                DWORD dataSize = sizeof(DWORD);
+                lResult = RegQueryValueEx(hKey, L"ForceUseInprocGameSaves", nullptr, nullptr, reinterpret_cast<LPBYTE>(&value), &dataSize);
+                if (lResult == ERROR_SUCCESS && value == 1)
+                {
+                    m_platformType = "WindowsInproc";
+                }
+                RegCloseKey(hKey);
+            }
+        }
+#endif // #ifdef _WIN32
+    }
 
     const PFEntityKey* entityKey{};
     RETURN_IF_FAILED(PFEntityGetEntityKeySize(entityHandle, &size));
@@ -59,6 +95,7 @@ void GameSaveTelemetryManager::PopulateCommonFields(JsonValue& payload) const no
 {
     JsonUtils::ObjectAddMember(payload, "userId", m_platformId);
     JsonUtils::ObjectAddMember(payload, "platformType", m_platformType);
+    JsonUtils::ObjectAddMember(payload, "sessionId", m_sessionId);
 }
 
 JsonValue ContextActivationEvent::ToJson() const
@@ -75,6 +112,11 @@ JsonValue ContextActivationEvent::ToJson() const
     {
         JsonUtils::ObjectAddMember(output, "conflictVersion", conflictVersion);
     }
+    if (!baseVersion.empty())
+    {
+        JsonUtils::ObjectAddMember(output, "baseVersion", baseVersion);
+    }
+    JsonUtils::ObjectAddMember(output, "hresult", static_cast<uint32_t>(hresult));
 
     return output;
 }
@@ -311,6 +353,7 @@ void GameSaveTelemetryManager::ResetContextActivation() noexcept
     m_contextActivationEvent = {};
     m_contextActivationFailureEvent = {};
     m_contextActivationEventEmitted = false;
+    m_sessionId = CreateGUID();
 }
 
 void GameSaveTelemetryManager::ResetContextDelete() noexcept

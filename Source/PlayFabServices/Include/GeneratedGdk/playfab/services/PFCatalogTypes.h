@@ -354,7 +354,12 @@ typedef struct PFCatalogRating
 } PFCatalogRating;
 
 /// <summary>
-/// PFCatalogRealMoneyPriceDetails data model.
+/// PFCatalogRealMoneyPriceDetails data model. The multi-currency unit price, in real money, of the item
+/// that was redeemed within an individual marketplace. Each property is a dictionary where the key is
+/// the three-letter currency code as defined in ISO 4217, and the value is the currency amount in the
+/// smallest unit (e.g. cents, pence, etc.) in accordance with ISO 4217. Example: If the product price
+/// in USD is $1.39, the dictionary entry would be: ["USD"] = 139. Currently, only United States Dollar
+/// (USD) is supported.
 /// </summary>
 typedef struct PFCatalogRealMoneyPriceDetails
 {

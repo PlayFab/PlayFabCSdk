@@ -48,6 +48,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\DownloadStep.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\FolderSyncManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\LockStep.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\RelockStep.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\ResetCloudStep.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\ActiveDevicePollWorker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\SetSaveDescriptionStep.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\DownloadStep.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\FolderSyncManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\LockStep.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\RelockStep.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\ResetCloudStep.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\ActiveDevicePollWorker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\SetSaveDescriptionStep.h" />

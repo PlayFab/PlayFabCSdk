@@ -49,6 +49,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)TitleDataManagementOperations.cpp" >
       <Filter>Source</Filter>
     </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayStreamOperations.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayStreamOperations.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsOperations.h" >
       <Filter>Include</Filter>
     </ClInclude>

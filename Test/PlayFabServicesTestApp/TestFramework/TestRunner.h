@@ -34,6 +34,13 @@ public:
     // Returns true if all tests passed
     bool Cleanup();
 
+    // Returns the current pass/fail state from the underlying TestReport without
+    // touching SDK state. Safe to call after Update() returns true (i.e. after
+    // the test summary has been logged) when callers need the result but want
+    // to avoid Cleanup() — useful as a fallback when Cleanup() is at risk of
+    // hanging (e.g. the known XTaskQueueTerminate wedge on Android x86_64).
+    bool AllTestsPassed() const;
+
 private:
     String GenerateTestSummary();
     void AddLog(HCTraceLevel level, _In_z_ _Printf_format_string_ const char* format, ...);

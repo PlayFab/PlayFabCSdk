@@ -16,26 +16,10 @@
 #if HC_PLATFORM == HC_PLATFORM_GDK // Temporary while GDK is still a separate platform
 #include <PFXGameSave.h>
 #include <playfab/gamesave/PFGameSaveFiles.h>
-
-constexpr auto PF_GDK_MAX_USERS = 16;
-
-struct PFXPALGameSaveUserState
-{
-    PFLocalUserHandle localUser;
-    XUserHandle xUser;
-    void* configHandle;
-    char saveFolder[1024];
-};
-
-struct PFXPALGameSaveContext
-{
-    PFGameSaveFilesUiProgressCallback* progressCallback;
-    PFGameSaveFilesUiSyncFailedCallback* syncFailedCallback;
-    PFGameSaveFilesUiActiveDeviceContentionCallback* activeDeviceContentionCallback;
-    PFGameSaveFilesUiConflictCallback* conflictCallback;
-    PFGameSaveFilesUiOutOfStorageCallback* outOfStorageCallback;
-    PFXPALGameSaveUserState users[PF_GDK_MAX_USERS];
-};
+// PFXPALGameSaveContext/PFXPALGameSaveUserState are shared with the game save GRTS provider,
+// which reads and writes this storage through PFPlatformGetGameSaveContext(). Both sides must
+// use the one definition in GameSaveGDKContext.h.
+#include "GameSaveGDKContext.h"
 #endif
 
 namespace PlayFab

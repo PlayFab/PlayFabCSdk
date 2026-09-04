@@ -1,0 +1,68 @@
+id: LHC-03-Http-Request-Response-Lifecycle
+name: LHC 03 - HTTP Request-Response Lifecycle
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  End-to-end HTTP flow mirroring a real customer scenario: create a call handle,
+  configure the request (URL, body, headers), perform a real GET against a public
+  endpoint, read back the response (status code, body, headers), verify perform
+  count, confirm double-perform is rejected, then clean up handles.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  http-lifecycle:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # ── Create and identify the call handle ──
+    - command: HCHttpCallCreate
+    - command: HCHttpCallGetId
+
+    # ── Configure the request ──
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://raw.githubusercontent.com/microsoft/libHttpClient/refs/heads/main/README.md"
+    - command: HCHttpCallRequestGetUrl
+    - command: HCHttpCallGetRequestUrl
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "User-Agent"
+        headerValue: "libHttpClient-test"
+    - command: HCHttpCallRequestGetNumHeaders
+
+    # ── Perform the call against the live endpoint ──
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallGetPerformCount
+
+    # ── Read the response ──
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallResponseGetResponseBodyBytesSize
+    - command: HCHttpCallResponseGetResponseBodyBytes
+    - command: HCHttpCallResponseGetNumHeaders
+
+    # ── Duplicate handle, verify ref-count, then close both ──
+    - command: HCHttpCallDuplicateHandle
+    - command: HCHttpCallCloseHandle
+    - command: HCHttpCallCreate
+    - command: HCHttpCallCloseHandle
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: http-lifecycle
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

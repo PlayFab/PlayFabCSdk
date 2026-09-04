@@ -1,12 +1,12 @@
-# PFGameSaveTestDevice Port Guide (Linux or Other 3pp Console)
+# GameTestApp Port Guide (Linux or Other 3pp Console)
 
-This guide describes how to port `PFGameSaveTestDeviceWindows` to Linux or other 3pp console, building on top of the existing `PlayFabServicesManualTestApp` port that your team has already completed.
+This guide describes how to port `GameTestAppWindows` to Linux or other 3pp console, building on top of the existing `PlayFabServicesManualTestApp` port that your team has already completed.
 
 ## Overview
 
-### What is PFGameSaveTestDeviceWindows?
+### What is GameTestAppWindows?
 
-`PFGameSaveTestDeviceWindows` is an automated test device application that executes commands sent from a remote test controller via WebSocket. Unlike the interactive `PlayFabServicesManualTestApp`, this application operates in a fully automated mode where:
+`GameTestAppWindows` is an automated test device application that executes commands sent from a remote test controller via WebSocket. Unlike the interactive `PlayFabServicesManualTestApp`, this application operates in a fully automated mode where:
 
 1. A **Test Controller** (C# WinForms application running on a PC) sends JSON commands over WebSocket
 2. The **Device Application** receives commands, executes them, and returns results
@@ -14,7 +14,7 @@ This guide describes how to port `PFGameSaveTestDeviceWindows` to Linux or other
 
 ### Key Differences from PlayFabServicesManualTestApp
 
-| Aspect | PlayFabServicesManualTestApp | PFGameSaveTestDeviceWindows |
+| Aspect | PlayFabServicesManualTestApp | GameTestAppWindows |
 |--------|------------------------------|------------------------------|
 | User Interaction | Keyboard-driven menu | No user interaction (automated) |
 | Communication | None (standalone) | WebSocket to test controller |
@@ -33,7 +33,7 @@ This guide describes how to port `PFGameSaveTestDeviceWindows` to Linux or other
 │                                                                             │
 │  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐         │
 │  │ Scenario YAML   │───>│ Scenario Engine │───>│ WebSocket Server│         │
-│  │ (Test Scripts)  │    │ (Step Executor) │    │ (Port 5000)     │         │
+│  │ (Test Scripts)  │    │ (Step Executor) │    │ (port 15080)     │         │
 │  └─────────────────┘    └─────────────────┘    └────────┬────────┘         │
 └─────────────────────────────────────────────────────────┼──────────────────┘
                                                           │ JSON Commands
@@ -56,7 +56,7 @@ This guide describes how to port `PFGameSaveTestDeviceWindows` to Linux or other
 
 ### Command-Response Loop
 
-1. Device connects to controller WebSocket (`ws://<controller-ip>:5000/ws/`)
+1. Device connects to controller WebSocket (`ws://<controller-ip>:15080/ws/`)
 2. Device sends capabilities message identifying platform type
 3. Controller assigns device a name and role
 4. Controller sends command envelope (JSON):
@@ -89,66 +89,76 @@ This guide describes how to port `PFGameSaveTestDeviceWindows` to Linux or other
 ### Directory Structure
 
 ```
-Test/PFGameSaveTestDeviceWindows/
-├── Common/                          # Cross-platform code (reuse as-is)
-│   ├── DeviceApplication.h          # Application lifecycle interface
-│   ├── DeviceCommandHandlers.cpp/h  # Command router/registry
-│   ├── DeviceCommandProcessor.cpp/h # WebSocket message handler
-│   ├── DeviceGameSave.cpp/h         # Argument parsing, cleanup
-│   ├── DeviceGameSaveState.h        # Shared state structure
-│   ├── DeviceLogging.h              # Logging interface (platform-specific impl)
-│   ├── DeviceWebSocketClient.cpp/h  # WebSocket wrapper (libHttpClient)
-│   ├── DeviceWebSocketConnection.cpp/h # Auto-reconnect logic
+Test/
+├── GameTestAppShared/          # Cross-platform code (reuse as-is)
+│   ├── DeviceApplication.h              # Application lifecycle interface
+│   ├── DeviceCommandHandlers.cpp/h      # Command router/registry
+│   ├── DeviceCommandProcessor.cpp/h     # WebSocket message handler
+│   ├── DeviceGameSave.cpp/h             # Argument parsing, cleanup
+│   ├── DeviceGameSaveState.h            # Shared state structure
+│   ├── DeviceLogging.h                  # Logging interface (platform-specific impl)
+│   ├── DeviceWebSocketClient.cpp/h      # WebSocket wrapper (libHttpClient)
+│   ├── DeviceWebSocketConnection.cpp/h  # Auto-reconnect logic
+│   ├── HarnessHash.cpp/h               # SHA256 implementation (BCrypt, shared)
 │   │
-│   ├── PFCommandHandlers.cpp/h      # PlayFab API command handlers
-│   ├── XUserHandlers.cpp/h          # Xbox user sign-in handlers
-│   ├── XTaskQueueHandlers.cpp/h     # Task queue handlers
-│   ├── XGameRuntimeHandlers.cpp/h   # XGameRuntime handlers
+│   ├── PFCommandHandlers.cpp/h          # PlayFab API command handlers
+│   ├── XUserHandlers.cpp/h              # Xbox user sign-in handlers
+│   ├── XTaskQueueHandlers.cpp/h         # Task queue handlers
+│   ├── XGameRuntimeHandlers.cpp/h       # XGameRuntime handlers
 │   │
-│   ├── ChaosModeHandler.cpp/h       # Random file operation testing
-│   ├── WriteGameSaveData.cpp/h      # Test data generation
-│   ├── GatherSnapshot.cpp/h         # Save folder archiving
+│   ├── ChaosModeHandler.cpp/h           # Random file operation testing
+│   ├── WriteGameSaveData.cpp/h          # Test data generation
+│   ├── GatherSnapshot.cpp/h             # Save folder archiving
 │   ├── CaptureSaveContainerSnapshot.cpp/h # File listing/hashing
-│   ├── DeleteSaveRoot.cpp/h         # Save folder deletion
-│   ├── DeleteLocalFolder.cpp/h      # Arbitrary folder deletion
+│   ├── DeleteSaveRoot.cpp/h             # Save folder deletion
+│   ├── DeleteLocalFolder.cpp/h          # Arbitrary folder deletion
 │   ├── CopyTargetFolderToSaveFolder.cpp/h # Dataset seeding
-│   ├── ConsumeDiskSpace.cpp/h       # Disk space manipulation
-│   ├── GatherLogs.cpp/h             # Log retrieval
-│   ├── GetDebugStats.cpp/h          # Debug statistics
-│   ├── HttpMock.cpp/h               # HTTP mocking support
-│   ├── HttpMockHandlers.cpp/h       # Mock configuration handlers
-│   ├── SmokeCommandHandlers.cpp/h   # Basic connectivity tests
-│   └── CommandHandlerShared.h       # Handler utilities
+│   ├── ConsumeDiskSpace.cpp/h           # Disk space manipulation
+│   ├── GatherLogs.cpp/h                 # Log retrieval
+│   ├── GetDebugStats.cpp/h              # Debug statistics
+│   ├── HttpMock.cpp/h                   # HTTP mocking support
+│   ├── HttpMockHandlers.cpp/h           # Mock configuration handlers
+│   ├── SmokeCommandHandlers.cpp/h       # Basic connectivity tests
+│   └── CommandHandlerShared.h           # Handler utilities
 │
-└── Platform/
-    └── Windows/                     # Windows-specific (create Linux or other 3pp console equivalent)
-        ├── Main.cpp                 # Entry point
-        ├── pch.cpp/h                # Precompiled header
-        ├── DeviceApplication_Win32.cpp  # App lifecycle implementation
-        ├── DeviceLogging_Win32.cpp      # Logging implementation
-        ├── DeviceGameSaveState_Win32.cpp # State singleton
-        ├── DeviceWindow.cpp/h           # GUI window (optional for PSX)
-        └── HarnessHash_Win32.cpp        # SHA256 implementation
+├── GameTestAppWindows/         # Windows GDK Desktop test device
+│   └── Platform/
+│       └── Windows/                     # Windows-specific platform files
+│           ├── Main.cpp                 # Entry point
+│           ├── pch.cpp/h                # Precompiled header
+│           ├── DeviceApplication_Win32.cpp  # App lifecycle implementation
+│           ├── DeviceLogging_Win32.cpp      # Logging implementation
+│           ├── DeviceGameSaveState_Win32.cpp # State singleton
+│           └── DeviceWindow.cpp/h           # GUI window (optional for PSX)
+│
+└── GameTestAppXbox/            # Xbox console + GDK Desktop test device
+    └── Platform/
+        └── Xbox/                        # Xbox-specific platform files (ATG/DirectX)
+            ├── Main_Xbox.cpp            # Entry point with PLM support
+            ├── pch_Xbox.cpp/h           # Precompiled header
+            ├── TestDeviceApp.cpp/h      # ATG app class (DeviceResources, TextConsole)
+            ├── DeviceLogging_Xbox.cpp   # TextConsole-based logging
+            └── DeviceGameSaveState_Xbox.cpp # State singleton
 ```
 
 ### What to Reuse vs. Implement
 
 | Component | Action | Notes |
 |-----------|--------|-------|
-| `Common/*` | **Reuse as-is** | All cross-platform code |
+| `GameTestAppShared/*` | **Reuse as-is** | All cross-platform code |
 | `Platform/Windows/Main.cpp` | **Create Linux or other 3pp console version** | Entry point with platform init |
 | `Platform/Windows/DeviceApplication_Win32.cpp` | **Create Linux or other 3pp console version** | Application lifecycle |
 | `Platform/Windows/DeviceLogging_Win32.cpp` | **Create Linux or other 3pp console version** | Logging to console/file |
 | `Platform/Windows/DeviceGameSaveState_Win32.cpp` | **Create Linux or other 3pp console version** | Global state singleton |
 | `Platform/Windows/DeviceWindow.cpp` | **Skip or stub** | GUI not needed on Linux or other 3pp console |
-| `Platform/Windows/HarnessHash_Win32.cpp` | **Create Linux or other 3pp console version** | SHA256 hashing |
+| `GameTestAppShared/HarnessHash.cpp` | **Reuse as-is** | SHA256 via BCrypt (shared across GDK platforms) |
 | `Platform/Windows/pch.cpp/h` | **Create Linux or other 3pp console version** | Platform headers |
 
 ## Implementation Steps
 
 ### Step 1: Create Platform Directory
 
-Create `Test/PFGameSaveTestDeviceWindows/Platform/<YourPlatform>/` with:
+Create `Test/GameTestApp<YourPlatform>/Platform/<YourPlatform>/` with:
 
 ```
 Platform/<YourPlatform>/
@@ -315,7 +325,7 @@ The WebSocket client (`DeviceWebSocketClient`) uses libHttpClient which should w
 
 Key configuration:
 - Default controller address: `localhost` (override with `/controller <ip>` argument)
-- WebSocket URI: `ws://<controller-ip>:5000/ws/`
+- WebSocket URI: `ws://<controller-ip>:15080/ws/`
 - Reconnect interval: 2 seconds
 
 The device announces its platform type on connect:
@@ -341,15 +351,15 @@ This section provides the complete reference for how your platform-specific code
 
 ### Required Headers to Include
 
-Your main platform file should include these headers from `Common/`:
+Your main platform file should include these headers from `GameTestAppShared/` (add this directory to your `AdditionalIncludeDirectories`):
 
 ```cpp
-#include "Common/DeviceApplication.h"        // Lifecycle interface
-#include "Common/DeviceCommandProcessor.h"   // WebSocket message setup
-#include "Common/DeviceGameSave.h"           // Cleanup and arg parsing
-#include "Common/DeviceGameSaveState.h"      // Global state structure
-#include "Common/DeviceLogging.h"            // Logging (you implement)
-#include "Common/DeviceWebSocketConnection.h" // Auto-reconnect pump
+#include "DeviceApplication.h"        // Lifecycle interface
+#include "DeviceCommandProcessor.h"   // WebSocket message setup
+#include "DeviceGameSave.h"           // Cleanup and arg parsing
+#include "DeviceGameSaveState.h"      // Global state structure
+#include "DeviceLogging.h"            // Logging (you implement)
+#include "DeviceWebSocketConnection.h" // Auto-reconnect pump
 ```
 
 ### Essential APIs You Must Call
@@ -432,12 +442,12 @@ Here's the complete template showing all API calls in order:
 
 ```cpp
 #include "pch.h"
-#include "Common/DeviceApplication.h"
-#include "Common/DeviceCommandProcessor.h"
-#include "Common/DeviceGameSave.h"
-#include "Common/DeviceGameSaveState.h"
-#include "Common/DeviceLogging.h"
-#include "Common/DeviceWebSocketConnection.h"
+#include "DeviceApplication.h"
+#include "DeviceCommandProcessor.h"
+#include "DeviceGameSave.h"
+#include "DeviceGameSaveState.h"
+#include "DeviceLogging.h"
+#include "DeviceWebSocketConnection.h"
 
 int main(int argc, char* argv[])
 {
@@ -764,7 +774,7 @@ static const std::unordered_map<std::string_view, CommandHandler> s_handlers{
 
 ### WebSocket Connection Issues
 
-- Ensure firewall allows port 5000
+- Ensure firewall allows port 15080
 - Check controller IP is reachable from device network
 - Verify libHttpClient is properly initialized
 
@@ -789,7 +799,7 @@ The port primarily involves:
 3. **Handling user sign-in** using platform-specific identity APIs
 4. **Stubbing Xbox-specific commands** that don't apply
 
-The bulk of the test automation logic in `Common/` should work unchanged since it uses:
+The bulk of the test automation logic in `GameTestAppShared/` should work unchanged since it uses:
 - Standard C++ and STL
 - libHttpClient for WebSocket (already ported for PlayFabServicesManualTestApp)
 - nlohmann/json for JSON parsing

@@ -1,0 +1,74 @@
+id: Scenario-Xbox-87-Custom-File-Location-Invalid
+name: GameSave Xbox 87 - Custom File Location Invalid Path
+tags:
+  - xboxgamesaves
+  - verified
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Attempt PFGameSaveFilesInitialize with invalid saveFolder path. Verify E_GS_PLAYFAB_INVALID_LOCATION error, no crash. Retry with valid path and verify success.
+brief: Invalid custom file location error handling
+group: P. GRTS API Edge Cases
+devices:
+  DeviceA:
+    engine: [xbox, pc-grts]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  attempt-invalid-path:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    # Invalid path — on PC-GRTS expect E_GS_PLAYFAB_INVALID_LOCATION (0x80832305);
+    # on Xbox the saveFolder parameter is ignored so Initialize succeeds (0x00000000).
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "Z:\\nonexistent\\badpath\\"
+        expectedHr: "0x00000000,0x80832305"
+  retry-valid-path:
+    # Retry with valid saveFolder — should succeed
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: attempt-invalid-path
+  - role: DeviceA
+    block: retry-valid-path
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

@@ -28,7 +28,6 @@ public:
     static AsyncOp<GetInventoryCollectionIdsResponse> GetInventoryCollectionIds(Entity const& entity, const GetInventoryCollectionIdsRequest& request, RunContext rc);
     static AsyncOp<GetInventoryItemsResponse> GetInventoryItems(Entity const& entity, const GetInventoryItemsRequest& request, RunContext rc);
     static AsyncOp<GetInventoryOperationStatusResponse> GetInventoryOperationStatus(Entity const& entity, const GetInventoryOperationStatusRequest& request, RunContext rc);
-    static AsyncOp<GetMicrosoftStoreAccessTokensResponse> GetMicrosoftStoreAccessTokens(Entity const& entity, const GetMicrosoftStoreAccessTokensRequest& request, RunContext rc);
     static AsyncOp<GetTransactionHistoryResponse> GetTransactionHistory(Entity const& entity, const GetTransactionHistoryRequest& request, RunContext rc);
     static AsyncOp<PurchaseInventoryItemsResponse> PurchaseInventoryItems(Entity const& entity, const PurchaseInventoryItemsRequest& request, RunContext rc);
     static AsyncOp<RedeemAppleAppStoreInventoryItemsResponse> RedeemAppleAppStoreInventoryItems(Entity const& entity, const RedeemAppleAppStoreInventoryItemsRequest& request, RunContext rc);

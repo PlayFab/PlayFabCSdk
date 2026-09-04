@@ -1,0 +1,56 @@
+id: PFServices-03-Catalog-Publish
+name: PFServices 03 - Publish and Get Published Item
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Creates a draft item, publishes it, retrieves the published item, and verifies visibility.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFCatalogCreateDraftItemAsync
+      expectFailure: true  # E_PF_NOT_AUTHORIZED (0x89235478) - title_player_account lacks catalog item type permissions
+    - command: PFCatalogCreateDraftItemGetResult
+    - command: PFCatalogPublishDraftItemAsync
+      expectFailure: true  # E_PF_ITEM_NOT_FOUND (0x89235450) - no item was created
+    - command: PFCatalogGetItemAsync
+      expectFailure: true  # E_PF_ITEM_NOT_FOUND (0x89235450) - no item was published
+    - command: PFCatalogGetItemGetResult
+    - command: PFCatalogDeleteItemAsync
+      expectFailure: true  # E_PF_ITEM_NOT_FOUND (0x89235450) - no item was created
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

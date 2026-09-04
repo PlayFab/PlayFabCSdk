@@ -233,9 +233,35 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
         uint32_t callCount{ 1 };
         uint32_t httpCode{};
         HCHttpCallGetPerformCount(m_callHandle, &callCount);
-        HCHttpCallResponseGetStatusCode(m_callHandle, &httpCode);
+        HRESULT getStatusCodeHr = HCHttpCallResponseGetStatusCode(m_callHandle, &httpCode);
         HttpResult httpResult{ callCount - 1, httpCode };
         response.HttpCode = httpCode;
+
+        // Surface a status-retrieval failure as itself. httpCode is left at 0 when this fails, and
+        // HttpStatusToHR(0) returns HTTP_E_STATUS_UNEXPECTED, so without this the real error would
+        // be replaced by a misleading "unexpected HTTP status". The sibling paths all check this
+        // before mapping the status: GetResultOfPlayfabCall below, and the RETURN_IF_FAILED in
+        // HCHttpFileDownloadCall::GetResult / HCHttpFileUploadCall::GetResult.
+        if (FAILED(getStatusCodeHr))
+        {
+            return Result<ServiceResponse>{ getStatusCodeHr, std::move(httpResult) };
+        }
+
+        // An HTTP error status must be surfaced as a failing HRESULT. libHttpClient reports
+        // transport success (S_OK) for any completed exchange, including 4xx/5xx, and expects
+        // the caller to inspect the status code. Without this check, callers that construct
+        // HCHttpCall directly for Azure Blob Storage transfers observe S_OK on failure and
+        // treat the error payload (an Azure XML <Error> document) as valid content.
+        //
+        // This mirrors the guard already present in the sibling request types:
+        //   HCHttpFileDownloadCall::GetResult (HttpFileDownloadRequest.cpp)
+        //   HCHttpFileUploadCall::GetResult   (HttpFileUploadRequest.cpp)
+        HRESULT httpStatusHr = HttpStatusToHR(httpCode);
+        if (FAILED(httpStatusHr))
+        {
+            return Result<ServiceResponse>{ httpStatusHr, std::move(httpResult) };
+        }
+
         HRESULT responseBodyHr = response.FromVector(m_responseBody);
         if (FAILED(responseBodyHr))
         {

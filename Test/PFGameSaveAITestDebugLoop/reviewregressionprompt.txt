@@ -1,0 +1,72 @@
+The code-review changes you just made BROKE the test suite. Fix the regressions.
+
+Read {{TESTRESULT}} for the failing tests, then debug and fix them.
+
+## What just happened
+
+A code-review round changed PRODUCT code in {{REVIEW_SCOPE}} to fix defects the reviewers found.
+The suite was green before those changes and is failing now, so treat the review changes as the
+prime suspect. What was fixed this round:
+
+{{REVIEW_FIXES}}
+
+The full disposition of the round is in {{AIREVIEW}}.
+
+## How to fix
+
+Work through the failures ONE AT A TIME. For each failing test:
+
+1. Read its evidence FIRST: the per-test logs live under the run's pass<N>\<test-id>\ folder (the
+   pass<N> path is the "Logs:" line in testresult.txt). Get the actual error/HRESULT before forming a
+   theory.
+2. Diff that evidence against the review fix that plausibly caused it. `git diff` on the files listed
+   above is the fastest way to see what changed.
+3. Decide which of these it is, based on evidence:
+
+   - **The review fix is wrong.** It changed behavior the SDK is supposed to have. Correct the
+     product code. Keep the defect the review fix was addressing fixed — do not simply revert to the
+     old buggy behavior; find the version that is correct for BOTH.
+   - **The review fix is right and the test encoded the old, buggy behavior.** Update the test to
+     assert the corrected behavior. Say so explicitly in the JSON "notes" — a test change is how a
+     real fix gets silently undone, so it needs to be visible.
+   - **Pre-existing flake, unrelated to the review changes.** Confirm it with the evidence (e.g. a
+     timestamp comparison, a timing window) rather than assuming. Leave it out of "fixed" and explain
+     in "notes".
+
+## Rules
+
+- Do NOT revert a review fix just to make a test pass. If a fix is genuinely wrong, replace it with a
+  correct one and say what you changed and why.
+- Do NOT weaken, skip or delete a test to get to green. Changing an assertion is only acceptable when
+  the assertion itself was wrong (case 2 above), and must be called out.
+- Prefer the smallest change that makes the behavior correct.
+- Do NOT run the build and do NOT run the tests. The loop rebuilds and re-runs them after you finish.
+
+## Result
+
+This pass writes {{AIDEBUG}} -- NOT aireviewresult.json. That is deliberate: the loop reads the
+test-debug contract here, so writing the review fixer's usual file leaves it seeing no result.
+
+When done, write {{AIDEBUG}} as a fresh, valid JSON file in exactly this shape:
+
+{
+  "rerun": ["01", "08"],
+  "rebuild": true,
+  "resolved": [
+    { "test_id": "01", "classification": "review-regression", "action": "what you changed and why" }
+  ],
+  "blocked": [
+    { "test_id": "16", "investigation": "path under {{INVESTIGATIONS}} ending in -blocked", "needs": "what help or decision is required" }
+  ],
+  "notes": "call out every test-file change here"
+}
+
+Rules for the JSON:
+- "rerun": test IDs you actually fixed and that should be re-run. Only list a test if you made a
+  concrete change for it.
+- "rebuild": true if you changed compiled code (C++ / C#), which you almost certainly did.
+- "classification": one of "review-regression" (the review fix was wrong), "test-expected-old-behavior"
+  (the test was updated to match a correct fix), or "unrelated-flake".
+- "blocked": failures you could NOT solve. Log each under {{INVESTIGATIONS}} in a folder ending in
+  "-blocked" with what you tried and what decision you need. Do not put these in "rerun".
+- Write this file LAST, only once you are finished with all the failures.

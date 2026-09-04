@@ -1,0 +1,59 @@
+id: LHC-12-WebSocket-Text-Send-Receive
+name: LHC 12 - WebSocket Connect, Send Text, and Disconnect
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Create a WebSocket handle, set headers, connect to a WebSocket echo
+  server, send a text message, verify the send result, then disconnect.
+  Covers the core real-time messaging path used by game services.
+  Uses the controller's StartWebSocketTestServer for a local echo endpoint.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  ws-text:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Start local WebSocket echo server
+    - command: StartWebSocketTestServer
+
+    - command: HCWebSocketCreate
+    - command: HCWebSocketSetHeader
+      parameters:
+        headerName: "X-Test"
+        headerValue: "lhc-12"
+
+    - command: HCWebSocketConnectAsync
+      parameters:
+        uri: "ws://localhost:{{wsTestPort}}/echo"
+        subProtocol: ""
+    - command: HCGetWebSocketConnectResult
+
+    # Send a text message
+    - command: HCWebSocketSendMessageAsync
+      parameters:
+        message: "Hello from libHttpClient test"
+    - command: HCGetWebSocketSendMessageResult
+
+    # Disconnect
+    - command: HCWebSocketDisconnect
+    - command: HCWebSocketCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: ws-text
+cleanup:
+  DeviceA:
+    - command: StopWebSocketTestServer
+    - command: XTaskQueueCloseHandle

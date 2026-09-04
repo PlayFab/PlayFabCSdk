@@ -1,0 +1,48 @@
+id: PFCore-21-Delete-Entity
+name: PFCore 21 - Delete Entity
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # 0x89235402 E_PF_NOT_AUTHORIZED — entity deletion requires admin/title-level permission
+  psx: ignore
+description: >
+  Creates a disposable user with CustomID, then deletes it with
+  PFAuthenticationDeleteAsync, verifying the operation completes.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfcore-disposable-delete-21"
+        createAccount: true
+    - command: PFAuthenticationDeleteAsync
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

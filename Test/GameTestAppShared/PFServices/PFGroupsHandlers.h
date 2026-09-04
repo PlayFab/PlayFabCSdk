@@ -1,0 +1,57 @@
+#pragma once
+#include "CommandHandlerShared.h"
+
+struct DeviceGameSaveState;
+
+CommandResultPayload HandlePFGroupsAcceptGroupApplicationAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsAcceptGroupInvitationAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsAddMembersAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsApplyToGroupAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsApplyToGroupGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsApplyToGroupGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsBlockEntityAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsChangeMemberRoleAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsCreateGroupAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsCreateGroupGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsCreateGroupGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsCreateRoleAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsCreateRoleGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsCreateRoleGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsDeleteGroupAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsDeleteRoleAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsGetGroupAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsGetGroupGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsGetGroupGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsInviteToGroupAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsInviteToGroupGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsInviteToGroupGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsIsMemberAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsIsMemberGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupApplicationsAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupApplicationsGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupApplicationsGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupBlocksAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupBlocksGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupBlocksGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupInvitationsAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupInvitationsGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupInvitationsGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupMembersAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupMembersGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListGroupMembersGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListMembershipAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListMembershipGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListMembershipGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListMembershipOpportunitiesAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListMembershipOpportunitiesGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsListMembershipOpportunitiesGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsRemoveGroupApplicationAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsRemoveGroupInvitationAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsRemoveMembersAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsUnblockEntityAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsUpdateGroupAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsUpdateGroupGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsUpdateGroupGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsUpdateRoleAsync(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsUpdateRoleGetResultSize(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);
+CommandResultPayload HandlePFGroupsUpdateRoleGetResult(DeviceGameSaveState* state, const std::string& commandId, const std::string& command, const nlohmann::json& parameters, const std::string& deviceId);

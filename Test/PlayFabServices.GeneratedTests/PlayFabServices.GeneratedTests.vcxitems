@@ -35,6 +35,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)TitleDataManagementTests.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)TitleDataManagementTests.cpp" />
     <None Include="$(MSBuildThisFileDirectory)TitleDataManagementTestsImpl.stubs" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayStreamTests.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayStreamTests.cpp" />
+    <None Include="$(MSBuildThisFileDirectory)PlayStreamTestsImpl.stubs" />
     <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsTests.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)PushNotificationsTests.cpp" />
     <None Include="$(MSBuildThisFileDirectory)PushNotificationsTestsImpl.stubs" />

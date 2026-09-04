@@ -1,11 +1,20 @@
 #include "stdafx.h"
 #include "ApiHelpers.h"
 #include "InfoManifest.h"
+#include "GameSaveGlobalState.h"
+#include "Platform/PFGameSaveFilesAPIProvider.h"
 
 namespace PlayFab
 {
 namespace GameSave
 {
+
+// Linear Congruential Generator (LCG) constants from Numerical Recipes
+// These are the traditional parameters for the MINSTD generator variant
+constexpr uint64_t LCG_MULTIPLIER = 1103515245;
+constexpr uint64_t LCG_INCREMENT = 12345;
+constexpr uint32_t LCG_MODULUS_DIVISOR = 65536;
+constexpr uint32_t LCG_MODULUS_RANGE = 32768;
 
 static uint64_t internal_seed = 0;
 uint32_t internal_rand(void)
@@ -14,8 +23,8 @@ uint32_t internal_rand(void)
     {
         internal_seed = static_cast<uint64_t>(std::time(nullptr));
     }
-    internal_seed = internal_seed * 1103515245 + 12345;
-    return (uint32_t)(internal_seed / 65536) % 32768;
+    internal_seed = internal_seed * LCG_MULTIPLIER + LCG_INCREMENT;
+    return (uint32_t)(internal_seed / LCG_MODULUS_DIVISOR) % LCG_MODULUS_RANGE;
 }
 
 char RandomHexDigit()
@@ -82,9 +91,8 @@ HRESULT ReadEntireFile(_In_ const String& filePath, _Out_ Vector<char>& fileBuff
     Result<uint64_t> fileSizeResult = FilePAL::GetFileSize(filePath);
     if (FAILED(fileSizeResult.hr))
     {
-        // Ignore missing/empty files
         fileBuffer.resize(0);
-        return S_OK;
+        return fileSizeResult.hr;
     }
     
     uint64_t fileSize = fileSizeResult.Payload();
@@ -102,7 +110,26 @@ HRESULT ReadEntireFile(_In_ const String& filePath, _Out_ Vector<char>& fileBuff
     }
     
     FileHandle file = fileResult.ExtractPayload();
-    fileBuffer.resize(fileSize);
+    
+    // Guard against files too large for memory (e.g., >256 MB which exceeds game save quota)
+    constexpr uint64_t maxAllowedFileSize = 256ULL * 1024 * 1024;
+    if (fileSize > maxAllowedFileSize)
+    {
+        TRACE_ERROR("[GAME SAVE] ReadEntireFile: File too large (%llu bytes), max=%llu, path=%s", fileSize, maxAllowedFileSize, filePath.c_str());
+        FilePAL::CloseFile(file);
+        return E_OUTOFMEMORY;
+    }
+
+    try
+    {
+        fileBuffer.resize(static_cast<size_t>(fileSize));
+    }
+    catch (const std::bad_alloc&)
+    {
+        TRACE_ERROR("[GAME SAVE] ReadEntireFile: Failed to allocate %llu bytes for file %s", fileSize, filePath.c_str());
+        FilePAL::CloseFile(file);
+        return E_OUTOFMEMORY;
+    }
 
     uint64_t bytesWrittenTotal{ 0 };
     while (bytesWrittenTotal < fileSize)
@@ -154,6 +181,71 @@ HRESULT WriteEntireFile(_In_ const String& filePath, _In_ const Vector<char>& fi
     return hr;
 }
 
+// Determine cloudsync folder path - use temp storage on platforms that support it
+HRESULT GetCloudSyncFolder(_In_ const String& saveFolder, _Out_ String& cloudSyncFolder)
+{
+    SharedPtr<GameSaveGlobalState> globalState;
+    if (SUCCEEDED(GameSaveGlobalState::Get(globalState)))
+    {
+        String tempPath = globalState->ApiProvider().GetTempCloudSyncPath();
+        if (!tempPath.empty())
+        {
+            cloudSyncFolder = tempPath;
+            return S_OK;
+        }
+    }
+    return JoinPathHelper(saveFolder, "cloudsync", cloudSyncFolder);
+}
+
+void CleanupTempCloudSyncFiles()
+{
+    SharedPtr<GameSaveGlobalState> globalState;
+    if (SUCCEEDED(GameSaveGlobalState::Get(globalState)))
+    {
+        globalState->ApiProvider().CleanupTempCloudSyncFiles();
+    }
+}
+
+HRESULT EnsureGameStorageMarker(_In_ const String& saveFolder)
+{
+    // On platforms with separate metadata storage, write a sentinel marker into
+    // game storage so we can detect if the game container is deleted externally.
+    SharedPtr<GameSaveGlobalState> globalState;
+    if (FAILED(GameSaveGlobalState::Get(globalState)))
+    {
+        TRACE_ERROR("[GAME SAVE] EnsureGameStorageMarker: Failed to get global state");
+        return E_FAIL;
+    }
+        
+    if(!globalState->ApiProvider().HasSeparateMetadataStorage())
+    {
+        return S_OK; // Not applicable on this platform
+    }
+
+    String markerFolder, markerPath;
+    if (FAILED(JoinPathHelper(saveFolder, PFGS_GAME_STORAGE_MARKER_FOLDER, markerFolder)) ||
+        FAILED(JoinPathHelper(markerFolder, PFGS_GAME_STORAGE_MARKER_FILENAME, markerPath)))
+    {
+        TRACE_ERROR("[GAME SAVE] EnsureGameStorageMarker: Failed to construct marker file path");
+        return E_FAIL;
+    }
+
+    RETURN_IF_FAILED(FilePAL::CreatePath(markerFolder));
+    if (!FilePAL::DoesFileExist(markerPath))
+    {
+        Vector<char> markerData = { '1' };
+        HRESULT markerHr = WriteEntireFile(markerPath, markerData);
+        if (FAILED(markerHr))
+        {
+            TRACE_ERROR("[GAME SAVE] EnsureGameStorageMarker: Failed to write marker file hr=0x%08X", markerHr);
+            return markerHr;
+        }
+        TRACE_INFORMATION("[GAME SAVE] EnsureGameStorageMarker: Created marker file at %s", markerPath.c_str());
+    }
+
+    return S_OK;
+}
+
 bool GetForceOutOfStorageError()
 {
     SharedPtr<GameSaveGlobalState> globalState;
@@ -184,6 +276,25 @@ bool GetForceSyncFailedError()
     return false;
 }
 
+bool GetForceNullPendingManifest()
+{
+    SharedPtr<GameSaveGlobalState> globalState;
+    if (SUCCEEDED(GameSaveGlobalState::Get(globalState)))
+    {
+        return globalState->GetForceNullPendingManifest();
+    }
+    return false;
+}
+
+void ClearForceNullPendingManifest()
+{
+    SharedPtr<GameSaveGlobalState> globalState;
+    if (SUCCEEDED(GameSaveGlobalState::Get(globalState)))
+    {
+        globalState->SetForceNullPendingManifest(false);
+    }
+}
+
 bool GetWriteManifestsToDisk()
 {
     SharedPtr<GameSaveGlobalState> globalState;
@@ -207,43 +318,85 @@ String GetLocalDeviceID(const String& saveFolder)
         }
 
         // Check if there's a mem cache of the device ID yet
-        const String& deviceId = globalState->GetLocalDeviceID();
+        String deviceId = globalState->GetLocalDeviceID();
         if (!deviceId.empty())
         {
             return deviceId;
         }
 
-        // If no mem cache, then read info.json
+        // If no mem cache, try to read info.json from disk
         String folderPath, filePath;
-        if (SUCCEEDED(JoinPathHelper(saveFolder, "cloudsync", folderPath)))
+        if (SUCCEEDED(JoinPathHelper(saveFolder, "cloudsync", folderPath)) &&
+            SUCCEEDED(JoinPathHelper(folderPath, "info.json", filePath)))
         {
+            InfoManifestData data;
+            if (SUCCEEDED(InfoManifestData::ReadInfoManifest(filePath, data)))
+            {
+                // Store in mem cache to avoid needing to read the file again
+                globalState->SetLocalDeviceID(data.deviceId);
+                return data.deviceId;
+            }
+
+            // Reading info.json failed - try to create directory and write
             if (SUCCEEDED(FilePAL::CreatePath(folderPath)))
             {
-                if (SUCCEEDED(JoinPathHelper(folderPath, "info.json", filePath)))
+                data.deviceId = CreateGUID();
+                HRESULT writeHr = InfoManifestData::WriteInfoManifest(filePath, data);
+                if (FAILED(writeHr))
                 {
-                    InfoManifestData data;
-                    if (SUCCEEDED(InfoManifestData::ReadInfoManifest(filePath, data)))
-                    {
-                        // Store in mem cache to avoid needing to reading the file again
-                        globalState->SetLocalDeviceID(data.deviceId);
-                        return data.deviceId;
-                    }
-                    else
-                    {
-                        // If reading info.json failed, create info.json
-                        data.deviceId = CreateGUID();
-                        InfoManifestData::WriteInfoManifest(filePath, data);
-
-                        globalState->SetLocalDeviceID(data.deviceId);
-                        return data.deviceId;
-                    }
+                    TRACE_WARNING("[GAME SAVE] GetLocalDeviceID: WriteInfoManifest failed hr=0x%08X", writeHr);
                 }
+
+                globalState->SetLocalDeviceID(data.deviceId);
+                return data.deviceId;
             }
         }
+
+        // If we couldn't read or write info.json (e.g., game storage not yet prepared
+        // for writes on this platform), generate a device ID and cache it in memory.
+        // It will be persisted to info.json when storage becomes writable.
+        String fallbackId = CreateGUID();
+        TRACE_WARNING("[GAME SAVE] GetLocalDeviceID: Unable to read/write info.json, caching device ID in memory");
+        globalState->SetLocalDeviceID(fallbackId);
+        return fallbackId;
     }
 
     assert(false);
     return CreateGUID();
+}
+
+void EnsureDeviceIdPersisted(const String& saveFolder)
+{
+    SharedPtr<GameSaveGlobalState> globalState;
+    if (FAILED(GameSaveGlobalState::Get(globalState)))
+    {
+        return;
+    }
+
+    String deviceId = globalState->GetLocalDeviceID();
+    if (deviceId.empty())
+    {
+        return;
+    }
+
+    String folderPath, filePath;
+
+    if (SUCCEEDED(JoinPathHelper(saveFolder, "cloudsync", folderPath)) &&
+        SUCCEEDED(FilePAL::CreatePath(folderPath)) &&
+        SUCCEEDED(JoinPathHelper(folderPath, "info.json", filePath)))
+    {
+        InfoManifestData data;
+        if (FAILED(InfoManifestData::ReadInfoManifest(filePath, data)))
+        {
+            // info.json doesn't exist yet - persist the cached device ID
+            data.deviceId = deviceId;
+            HRESULT writeHr = InfoManifestData::WriteInfoManifest(filePath, data);
+            if (FAILED(writeHr))
+            {
+                TRACE_WARNING("[GAME SAVE] EnsureDeviceIdPersisted: WriteInfoManifest failed hr=0x%08X", writeHr);
+            }
+        }
+    }
 }
 
 PlayFab::GameSaveWrapper::ManifestStatus ConvertToManifestStatusEnum(String str)
@@ -264,6 +417,7 @@ String ConvertToManifestStatusString(PlayFab::GameSaveWrapper::ManifestStatus n)
         case PlayFab::GameSaveWrapper::ManifestStatus::Finalized: return "Finalized";
         case PlayFab::GameSaveWrapper::ManifestStatus::Quarantined: return "Quarantined";
         default:
+            [[fallthrough]];
         case PlayFab::GameSaveWrapper::ManifestStatus::PendingDeletion: return "PendingDeletion";
     }
 }
@@ -304,7 +458,7 @@ uint64_t StringToUint64(String str)
 
 PlayFab::String Uint64ToString(uint64_t n)
 {
-    return FormatString("%lld", n);
+    return FormatString("%llu", n);
 }
 
 ScopeTracer::ScopeTracer(const String& traceMessage) :
@@ -322,7 +476,7 @@ ScopeTracer::~ScopeTracer()
     TRACE_INFORMATION("[GAME SAVE] [ThreadID %s] %s exit", threadIdStream.str().c_str(), m_traceMessage.c_str());
 }
 
-#if _DEBUG
+#if defined(_DEBUG)
 void SingleThreadProviderValidation::Set()
 {
     Stringstream threadIdStream;

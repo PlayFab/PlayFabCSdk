@@ -22,6 +22,9 @@ void pfgamesave_syncdevice(const std::string& deviceName, ProcessDataFn processD
 HRESULT pfgamesave_download(const std::string& deviceName, bool resetCloud = true, bool forceOutOfStorageError = false, bool forceSyncFailError = false, bool init = true, bool allowOfflineError = false);
 
 HRESULT debug_reset_cloud(std::string folder);
+HRESULT debug_wipe_cloud_only();
+HRESULT delete_localstate(std::string deviceFolderName);
+HRESULT verify_localstate_has_sync_baseline(std::string deviceFolderName, bool expected);
 HRESULT reset_all();
 HRESULT debug_set_device_name(std::string deviceName);
 HRESULT debug_set_root_folder(std::string rootFolder);
@@ -45,6 +48,10 @@ HRESULT verify_folder_exists(std::string folderName);
 HRESULT verify_cloud_connected(bool isCloudConnected);
 HRESULT delete_file(std::string folderName, std::string fileName);
 HRESULT delete_folder(std::string folderName);
+// Deletes every extended-<N>-manifest.json from the mock "cloud" folder, leaving the manifest
+// records themselves intact. Simulates a finalized manifest whose extended manifest blob is
+// absent from storage - the client can still list the manifest but cannot learn its file set.
+HRESULT delete_mock_extended_manifests();
 HRESULT debug_get_last_write_time(_Out_ std::filesystem::file_time_type& lastWriteTime, std::string folderName, std::string fileName);
 
 void AutomatedPFGameSaveFilesUiProgressCallback(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesSyncState syncState, _In_ void* context);

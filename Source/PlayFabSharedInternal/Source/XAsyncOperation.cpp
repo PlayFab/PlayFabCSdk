@@ -35,6 +35,7 @@ void XAsyncOperationBase::OnStarted(UniquePtr<IOperation> self) noexcept
     bool alreadyCancelled = RunContext().CancellationToken().RegisterForNotificationAndCheck(*this);
     if (alreadyCancelled)
     {
+        TRACE_WARNING("[XAsyncOperationBase] OnStarted: CancellationToken already cancelled, aborting immediately");
         OnFailed(E_ABORT);
         return;
     }
@@ -53,6 +54,7 @@ void XAsyncOperationBase::OnStarted(UniquePtr<IOperation> self) noexcept
 
 void XAsyncOperationBase::OnCancellation() noexcept
 {
+    TRACE_WARNING("[XAsyncOperationBase] OnCancellation triggered - calling XAsyncCancel");
     XAsyncCancel(&m_asyncBlock);
 }
 

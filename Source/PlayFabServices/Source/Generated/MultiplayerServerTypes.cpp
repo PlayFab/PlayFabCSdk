@@ -1397,6 +1397,10 @@ HRESULT RequestPartyServiceResponse::FromJson(const JsonValue& input)
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PartyId", partyId));
     this->SetPartyId(std::move(partyId));
 
+    String region{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "Region", region));
+    this->SetRegion(std::move(region));
+
     String serializedNetworkDescriptor{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "SerializedNetworkDescriptor", serializedNetworkDescriptor));
     this->SetSerializedNetworkDescriptor(std::move(serializedNetworkDescriptor));
@@ -1425,6 +1429,10 @@ size_t RequestPartyServiceResponse::RequiredBufferSize(const PFMultiplayerServer
     {
         requiredSize += (std::strlen(model.partyId) + 1);
     }
+    if (model.region)
+    {
+        requiredSize += (std::strlen(model.region) + 1);
+    }
     if (model.serializedNetworkDescriptor)
     {
         requiredSize += (std::strlen(model.serializedNetworkDescriptor) + 1);
@@ -1444,6 +1452,11 @@ HRESULT RequestPartyServiceResponse::Copy(const PFMultiplayerServerRequestPartyS
         auto propCopyResult = buffer.CopyTo(input.partyId);
         RETURN_IF_FAILED(propCopyResult.hr);
         output.partyId = propCopyResult.ExtractPayload();
+    }
+    {
+        auto propCopyResult = buffer.CopyTo(input.region);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.region = propCopyResult.ExtractPayload();
     }
     {
         auto propCopyResult = buffer.CopyTo(input.serializedNetworkDescriptor);

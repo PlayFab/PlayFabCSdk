@@ -1,0 +1,66 @@
+id: Controller-Action-15-Quick-Resume-List-Delete
+name: Controller Action 15 - Quick Resume List / Delete
+tags:
+  - xboxactions
+platforms:
+  xbox: untested
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: Verify QuickResumeList enumerates saved QR states and QuickResumeDelete removes them.
+devices:
+  DeviceA:
+    engine: xbox
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  init:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+  test:
+    # Create a QR state to list/delete
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QuickResumeSave
+        state: listtest
+    - command: SmokeDelay
+      parameters:
+        durationMs: 3000
+    # List QR states
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QuickResumeList
+    # Delete the QR state
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QuickResumeDelete
+        state: listtest
+    - command: SmokeDelay
+      parameters:
+        durationMs: 3000
+    # Verify it's gone
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: QuickResumeList
+  cleanup:
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: init
+  - role: DeviceA
+    block: test
+  - role: DeviceA
+    block: cleanup

@@ -54,7 +54,12 @@ HRESULT HandleTable<HandleT, ObjectT>::MakeHandle(SharedPtr<ObjectT> object, Han
     RETURN_HR_IF(E_INVALIDARG, !object);
 
     handle = (HandleT)m_nextHandle++;
-    m_handles.emplace(handle, std::move(object));
+    auto [it, inserted] = m_handles.emplace(handle, std::move(object));
+    if (!inserted)
+    {
+        TRACE_ERROR("%s: Handle collision at %llu", __FUNCTION__, static_cast<unsigned long long>(m_nextHandle - 1));
+        return E_UNEXPECTED;
+    }
 
     return S_OK;
 }

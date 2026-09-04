@@ -1,0 +1,38 @@
+id: PFCore-02-Double-Init
+name: PFCore 02 - Double Init is Reference-Counted
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Calls PFInitialize twice, verifies both succeed (reference-counted).
+  Then uninitializes twice to balance.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  test:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFUninitializeAsync
+
+executionOrder:
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

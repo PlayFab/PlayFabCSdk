@@ -1,0 +1,69 @@
+# Initialize a STEAM DECK device using Xbox/XUser identity for PFGameSave testing.
+#
+# On Steam Deck there is no native Xbox sign-in. Instead, the XGameRuntime
+# surfaces a Remote Connect QR code dialog that the player scans with the
+# Xbox app on their phone to authenticate. Once the XUser is obtained,
+# PFLocalUserCreateHandleWithXboxUser creates the PlayFab local user from
+# that Xbox identity — no linking required because Xbox IS the primary
+# identity.
+#
+# Key Steam Deck differences vs. Xbox / in-proc:
+#   - saveFolder is REQUIRED (the system does not manage the path)
+#   - UI callbacks are REQUIRED (there is no platform-provided UI)
+#   - Sandbox must be set via registry before XGameRuntimeInitialize
+#   - XUserAddAsync triggers the Remote Connect QR code flow
+#   - Upload is in-process only — no background upload after exit
+#
+# Flow (mirrors PlayFabGameSaveSample-Windows with ENABLE_STEAM_SDK):
+#   1. Set Xbox Live sandbox registry (HKLM\SOFTWARE\Microsoft\XboxLive\Sandbox)
+#   2. Initialize runtime, PlayFab core, services, service config, task queue
+#   3. Set up XUser remote connect + SPOP event handlers for QR code auth
+#   4. XUserAddAsync — player scans QR code with Xbox app
+#   5. PFLocalUserCreateHandleWithXboxUser from the authenticated XUser
+#   6. PFGameSaveFilesInitialize with explicit saveFolder
+#   7. Register UI callbacks and active device changed callback
+#   8. PFGameSaveFilesAddUserWithUiAsync (download dance)
+#
+# See: PlayFabGameSaveSample-Windows/SteamIntegration.cpp
+# See: PlayFabGameSaveSample-Windows/GameSaveIntegration.cpp
+#
+# Prerequisites:
+#   - GameTestAppWindows (Steam build) deployed and running on Steam Deck
+#   - Steam client running and user logged in
+#   - Device connected to the controller
+#   - Player has Xbox/MSA credentials to scan QR code
+
+# Step 1: Set the Xbox Live sandbox via registry (requires elevation)
+# On real Steam Deck this sets HKLM\SOFTWARE\Microsoft\XboxLive\Sandbox
+SetSandboxForSteamDeck --sandbox=XDKS.1
+
+# Step 2: Core initialization
+XGameRuntimeInitialize
+PFInitialize
+PFServicesInitialize
+PFServiceConfigCreateHandle --endpoint=https://E18D7.playfabapi.com --titleId=E18D7
+XTaskQueueCreate --workMode=ThreadPool --completionMode=ThreadPool --setAsProcessQueue=true
+
+# Step 3: Set up remote connect event handlers for QR code auth on Steam Deck
+XUserPlatformRemoteConnectSetEventHandlers
+XUserPlatformSpopPromptSetEventHandlers
+
+# Step 4: Sign in via Xbox — on Steam Deck this triggers the Remote Connect
+# QR code flow. The player scans the code with the Xbox app on their phone.
+# The async operation completes once authentication finishes.
+XUserAddAsync --options=AddDefaultUserAllowingUI
+
+# Step 5: Create PlayFab local user from the authenticated XUser.
+# No identity linking needed — Xbox is the primary identity.
+PFLocalUserCreateHandleWithXboxUser
+
+# Step 6: Initialize Game Saves with explicit save folder (required on Steam Deck)
+PFGameSaveFilesInitialize --saveFolder=C:\gamesave
+
+# Step 7: Register UI callbacks (required on Steam Deck — no platform UI)
+PFGameSaveFilesSetUiCallbacks --enable=true
+PFGameSaveFilesSetActiveDeviceChangedCallback
+
+# Step 8: Add user and sync (the "download dance")
+PFGameSaveFilesAddUserWithUiAsync
+PFGameSaveFilesGetFolder

@@ -133,7 +133,7 @@ namespace
             : mDevice(device),
             mRootSignature{},
             mMutex{}
-        { }
+        {}
 
         DeviceResources(const DeviceResources&) = delete;
         DeviceResources& operator=(const DeviceResources&) = delete;
@@ -242,11 +242,15 @@ BasicPostProcess::Impl::Impl(_In_ ID3D12Device* device, const RenderTargetState&
     bloomBrightness(1.f),
     bloomThreshold(0.25f),
     bloomHorizontal(true),
-    mDirtyFlags(INT_MAX),
-    mDeviceResources(deviceResourcesPool.DemandCreate(device))
+    mDirtyFlags(INT_MAX)
 {
     if (ifx >= Effect_Max)
         throw std::invalid_argument("Effect not defined");
+
+    if (!device)
+        throw std::invalid_argument("Direct3D device is null");
+
+    mDeviceResources = deviceResourcesPool.DemandCreate(device);
 
     switch (ifx)
     {
@@ -269,10 +273,10 @@ BasicPostProcess::Impl::Impl(_In_ ID3D12Device* device, const RenderTargetState&
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS
-#ifdef _GAMING_XBOX_SCARLETT
+        #ifdef _GAMING_XBOX_SCARLETT
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_AMPLIFICATION_SHADER_ROOT_ACCESS
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_MESH_SHADER_ROOT_ACCESS
-#endif
+        #endif
             ;
 
         const CD3DX12_DESCRIPTOR_RANGE textureSRVs(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
@@ -565,8 +569,7 @@ void  BasicPostProcess::Impl::Bloom(bool horizontal, float size, float brightnes
 // Public constructor.
 BasicPostProcess::BasicPostProcess(_In_ ID3D12Device* device, const RenderTargetState& rtState, Effect fx)
     : pImpl(std::make_unique<Impl>(device, rtState, fx))
-{
-}
+{}
 
 
 // Move constructor.

@@ -15,28 +15,70 @@ constexpr char kTestVal[]{ "testVal" };
 const PFJsonObject kObject{ "{ \"testKey\": \"testValue\" }" };
 
 
-HRESULT UploadFileSync(String url)
+// Uploads the test payload to the pre-signed URL returned by InitiateFileUploads.
+//
+// This used to block on XAsyncGetStatus(&asyncBlock, true) with an unqueued XAsyncBlock. That call
+// runs inside a .Then continuation - i.e. on a task-queue worker thread - so it parked a worker
+// waiting on work that the same queue has to dispatch, and it had no timeout of its own. When it
+// stopped making progress the test simply ran until the 150s harness timeout. The same test is
+// already skipped on Android with a "hangs on the pipeline" TODO, which is the same symptom.
+//
+// Modelled as a normal XAsyncOperation so the PUT is chained like every other call in this file
+// and no thread is blocked.
+class UploadFileOperation : public XAsyncOperation<void>
 {
-    JsonValue requestBody= JsonValue::object();;
-    JsonUtils::ObjectAddMember(requestBody, kTestKey, kTestVal);
+public:
+    UploadFileOperation(String url, PlayFab::RunContext rc) :
+        XAsyncOperation{ std::move(rc) },
+        m_url{ std::move(url) }
+    {
+    }
 
-    HCCallHandle callHandle{ nullptr };
+    static AsyncOp<void> Run(String url, PlayFab::RunContext rc) noexcept
+    {
+        return RunOperation(MakeUnique<UploadFileOperation>(std::move(url), std::move(rc)));
+    }
 
-    // Set up HCHttpCallHandle
-    RETURN_IF_FAILED(HCHttpCallCreate(&callHandle));
-    RETURN_IF_FAILED(HCHttpCallRequestSetUrl(callHandle, "PUT", url.c_str()));
+private:
+    HRESULT OnStarted(XAsyncBlock* async) noexcept override
+    {
+        JsonValue requestBody = JsonValue::object();
+        JsonUtils::ObjectAddMember(requestBody, kTestKey, kTestVal);
 
-    RETURN_IF_FAILED(HCHttpCallRequestSetHeader(callHandle, "Content-Type", "application/json; charset=utf-8", true));
+        HCCallHandle callHandle{ nullptr };
+        RETURN_IF_FAILED(HCHttpCallCreate(&callHandle));
 
-    RETURN_IF_FAILED(HCHttpCallRequestSetRequestBodyString(callHandle, PlayFab::JsonUtils::WriteToString(requestBody).c_str()));
+        // Close our handle on every exit path. HCHttpCallPerformAsync keeps its own reference for
+        // the duration of the call, so releasing here does not cancel an in-flight request.
+        auto closeCall = [&callHandle]()
+        {
+            if (callHandle)
+            {
+                HCHttpCallCloseHandle(callHandle);
+                callHandle = nullptr;
+            }
+        };
 
-    XAsyncBlock asyncBlock{};
-    RETURN_IF_FAILED(HCHttpCallPerformAsync(callHandle, &asyncBlock));
+        HRESULT hr = HCHttpCallRequestSetUrl(callHandle, "PUT", m_url.c_str());
+        if (SUCCEEDED(hr))
+        {
+            hr = HCHttpCallRequestSetHeader(callHandle, "Content-Type", "application/json; charset=utf-8", true);
+        }
+        if (SUCCEEDED(hr))
+        {
+            hr = HCHttpCallRequestSetRequestBodyString(callHandle, PlayFab::JsonUtils::WriteToString(requestBody).c_str());
+        }
+        if (SUCCEEDED(hr))
+        {
+            hr = HCHttpCallPerformAsync(callHandle, async);
+        }
 
-    RETURN_IF_FAILED(HCHttpCallCloseHandle(callHandle));
+        closeCall();
+        return hr;
+    }
 
-    return XAsyncGetStatus(&asyncBlock, true);
-}
+    String m_url;
+};
 
 AsyncOp<void> DataTests::Initialize()
 {
@@ -107,75 +149,88 @@ void DataTests::TestGetFiles(TestContext& tc)
     tc.Skip();
     return;
 #endif
+    // Hold our own reference for the lifetime of the chain rather than calling
+    // DefaultTitlePlayer() from inside each continuation.
+    //
+    // DefaultTitlePlayer() returns Entity BY VALUE, and Entity's copy constructor is
+    // THROW_IF_FAILED(PFEntityDuplicateHandle(...)). If this test times out, the harness ends it
+    // and moves on but never cancels this chain; the class then tears down and
+    // ServicesTestClass::Uninitialize() does m_defaultTitlePlayer.reset(). A continuation that
+    // resumes after that duplicates a closed handle, throws E_PF_INVALIDHANDLE, and - because the
+    // throw happens on a task-queue thread - takes the whole process down instead of failing one
+    // test. Copying once here keeps the entity alive until the chain finishes.
+    Entity titlePlayer = DefaultTitlePlayer();
+    PlayFab::RunContext rc = RunContext();
+
     InitiateFileUploadsOperation::RequestType request;
-    request.SetEntity(DefaultTitlePlayer().EntityKey());
+    request.SetEntity(titlePlayer.EntityKey());
     request.SetFileNames({ kTestName });
 
-    InitiateFileUploadsOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<InitiateFileUploadsOperation::ResultType> result) -> AsyncOp<void>
+    InitiateFileUploadsOperation::Run(titlePlayer, request, rc).Then([&tc, titlePlayer, rc](Result<InitiateFileUploadsOperation::ResultType> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
         auto& model = result.Payload().Model();
-        tc.AssertEqual(DefaultTitlePlayer().EntityKey().Model().id, model.entity->id, "entity->id");
+        tc.AssertEqual(titlePlayer.EntityKey().Model().id, model.entity->id, "entity->id");
         tc.AssertEqual(1u, model.uploadDetailsCount, "uploadDetailsCount");
         tc.AssertEqual(kTestName, model.uploadDetails[0]->fileName, "uploadDetails[0]->fileName");
         tc.AssertTrue(model.uploadDetails[0]->uploadUrl, "uploadDetails[0]->uploadUrl");
 
-        return UploadFileSync(model.uploadDetails[0]->uploadUrl);
+        return UploadFileOperation::Run(model.uploadDetails[0]->uploadUrl, rc);
     })
-    .Then([&](Result<void> result) -> AsyncOp<FinalizeFileUploadsOperation::ResultType>
+    .Then([&tc, titlePlayer, rc](Result<void> result) -> AsyncOp<FinalizeFileUploadsOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
         FinalizeFileUploadsOperation::RequestType request;
-        request.SetEntity(DefaultTitlePlayer().EntityKey());
+        request.SetEntity(titlePlayer.EntityKey());
         request.SetFileNames({ kTestName });
 
-        return FinalizeFileUploadsOperation::Run(DefaultTitlePlayer(), request, RunContext());
+        return FinalizeFileUploadsOperation::Run(titlePlayer, request, rc);
     })
-    .Then([&](Result<FinalizeFileUploadsOperation::ResultType> result) -> AsyncOp<GetFilesOperation::ResultType>
+    .Then([&tc, titlePlayer, rc](Result<FinalizeFileUploadsOperation::ResultType> result) -> AsyncOp<GetFilesOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
         auto& model = result.Payload().Model();
-        tc.AssertEqual(DefaultTitlePlayer().EntityKey().Model().id, model.entity->id, "entity->id");
+        tc.AssertEqual(titlePlayer.EntityKey().Model().id, model.entity->id, "entity->id");
         tc.AssertEqual(1u, model.metadataCount, "metadataCount");
 
         GetFilesOperation::RequestType request;
-        request.SetEntity(DefaultTitlePlayer().EntityKey());
+        request.SetEntity(titlePlayer.EntityKey());
 
-        return GetFilesOperation::Run(DefaultTitlePlayer(), request, RunContext());
+        return GetFilesOperation::Run(titlePlayer, request, rc);
     })
-    .Then([&](Result<GetFilesOperation::ResultType> result) -> AsyncOp<void>
+    .Then([&tc, titlePlayer](Result<GetFilesOperation::ResultType> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
         auto& model = result.Payload().Model();
-        tc.AssertEqual(DefaultTitlePlayer().EntityKey().Model().id, model.entity->id, "entity->id");
+        tc.AssertEqual(titlePlayer.EntityKey().Model().id, model.entity->id, "entity->id");
         tc.AssertEqual(1u, model.metadataCount, "metadataCount");
 
         return S_OK;
     })
-    .Then([&](Result<void> result) -> AsyncOp<DeleteFilesOperation::ResultType>
+    .Then([&tc, titlePlayer, rc](Result<void> result) -> AsyncOp<DeleteFilesOperation::ResultType>
     {
         tc.RecordResult(std::move(result));
 
         // Cleanup: delete files
         DeleteFilesOperation::RequestType request;
-        request.SetEntity(DefaultTitlePlayer().EntityKey());
+        request.SetEntity(titlePlayer.EntityKey());
         request.SetFileNames({ kTestName });
 
-        return DeleteFilesOperation::Run(DefaultTitlePlayer(), request, RunContext());
+        return DeleteFilesOperation::Run(titlePlayer, request, rc);
     })
-    .Then([&](Result<DeleteFilesOperation::ResultType> result) -> AsyncOp<void>
+    .Then([&tc, titlePlayer](Result<DeleteFilesOperation::ResultType> result) -> AsyncOp<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
-        tc.AssertEqual(DefaultTitlePlayer().EntityKey().Model().id, result.Payload().Model().entity->id, "entity->id");
+        tc.AssertEqual(titlePlayer.EntityKey().Model().id, result.Payload().Model().entity->id, "entity->id");
 
         return S_OK;
     })
-    .Finally([&](Result<void> result)
+    .Finally([&tc](Result<void> result)
     {
         tc.EndTest(std::move(result));
     });

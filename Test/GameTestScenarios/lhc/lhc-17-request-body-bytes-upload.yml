@@ -1,0 +1,59 @@
+id: LHC-17-Request-Body-Bytes-Upload
+name: LHC 17 - Request Body Bytes Upload
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  POST binary body bytes via HCHttpCallRequestSetRequestBodyBytes instead
+  of SetRequestBodyString.  This is a distinct codepath used by SDK binary
+  uploads and telemetry.  Verifies the body is transmitted and a valid
+  response is returned.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  body-bytes-upload:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "POST"
+        url: "https://httpbin.org/post"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "Content-Type"
+        headerValue: "application/octet-stream"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "User-Agent"
+        headerValue: "libHttpClient-test"
+
+    # Use body bytes path (not string)
+    - command: HCHttpCallRequestSetRequestBodyBytes
+      parameters:
+        body: "binary-payload-test-1234567890"
+
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallResponseGetResponseBodyBytesSize
+
+    - command: HCHttpCallCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: body-bytes-upload
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

@@ -13,9 +13,12 @@ public:
     template<size_t n>
     DownloadAsyncProvider(RunContext&& rc, XAsyncBlock* async, const char(&identityName)[n], SharedPtr<FolderSyncManager>&& folderSync) :
         GameSaveAsyncProvider{ std::move(rc), async, identityName },
-        m_folderSync{ folderSync }
+        m_folderSync{ std::move(folderSync) }
     {
         TRACE_TASK("DownloadAsyncProvider ctor");
+        // Under the manager's lock: this resets the steps and drops the manifests and file/folder
+        // sets, which a SetSaveDescription provider can be reading concurrently on a worker thread.
+        std::lock_guard<std::recursive_mutex> lock(m_folderSync->GetSyncMutex());
         m_folderSync->InitForDownload();
     }
 
@@ -40,7 +43,7 @@ public:
     void ScheduleNow() override
     {
         TRACE_TASK("DownloadAsyncProvider.ScheduleNow");
-#if _DEBUG
+#if defined(_DEBUG)
         m_singleThreadProviderValidation.AssertUponSchedule();
 #endif
         Schedule(0);
@@ -49,8 +52,9 @@ public:
 protected:
     HRESULT DoWork(RunContext runContext) override;
     SharedPtr<FolderSyncManager> m_folderSync;
-    std::recursive_mutex m_folderSyncMutex;
-#if _DEBUG
+    // Owned by the FolderSyncManager, not by this provider: see FolderSyncManager::GetSyncMutex().
+    std::recursive_mutex& m_folderSyncMutex{ m_folderSync->GetSyncMutex() };
+#if defined(_DEBUG)
     SingleThreadProviderValidation m_singleThreadProviderValidation;
 #endif
 };

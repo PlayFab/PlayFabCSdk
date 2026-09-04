@@ -21,9 +21,6 @@ void InventoryTests::AddTests()
     AddTest("TestGetInventoryOperationStatus", &InventoryTests::TestGetInventoryOperationStatus);
 #endif
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    AddTest("TestGetMicrosoftStoreAccessTokens", &InventoryTests::TestGetMicrosoftStoreAccessTokens);
-#endif
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     AddTest("TestGetTransactionHistory", &InventoryTests::TestGetTransactionHistory, true);
 #endif
     AddTest("TestPurchaseInventoryItems", &InventoryTests::TestPurchaseInventoryItems);

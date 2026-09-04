@@ -1,0 +1,277 @@
+id: Scenario-Inproc-46-Chaos-Soak-Two-Device
+name: GameSave Inproc 46 - Chaos Soak Two-Device Upload/Verify
+# 6 upload/verify iterations across two devices (~25-30s each). The runner reads
+# this override and grants the larger of (this, suite default) for THIS scenario.
+runnerTimeoutSeconds: 600
+tags:
+  - gamesaves
+  - chaos
+  - soak
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: ignore
+description: >
+  Two-device chaos soak that runs as a NORMAL scenario (picked up by
+  `tests-run.py gamesave-inproc`) instead of the old CLI-only `chaos` command.
+
+  Device A is the uploader, Device B is the verifier — both share the same customId
+  so they sync through the same cloud save. The run loops 6 chaos cycles; each cycle:
+    1. Device A initializes, AddUser downloads the current cloud save, then runs
+       DoChaosMode (3 random chaos write ops) and uploads as the active device
+       (ReleaseDeviceAsActive). It captures the uploaded state as snapshot 'left'.
+    2. Device B initializes fresh, AddUser DOWNLOADS what A just uploaded, captures
+       snapshot 'right', and CompareSaveContainerSnapshots verifies left == right —
+       i.e. Device B received Device A's upload correctly.
+
+  Save reset every 3rd cycle (cycles 1 and 4): on a "reset" cycle Device A wipes the
+  downloaded save root before chaos (starts clean, chaos mostly creates). On a "keep"
+  cycle (2, 3, 5, 6) Device A keeps the downloaded prior state, so the modify/delete
+  chaos verbs (CopyFile, RenameFile, DeleteFile) have existing files to act on.
+  Resetting every 3rd bounds data growth so per-cycle cost stays flat (no runaway).
+
+  The seed is time-based (high-resolution clock) per chaos run, so each cycle — and
+  each test invocation — performs different random operations.
+brief: 6x two-device chaos upload(A)/verify(B) soak, save reset every 3rd cycle
+group: Z. Chaos
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+  DeviceB:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  # Device A uploader, "reset" variant (cycles 1, 4): wipe the downloaded save root
+  # before chaos so each group of 3 starts clean and growth stays bounded.
+  device-a-chaos-upload-reset:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness-ChaosMD"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 300
+    - command: PFGameSaveFilesGetFolder
+    # Reset: start this group of 3 from a clean save root.
+    - command: DeleteSaveRoot
+    - command: DoChaosMode
+      parameters:
+        fileCreate: true
+        fileModify: true
+        fileDelete: true
+        folderCreate: false
+        folderDelete: false
+        binaryFiles: true
+        textFiles: true
+        largeFiles: false
+        unicodeFiles: false
+        unicodeFolders: false
+        operationsPerUpload: 3
+        numUploads: 1
+        mode: ReleaseDeviceAsActive
+      timeoutSeconds: 300
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # Device A uploader, "keep" variant (cycles 2, 3, 5): keep the downloaded prior
+  # state so chaos modifies/deletes existing files.
+  device-a-chaos-upload-keep:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness-ChaosMD"
+        createAccount: true
+    # AddUser downloads the prior cycle's cloud save; NO reset, so chaos modifies it.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 300
+    - command: PFGameSaveFilesGetFolder
+    - command: DoChaosMode
+      parameters:
+        fileCreate: true
+        fileModify: true
+        fileDelete: true
+        folderCreate: false
+        folderDelete: false
+        binaryFiles: true
+        textFiles: true
+        largeFiles: false
+        unicodeFiles: false
+        unicodeFolders: false
+        operationsPerUpload: 3
+        numUploads: 1
+        mode: ReleaseDeviceAsActive
+      timeoutSeconds: 300
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  # Device B verifier (every cycle): downloads what A just uploaded and confirms
+  # it matches A's snapshot via CompareSaveContainerSnapshots (left == right).
+  device-b-verify-download:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceB"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness-ChaosMD"
+        createAccount: true
+    # AddUser downloads Device A's just-uploaded chaos save.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      timeoutSeconds: 300
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    # Device B verifies it received Device A's upload correctly.
+    - command: CompareSaveContainerSnapshots
+      parameters:
+        ignoreTimestamps: true
+    # Clear Device B's local copy so the next cycle is a genuine fresh download.
+    - command: DeleteSaveRoot
+      parameters:
+        preserveManifest: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  # ----- 6 cycles: A uploads, B verifies. Reset on cycles 1 and 4 (every 3rd). -----
+  - role: DeviceA
+    block: device-a-chaos-upload-reset   # cycle 1 (reset)
+  - role: DeviceB
+    block: device-b-verify-download
+  - role: DeviceA
+    block: device-a-chaos-upload-keep    # cycle 2
+  - role: DeviceB
+    block: device-b-verify-download
+  - role: DeviceA
+    block: device-a-chaos-upload-keep    # cycle 3
+  - role: DeviceB
+    block: device-b-verify-download
+  - role: DeviceA
+    block: device-a-chaos-upload-reset   # cycle 4 (reset)
+  - role: DeviceB
+    block: device-b-verify-download
+  - role: DeviceA
+    block: device-a-chaos-upload-keep    # cycle 5
+  - role: DeviceB
+    block: device-b-verify-download
+  - role: DeviceA
+    block: device-a-chaos-upload-keep    # cycle 6
+  - role: DeviceB
+    block: device-b-verify-download
+  # -------------------------------------------------------------------------------
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+  DeviceB:
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceB"

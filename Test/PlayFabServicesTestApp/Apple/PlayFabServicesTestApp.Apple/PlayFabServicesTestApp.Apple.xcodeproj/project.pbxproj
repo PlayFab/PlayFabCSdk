@@ -33,6 +33,14 @@
 		82658A1A2C6D430F00E9DEE0 /* LeaderboardsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A172C6D430F00E9DEE0 /* LeaderboardsOperations.cpp */; };
 		82658A1B2C6D430F00E9DEE0 /* StatisticsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */; };
 		82658A1C2C6D430F00E9DEE0 /* StatisticsOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */; };
+		A12608140000000000000011 /* PlayStreamOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A12608140000000000000002 /* PlayStreamOperations.cpp */; };
+		A12608140000000000000012 /* PlayStreamOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A12608140000000000000002 /* PlayStreamOperations.cpp */; };
+		A12608140000000000000013 /* PlayStreamTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A12608140000000000000004 /* PlayStreamTests.cpp */; };
+		A12608140000000000000014 /* PlayStreamTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A12608140000000000000004 /* PlayStreamTests.cpp */; };
+		A12608140000000000000015 /* PlayStreamTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A12608140000000000000006 /* PlayStreamTestsImpl.cpp */; };
+		A12608140000000000000016 /* PlayStreamTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A12608140000000000000006 /* PlayStreamTestsImpl.cpp */; };
+		A12608140000000000000017 /* PlayStreamTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = A12608140000000000000005 /* PlayStreamTestsImpl.stubs */; };
+		A12608140000000000000018 /* PlayStreamTestsImpl.stubs in Resources */ = {isa = PBXBuildFile; fileRef = A12608140000000000000005 /* PlayStreamTestsImpl.stubs */; };
 		8291EC312DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8291EC302DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp */; };
 		8291EC322DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8291EC302DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp */; };
 		82AB6DA42B4DBB980082EDED /* AppleSignInCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB6DA32B4DBB980082EDED /* AppleSignInCoordinator.swift */; };
@@ -364,6 +372,12 @@
 		82658A162C6D42FA00E9DEE0 /* StatisticsOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StatisticsOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/StatisticsOperations.h; sourceTree = "<group>"; };
 		82658A172C6D430F00E9DEE0 /* LeaderboardsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LeaderboardsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/LeaderboardsOperations.cpp; sourceTree = "<group>"; };
 		82658A182C6D430F00E9DEE0 /* StatisticsOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StatisticsOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/StatisticsOperations.cpp; sourceTree = "<group>"; };
+		A12608140000000000000001 /* PlayStreamOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayStreamOperations.h; path = ../../../PlayFabServices.GeneratedApiWrappers/PlayStreamOperations.h; sourceTree = "<group>"; };
+		A12608140000000000000002 /* PlayStreamOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayStreamOperations.cpp; path = ../../../PlayFabServices.GeneratedApiWrappers/PlayStreamOperations.cpp; sourceTree = "<group>"; };
+		A12608140000000000000003 /* PlayStreamTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayStreamTests.h; path = ../../../PlayFabServices.GeneratedTests/PlayStreamTests.h; sourceTree = "<group>"; };
+		A12608140000000000000004 /* PlayStreamTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayStreamTests.cpp; path = ../../../PlayFabServices.GeneratedTests/PlayStreamTests.cpp; sourceTree = "<group>"; };
+		A12608140000000000000005 /* PlayStreamTestsImpl.stubs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = PlayStreamTestsImpl.stubs; path = ../../../PlayFabServices.GeneratedTests/PlayStreamTestsImpl.stubs; sourceTree = "<group>"; };
+		A12608140000000000000006 /* PlayStreamTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayStreamTestsImpl.cpp; sourceTree = "<group>"; };
 		8286B2162B7401C6009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
 		8291EC2F2DD3AF4100284CA4 /* TitleLocalUser_Apple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TitleLocalUser_Apple.h; sourceTree = "<group>"; };
 		8291EC302DD3AF4100284CA4 /* TitleLocalUser_Apple.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TitleLocalUser_Apple.cpp; sourceTree = "<group>"; };
@@ -540,6 +554,7 @@
 				82658A052C6D42FA00E9DEE0 /* MultiplayerServerOperations.h */,
 				82658A092C6D42FA00E9DEE0 /* PlatformSpecificOperations.h */,
 				82658A102C6D42FA00E9DEE0 /* PlayerDataManagementOperations.h */,
+				A12608140000000000000001 /* PlayStreamOperations.h */,
 				82658A0E2C6D42FA00E9DEE0 /* ProfilesOperations.h */,
 				82658A122C6D42FA00E9DEE0 /* PushNotificationsOperations.h */,
 				82658A0F2C6D42FA00E9DEE0 /* SegmentsOperations.h */,
@@ -658,6 +673,7 @@
 				82CEEAA42B1536C9007BD4F5 /* MultiplayerServerOperations.cpp */,
 				82CEEAA52B1536C9007BD4F5 /* PlatformSpecificOperations.cpp */,
 				82CEEAB12B1536C9007BD4F5 /* PlayerDataManagementOperations.cpp */,
+				A12608140000000000000002 /* PlayStreamOperations.cpp */,
 				82CEEAA92B1536C9007BD4F5 /* ProfilesOperations.cpp */,
 				82CEEAAC2B1536C9007BD4F5 /* PushNotificationsOperations.cpp */,
 				82CEEAA82B1536C9007BD4F5 /* SegmentsOperations.cpp */,
@@ -684,6 +700,7 @@
 				82CEEAE22B1537FB007BD4F5 /* MultiplayerServerTests.cpp */,
 				82CEEADE2B1537FB007BD4F5 /* PlatformSpecificTests.cpp */,
 				82CEEAD72B1537FB007BD4F5 /* PlayerDataManagementTests.cpp */,
+				A12608140000000000000004 /* PlayStreamTests.cpp */,
 				82CEEADC2B1537FB007BD4F5 /* ProfilesTests.cpp */,
 				82CEEAE02B1537FB007BD4F5 /* PushNotificationsTests.cpp */,
 				82CEEAE12B1537FB007BD4F5 /* SegmentsTests.cpp */,
@@ -709,6 +726,7 @@
 				82CEEAC82B1537C9007BD4F5 /* MultiplayerServerTests.h */,
 				82CEEAD62B1537C9007BD4F5 /* PlatformSpecificTests.h */,
 				82CEEACA2B1537C9007BD4F5 /* PlayerDataManagementTests.h */,
+				A12608140000000000000003 /* PlayStreamTests.h */,
 				82CEEAD02B1537C9007BD4F5 /* ProfilesTests.h */,
 				82CEEACF2B1537C9007BD4F5 /* PushNotificationsTests.h */,
 				82CEEAD22B1537C9007BD4F5 /* SegmentsTests.h */,
@@ -734,6 +752,7 @@
 				82CEEAF92B153866007BD4F5 /* MultiplayerServerTestsImpl.stubs */,
 				82CEEB022B153866007BD4F5 /* PlatformSpecificTestsImpl.stubs */,
 				82CEEAFD2B153866007BD4F5 /* PlayerDataManagementTestsImpl.stubs */,
+				A12608140000000000000005 /* PlayStreamTestsImpl.stubs */,
 				82CEEAFA2B153866007BD4F5 /* ProfilesTestsImpl.stubs */,
 				82CEEAFF2B153866007BD4F5 /* PushNotificationsTestsImpl.stubs */,
 				82CEEB032B153866007BD4F5 /* SegmentsTestsImpl.stubs */,
@@ -824,6 +843,7 @@
 				826589CB2C6D304B00E9DEE0 /* StatisticsTestsImpl.cpp */,
 				82CEEB422B153920007BD4F5 /* PlayerDataManagementTestsImpl.cpp */,
 				82CEEB432B153920007BD4F5 /* TitleDataManagementTestsImpl.cpp */,
+				A12608140000000000000006 /* PlayStreamTestsImpl.cpp */,
 				82CEEB442B153920007BD4F5 /* ProfilesTestsImpl.cpp */,
 				82CEEB452B153920007BD4F5 /* SegmentsTestsImpl.cpp */,
 				82CEEB462B153920007BD4F5 /* CloudScriptTestsImpl.cpp */,
@@ -1083,6 +1103,7 @@
 				826589C12C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs in Resources */,
 				82B3CCC32B5B04F000337232 /* CloudScriptTestsImpl.stubs in Resources */,
 				82B3CCC42B5B04F000337232 /* CatalogTestsImpl.stubs in Resources */,
+				A12608140000000000000017 /* PlayStreamTestsImpl.stubs in Resources */,
 				82B3CCC52B5B04F000337232 /* ProfilesTestsImpl.stubs in Resources */,
 				82B3CCC62B5B04F000337232 /* LocalizationTestsImpl.stubs in Resources */,
 			);
@@ -1111,6 +1132,7 @@
 				826589C02C6D2FF500E9DEE0 /* LeaderboardsTestsImpl.stubs in Resources */,
 				82CEEB172B153866007BD4F5 /* CloudScriptTestsImpl.stubs in Resources */,
 				82CEEB102B153866007BD4F5 /* CatalogTestsImpl.stubs in Resources */,
+				A12608140000000000000018 /* PlayStreamTestsImpl.stubs in Resources */,
 				82CEEB0A2B153866007BD4F5 /* ProfilesTestsImpl.stubs in Resources */,
 				82CEEB162B153866007BD4F5 /* LocalizationTestsImpl.stubs in Resources */,
 			);
@@ -1192,10 +1214,13 @@
 				82B3CCA62B5B04F000337232 /* ServicesTestClass.cpp in Sources */,
 				82B3CCA72B5B04F000337232 /* GroupsTests.cpp in Sources */,
 				82B3CCA82B5B04F000337232 /* SegmentsOperations.cpp in Sources */,
+				A12608140000000000000015 /* PlayStreamTestsImpl.cpp in Sources */,
 				82B3CCA92B5B04F000337232 /* ProfilesTestsImpl.cpp in Sources */,
 				82B3CCAA2B5B04F000337232 /* PushNotificationsTests.cpp in Sources */,
 				82B3CCAB2B5B04F000337232 /* PlatformSpecificTests.cpp in Sources */,
 				82B3CCAC2B5B04F000337232 /* ProfilesOperations.cpp in Sources */,
+				A12608140000000000000011 /* PlayStreamOperations.cpp in Sources */,
+				A12608140000000000000013 /* PlayStreamTests.cpp in Sources */,
 				82B3CCAD2B5B04F000337232 /* SegmentsTests.cpp in Sources */,
 				82B3CCAE2B5B04F000337232 /* DataTests.cpp in Sources */,
 			);
@@ -1274,10 +1299,13 @@
 				82CEEB612B153920007BD4F5 /* ServicesTestClass.cpp in Sources */,
 				82CEEAF62B1537FB007BD4F5 /* GroupsTests.cpp in Sources */,
 				82CEEAB82B1536C9007BD4F5 /* SegmentsOperations.cpp in Sources */,
+				A12608140000000000000016 /* PlayStreamTestsImpl.cpp in Sources */,
 				82CEEB6E2B153920007BD4F5 /* ProfilesTestsImpl.cpp in Sources */,
 				82CEEAF02B1537FB007BD4F5 /* PushNotificationsTests.cpp in Sources */,
 				82CEEAEE2B1537FB007BD4F5 /* PlatformSpecificTests.cpp in Sources */,
 				82CEEAB92B1536C9007BD4F5 /* ProfilesOperations.cpp in Sources */,
+				A12608140000000000000012 /* PlayStreamOperations.cpp in Sources */,
+				A12608140000000000000014 /* PlayStreamTests.cpp in Sources */,
 				82CEEAF12B1537FB007BD4F5 /* SegmentsTests.cpp in Sources */,
 				82CEEAEF2B1537FB007BD4F5 /* DataTests.cpp in Sources */,
 			);

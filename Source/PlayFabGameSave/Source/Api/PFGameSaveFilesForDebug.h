@@ -5,12 +5,18 @@ extern "C"
 {
 
 // These functions can be used only for debugging.
+
+// Force the in-process (Win32) provider instead of GRTS/PFX.
+// Must be called BEFORE PFGameSaveFilesInitialize.
+PF_API PFGameSaveFilesSetForceInprocForDebug(_In_ bool forceInproc);
+
 PF_API PFGameSaveFilesSetMockDeviceIdForDebug(_In_ const char* deviceId);
 PF_API PFGameSaveFilesSetMockRootFolderForDebug(_In_ const char* rootFolder);
 PF_API PFGameSaveFilesSetMockManifestOffsetForDebug(_In_ size_t offset);
 PF_API PFGameSaveFilesSetMockDataFolderForDebug(_In_ const char* mockDataFolder);
 PF_API PFGameSaveFilesSetForceOutOfStorageErrorForDebug(_In_ bool forceError);
 PF_API PFGameSaveFilesSetForceSyncFailedErrorForDebug(_In_ bool forceError);
+PF_API PFGameSaveFilesSetForceNullPendingManifestForDebug(_In_ bool force);
 PF_API PFGameSaveFilesSetWriteManifestsToDiskForDebug(_In_ bool writeManifests);
 PF_API PFGameSaveFilesSetActiveDevicePollForceChangeForDebug();
 PF_API PFGameSaveFilesSetActiveDevicePollIntervalForDebug(_In_ uint32_t interval);

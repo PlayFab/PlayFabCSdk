@@ -77,6 +77,7 @@ PF_API PFAccountManagementClientAddUsernamePasswordGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientAddUsernamePasswordGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementAddUsernamePasswordResult*>(buffer);
@@ -128,6 +129,7 @@ PF_API PFAccountManagementClientGetAccountInfoGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetAccountInfoGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetAccountInfoResult*>(buffer);
@@ -178,6 +180,7 @@ PF_API PFAccountManagementClientGetPlayerCombinedInfoGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayerCombinedInfoGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayerCombinedInfoResult*>(buffer);
@@ -228,6 +231,7 @@ PF_API PFAccountManagementClientGetPlayerProfileGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayerProfileGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayerProfileResult*>(buffer);
@@ -278,6 +282,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromBattleNetAccountIdsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromBattleNetAccountIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult*>(buffer);
@@ -329,6 +334,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromFacebookIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromFacebookIDsResult*>(buffer);
@@ -381,6 +387,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromFacebookInstantGamesIdsGetResul
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromFacebookInstantGamesIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromFacebookInstantGamesIdsResult*>(buffer);
@@ -433,6 +440,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGameCenterIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromGameCenterIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromGameCenterIDsResult*>(buffer);
@@ -485,6 +493,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGoogleIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromGoogleIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromGoogleIDsResult*>(buffer);
@@ -537,6 +546,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsGetResu
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromGooglePlayGamesPlayerIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromGooglePlayGamesPlayerIDsResult*>(buffer);
@@ -589,6 +599,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromKongregateIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromKongregateIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromKongregateIDsResult*>(buffer);
@@ -641,6 +652,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoServiceAccountIdsGetRes
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromNintendoServiceAccountIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromNintendoServiceAccountIdsResult*>(buffer);
@@ -693,6 +705,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResul
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsResult*>(buffer);
@@ -745,6 +758,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromOpenIdSubjectIdentifiersGetResu
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromOpenIdSubjectIdentifiersGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromOpenIdsResult*>(buffer);
@@ -797,6 +811,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromPSNAccountIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromPSNAccountIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromPSNAccountIDsResult*>(buffer);
@@ -848,6 +863,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromPSNOnlineIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromPSNOnlineIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult*>(buffer);
@@ -899,6 +915,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromSteamIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromSteamIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromSteamIDsResult*>(buffer);
@@ -950,6 +967,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromSteamNamesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromSteamNamesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromSteamNamesResult*>(buffer);
@@ -1001,6 +1019,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromTwitchIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromTwitchIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromTwitchIDsResult*>(buffer);
@@ -1052,6 +1071,7 @@ PF_API PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientGetPlayFabIDsFromXboxLiveIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromXboxLiveIDsResult*>(buffer);
@@ -1550,7 +1570,7 @@ PF_API PFAccountManagementClientUnlinkAndroidDeviceIDAsync(
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientUnlinkAppleAsync(
     _In_ PFEntityHandle contextHandle,
-    _In_ const PFAccountManagementUnlinkAppleRequest* request,
+    _In_ const PFAccountManagementClientUnlinkAppleRequest* request,
     _In_ XAsyncBlock* async
 ) noexcept
 {
@@ -1658,7 +1678,7 @@ PF_API PFAccountManagementClientUnlinkFacebookInstantGamesIdAsync(
 #if HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_IOS || HC_PLATFORM == HC_PLATFORM_MAC
 PF_API PFAccountManagementClientUnlinkGameCenterAccountAsync(
     _In_ PFEntityHandle contextHandle,
-    _In_ const PFAccountManagementUnlinkGameCenterAccountRequest* request,
+    _In_ const PFAccountManagementClientUnlinkGameCenterAccountRequest* request,
     _In_ XAsyncBlock* async
 ) noexcept
 {
@@ -1978,11 +1998,34 @@ PF_API PFAccountManagementClientUpdateUserTitleDisplayNameGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementClientUpdateUserTitleDisplayNameGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementUpdateUserTitleDisplayNameResult*>(buffer);
 
         return S_OK;
+    });
+}
+#endif
+
+#if 0
+PF_API PFAccountManagementServerAddOrUpdateContactEmailAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFAccountManagementServerAddOrUpdateContactEmailRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFAccountManagementServerAddOrUpdateContactEmailAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAccountManagementServerAddOrUpdateContactEmailAsync),
+            std::bind(&AccountManagementAPI::ServerAddOrUpdateContactEmail, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
     });
 }
 #endif
@@ -2030,6 +2073,7 @@ PF_API PFAccountManagementServerBanUsersGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerBanUsersGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementBanUsersResult*>(buffer);
@@ -2104,6 +2148,7 @@ PF_API PFAccountManagementServerGetPlayerCombinedInfoGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayerCombinedInfoGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayerCombinedInfoResult*>(buffer);
@@ -2156,6 +2201,7 @@ PF_API PFAccountManagementServerGetPlayerProfileGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayerProfileGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayerProfileResult*>(buffer);
@@ -2208,6 +2254,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromBattleNetAccountIdsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromBattleNetAccountIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromBattleNetAccountIdsResult*>(buffer);
@@ -2260,6 +2307,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromFacebookIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromFacebookIDsResult*>(buffer);
@@ -2312,6 +2360,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromFacebookInstantGamesIdsGetResul
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromFacebookInstantGamesIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromFacebookInstantGamesIdsResult*>(buffer);
@@ -2364,6 +2413,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoServiceAccountIdsGetRes
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromNintendoServiceAccountIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromNintendoServiceAccountIdsResult*>(buffer);
@@ -2416,6 +2466,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResul
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromNintendoSwitchDeviceIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromNintendoSwitchDeviceIdsResult*>(buffer);
@@ -2468,6 +2519,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromOpenIdSubjectIdentifiersGetResu
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromOpenIdSubjectIdentifiersGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromOpenIdsResult*>(buffer);
@@ -2520,6 +2572,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromPSNAccountIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromPSNAccountIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromPSNAccountIDsResult*>(buffer);
@@ -2572,9 +2625,63 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult*>(buffer);
+
+        return S_OK;
+    });
+}
+#endif
+
+#if 0
+PF_API PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFAccountManagementGetPlayFabIDsFromServerCustomIDsRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsAsync),
+            std::bind(&AccountManagementAPI::ServerGetPlayFabIDsFromServerCustomIDs, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+
+PF_API PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResultSize(
+    _In_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResultSize), [&]()
+    {
+        return XAsyncGetResultSize(async, bufferSize);
+    });
+}
+
+PF_API PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResult(
+    _In_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFAccountManagementGetPlayFabIDsFromServerCustomIDsResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResult), [&]()
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
+
+        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
+        *result = static_cast<PFAccountManagementGetPlayFabIDsFromServerCustomIDsResult*>(buffer);
 
         return S_OK;
     });
@@ -2624,6 +2731,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromSteamIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromSteamIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromSteamIDsResult*>(buffer);
@@ -2676,6 +2784,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromSteamNamesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromSteamNamesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromSteamNamesResult*>(buffer);
@@ -2728,6 +2837,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromTwitchIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromTwitchIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromTwitchIDsResult*>(buffer);
@@ -2780,6 +2890,7 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromXboxLiveIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetPlayFabIDsFromXboxLiveIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetPlayFabIDsFromXboxLiveIDsResult*>(buffer);
@@ -2832,6 +2943,7 @@ PF_API PFAccountManagementServerGetServerCustomIDsFromPlayFabIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetServerCustomIDsFromPlayFabIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetServerCustomIDsFromPlayFabIDsResult*>(buffer);
@@ -2884,6 +2996,7 @@ PF_API PFAccountManagementServerGetUserAccountInfoGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetUserAccountInfoGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetUserAccountInfoResult*>(buffer);
@@ -2936,6 +3049,7 @@ PF_API PFAccountManagementServerGetUserBansGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerGetUserBansGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetUserBansResult*>(buffer);
@@ -3230,6 +3344,7 @@ PF_API PFAccountManagementServerRevokeAllBansForUserGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerRevokeAllBansForUserGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementRevokeAllBansForUserResult*>(buffer);
@@ -3282,6 +3397,7 @@ PF_API PFAccountManagementServerRevokeBansGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerRevokeBansGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementRevokeBansResult*>(buffer);
@@ -3329,6 +3445,28 @@ PF_API PFAccountManagementServerSendEmailFromTemplateAsync(
             async,
             XASYNC_IDENTITY(PFAccountManagementServerSendEmailFromTemplateAsync),
             std::bind(&AccountManagementAPI::ServerSendEmailFromTemplate, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+#endif
+
+#if 0
+PF_API PFAccountManagementServerUnlinkAppleAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFAccountManagementServerUnlinkAppleRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFAccountManagementServerUnlinkAppleAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAccountManagementServerUnlinkAppleAsync),
+            std::bind(&AccountManagementAPI::ServerUnlinkApple, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
         );
         return XAsyncProviderBase::Run(std::move(provider));
     });
@@ -3395,6 +3533,28 @@ PF_API PFAccountManagementServerUnlinkFacebookInstantGamesIdAsync(
             async,
             XASYNC_IDENTITY(PFAccountManagementServerUnlinkFacebookInstantGamesIdAsync),
             std::bind(&AccountManagementAPI::ServerUnlinkFacebookInstantGamesId, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
+        );
+        return XAsyncProviderBase::Run(std::move(provider));
+    });
+}
+#endif
+
+#if 0
+PF_API PFAccountManagementServerUnlinkGameCenterAccountAsync(
+    _In_ PFEntityHandle contextHandle,
+    _In_ const PFAccountManagementServerUnlinkGameCenterAccountRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    RETURN_HR_INVALIDARG_IF_NULL(request);
+
+    return AsyncApiImpl(async, XASYNC_IDENTITY(PFAccountManagementServerUnlinkGameCenterAccountAsync), [&](SharedPtr<GlobalState> state)
+    {
+        auto provider = MakeProvider(
+            state->RunContext().DeriveOnQueue(async->queue),
+            async,
+            XASYNC_IDENTITY(PFAccountManagementServerUnlinkGameCenterAccountAsync),
+            std::bind(&AccountManagementAPI::ServerUnlinkGameCenterAccount, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
         );
         return XAsyncProviderBase::Run(std::move(provider));
     });
@@ -3620,6 +3780,7 @@ PF_API PFAccountManagementServerUpdateBansGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementServerUpdateBansGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementUpdateBansResult*>(buffer);
@@ -3671,6 +3832,7 @@ PF_API PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementGetTitlePlayersFromXboxLiveIDsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementGetTitlePlayersFromProviderIDsResponse*>(buffer);
@@ -3721,6 +3883,7 @@ PF_API PFAccountManagementSetDisplayNameGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAccountManagementSetDisplayNameGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAccountManagementSetDisplayNameResponse*>(buffer);

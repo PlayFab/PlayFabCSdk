@@ -1905,7 +1905,11 @@ void AccountManagementTests::TestServerUnlinkPSNAccount(TestContext& tc)
 
     ServerUnlinkPSNAccountOperation::Run(TitleEntity(), request, RunContext()).Then([&](Result<void> result) -> Result<void>
     {
+#if HC_PLATFORM == HC_PLATFORM_GDK
+        RETURN_IF_FAILED_PLAYFAB(result);
+#else
         tc.AssertEqual(E_PF_ACCOUNT_NOT_LINKED, result.hr, "errorName");
+#endif
 
         return S_OK;
     })

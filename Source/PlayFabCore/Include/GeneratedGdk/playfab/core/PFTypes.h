@@ -941,6 +941,11 @@ typedef struct PFUserPsnInfo
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* psnOnlineId;
 
+    /// <summary>
+    /// (Optional) PlayStation :tm: Network sandbox ID.
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* psnSandboxId;
+
 } PFUserPsnInfo;
 
 /// <summary>

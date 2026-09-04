@@ -1,0 +1,221 @@
+id: Scenario-Xbox-57-Ring-Buffer-Suspend-Resume-Cloud-Verify
+name: GameSave Xbox 57 - Ring Buffer Suspend/Resume Cloud Verify
+tags:
+  - xboxgamesaves
+  - soak
+platforms:
+  xbox: passing      # Background autosave + suspend/resume race; local + cloud data-loss detectors
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Targets the resume-with-missing-data save-loss class (Forte 4440029) with a real
+  race hunt. A BACKGROUND ring-buffer writer cycles 1MB single-byte payloads through
+  a fixed set of files while a PLM suspend lands mid-write (so a GRTS upload is in
+  flight), then a randomized delay resumes at a different point in the upload window
+  each iteration. The iteration block is listed several times in executionOrder so the
+  race is sampled repeatedly; scale further with `tests-run.py gamesave-xbox --only 57
+  --repeat N`.
+
+  Data-loss detection uses the ring writer as a monotonic ground truth: once seeded,
+  the save must ALWAYS contain every ring file at full size, each uniform with its last
+  written byte. StopRingBufferWriter freezes that manifest right after resume (so the
+  writer can't repopulate and mask a wipe); then:
+
+    1. LOCAL: after re-init + re-AddUser, VerifyRingBufferIntegrity(local) fails if the
+       post-resume folder lost/truncated any ring file — i.e. AddUser "succeeded" but
+       data went missing.
+    2. CLOUD: upload the recovered state, pfgamesaveutil download it, and
+       VerifyRingBufferIntegrity(cloud) fails if a bad/empty state was uploaded over
+       good cloud data — the exact "signed off as good" risk the bug describes.
+
+  Cloud steps are skipped (logged) when PFSECRETKEY is unset.
+brief: Background autosave + randomized suspend/resume race; local + cloud data-loss checks
+group: I. Suspend / Resume
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  session-a-init-and-baseline:
+    # Start the app ONCE (XGameRuntimeInitialize is process-level, not repeated).
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    # Surface the entity id so the controller can target pfgamesaveutil at this player.
+    - command: PFEntityGetEntityKey
+    - command: PFGameSaveFilesGetFolder
+
+  session-a-iterate-autosave-suspend-resume:
+    # ===== ONE no-terminate iteration. Listed N times in executionOrder. =====
+    # Precondition: an ACTIVE PF/CS session exists. Process is NEVER terminated here.
+
+    # 1) Start the background autosave writer (1MB single-byte payloads, every 100ms).
+    - command: StartRingBufferWriter
+      parameters:
+        fileCount: 4
+        bytesPerFile: 1048576
+        intervalMs: 100
+        relativeDir: ring
+    # 2) Let writes accumulate for a RANDOM time so the suspend lands at a varying point.
+    - command: SmokeDelay
+      parameters:
+        minMs: 400
+        maxMs: 1600
+    # 3) PLM suspend triggers a GRTS upload of the dirty folder WHILE a write is in flight.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    # 4) Resume after a RANDOM delay so we land at different points in the upload window.
+    - command: SmokeDelay
+      parameters:
+        minMs: 200
+        maxMs: 2200
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+    # 5) Freeze the ground truth NOW (before re-AddUser) so a wipe can't be repopulated.
+    - command: StopRingBufferWriter
+    # 6) Tear down ONLY the PF/CS stack (process persists — no XGameRuntime reinit).
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: XUserCloseHandle
+    # 7) Re-initialize the PF/CS stack (post-resume reinit / URI-activation re-init).
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseCloud
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFAccountManagementClientLinkXboxAccountAsync
+      parameters:
+        forceLink: true
+        unlinkIfNeeded: true
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Re-add user — the resume recovery path (the bug spot). Must NOT lose the ring data.
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFEntityGetEntityKey
+    - command: PFGameSaveFilesGetFolder
+    # 8) LOCAL data-loss detector: post-resume folder must still match the frozen manifest.
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: VerifyRingBufferIntegrity
+      parameters:
+        source: local
+        slot: right
+    # Leaves an ACTIVE session for the next iteration.
+
+  session-a-cloud-verify-and-teardown:
+    # 9) Upload the recovered state, then verify the CLOUD copy has no data loss vs the
+    #    last frozen ring manifest. Catches "bad state uploaded as good" even if local passed.
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+      timeoutSeconds: 300
+    - command: PfGameSaveUtilDownload
+      timeoutSeconds: 300
+    - command: VerifyRingBufferIntegrity
+      parameters:
+        source: cloud
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-a-init-and-baseline
+  # ----- Randomized suspend/resume race iterations (scale with --repeat for more soak) -----
+  - role: DeviceA
+    block: session-a-iterate-autosave-suspend-resume
+  - role: DeviceA
+    block: session-a-iterate-autosave-suspend-resume
+  - role: DeviceA
+    block: session-a-iterate-autosave-suspend-resume
+  - role: DeviceA
+    block: session-a-iterate-autosave-suspend-resume
+  - role: DeviceA
+    block: session-a-iterate-autosave-suspend-resume
+  # ---------------------------------------------------------------------------------------
+  - role: DeviceA
+    block: session-a-cloud-verify-and-teardown
+cleanup:
+  DeviceA:
+    - command: StopRingBufferWriter
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

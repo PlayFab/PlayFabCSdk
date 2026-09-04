@@ -1,0 +1,118 @@
+id: LHC-Xbox-14-Websockets-Do-Not-Consume-Http-Budget
+name: LHC Xbox 14 - WebSockets Must Not Consume HTTP Request Budget
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Pins a deliberate design decision in the concurrent request limit: the budget applies to
+  HTTP requests only. WebSocket connections are tracked by the same provider and are torn down
+  by the same suspend path, but they do not reserve a slot.
+
+  The reason is lifetime. HTTP requests are short-lived and return their slot on completion,
+  so the budget is self-clearing. WebSockets are long-lived by design and may stay open for
+  the entire session. If they consumed slots, a title holding a handful of sockets would
+  permanently reduce its HTTP concurrency, and enough sockets would starve HTTP completely
+  with no completion able to release anything.
+
+  With a deliberately tiny cap of 1, the failure is unambiguous: if WebSockets took slots,
+  a single open socket would consume the entire budget and every HTTP request afterwards would
+  queue forever.
+
+  This also guards the reverse direction -- an open WebSocket must not be disturbed by HTTP
+  requests saturating the budget.
+brief: Long-lived WebSockets must not reduce HTTP concurrency
+group: C. Request Limit
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  setup-tiny-cap:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # A cap of 1 is what makes this test able to fail. The harness tracks a single WebSocket
+    # handle, so exactly one socket is opened below; with a cap of 1 that socket represents the
+    # ENTIRE HTTP budget. If a WebSocket wrongly consumed a slot, zero slots would remain and the
+    # HTTP burst could never start. With a larger cap a leaked slot still leaves capacity free and
+    # the burst completes serially, so the scenario would pass whether or not the bug was present.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 1
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 1
+
+  open-websockets:
+    # One long-lived socket, equal to the entire HTTP budget. Left open for the rest of the
+    # scenario.
+    # The controller hosts the echo endpoint. The console reaches it over the LAN via
+    # {{wsTestHost}}; a public internet echo service is not usable here because the title's
+    # network policy only permits approved endpoints.
+    - command: StartWebSocketTestServer
+
+    - command: HCWebSocketCreate
+    - command: HCWebSocketConnectAsync
+      parameters:
+        uri: "{{wsTestUrl}}"
+        subProtocol: ""
+    - command: HCWebSocketSendMessageAsync
+      parameters:
+        message: "socket-open"
+
+  verify-http-still-flows:
+    # THE ASSERTION. With the socket open and a cap of 1, HTTP must still run. If the WebSocket
+    # consumed the only slot this burst would never start and the command reports requests still
+    # outstanding.
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "https://E18D7.playfabapi.com/"
+        requestCount: 8
+        expectedSuccesses: 8
+        timeoutMs: 120000
+
+  verify-websocket-still-usable:
+    # The existing socket must be unaffected by the HTTP load that just ran.
+    - command: HCWebSocketSendMessageAsync
+      parameters:
+        message: "still-alive-after-http-burst"
+    - command: HCWebSocketDisconnect
+    - command: HCWebSocketCloseHandle
+
+    # Closing sockets must not have disturbed HTTP accounting either.
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "https://E18D7.playfabapi.com/"
+        requestCount: 8
+        expectedSuccesses: 8
+        timeoutMs: 120000
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: setup-tiny-cap
+  - role: DeviceA
+    block: open-websockets
+  - role: DeviceA
+    block: verify-http-still-flows
+  - role: DeviceA
+    block: verify-websocket-still-usable
+cleanup:
+  DeviceA:
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0
+    - command: XTaskQueueCloseHandle
+    # Release the controller-hosted echo endpoint.
+    - command: StopWebSocketTestServer

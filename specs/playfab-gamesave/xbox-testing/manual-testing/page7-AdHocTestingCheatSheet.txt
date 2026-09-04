@@ -1,0 +1,120 @@
+Game Save State & Transition Cheat Sheet			
+Purpose: Quick tester reference for how to force each game-save state and what player/device transitions to run at any point during play.			
+			
+1) Core Game Save States — How to Get Into Each			
+			
+A) Active Device Contention			
+What it is:	Two devices compete for active ownership of the same user save session.		
+How to enter:			
+	1.	Start gameplay on Device A (signed in, online).	
+	2.	Launch same title + same user on Device B.	
+	3.	On B, proceed through init so active device prompt appears.	
+	4.	Load latest from cloud or wait for upload to takeover based on scenario.	
+Variants:			
+	•	A uploading while B online tries to take over → should show progress dialog that progresses as A upload completes	
+	•	A offline-active while B online tries to take over → should show error dialog prompting player to load from cloud	
+	•	A online active while B online tries to take over → should show error dialog prompting player to load from cloud	
+Validate:	Active device prompt behavior; No duplicate/lost writes		
+			
+B) Conflict Resolution			
+What it is:	Cloud and local data differ and the system must choose/merge.		
+How to enter (Cloud Newer):			
+	1.	Make offline progress on B and quit (e.g. change car).	
+	2.	Make online progress on A and quit.	
+	3.	Launch B to trigger init/download — you should see a conflict.	
+How to enter (Local Newer):			
+	1.	Play on A and make progress (e.g. change car) and quit.	
+	2.	Play on B offline and make local progress (change to another car) and quit.	
+	3.	Reconnect B and launch to trigger init/download — you should see a conflict.	
+Variants:			
+	•	Choose cloud → should load latest cloud progress	
+	•	Choose local → should load latest local progress	
+	•	Go offline and relaunch again	
+Validate:	Selected source wins; Timestamps accurate for both local and cloud; No data loss where unexpected; Conflicts appear when expected		
+			
+C) Offline Mode			
+What it is:	Title can run/save locally without cloud connectivity.		
+How to enter:			
+	1.	Disconnect network before launch or during sync.	
+	2.	Launch title and continue offline.	
+	3.	Create progress and quit while still offline.	
+	4.	Reconnect and relaunch for recovery/sync.	
+Validate:	Offline prompt/flow; Local progress retained; Reconnect sync outcome is deterministic		
+			
+D) Game Save Download			
+What it is:	Pull latest cloud save to local.		
+How to enter:			
+	1.	Seed cloud with known data on Device A.	
+	2.	On Device B use clean local OR stale local (depending on case).	
+	3.	Trigger init/download by launching game online.	
+	4.	Complete/resolve any prompts.	
+Validate:	Expected cloud state appears locally; No partial files; Conflict handling matches expectations		
+			
+E) Game Save Upload (Out-of-game)			
+What it is:	Write latest local save to cloud after progress and exit.		
+How to enter:			
+	1.	Make known progress locally.	
+	2.	Quit title to trigger out-of-game upload window.	
+	3.	Optionally introduce stressor (sign out, standby, power event).	
+	4.	Relaunch on same or second device and sync.	
+Validate:	Cloud reflects newest intended state; No regression/corruption		
+			
+2) Player/Device Transitions — Run During Init, Download, Conflict Prompts & Upload			
+			
+App Lifecycle			
+	•	Foreground → Background	
+	•	Background → Foreground	
+	•	Suspend → Resume	
+	•	Connected Standby → Resume	
+			
+Process / System Events			
+	•	Running → Title termination (kill app)	
+	•	Running → Structured shutdown (clean OS shutdown)	
+	•	Running → Power loss / crash / power pull	
+	•	Reboot → Relaunch → Resync	
+			
+Network / Connectivity			
+	•	Online → Offline	
+	•	Offline → Online	
+	•	High latency / packet loss burst	
+	•	Intermittent flapping (offline/online repeatedly)	
+			
+Auth / User			
+	•	Signed in → Signed out	
+	•	Signed out → Signed in	
+	•	Auth valid → Auth expired	
+	•	Auth expired → Re-authenticated	
+	•	User switch (same device, different account)	
+			
+Storage / Data Conditions			
+	•	Disk available → Disk full	
+	•	Disk full → Space recovered	
+	•	Clean local data → Download from cloud	
+	•	Stale local data → Cloud newer	
+	•	Local newer → Cloud older (conflict path)	
+			
+Multi-device Ownership			
+	•	Device A active → Device B launch (same user)	
+	•	Device A uploading → Device B takeover	
+	•	Device A playing → Device B SPOP takeover	
+	•	Device A offline-active → Device B online takeover	
+	•	Device A acquiring → Device B loses active	
+			
+3) Minimal "Always Verify" Checklist			
+			
+	1.	UX result: prompt, retry path, ownership/conflict decision path is correct.	
+	2.	Data result: expected save content present, timestamp/order progression correct, no corruption.	
+	3.	Cross-device final check (when applicable): A and B converge on same intended final state.	
+			
+4) Quick High-Value Combo Matrix — Run First			
+			
+	1.	Offline → Online during Download	
+	2.	Foreground → Background during Init	
+	3.	Suspend → Resume during Download	
+	4.	Sign out during Upload window	
+	5.	Auth expiry during Init then Re-auth	
+	6.	A active + B takeover during Download	
+	7.	Local newer than cloud conflict → choose local	
+	8.	Cloud newer than local conflict → choose cloud	
+	9.	Title termination during Download	
+	10.	Power loss during Upload window	

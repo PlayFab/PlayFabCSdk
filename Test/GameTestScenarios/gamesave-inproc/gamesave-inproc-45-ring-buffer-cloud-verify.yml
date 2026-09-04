@@ -1,0 +1,116 @@
+id: Scenario-Inproc-45-Ring-Buffer-Cloud-Verify
+name: GameSave Inproc 45 - Ring Buffer Cloud Verify
+tags:
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: ignore
+description: >
+  Periodic autosave-style writer that cycles 1MB single-byte payloads through a
+  ring buffer of files (different byte each pass), uploads the final state, then
+  pulls the data back down with `pfgamesaveutil download` and verifies the cloud
+  copy byte-for-byte against the pre-upload snapshot.
+
+  This is the cloudless-friendly base case (no suspend/PLM): it exercises the new
+  PfGameSaveUtilDownload + VerifyGameSaveUtilDownload controller commands. When
+  PFSECRETKEY is unset both steps log and skip, so the scenario still passes the
+  local upload path on machines without title credentials.
+brief: Ring-buffer autosave writes, upload, then cloud download + verify
+group: Z. Cloud Verification
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  write-upload-verify:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\DeviceA"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness-RingBuffer"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    # Surface the entity id so the controller can target pfgamesaveutil at this player.
+    - command: PFEntityGetEntityKey
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    # ----- Periodic autosave: background ring-buffer writer (4 files x 1MB, every 100ms) -----
+    - command: StartRingBufferWriter
+      parameters:
+        fileCount: 4
+        bytesPerFile: 1048576
+        intervalMs: 100
+        relativeDir: ring
+    # Let the writer churn through a few full passes.
+    - command: SmokeDelay
+      parameters:
+        durationMs: 1500
+    # Freeze the authoritative ground truth (per-slot last byte + size).
+    - command: StopRingBufferWriter
+    # Capture the exact on-disk state and assert NO data loss vs the ring manifest.
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+    - command: VerifyRingBufferIntegrity
+      parameters:
+        source: local
+        slot: left
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: ReleaseDeviceAsActive
+      timeoutSeconds: 300
+    # ----- Cloud round-trip verification (skipped when PFSECRETKEY is unset) -----
+    - command: PfGameSaveUtilDownload
+      timeoutSeconds: 300
+    - command: VerifyRingBufferIntegrity
+      parameters:
+        source: cloud
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: write-upload-verify
+cleanup:
+  DeviceA:
+    - command: StopRingBufferWriter
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"

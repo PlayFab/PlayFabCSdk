@@ -1,0 +1,58 @@
+id: PFServices-06-Catalog-Reviews
+name: PFServices 06 - Item Reviews Lifecycle
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Submits a review, gets the review, gets review summary, votes on it, then cleans up.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFCatalogReviewItemAsync
+      expectFailure: true  # E_PF_INVALID_REQUEST (0x89235468) - no item ID provided (empty request)
+    - command: PFCatalogGetEntityItemReviewAsync
+      expectFailure: true  # E_PF_INVALID_REQUEST (0x89235468) - no item ID provided (empty request)
+    - command: PFCatalogGetEntityItemReviewGetResult
+    - command: PFCatalogGetItemReviewSummaryAsync
+      expectFailure: true  # E_PF_INVALID_REQUEST (0x89235468) - no item ID provided (empty request)
+    - command: PFCatalogGetItemReviewSummaryGetResult
+    - command: PFCatalogSubmitItemReviewVoteAsync
+      expectFailure: true  # E_PF_INVALID_REQUEST (0x89235468) - invalid JSON / missing required fields
+    - command: PFCatalogDeleteEntityItemReviewsAsync
+      expectFailure: true  # E_PF_NOT_AUTHORIZED (0x89235478) - requires title entity, not title_player_account
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

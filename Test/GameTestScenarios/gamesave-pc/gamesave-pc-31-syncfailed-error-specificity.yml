@@ -1,0 +1,152 @@
+id: Scenario-PC-31-SyncFailed-Error-Specificity
+name: GameSave PC 31 - SyncFailed Error Code Specificity
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  Test A: DisableNetwork, init, trigger SyncFailed, verify network-related HRESULT, UseOffline, cleanup, EnableNetwork.
+  Test B: Init with invalid auth scenario, trigger SyncFailed, verify auth HRESULT. Verify distinct error codes
+  for different failure types.
+brief: SyncFailed returns specific error codes per failure type
+group: D. Sync Failure / Offline
+devices:
+  DeviceA:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  test-a-network-failure:
+    # Stop GRTS, clear cache, disable network, start GRTS cold —
+    # ensures AddUser hits SyncFailed instead of using stale cache
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: FlushGrtsAndGoOffline
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # UiNavigator clicks "Play offline" on SyncFailed dialog
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: UseOffline
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # AddUser triggers sync failure (offline); SyncFailed TCUI fires
+    # Verify: error HRESULT is network-related (0x80832302 or 0x89237005)
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectSyncFailedHrCategory: network
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5000
+  test-b-auth-failure:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    # Use an invalid endpoint to provoke an auth-related sync failure
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://INVALID.playfabapi.com"
+        titleId: "FFFFF"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceB"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # UiNavigator clicks "Play offline" on SyncFailed dialog (Cancel maps to UseOfflineButton)
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: Cancel
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # AddUser triggers sync failure (auth); SyncFailed TCUI fires
+    # inproc: Cancel returns E_CANCELLED (0x800704C7).
+    # GRTS: auth failure returns CS_E_NO_ACCESS (0x80830002) or E_GS_USER_CANCELED (0x80830004).
+    - command: PFGameSaveFilesAddUserWithUiAsync
+      parameters:
+        expectSyncFailedHrCategory: auth
+        expectedHr: "0x800704C7, 0x80830002, 0x80830004"
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: test-a-network-failure
+  - role: DeviceA
+    block: test-b-auth-failure
+cleanup:
+  DeviceA:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: StartGamingServices
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

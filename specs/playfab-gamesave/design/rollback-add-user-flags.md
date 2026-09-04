@@ -29,7 +29,7 @@ Two rollback scenarios are supported:
 ## 3. Non-Goals
 
 * Adding UI to let the player pick rollback targets post-initialization.
-* Mid-session rollback (after `AddUserWithUiAsync` succeeds) — requires full uninitialize/reinitialize cycle and is out of scope.
+* Mid-session rollback (after `AddUserWithUiAsync` succeeds) -- requires full uninitialize/reinitialize cycle and is out of scope.
 * Extending upload APIs for rollback; rollback applies only at initial Add User sync path.
 
 ## 4. Public API Changes
@@ -48,7 +48,7 @@ Add two flag values:
     };
 ```
 
-Validation rule: At most one rollback flag may be specified per call. If both are provided simultaneously return `E_INVALIDARG` (fail fast before async begins) — see §6.5.
+Validation rule: At most one rollback flag may be specified per call. If both are provided simultaneously return `E_INVALIDARG` (fail fast before async begins) -- see §6.5.
 
 ### 4.2 Title Configuration Gating
 
@@ -82,7 +82,7 @@ Testing Notes:
 
 ### 4.2 Documentation Updates
 
-`PFGameSaveFilesAddUserWithUiAsync` docs will gain a subsection “Rollback Options” describing semantics, precedence, and errors.
+`PFGameSaveFilesAddUserWithUiAsync` docs will gain a subsection "Rollback Options" describing semantics, precedence, and errors.
 
 ## 5. Behavior: GRTS Provider (`GameSaveAPIProviderGRTS`)
 
@@ -96,14 +96,14 @@ Edge case mapping and final selection is performed by GRTS. The client simply fo
 
 ## 6. Behavior: Win32 / In-Process Provider (`GameSaveAPIProviderWin32`)
 
-Since the Win32 provider currently enumerates manifests and picks “latest finalized” (then optionally pending) we must interpose logic early in `AddUserWithUiAsync` flow (before `PreparingForDownload` transitions). Pseudocode insertion point: right after verifying `syncState == NotStarted` and before setting `PreparingForDownload`.
+Since the Win32 provider currently enumerates manifests and picks "latest finalized" (then optionally pending) we must interpose logic early in `AddUserWithUiAsync` flow (before `PreparingForDownload` transitions). Pseudocode insertion point: right after verifying `syncState == NotStarted` and before setting `PreparingForDownload`.
 
-### 6.1 Manifest Selection Strategy (Win32/In-Process) – With Title Config Gating
+### 6.1 Manifest Selection Strategy (Win32/In-Process) - With Title Config Gating
 
 Metadata Inputs:
 * `IsKnownGood` (bool)
-* `IsWinner` (bool) – exactly one manifest in a conflict pair is winner; the other is loser (`IsWinner == false`).
-* `ConflictingVersion` (version id) – set when a manifest participated in a conflict; both winner and loser have this field referencing the opposing version.
+* `IsWinner` (bool) - exactly one manifest in a conflict pair is winner; the other is loser (`IsWinner == false`).
+* `ConflictingVersion` (version id) - set when a manifest participated in a conflict; both winner and loser have this field referencing the opposing version.
 
 Definitions:
 * Latest Finalized (L): Highest finalized manifest (simple max-version over all finalized manifests; excludes conflict losers when computing L).

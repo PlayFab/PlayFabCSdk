@@ -1,6 +1,7 @@
 #include "TestAppPch.h"
 #include "GroupsTests.h"
 #include "GroupsOperations.h"
+#include "Platform/PlatformUtils.h"
 
 namespace PlayFab
 {
@@ -8,6 +9,35 @@ namespace Test
 {
 
 constexpr char joinerCustomId[]{ "GroupJoinerCustomId" };
+constexpr uint32_t groupApplicationsMaxAttempts{ 7 };
+constexpr uint32_t groupApplicationsRetryDelayMs{ 5000 };
+
+AsyncOp<ListGroupApplicationsOperation::ResultType> ListGroupApplicationsWithRetry(
+    Entity entity,
+    EntityKey group,
+    RunContext rc,
+    uint32_t attemptsRemaining)
+{
+    ListGroupApplicationsOperation::RequestType request;
+    request.SetGroup(group);
+    return ListGroupApplicationsOperation::Run(entity, request, rc).Then(
+        [entity = std::move(entity), group = std::move(group), rc = std::move(rc), attemptsRemaining]
+        (Result<ListGroupApplicationsOperation::ResultType> result) mutable -> AsyncOp<ListGroupApplicationsOperation::ResultType>
+    {
+        RETURN_IF_FAILED_PLAYFAB(result);
+        if (result.Payload().Model().applicationsCount > 0 || attemptsRemaining <= 1)
+        {
+            return std::move(result);
+        }
+
+        Platform::Sleep(groupApplicationsRetryDelayMs);
+        return ListGroupApplicationsWithRetry(
+            std::move(entity),
+            std::move(group),
+            std::move(rc),
+            attemptsRemaining - 1);
+    });
+}
 
 struct GroupsTestsState
 {
@@ -102,6 +132,7 @@ void GroupsTests::TestAcceptGroupInvitation(TestContext& tc)
     InviteToGroupOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<InviteToGroupOperation::ResultType> result) -> AsyncOp<ListGroupInvitationsOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
+        Platform::Sleep(groupApplicationsRetryDelayMs);
         ListGroupInvitationsOperation::RequestType request;
         request.SetGroup(m_state->group);
         return ListGroupInvitationsOperation::Run(DefaultTitlePlayer(), request, RunContext());
@@ -111,6 +142,10 @@ void GroupsTests::TestAcceptGroupInvitation(TestContext& tc)
         RETURN_IF_FAILED_PLAYFAB(result);
         auto& model = result.Payload().Model();
         tc.AssertEqual(1u, model.invitationsCount, "invitationsCount");
+        if (model.invitationsCount != 1)
+        {
+            return E_FAIL;
+        }
         tc.AssertEqual<String>(DefaultTitlePlayer().EntityKey().Model().id, model.invitations[0]->invitedByEntity->key->id, "invitations[0]->invitedByEntity->key->id");
         tc.AssertEqual<String>(m_state->groupJoiner->EntityKey().Model().id, model.invitations[0]->invitedEntity->key->id, "invitations[0]->invitedEntity->key->id");
 
@@ -316,9 +351,11 @@ void GroupsTests::TestListGroupApplications(TestContext& tc)
     ApplyToGroupOperation::Run(*m_state->groupJoiner, request, RunContext()).Then([&](Result<ApplyToGroupOperation::ResultType> result) -> AsyncOp<ListGroupApplicationsOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
-        ListGroupApplicationsOperation::RequestType request;
-        request.SetGroup(m_state->group);
-        return ListGroupApplicationsOperation::Run(DefaultTitlePlayer(), request, RunContext());
+        return ListGroupApplicationsWithRetry(
+            DefaultTitlePlayer(),
+            m_state->group,
+            RunContext(),
+            groupApplicationsMaxAttempts);
     })
     .Then([&](Result<ListGroupApplicationsOperation::ResultType> result) -> Result<void>
     {

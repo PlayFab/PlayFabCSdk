@@ -98,6 +98,7 @@ PF_API PFStatisticsDeleteStatisticsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsDeleteStatisticsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFStatisticsDeleteStatisticsResponse*>(buffer);
@@ -149,6 +150,7 @@ PF_API PFStatisticsGetStatisticDefinitionGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsGetStatisticDefinitionGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFStatisticsGetStatisticDefinitionResponse*>(buffer);
@@ -200,6 +202,7 @@ PF_API PFStatisticsGetStatisticsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsGetStatisticsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFStatisticsGetStatisticsResponse*>(buffer);
@@ -251,6 +254,7 @@ PF_API PFStatisticsGetStatisticsForEntitiesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsGetStatisticsForEntitiesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFStatisticsGetStatisticsForEntitiesResponse*>(buffer);
@@ -336,6 +340,7 @@ PF_API PFStatisticsListStatisticDefinitionsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsListStatisticDefinitionsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFStatisticsListStatisticDefinitionsResponse*>(buffer);
@@ -431,6 +436,7 @@ PF_API PFStatisticsUpdateStatisticsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFStatisticsUpdateStatisticsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFStatisticsUpdateStatisticsResponse*>(buffer);

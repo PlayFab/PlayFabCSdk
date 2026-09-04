@@ -72,7 +72,9 @@ AsyncOp<User> User::Add(
 
 HRESULT User::Initialize() noexcept
 {
-    RETURN_IF_FAILED(XUserGetId(m_user.Handle(), &m_id));
+    uint64_t id{ 0 };
+    RETURN_IF_FAILED(XUserGetId(m_user.Handle(), &id));
+    m_id.store(id);
     return S_OK;
 }
 

@@ -1,0 +1,58 @@
+id: PFCore-32-Data-Connections
+name: PFCore 32 - Data Connections CRUD
+tags:
+  - pfcore
+platforms:
+  xbox: failing  # 0x80004001 E_NOTIMPL — PFEventsListDataConnectionsAsync not implemented
+  pc-grts: ignore
+  pc-inproc: failing  # 0x80004001 E_NOTIMPL — PFEventsListDataConnectionsAsync not implemented
+  psx: ignore
+description: >
+  Creates a data connection, reads it, lists all, toggles active,
+  and deletes it. Exercises the full CRUD lifecycle.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserLoginAsync
+
+  test:
+    - command: PFLocalUserTryGetEntityHandle
+    - command: PFEventsListDataConnectionsAsync
+    - command: PFEventsCreateDataConnectionAsync
+      parameters:
+        connectionName: "pfcore-test-conn-32"
+    - command: PFEventsGetDataConnectionAsync
+    - command: PFEventsListDataConnectionsAsync
+    - command: PFEventsSetDataConnectionActiveAsync
+      parameters:
+        active: false
+    - command: PFEventsDeleteDataConnectionAsync
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

@@ -1474,6 +1474,27 @@ Result<ClientUpdateUserTitleDisplayNameOperation::ResultType> ClientUpdateUserTi
 }
 #endif
 
+#if 0
+
+ServerAddOrUpdateContactEmailOperation::ServerAddOrUpdateContactEmailOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<void> ServerAddOrUpdateContactEmailOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerAddOrUpdateContactEmailOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerAddOrUpdateContactEmailOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAccountManagementServerAddOrUpdateContactEmailAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 
 ServerBanUsersOperation::ServerBanUsersOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
@@ -1821,6 +1842,36 @@ Result<ServerGetPlayFabIDsFromPSNOnlineIDsOperation::ResultType> ServerGetPlayFa
     Vector<char> resultBuffer(resultSize);
     PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsResult* result;
     RETURN_IF_FAILED(PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
+    return ResultType{ *result };
+}
+#endif
+
+#if 0
+
+ServerGetPlayFabIDsFromServerCustomIDsOperation::ServerGetPlayFabIDsFromServerCustomIDsOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<ServerGetPlayFabIDsFromServerCustomIDsOperation::ResultType> ServerGetPlayFabIDsFromServerCustomIDsOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerGetPlayFabIDsFromServerCustomIDsOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerGetPlayFabIDsFromServerCustomIDsOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+Result<ServerGetPlayFabIDsFromServerCustomIDsOperation::ResultType> ServerGetPlayFabIDsFromServerCustomIDsOperation::GetResult(XAsyncBlock* async) noexcept
+{
+    size_t resultSize;
+    RETURN_IF_FAILED(PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResultSize(async, &resultSize));
+    Vector<char> resultBuffer(resultSize);
+    PFAccountManagementGetPlayFabIDsFromServerCustomIDsResult* result;
+    RETURN_IF_FAILED(PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResult(async, resultBuffer.size(), resultBuffer.data(), &result, nullptr));
     return ResultType{ *result };
 }
 #endif
@@ -2368,6 +2419,27 @@ HRESULT ServerSendEmailFromTemplateOperation::OnStarted(XAsyncBlock* async) noex
 
 #endif
 
+#if 0
+
+ServerUnlinkAppleOperation::ServerUnlinkAppleOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<void> ServerUnlinkAppleOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerUnlinkAppleOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerUnlinkAppleOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAccountManagementServerUnlinkAppleAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_GDK
 
 ServerUnlinkBattleNetAccountOperation::ServerUnlinkBattleNetAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
@@ -2427,6 +2499,27 @@ AsyncOp<void> ServerUnlinkFacebookInstantGamesIdOperation::Run(Entity entity, Re
 HRESULT ServerUnlinkFacebookInstantGamesIdOperation::OnStarted(XAsyncBlock* async) noexcept
 {
     return PFAccountManagementServerUnlinkFacebookInstantGamesIdAsync(m_entity.Handle(), &m_request.Model(), async);
+}
+
+#endif
+
+#if 0
+
+ServerUnlinkGameCenterAccountOperation::ServerUnlinkGameCenterAccountOperation(Entity entity, RequestType request, PlayFab::RunContext rc) :
+    XAsyncOperation{ std::move(rc) },
+    m_entity{ std::move(entity) },
+    m_request{ std::move(request) }
+{
+}
+
+AsyncOp<void> ServerUnlinkGameCenterAccountOperation::Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept
+{
+    return RunOperation(MakeUnique<ServerUnlinkGameCenterAccountOperation>(std::move(entity), std::move(request), std::move(rc)));
+}
+
+HRESULT ServerUnlinkGameCenterAccountOperation::OnStarted(XAsyncBlock* async) noexcept
+{
+    return PFAccountManagementServerUnlinkGameCenterAccountAsync(m_entity.Handle(), &m_request.Model(), async);
 }
 
 #endif

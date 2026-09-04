@@ -1,0 +1,67 @@
+id: LHC-15-Trace-Configuration-And-Callback
+name: LHC 15 - Trace Level Configuration and Callback Routing
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Set trace level to Verbose, install a custom trace callback, perform
+  an HTTP call that generates trace output, then set trace level to Off.
+  Catches regressions in the diagnostics path developers rely on for debugging.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  tracing:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Set verbose tracing and install callback
+    - command: HCSettingsSetTraceLevel
+      parameters:
+        traceLevel: "Verbose"
+    - command: HCSettingsGetTraceLevel
+    - command: HCTraceSetClientCallback
+      parameters:
+        action: "set"
+
+    # Perform an HTTP call to generate trace output
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://raw.githubusercontent.com/microsoft/libHttpClient/refs/heads/main/README.md"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "User-Agent"
+        headerValue: "libHttpClient-test"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    # Turn tracing off
+    - command: HCSettingsSetTraceLevel
+      parameters:
+        traceLevel: "Off"
+    - command: HCSettingsGetTraceLevel
+
+    # Remove callback
+    - command: HCTraceSetClientCallback
+      parameters:
+        action: "clear"
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: tracing
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

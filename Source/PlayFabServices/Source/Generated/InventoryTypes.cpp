@@ -919,60 +919,6 @@ HRESULT GetInventoryOperationStatusResponse::Copy(const PFInventoryGetInventoryO
     return S_OK;
 }
 
-JsonValue GetMicrosoftStoreAccessTokensRequest::ToJson() const
-{
-    return GetMicrosoftStoreAccessTokensRequest::ToJson(this->Model());
-}
-
-JsonValue GetMicrosoftStoreAccessTokensRequest::ToJson(const PFInventoryGetMicrosoftStoreAccessTokensRequest& input)
-{
-    JsonValue output = JsonValue::object();
-    JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
-    return output;
-}
-
-HRESULT GetMicrosoftStoreAccessTokensResponse::FromJson(const JsonValue& input)
-{
-    String collectionsAccessToken{};
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "CollectionsAccessToken", collectionsAccessToken));
-    this->SetCollectionsAccessToken(std::move(collectionsAccessToken));
-
-    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "CollectionsAccessTokenExpirationDate", this->m_model.collectionsAccessTokenExpirationDate));
-
-    return S_OK;
-}
-
-size_t GetMicrosoftStoreAccessTokensResponse::RequiredBufferSize() const
-{
-    return RequiredBufferSize(this->Model());
-}
-
-Result<PFInventoryGetMicrosoftStoreAccessTokensResponse const*> GetMicrosoftStoreAccessTokensResponse::Copy(ModelBuffer& buffer) const
-{
-    return buffer.CopyTo<GetMicrosoftStoreAccessTokensResponse>(&this->Model());
-}
-
-size_t GetMicrosoftStoreAccessTokensResponse::RequiredBufferSize(const PFInventoryGetMicrosoftStoreAccessTokensResponse& model)
-{
-    size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
-    if (model.collectionsAccessToken)
-    {
-        requiredSize += (std::strlen(model.collectionsAccessToken) + 1);
-    }
-    return requiredSize;
-}
-
-HRESULT GetMicrosoftStoreAccessTokensResponse::Copy(const PFInventoryGetMicrosoftStoreAccessTokensResponse& input, PFInventoryGetMicrosoftStoreAccessTokensResponse& output, ModelBuffer& buffer)
-{
-    output = input;
-    {
-        auto propCopyResult = buffer.CopyTo(input.collectionsAccessToken);
-        RETURN_IF_FAILED(propCopyResult.hr);
-        output.collectionsAccessToken = propCopyResult.ExtractPayload();
-    }
-    return S_OK;
-}
-
 JsonValue GetTransactionHistoryRequest::ToJson() const
 {
     return GetTransactionHistoryRequest::ToJson(this->Model());
@@ -1806,6 +1752,10 @@ HRESULT RedemptionFailure::Copy(const PFInventoryRedemptionFailure& input, PFInv
 
 HRESULT RedemptionSuccess::FromJson(const JsonValue& input)
 {
+    std::optional<time_t> expirationTimestamp{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMemberTime(input, "ExpirationTimestamp", expirationTimestamp));
+    this->SetExpirationTimestamp(std::move(expirationTimestamp));
+
     String marketplaceAlternateId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "MarketplaceAlternateId", marketplaceAlternateId));
     this->SetMarketplaceAlternateId(std::move(marketplaceAlternateId));
@@ -1832,6 +1782,10 @@ Result<PFInventoryRedemptionSuccess const*> RedemptionSuccess::Copy(ModelBuffer&
 size_t RedemptionSuccess::RequiredBufferSize(const PFInventoryRedemptionSuccess& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.expirationTimestamp)
+    {
+        requiredSize += (alignof(time_t) + sizeof(time_t));
+    }
     if (model.marketplaceAlternateId)
     {
         requiredSize += (std::strlen(model.marketplaceAlternateId) + 1);
@@ -1846,6 +1800,11 @@ size_t RedemptionSuccess::RequiredBufferSize(const PFInventoryRedemptionSuccess&
 HRESULT RedemptionSuccess::Copy(const PFInventoryRedemptionSuccess& input, PFInventoryRedemptionSuccess& output, ModelBuffer& buffer)
 {
     output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.expirationTimestamp);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.expirationTimestamp = propCopyResult.ExtractPayload();
+    }
     {
         auto propCopyResult = buffer.CopyTo(input.marketplaceAlternateId);
         RETURN_IF_FAILED(propCopyResult.hr);
@@ -2034,7 +1993,6 @@ JsonValue RedeemMicrosoftStoreInventoryItemsRequest::ToJson(const PFInventoryRed
 {
     JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "CollectionId", input.collectionId);
-    JsonUtils::ObjectAddMember(output, "CollectionsIdKey", input.collectionsIdKey);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
 #if HC_PLATFORM != HC_PLATFORM_GDK

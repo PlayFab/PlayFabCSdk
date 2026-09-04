@@ -1,0 +1,34 @@
+# Standing exclusions for the iterative code review loop
+#
+# Anything listed here is NOT reported by the reviewers. Add an entry when a finding is
+# real but the team has decided not to act on it, or when it is a known design
+# limitation that keeps coming back round after round and drowns out new signal.
+#
+# Lines starting with '#' are comments and are stripped before the text is injected
+# into the reviewer prompt. Keep each entry to a sentence or two, and say WHY — a bare
+# "don't report X" tends to get argued with by the next model.
+#
+# The loop also nudges you to add entries here: when the fixer defers a finding with
+# "suggest_exclusion": true, it shows up in the round summary as an exclusion candidate.
+
+- The PRNG / GUID generation in `CreateGUID` in `Source\PlayFabGameSave\Source\Common\Utils.cpp`.
+  Reviewed and declined by the owner; it is not a security boundary here.
+
+- The design-level request to extract archive entries into staging files and atomically swap
+  them into place. The current design writes decompressed entries directly to the destination
+  save file; that is a known, accepted limitation, not a new finding.
+
+- The design-level request that GRTS uninitialize quiesce all in-flight async operations before
+  freeing user-slot handles. Ordering uninitialize against an in-flight AddUser is title misuse;
+  tracked as deferred design work.
+
+- The known gap that conflict detection does not cover folder-only changes (empty folder create
+  or delete) in an atomic unit that also has remote changes. Tracked separately.
+
+- Making `ResetCloudStep` list unavailable manifests (`ListManifestsRequest::SetIncludeUnavailable`)
+  so it can delete Quarantined versions. This was tried and reverted: it also returns every
+  PendingDeletion version the title has accumulated, which took the response from ~3 KB to 341 KB on
+  a well-used test title and wedged ResetCloud before its completion handler ran — every scenario
+  that calls PFGameSaveFilesResetCloudAsync timed out. PendingDeletion versions are already being
+  torn down service-side. If quarantined-version cleanup is worth doing, it needs a bounded design
+  (server-side filtering or paging), not this flag.

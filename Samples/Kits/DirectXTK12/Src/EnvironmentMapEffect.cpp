@@ -373,6 +373,17 @@ EnvironmentMapEffect::Impl::Impl(
     static_assert(static_cast<int>(std::size(EffectBase<EnvironmentMapEffectTraits>::PixelShaderBytecode)) == EnvironmentMapEffectTraits::PixelShaderCount, "array/max mismatch");
     static_assert(static_cast<int>(std::size(EffectBase<EnvironmentMapEffectTraits>::PixelShaderIndices)) == EnvironmentMapEffectTraits::ShaderPermutationCount, "array/max mismatch");
 
+    switch(mapping)
+    {
+    case Mapping_Cube:
+    case Mapping_Sphere:
+    case Mapping_DualParabola:
+        break;
+
+    default:
+        throw std::invalid_argument("Unsupported mapping");
+    }
+
     // Create root signature.
     {
         ENUM_FLAGS_CONSTEXPR D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
@@ -380,10 +391,10 @@ EnvironmentMapEffect::Impl::Impl(
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS
-#ifdef _GAMING_XBOX_SCARLETT
+        #ifdef _GAMING_XBOX_SCARLETT
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_AMPLIFICATION_SHADER_ROOT_ACCESS
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_MESH_SHADER_ROOT_ACCESS
-#endif
+        #endif
             ;
 
         CD3DX12_ROOT_PARAMETER rootParameters[RootParameterIndex::RootParameterCount] = {};
@@ -564,8 +575,7 @@ EnvironmentMapEffect::EnvironmentMapEffect(
     const EffectPipelineStateDescription& pipelineDescription,
     EnvironmentMapEffect::Mapping mapping)
     : pImpl(std::make_unique<Impl>(device, effectFlags, pipelineDescription, mapping))
-{
-}
+{}
 
 
 EnvironmentMapEffect::EnvironmentMapEffect(EnvironmentMapEffect&&) noexcept = default;

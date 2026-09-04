@@ -1,0 +1,51 @@
+id: PFCore-34-HTTP-Settings
+name: PFCore 34 - HTTP Settings (Compression) Round-Trip
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Toggles GZIP compression via PFSetHttpSettings, reads it back
+  with PFGetHttpSettings to verify persistence.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFSetHttpSettings
+      parameters:
+        enableGzipCompression: true
+    - command: PFGetHttpSettings
+    - command: PFSetHttpSettings
+      parameters:
+        enableGzipCompression: false
+    - command: PFGetHttpSettings
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

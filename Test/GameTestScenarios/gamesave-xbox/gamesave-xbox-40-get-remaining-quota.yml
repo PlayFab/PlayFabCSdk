@@ -1,0 +1,122 @@
+id: Scenario-Xbox-40-Get-Remaining-Quota
+name: GameSave Xbox 40 - GetRemainingQuota Explicit Verification
+tags:
+  - failing
+  - xboxgamesaves
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: >
+  After init and upload, call PFGameSaveFilesGetRemainingQuota. Write known-size
+  data, upload again, and call GetRemainingQuota. Verify the quota delta matches
+  the payload size within a reasonable margin.
+brief: GetRemainingQuota returns accurate quota values
+group: F. UI Callback Data Verification
+devices:
+  DeviceA:
+    engine: [xbox, pc-grts]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  quota-verification:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # Defensive: register contention auto-response in case prior scenarios left
+    # cloud-side active-device state pointing elsewhere (Monday stability report,
+    # fix #3 — prevents AddUserWithUiAsync timeout on inherited contention).
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+    # Record initial quota (should be ~256 MB for a fresh account)
+    - command: PFGameSaveFilesGetRemainingQuota
+      parameters:
+        recordAs: "Q0"
+        minimumBytes: 1
+    # Write 1 MB payload and upload
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload.bin
+            bytes: 1048576
+            pattern: [0xAA]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Record quota after 1 MB upload
+    - command: PFGameSaveFilesGetRemainingQuota
+      parameters:
+        recordAs: "Q1"
+    - command: VerifyQuotaDelta
+      parameters:
+        before: "Q0"
+        after: "Q1"
+        expectedDeltaApprox: 1048576
+        marginPercent: 20
+    # Write additional 5 MB payload and upload
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/payload2.bin
+            bytes: 5242880
+            pattern: [0xBB]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    # Record quota after 5 MB upload
+    - command: PFGameSaveFilesGetRemainingQuota
+      parameters:
+        recordAs: "Q2"
+    - command: VerifyQuotaDelta
+      parameters:
+        before: "Q1"
+        after: "Q2"
+        expectedDeltaApprox: 5242880
+        marginPercent: 20
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: quota-verification
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,150 @@
+id: LHC-Xbox-10-Offline-To-Online-Recovery
+name: LHC Xbox 10 - Requests Recover After Going Offline Then Back Online
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Regression test for the "title stays offline forever after regaining network" class of bug
+  (reported on Steam Deck under Proton; the same defect shape applies to any GDK device).
+
+  Root cause: the WinHTTP provider used to gate every request on a cached bool derived from
+  XNetworkingGetConnectivityHint. That flag only ever advanced when the OS delivered a
+  connectivity-change notification. Registration delivers one initial notification, so a title
+  that started while online latched true and worked; a title that started offline latched
+  false, and if the later offline->online change notification did not arrive the flag was
+  stuck false for the life of the process. Every request then failed immediately with
+  E_HC_NETWORK_NOT_INITIALIZED without any HTTP being attempted, so retry never ran and the
+  title could not recover without a full restart.
+
+  Why the notification did not arrive was never established, and deliberately so: it sits below
+  libHttpClient, in the platform's connectivity-notification delivery. Chasing it would have
+  produced a fix that still depended on a signal outside our control and still had a single
+  point of failure that strands the title offline permanently.
+
+  Fix: the cached network gate was removed entirely. WinHTTP is the authority on whether a
+  request can go out, so requests are attempted and return a real, retryable network error.
+  There is no cached state left that can get stuck, which makes the recovery path correct
+  whether or not any given notification is delivered.
+
+  This scenario reproduces the exact customer sequence: start with the network down so the
+  provider initializes in the "offline" state, confirm requests fail, restore the network, and
+  require that requests succeed again with no restart and no re-initialization of libHttpClient.
+brief: After offline start then network restore, requests must succeed without restart
+group: D. Network Recovery
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  initialize-while-offline:
+    # Every device command between DisableNetwork and EnableNetwork is executed by the device
+    # itself: the controller detects the DisableNetwork, sends the whole run of following device
+    # commands ahead of time via BeginOfflineBatch, and collects the results once the device
+    # reconnects. That is what makes an offline phase observable at all, since the control channel
+    # rides the same network being taken down.
+    #
+    # CRITICAL: do not put a controller command (SmokeDelay, Suspend, another
+    # ChangeTargetDeviceState, ...) between DisableNetwork and the device commands. The batching
+    # scan stops at the first controller command it meets, so an intervening step silently reduces
+    # the batch to zero commands and every device step after it is then sent live to a device that
+    # is no longer reachable. The scenario times out, and the controller log says:
+    #   "controller command 'X' at index N before any device commands - skipping offline batch".
+    #
+    # Network goes down BEFORE HCInitialize so the provider comes up in the offline state.
+    # This ordering is essential: initializing while online latches the old cached flag to
+    # true and the defect does not reproduce.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: DisableNetwork
+
+    - command: HCInitialize
+    - command: HCIsInitialized
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+  verify-fails-while-offline:
+    # Expected to fail: there is genuinely no network. What matters is that it fails as a real
+    # network error from WinHTTP rather than a synthetic pre-check, and that the failure is not
+    # sticky. Retry is disabled so the step resolves promptly.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    # No expectFailure here. libHttpClient reports transport-level failures through the network
+    # error code while the XAsync result stays S_OK, so the perform legitimately "succeeds" even
+    # with no network at all -- asserting failure here fails the step for the wrong reason.
+    - command: HCHttpCallPerformAsync
+    # This is the real assertion for the block: the failure must be a genuine transport-level
+    # network error, not a synthetic pre-check. With the old cached gate the request was rejected
+    # before WinHTTP was ever asked, so it never produced one.
+    - command: HCHttpCallResponseGetNetworkErrorCode
+      parameters:
+        expectNetworkError: true
+    - command: HCHttpCallCloseHandle
+
+  restore-network:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    # Give the OS time to actually bring the interface back. This delay is intentionally
+    # generous: the point of the test is what happens well AFTER connectivity returns, not
+    # whether recovery is instant.
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+
+  verify-recovers-without-restart:
+    # THE ASSERTION. Same process, same libHttpClient instance, no re-initialization. With the
+    # defect this failed forever with E_HC_NETWORK_NOT_INITIALIZED because the cached flag was
+    # stuck false. With the fix the request is attempted and succeeds.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    # A second request confirms recovery is stable rather than a one-off.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: initialize-while-offline
+  - role: DeviceA
+    block: verify-fails-while-offline
+  - role: DeviceA
+    block: restore-network
+  - role: DeviceA
+    block: verify-recovers-without-restart
+cleanup:
+  DeviceA:
+    # Must always run: leaving the devkit with networking disabled would break every
+    # subsequent scenario on this device.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,207 @@
+id: LHC-Xbox-11-Repeated-Suspend-Resume-Cycles
+name: LHC Xbox 11 - Repeated Suspend/Resume Cycles Leak Nothing
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  A single suspend/resume proves the teardown runs; it does not prove the teardown is
+  balanced. Leaks in this path are cumulative and only become visible after several cycles,
+  which is exactly the usage pattern of a real console title.
+
+  Three specific accounting bugs are only detectable by repetition:
+    - a request slot not returned when suspend cancels an in-flight request, shrinking the
+      global budget by one per cycle until nothing can start
+    - a WinHTTP connect handle left open because it was only closed from the connection
+      destructor rather than when the connection reported closed
+    - the suspend flag not clearing on resume, so every later request is refused
+
+  Each cycle leaves a request in flight across the suspend so the cancel path is exercised
+  every time, then proves the library is fully functional afterwards. The final burst is
+  sized well above the default cap so it can only pass if the budget survived all three
+  cycles intact -- a single leaked slot per cycle would leave the cap at 9 and the burst
+  would still pass, so the burst is deliberately larger than the cap and asserts that every
+  request completes.
+brief: Three suspend/resume cycles with in-flight work must not degrade the provider
+group: B. Suspend / PLM
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  init:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+  cycle-1:
+    # A deliberately slow endpoint, so the request below is still outstanding when the event
+    # under test arrives. Against a normal endpoint it completes first, leaving nothing in
+    # flight, and this scenario passes without testing anything.
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/slow"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "slow-response"
+        delayMs: 30000
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/slow"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    - command: HCHttpCallPerformStart
+
+    # Precondition: the request must actually still be outstanding here, otherwise whatever
+    # follows is not being observed against an in-flight request at all.
+    - command: HCHttpCallPerformAssertPending
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 15000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 60000
+        allowFailedResult: true
+    - command: HCHttpCallCloseHandle
+
+    # Proves the provider still works after this cycle, so a later failure can be attributed
+    # to the cycle that actually broke it rather than to the end of the test.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+  cycle-2:
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/slow"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    - command: HCHttpCallPerformStart
+
+    # Precondition: the request must actually still be outstanding here, otherwise whatever
+    # follows is not being observed against an in-flight request at all.
+    - command: HCHttpCallPerformAssertPending
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 15000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 60000
+        allowFailedResult: true
+    - command: HCHttpCallCloseHandle
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+  cycle-3:
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/slow"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    - command: HCHttpCallPerformStart
+
+    # Precondition: the request must actually still be outstanding here, otherwise whatever
+    # follows is not being observed against an in-flight request at all.
+    - command: HCHttpCallPerformAssertPending
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Suspend
+    - command: SmokeDelay
+      parameters:
+        durationMs: 15000
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: Resume
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 60000
+        allowFailedResult: true
+    - command: HCHttpCallCloseHandle
+
+  verify-full-throughput-survived:
+    # The cumulative check. Drop the cap to 1 first: admission is "active >= limit", so a single
+    # slot leaked across any of the three suspend/resume cycles leaves the active count >= 1 and
+    # this burst queues forever. Bursting against the default cap of 12 would only catch a leak
+    # of all 12 -- a leak of one per cycle leaves 9 slots free and the burst still completes,
+    # which is exactly the partial leak this scenario is meant to detect.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 1
+    - command: HCSettingsGetGlobalRequestLimit
+      parameters:
+        expectedLimit: 1
+
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "https://E18D7.playfabapi.com/"
+        requestCount: 20
+        expectedSuccesses: 20
+        timeoutMs: 150000
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: init
+  - role: DeviceA
+    block: cycle-1
+  - role: DeviceA
+    block: cycle-2
+  - role: DeviceA
+    block: cycle-3
+  - role: DeviceA
+    block: verify-full-throughput-survived
+cleanup:
+  DeviceA:
+    # The request limit is process-global and survives HCCleanup, so it must be reset or it
+    # leaks into every scenario that runs after this one. 0 restores the default.
+    - command: HCSettingsSetGlobalRequestLimit
+      parameters:
+        limit: 0
+    - command: XTaskQueueCloseHandle
+    # Release the controller-hosted slow endpoint.
+    - command: StopHttpTestServer

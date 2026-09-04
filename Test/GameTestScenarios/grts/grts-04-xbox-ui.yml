@@ -1,0 +1,35 @@
+id: Scenario-GRTS-004-XboxUI
+name: GRTS 4 - XboxUI
+tags:
+  - grts
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: Device A pops TCUI
+brief: Device A pops TCUI
+group: A. Golden Path / Smoke
+devices:
+  DeviceA:
+    engine: xbox
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  session-signin:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+      parameters:
+        allowUi: true
+    #- command: XGameUiShowErrorDialogAsync
+    - command: XGameUiShowMessageDialogAsync
+    - command: XUserCloseHandle
+    - command: XTaskQueueCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: session-signin

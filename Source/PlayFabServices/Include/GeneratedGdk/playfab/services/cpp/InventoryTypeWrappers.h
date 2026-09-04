@@ -3050,147 +3050,6 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
-class PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper : public ModelWrapper<PFInventoryGetMicrosoftStoreAccessTokensRequest, Alloc>
-{
-public:
-    using ModelType = PFInventoryGetMicrosoftStoreAccessTokensRequest;
-    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
-    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
-
-    PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper() = default;
-
-    PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper(const PFInventoryGetMicrosoftStoreAccessTokensRequest& model) :
-        ModelWrapper<PFInventoryGetMicrosoftStoreAccessTokensRequest, Alloc>{ model },
-        m_customTags{ model.customTags, model.customTags + model.customTagsCount }
-    {
-        SetModelPointers();
-    }
-
-    PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper(const PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper& src) :
-        PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper{ src.Model() }
-    {
-    }
-
-    PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper(PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper&& src) :
-        PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper{}
-    {
-        swap(*this, src);
-    }
-
-    PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper& operator=(PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper src) 
-    {
-        swap(*this, src);
-        return *this;
-    }
-
-    virtual ~PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper() = default;
-
-    friend void swap(PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper& lhs, PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper& rhs)
-    {
-        using std::swap;
-        swap(lhs.m_model, rhs.m_model);
-        swap(lhs.m_customTags, rhs.m_customTags);
-        lhs.SetModelPointers();
-        rhs.SetModelPointers();
-    }
-
-    StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
-    {
-        return m_customTags;
-    }
-
-    void SetCustomTags(StringDictionaryEntryVector<Alloc> value)
-    {
-        m_customTags = std::move(value);
-        this->m_model.customTags =  m_customTags.empty() ? nullptr : m_customTags.data();
-        this->m_model.customTagsCount =  static_cast<uint32_t>(m_customTags.size());
-    }
-
-private:
-    void SetModelPointers()
-    {
-        this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
-    }
-
-    StringDictionaryEntryVector<Alloc> m_customTags;
-};
-
-template<template<typename AllocT> class Alloc = std::allocator>
-class PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper : public ModelWrapper<PFInventoryGetMicrosoftStoreAccessTokensResponse, Alloc>
-{
-public:
-    using ModelType = PFInventoryGetMicrosoftStoreAccessTokensResponse;
-    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
-    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
-
-    PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper() = default;
-
-    PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper(const PFInventoryGetMicrosoftStoreAccessTokensResponse& model) :
-        ModelWrapper<PFInventoryGetMicrosoftStoreAccessTokensResponse, Alloc>{ model },
-        m_collectionsAccessToken{ SafeString(model.collectionsAccessToken) }
-    {
-        SetModelPointers();
-    }
-
-    PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper(const PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper& src) :
-        PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper{ src.Model() }
-    {
-    }
-
-    PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper(PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper&& src) :
-        PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper{}
-    {
-        swap(*this, src);
-    }
-
-    PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper& operator=(PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper src) 
-    {
-        swap(*this, src);
-        return *this;
-    }
-
-    virtual ~PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper() = default;
-
-    friend void swap(PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper& lhs, PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper& rhs)
-    {
-        using std::swap;
-        swap(lhs.m_model, rhs.m_model);
-        swap(lhs.m_collectionsAccessToken, rhs.m_collectionsAccessToken);
-        lhs.SetModelPointers();
-        rhs.SetModelPointers();
-    }
-
-    String const& GetCollectionsAccessToken() const
-    {
-        return m_collectionsAccessToken;
-    }
-
-    void SetCollectionsAccessToken(String value)
-    {
-        m_collectionsAccessToken = std::move(value);
-        this->m_model.collectionsAccessToken =  m_collectionsAccessToken.empty() ? nullptr : m_collectionsAccessToken.data();
-    }
-
-    time_t GetCollectionsAccessTokenExpirationDate() const
-    {
-        return this->m_model.collectionsAccessTokenExpirationDate;
-    }
-
-    void SetCollectionsAccessTokenExpirationDate(time_t value)
-    {
-        this->m_model.collectionsAccessTokenExpirationDate = value;
-    }
-
-private:
-    void SetModelPointers()
-    {
-        this->m_model.collectionsAccessToken = m_collectionsAccessToken.empty() ? nullptr : m_collectionsAccessToken.data();
-    }
-
-    String m_collectionsAccessToken;
-};
-
-template<template<typename AllocT> class Alloc = std::allocator>
 class PFInventoryGetTransactionHistoryRequestWrapper : public ModelWrapper<PFInventoryGetTransactionHistoryRequest, Alloc>
 {
 public:
@@ -4740,6 +4599,7 @@ public:
 
     PFInventoryRedemptionSuccessWrapper(const PFInventoryRedemptionSuccess& model) :
         ModelWrapper<PFInventoryRedemptionSuccess, Alloc>{ model },
+        m_expirationTimestamp{ model.expirationTimestamp ? std::optional<time_t>{ *model.expirationTimestamp } : std::nullopt },
         m_marketplaceAlternateId{ SafeString(model.marketplaceAlternateId) },
         m_marketplaceTransactionId{ SafeString(model.marketplaceTransactionId) }
     {
@@ -4769,10 +4629,22 @@ public:
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_expirationTimestamp, rhs.m_expirationTimestamp);
         swap(lhs.m_marketplaceAlternateId, rhs.m_marketplaceAlternateId);
         swap(lhs.m_marketplaceTransactionId, rhs.m_marketplaceTransactionId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<time_t> const& GetExpirationTimestamp() const
+    {
+        return m_expirationTimestamp;
+    }
+
+    void SetExpirationTimestamp(std::optional<time_t> value)
+    {
+        m_expirationTimestamp = std::move(value);
+        this->m_model.expirationTimestamp = m_expirationTimestamp ? m_expirationTimestamp.operator->() : nullptr;
     }
 
     String const& GetMarketplaceAlternateId() const
@@ -4810,10 +4682,12 @@ public:
 private:
     void SetModelPointers()
     {
+        this->m_model.expirationTimestamp = m_expirationTimestamp ? m_expirationTimestamp.operator->() : nullptr;
         this->m_model.marketplaceAlternateId = m_marketplaceAlternateId.empty() ? nullptr : m_marketplaceAlternateId.data();
         this->m_model.marketplaceTransactionId = m_marketplaceTransactionId.empty() ? nullptr : m_marketplaceTransactionId.data();
     }
 
+    std::optional<time_t> m_expirationTimestamp;
     String m_marketplaceAlternateId;
     String m_marketplaceTransactionId;
 };
@@ -5227,7 +5101,6 @@ public:
     PFInventoryRedeemMicrosoftStoreInventoryItemsRequestWrapper(const PFInventoryRedeemMicrosoftStoreInventoryItemsRequest& model) :
         ModelWrapper<PFInventoryRedeemMicrosoftStoreInventoryItemsRequest, Alloc>{ model },
         m_collectionId{ SafeString(model.collectionId) },
-        m_collectionsIdKey{ SafeString(model.collectionsIdKey) },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_entity{ model.entity ? std::optional<PFEntityKeyWrapper<Alloc>>{ *model.entity } : std::nullopt },
 #if HC_PLATFORM == HC_PLATFORM_GDK
@@ -5267,7 +5140,6 @@ public:
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_collectionId, rhs.m_collectionId);
-        swap(lhs.m_collectionsIdKey, rhs.m_collectionsIdKey);
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_entity, rhs.m_entity);
 #if HC_PLATFORM == HC_PLATFORM_GDK
@@ -5287,17 +5159,6 @@ public:
     {
         m_collectionId = std::move(value);
         this->m_model.collectionId =  m_collectionId.empty() ? nullptr : m_collectionId.data();
-    }
-
-    String const& GetCollectionsIdKey() const
-    {
-        return m_collectionsIdKey;
-    }
-
-    void SetCollectionsIdKey(String value)
-    {
-        m_collectionsIdKey = std::move(value);
-        this->m_model.collectionsIdKey =  m_collectionsIdKey.empty() ? nullptr : m_collectionsIdKey.data();
     }
 
     StringDictionaryEntryVector<Alloc> const& GetCustomTags() const
@@ -5346,7 +5207,6 @@ private:
     void SetModelPointers()
     {
         this->m_model.collectionId = m_collectionId.empty() ? nullptr : m_collectionId.data();
-        this->m_model.collectionsIdKey = m_collectionsIdKey.empty() ? nullptr : m_collectionsIdKey.data();
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.entity = m_entity ?  &m_entity->Model() : nullptr;
 #if HC_PLATFORM == HC_PLATFORM_GDK
@@ -5357,7 +5217,6 @@ private:
     }
 
     String m_collectionId;
-    String m_collectionsIdKey;
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFEntityKeyWrapper<Alloc>> m_entity;
 #if HC_PLATFORM == HC_PLATFORM_GDK

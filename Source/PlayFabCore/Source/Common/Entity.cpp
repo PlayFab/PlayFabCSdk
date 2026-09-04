@@ -37,6 +37,7 @@ private:
 
     // ITaskQueueWork
     void Run() override;
+    void WorkCancelled() override;
 
     // Check validity of token and refresh if needed. Handles all errors and invokes TokenExpiredHandler as needed
     void CheckAndRefreshToken(SharedPtr<Entity> entity) noexcept;
@@ -48,6 +49,7 @@ private:
     SharedPtr<Authentication::ILoginHandler> m_loginHandler;
     TokenExpiredHandler m_tokenExpiredHandler;
     PlayFab::RunContext m_rc;
+    std::atomic<bool> m_refreshInProgress{ false };
 
 #if HC_PLATFORM == HC_PLATFORM_GDK
     static void CALLBACK NetworkConnectivityChangedCallback(void* context, const XNetworkingConnectivityHint* hint);
@@ -143,15 +145,25 @@ HRESULT TokenRefreshWorker::OnLoginContextUpdated(SharedPtr<Authentication::ILog
 void TokenRefreshWorker::Run()
 {
     SharedPtr<Entity> entity{ m_weakEntity.lock() };
-    if (entity)
+    if (!entity)
     {
-        CheckAndRefreshToken(std::move(entity));
-
-        // Reschedule ourselves.
-        // Note that with this implementation the TokenExpiredHandler will be invoked every s_interval until the token is restored.
-        // This may be fine, but we could include some additional logic to avoid that if desired.
-        m_rc.TaskQueueSubmitWork(shared_from_this(), s_interval);
+        TRACE_INFORMATION("TokenRefreshWorker::Run - entity expired, not rescheduling");
+        return; // Don't reschedule - entity is gone
     }
+
+    CheckAndRefreshToken(std::move(entity));
+
+    // Reschedule ourselves.
+    // Note that with this implementation the TokenExpiredHandler will be invoked every s_interval until the token is restored.
+    // This may be fine, but we could include some additional logic to avoid that if desired.
+    TRACE_VERBOSE("TokenRefreshWorker::Run - rescheduling with delay=%ums", s_interval);
+    m_rc.TaskQueueSubmitWork(shared_from_this(), s_interval);
+}
+
+void TokenRefreshWorker::WorkCancelled()
+{
+    TRACE_WARNING("TokenRefreshWorker::WorkCancelled - delayed callback cancelled during termination (refreshInProgress=%s)",
+        m_refreshInProgress.load() ? "true" : "false");
 }
 
 void TokenRefreshWorker::CheckAndRefreshToken(SharedPtr<Entity> entity) noexcept
@@ -174,10 +186,20 @@ void TokenRefreshWorker::CheckAndRefreshToken(SharedPtr<Entity> entity) noexcept
             return;
         }
 
+        // Avoid redundant refreshes if one is already in progress
+        bool expected = false;
+        if (!m_refreshInProgress.compare_exchange_strong(expected, true))
+        {
+            return;
+        }
+
         SharedPtr<TokenRefreshWorker> self{ shared_from_this() };
 
         m_loginHandler->ReLogin(entity, m_rc).Finally([entity, self](Result<void> result)
         {
+            // Clear the refresh-in-progress flag now that the refresh has completed
+            self->m_refreshInProgress.store(false);
+
             // If we are unable to re-login for any reason, invoke the TokenExpiredHandler so the title can resolve the issue
             if (Failed(result))
             {
@@ -197,7 +219,7 @@ bool TokenRefreshWorker::CheckRefreshRequired(EntityToken const& token) noexcept
     // This was just a first crack at a refresh heuristic. We may want to refine this and sync with the
     // service team about recommended refresh policy.
     time_t const* expiration{ token.expiration };
-    if (expiration && (*expiration - time(nullptr)) < (60 * 60))
+    if (expiration && (*expiration - GetTimeTNow()) < (60 * 60))
     {
         return true;
     }
@@ -380,14 +402,23 @@ HRESULT Entity::OnEntityTokenRefreshed(Authentication::EntityTokenResponse const
     std::unique_lock<std::mutex> lock{ m_mutex };
 
     RETURN_HR_IF(E_FAIL, entityTokenResponse.Model().entity == nullptr);
+    RETURN_HR_IF(E_FAIL, !m_key.Model().id);
 
-    if (std::strcmp(entityTokenResponse.Model().entity->id, m_key.Model().id))
+    if (std::strcmp(entityTokenResponse.Model().entity->id, m_key.Model().id) != 0)
     {
         TRACE_ERROR("%s: attempting to set EntityToken with mismatched entityKey", __FUNCTION__);
         return E_FAIL;
     }
 
     PlayFab::EntityToken newToken{ entityTokenResponse };
+
+    // Reject already-expired tokens
+    if (newToken.expiration && *newToken.expiration < GetTimeTNow())
+    {
+        TRACE_WARNING("%s: rejecting token with expiration in the past", __FUNCTION__);
+        return E_FAIL;
+    }
+
     m_entityToken = newToken;
 
     // Release lock before invoke handler (m_key and m_tokenRefreshedHandler are const and safe to access without lock)
@@ -402,14 +433,23 @@ HRESULT Entity::OnEntityTokenRefreshed(Authentication::GetEntityTokenResponse co
     std::unique_lock<std::mutex> lock{ m_mutex };
 
     RETURN_HR_IF(E_FAIL, !entityTokenResponse.entity.has_value());
+    RETURN_HR_IF(E_FAIL, !m_key.Model().id);
 
-    if (std::strcmp(entityTokenResponse.entity->Model().id, m_key.Model().id))
+    if (std::strcmp(entityTokenResponse.entity->Model().id, m_key.Model().id) != 0)
     {
         TRACE_ERROR("%s: attempting to set EntityToken with mismatched entityKey", __FUNCTION__);
         return E_FAIL;
     }
 
     PlayFab::EntityToken newToken{ entityTokenResponse };
+
+    // Reject already-expired tokens
+    if (newToken.expiration && *newToken.expiration < GetTimeTNow())
+    {
+        TRACE_WARNING("%s: rejecting token with expiration in the past", __FUNCTION__);
+        return E_FAIL;
+    }
+
     m_entityToken = newToken;
 
     // Release lock before invoke handler (m_key and m_tokenRefreshedHandler are const and safe to access without lock)

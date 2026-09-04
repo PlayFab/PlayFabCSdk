@@ -1,0 +1,10 @@
+# Persisted primed-session id (machine/run-local; regenerated as needed).
+# One per suite AND mode, e.g. .loop-session-test-gamesave-xbox.json /
+# .loop-session-review-gamesave-inproc.json -- so match the glob, not a literal name.
+.loop-session*.json
+
+# Review-mode accumulated "already fixed" history (run-local; --reset-review-state clears it).
+# One per reviewed area, e.g. .loop-review-state-playfabgamesave.json -- match the glob.
+.loop-review-state*.json
+
+__pycache__/

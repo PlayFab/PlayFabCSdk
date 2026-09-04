@@ -88,7 +88,7 @@ typedef struct PFAuthenticationLoginWithAndroidDeviceIDRequest
     _Maybenull_ _Null_terminated_ const char* OS;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -189,7 +189,7 @@ typedef struct PFAuthenticationLoginWithAppleRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -227,7 +227,7 @@ typedef struct PFAuthenticationLoginWithBattleNetRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -271,7 +271,7 @@ typedef struct PFAuthenticationLoginWithCustomIDRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -363,7 +363,7 @@ typedef struct PFAuthenticationLoginWithFacebookRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -401,7 +401,7 @@ typedef struct PFAuthenticationLoginWithFacebookInstantGamesIdRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -447,7 +447,7 @@ typedef struct PFAuthenticationLoginWithGameCenterRequest
     _Maybenull_ _Null_terminated_ const char* playerId;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -516,7 +516,7 @@ typedef struct PFAuthenticationLoginWithGoogleAccountRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -573,7 +573,7 @@ typedef struct PFAuthenticationLoginWithGooglePlayGamesServicesRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -637,7 +637,7 @@ typedef struct PFAuthenticationLoginWithIOSDeviceIDRequest
     _Maybenull_ _Null_terminated_ const char* OS;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -687,7 +687,7 @@ typedef struct PFAuthenticationLoginWithKongregateRequest
     _Null_terminated_ const char* kongregateId;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -725,7 +725,7 @@ typedef struct PFAuthenticationLoginWithNintendoServiceAccountRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -763,7 +763,7 @@ typedef struct PFAuthenticationLoginWithNintendoSwitchDeviceIdRequest
     _Maybenull_ _Null_terminated_ const char* nintendoSwitchDeviceId;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -808,7 +808,7 @@ typedef struct PFAuthenticationLoginWithOpenIdConnectRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -866,6 +866,12 @@ typedef struct PFAuthenticationLoginWithPSNRequest
     _Null_terminated_ const char* authCode;
 
     /// <summary>
+    /// (Optional) Optional PlayStation :tm: Network auth version. Controls which PlayStation :tm: Network
+    /// auth version is used. Accepted values are "v2" and "v3".
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* authVersion;
+
+    /// <summary>
     /// Automatically create a PlayFab account if one is not currently linked to this ID.
     /// </summary>
     bool createAccount;
@@ -893,7 +899,7 @@ typedef struct PFAuthenticationLoginWithPSNRequest
     _Maybenull_ int32_t const* issuerId;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -940,7 +946,7 @@ typedef struct PFAuthenticationLoginWithSteamRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -997,7 +1003,7 @@ typedef struct PFAuthenticationLoginWithTwitchRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -1034,7 +1040,7 @@ typedef struct PFAuthenticationLoginWithXboxRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -1073,8 +1079,7 @@ typedef struct PFAuthenticationRegisterPlayFabUserRequest
     _Maybenull_ _Null_terminated_ const char* email;
 
     /// <summary>
-    /// (Optional) Base64 encoded body that is encrypted with the Title's public RSA key (Enterprise
-    /// Only).
+    /// (Optional) Base64 encoded body that is encrypted with the Title's public RSA key.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* encryptedRequest;
 
@@ -1089,7 +1094,7 @@ typedef struct PFAuthenticationRegisterPlayFabUserRequest
     _Maybenull_ _Null_terminated_ const char* password;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -1329,6 +1334,12 @@ typedef struct PFAuthenticationServerLoginWithPSNRequest
     _Null_terminated_ const char* authCode;
 
     /// <summary>
+    /// (Optional) Optional PlayStation :tm: Network auth version. Controls which PlayStation :tm: Network
+    /// auth version is used. Accepted values are "v2" and "v3".
+    /// </summary>
+    _Maybenull_ _Null_terminated_ const char* authVersion;
+
+    /// <summary>
     /// Automatically create a PlayFab account if one is not currently linked to this ID.
     /// </summary>
     bool createAccount;
@@ -1389,7 +1400,7 @@ typedef struct PFAuthenticationLoginWithServerCustomIdRequest
     _Maybenull_ PFGetPlayerCombinedInfoRequestParams const* infoRequestParameters;
 
     /// <summary>
-    /// (Optional) Player secret that is used to verify API request signatures (Enterprise Only).
+    /// (Optional) Player secret that is used to verify API request signatures.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* playerSecret;
 
@@ -1660,11 +1671,8 @@ typedef struct PFAuthenticationDeleteRequest
 
 /// <summary>
 /// PFAuthenticationGetEntityRequest data model. This API must be called with X-SecretKey, X-Authentication
-/// or X-EntityToken headers. An optional EntityKey may be included to attempt to set the resulting EntityToken
-/// to a specific entity, however the entity must be a relation of the caller, such as the master_player_account
-/// of a character. If sending X-EntityToken the account will be marked as freshly logged in and will
-/// issue a new token. If using X-Authentication or X-EntityToken the header must still be valid and cannot
-/// be expired or revoked.
+/// or X-EntityToken headers. The header must still be valid and cannot be expired or revoked.If successful,
+/// it will issue a new entity token and emit the "entity_logged_in" PlayStream event.
 /// </summary>
 typedef struct PFAuthenticationGetEntityRequest
 {
@@ -1678,12 +1686,6 @@ typedef struct PFAuthenticationGetEntityRequest
     /// Count of customTags
     /// </summary>
     uint32_t customTagsCount;
-
-    /// <summary>
-    /// (Optional) The optional entity to perform this action on. Defaults to the currently logged in
-    /// entity.
-    /// </summary>
-    _Maybenull_ PFEntityKey const* entity;
 
 } PFAuthenticationGetEntityRequest;
 

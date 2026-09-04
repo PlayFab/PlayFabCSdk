@@ -1,0 +1,67 @@
+id: LHC-19-Network-Error-Code-Propagation
+name: LHC 19 - Network Error Code Propagation
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Mock a response with a network error code via
+  HCMockResponseSetNetworkErrorCode.  Verify that
+  GetNetworkErrorCode returns the correct values after performing the
+  call.  Critical for SDK telemetry and error reporting.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  error-propagation:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Mock with network error codes
+    - command: HCMockCallCreate
+    - command: HCMockResponseSetStatusCode
+      parameters:
+        statusCode: 0
+    - command: HCMockResponseSetNetworkErrorCode
+      parameters:
+        networkErrorCode: 12029
+        platformNetworkErrorCode: 12029
+    - command: HCMockAddMock
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/network-error"
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://mock.playfab.com/api/network-error"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+
+    - command: HCHttpCallPerformAsync
+    # The mock forces a transport-level network failure, so no HTTP response is ever received and
+    # the status is 0 by design. The network error code checked below is what this scenario asserts.
+    - command: HCHttpCallResponseGetStatusCode
+      parameters:
+        requireResponse: false
+    - command: HCHttpCallResponseGetNetworkErrorCode
+
+    - command: HCHttpCallCloseHandle
+    - command: HCMockClearMocks
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: error-propagation
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,51 @@
+id: PFCore-10-Relogin-CustomID
+name: PFCore 10 - Re-login with CustomID
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # E_FAIL from service — ReLogin handler setup issue
+  psx: ignore
+description: >
+  After initial CustomID login, calls ReLoginWithCustomIDAsync
+  and verifies the entity remains valid.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+  test:
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfcore-test-custom-id-10"
+        createAccount: true
+    - command: PFAuthenticationReLoginWithCustomIDAsync
+      parameters:
+        customId: "pfcore-test-custom-id-10"
+    - command: PFEntityGetEntityKey
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

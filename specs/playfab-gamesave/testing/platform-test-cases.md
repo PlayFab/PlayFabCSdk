@@ -5,39 +5,39 @@ PlayFab Game Saves Platform Test Cases
 
 The objective of this document is to outline manual tests for the new PlayFab Game Saves client components on PC/Console.
 
-Gap coverage index (manual vs automation – source of truth)
+Gap coverage index (manual vs automation - source of truth)
 
-- Gap 63 — Conflict UI Decision Application
+- Gap 63 -- Conflict UI Decision Application
 
 	- Manual: Yes. Covered in Section 3: Verifying Conflict resolution (Case 1/2). Manual focus = UX clarity and single-decision application.
 
 	- Automation: Enforced behavior/guard rails tracked separately; manual remains for UX.
 
-- Gap 76 — UI Automation for Conflict Resolution
+- Gap 76 -- UI Automation for Conflict Resolution
 
 	- Manual: Yes. Section 3 exercises the flows end-to-end.
 
 	- Automation: Yes. This gap tracks adding automation; manual sanity stays for copy/flow.
 
-- Gap 77 — Power State Testing Automation
+- Gap 77 -- Power State Testing Automation
 
 	- Manual: Yes. Section 2: Upload on Suspend/Connected Standby/Power Pull/Structured Shutdown.
 
 	- Automation: Recommended to broaden permutations; manual remains a spot-check.
 
-- Gap 106 — October 2025 GDK Folder Layout Compatibility
+- Gap 106 -- October 2025 GDK Folder Layout Compatibility
 
 	- Manual: No. Verified by integration/build automation. Testers do not validate folder layout.
 
-- Gap 110 — Steam Deck Frequent Sync Requirements
+- Gap 110 -- Steam Deck Frequent Sync Requirements
 
-	- Manual: Yes. Section 2: (NEW!) Mid game Upload — also run on Steam Deck; verify periodic in-game syncing occurs within the expected window.
+	- Manual: Yes. Section 2: (NEW!) Mid game Upload -- also run on Steam Deck; verify periodic in-game syncing occurs within the expected window.
 
 	- Automation: Planned cadence/timing checks.
 
-- Gap 117 — Active Device Changed Recovery Flow
+- Gap 117 -- Active Device Changed Recovery Flow
 
-	- Manual: Yes. Section 3: Active Device contention (Cases 1–3) covers recovery/flow; earlier docs may call this lock contention.
+	- Manual: Yes. Section 3: Active Device contention (Cases 1-3) covers recovery/flow; earlier docs may call this lock contention.
 
 	- Automation: Optional.
 
@@ -285,7 +285,7 @@ PlayFab  > Prepare
 
 Validate that sync dialog shows up briefly
 
-If you don’t see the dialog do PFGSMode > Enum Folders and validate from the Output window that you have at least 128 MB. If not, do PFGSMode > CreateFile a few times and restart this test.
+If you don't see the dialog do PFGSMode > Enum Folders and validate from the Output window that you have at least 128 MB. If not, do PFGSMode > CreateFile a few times and restart this test.
 
 
 
@@ -365,7 +365,7 @@ Close the game and wait a minute for the cloud data to upload
 
 Switch to another device, load the same
 
-Verify the user is shown a ‘syncing dialog’
+Verify the user is shown a 'syncing dialog'
 
 Verify the save previously made is available on the new device
 
@@ -463,7 +463,7 @@ Follow steps to create a game save
 
 PlayFab > Enum Folder (note this number)
 
-Pull power from the device suddenly – at the plug
+Pull power from the device suddenly - at the plug
 
 Wait 5 minutes
 
@@ -560,7 +560,7 @@ PlayFab -> Prepare
 
 Immediately disconnect your device from the internet
 
-Verify the user is prompted with a ‘connectivity’ prompt
+Verify the user is prompted with a 'connectivity' prompt
 
 CASE 1: Verify the user can try again (after reconnecting) [Test Case: 53973596]
 
@@ -632,7 +632,7 @@ On the Console PC, load the save.
 Verify a "Syncing" TCUI pops up to verify that the cloud save was updated to the newest cloud save that was formerly the previous device save.
 
 (UPDATED!) Active Device contention:
-Note (Gaps 115–117): Covers takeover messaging and recovery (Gap 117). Earlier docs may call this lock contention.
+Note (Gaps 115-117): Covers takeover messaging and recovery (Gap 117). Earlier docs may call this lock contention.
 
 Ensure Active Device contention prompts correctly when another device is still uploading [Test Case: 53974103]
 
@@ -642,11 +642,11 @@ Once the game save has been created immediately close ShamWOW and switch to anot
 
 Immediately launch ShamWOW on the new device
 
-Verify a dialog prompts ‘Your previous device is still uploading your game save”
+Verify a dialog prompts 'Your previous device is still uploading your game save"
 
 CASE 1: Verify a user can break a lock and play on a new device [Test Case: 53974195]
 
-Select “continue from last cloud data”/”stop sync and continue”
+Select "continue from last cloud data"/"stop sync and continue"
 
 Select confirm on confirmation prompt
 
@@ -658,7 +658,7 @@ PFGSMode > Enum Folder, ensure the previous game saves made are not present
 
 CASE 2: Verify a user can wait for the lock and continue [Test Case: 53974360]
 
-Wait until the progress bar has complete or select ‘try again’
+Wait until the progress bar has complete or select 'try again'
 
 Verify the dialog eventually disappears
 

@@ -1,0 +1,105 @@
+id: Scenario-PC-29-Get-Quota-Offline
+name: GameSave PC 29 - GetRemainingQuota in Offline Mode
+tags:
+  - xplatgamesaves
+platforms:
+  xbox: ignore
+  pc-grts: passing
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+description: Go offline, init, enter offline mode via UseOffline, call PFGameSaveFilesGetRemainingQuota, verify it returns E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD (0x89237004). Cleanup and re-enable network.
+brief: GetRemainingQuota fails correctly in offline mode
+group: D. Sync Failure / Offline
+devices:
+  DeviceA:
+    engine: pc-grts
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  enter-offline-mode:
+    # Stop GRTS, clear cache, disable network, start GRTS cold —
+    # ensures AddUser hits SyncFailed instead of using stale cache
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: FlushGrtsAndGoOffline
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: AutoNavigateGameSaveUi
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesaves-test\\DeviceA"
+    - command: PFGameSaveFilesSetWriteManifestsToDiskForDebug
+      parameters:
+        writeManifests: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    # UiNavigator clicks "Play offline" on SyncFailed dialog
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: true
+        action: UseOffline
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    # Sync fails; UiNavigator clicks "Play offline"; enters offline mode
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: false
+  get-quota-offline:
+    # GetRemainingQuota in offline mode — inproc returns E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD;
+    # GRTS caches quota locally so it succeeds (S_OK) even offline.
+    - command: PFGameSaveFilesGetRemainingQuota
+      parameters:
+        expectedHr: "0x89237004, 0x00000000"
+  cleanup-and-reconnect:
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+executionOrder:
+  - role: DeviceA
+    block: enter-offline-mode
+  - role: DeviceA
+    block: get-quota-offline
+  - role: DeviceA
+    block: cleanup-and-reconnect
+cleanup:
+  DeviceA:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: StartGamingServices
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: XUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle

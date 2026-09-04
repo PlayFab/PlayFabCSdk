@@ -29,6 +29,7 @@ Result<SharedPtr<PlatformComponents_Android>> PlatformComponents_Android::Initia
     }
 
     jclass globalLocalUserClass = reinterpret_cast<jclass>(jniEnv->NewGlobalRef(localUserClass));
+    jniEnv->DeleteLocalRef(localUserClass);
 
     Allocator<PlatformComponents_Android> a;
     auto platformComponents = SharedPtr<PlatformComponents_Android>(

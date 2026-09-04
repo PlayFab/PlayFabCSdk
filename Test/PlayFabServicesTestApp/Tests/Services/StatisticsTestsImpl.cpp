@@ -130,9 +130,10 @@ void StatisticsTests::TestDeleteStatistics(TestContext& tc)
         tc.AssertTrue(result.Payload().Model().statisticsCount > 0, "Found unexpected statistics count after inserting entries.");
 
         PFStatisticsEntityStatisticValue const* foundStatistic = {};
-        
-        auto statisticsCount = result.ExtractPayload().Model().statisticsCount;
-        auto statistics = result.ExtractPayload().Model().statistics;
+
+        auto payload = result.ExtractPayload();
+        auto statisticsCount = payload.Model().statisticsCount;
+        auto statistics = payload.Model().statistics;
 
         for (size_t i = 0; i < statisticsCount; i++)
         {
@@ -179,9 +180,10 @@ void StatisticsTests::TestDeleteStatistics(TestContext& tc)
         RETURN_IF_FAILED_PLAYFAB(result);
 
         PFStatisticsEntityStatisticValue const* foundStatistic = {};
-        
-        auto statisticsCount = result.ExtractPayload().Model().statisticsCount;
-        auto statistics = result.ExtractPayload().Model().statistics;
+
+        auto payload = result.ExtractPayload();
+        auto statisticsCount = payload.Model().statisticsCount;
+        auto statistics = payload.Model().statistics;
 
         for (size_t i = 0; i < statisticsCount; i++)
         {

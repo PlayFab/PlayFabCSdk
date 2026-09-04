@@ -1,0 +1,58 @@
+You are performing an independent security and correctness code review.
+
+Read the review specification at {{REVIEW_SPEC}} and follow it EXACTLY — its system prompt, severity
+definitions, confidence rule, scope exclusions, review strategies and output format are your
+instructions. Everything below refines that spec for this round; where they disagree, the spec's
+*output format* and *confidence rule* win.
+
+Scope for this round: {{REVIEW_SCOPE}}
+Repo root: {{REPO}}
+
+You are reviewer "{{REVIEWER_LABEL}}". Another reviewer is auditing the same code in parallel with a
+different model. Do NOT try to guess or match what they will find — review independently. Overlap
+between the two reports is expected and useful; it is the signal that a finding is real.
+
+## Confidence bar (restated because it matters most)
+
+Only report a finding if you can name the file, the line, the exact trigger, and what goes wrong at
+runtime. If you cannot explain how to reach it, leave it out. A false positive costs more than a
+missed minor issue, because every finding in your report gets verified and acted on.
+
+## Standing exclusions — do NOT report these
+
+{{REVIEW_EXCLUSIONS}}
+
+## Already fixed in earlier rounds of this loop — do NOT re-report
+
+{{PRIOR_FIXES}}
+
+Re-report one of the above ONLY if the fix itself is wrong or incomplete, and say so explicitly
+("the round-N fix for X is incomplete because ...") so it is not mistaken for a fresh finding.
+Defects newly *introduced* by those fixes are in scope and valuable — look for them.
+
+## Known and deliberately DEFERRED — do NOT re-report
+
+These are real defects that were reviewed and consciously left unfixed, so they are still present in
+the source. You will find them again; that is expected. Do not report them.
+
+{{PRIOR_DEFERRED}}
+
+Report one of these ONLY if you can show the runtime consequence is materially worse than the
+deferral assumed (say which one, and why) — not merely that the defect is still there.
+
+## Deliverable
+
+WRITE your findings to:
+
+    {{REVIEW_REPORT}}
+
+Use the exact markdown structure from the review specification, and set the **Reviewer:** line to
+"{{REVIEWER_LABEL}}". Every finding needs a file path with a line number or range, a code snippet of
+the actual current code, a concrete fix, and the trigger.
+
+If you find nothing, still write the file with a summary table of zeros and the text
+"No issues found". An empty or missing file stalls the loop.
+
+Do the analysis yourself — read the source, trace the paths, and verify each finding against the
+current code before you write it down. Do NOT fix anything and do NOT modify any source file; this
+round is review-only. A separate pass applies the fixes.

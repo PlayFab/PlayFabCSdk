@@ -1,0 +1,66 @@
+id: XSAPI-22-MP-Search
+name: XSAPI 22 - Multiplayer Session Search
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer mp/mp_search.lua.
+  Signs in, creates XBL context, creates a multiplayer session,
+  creates a search handle, inspects search handle properties,
+  searches for handles, then cleans up.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblMultiplayerSessionReferenceCreate
+    - command: XblMultiplayerSessionCreateHandle
+    - command: XblMultiplayerSessionJoin
+    - command: XblMultiplayerSessionSetCustomPropertyJson
+    - command: XblMultiplayerWriteSessionAsync
+    - command: XblMultiplayerCreateSearchHandleAsync
+    - command: XblMultiplayerSearchHandleGetSessionOwnerXuids
+    - command: XblMultiplayerSearchHandleGetTags
+    - command: XblMultiplayerSearchHandleGetStringAttributes
+    - command: XblMultiplayerSearchHandleGetNumberAttributes
+    - command: XblMultiplayerSearchHandleGetVisibility
+    - command: XblMultiplayerSearchHandleGetJoinRestriction
+    - command: XblMultiplayerSearchHandleGetSessionClosed
+    - command: XblMultiplayerSearchHandleGetMemberCounts
+    - command: XblMultiplayerSearchHandleGetCreationTime
+    - command: XblMultiplayerSearchHandleGetCustomSessionPropertiesJson
+    - command: XblMultiplayerGetSearchHandlesAsync
+    - command: XblMultiplayerDeleteSearchHandleAsync
+    - command: XblMultiplayerSearchHandleCloseHandle
+    - command: XblMultiplayerSessionCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

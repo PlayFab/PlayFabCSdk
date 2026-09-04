@@ -18,20 +18,21 @@ struct InnerProgressContext
 {
     ProgressCallback* callback;
     void* callbackContext;
-    ISchedulableTask& task;
-    LocalUser& localUser;
     PFGameSaveFilesSyncState syncState;
+
+    // When both are non-zero, InnerProgressCallback converts compressed transfer
+    // progress to uncompressed units using the global ratio (totalUncompressed / totalCompressed).
+    uint64_t totalUncompressedBytes{ 0 };
+    uint64_t totalCompressedBytes{ 0 };
 
     InnerProgressContext(
         ProgressCallback* callback,
         void* callbackContext,
-        ISchedulableTask& task,
-        LocalUser& localUser,
+        ISchedulableTask& /*task*/,
+        LocalUser& /*localUser*/,
         PFGameSaveFilesSyncState syncState) :
         callback{ callback },
         callbackContext{ callbackContext },
-        task{ task },
-        localUser{ localUser },
         syncState{ syncState }
     {
     }

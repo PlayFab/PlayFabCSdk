@@ -85,6 +85,7 @@ AsyncOp<ServiceResponse> HttpClient::MakeEntityRequest(
 {
     auto entityTokenResult = entity->GetEntityToken();
     RETURN_IF_FAILED(entityTokenResult.hr);
+    RETURN_HR_IF(E_PF_NOENTITYTOKEN, !entityTokenResult.Payload().token || entityTokenResult.Payload().token[0] == '\0');
 
     UnorderedMap<String, String> headers{};
     headers[kEntityTokenHeaderName] = entityTokenResult.Payload().token;

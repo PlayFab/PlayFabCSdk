@@ -419,6 +419,7 @@ JsonValue LoginWithPSNRequest::ToJson(const PFAuthenticationLoginWithPSNRequest&
 {
     JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AuthCode", input.authCode);
+    JsonUtils::ObjectAddMember(output, "AuthVersion", input.authVersion);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -657,6 +658,7 @@ JsonValue ServerLoginWithPSNRequest::ToJson(const PFAuthenticationServerLoginWit
 {
     JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMember(output, "AuthCode", input.authCode);
+    JsonUtils::ObjectAddMember(output, "AuthVersion", input.authVersion);
     JsonUtils::ObjectAddMember(output, "CreateAccount", input.createAccount);
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember<GetPlayerCombinedInfoRequestParams>(output, "InfoRequestParameters", input.infoRequestParameters);
@@ -893,7 +895,6 @@ JsonValue GetEntityRequest::ToJson(const PFAuthenticationGetEntityRequest& input
 {
     JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
-    JsonUtils::ObjectAddMember<EntityKey>(output, "Entity", input.entity);
     return output;
 }
 

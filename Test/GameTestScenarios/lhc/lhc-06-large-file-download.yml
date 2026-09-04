@@ -1,0 +1,61 @@
+id: LHC-06-Large-File-Download
+name: LHC 06 - Large File Download
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  GET a file large enough to exercise chunked transfer and buffering,
+  verify response status and body size match the configured route.
+  Uses the controller's StartHttpTestServer to serve a generated binary file.
+  Note: HCHttpCallResponseGetResponseBodyBytes is not called because the
+  handler serializes raw bytes into JSON, which crashes on non-UTF-8 content.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 120
+blocks:
+  large-download:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Start a local HTTP server and configure a large response
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        path: "/largefile"
+        method: "GET"
+        statusCode: 200
+        generateBodySizeBytes: 262144
+        contentType: "application/octet-stream"
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "http://localhost:{{httpTestPort}}/largefile"
+    - command: HCHttpCallRequestSetHeader
+      parameters:
+        headerName: "User-Agent"
+        headerValue: "libHttpClient-test"
+
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseBodyBytesSize
+
+    - command: HCHttpCallCloseHandle
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: large-download
+cleanup:
+  DeviceA:
+    - command: StopHttpTestServer
+    - command: XTaskQueueCloseHandle

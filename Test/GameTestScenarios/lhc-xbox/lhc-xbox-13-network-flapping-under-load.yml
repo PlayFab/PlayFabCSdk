@@ -1,0 +1,152 @@
+id: LHC-Xbox-13-Network-Flapping-Under-Load
+name: LHC Xbox 13 - Network Flapping With Concurrent Requests In Flight
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Stresses the interaction between rapid connectivity changes and the concurrent request
+  budget. This is the failure shape that made the offline->online bug so damaging: it was not
+  that requests failed while the network was down, it was that the provider retained state
+  which never recovered afterwards.
+
+  Two things are being checked that no single-transition test can catch:
+
+    1. Slot accounting under churn. Requests failing because of connectivity loss take a
+       different completion path from requests that succeed. If that path failed to release
+       its budget slot, repeated flapping would drain the budget and the provider would stall
+       permanently even after the network stabilised.
+
+    2. No sticky offline state. With connectivity restored, throughput must return to normal
+       with no restart, re-initialization, or manual reset.
+
+  Requests are deliberately left in flight while the network flaps so that failures land
+  mid-request rather than at connect time.
+
+  Failures here are expected and fine during the flapping block; the assertion is entirely
+  about the state the provider is left in afterwards.
+brief: Budget and connectivity state must survive repeated network loss under load
+group: D. Network Recovery
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 300
+blocks:
+  baseline:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Establish that full concurrency works before any disruption, so a failure at the end can
+    # be attributed to the flapping rather than to the environment.
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "https://E18D7.playfabapi.com/"
+        requestCount: 15
+        expectedSuccesses: 15
+        timeoutMs: 120000
+
+  flap-with-request-in-flight:
+    # Leave a request in flight so connectivity is lost mid-request, exercising the failure
+    # completion path rather than a clean connect-time rejection.
+    # A deliberately slow endpoint, so the request below is still outstanding when the event
+    # under test arrives. Against a normal endpoint it completes first, leaving nothing in
+    # flight, and this scenario passes without testing anything.
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/slow"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "slow-response"
+        delayMs: 30000
+
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/slow"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: false
+    - command: HCHttpCallPerformStart
+
+    # Precondition: the request must actually still be outstanding here, otherwise whatever
+    # follows is not being observed against an in-flight request at all.
+    - command: HCHttpCallPerformAssertPending
+
+    # Repeated up/down transitions. If any connectivity-change handling retained state, this
+    # is where it accumulates.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: NetworkFlapping
+        cycles: 5
+        intervalMs: 2000
+
+    # Outcome is not asserted at all: whether it completed before, during, or after a
+    # transition is timing dependent, so allowFailedResult accepts success or failure. It
+    # must simply resolve rather than hang.
+    - command: HCHttpCallPerformWait
+      parameters:
+        timeoutMs: 90000
+        allowFailedResult: true
+    - command: HCHttpCallCloseHandle
+
+  stabilize:
+    # Guarantee a known-good end state regardless of which phase the flapping ended on.
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: SmokeDelay
+      parameters:
+        durationMs: 20000
+
+  verify-full-recovery:
+    # A single request first: isolates "can anything work at all" from "can concurrency work",
+    # so a failure is easier to diagnose.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallPerformAsync
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallCloseHandle
+
+    # THE ASSERTION. Matching the baseline burst proves both that connectivity state is not
+    # sticky and that no budget slots were lost across all the failed requests during flapping.
+    - command: TestHCHttpCallPerformBurst
+      parameters:
+        url: "https://E18D7.playfabapi.com/"
+        requestCount: 15
+        expectedSuccesses: 15
+        timeoutMs: 120000
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: baseline
+  - role: DeviceA
+    block: flap-with-request-in-flight
+  - role: DeviceA
+    block: stabilize
+  - role: DeviceA
+    block: verify-full-recovery
+cleanup:
+  DeviceA:
+    - command: ChangeTargetDeviceState
+      parameters:
+        action: EnableNetwork
+    - command: XTaskQueueCloseHandle
+    # Release the controller-hosted slow endpoint.
+    - command: StopHttpTestServer

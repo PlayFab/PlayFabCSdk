@@ -277,6 +277,18 @@ DebugEffect::Impl::Impl(
     constants.ambientDownAndAlpha = s_lower;
     constants.ambientRange = g_XMOne;
 
+    switch(debugMode)
+    {
+        case Mode_Default:
+        case Mode_Normals:
+        case Mode_Tangents:
+        case Mode_BiTangents:
+            break;
+
+        default:
+            throw std::invalid_argument("Invalid debugMode");
+    }
+
     // Create root signature.
     {
         ENUM_FLAGS_CONSTEXPR D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
@@ -284,10 +296,10 @@ DebugEffect::Impl::Impl(
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS
-#ifdef _GAMING_XBOX_SCARLETT
+        #ifdef _GAMING_XBOX_SCARLETT
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_AMPLIFICATION_SHADER_ROOT_ACCESS
             | D3D12_ROOT_SIGNATURE_FLAG_DENY_MESH_SHADER_ROOT_ACCESS
-#endif
+        #endif
             ;
 
         // Create root parameters and initialize first (constants)
@@ -394,8 +406,7 @@ DebugEffect::DebugEffect(
     const EffectPipelineStateDescription& pipelineDescription,
     Mode debugMode)
     : pImpl(std::make_unique<Impl>(device, effectFlags, pipelineDescription, debugMode))
-{
-}
+{}
 
 
 DebugEffect::DebugEffect(DebugEffect&&) noexcept = default;

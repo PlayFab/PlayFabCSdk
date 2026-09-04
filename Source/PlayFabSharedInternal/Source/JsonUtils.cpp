@@ -10,7 +10,15 @@ namespace JsonUtils
 String WriteToString(const JsonValue& jsonValue)
 {
     // Convert JSON object to string
-    return String{ jsonValue.dump() };
+    try
+    {
+        return String{ jsonValue.dump() };
+    }
+    catch (const nlohmann::json::exception&)
+    {
+        TRACE_ERROR("Json Error: failed to serialize JsonValue to string");
+        return String{};
+    }
 }
 
 JsonValue ToJson(const char* string)
@@ -42,7 +50,15 @@ JsonValue ToJson(const PFJsonObject& jsonObject)
         return JsonValue();
     }
 
-    return JsonValue::parse(jsonObject.stringValue);
+    try
+    {
+        return JsonValue::parse(jsonObject.stringValue);
+    }
+    catch (const nlohmann::json::parse_error&)
+    {
+        TRACE_ERROR("Json Parse Error: failed to parse PFJsonObject");
+        return JsonValue();
+    }
 }
 
 JsonValue ToJsonTime(time_t value)
@@ -90,7 +106,13 @@ HRESULT FromJson(const JsonValue& input, int16_t& output)
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = static_cast<int16_t>(input.get<int>());
+    int64_t value = input.get<int64_t>();
+    if (value < INT16_MIN || value > INT16_MAX)
+    {
+        TRACE_ERROR("Json Parse Error: integer value out of int16_t range");
+        return E_INVALIDARG;
+    }
+    output = static_cast<int16_t>(value);
     return S_OK;
 }
 
@@ -101,7 +123,13 @@ HRESULT FromJson(const JsonValue& input, uint16_t& output)
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = static_cast<uint16_t>(input.get<unsigned int>());
+    uint64_t value = input.get<uint64_t>();
+    if (value > UINT16_MAX)
+    {
+        TRACE_ERROR("Json Parse Error: integer value out of uint16_t range");
+        return E_INVALIDARG;
+    }
+    output = static_cast<uint16_t>(value);
     return S_OK;
 }
 
@@ -112,7 +140,13 @@ HRESULT FromJson(const JsonValue& input, int32_t& output)
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = static_cast<int32_t>(input.get<int>());
+    int64_t value = input.get<int64_t>();
+    if (value < INT32_MIN || value > INT32_MAX)
+    {
+        TRACE_ERROR("Json Parse Error: integer value out of int32_t range");
+        return E_INVALIDARG;
+    }
+    output = static_cast<int32_t>(value);
     return S_OK;
 }
 
@@ -123,7 +157,13 @@ HRESULT FromJson(const JsonValue& input, uint32_t& output)
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = static_cast<uint32_t>(input.get<unsigned int>());
+    uint64_t value = input.get<uint64_t>();
+    if (value > UINT32_MAX)
+    {
+        TRACE_ERROR("Json Parse Error: integer value out of uint32_t range");
+        return E_INVALIDARG;
+    }
+    output = static_cast<uint32_t>(value);
     return S_OK;
 }
 
@@ -146,13 +186,13 @@ HRESULT FromJson(const JsonValue& input, uint64_t& output)
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
     }
-    output = static_cast<uint64_t>(input.get<unsigned int>());
+    output = input.get<uint64_t>();
     return S_OK;
 }
 
 HRESULT FromJson(const JsonValue& input, float& output)
 {
-    if (!input.is_number_float())
+    if (!input.is_number())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
@@ -163,7 +203,7 @@ HRESULT FromJson(const JsonValue& input, float& output)
 
 HRESULT FromJson(const JsonValue& input, double& output)
 {
-    if (!input.is_number_float())
+    if (!input.is_number())
     {
         TRACE_ERROR("Json Parse Error: unexpected token");
         return E_FAIL;
@@ -260,6 +300,10 @@ HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const tim
 
 HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const time_t* array, uint32_t arrayCount)
 {
+    if (arrayCount > 0 && !array)
+    {
+        return E_INVALIDARG;
+    }
     JsonValue member = JsonValue::array();
     for (auto i = 0u; i < arrayCount; ++i)
     {
@@ -270,6 +314,10 @@ HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const tim
 
 HRESULT ObjectAddMemberTime(JsonValue& jsonObject, StringRefType name, const PFDateTimeDictionaryEntry* associativeArray, uint32_t arrayCount)
 {
+    if (arrayCount > 0 && !associativeArray)
+    {
+        return E_INVALIDARG;
+    }
     JsonValue member = JsonValue::object();
     for (auto i = 0u; i < arrayCount; ++i)
     {
@@ -329,7 +377,12 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, CStringVe
             return E_FAIL;
         }
 
-        auto jsonArray = findResult.Payload()->get<Vector<String>>();
+        const auto& jsonArray = findResult.Payload().value();
+        if (jsonArray.size() > kMaxJsonArraySize)
+        {
+            TRACE_ERROR("Json Parse Error: array size exceeds maximum");
+            return E_OUTOFMEMORY;
+        }
         output.reserve(jsonArray.size());
         for (const auto& value : jsonArray)
         {
@@ -355,6 +408,11 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, StringDic
         }
 
         auto memberObject = findResult.Payload()->get<JsonValue>();
+        if (memberObject.size() > kMaxJsonArraySize)
+        {
+            TRACE_ERROR("Json Parse Error: object size exceeds maximum");
+            return E_OUTOFMEMORY;
+        }
         output.reserve(memberObject.size());
         for (auto& [key, value] : memberObject.items()) {
             String stringValue{};
@@ -403,7 +461,12 @@ HRESULT ObjectGetMemberTime(const JsonValue& jsonObject, const char* name, Vecto
             return E_FAIL;
         }
 
-        auto jsonArray = findResult.Payload()->get<Vector<time_t>>();
+        const auto& jsonArray = findResult.Payload().value();
+        if (jsonArray.size() > kMaxJsonArraySize)
+        {
+            TRACE_ERROR("Json Parse Error: array size exceeds maximum");
+            return E_OUTOFMEMORY;
+        }
         output.reserve(jsonArray.size());
         for (const auto& value : jsonArray)
         {

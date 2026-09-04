@@ -1,0 +1,198 @@
+,,SHAMWOW,FORTE 
+53971360,Create new save data,,
+,1,Launch ShamWOW on Device 1,Launch Forte (Forza Horizon  6) on Device 1
+,,,
+,2,"In the ""Scenarios"" window/ select the ""Game Save"" drop down menu",Make profile progress game save: Easiest way to make profile progress is via road discovery. Just drive on a road and you'll see it turn from grey to white in the map. Smashing the boards marked with little purple rectangles on the map is also an easy way. Always pause the game after doing this to make sure it saves as we don't save while the car is driving.
+,3,Set User-> PlayFab -> Prepare -> Create -> Enum -> Terminate Shamwow,
+,4,Data has been created,Make new data game save: Create a vinyl group in the livery editor and save it. This forces a new file to be created.
+,,,
+53971413,Load cloud save data,,
+,1,Wait 5 minutes or so/ then launch ShamWOW on Device 2,Wait 5 minutes or so/ then launch Forte on Device 2
+,2,"In the ""Scenarios"" > select ""Game Save"" drop down > Set User > PlayFab > Prepare > Enum to see the data listed. Read is optional",Game must be launched online/ you might see a syncing dialog/ validate previous progress is there
+,3,"If data was listed after ""Enum"" was pressed/ then loading a cloud save worked",
+53971519,Ensure Sync dialog prompts correctly,,
+,1,Close any/all local instance of ShamWOW for 5min,Close any/all local instance of Forte for 5min
+,2,Open File Explorer and go to C:\XboxGames\GameSave\pgs > open your profile folder > delete EVERYTHING inside the profile folder,Open File Explorer and go to C:\XboxGames\GameSave\pgs > open your profile folder > delete EVERYTHING inside the profile folder
+,3,Launch ShamWOW,Launch Forte
+,4,"In the ""Scenarios"" window > 'GameSave' drop down > click on ""SetUser"" > sign in to your profile > PlayFab > Prepare",Ignore
+,5,Validate that sync dialog shows up briefly,Validate that sync dialog shows up briefly
+,6,If you don’t see the dialog/ do PFGSMode > Enum Folders and validate from the Output window that you have at least 128 MB. If not/ do PFGSMode > CreateFile around 12 times and restart this test.,If you don’t see the dialog/ validate your game saves were synced correctly. Attempt the test again but with more save data saved (drive on more road/ buy more cars / make more progress) 
+59007442,Ensure Sync dialog can be cancelled correctly,,
+,1,Close any/all local instance of ShamWOW for 5min,Close any/all local instance of Forte for 5min
+,2,Open a CMD window as Admin & enter the following 3 commands:,Open a CMD window as Admin & enter the following 3 commands:
+,a,cd c:\XboxGames\GameSave\pgs,cd c:\XboxGames\GameSave\pgs
+,b,dir u_*,dir u_*
+,c,rmdir /s/q [UserDirectory (ie. u_XUID_PFID)],rmdir /s/q [UserDirectory (ie. u_XUID_PFID)]
+,3,Launch ShamWOW,Launch Forte
+,4,Go to GameSave > SetUser > ensure user is signed in > PlayFab > Prepare,ignore
+,5,Validate that sync dialog shows up briefly,Validate that sync dialog shows up briefly
+,a,If you don’t see the dialog do PFGSMode > Enum Folders and validate from the Output window that you have at least 128MB. If not/ do PFGSMode > CreateFile a few times and restart this test.,If you don’t see the dialog/ validate your game saves were synced correctly. Attempt the test again but with more save data saved (drive on more road/ buy more cars / make more progress) 
+,6,Select cancel when the sync dialog appears,Select cancel when the sync dialog appears
+,7,Validate that the option to play offline appears > Continue,Validate that the option to play offline appears > Continue
+,8,Create a new game save (PFGSMode > CreateFile),Create a new game save  
+,9,Quit ShamWOW,Quit Forte
+,10,Move to a second device/ open and sign in to ShamWow as the same user,Move to a second device/ open and sign in to Forte as the same user
+,11,Validate the previous game saves were not synced to the new device,Validate the previous game saves were not synced to the new device
+53971672,Ensure sync failed dialog prompts during sync failure,,
+,1,Close any/all local instance of ShamWOW for 5min,Close any/all local instance of Forte for 5min
+,2,Open File Explorer and go to C:\XboxGames\GameSave\pgs > open your profile folder > delete EVERYTHING inside the profile folder,h
+,3,Launch ShamWOW,Launch Forte
+,4,"In the ""Scenarios"" window > 'GameSave' drop down > click on ""SetUser"" > sign in to your profile > PlayFab > Prepare",ignore
+,5,Validate that sync dialog shows up briefly,Validate that sync dialog shows up briefly
+,6,"Quickly disconnect internet from the device > validate that an error message informing the user ""the sync has failed"" appears","Quickly disconnect internet from the device > validate that an error message informing the user ""the sync has failed"" appears"
+59026010,Ensure try again works during failed dialog,,
+,1,Close any/all local instance of ShamWOW for 5min,Close any/all local instance of Forte for 5min
+,2,Open a CMD window as Admin & enter the following 3 commands:,Open a CMD window as Admin & enter the following 3 commands:
+,a,cd c:\XboxGames\GameSave\pgs,cd c:\XboxGames\GameSave\pgs
+,b,dir u_*,dir u_*
+,c,rmdir /s/q [UserDirectory (ie. u_XUID_PFID)],rmdir /s/q [UserDirectory (ie. u_XUID_PFID)]
+,3,Launch ShamWOW,Launch ShamWOW
+,4,Go to GameSave > SetUser > ensure user is signed in > PlayFab > Prepare,ignore
+,5,Validate that sync dialog shows up briefly,Validate that sync dialog shows up briefly
+,a,If you don’t see the dialog do PFGSMode > Enum Folders and validate from the Output window that you have at least 128MB. If not/ do PFGSMode > CreateFile a few times and restart this test.,If you don’t see the dialog/ validate your game saves were synced correctly. Attempt the test again but with more save data saved (drive on more road/ buy more cars / make more progress) 
+,6,Disconnect internet from the device quickly,Disconnect internet from the device quickly
+,7,Validate an error message prompts informing the user the sync has failed,Validate an error message prompts informing the user the sync has failed
+,8,Reconnect the device to the internet,Reconnect the device to the internet
+,9,Select 'Try Again',Select 'Try Again'
+,10,Validate the sync continues and all game saves are present as expected,Validate the sync continues and all game saves are present as expected
+53972746,Existing save data while offline carries over across devices,,
+,1,Launch ShamWOW and sign in a user that has existing cloud save data,Launch Forte and sign in a user that has existing cloud save data
+,2,Make additional new save data > wait about 1min for upload > close ShamWOW,Make additional new save data > wait about 1min for upload > close Forte
+,3,Launch ShamWOW on a 2nd device > sign in with the same user as Step [1],Launch Forte on a 2nd device > sign in with the same user as Step [1]
+,4,Verify the save data that was on the 1st device/ shows up as expected on the 2nd device,Verify the save data that was on the 1st device/ shows up as expected on the 2nd device
+,5,On Device 2/ make additional new save data > wait about 1min for upload > close ShamWOW,On Device 2/ make additional new save data > wait about 1min for upload > close Forte
+,6,Launch ShamWOW on a 1st device > sign in with the same user as Step [1],Launch Forte on a 1st device > sign in with the same user as Step [1]
+,7,Verify the save data that was added on the 2nd device/ shows up as expected on the 1st device,Verify the save data that was added on the 2nd device/ shows up as expected on the 1st device
+,8,Repeat for all device combinations (PC>PC/ Console>Console/ PC>Console/ Console>PC),Repeat for all device combinations (PC>PC/ Console>Console/ PC>Console/ Console>PC)
+53972820,New save data carries over across devices,,
+,1,On any device/ launch the ShamWOW app and sign in.,On any device/ launch the Forte app and sign in.
+,2,Create new save data,Create new save data
+,3,Close ShamWOW and wait a minute for the cloud data to upload,Close Forte and wait a minute for the cloud data to upload
+,4,Switch to another device/ load the save data,Switch to another device/ load the save data
+,5,Verify the user is shown a ‘syncing dialog’ prompt,Verify the user is shown a ‘syncing dialog’ prompt
+,6,Verify the save data created in step [2] is available on the new device,Verify the save data created in step [2] is available on the new device
+53972878,Upload after being in background for 30min without doing a write,,
+,1,Create new save data,Create new save data
+,2,PlayFab > Enum (remember the number of the file enumerated),Remember what your progress is 
+,3,Minimize ShamWOW to background/ and wait 35 minutes,Minimize Forte to background/ and wait 35 minutes
+,4,Disconnect the PC from the network,Disconnect the PC from the network
+,5,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device
+,a,You can Enum again to verify you have the correct file name and size,verify your progress has synced 
+53972975,Upload on Title Termination,,
+,1,Create new save data,Create new save data
+,2,PlayFab > Enum (remember the number files and size),Remember what your progress is 
+,3,Terminate ShamWOW,Terminate Forte
+,4,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device
+,a,You can Enum again to verify you have the correct file name and size,verify your progress has synced 
+53973046,Upload on User-sign Out,,
+,1,Create new save data,Create new save data
+,2,PlayFab > Enum (remember the number of the file enumerated),Remember what your progress is 
+,3,"Sign out of ShamWOW on this same device (PC: bring up Game Bar > launch ""Xbox Social"" widget > click on ""Xbox Social options"" next to the close button of the Xbox Social widget > click ""SIGN OUT"")","Sign out of Forte on this same device (PC: bring up Game Bar > launch ""Xbox Social"" widget > click on ""Xbox Social options"" next to the close button of the Xbox Social widget > click ""SIGN OUT"")"
+,4,Wait about 5min,Wait about 5min
+,5,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device
+,6,You can Enum again to verify you have the correct file name and size,verify your progress has synced 
+53973160,Upload on Suspend on Console,,
+,1,Create new save data,Create new save data
+,2,PlayFab > Enum (remember the number of the file enumerated),Remember what your progress is 
+,3,Launch the 'Settings' app,Launch the 'Settings' app
+,4,Wait 15min (game is suspended after 10min),Wait 15min (game is suspended after 10min)
+,5,Disconnect console from network,Disconnect console from network
+,6,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device
+,a,You can Enum again to verify you have the correct file name and size,verify your progress has synced 
+53973243,Upload on Power State Change (Connected Standby),,
+,1,Create new save data,Create new save data
+,2,PlayFab > Enum (remember the number of the file enumerated),Remember what your progress is 
+,3,Put console into standby mode,Put console into standby mode
+,4,Wait 5min,Wait 5min
+,5,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device
+,a,You can Enum again to verify you have the correct file name and size,verify your progress has synced 
+53973301,Upload on Power State Change on a device (Power Pull),,
+,1,Create new save data,Create new save data
+,2,PlayFab > Enum (remember the number of the file enumerated),Remember what your progress is 
+,3,Pull power from the device suddenly – at the plug,Pull power from the device suddenly – at the plug
+,4,Wait 5min,Wait 5min
+,5,On secondary device/ use ShamWow with same user and verify your game save state (you should not have the latest saves),On secondary device/ use ShamWow with same user and verify your game save state (you should not have the latest saves)
+,a,You can Enum again to verify you have the correct file name and size,verify your progress has synced 
+,6,Return to 1st device/ ensure your saves are still present,Return to 1st device/ ensure your saves are still present
+53973372,Upload on Power State Change on a device (Structured Shutdown),,
+,1,Create new save data,Create new save data
+,2,PlayFab > Enum (remember the number of the file enumerated),Remember what your progress is 
+,3,Shut down the device (turn off console from menu/ or turn off PC from the windows menu),Shut down the device (turn off console from menu/ or turn off PC from the windows menu)
+,4,Wait 5min,Wait 5min
+,5,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device,On 2nd device/ with same user/ verify your newly created save data is synced to this 2nd device
+,a,You can Enum again to verify you have the correct file name and size,verify your progress has synced 
+,6,Return to 1st device/ ensure your saves are still present,Return to 1st device/ ensure your saves are still present
+59026195,Mid-game upload steps,,
+,1,PlayFab > Enum Folder (note this number),TBD 
+,2,Playfab > Upload,
+,Verify mid-game upload success,,
+,1,Follow steps above to initialize a mid-game upload,
+,2,To ensure the game save that usually kicks off after title termination does not occur/ disconnect device from the network,TBD 
+,3,Terminate ShamWOW,
+,4,On secondary device/ use ShamWow with same user and verify your game save state,
+,a,You can again use PFGSMode > Enum Folder to validate you have the correct number of files and size.,
+59030435,Verify other writes can occur during mid game upload,,
+,1,Follow steps above to initialize a mid-game upload,TBD 
+,2,Make another game save: PlayFab > Prepare/ Create &/or Write.,
+,3,Read / Enum to ensure the new write was successful and make note of it,
+,4,Do not upload the latest save,
+,5,To ensure out of game uploads do not occur/ disconnect device from the network,
+,6,On secondary device/ use ShamWow with same user and verify your 1st game save was uploaded correctly,
+,a,You can again use PFGSMode > Enum Folder to validate you have the correct number of files and size.,
+,7,Verify your 2nd game save is not present on the secondary device,
+53973596,Verify connectivity dialog prompts when connection to the service is lost,,
+,1,Launch ShamWOW > sign in > create save data,Launch Forte and create new save
+,2,Once the save data has been created and uploaded to the cloud/ close ShamWOW and reopen ShamWOW on a 2nd device,Once the save data has been created and uploaded to the cloud/ close Forte and reopen Foret on a 2nd device
+,3,Sign in on the 2nd device with the same profile from step [1],Sign in on the 2nd device with the same profile from step [1]
+,4,PlayFab > Prepare,ignore
+,5,Immediately disconnect the 2nd device from the internet,Immediately disconnect the 2nd device from the internet
+,6,Verify the user is prompted with a 'connectivity' prompt,Verify the user is prompted with a 'connectivity' prompt
+,CASE 1: Verify the user can try again (after reconnecting),,
+,1,Reconnect your device back to the internet,Reconnect your device back to the internet
+,2,Select 'Try again',Select 'Try again'
+,3,"Verify the save data continues to initialize: Click ""Load"" to verify the cloud save containers are present.​","Verify the save data continues to initialize: Click ""Load"" to verify the cloud save containers are present.​"
+53973658,CASE 2: Verify the user can continue offline,,
+,1,Do not reconnect your device to the internet,Do not reconnect your device to the internet
+,2,Select continue offline,Select continue offline
+,3,"Verify the user can continue offline (Click ""Load"" to verify the cloud save containers made in device 1 are NOT present.​)","Verify the user can continue offline (Click ""Load"" to verify the cloud save containers made in device 1 are NOT present.​)"
+53973957,Verify conflict resolution prompts appropriately,,
+,1,Launch ShamWOW > sign in > create save data,Launch Forte > sign in > create save data
+,2,When save data has been made and uploaded to cloud/ close ShamWow and swap to device 2,When save data has been made and uploaded to cloud/ close Forte and swap to device 2
+,3,"On device 2: sign in to ShamWOW and load the cloud save going to ""Set User"" > PlayFab > Prepare",On device 2: sign in to Forte and load the cloud save 
+,4,Once the cloud saves are loaded/ disconnect the device from the internet by either disconnecting the network cable or disabling network devices in the settings menu.,Once the cloud saves are loaded/ disconnect the device from the internet by either disconnecting the network cable or disabling network devices in the settings menu.
+,5,Make changes to the local save by modifying the data/ Create/ Write or Delete. Close the app.,Make changes to the local save by modifying the data/ make new offline game save progress. Close the app.
+,6,Switch back to the device 1 again/ launch and sign in to ShamWOW,Switch back to the device 1 again/ launch and sign in to Forte
+,7,Make changes to the local save by modifying the data/ Create/ Write or Delete.,Make changes to the local save by modifying the data/ i.e. new game profile progress
+,8,Close the game/ wait a moment for the save to upload to the cloud.,Close the game/ wait a moment for the save to upload to the cloud.
+,9,Reconnect device 2 to the internet again and launch ShamWOW PC app,Reconnect device 2 to the internet again and launch forte
+,10,"Sign in to ShamWOW/ in the Game Save window select ""Set User/"" then ""Initialize"".",Sign in to forte
+,11,Verify the user should then be prompted with choosing between the older offline console save and the newer cloud pc save,Verify the user should then be prompted with choosing between the older offline console save and the newer cloud pc save
+,CASE 2: Choose local save,,
+,1,When prompted to choose the newer cloud save and the older local save/ pick the local save.,When prompted to choose the newer cloud save and the older local save/ pick the local save.
+,2,Once the local save is loaded/ save the game and close it. Wait a minute for the cloud save to upload.,Once the local save is loaded/ save the game and close it. Wait a minute for the cloud save to upload.
+,3,On the Console PC/ load the save.,On the Console PC/ load the save.
+,4,"Verify a ""Syncing"" TCUI pops up to verify that the cloud save was updated to the newest cloud save that was formerly the previous device save.","Verify a ""Syncing"" TCUI pops up to verify that the cloud save was updated to the newest cloud save that was formerly the previous device save."
+53973854,CASE 1: Select the cloud save,,
+,1,Select the cloud save option on the dialog,Select the cloud save option on the dialog
+,2,Close the app/ switch to the original device,Close the app/ switch to the original device
+,3,Launch the app and load the cloud save,Launch the app and load the cloud save
+,4,Verify the user should not be prompted to choose between any saves/ the save should load automatically.,Verify the user should not be prompted to choose between any saves/ the save should load automatically.
+53974103,Ensure Active Device contention prompts correctly when another device is still uploading,,
+,1,Launch ShamWOW > sign in > create save data,Launch Forte > sign in > create save data
+,2,Once the save data has been created/ immediately close ShamWOW and switch to device 2,Once the save data has been created/ immediately close Forte and switch to device 2
+,3,Immediately launch ShamWOW on the new device,Immediately launch Forte on the new device
+,4,Verify a dialog prompts ‘Your previous device is still uploading your game save”,Verify a dialog prompts ‘Your previous device is still uploading your game save”
+53974195,Verify a user can break a lock and play on a new device ,,
+,1,Select “continue from last cloud data”/”stop sync and continue”,Select “continue from last cloud data”/”stop sync and continue”
+,2,Select confirm on confirmation prompt,Select confirm on confirmation prompt
+,3,Load your game save,Load your game save
+,4,PFGSMode > Enum Folder/ ensure the previous game saves made are not present,ensure the previous game saves made are not present
+53974360,(OUTDATED) CASE 2: Verify a user can wait for the lock and continue,,
+,1,Select 'Try again',Select 'Try again'
+,2,Verify the dialog eventually disappears,Verify the dialog eventually disappears
+,3,PFGSMode > Enum Folder/ new save files are available,new save files are available
+53974442,CASE 3: Verify a user can quit the title safely,,
+,1,Select the exit button or exit ShamWOW completely,Select the exit button or exit Forte completely
+,2,Wait a minute,Wait a minute
+,3,Relaunch ShamWOW and sign in,Relaunch Forte and sign in
+,4,Verify your previous game saves are available,Verify your previous game saves are available

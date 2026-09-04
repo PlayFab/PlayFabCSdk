@@ -1,0 +1,49 @@
+id: PFCore-24-User-Context
+name: PFCore 24 - Local User Custom Context
+tags:
+  - pfcore
+platforms:
+  xbox: failing  # 0x80004001 E_NOTIMPL — PFLocalUserSetCustomContext handler not implemented + needs Xbox local user
+  pc-grts: ignore
+  pc-inproc: failing  # 0x80004001 E_NOTIMPL — PFLocalUserSetCustomContext handler not implemented + needs Xbox local user
+  psx: ignore
+description: >
+  Sets and gets a custom context on a local user handle,
+  verifying the user-data attachment pattern.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserLoginAsync
+
+  test:
+    - command: PFLocalUserSetCustomContext
+    - command: PFLocalUserGetCustomContext
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

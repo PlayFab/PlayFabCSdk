@@ -1,0 +1,134 @@
+Test ID	Title	Step	Instruction	Notes / xCloud
+BUG-REG-01	Steam TCUI Conflict Dialog Hidden Behind Game Window (Bug 61056197)			🖥️ PC (Steam) ONLY — bug is specific to Steam InProc TCUI rendering. Source: Bug 61056197
+		1	[CLOSE-APP] all instances on both Device 1 (Steam PC) and Device 2, wait 5 min	
+		2	[LAUNCH] Forte on Device 2 (Console or MS Store PC)	
+		3	[CREATE-SAVE] on Device 2 — complete a road discovery	
+		4	[DISCONNECT] Device 2 from network	
+		5	[CLOSE-APP] on Device 2 (save stays local only, not uploaded)	
+		6	[LAUNCH] Forte on Device 1 (Steam PC)	
+		7	[CREATE-SAVE] on Device 1 — purchase a new car (different progress than Device 2)	
+		8	[CLOSE-APP] on Device 1 > [WAIT-UPLOAD]	
+		9	[RECONNECT] Device 2 — its local save is now older than cloud	
+		10	[LAUNCH] Forte on Device 2 > [CLOSE-APP] > [WAIT-UPLOAD] — this creates a true cloud conflict	
+		11	[LAUNCH] Forte on Device 1 (Steam PC) — conflict resolution TCUI should trigger	
+		12	[VERIFY-TCUI-VISIBLE] — confirm Conflict Resolution dialog appears IN FOREGROUND of the Steam game window	
+		13	Verify dialog is interactable: can select "Use this device's data" or "Use the cloud data"	
+		14	If dialog is hidden behind game window → Alt+Tab to locate it → note as BUG REPRO (61056197)	
+		15	Select a resolution option and verify game loads with the chosen save data	
+				
+BUG-REG-02	Steam TCUI Crash → Offline Fallback → Stale Version on Recovery (Bug 61311850)			🖥️ PC (Steam) ONLY — requires killing GamingServices to simulate TCUI crash. Source: Bug 61311850. NOTE: May require admin privileges.
+		1	[CLOSE-APP] all instances and wait 5 min	
+		2	[LAUNCH] Forte on Steam PC — allow saves to sync normally, confirm "Synced" state	
+		3	[CREATE-SAVE] — complete a race event	
+		4	[CLOSE-APP] > [WAIT-UPLOAD] — confirm upload completes	
+		5	Kill the GamingServices process: Task Manager → Details → GamingServices.exe → End Process Tree	
+		6	[LAUNCH] Forte on Steam PC — observe PFGS detects TCUI unavailable and enters offline fallback mode	
+		7	[CREATE-SAVE] while in offline mode — complete a car change	
+		8	[CLOSE-APP] Forte	
+		9	Restart GamingServices: open PowerShell (Admin) → Start-Service GamingServices, or reboot PC	
+		10	[LAUNCH] Forte on Steam PC — TCUI should now be healthy	
+		11	VERIFY: Save sync resumes — watch for successful sync indicator (no error dialogs)	
+		12	VERIFY: No permanent mismatch — on another device [LAUNCH] > [VERIFY-SAVE] confirms data from steps 3 AND 7 are present	
+		13	If saves are stuck in mismatch state (cloud doesn't match local) → BUG REPRO (61311850)	
+				
+BUG-REG-03	Dashboard "Delete Everywhere" While Game Actively Running (Bug 61136195)			🎮 Console ONLY — "Delete Everywhere" is a console dashboard feature. Source: Bug 61136195. Tests ConnectedStorage race condition during active game session.
+		1	[CLOSE-APP] all instances on both Console (Device 1) and Device 2, wait 5 min	
+		2	[LAUNCH] Forte on Console (Device 1)	
+		3	[CREATE-SAVE] — complete a road discovery, note the progress	
+		4	Leave Forte RUNNING on Device 1 — do NOT close the game	
+		5	Press Xbox button → navigate to My games & apps → highlight Forte → Menu (☰) → Manage game & add-ons → Saved data	
+		6	Select your profile → choose "Delete everywhere"	
+		7	Observe: console attempts to evict Forte. [WAIT-EVICTION] — this may take up to 6 minutes if the game resists PLM termination	
+		8	After eviction completes and returns to home screen, [LAUNCH] Forte on Device 1	
+		9	VERIFY: Game starts fresh (no save data) — delete was successful locally	
+		10	VERIFY: No orphaned device lock — title syncs as if first-time setup	
+		11	[LAUNCH] Forte on Device 2	
+		12	VERIFY: No device contention TCUI appears on Device 2 — device lock from Device 1 was properly released	
+		13	VERIFY: Cloud save data is also deleted — Device 2 shows fresh start (no old save data)	
+		14	If Device 2 shows contention dialog or finds old cloud data → BUG REPRO (61136195)	
+				
+BUG-REG-04	Same-Device Contention After Crash → "Stop Sync" → AddUser Hang (Bug 61456073)			🖥️ PC ONLY (Desktop GDK) — same-device contention is a PC-specific issue. Source: Bug 61456073. Verify with both MS Store and Steam builds if available.
+		1	[CLOSE-APP] all instances and wait 5 min	
+		2	[LAUNCH] Forte on PC	
+		3	[CREATE-SAVE] — purchase a new car, note the car name	
+		4	[FORCE-CRASH] — Task Manager → Forte → End Task (simulates crash, no graceful shutdown)	
+		5	Wait 30 seconds for system to register the ungraceful termination	
+		6	[LAUNCH] Forte on the SAME PC — observe if device contention TCUI appears (same device showing as conflicting with itself)	
+		7	If contention dialog shows: select "Stop syncing and continue"	
+		8	VERIFY: Game loads to main menu within 2 minutes — no soft-lock or indefinite hang at AddUser	
+		9	[CLOSE-APP] Forte normally	
+		10	Wait 1 minute	
+		11	[LAUNCH] Forte on same PC again	
+		12	VERIFY: No contention TCUI appears on this subsequent launch — device lock was properly cleared	
+		13	VERIFY: AddUser completes within 60 seconds (no hang)	
+		14	[VERIFY-SAVE] — previous save data (car from step 3) is intact	
+		15	Repeat steps 3-8 two more times to confirm the issue does not recur across multiple crash cycles	
+		16	If AddUser hangs indefinitely after selecting "Stop Sync" or on subsequent launches → BUG REPRO (61456073)	
+				
+BUG-REG-05	Suspend Online → Go Offline → Resume: AddUser Hang (Bug 61557570)			🎮 Console ONLY — requires network settings toggle during suspend. Source: Bug 61557570. ⛔ Not xCloud applicable.
+		1	[CLOSE-APP] all instances and wait 5 min	
+		2	[LAUNCH] Forte on Console while online — confirm sync completes	
+		3	[CREATE-SAVE] — complete a race event, note the results	
+		4	[SUSPEND] Forte — press Xbox button and launch a different title (or leave idle for PLM suspend)	
+		5	While Forte is suspended, go to Settings → General → Network settings → Go offline	
+		6	[RESUME] Forte — navigate back to Forte and select it	
+		7	VERIFY: PlayFab/GRTS prompt appears offering "Retry" or "Use Offline" (or similar network error dialog)	
+		8	Select "Use Offline"	
+		9	VERIFY: Game resumes within 60 seconds — no hang at "Resuming" screen or AddUser	
+		10	VERIFY: Save data from before suspend (step 3) is accessible and correct	
+		11	[GO-ONLINE] — Settings → Network → Go online	
+		12	[CLOSE-APP] > [WAIT-UPLOAD]	
+		13	On another device, [LAUNCH] > [VERIFY-SAVE] — confirm save data eventually syncs	
+		14	If game hangs indefinitely at resume or AddUser after selecting "Use Offline" → BUG REPRO (61557570)	
+				
+BUG-REG-06	OS Downgrade → EntityId Change → Upload Recovery (Bug 61543635)			🎮 Dev Kit ONLY — requires OS flashing capability. Source: Bug 61543635. ⚠️ NOT feasible for manual testers without devkit access. Consider for automated regression only.
+		1	Prerequisite: Two dev kits (Kit A and Kit B) with ability to flash OS builds. NOT feasible on retail hardware.	
+		2	[CLOSE-APP] all instances on both kits, wait 5 min	
+		3	On Kit A: [LAUNCH] > [CREATE-SAVE] — complete a car change. [CLOSE-APP] > [WAIT-UPLOAD]	
+		4	On Kit B: [LAUNCH] > [VERIFY-SAVE] — confirm Kit A's save synced. [CLOSE-APP]	
+		5	On Kit A: Flash/downgrade to an older OS build (e.g., previous monthly release)	
+		6	Wait for OS downgrade to complete and kit to reboot	
+		7	On Kit A: [LAUNCH] Forte — note any errors or unusual behavior during sync. [CREATE-SAVE] — complete a road discovery	
+		8	[CLOSE-APP] > [WAIT-UPLOAD] on Kit A	
+		9	On Kit A: Flash/upgrade back to the CURRENT OS build	
+		10	Wait for OS upgrade to complete and kit to reboot	
+		11	On Kit A: [LAUNCH] Forte — [CREATE-SAVE] — complete a race event	
+		12	[CLOSE-APP] > [WAIT-UPLOAD] on Kit A — wait full 5 minutes	
+		13	On Kit B: [LAUNCH] Forte	
+		14	VERIFY: No unexpected device contention TCUI on Kit B	
+		15	VERIFY: [VERIFY-SAVE] on Kit B shows Kit A's latest save data (from step 11) — uploads recovered after EntityId change	
+		16	If Kit B shows stale data or device contention fires → BUG REPRO (61543635)	
+				
+BUG-REG-07	Game Terminated by OS During Save Uninitialize → HANG_QUIESCE (Bug 61444916)			🎮 Console ONLY — timing-dependent, requires quick eviction during save flush. Source: Bug 61444916. ⚠️ Hard to hit consistently — may require multiple attempts. Step 4-5 timing is critical.
+		1	[CLOSE-APP] all instances and wait 5 min	
+		2	[LAUNCH] Forte on Console	
+		3	[CREATE-SAVE] — complete a race with a large save write (championship or Horizon Story event)	
+		4	IMMEDIATELY after the save/autosave triggers (watch for save icon), initiate game quit: in-game menu → Quit	
+		5	While the "Saving..." or shutdown indicator is still visible, QUICKLY [EVICT-GAME] by launching a different title	
+		6	Goal: OS terminates Forte while PFGameSaveFilesUninitializeAsync is still running	
+		7	Wait 2 minutes for all processes to settle	
+		8	[LAUNCH] Forte again on the same console	
+		9	VERIFY: Game launches normally — no indefinite hang at splash screen (HANG_QUIESCE)	
+		10	VERIFY: No crash or error dialog on launch	
+		11	[VERIFY-SAVE] — save data is either intact (uninitialize completed) OR cleanly rolled back (no corruption)	
+		12	[CLOSE-APP] > [WAIT-UPLOAD]	
+		13	On another device, [LAUNCH] > [VERIFY-SAVE] — confirm data is consistent	
+		14	If game hangs indefinitely on relaunch or save is corrupted → BUG REPRO (61444916)	
+				
+BUG-REG-08	TCUI Dialog Stuck or Flashing After Game Eviction Mid-Sync Dialog (Bug 61173408)			🎮 Console ONLY — requires eviction during active TCUI dialog. Source: Bug 61173408. Variant A tests stuck dialog, Variant B tests flash loop. ⛔ Not xCloud applicable.
+		1	[CLOSE-APP] all instances and wait 5 min	
+		2	[DISCONNECT] the console from network (Settings → Network → Go offline)	
+		3	[LAUNCH] Forte — the game will attempt to sync and fail. Watch for a sync failure TCUI dialog to appear	
+		4	While the sync failure dialog is displayed on screen, [EVICT-GAME] — press Xbox button and quickly launch a different installed title	
+		5	[WAIT-EVICTION] — wait 30-60 seconds for Forte to be fully evicted from memory	
+		6	Press Xbox button → return to Home screen	
+		7	VERIFY: No stuck TCUI dialog remains visible on screen after eviction	
+		8	VERIFY: No flashing/flickering dialog loop (rapid show→dismiss→show cycle)	
+		9	VERIFY: Home screen and Guide are responsive — no UI soft-lock	
+		10	[RECONNECT] the console (Settings → Network → Go online)	
+		11	[LAUNCH] Forte	
+		12	VERIFY: Game syncs normally on relaunch — no residual TCUI error state from the interrupted dialog	
+		13	VERIFY: No rapid-fire sync failure dialogs (should be at most 1 sync attempt, not dozens)	
+		14	[VERIFY-SAVE] — previous save data loads correctly	
+		15	If any stuck/flashing dialogs appear OR the sync failure dialog repeats in a loop → BUG REPRO (61173408)	
+				      

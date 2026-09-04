@@ -1,0 +1,30 @@
+# Initialize a LOCAL (in-proc) PC device using Xbox Live sign-in.
+#
+# Uses XUserAddAsync to sign in via Xbox Live, then
+# PFLocalUserCreateHandleWithXboxUser to create the local user from
+# the signed-in XUserHandle. Uses entity auth (InitFlagUseEntityAuth)
+# which is supported on PC but not on Xbox console.
+#
+# NOTE: XUserAddAsync will trigger a system pop-up (SPOP) prompting
+# the user to sign in with their Xbox Live / Microsoft account.
+# You must interact with the pop-up before the command times out.
+#
+# Prerequisites:
+#   - GameTestAppWin32 running locally (launched via 'launch' command)
+#   - Xbox Live sign-in available (Xbox app installed, or MSA account)
+#   - A saveFolder on the local filesystem
+
+XGameRuntimeInitialize
+PFInitialize
+PFServicesInitialize
+PFServiceConfigCreateHandle --endpoint=https://E18D7.playfabapi.com --titleId=E18D7
+XTaskQueueCreate --workMode=ThreadPool --completionMode=ThreadPool --setAsProcessQueue=true
+PFGameSaveFilesInitialize --saveFolder=C:\gamesave
+PFGameSaveFilesSetUiCallbacks --enable=true
+PFGameSaveFilesSetActiveDeviceChangedCallback
+
+# Sign in via Xbox Live — this triggers a system pop-up (SPOP)
+XUserAddAsync
+PFLocalUserCreateHandleWithXboxUser
+PFGameSaveFilesAddUserWithUiAsync
+PFGameSaveFilesGetFolder

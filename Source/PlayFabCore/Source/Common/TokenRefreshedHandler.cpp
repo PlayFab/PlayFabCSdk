@@ -121,6 +121,10 @@ void TokenRefreshedHandler::SharedState::Invoke(EntityKey const& entityKey, Enti
         // TokenRefreshedHandler handles submitting the work to the TaskQueue so that it can synchronize the event handler invocation
         // and unregistration of the handler
 
+        // Capture handler by SharedPtr so it stays alive for the duration of the queued work item.
+        // This is safe despite the apparent race window with UnregisterClientHandler because the
+        // SharedPtr capture keeps the handler alive, and the CancellationToken check inside the
+        // lambda ensures we don't invoke a handler that has been unregistered.
         auto handler = pair.second;
         handler->RunContext().TaskQueueSubmitWork([this, handler, key = EntityKey{ entityKey }, token = EntityToken{ newToken }]()
         {

@@ -11,7 +11,11 @@ namespace GameSave
 
 namespace Detail
 {
-    HRESULT CompleteAsyncWithError(XAsyncBlock* async, const char* apiIdentity, HRESULT hr);
+    // Completes 'async' with 'hr' through a real XAsync provider. XAsyncComplete alone is not
+    // enough: it requires a block that was already handed to XAsyncBegin, so calling it on a block
+    // no provider ever started leaves the title waiting on a completion that never arrives.
+    // Used for both error results and the early-success paths that never start a provider.
+    HRESULT CompleteAsyncWithResult(XAsyncBlock* async, const char* apiIdentity, HRESULT hr);
 }
 
 template<typename TWork>
@@ -45,13 +49,13 @@ inline HRESULT GameSaveEntityAsyncApiImpl(XAsyncBlock* async, const char* apiIde
         HRESULT hr = GameSaveGlobalState::Get(state);
         if (FAILED(hr))
         {
-            return Detail::CompleteAsyncWithError(async, apiIdentity, hr);
+            return Detail::CompleteAsyncWithResult(async, apiIdentity, hr);
         }
 
         SharedPtr<FolderSyncManager> folderSync = state->GetFolderSyncManagerFromLocalUser(localUserHandle, createOnDemand);
         if (folderSync == nullptr)
         {
-            return Detail::CompleteAsyncWithError(async, apiIdentity, E_PF_GAMESAVE_USER_NOT_ADDED);
+            return Detail::CompleteAsyncWithResult(async, apiIdentity, E_PF_GAMESAVE_USER_NOT_ADDED);
         }
         return work(std::move(folderSync), state->RunContext().DeriveOnQueue(async->queue));
     }

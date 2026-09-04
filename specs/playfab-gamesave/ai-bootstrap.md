@@ -1,5 +1,5 @@
 ## Workflow
-1. **Start with context-gathering** — do not generate any files yet, first read the context source files below to understand the project.
+1. **Start with context-gathering** -- do not generate any files yet, first read the context source files below to understand the project.
 2. Ask clarifying questions about the project as needed.
 3. After carefully reading the context source files below, wait for next prompt.
 4. **When writing new markdown files:**
@@ -12,17 +12,31 @@
 6. Use an objective, developer-facing tone consistent with other PlayFab SDK documentation.
 
 ## PFGameSaves Context Sources
-To understand the PFGameSaves project, consult the following:
+To understand the PFGameSaves project, read in this order:
 
-- **Public docs:** `\PlayFab.C\specs\playfab-gamesave\docs`
-- **Public headers:** `\PlayFab.C\Source\PlayFabGameSave\Include\playfab\gamesave`
-- **Dev spec:** `\PlayFab.C\specs\playfab-gamesave\design\client-dev-spec.md`
-- **Test strategy:** `\PlayFab.C\specs\playfab-gamesave\testing\unified-test-strategy.md`
-- **Sample code:** `\PlayFab.C\Samples\PlayFabGameSaveSample-Windows`
-- **Source code (if needed):** `\PlayFab.C\Source\PlayFabGameSave\Source`
-- **Automated testing specs:** `\PlayFab.C\specs\playfab-gamesave\testing\test-automation`
-- **C# test controller** `\PlayFab.C\Test\PFGameSaveTestController`
-- **C++ test device** `\PlayFab.C\Test\PFGameSaveTestDeviceWindows`
+### Start here (fast onboarding)
+- **AI summary:** `specs\playfab-gamesave\ai-summary.md` -- high-level concepts, API snapshot, patterns
+- **Architecture & code flow:** `specs\playfab-gamesave\ai-architecture.md` -- layer diagram, how API calls flow through the code, where to make changes
+- **Source code map:** `specs\playfab-gamesave\ai-source-map.md` -- every file with class names and one-line descriptions
+
+### Reference material
+- **Public headers:** `Source\PlayFabGameSave\Include\playfab\gamesave` -- the API surface
+- **Dev spec:** `specs\playfab-gamesave\design\client-dev-spec.md` -- detailed design decisions
+- **Public docs:** `specs\playfab-gamesave\docs` -- user-facing documentation
+- **Design specs:** `specs\playfab-gamesave\design\` -- state machines, conflict resolution, rollback, telemetry, quota
+
+### Testing
+- **Test loop guide:** `specs\playfab-gamesave\ai-test-loop-guide.md` -- build/test/fix workflow with scripts
+- **Test strategy:** `specs\playfab-gamesave\testing\testing-strategy-summary.md`
+- **Test automation specs:** `specs\playfab-gamesave\testing\test-automation`
+- **C# test controller:** `Test\GameTestController`
+- **C++ test device:** `Test\GameTestAppWindows`
+
+### Deep dives (when needed)
+- **Sample code:** `Samples\PlayFabGameSaveSample-Windows`
+- **Source code:** `Source\PlayFabGameSave\Source`
+- **Code review (25-step):** `specs\playfab-gamesave\ai-code-review\` -- detailed per-component analysis
+- **Bug write-ups:** `specs\playfab-gamesave\bug-*.md` -- past bug investigations with root cause and fix
 
 Just read these for now.  
 I will tell you what to do in next prompt.

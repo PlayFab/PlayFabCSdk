@@ -1,0 +1,34 @@
+id: Scenario-Xbox-66-Quick-Resume-Invalidation
+name: GameSave Xbox 66 - Quick Resume Cache Invalidation
+tags:
+  - xboxgamesaves
+  - skipped
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc-gamesaves: ignore
+  psx: ignore
+skip_reason: >
+  Cross-platform backend mismatch. Test requires Device B (PC/GRTS) to modify cloud data
+  while Device A (Xbox/CS) is suspended, then A sees B's changes on resume. Xbox Connected
+  Storage and GRTS are separate backends — Xbox CS will not see GRTS cloud changes.
+  Same fundamental issue as tests 108-112.
+description: >
+  SKIPPED: Tests that Quick Resume detects cloud changes made by another device during
+  suspension. Not feasible because Xbox Connected Storage (Device A) cannot observe
+  changes made by GRTS (Device B) — they are separate storage backends.
+brief: Quick Resume invalidation (cross-platform backend mismatch)
+group: J. Title Termination / Eviction
+devices:
+  DeviceA:
+    engine: xbox
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  skip-placeholder:
+    - command: XGameRuntimeInitialize
+executionOrder:
+  - role: DeviceA
+    block: skip-placeholder

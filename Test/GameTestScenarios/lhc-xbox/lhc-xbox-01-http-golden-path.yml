@@ -1,0 +1,62 @@
+id: LHC-Xbox-01-Http-Golden-Path
+name: LHC Xbox 01 - HTTP Golden Path (WinHTTP provider)
+tags:
+  - lhc-xbox
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: ignore
+  psx: ignore
+description: >
+  Console smoke test that vets libHttpClient end to end on an Xbox devkit. GDK uses the
+  WinHTTP provider for both HTTP and WebSockets -- see PlatformComponents_GDK.cpp, which
+  constructs WinHttpProvider unconditionally. Initializes LHC, performs a real HTTPS GET on a
+  ThreadPool task queue that is dispatched normally, and asserts a real HTTP response came
+  back. Proves DNS, TLS, and the provider's request path all work on console before the
+  suspend-specific scenarios run.
+brief: Basic HTTPS GET through the WinHTTP provider on console
+group: A. Console smoke
+devices:
+  DeviceA:
+    engine: [xbox]
+    prerequisites:
+      sandbox: "XDKS.1"
+defaults:
+  stepTimeoutSeconds: 120
+blocks:
+  http-golden-path:
+    - command: HCInitialize
+    - command: HCIsInitialized
+    - command: HCGetLibVersion
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # Real HTTPS request against the PlayFab endpoint the Xbox suites already use, so no
+    # extra network infrastructure is required and reachability is already proven.
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "https://E18D7.playfabapi.com/"
+    - command: HCHttpCallRequestSetRetryAllowed
+      parameters:
+        retryAllowed: true
+    - command: HCHttpCallPerformAsync
+    # Reading the status code asserts that a real HTTP response came back: the harness requires one
+    # by default, so a request that never got a response at all (status 0) fails the step. The
+    # specific code is not asserted: this endpoint's response to a bare GET is the service's
+    # business, while receiving any HTTP status proves DNS, TLS and the full round trip worked.
+    - command: HCHttpCallResponseGetStatusCode
+    - command: HCHttpCallResponseGetResponseString
+    - command: HCHttpCallCloseHandle
+
+    - command: HCCleanup
+executionOrder:
+  - role: DeviceA
+    block: http-golden-path
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

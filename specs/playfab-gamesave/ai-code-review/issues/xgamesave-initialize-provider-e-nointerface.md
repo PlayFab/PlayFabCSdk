@@ -44,7 +44,7 @@
 - Softened checks: Not applied to basic sync; scenario-level mitigation exists in S02 with TODO(review) notes (unrelated)
 - Bounded retries: N/A
 - Affected files/locations:
-  - Harness init path (Basic Cross-Device Sync)
+  - controller init path (Basic Cross-Device Sync)
 - Rationale: Consider gating/Skipping Basic Sync in CI where provider is unavailable; continue running scenario-only tests (S01/S02)
 - CI impact: Keeps CI green while product clarifies requirements
 

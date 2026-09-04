@@ -71,6 +71,15 @@
     <None Include="$(MSBuildThisFileDirectory)TitleDataManagementTestsImpl.stubs" >
       <Filter>Source\Stubs</Filter>
     </None>
+    <ClInclude Include="$(MSBuildThisFileDirectory)PlayStreamTests.h" >
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)PlayStreamTests.cpp" >
+      <Filter>Source</Filter>
+    </ClCompile>
+    <None Include="$(MSBuildThisFileDirectory)PlayStreamTestsImpl.stubs" >
+      <Filter>Source\Stubs</Filter>
+    </None>
     <ClInclude Include="$(MSBuildThisFileDirectory)PushNotificationsTests.h" >
       <Filter>Include</Filter>
     </ClInclude>

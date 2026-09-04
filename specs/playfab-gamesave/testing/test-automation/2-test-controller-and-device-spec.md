@@ -12,9 +12,9 @@ This document defines the controller and device-agent capabilities required to e
 
 ## Functional Overview
 The system consists of:
-1. **Test Controller**: Holds the scenario list and, when a scenario is executed, steps through each action in order while issuing commands to connected devices one at a time. All staging and execution work is triggered through these call-and-response commands; devices never act autonomously. After each device reports back—or the configured timeout is hit—the controller issues the next action or cancel on the appropriate device until the scenario completes.
-2. **Device Agents**: Lightweight listeners on each device that receive the controller’s call, execute the requested action (launch harness step, toggle mock, call APIs, capture output), and issue a response with success or failure data before the controller proceeds.
-3. **Scenario Definitions**: Ordered call-and-response scripts that map directly to the test automation plan’s steps so the controller knows which device to ask for each action and what result to expect.
+1. **Test Controller**: Holds the scenario list and, when a scenario is executed, steps through each action in order while issuing commands to connected devices one at a time. All staging and execution work is triggered through these call-and-response commands; devices never act autonomously. After each device reports back--or the configured timeout is hit--the controller issues the next action or cancel on the appropriate device until the scenario completes.
+2. **Device Agents**: Lightweight listeners on each device that receive the controller's call, execute the requested action (launch harness step, toggle mock, call APIs, capture output), and issue a response with success or failure data before the controller proceeds.
+3. **Scenario Definitions**: Ordered call-and-response scripts that map directly to the test automation plan's steps so the controller knows which device to ask for each action and what result to expect.
 
 ## Test Controller Responsibilities
 - Parse scenario manifests, resolve required assets (payload seeds, mock definitions, quota baselines), and drive all staging actions through explicit call-and-response commands to each device.
@@ -43,10 +43,11 @@ Each scenario (matching the automation plan numbering) should call out:
 - **Cleanup**: anything that must be reset before the next scenario.
 
 ## Device Matrix & Lab Requirements
-- **Windows MSIXVC PCs**: Run the Windows build of the harness with Xbox identity enabled.
-- **Xbox GDK Consoles**: Developer-enabled consoles able to launch the harness title and send logs.
-- **Steam PC & Steam Deck**: Steam runtimes with controller agent installed and ready to answer prompts.
-- **Future Platforms**: Keep a slot reserved so new device types can be added when the scenarios expand.
+- **Xbox GDK Consoles** (engine: `xbox`): Developer-enabled consoles able to launch the harness title and send logs. Controller actions use GDK xb* tools via `%GameDK%\bin\`.
+- **Windows GRTS PCs** (engine: `pc-grts`): Run the Windows GRTS build of the harness. Uses the same out-of-process GRTS provider as Xbox.
+- **Windows In-Proc PCs** (engine: `pc-inproc`, `pc-inproc-gamesaves`): Run the Windows in-proc build using HTTP-level mocks for fault injection.
+- **PlayStation** (engine: `psx`): PlayStation dev kit runtimes with controller agent installed and ready to answer prompts.
+- **Future Platforms**: Keep a slot reserved so new device types can be added when the scenarios expand. Each new platform adds a new engine string that scenarios can target via `engine:` in the `devices:` block.
 
 ## Logging & Diagnostics
 - Capture step-by-step logs with timestamps, HRESULTs, agent build hash, and device identity (hardware ID, sandbox, signed-in account).
@@ -206,7 +207,7 @@ Each scenario (matching the automation plan numbering) should call out:
 - **Standard Commands**: In addition to scenario actions, controllers may send infrastructure commands such as `artifactAck` with parameters `{ "artifactName": "manifests/deviceA-manifest.json" }` to confirm artifact ingestion before the agent streams the next file. When TLS is disabled for lab runs, rely on shared secrets in these envelopes to guard against spoofed traffic.
 
 ## Scenario Manifest Format
-- **Location**: Stored under `Test/PFGameSaveTestController/Scenarios/` with `.yml` extension.
+- **Location**: Stored under `Test/GameTestScenarios/` with `.yml` extension.
 - **Schema**: Each manifest includes metadata, devices, blocks, execution ordering, and cleanup.
 
   ```yaml
@@ -215,7 +216,8 @@ Each scenario (matching the automation plan numbering) should call out:
   description: Reset cloud state, seed payload, upload while retaining active lock
   devices:
     DeviceA:
-      role: windowsHarness
+      engine: xbox
+    DeviceB: {}
   defaults:
     stepTimeoutSeconds: 120
     cleanupTimeoutSeconds: 120
@@ -243,6 +245,80 @@ Each scenario (matching the automation plan numbering) should call out:
 
 - **Validation**: Controller rejects manifests missing required sections, unknown commands, or devices that cannot be matched. Blocks execute according to `executionOrder`; within a block the controller uses step array position as the sequence index. When `timeoutSeconds` is omitted the controller applies the scenario defaults, falling back to block-level overrides when present.
 
+- **Block repetition**: An `executionOrder` entry may set `repeat: <N>` to run that block `N` times consecutively (default 1). This expands at load time into `N` copies of the block's steps, letting a scenario loop an upload/download/verify cycle without listing the same entry dozens of times (e.g. a 50x chaos soak).
+
+- **Per-scenario runner timeout**: A scenario may declare a top-level `runnerTimeoutSeconds: <N>` to override the suite's default per-test wall-clock timeout in `tests-run.py`. The runner grants the larger of (declared, suite default), so a long soak/repeat scenario can request more time without affecting other tests. The controller ignores this field (unmatched-property tolerant); it is a runner-only hint.
+
+### Device Engine Constraints
+
+Each entry in the `devices:` map may specify an `engine` property to require a particular device type for that role. When `engine` is omitted (or the device is `{}`), any connected device may fill the role.
+
+**Supported engine values**: `xbox`, `pc-grts`, `pc-inproc`, `pc-inproc-gamesaves`, `psx`
+
+**YAML syntax**:
+
+```yaml
+# DeviceA must be an Xbox console; DeviceB can be anything
+devices:
+  DeviceA:
+    engine: xbox
+  DeviceB: {}
+
+# Both devices must be Xbox (e.g., SPOP same-account testing)
+devices:
+  DeviceA:
+    engine: xbox
+  DeviceB:
+    engine: xbox
+
+# No engine constraints — any connected devices are assigned
+devices:
+  DeviceA: {}
+  DeviceB: {}
+```
+
+**How assignment works** (`TryBuildRoleAssignments` in `ScenarioRunner.cs`):
+
+1. The controller collects all connected devices that have completed the capability handshake and reported their engine type.
+2. Roles are split into two groups: **constrained** (have `engine` set) and **unconstrained** (no engine requirement).
+3. **Pass 1 — Constrained roles first**: For each constrained role, the controller finds a connected device whose reported engine matches the required value (case-insensitive). Constrained roles are assigned before unconstrained roles to prevent an unconstrained role from consuming the only device that satisfies a later engine constraint.
+4. **Pass 2 — Unconstrained roles**: Remaining roles are filled from whatever devices have not yet been assigned.
+5. If a constrained role cannot be satisfied:
+   - If a device with the required engine is connected but still completing capability handshake, the controller logs a waiting message and defers the scenario.
+   - If no device with the required engine exists at all, the scenario is **skipped** (`NotStarted` → `Skipped` in test results) with a log message such as: `Skipped scenario 'Scenario-Xbox-01': role 'DeviceA' requires engine 'xbox' but no compatible device is available.`
+
+**Migration note**: The `--device-a-engine` CLI argument has been removed. Engine requirements are now expressed entirely in YAML scenario files. Scripts and pipelines no longer need to pass engine preferences to the controller — the scenarios themselves declare what they need.
+
+### Xbox Auto-Launch
+
+When auto-launch is enabled (the default; disable with `--no-auto-launch`) and a scenario requires `engine: xbox`, the controller will automatically discover, deploy to, and launch the test app on the default Xbox devkit. This eliminates the need for separate deploy/launch scripts when running interactively.
+
+**How it works** (`XboxDeviceLauncher.cs` + `ControllerRuntime.EnsureXboxDeviceAsync`):
+
+1. **Discover console**: Runs `xbconnect /S` to get the default console's System IP. If no default console is configured, the scenario is skipped with a clear message: *"Run 'xbconnect \<ip\>' to set a default console."*
+2. **Resolve layout**: Finds the `GameTestAppXbox` loose-file layout directory under `Out\Gaming.Xbox.Scarlett.x64\{Debug,Release}\GameTestAppXbox\` (local builds) or adjacent to the controller binary (artifact mode). Picks the most recently built layout.
+3. **Write controllerip.txt**: Writes this PC's non-loopback IPv4 address into the layout so the Xbox app knows where to connect on startup.
+4. **Deploy (once per session)**: Runs `xbapp deploy <layoutDir> /x:<consoleIp>`. This is cached — the controller only deploys once per session, not per scenario.
+5. **Launch (per scenario)**: Runs `xbapp launch <AUMID> /x:<consoleIp>` before each scenario that needs Xbox. This handles the case where a previous scenario terminated the app.
+6. **Wait for readiness**: Waits for a device with `engine: xbox` to connect via WebSocket **and** complete the capability handshake (60-second timeout). This ensures the controller doesn't proceed until the Xbox device has reported its engine type.
+
+**Requirements**:
+- GDK installed (`%GameDK%` environment variable set)
+- Default console configured via `xbconnect <ip>`
+- `GameTestAppXbox` built (Gaming.Xbox.Scarlett.x64 target)
+- URL ACL configured for the WebSocket listener (`netsh http add urlacl url=http://+:15080/ws/ user=Everyone`)
+- **Windows Firewall inbound rule** allowing the controller executable or TCP port 15080 (see below)
+
+> **Firewall rule (required for Xbox connectivity):** The controller's WebSocket server listens on port 15080. Xbox devices connect over the local network, so Windows Firewall must allow inbound TCP traffic. Without this rule, the Xbox app will log `[WSAutoConnect] Connect attempt stuck for >15s` and the controller will report *"no device with engine 'xbox' connected within 60 seconds"*. PC-only (loopback) tests are not affected.
+>
+> Run as Administrator:
+> ```
+> netsh advfirewall firewall add rule name="GameTestController" dir=in action=allow program="<path-to-GameTestController.exe>" protocol=TCP profile=private,public enable=yes
+> ```
+> Or allow by port: `netsh advfirewall firewall add rule name="GameTestController Port 15080" dir=in action=allow protocol=TCP localport=15080 profile=private,public enable=yes`
+
+**When auto-launch is disabled** (`--no-auto-launch`): The controller skips the deploy/launch steps entirely. Xbox devices must be launched externally (e.g., via the PS1 scripts or manually). If no Xbox device connects, the scenario is skipped.
+
 ## Artifact Packaging
 - **Bundle Layout**: Each scenario run produces `artifacts/<scenarioId>/<timestamp>-<runId>/` containing:
   - `logs/controller.log`
@@ -265,7 +341,7 @@ Each scenario (matching the automation plan numbering) should call out:
   1. Load scenario manifests and validate schema.
   2. Initialize persistent storage (artifact root, logs) and prune bundles beyond retention policy.
   3. Start the WebSocket listener and accept inbound agent connections.
-  4. Reconcile agent roster—clear stale device entries and mark previously connected agents as pending until a fresh `agentStatus` arrives.
+  4. Reconcile agent roster--clear stale device entries and mark previously connected agents as pending until a fresh `agentStatus` arrives.
   5. Begin scheduling scenarios once the required roles are online.
 - **Shutdown Sequence**:
   1. Stop assigning new scenarios and wait for in-flight actions to reach a terminal state.
@@ -287,8 +363,8 @@ The following commands are fulfilled by the device agent harness rather than the
 
   | Parameter | Type | Required | Default | Description |
   |-----------|------|----------|---------|-------------|
-  | `operations` | array<object> | conditional | — | Ordered list of folder mutations. Required unless a `chaos` block is supplied. Each entry specifies a `verb` and the fields described below so the agent can reproduce the legacy folder monitor save-folder edits. |
-  | `chaos` | object | conditional | — | Instructs the agent to synthesize random edits. Required when `operations` is omitted; may be combined with `operations` to append deterministic steps after the chaotic batch. |
+  | `operations` | array<object> | conditional | -- | Ordered list of folder mutations. Required unless a `chaos` block is supplied. Each entry specifies a `verb` and the fields described below so the agent can reproduce the legacy folder monitor save-folder edits. |
+  | `chaos` | object | conditional | -- | Instructs the agent to synthesize random edits. Required when `operations` is omitted; may be combined with `operations` to append deterministic steps after the chaotic batch. |
 
   **Supported verbs**
 
@@ -345,7 +421,7 @@ The following commands are fulfilled by the device agent harness rather than the
 
   | Field | Type | Required | Default | Description |
   |-------|------|----------|---------|-------------|
-  | `operationCount` | int | yes | — | Number of random mutations to perform. Each mutation maps to one of the supported verbs listed above. |
+  | `operationCount` | int | yes | -- | Number of random mutations to perform. Each mutation maps to one of the supported verbs listed above. |
   | `seed` | int | no | derived from `commandId` | Overrides the PRNG seed so multiple devices can execute the exact same chaos run. |
   | `verbs` | array<string> | no | `[CreateRandomBinaryFile, CreateRandomText, CreateFolder, RenameFile, RenameFolder, DeleteFile, DeleteFolder]` | Limits the verb pool used by chaos mode. Verbs omitted here are never selected. |
   | `maxFileBytes` | int | no | `32768` | Upper bound (inclusive) for bytes written by `CreateRandomBinaryFile` and `CreateRandomText`. |
@@ -389,7 +465,7 @@ The following commands are fulfilled by the device agent harness rather than the
       - command: DeleteSaveRoot
   ```
 
-  In this flow DeviceA generates 50 random edits using a fixed seed and captures a snapshot. DeviceB executes the same chaos parameters after establishing the same starting dataset, captures its snapshot, and `CompareSaveContainerSnapshots` diff the artifacts—skipping `cloudsync/` entries—to confirm byte-for-byte parity before cleanup.
+  In this flow DeviceA generates 50 random edits using a fixed seed and captures a snapshot. DeviceB executes the same chaos parameters after establishing the same starting dataset, captures its snapshot, and `CompareSaveContainerSnapshots` diff the artifacts--skipping `cloudsync/` entries--to confirm byte-for-byte parity before cleanup.
 
 #### DeleteSaveRoot
 - **Purpose**: Clear all local game save content and manifest files so scenarios can re-hydrate or validate cloud rollback behaviour from a cold start.
@@ -427,28 +503,28 @@ The following commands are fulfilled by the device agent harness rather than the
 
   The `snapshot` object currently uses `schemaVersion = 1` and has the following shape:
 
-  - `deviceId`: string — input device identifier provided by the agent (falls back to `TestDevice` if not assigned).
-  - `scenarioId` / `scenarioName`: strings — copied from the active scenario metadata when available.
-  - `saveFolder`: string — same as the top-level path.
-  - `hashesIncluded`: bool — matches `includeHashes`.
-  - `capturedAtUtc`: string — ISO 8601 timestamp of when the snapshot was recorded (UTC, millisecond precision).
-  - `cloudsyncEntriesSkipped`: int — same value surfaced at the top level.
-  - `totals`: object — aggregate counts (`files`, `directories`, `bytes`).
-  - `entries`: array<object> — lexicographically sorted by relative path; each entry contains:
-    - `path`: string — relative path using forward slashes.
-    - `type`: string — one of `file`, `directory`, `symlink`, or the underlying filesystem category (`unknown`, `block`, `character`, `fifo`, `socket`, `none`).
-    - `lastWriteTimeEpochMs`: int64 — UTC timestamp as milliseconds since the Unix epoch.
-    - `lastWriteTime`: string — ISO 8601 representation of the same timestamp.
-    - `attributes`: uint32 — Windows file attribute mask, present for every entry.
-    - `size`: uint64 — included for `file` and `symlink` entries.
-    - `sha256`: string — lowercase hex digest, present only when `includeHashes` is `true`.
+  - `deviceId`: string -- input device identifier provided by the agent (falls back to `TestDevice` if not assigned).
+  - `scenarioId` / `scenarioName`: strings -- copied from the active scenario metadata when available.
+  - `saveFolder`: string -- same as the top-level path.
+  - `hashesIncluded`: bool -- matches `includeHashes`.
+  - `capturedAtUtc`: string -- ISO 8601 timestamp of when the snapshot was recorded (UTC, millisecond precision).
+  - `cloudsyncEntriesSkipped`: int -- same value surfaced at the top level.
+  - `totals`: object -- aggregate counts (`files`, `directories`, `bytes`).
+  - `entries`: array<object> -- lexicographically sorted by relative path; each entry contains:
+    - `path`: string -- relative path using forward slashes.
+    - `type`: string -- one of `file`, `directory`, `symlink`, or the underlying filesystem category (`unknown`, `block`, `character`, `fifo`, `socket`, `none`).
+    - `lastWriteTimeEpochMs`: int64 -- UTC timestamp as milliseconds since the Unix epoch.
+    - `lastWriteTime`: string -- ISO 8601 representation of the same timestamp.
+    - `attributes`: uint32 -- Windows file attribute mask, present for every entry.
+    - `size`: uint64 -- included for `file` and `symlink` entries.
+    - `sha256`: string -- lowercase hex digest, present only when `includeHashes` is `true`.
 
   The controller caches the returned `snapshot` manifest for later comparisons and may rely on `schemaVersion` to accommodate future additions without breaking compatibility.
 
 #### CompareSaveContainerSnapshots
 - **Purpose**: Diff two previously captured snapshot artifacts and return a verdict when inconsistencies are detected.
 - **Primary APIs**: Harness snapshot comparer (`SnapshotComparer::Diff`), JSON parsing (`nlohmann::json`).
-- **Behaviour**: The harness caches the latest snapshot for each device role (for example `DeviceA`, `DeviceB`) when `CaptureSaveContainerSnapshot` runs. Invoking this command compares the remembered pair for the active scenario, ignores reserved metadata paths such as `cloudsync/`, surfaces any differences in the `actionResult.metrics.diff` payload, and fails if either side is missing or diverges beyond byte-for-byte equality. No parameters are required—the controller relies on the agent’s stored role metadata.
+- **Behaviour**: The harness caches the latest snapshot for each device role (for example `DeviceA`, `DeviceB`) when `CaptureSaveContainerSnapshot` runs. Invoking this command compares the remembered pair for the active scenario, ignores reserved metadata paths such as `cloudsync/`, surfaces any differences in the `actionResult.metrics.diff` payload, and fails if either side is missing or diverges beyond byte-for-byte equality. No parameters are required--the controller relies on the agent's stored role metadata.
 
 #### ConsumeDiskSpace
 - **Purpose**: Exhaust free disk space to trigger cloud sync out-of-storage conditions.
@@ -457,9 +533,9 @@ The following commands are fulfilled by the device agent harness rather than the
 
   | Parameter | Type | Required | Default | Description |
   |-----------|------|----------|---------|-------------|
-  | `bytes` | int64 | yes | — | Total bytes to allocate via filler files. |
+  | `bytes` | int64 | yes | -- | Total bytes to allocate via filler files. |
   | `scope` | string enum | no | `user` | `user` (save root), `system` (temp drive), or `custom`. |
-  | `customPath` | string | conditional | — | Required when `scope` is `custom`; path where filler files are written. |
+  | `customPath` | string | conditional | -- | Required when `scope` is `custom`; path where filler files are written. |
   | `token` | string | no | auto-generated | Identifier used by `ReleaseDiskSpace` to free the allocation. |
 
 - **Response**:
@@ -482,7 +558,7 @@ The following commands are fulfilled by the device agent harness rather than the
 
   | Parameter | Type | Required | Default | Description |
   |-----------|------|----------|---------|-------------|
-  | `token` | string | conditional | — | Frees the allocation created with the matching token. |
+  | `token` | string | conditional | -- | Frees the allocation created with the matching token. |
   | `scope` | string enum | no | `user` | When present, releases all filler files for the specified scope if `token` is omitted. |
 
 - **Response**:
@@ -504,7 +580,7 @@ The following commands are fulfilled by the device agent harness rather than the
 
   | Parameter | Type | Required | Default | Description |
   |-----------|------|----------|---------|-------------|
-  | `enabled` | bool | yes | — | Turns mocking on (`true`) or tears down every active mock (`false`). When disabling, the harness destroys all `HttpMock` instances created for the current scenario. |
+  | `enabled` | bool | yes | -- | Turns mocking on (`true`) or tears down every active mock (`false`). When disabling, the harness destroys all `HttpMock` instances created for the current scenario. |
   | `routes` | array<object> | conditional | `[]` | Required when enabling. Each entry maps directly to a `PlayFab::Test::HttpMock` constructor plus optional configuration calls described below. |
 
   **Route fields**
@@ -519,7 +595,7 @@ The following commands are fulfilled by the device agent harness rather than the
   | `responseHeaders` | object<string,string> | no | Key/value map passed to `SetResponseHeaders` so deterministic headers ship with the mock response. |
   | `clearBody` | bool | no | When `true`, the harness invokes `ClearReponseBody()` after applying other body fields so the mock returns an empty payload. |
 
-  The harness automatically wires `SetCallback` to record every hit (URL, request body, hit count) into the action’s artifact payload so scenarios can assert on request cadence without custom plumbing.
+  The harness automatically wires `SetCallback` to record every hit (URL, request body, hit count) into the action's artifact payload so scenarios can assert on request cadence without custom plumbing.
 
   Example scenario fragment that enables two mocks, exercises them, then tears them down:
 

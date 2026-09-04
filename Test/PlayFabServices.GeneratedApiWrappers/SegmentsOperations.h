@@ -99,26 +99,6 @@ private:
 #endif
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-class ServerGetPlayersInSegmentOperation : public XAsyncOperation<Wrappers::PFSegmentsGetPlayersInSegmentResultWrapper<Allocator>>
-{
-public:
-    using RequestType = Wrappers::PFSegmentsGetPlayersInSegmentRequestWrapper<Allocator>;
-    using ResultType = Wrappers::PFSegmentsGetPlayersInSegmentResultWrapper<Allocator>;
-
-    ServerGetPlayersInSegmentOperation(Entity entity, RequestType request, PlayFab::RunContext rc);
-
-    static AsyncOp<Wrappers::PFSegmentsGetPlayersInSegmentResultWrapper<Allocator>> Run(Entity entity, RequestType request, PlayFab::RunContext rc) noexcept;
-
-private:
-    HRESULT OnStarted(XAsyncBlock* async) noexcept override;
-    Result<ResultType> GetResult(XAsyncBlock* async) noexcept override;
-
-    Entity m_entity;
-    RequestType m_request;
-};
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 class ServerGetPlayerTagsOperation : public XAsyncOperation<Wrappers::PFSegmentsGetPlayerTagsResultWrapper<Allocator>>
 {
 public:

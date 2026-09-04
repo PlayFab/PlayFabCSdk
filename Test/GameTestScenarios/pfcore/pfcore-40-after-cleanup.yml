@@ -1,0 +1,41 @@
+id: PFCore-40-After-Cleanup
+name: PFCore 40 - API Calls After Cleanup Fail Gracefully
+tags:
+  - pfcore
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  After PFUninitializeAsync completes, attempts API calls and
+  verifies they return appropriate errors.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 60
+blocks:
+  test:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCreateHandle
+      expectFailure: true  # 0x89235400 E_PF_NOT_INITIALIZED — expected after PFUninitializeAsync
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+
+executionOrder:
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XTaskQueueCloseHandle

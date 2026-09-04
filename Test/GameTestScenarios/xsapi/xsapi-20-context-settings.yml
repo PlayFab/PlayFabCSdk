@@ -1,0 +1,57 @@
+id: XSAPI-20-Context-Settings
+name: XSAPI 20 - XBL Context Settings
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Port of APIExplorer misc/xbox_live_context.lua.
+  Signs in, creates XBL context, exercises all context settings
+  getters and setters (timeouts, retry, QoS servers).
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblAddServiceCallRoutedHandler
+    - command: XblRemoveServiceCallRoutedHandler
+    - command: XblContextSettingsGetLongHttpTimeout
+    - command: XblContextSettingsSetLongHttpTimeout
+    - command: XblContextSettingsGetHttpRetryDelay
+    - command: XblContextSettingsSetHttpRetryDelay
+    - command: XblContextSettingsGetHttpTimeoutWindow
+    - command: XblContextSettingsSetHttpTimeoutWindow
+    - command: XblContextSettingsGetWebsocketTimeoutWindow
+    - command: XblContextSettingsSetWebsocketTimeoutWindow
+    - command: XblContextSettingsGetUseCrossPlatformQosServers
+    - command: XblContextSettingsSetUseCrossPlatformQosServers
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

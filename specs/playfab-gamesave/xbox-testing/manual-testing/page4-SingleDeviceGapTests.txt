@@ -1,0 +1,550 @@
+Test ID	Title	Step	Instruction	Notes / xCloud	
+SD-GAP-001	Offline → Online: Out-of-game Upload completes after reconnect			⛔ Not xCloud applicable	
+		1	[LAUNCH] on Device 1		
+		2	[CREATE-SAVE]		
+		3	[NOTE-PROGRESS]		
+		4	[DISCONNECT]		
+		5	[CLOSE-APP] while still offline		
+		6	[RECONNECT]		
+		7	[WAIT-UPLOAD] (5 min for background upload to trigger)		
+		8	[LAUNCH] on Device 2 with same user		
+		9	[VERIFY-SAVE] — confirm data from step 2 is present on Device 2		
+					
+SD-GAP-002	Foreground → Background during Init: sync resumes correctly			⛔ Not xCloud applicable	
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH]		
+		4	As soon as active device error dialog appears, minimize app to background immediately		
+		5	Wait 10–15 seconds		
+		6	Bring app back to foreground		
+		7	Verify active device dialog reappears  [VALIDATE‑CONTENTION‑DIALOG] and download from last cloud data		
+		8	[VERIFY-SAVE]  (expected data from step 1 will not be present)		
+					
+SD-GAP-003	Foreground → Background during Download: download completes without corruption	
+        1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])	⛔ Not xCloud applicable	
+		2	[CLOSE-APP] all instances and wait 5 min		
+		3	[DELETE-LOCAL]		
+		4	[LAUNCH] on Device 1 to trigger cloud download		
+		5	During sync dialog / download, minimize app to background		
+		6	Wait 15–30 seconds		
+		7	Bring app back to foreground		
+		8	Verify download completes successfully		
+		9	[VERIFY-SAVE] — confirm data matches Device 2		
+
+SD-GAP-004	Foreground → Background during LOCAL WRITE			⛔ Not xCloud applicable	
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]		
+		4	[LAUNCH] on Device 1 to sync with the cloud 		
+		5	[CREATE-SAVE] and IMMEDIATELY move app to the background when save is made 		
+		6	Wait 15–30 seconds		
+		7	Bring app back to foreground		
+		8	[CLOSE-APP]>[WAIT UPLOAD]		
+		9	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+					
+SD-GAP-005	Background → Foreground during Init: init state remains valid			⛔ Not xCloud applicable	
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] and immediately minimize to background once active device dialog prompts		
+		4	Wait 30 seconds while app is in background		
+		5	Bring app to foreground		
+		6	Download from last cloud data and complete init if prompted for other dialogs 		
+		8	[VERIFY-SAVE] Verify init/sync completes normally (expected data from step 1 will not be present)		
+					
+SD-GAP-006	Background → Foreground during Download: download resumes correctly			⛔ Not xCloud applicable	
+		1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download		
+		4	Minimize app to background while download is in progress		
+		5	Wait 20 seconds		
+		6	Bring app to foreground		
+		7	Verify download resumes or completes		
+		8	[VERIFY-SAVE]		
+
+SD-GAP-007	Background → Foreground during LOCAL WRITE				
+		1	[CLOSE-APP] all instances and wait 5 min	⛔ Not xCloud applicable	
+		2	[DELETE-LOCAL]		
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	Right before [CREATE-SAVE] IMMEDIATELY move app to the background		
+		5	Wait 15–30 seconds		
+		6	Bring app back to foreground and immediately [CREATE-SAVE]		
+		7	Move app to background again, wait 15-30 seconds, then bring app to the forgound again 		
+		8	[CLOSE-APP]>[WAIT UPLOAD]		
+		9	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+					
+SD-GAP-008	Suspend → Resume during Init: init retries/resumes without corruption				
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]	⛔ Not xCloud applicable	
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] to trigger init/sync (active device contention error state from Device 2 will keep you in init before download)		
+		4	When sync dialog appears, [SUSPEND]		
+		5	Wait 1 minute while suspended		
+		6	[RESUME]		
+		7	Verify app recovers — active device contention should reprompt  [VALIDATE‑CONTENTION‑DIALOG], continue from last cloud data		
+		8	[VERIFY-SAVE] Verify init/sync completes normally (expected data from step 1 will not be present)		
+					
+SD-GAP-009	Suspend → Resume during Download: download survives suspend cycle				
+		1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])	⛔ Not xCloud applicable	
+		2	On device 1, [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download		
+		4	During sync/download, [SUSPEND]		
+		5	Wait 1 minute while suspended		
+		6	[RESUME]		
+		7	Verify download retries or completes after resume		
+		8	[VERIFY-SAVE]		
+
+SD-GAP-010	suspend --> resume during LOCAL WRITE				
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]	⛔ Not xCloud applicable	
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] and IMMEDIATELY [SUSPEND]		
+		5	Wait 1 minute while suspended		
+		6	[RESUME]		
+		7	[CLOSE-APP]>[WAIT UPLOAD]		
+		8	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+					
+SD-GAP-011	Title termination during Init: relaunch sync is consistent			⛔ Not xCloud applicable	
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] to trigger init/sync		
+		4	During the first sync dialog, [TERMINATE]		
+		5	Wait 30 seconds		
+		6	[LAUNCH] again		
+		7	Verify sync starts fresh and active device contention error shows up  [VALIDATE‑CONTENTION‑DIALOG] and continue from last cloud data works		
+		8	[VERIFY-SAVE] — no partial or corrupt containers		
+					
+SD-GAP-012	Title termination during Download: no partial/corrupt container			⛔ Not xCloud applicable	
+		1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])		
+		2	On device 1, [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download		
+		4	During sync dialog, [TERMINATE]		
+		5	Wait 30 seconds		
+		6	[LAUNCH] again		
+		7	Verify download restarts and completes normally		
+		8	[VERIFY-SAVE]		
+
+SD-GAP-013	Running --> Title termination during LOCAL WRITE				
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]	⛔ Not xCloud applicable	
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] and IMMEDIATELY [TERMINATE]		
+		5	Wait 30 seconds		
+		6	[LAUNCH] again and [VERIFY-SAVE], note any anomolies or crashes 		
+		7	[CLOSE-APP]>[WAIT UPLOAD]		
+		8	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+				⛔ Not xCloud applicable	
+
+SD-GAP-014	Structured shutdown during Init: init recovers cleanly on reboot		
+        Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		1	On device 1 [DELETE-LOCAL]		
+		2	[LAUNCH] to trigger init/sync		
+		3	During active device dialog, [SHUTDOWN]		
+		4	Wait for device to fully shut down		
+		5	Power on device and [LAUNCH]		
+		6	Verify active device dialog shows up again [VALIDATE‑CONTENTION‑DIALOG] and you can continue from last cloud data 		
+		7	[VERIFY-SAVE] Verify init/sync completes normally (expected data from step 1 will not be present)		
+					
+SD-GAP-015	Structured shutdown during Download: download resumes/retries on reboot			⛔ Not xCloud applicable | Hardware: Console instant-on mode only. PC: modern standby required. Skip if not supported.	
+		1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])		
+		2	On device 1, [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download		
+		4	During download, [SHUTDOWN]		
+		5	Wait for device to fully shut down		
+		6	Power on device and [LAUNCH]		
+		7	Verify cloud download restarts and completes successfully		
+		8	[VERIFY-SAVE]		
+
+SD-GAP-016	Running --> Structured Shutdown during LOCAL WRITE				
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]	⛔ Not xCloud applicable	
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] and IMMEDIATELY [SHUTDOWN]		
+		5	Wait for device to fully shut down		
+		6	Power on device and [LAUNCH] again and [VERIFY-SAVE], note any anomolies or crashes 		
+		7	[CLOSE-APP]>[WAIT UPLOAD]		
+		8	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+				⛔ Not xCloud applicable | Hardware: Console instant-on mode only. PC: modern standby required. Skip if not supported.	
+
+SD-GAP-017	Power loss during Init: no corruption on recovery		Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		1	On device 1 [DELETE-LOCAL]		
+		2	[LAUNCH] to trigger init/sync		
+		3	During active device dialog, [POWER-PULL]		
+		4	Wait 1 minute, reconnect power, boot device		
+		5	[LAUNCH]		
+		6	Verify init/sync completes normally with no corruption when downloading latest from cloud		
+		7	[VERIFY-SAVE] Verify init/sync completes normally (expected data from step 1 will not be present)		
+					
+SD-GAP-018	Power loss during Download: download state integrity preserved				
+		1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])	⛔ Not xCloud applicable	
+		2	On device 1, [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download		
+		4	During download, [POWER-PULL]		
+		5	Wait 1 minute, reconnect power, boot device		
+		6	[LAUNCH]		
+		7	Verify download re-establishes and completes		
+		8	[VERIFY-SAVE] — no partial or corrupt experiences		
+
+SD-GAP-019	Running --> Power loss during LOCAL WRITE				
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]	⛔ Not xCloud applicable	
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] and IMMEDIATELY [POWER-PULL]		
+		5	Wait 1 minute, reconnect power, boot device		
+		6	[LAUNCH] again and [VERIFY-SAVE], note any anomolies or crashes 		
+		7	[CLOSE-APP]>[WAIT UPLOAD]		
+		8	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+					
+SD-GAP-020	Connected Standby → Resume during Init: init remains valid		
+        Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]	⛔ Not xCloud applicable | Hardware: Console instant-on mode only. PC: modern standby required. Skip if not supported.	
+		1	On device 1 [DELETE-LOCAL]		
+		2	[LAUNCH] to trigger init/sync		
+		3	During active device dialog, [STANDBY]		
+		4	Wait 5 minutes in connected standby		
+		5	[RESUME]		
+		6	Verify app resumes and sync can be completed (continue from last cloud data)		
+		7	[VERIFY-SAVE] Verify init/sync completes normally (expected data from step 1 will not be present)		
+					
+SD-GAP-021	Connected Standby → Resume during Download: download resumes/completes			⛔ Not xCloud applicable | Hardware: Console instant-on mode only. PC: modern standby required. Skip if not supported.	
+		1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])		
+		2	On device 1, [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download		
+		4	During download, [STANDBY]		
+		5	Wait 5 minutes		
+		6	[RESUME]		
+		7	Verify download completes after resume		
+		8	[VERIFY-SAVE]		
+
+SD-GAP-022	Running --> Connected Standby --> Resume during LOCAL WRITE				
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]	⛔ Not xCloud applicable | Hardware: Console instant-on mode only. PC: modern standby required. Skip if not supported.	
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] and IMMEDIATELY [STANDBY]		
+		5	Wait 5 minutes		
+		6	[RESUME] and [VERIFY-SAVE], note any anomolies or crashes 		
+		7	[CLOSE-APP]>[WAIT UPLOAD]		
+		8	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+					
+SD-GAP-023	Running --> regulatory standby  INIT		
+        Prerequisite on Device 1 console press Xbox button --> profile & system --> settings --> general --> power options and select shutdown (energy saving)	⛔ CONSOLE ONLY	
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] to trigger init/sync		
+		4	During active device dialog, [SHUTDOWN]		
+		5	Wait for device to fully shut down		
+		6	Power on device and [LAUNCH]		
+		7	Verify active device dialog shows up again  [VALIDATE‑CONTENTION‑DIALOG] and you can continue from last cloud data 		
+		8	[VERIFY-SAVE] Verify init/sync completes normally (expected data from step 1 will not be present)		
+
+SD-GAP-024	Running --> regulatory standby  download			⛔ CONSOLE ONLY	
+		1	prerequisite on Device 1 console press Xbox button --> profile & system --> settings --> general --> power options and select shutdown (energy saving)		
+		2	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])		
+		3	On device 1, [DELETE-LOCAL]		
+		4	[LAUNCH] to start cloud download		
+		5	During download, [SHUTDOWN]		
+		6	Wait for device to fully shut down		
+		7	Power on device and [LAUNCH]		
+		8	Verify cloud download restarts and completes successfully		
+			[VERIFY-SAVE]		
+					
+SD-GAP-025	Running --> regulatory standby  LOCAL WRITE		
+        Prerequisite on Device 1 console press Xbox button --> profile & system --> settings --> general --> power options and select shutdown (energy saving)	⛔ CONSOLE ONLY	
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]		
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] and IMMEDIATELY [SHUTDOWN]		
+		5	Wait for device to fully shut down		
+		6	Power on device and [LAUNCH] again and [VERIFY-SAVE], note any anomolies or crashes 		
+		7	[CLOSE-APP]>[WAIT UPLOAD]		
+			On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+					
+SD-GAP-026	Running --> regulatory standby  UPLOAD 		
+        Prerequisite on Device 1 console press Xbox button --> profile & system --> settings --> general --> power options and select shutdown (energy saving)	⛔ CONSOLE ONLY	
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]		
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] 		
+		5	[CLOSE-APP] and IMMEDIATELY [SHUTDOWN]		
+		6	Power on device and [WAIT FOR UPLOAD]		
+		7	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+					
+SD-GAP-027	Running --> SLEEP  INIT			⛔ PC ONLY	
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] to trigger init/sync		
+		4	During active device dialog, [SLEEP]		
+		5	Wait 1 minute while in SLEEP mode		
+		6	Power on device and [LAUNCH]		
+		7	Verify active device dialog shows up again  [VALIDATE‑CONTENTION‑DIALOG] and you can continue from last cloud data 		
+		8	[VERIFY-SAVE] Verify init/sync completes normally (expected data from step 1 will not be present)		
+
+SD-GAP-028	Running --> SLEEP    download			⛔ PC ONLY	
+		1			
+		2	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])		
+		3	On device 1, [DELETE-LOCAL]		
+		4	[LAUNCH] to start cloud download		
+		5	During download, [SLEEP]		
+		6	Wait 1 minute while in SLEEP mode		
+		7	Power on device and [LAUNCH]		
+		8	Verify cloud download restarts and completes successfully		
+			[VERIFY-SAVE]		
+					
+SD-GAP-029	Running --> SLEEP    LOCAL WRITE			⛔ PC ONLY	
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]		
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] and IMMEDIATELY [SLEEP]		
+		5	Wait 1 minute while in SLEEP mode		
+		6	Power on device and [LAUNCH] again and [VERIFY-SAVE], note any anomolies or crashes 		
+		7	[CLOSE-APP]>[WAIT UPLOAD]		
+			On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+					
+SD-GAP-030	Running --> SLEEP   UPLOAD 		prerequisite on Device 1 console pressc	⛔ PC ONLY	
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]		
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] 		
+		5	[CLOSE-APP] and IMMEDIATELY [SLEEP]		
+		6	Wait 1 minute while in SLEEP mode		
+		7	Power on device and [WAIT FOR UPLOAD]		
+		8	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+					
+					
+SD-GAP-031	User signed out during Init: app handles sign-out gracefully		
+        Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		1	On device 1 [DELETE-LOCAL]		
+		2	[LAUNCH] to trigger init/sync		
+		3	During active device dialog, [SIGN-OUT]	Notes: this test might be difficult to hit specifically at the right time as downloads are fast	
+		4	Verify app handles sign-out gracefully (error/prompt, no crash)	⛔ Not xCloud applicable	
+		5	[SIGN-IN] with the same account		
+		6	Retry init — verify sync can be completed normally  [VALIDATE‑CONTENTION‑DIALOG] ( select continue from last cloud data)		
+		7	[VERIFY-SAVE] Verify init/sync completes normally (expected data from step 1 will not be present)		
+					
+SD-GAP-032	User signed out during Download: download abort/retry is correct				
+		1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])		
+		2	On device 1, [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download		
+		4	During download, [SIGN-OUT]		
+		5	Verify download aborts gracefully (no crash, appropriate prompt)		
+		6	[SIGN-IN] and retry	⛔ Not xCloud applicable	
+		7	Verify download completes successfully on retry		
+		8	[VERIFY-SAVE]		
+
+SD-GAP-033	User sign out during LOCAL WRITE				
+		1	[CLOSE-APP] all instances and wait 5 min		
+		2	[DELETE-LOCAL]	⛔ Not xCloud applicable	
+		3	[LAUNCH] on Device 1 to sync with the cloud 		
+		4	[CREATE-SAVE] and IMMEDIATELY [SIGN-OUT]		
+		5	Verify title aborts gracefully (no crash, appropriate prompt)		
+		6	[SIGN-IN]>[LAUNCH] and [VERIFY-SAVE], note any anomolies or crashes 		
+		7	[CLOSE-APP]>[WAIT UPLOAD]		
+		8	On another device, [LAUNCH]>[VERIFY-SAVE] — confirm data matches Device 1		
+
+SD-GAP-034	Auth token expired during Init: correct auth prompt/recovery				
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] and wait to see Active device dialog 		
+		4	Keep Device 1 and title ON, and [RECONNECT] + [LAUNCH] on Device 2 (if prompted by SPOP dialog select sign in here or play here [Xcloud does not show this dialog])		
+		5	Document behavior on device 1, title should close or restart 		
+		6	[DISCONNECT]>[CLOSE-APP] on Device 2, 		
+		7	[LAUNCH] on Device 1 (this time if prompted select sign in or play here) 		
+		8	validate active device prompts as expected  [VALIDATE‑CONTENTION‑DIALOG], sync can continue and game saves progress as expected 		
+
+SD-GAP-035	Auth token expired during Download: download handles auth expiry safely				
+		1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])		
+		2	On device 1, [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download	NOTE: Do steps 3 and 4 as close together as possible	
+		4	Keep Device 1 and title ON, and [LAUNCH] on Device 2 (if prompted by SPOP dialog select sign in here or play here [Xcloud does not show this dialog])		
+		5	Document behavior on device 1, title should close or restart 		
+		6	[CLOSE-APP] on device 2		
+		7	[LAUNCH] on Device 1 (this time if prompted select sign in or play here) 		
+		8	[VERIFY-SAVE]		
+					
+SD-GAP-036	Auth token expired during local write				
+		1	[LAUNCH] on Device 1 and go through cloud sync to start making progress 		
+		2	 [CREATE-SAVE]	NOTE: Do steps 2 and 3 as close together as possible	
+		3	Keep Device 1 and title ON, and [LAUNCH] on Device 2 (if prompted by SPOP dialog select sign in here or play here [Xcloud does not show this dialog])		
+		4	Document behavior on device 1, title should close or restart 		
+		5	[CLOSE-APP] on device 2		
+		6	[LAUNCH] on Device 1 (this time if prompted select sign in or play here) 		
+		7	[VERIFY-SAVE]		
+					
+SD-GAP-037	Auth token expired during Out-of-game Upload: upload retries after auth refresh				
+		1	[LAUNCH] on Device 1 and go through cloud sync to start making progress 		
+		2	 [CREATE-SAVE], [CLOSE-APP]		
+		3	Immediately [LAUNCH] on Device 2 (if prompted by SPOP dialog select sign in here or play here [Xcloud does not show this dialog])		
+		4	[VERIFY-SAVE] on device 2, not a fail if Device 1 data is not present, fail if any unaccounted data loss occurs 		
+		5	[CLOSE-APP] on device 2		
+		6	[LAUNCH] on Device 1 (this time if prompted select sign in or play here) 		
+		7	[VERIFY-SAVE] saves from prior should be present 		
+					
+SD-GAP-038	Storage not full → storage full during Init: out-of-storage handling on sync				
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] to trigger init/sync (active device contention error state from Device 2 will keep you in init before download)		
+		4	Put title in background and [FILL-STORAGE], return to title 		
+		5	Continue from last cloud data in Active device contention prompt  [VALIDATE‑CONTENTION‑DIALOG]		
+		6	[VERIFY-STORAGE-ERROR] — verify out-of-storage error appears when download runs out of space mid-transfer		
+		7	Verify app does not crash and handles the error gracefully (offers retry, cancel, or guidance)		
+		8	[FREE-STORAGE] — free sufficient disk space while app is still showing the error and continue sync	⛔ Not xCloud applicable	
+		9	Verify no partial or corrupt save containers were written to disk		
+		10	Continue on ST-GAP-021 for reverse 		
+					
+SD-GAP-039	Storage not full → storage full during Download: download fails gracefully				
+		1	Prerequisite: Ensure cloud save data exists for the user (use Device 2 if needed: [LAUNCH] > [CREATE-SAVE] > [CLOSE-APP] > [WAIT-UPLOAD])		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download — verify sync dialog appears		
+		4	While download is in progress, [FILL-STORAGE] from another window/process to exhaust remaining disk space		
+		5	[VERIFY-STORAGE-ERROR] — verify out-of-storage error appears when download runs out of space mid-transfer		
+		6	Verify download aborts cleanly — no partial files, no corruption		
+		7	Verify app offers a recovery path (retry after freeing space, or clear guidance)	⛔ Not xCloud applicable	
+		8	[FREE-STORAGE]		
+		9	Retry: [LAUNCH] and verify download completes successfully after space is freed		
+		10	[VERIFY-SAVE]		
+		11	Continue on ST-GAP-022 for reverse 		
+
+SD-GAP-040	Storage not full → storage full during Out-of-game Upload: upload under storage pressure				
+		1	[LAUNCH] and [CREATE-SAVE]		
+		2	[NOTE-PROGRESS]		
+		3	[FILL-STORAGE] — consume disk space until almost full, return to title 		
+		4	[CLOSE-APP] (triggers out-of-game upload)		
+		5	[FILL-STORAGE] — consume disk space until [VALIDATE‑STORAGE‑DIALOG]		
+		6	Wait 5 minutes — the upload reads from local save data (should not need free space to upload, but verify)	⛔ Not xCloud applicable	
+		7	[LAUNCH] on Device 2 with same user		
+		8	[VERIFY-SAVE] — confirm save data from step 1 was uploaded despite storage pressure on Device 1		
+		9	If upload failed: document error behavior and whether retry occurs after [FREE-STORAGE]		
+		10	continue to ST-GAP-022 for reverse		
+					
+SD-GAP-041	Storage full → space recovered during Init: init succeeds after freeing space				
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]	⛔ Not xCloud applicable	
+		2	On device 1 [DELETE-LOCAL]		
+		3	[FILL-STORAGE] — fill disk completely		
+		4	[LAUNCH] to trigger init/sync (continue from last save when active device contention error prompts)		
+		5	[VALIDATE‑STORAGE‑DIALOG]— confirm out-of-storage error appears		
+		6	Do NOT close the app — leave it on the error/prompt screen		
+		7	[FREE-STORAGE] — free sufficient disk space while app is still showing the error		
+		8	Select "Try Again" / "Retry" on the error prompt (or [CLOSE-APP] and [LAUNCH] again if no retry option)		
+		9	Verify init/sync now completes successfully		
+		10	[VERIFY-SAVE]		
+					
+SD-GAP-042	Storage full → space recovered during Download: download completes after freeing space				
+		1	Prerequisite: Ensure cloud save data exists for the user (use Device 2 if needed: [LAUNCH] > [CREATE-SAVE] > [CLOSE-APP] > [WAIT-UPLOAD])	⛔ Not xCloud applicable	
+		2	On device 1 [DELETE-LOCAL]		
+		3	[FILL-STORAGE] — fill disk completely		
+		4	[LAUNCH] to trigger cloud download		
+		5	[VALIDATE‑STORAGE‑DIALOG] — confirm download fails with storage error		
+		6	[FREE-STORAGE] — free sufficient disk space		
+		7	Retry download: select "Try Again" on error prompt, or [CLOSE-APP] and [LAUNCH] again		
+		8	Verify cloud download now completes successfully		
+		9	[VERIFY-SAVE] — all expected save data present, no corruption from prior failed attempt		
+					
+SD-GAP-043	Storage full → space recovered during Out-of-game Upload: upload recovers after freeing space			⛔ Not xCloud applicable	
+		1	[FILL-STORAGE] — fill disk completely		
+		2	[LAUNCH] — if init fails due to storage, [FREE-STORAGE] just enough to allow app to start, then [LAUNCH] again		
+		3	[CREATE-SAVE] until [VERIFY-STORAGE-ERROR] >[VALIDATE‑STORAGE‑DIALOG]		
+		4	[NOTE-PROGRESS]		
+		5	If [VERIFY-STORAGE-ERROR] does not occur in game, [FILL-STORAGE] again — re-consume all free space		
+		6	[CLOSE-APP] (triggers out-of-game upload)		
+		7	Wait 2 minutes — observe whether upload succeeds or fails under full-storage conditions		
+		8	 Device 2 [LAUNCH] and validate game progress success from Device 1 uploaded. [CLOSE APP]		
+		9	if failure on step 8, go back to Device 1 and [FREE-STORAGE] > [LAUNCH] > [CREATE-SAVE] > [CLOSE-APP] > [WAIT-UPLOAD]		
+		10	Wait 5 minutes for upload retry after space is freed		
+		11	[LAUNCH] on Device 2 with same user		
+		12	[VERIFY-SAVE] — confirm save data from step 9 eventually uploaded		
+		13	If upload never succeeded: document behavior and whether manual intervention is needed		
+					
+					
+SD-GAP-044	Rollback to Last Conflict via GRTS (ShamWOW only)				
+		1	Prerequisite: Set up conflict scenario across two devices		
+		2	On Device A: [LAUNCH] > [CREATE-SAVE] — note specific progress (e.g. car color, track)		
+		3	[CLOSE-APP] > [WAIT-UPLOAD]		
+		4	On Device B: [LAUNCH] offline > [CREATE-SAVE] with different progress > [CLOSE-APP]		
+		5	[RECONNECT] Device B > [LAUNCH] — conflict prompt should appear  [VALIDATE‑CONFLICT‑DIALOG]		
+		6	Choose LOCAL in conflict resolution		
+		7	[VERIFY-SAVE] — confirm local data is loaded		
+		8	[CLOSE-APP]		
+		9	[LAUNCH] with InitFlagRollbackToLastConflict (ShamWOW: PlayFab > Init with RollbackToLastConflict flag)		
+		10	Verify the discarded CLOUD branch from step 2 is now restored		
+		11	[VERIFY-SAVE] — confirm Device A progress from step 2 is present		
+					
+SD-GAP-045	Rollback to Last Known Good via GRTS (ShamWOW only)				
+		1	[LAUNCH] > [CREATE-SAVE] — note this as "baseline" progress		
+		2	[CLOSE-APP] > [WAIT-UPLOAD]		
+		3	[LAUNCH] > [MODIFY-SAVE] — create newer progress distinct from baseline		
+		4	[NOTE-PROGRESS] — record current (newer) state		
+		5	[CLOSE-APP] > [WAIT-UPLOAD]		
+		6	[LAUNCH] with InitFlagRollbackToLastKnownGood (ShamWOW: PlayFab > Init with RollbackToLastKnownGood flag)		
+		7	Verify the baseline progress from step 1 is restored (not the newer progress from step 3)		
+		8	[VERIFY-SAVE]		
+					
+SD-GAP-046	Cloud Quota Exhaustion — 256MB limit 				
+		1	[LAUNCH] 		
+		2	[VERIFY-QUOTA] — record current remaining quota		
+		3	 [CREATE-SAVE]  to approach 256MB limit  		
+		4	[VERIFY-QUOTA] — confirm quota is near zero or negative		
+		5	Attempt one more save or new progress that would exceed the limit		
+		6	Verify upload is blocked with appropriate error/UX — document exact message		
+		7	[DELETE-SAVE] — remove some uploaded data to recover quota		
+		8	[VERIFY-QUOTA] — confirm quota recovers		
+		9	[CLOSE APP], on Device 2 [LAUNCH] and verify your progress from your previous session progressed 		
+		10	[VERIFY-SAVE]		
+					
+SD-GAP-047	Network Flapping During Sync: download survives intermittent connectivity			⛔ Not xCloud applicable	
+		1	Prerequisite: Ensure cloud save data exists for the user (use Device 2 if needed: [LAUNCH] > [CREATE-SAVE] > [CLOSE-APP] > [WAIT-UPLOAD])		
+		2	Device 2, [DELETE-LOCAL]		
+		3	[LAUNCH] to trigger download		
+		4	During active download: [DISCONNECT] for ~3 seconds, then [RECONNECT] for ~3 seconds — repeat 3-5 times		
+		5	Wait for download to settle		
+		6	Verify sync eventually succeeds OR fails cleanly with retry option (no hang, no corruption)		
+		7	If sync succeeded: [VERIFY-SAVE]		
+		8	If sync failed: [CLOSE-APP] > [LAUNCH] again — verify clean recovery on retry		
+					
+SD-GAP-048	User Switch Same Device: different gamertag				
+		1	[LAUNCH] and [SIGN-IN] as User A		
+		2	[CREATE-SAVE] as User A — note specific progress		
+		4	[SWITCH-USER] — sign out User A and sign in User B WITHOUT closing app		
+		5	Verify User A save data is no longer accessible in the current session		
+		6	[CREATE-SAVE] as User B — create different progress		
+		7	[NOTE-PROGRESS] for User B		
+		8	[CLOSE-APP]		
+		9	[LAUNCH] and [SIGN-IN] as User A		
+		10	[VERIFY-SAVE] — confirm User A original progress intact, no bleed from User B		
+		11	[CLOSE-APP] > [LAUNCH] and [SIGN-IN] as User B		
+		12	[VERIFY-SAVE] — confirm User B progress intact, no bleed from User A		
+					
+					
+SD-GAP-049	Forte/ShamWow--> another title init				
+		1	Prerequisite: on anorther device, Device 2, [LAUNCH] > [CREATE-SAVE] > [DISCONNECT]>[CLOSE APP]		
+		2	On device 1 [DELETE-LOCAL]		
+		3	[LAUNCH] and wait to see Active device dialog  [VALIDATE‑CONTENTION‑DIALOG]		
+		4	Launch another title on device 1 (same steps as LAUNCH but with another title) 		
+		5	Play other title for 2 minute 		
+		6	return to the original title (if console launch via Quick Resume)		
+		7	validate active device prompts as expected, sync can continue and game saves progress as expected 		
+					
+SD-GAP-050	Forte/ShamWow--> another title Download				
+		1	On Device 2, ensure cloud save data exists ([CREATE-SAVE] if needed, then [CLOSE-APP] + [WAIT-UPLOAD])		
+		2	On device 1, [DELETE-LOCAL]		
+		3	[LAUNCH] to start cloud download		
+		4	Launch another title on device 1 (same steps as LAUNCH but with another title) 		
+		5	Play other title for 2 minute 		
+		6	return to the original title (if console launch via Quick Resume)		
+		7	[VERIFY-SAVE]		
+					
+SD-GAP-051	Forte/ShamWow--> another title local write + upload 				
+		1	[LAUNCH] on Device 1 and go through cloud sync to start making progress 		
+		2	 [CREATE-SAVE]		
+		3	at the same time Launch another title on device 1 (same steps as LAUNCH but with another title) 		
+		4	Play other title for 2 minute 		
+		5	return to the original title (if console launch via Quick Resume)		
+		6	[VERIFY-SAVE]		
+		7	[CLOSE-APP]>[WAIT UPLOAD]>  go to device 2 [LAUNCH] and verify saves progressed from device 1 		
+					
+SD-GAP-052	Quick Resume invalid 	1	[CLOSE‑APP] all instances and wait 5 minutes	⛔ CONSOLE ONLY	
+		2	[LAUNCH] Console - allow full sync to complete		
+		3	[CREATE‑SAVE] > [NOTE‑PROGRESS]		
+		4	Press Xbox button → launch a different title (app enters Quick Resume suspended state)		
+		5	Play the other title for at least 2 minutes		
+		6	On Device 2: [LAUNCH]  → [CREATE‑SAVE]→ [CLOSE‑APP] → [WAIT‑UPLOAD]		
+		7	Return to Console →[LAUNCH] via Quick Resume		
+		8	VERIFY: Game detects cloud state change - expects  re‑init process or cloud sync 		
+		10	VERIFY: Init/sync completes within 60 seconds (no hang at AddUser or “Resuming” screen)		
+		11	[VERIFY‑SAVE] — confirm Device 2’s progress (step 6) is reflected		
+					

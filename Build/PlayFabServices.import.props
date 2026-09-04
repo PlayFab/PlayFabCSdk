@@ -20,8 +20,11 @@
 
   <PropertyGroup>
     <PlayFabServicesProjectName>PlayFabServices.$(HCPlatform)</PlayFabServicesProjectName>
+    <PlayFabServicesTargetName>PlayFabServices</PlayFabServicesTargetName>
+    <_PFSvcBuildPlatform Condition="'$(HCPlatform)' == 'GDK' AND $(Platform.StartsWith('Gaming.Xbox'))">x64</_PFSvcBuildPlatform>
+    <_PFSvcBuildPlatform Condition="'$(_PFSvcBuildPlatform)' == ''">$(Platform)</_PFSvcBuildPlatform>
     <PlayFabServicesOutDir Condition="'$(HCPlatform)' == 'Win32'">$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabServicesProjectName)\</PlayFabServicesOutDir>
-    <PlayFabServicesOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\Gaming.Desktop.x64\$(Configuration)\$(PlayFabServicesProjectName)\</PlayFabServicesOutDir>
+    <PlayFabServicesOutDir Condition="'$(HCPlatform)' == 'GDK'">$(PlayFabOutRoot)\$(_PFSvcBuildPlatform)\$(Configuration)\$(PlayFabServicesProjectName)\</PlayFabServicesOutDir>
   </PropertyGroup>
 
   <!--Add reference to appropriate PlayFabServices project-->
@@ -34,8 +37,8 @@
 
   <!--Copy PlayFabCore and dependencies to OutDir-->
   <ItemGroup Label="CopyDependencies">
-    <ReferenceCopyLocalPaths Include="$(PlayFabServicesOutDir)\$(PlayFabServicesProjectName).dll" />
-    <ReferenceCopyLocalPaths Include="$(PlayFabServicesOutDir)\$(PlayFabServicesProjectName).pdb" />
+    <ReferenceCopyLocalPaths Include="$(PlayFabServicesOutDir)\$(PlayFabServicesTargetName).dll" />
+    <ReferenceCopyLocalPaths Include="$(PlayFabServicesOutDir)\$(PlayFabServicesTargetName).pdb" />
   </ItemGroup>
 
 </Project>

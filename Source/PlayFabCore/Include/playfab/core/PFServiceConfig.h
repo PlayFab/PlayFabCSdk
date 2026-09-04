@@ -38,8 +38,8 @@ PF_API PFServiceConfigCreateHandle(
 /// are no longer needed.
 /// </remarks>
 PF_API PFServiceConfigDuplicateHandle(
-    PFServiceConfigHandle handle,
-    PFServiceConfigHandle* duplicatedHandle
+    _In_ PFServiceConfigHandle handle,
+    _Out_ PFServiceConfigHandle* duplicatedHandle
 ) noexcept;
 
 /// <summary>

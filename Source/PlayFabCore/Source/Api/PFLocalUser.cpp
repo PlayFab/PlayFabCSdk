@@ -47,6 +47,7 @@ PF_API PFLocalUserDuplicateHandle(
 {
     return ApiImpl(XASYNC_IDENTITY(PFLocalUserDuplicateHandle), [&](PFCoreGlobalState& state)
     {
+        RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
         RETURN_HR_INVALIDARG_IF_NULL(duplicatedHandle);
 
         SharedPtr<LocalUser> localUser;
@@ -114,6 +115,7 @@ PF_API PFLocalUserGetServiceConfigHandle(
     _Out_ PFServiceConfigHandle* serviceConfigHandle
 ) noexcept
 {
+    RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
     return LocalUserApiImpl(XASYNC_IDENTITY(PFLocalUserGetServiceConfigHandle), localUserHandle, [&](SharedPtr<LocalUser> localUser)
     {
         SharedPtr<PFCoreGlobalState> state;
@@ -149,7 +151,7 @@ PF_API PFLocalUserGetLocalId(
         RETURN_HR_INVALIDARG_IF_NULL(localIdBuffer);
 
         String localId = localUser->LocalId();
-        RETURN_HR_IF(E_INVALIDARG, localIdSize < localId.size() + 1);
+        RETURN_HR_IF(E_INVALIDARG, localId.size() >= localIdSize);
 
         memcpy(localIdBuffer, localId.data(), localId.size() + 1);
 

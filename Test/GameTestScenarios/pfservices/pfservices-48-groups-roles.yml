@@ -1,0 +1,55 @@
+id: PFServices-48-Groups-Roles
+name: PFServices 48 - Group Roles
+tags:
+  - pfservices
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: failing  # ChangeMemberRole returns E_PF_INVALID_PARAMS - needs valid role configuration
+  psx: ignore
+description: >
+  Creates a group and role, changes member role, updates role, deletes role.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: PFAuthenticationLoginWithCustomIDAsync
+      parameters:
+        customId: "pfservices-test"
+        createAccount: true
+
+  test:
+    - command: PFGroupsCreateGroupAsync
+    - command: PFGroupsCreateGroupGetResult
+    - command: PFGroupsCreateRoleAsync
+    - command: PFGroupsCreateRoleGetResult
+    - command: PFGroupsChangeMemberRoleAsync
+    - command: PFGroupsUpdateRoleAsync
+    - command: PFGroupsUpdateRoleGetResult
+    - command: PFGroupsDeleteRoleAsync
+    - command: PFGroupsDeleteGroupAsync
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle

@@ -1,0 +1,22 @@
+# Initialize a LOCAL (in-proc) device for PFGameSave testing.
+# Uses PFLocalUserCreateHandleWithPersistedLocalId for a synthetic test user
+# that authenticates via CustomID — no platform identity or linking required.
+#
+# For Xbox or PlayStation devices, use init-device-xbox.txt or
+# init-device-psx.txt instead.
+#
+# Parameters you may want to change:
+#   --saveFolder      Local path where game save data is stored
+#   --persistedLocalId / --customId   Credentials for the test user
+
+XGameRuntimeInitialize
+PFInitialize
+PFServicesInitialize
+PFServiceConfigCreateHandle --endpoint=https://E18D7.playfabapi.com --titleId=E18D7
+XTaskQueueCreate --workMode=ThreadPool --completionMode=ThreadPool --setAsProcessQueue=true
+PFGameSaveFilesInitialize --saveFolder=C:\gamesave
+PFGameSaveFilesSetUiCallbacks --enable=true
+PFGameSaveFilesSetActiveDeviceChangedCallback
+PFLocalUserCreateHandleWithPersistedLocalId --persistedLocalId=GameTestHarness --customId=GameTestHarness --createAccount=true
+PFGameSaveFilesAddUserWithUiAsync
+PFGameSaveFilesGetFolder

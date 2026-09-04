@@ -11,6 +11,8 @@ namespace PlayFab
 namespace JsonUtils
 {
 
+constexpr size_t kMaxJsonArraySize = 1000000;
+
 // Write JsonValue to String
 String WriteToString(const JsonValue& jsonValue);
 
@@ -276,6 +278,10 @@ HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const Ve
 template <typename T>
 HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const T* array, uint32_t arrayCount)
 {
+    if (arrayCount > 0 && !array)
+    {
+        return E_INVALIDARG;
+    }
     JsonValue member = JsonValue::array();
     for (auto i = 0u; i < arrayCount; ++i)
     {
@@ -287,6 +293,10 @@ HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const T*
 template <typename InternalModelWrapperT>
 HRESULT ObjectAddMemberArray(JsonValue& jsonObject, StringRefType name, const typename InternalModelWrapperT::ModelType* const* array, uint32_t arrayCount)
 {
+    if (arrayCount > 0 && !array)
+    {
+        return E_INVALIDARG;
+    }
     JsonValue member = JsonValue::array();
     for (auto i = 0u; i < arrayCount; ++i)
     {
@@ -310,6 +320,10 @@ HRESULT ObjectAddMemberDictionary(JsonValue& jsonObject, StringRefType name, con
 template <typename EntryT, typename std::enable_if_t<PlayFab::Detail::IsDictionaryEntry<EntryT>::value, bool>>
 HRESULT ObjectAddMemberDictionary(JsonValue& jsonObject, StringRefType name, const EntryT* associativeArray, uint32_t arrayCount)
 {
+    if (arrayCount > 0 && !associativeArray)
+    {
+        return E_INVALIDARG;
+    }
     JsonValue member = JsonValue::object();
     for (auto i = 0u; i < arrayCount; ++i)
     {
@@ -322,6 +336,10 @@ HRESULT ObjectAddMemberDictionary(JsonValue& jsonObject, StringRefType name, con
 template <typename InternalModelWrapperT, typename std::enable_if_t<std::is_base_of_v<InputModel, InternalModelWrapperT>, bool>>
 HRESULT ObjectAddMemberDictionary(JsonValue& jsonObject, StringRefType name, const typename InternalModelWrapperT::DictionaryEntryType* associativeArray, uint32_t arrayCount)
 {
+    if (arrayCount > 0 && !associativeArray)
+    {
+        return E_INVALIDARG;
+    }
     JsonValue member = JsonValue::object();
     for (auto i = 0u; i < arrayCount; ++i)
     {
@@ -373,6 +391,11 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, Vector<T>
         }
 
         auto jsonArray = findResult.Payload()->get<Vector<JsonValue>>();
+        if (jsonArray.size() > kMaxJsonArraySize)
+        {
+            TRACE_ERROR("Json Parse Error: array size exceeds maximum");
+            return E_OUTOFMEMORY;
+        }
         output.reserve(jsonArray.size());
         for (auto& value : jsonArray)
         {
@@ -398,6 +421,11 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, ModelVect
         }
 
         auto jsonArray = findResult.Payload()->get<Vector<JsonValue>>();
+        if (jsonArray.size() > kMaxJsonArraySize)
+        {
+            TRACE_ERROR("Json Parse Error: array size exceeds maximum");
+            return E_OUTOFMEMORY;
+        }
         output.reserve(jsonArray.size());
 
         for (const auto& value : jsonArray)
@@ -431,6 +459,11 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, Dictionar
         }
 
         auto memberObject = findResult.Payload()->get<JsonValue>();
+        if (memberObject.size() > kMaxJsonArraySize)
+        {
+            TRACE_ERROR("Json Parse Error: object size exceeds maximum");
+            return E_OUTOFMEMORY;
+        }
         output.reserve(memberObject.size());
         for (const auto& [key, value] : memberObject.items())
         {
@@ -457,6 +490,11 @@ HRESULT ObjectGetMember(const JsonValue& jsonObject, const char* name, ModelDict
         }
 
         auto memberObject = findResult.Payload()->get<JsonValue>();
+        if (memberObject.size() > kMaxJsonArraySize)
+        {
+            TRACE_ERROR("Json Parse Error: object size exceeds maximum");
+            return E_OUTOFMEMORY;
+        }
         output.reserve(memberObject.size());
         for (const auto& [key, value] : memberObject.items())
         {

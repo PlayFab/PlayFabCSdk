@@ -286,41 +286,6 @@ AsyncOp<GetInventoryOperationStatusResponse> InventoryAPI::GetInventoryOperation
     });
 }
 
-AsyncOp<GetMicrosoftStoreAccessTokensResponse> InventoryAPI::GetMicrosoftStoreAccessTokens(
-    Entity const& entity,
-    const GetMicrosoftStoreAccessTokensRequest& request,
-    RunContext rc
-)
-{
-    const char* path{ "/Inventory/GetMicrosoftStoreAccessTokens" };
-    JsonValue requestBody = request.ToJson();
-
-    auto requestOp = ServicesHttpClient::MakeEntityRequest(
-        ServicesCacheId::InventoryGetMicrosoftStoreAccessTokens,
-        entity,
-        path,
-        requestBody,
-        std::move(rc)
-    );
-
-    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetMicrosoftStoreAccessTokensResponse>
-    {
-        RETURN_IF_FAILED(result.hr);
-
-        auto serviceResponse = result.ExtractPayload();
-        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
-        {
-            GetMicrosoftStoreAccessTokensResponse resultModel;
-            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
-            return resultModel;
-        }
-        else
-        {
-            return Result<GetMicrosoftStoreAccessTokensResponse>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
-        }
-    });
-}
-
 AsyncOp<GetTransactionHistoryResponse> InventoryAPI::GetTransactionHistory(
     Entity const& entity,
     const GetTransactionHistoryRequest& request,

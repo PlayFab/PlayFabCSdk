@@ -29,7 +29,8 @@ android {
 
     externalNativeBuild {
         cmake {
-            version "3.18.1"
+            // CXX20 Standard is only available in CMake 3.18.1 and above.
+            version "3.18.1+"
             path "CMakeLists.txt"
             buildStagingDirectory "${project.buildDir.getParentFile().getAbsolutePath()}/.cxx/${project.name}"
         }
@@ -83,33 +84,40 @@ android {
         }
     }
 
-    // Custom task to copy test json file for test app
-    task copyTestFiles(type: Copy) {
+}
+
+// Custom task to copy test json file for test app
+task copyTestFiles(type: Copy) {
+    from '../../..'
+    into 'src/main/assets'
+    include 'testTitleData.json'
+
+    doFirst {
         println("Copying testTitleData.json...")
-        from '../../..'
-        into 'src/main/assets'
-        include 'testTitleData.json'
+    }
+}
+
+// Custom task to copy aar files for test app
+task copyAars(type: Copy) {
+    into 'libs'
+
+    into("") {
+        from '../../../../Int/Android/PlayFabServices.Android/outputs/aar'
+        include '*.aar'
     }
 
-    // Custom task to copy aar files for test app
-    task copyAars(type: Copy) {
+    into("") {
+        from '../../../../Int/Android/PlayFabCore.Android/outputs/aar'
+        include '*.aar'
+    }
+
+    into("") {
+        from '../../../../../libHttpClient/Binaries/Android/libHttpClient.Android/outputs/aar'
+        include '*.aar'
+    }
+
+    doFirst {
         println("Copying aars...")
-        into 'libs'
-
-        into("") {
-            from '../../../../Int/Android/PlayFabServices.Android/outputs/aar'
-            include '*.aar'
-        }
-
-        into("") {
-            from '../../../../Int/Android/PlayFabCore.Android/outputs/aar'
-            include '*.aar'
-        }
-
-        into("") {
-            from '../../../../../libHttpClient/Binaries/Android/libHttpClient.Android/outputs/aar'
-            include '*.aar'
-        }
     }
 }
 
@@ -154,7 +162,10 @@ dependencies {
 
     implementation "com.google.android.material:material:1.6.0"
 
-    implementation "com.google.android.gms:play-services-games-v2:+"
+    // Pinned deliberately - must match the version in Build/PlayFabCore.Android/build.gradle.
+    // 22.0.0 (published 2026-07-29) raises its minSdk to 24 and fails the manifest merge
+    // against minSdk 21; 21.0.0 is the last release supporting minSdk 21.
+    implementation "com.google.android.gms:play-services-games-v2:21.0.0"
     
     androidTestImplementation "androidx.test:core:1.5.0"
     androidTestImplementation "androidx.test:rules:1.5.0"

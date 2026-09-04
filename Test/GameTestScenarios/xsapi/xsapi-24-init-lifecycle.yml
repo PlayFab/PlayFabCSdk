@@ -1,0 +1,49 @@
+id: XSAPI-24-Init-Lifecycle
+name: XSAPI 24 - Init, Context Create, and Cleanup Lifecycle
+tags:
+  - xsapi
+platforms:
+  xbox: untested
+  pc-grts: untested
+  pc-inproc: untested
+  psx: ignore
+description: >
+  Verify XblInitialize succeeds, context create/duplicate/close works,
+  XblContextGetXboxUserId returns a valid XUID, and XblCleanupAsync completes.
+  Tests double-init reference counting.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  xbl-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: XUserAddAsync
+    - command: XblInitialize
+      parameters:
+        scid: "00000000-0000-0000-0000-000076029b4d"
+    - command: XblContextCreateHandle
+
+  test:
+    - command: XblContextGetXboxUserId
+    - command: XblContextDuplicateHandle
+    - command: XblContextCloseHandle
+    - command: XblGetScid
+
+executionOrder:
+  - role: DeviceA
+    block: xbl-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: XblContextCloseHandle
+    - command: XUserCloseHandle
+    - command: XblCleanupAsync
+    - command: XTaskQueueCloseHandle

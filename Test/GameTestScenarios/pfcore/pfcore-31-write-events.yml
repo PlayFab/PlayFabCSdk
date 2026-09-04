@@ -1,0 +1,56 @@
+id: PFCore-31-Write-Events
+name: PFCore 31 - Write Events via Service API
+tags:
+  - pfcore
+platforms:
+  xbox: passing
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  After login, writes events via PFEventsWriteEventsAsync and
+  PFEventsWriteTelemetryEventsAsync, verifying both succeed.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  pf-init:
+    - command: XGameRuntimeInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XUserAddAsync
+    - command: PFLocalUserCreateHandleWithXboxUser
+    - command: PFLocalUserLoginAsync
+
+  test:
+    - command: PFLocalUserTryGetEntityHandle
+    - command: PFEventsWriteEventsAsync
+      parameters:
+        eventNamespace: "com.playfab.events.pfcore"
+        eventName: "pfcore_test_write_event"
+    - command: PFEventsWriteTelemetryEventsAsync
+      parameters:
+        eventNamespace: "custom.playfab.events"
+        eventName: "pfcore_test_write_telemetry"
+
+executionOrder:
+  - role: DeviceA
+    block: pf-init
+  - role: DeviceA
+    block: test
+
+cleanup:
+  DeviceA:
+    - command: PFLocalUserCloseHandle
+    - command: PFServicesUninitializeAsync
+    - command: XTaskQueueCloseHandle
