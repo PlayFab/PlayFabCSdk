@@ -17,6 +17,7 @@ PF_API PFTraceEnableTraceToFile(
 
         auto& settings = GetTraceSettings();
         settings.enableTraceToFile = true;
+        RETURN_HR_IF(E_INVALIDARG, strlen(traceFileDirectory) >= sizeof(settings.traceFileDirectory));
         StrCpy(settings.traceFileDirectory, sizeof(settings.traceFileDirectory), traceFileDirectory);
 
         return S_OK;

@@ -55,6 +55,7 @@ PF_API PFLocalizationGetLanguageListGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFLocalizationGetLanguageListGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFLocalizationGetLanguageListResponse*>(buffer);

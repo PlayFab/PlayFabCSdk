@@ -18,7 +18,13 @@ public:
 
     ~ActiveDevicePollWorker();
 
-#if _DEBUG
+    // Stops the poll loop. The worker keeps itself alive by resubmitting to the task queue after
+    // every poll, so a replacement worker (each successful AddUser creates one) would otherwise
+    // leave the previous instance polling forever - duplicating active-device-changed callbacks
+    // and issuing one redundant ListManifests per accumulated worker every interval.
+    void Stop() noexcept { m_stopped.store(true); }
+
+#if defined(_DEBUG)
     static void SetInterval(uint32_t interval) { s_interval = interval; }
     static void SetActiveDevicePollForceChange(bool changed) { s_debugForceChange = changed; }
 #endif
@@ -33,6 +39,7 @@ private:
     HRESULT CheckActiveDevice() noexcept;
 
     std::mutex m_mutex;
+    std::atomic<bool> m_stopped{ false };
     Entity m_entity;
     LocalUser m_localUser;
     PlayFab::RunContext m_rc;

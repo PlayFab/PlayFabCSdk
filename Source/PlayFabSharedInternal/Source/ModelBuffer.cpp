@@ -31,7 +31,8 @@ Result<const char*> ModelBuffer::CopyTo(const char* input)
 
         return std::move(outputPtr);
 #else
-        return std::strcpy(outputPtr, input);
+        std::memcpy(outputPtr, input, bytesNeeded);
+        return outputPtr;
 #endif
     }
     else

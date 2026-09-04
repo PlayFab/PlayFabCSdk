@@ -8,25 +8,110 @@
   <Import Condition="'$(HCPlatform)' == ''" Project="$(HCRoot)\platform_select.props" />
   <PropertyGroup>
     <HCProjectName>libHttpClient.$(HCPlatform)</HCProjectName>
-    <HCOutDir>$(HCOutRoot)\$(Platform)\$(Configuration)\$(HCProjectName)\</HCOutDir>
+    <HCTargetName>libHttpClient</HCTargetName>
+    <!-- libHttpClient.vs2022.sln only has x64 platform configs, not Gaming.Xbox.*.x64.
+         Map any Gaming.Xbox platform to x64 for both the output path and pre-build invocation
+         so the check, build, and link all reference the same directory. -->
+    <HCBuildPlatform Condition="$(Platform.StartsWith('Gaming.Xbox'))">x64</HCBuildPlatform>
+    <HCBuildPlatform Condition="'$(HCBuildPlatform)' == ''">$(Platform)</HCBuildPlatform>
+    <HCOutDir>$(HCOutRoot)\$(HCBuildPlatform)\$(Configuration)\$(HCProjectName)\</HCOutDir>
+    <!-- Must mirror libHttpClient.GDK.vcxproj's own OutDir rule: since libHttpClient PR #954 that
+         project redirects OutDir to <project>.nosuffix\ whenever LibHttpClientIncludeSuffix is
+         false, so that suffixed and non-suffixed builds don't collide. This condition previously
+         also required TF_BUILD != 'True', which happened to work only because CI pinned a
+         libHttpClient predating #954 while developers built against libHttpClient main. Once the
+         pin moved past #954 the two disagreed in CI: libHttpClient linked into
+         libHttpClient.GDK.nosuffix\ while consumers copied from libHttpClient.GDK\, failing with
+         MSB3030 (libHttpClient.dll/.pdb not found). Keep this in lockstep with that project. -->
+    <HCOutDir Condition="'$(LibHttpClientIncludeSuffix)' == 'false'">$(HCOutRoot)\$(HCBuildPlatform)\$(Configuration)\$(HCProjectName).nosuffix\</HCOutDir>
   </PropertyGroup>
+
+  <!--
+    Include directory to expose for libHttpClient's public headers.
+
+    Everywhere except GDK this is just $(HCIncludeDir). On GDK it cannot be, because
+    $(HCIncludeDir) holds two unrelated header sets:
+
+      Include\httpClient\*.h  - libHttpClient's public API. We need these, because we link the
+                                libHttpClient built from $(HCRoot) and only its own headers
+                                declare newly added APIs.
+      Include\XAsync.h,
+      Include\XAsyncProvider.h,
+      Include\XTaskQueue.h    - libHttpClient's standalone async library, built only on platforms
+                                where libHttpClient compiles Source\Task itself. On GDK these
+                                types belong to the Game Runtime instead.
+
+    The GDK ships libHttpClient with that same split: %GameDK%\<edition>\windows\include\httpClient
+    holds only the public API headers, while XAsync.h / XTaskQueue.h sit in the GDK include root
+    next to XGameRuntime.h.
+
+    Putting $(HCIncludeDir) on the search path collapses that split: httpClient\async.h resolves
+    <XAsync.h> through the search path and picks up libHttpClient's copy, while the GDK's
+    XGameRuntime.h quote-includes "XAsync.h" and always picks up the GDK's copy next to it. Any
+    translation unit pulling in both then declares every XAsync/XTaskQueue type twice
+    (error C2011: 'XAsyncBlock': 'struct' type redefinition).
+
+    So on GDK, point at a generated directory mirroring only Include\httpClient. <XAsync.h> and
+    <XTaskQueue.h> then resolve to the GDK, and <httpClient/*.h> resolves to $(HCRoot).
+
+    Set HCPublicIncludeDir before importing this file to override.
+  -->
+  <PropertyGroup>
+    <HCPublicIncludeDir Condition="'$(HCPublicIncludeDir)' == '' And '$(HCPlatform)' == 'GDK'">$(HCOutRoot)\PublicInclude.GDK\</HCPublicIncludeDir>
+    <HCPublicIncludeDir Condition="'$(HCPublicIncludeDir)' == ''">$(HCIncludeDir)</HCPublicIncludeDir>
+  </PropertyGroup>
+
+  <!--
+    Refreshes the mirror before compiling.
+
+    Stale headers are pruned: a header deleted or renamed in libHttpClient would otherwise linger
+    here and keep satisfying an #include that must now fail, so an incremental build would succeed
+    where a clean build fails.
+
+    Copy is retried because several projects import this file and, in a parallel build, run this
+    target concurrently against the same destination; without retries a benign file-sharing
+    collision fails the build. SkipUnchangedFiles keeps steady-state builds from rewriting the
+    headers and needlessly rebuilding everything that includes them.
+  -->
+  <Target Name="HCMirrorGdkPublicHeaders"
+          Condition="'$(HCPlatform)' == 'GDK'"
+          BeforeTargets="ClCompile">
+    <ItemGroup>
+      <HCPublicHeader Include="$(HCIncludeDir)\httpClient\*.h" />
+      <!-- Whatever the mirror holds right now, minus what the source still has: the remainder is
+           stale and must go. Compared by filename so the source and destination paths line up. -->
+      <HCMirroredHeader Include="$(HCPublicIncludeDir)httpClient\*.h" />
+      <HCStaleHeader Include="@(HCMirroredHeader)"
+                     Exclude="@(HCPublicHeader->'$(HCPublicIncludeDir)httpClient\%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <Error Condition="'@(HCPublicHeader)' == ''"
+           Text="No libHttpClient public headers found under '$(HCIncludeDir)\httpClient'. Check that HCRoot ('$(HCRoot)') points at the libHttpClient repo." />
+    <!-- ContinueOnError: a parallel project may have pruned the same file already. -->
+    <Delete Files="@(HCStaleHeader)" ContinueOnError="true" />
+    <Copy SourceFiles="@(HCPublicHeader)"
+          DestinationFolder="$(HCPublicIncludeDir)httpClient"
+          SkipUnchangedFiles="true"
+          Retries="5"
+          RetryDelayMilliseconds="200" />
+  </Target>
+
   <ItemDefinitionGroup>
     <PreBuildEvent>
-      <Command>MSBuild /nologo /v:m /t:"$(HCPlatform)\$([System.String]::Copy('$(HCProjectName)').Replace('.','_'))" /p:Configuration="$(Configuration)" /p:Platform="$(Platform)" /p:VCToolsVersion="$(VCToolsVersion)" "$(HCRoot)\libHttpClient.vs2022.sln"</Command>
+      <Command>if not exist "$(HCOutDir)$(HCTargetName).lib" MSBuild /nologo /v:m /nr:false /t:"$(HCPlatform)\$([System.String]::Copy('$(HCProjectName)').Replace('.','_'))" /p:Configuration="$(Configuration)" /p:Platform="$(HCBuildPlatform)" /p:PlatformToolset="$(PlatformToolset)" /p:LibHttpClientIncludeSuffix="$(LibHttpClientIncludeSuffix)" "$(HCRoot)\libHttpClient.vs2022.sln"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(HCIncludeDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(HCPublicIncludeDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(HCOutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);$(HCProjectName).lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(HCTargetName).lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <!--Copy dlls to OutDir-->
   <ItemGroup Label="CopyDependencies">
-    <ReferenceCopyLocalPaths Include="$(HCOutDir)\$(HCProjectName).dll" />
-    <ReferenceCopyLocalPaths Include="$(HCOutDir)\$(HCProjectName).pdb" />
+    <ReferenceCopyLocalPaths Include="$(HCOutDir)\$(HCTargetName).dll" />
+    <ReferenceCopyLocalPaths Include="$(HCOutDir)\$(HCTargetName).pdb" />
   </ItemGroup>
 </Project>

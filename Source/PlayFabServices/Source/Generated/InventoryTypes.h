@@ -432,39 +432,6 @@ public:
     static HRESULT Copy(const PFInventoryGetInventoryOperationStatusResponse& input, PFInventoryGetInventoryOperationStatusResponse& output, ModelBuffer& buffer);
 };
 
-class GetMicrosoftStoreAccessTokensRequest : public Wrappers::PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper<Allocator>, public InputModel
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFInventoryGetMicrosoftStoreAccessTokensRequestWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // InputModel
-    JsonValue ToJson() const override;
-    static JsonValue ToJson(const PFInventoryGetMicrosoftStoreAccessTokensRequest& input);
-};
-
-class GetMicrosoftStoreAccessTokensResponse : public Wrappers::PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFInventoryGetMicrosoftStoreAccessTokensResponse>
-{
-public:
-    using ModelWrapperType = typename Wrappers::PFInventoryGetMicrosoftStoreAccessTokensResponseWrapper<Allocator>;
-    using ModelWrapperType::ModelType;
-
-    // Constructors
-    using ModelWrapperType::ModelWrapperType;
-
-    // ServiceOutputModel
-    HRESULT FromJson(const JsonValue& input) override;
-    // ClientOutputModel
-    size_t RequiredBufferSize() const override;
-    Result<PFInventoryGetMicrosoftStoreAccessTokensResponse const*> Copy(ModelBuffer& buffer) const override;
-
-    static size_t RequiredBufferSize(const PFInventoryGetMicrosoftStoreAccessTokensResponse& model);
-    static HRESULT Copy(const PFInventoryGetMicrosoftStoreAccessTokensResponse& input, PFInventoryGetMicrosoftStoreAccessTokensResponse& output, ModelBuffer& buffer);
-};
-
 class GetTransactionHistoryRequest : public Wrappers::PFInventoryGetTransactionHistoryRequestWrapper<Allocator>, public InputModel
 {
 public:

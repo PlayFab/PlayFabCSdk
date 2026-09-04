@@ -54,6 +54,7 @@ PF_API PFProfilesGetProfileGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFProfilesGetProfileGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFProfilesGetEntityProfileResponse*>(buffer);
@@ -104,6 +105,7 @@ PF_API PFProfilesGetProfilesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFProfilesGetProfilesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFProfilesGetEntityProfilesResponse*>(buffer);
@@ -154,6 +156,7 @@ PF_API PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFProfilesGetTitlePlayersFromMasterPlayerAccountIdsResponse*>(buffer);
@@ -204,6 +207,7 @@ PF_API PFProfilesSetProfileLanguageGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFProfilesSetProfileLanguageGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFProfilesSetProfileLanguageResponse*>(buffer);
@@ -254,6 +258,7 @@ PF_API PFProfilesSetProfilePolicyGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFProfilesSetProfilePolicyGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFProfilesSetEntityProfilePolicyResponse*>(buffer);

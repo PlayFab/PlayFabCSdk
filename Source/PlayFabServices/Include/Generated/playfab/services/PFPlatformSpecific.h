@@ -50,8 +50,9 @@ PF_API PFPlatformSpecificClientAndroidDevicePushNotificationRegistrationAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_INVALID_PSN_AUTH_CODE, E_PF_PSN_INACCESSIBLE or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_DOWNSTREAM_SERVICE_UNAVAILABLE, E_PF_INVALID_PSN_AUTH_CODE, E_PF_PSN_INACCESSIBLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </remarks>
 PF_API PFPlatformSpecificClientRefreshPSNAuthTokenAsync(
     _In_ PFEntityHandle entityHandle,
@@ -109,9 +110,9 @@ PF_API PFPlatformSpecificServerAwardSteamAchievementAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_USERIS_NOT_VALID
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE,
+/// E_PF_USERIS_NOT_VALID or any of the global PlayFab Service errors. See doc page "Handling PlayFab
+/// Errors" for more details on error handling.
 /// </returns>
 PF_API PFPlatformSpecificServerAwardSteamAchievementGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -127,9 +128,9 @@ PF_API PFPlatformSpecificServerAwardSteamAchievementGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_USERIS_NOT_VALID
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE,
+/// E_PF_USERIS_NOT_VALID or any of the global PlayFab Service errors. See doc page "Handling PlayFab
+/// Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

@@ -14,6 +14,7 @@ AsyncOp<void> AccountManagementAPI::ClientLinkXboxAccount(
     RunContext rc
 )
 {
+    RETURN_HR_IF(E_INVALIDARG, !request.Model().user);
     auto duplicateUserResult = XUser::Duplicate(request.Model().user);
     RETURN_IF_FAILED(duplicateUserResult.hr);
 

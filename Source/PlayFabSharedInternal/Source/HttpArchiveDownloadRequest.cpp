@@ -41,7 +41,14 @@ HCHttpArchiveDownloadCall::HCHttpArchiveDownloadCall(
 
 HRESULT HCHttpArchiveDownloadCall::OnStarted(XAsyncBlock* async) noexcept
 {
-    RETURN_IF_FAILED(SetupCall());
+    // Skip native LHC progress registration during SetupCall — this subclass
+    // provides per-chunk progress from HCResponseBodyDecompressAndWriteToFile which is more
+    // frequent and accurate. Registering both causes interleaved/oscillating values.
+    auto savedCallback = m_progressReportCallback;
+    m_progressReportCallback = nullptr;
+    HRESULT setupHr = SetupCall();
+    m_progressReportCallback = savedCallback;
+    RETURN_IF_FAILED(setupHr);
 
     // Override the response body write function to decompress the archive and write the files
     if (m_dynamicTotalSize == 0)
@@ -74,6 +81,23 @@ HRESULT HCHttpArchiveDownloadCall::HCResponseBodyDecompressAndWriteToFile(
     
     RETURN_IF_FAILED(call->m_archiveHandle->DecompressBytesProvideData(reinterpret_cast<const char*>(source), bytesAvailable, &uncompressedBytesWritten));
     RETURN_IF_FAILED(HCHttpCallResponseAddDynamicBytesWritten(callHandle, uncompressedBytesWritten));
+
+    // Fire per-chunk download progress so callers get frequent updates.
+    // The platform HTTP stack's native progress reporting may be very infrequent.
+    if (call->m_progressReportCallback)
+    {
+        call->m_totalBytesReceived += bytesAvailable;
+        uint64_t currentProgress = call->m_dynamicCurrentSize + call->m_totalBytesReceived;
+        uint64_t totalProgress = (call->m_dynamicTotalSize > 0) ? call->m_dynamicTotalSize : call->m_totalBytesReceived;
+
+        // Clamp to prevent reporting progress > 100% (e.g., if bytes accumulate across HTTP retries)
+        if (currentProgress > totalProgress)
+        {
+            currentProgress = totalProgress;
+        }
+
+        call->m_progressReportCallback(call->m_callHandle, currentProgress, totalProgress, call->m_progressReportContext);
+    }
 
     return S_OK;
 }

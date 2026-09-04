@@ -100,6 +100,7 @@ void FilePAL::CloseFile(FileHandle& fileHandle) noexcept
 {
     FileStreamContainer* pfFile = static_cast<FileStreamContainer*>(fileHandle.get());
     pfFile->file.close();
+    fileHandle.reset();
 }
 
 bool FilePAL::DoesDirectoryExist(const String& directoryPath) noexcept
@@ -129,16 +130,19 @@ bool FilePAL::DoesFileExist(const String& filePath) noexcept
 HRESULT FilePAL::DeleteLocalFile(const String& filePath) noexcept
 {
     TRACE_INFORMATION("[FILEPAL] DeleteLocalFile %s", filePath.c_str());
-    RETURN_HR_IF_FALSE(E_INVALIDARG, DoesFileExist(filePath));
 
     try
     {
         auto path = ConvertStringToPath(filePath);
-        bool result = std::filesystem::remove(path.c_str());
-        TRACE_INFORMATION("[FILEPAL] std::filesystem::remove %d", result);
-        bool exists = DoesFileExist(filePath);
-        TRACE_INFORMATION("[FILEPAL] DoesFileExist %d", exists);
-        return result ? S_OK : E_FAIL;
+        std::error_code ec;
+        std::filesystem::remove(path.c_str(), ec);
+        if (ec)
+        {
+            TRACE_INFORMATION("[FILEPAL] std::filesystem::remove failed: %s", ec.message().c_str());
+            return E_FAIL;
+        }
+        TRACE_INFORMATION("[FILEPAL] std::filesystem::remove success");
+        return S_OK;
     }
     catch (const std::filesystem::filesystem_error&)
     {
@@ -179,23 +183,149 @@ HRESULT FilePAL::DeletePath(const String& directoryPath) noexcept
 {
     TRACE_INFORMATION("[FILEPAL] DeletePath %s", directoryPath.c_str());
     RETURN_HR_IF_FALSE(E_INVALIDARG, IsValidPath(directoryPath));
-    RETURN_HR_IF_FALSE(S_OK, DoesDirectoryExist(directoryPath));
+
+    if (!DoesDirectoryExist(directoryPath))
+    {
+        TRACE_INFORMATION("[FILEPAL] DeletePath: directory does not exist, returning S_OK");
+        return S_OK;
+    }
 
     try
     {
         std::error_code ec;
         auto path = ConvertStringToPath(directoryPath);
         std::filesystem::remove_all(path, ec);
-        if (!ec)
+        if (ec)
         {
-            if (DoesDirectoryExist(directoryPath))
-            {
-                TRACE_INFORMATION("[FILEPAL] std::filesystem::remove_all failure");
-                return E_FAIL;
-            }
+            TRACE_INFORMATION("[FILEPAL] std::filesystem::remove_all failed: %s", ec.message().c_str());
+            return E_FAIL;
+        }
+
+        if (DoesDirectoryExist(directoryPath))
+        {
+            TRACE_INFORMATION("[FILEPAL] std::filesystem::remove_all failure: directory still exists");
+            return E_FAIL;
         }
 
         TRACE_INFORMATION("[FILEPAL] std::filesystem::remove_all success");
+        return S_OK;
+    }
+    catch (const std::filesystem::filesystem_error&)
+    {
+        return E_FAIL;
+    }
+    catch (const std::exception&)
+    {
+        return E_FAIL;
+    }
+}
+
+namespace
+{
+
+// Removes dir only if neither it nor any descendant contains a file. Empty subdirectories
+// are removed bottom-up. Returns true when dir itself was removed.
+//
+// Entries are collected before recursing so the directory_iterator is never invalidated by
+// removals performed during traversal. Descendant symlinks are treated as survivors and are
+// never followed. Note this says nothing about `dir` itself: directory_iterator follows a
+// symlinked root and would enumerate its target, so callers must reject a symlinked root
+// before calling in (DeletePathIfEmpty does). Any enumeration or removal error is treated as
+// "keep", because this runs on the game-save delete path where preserving unexpected content
+// is always safer than destroying it.
+bool RemoveDirectoryIfEmptyRecursive(const std::filesystem::path& dir)
+{
+    Vector<std::filesystem::path> subDirectories;
+    bool survivorFound = false;
+
+    std::error_code ec;
+    for (std::filesystem::directory_iterator it(dir, ec), end; it != end; it.increment(ec))
+    {
+        if (ec)
+        {
+            return false;
+        }
+
+        std::error_code entryEc;
+        if (it->is_symlink(entryEc) || entryEc)
+        {
+            survivorFound = true;
+            continue;
+        }
+
+        if (it->is_directory(entryEc) && !entryEc)
+        {
+            subDirectories.push_back(it->path());
+        }
+        else
+        {
+            survivorFound = true;
+        }
+    }
+
+    if (ec)
+    {
+        return false;
+    }
+
+    for (const std::filesystem::path& subDirectory : subDirectories)
+    {
+        if (!RemoveDirectoryIfEmptyRecursive(subDirectory))
+        {
+            survivorFound = true;
+        }
+    }
+
+    if (survivorFound)
+    {
+        return false;
+    }
+
+    std::error_code removeEc;
+    std::filesystem::remove(dir, removeEc);
+    return !removeEc;
+}
+
+} // anonymous namespace
+
+HRESULT FilePAL::DeletePathIfEmpty(const String& directoryPath, bool& fullyDeleted) noexcept
+{
+    fullyDeleted = false;
+
+    TRACE_INFORMATION("[FILEPAL] DeletePathIfEmpty %s", directoryPath.c_str());
+    RETURN_HR_IF_FALSE(E_INVALIDARG, IsValidPath(directoryPath));
+
+    if (!DoesDirectoryExist(directoryPath))
+    {
+        TRACE_INFORMATION("[FILEPAL] DeletePathIfEmpty: directory does not exist, returning S_OK");
+        fullyDeleted = true;
+        return S_OK;
+    }
+
+    try
+    {
+        auto path = ConvertStringToPath(directoryPath);
+
+        // DoesDirectoryExist above follows symlinks, so directoryPath itself may be a link. Walking it
+        // would enumerate the link's TARGET and prune empty directories outside the tree being cleaned.
+        // RemoveDirectoryIfEmptyRecursive cannot prevent that - it only inspects entries it enumerates,
+        // never the root it was handed. symlink_status does not follow the link, so check it here.
+        std::error_code statusEc;
+        const std::filesystem::file_status linkStatus = std::filesystem::symlink_status(path, statusEc);
+        if (statusEc)
+        {
+            TRACE_WARNING("[FILEPAL] DeletePathIfEmpty: symlink_status failed for %s: %s", directoryPath.c_str(), statusEc.message().c_str());
+            return E_FAIL;
+        }
+
+        if (std::filesystem::is_symlink(linkStatus))
+        {
+            TRACE_WARNING("[FILEPAL] DeletePathIfEmpty: refusing to prune %s because it is a symlink", directoryPath.c_str());
+            return E_INVALIDARG;
+        }
+
+        fullyDeleted = RemoveDirectoryIfEmptyRecursive(path);
+        TRACE_INFORMATION("[FILEPAL] DeletePathIfEmpty: fullyDeleted:%d", fullyDeleted);
         return S_OK;
     }
     catch (const std::filesystem::filesystem_error&)

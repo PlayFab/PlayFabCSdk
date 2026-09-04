@@ -77,6 +77,14 @@
     <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\TitleDataManagement.cpp" />
     <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFTitleDataManagement.h" />
     <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFTitleDataManagement.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPlayStreamTypes.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\PlayStreamTypeWrappers.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayStreamTypes.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayStreamTypes.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayStream.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PlayStream.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPlayStream.h" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PFPlayStream.cpp" />
     <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFPushNotificationsTypes.h" />
     <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\cpp\PushNotificationsTypeWrappers.h" />
     <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\PushNotificationsTypes.h" />

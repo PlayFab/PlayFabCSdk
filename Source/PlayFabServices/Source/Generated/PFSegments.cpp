@@ -52,6 +52,7 @@ PF_API PFSegmentsClientGetPlayerSegmentsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFSegmentsClientGetPlayerSegmentsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFSegmentsGetPlayerSegmentsResult*>(buffer);
@@ -102,6 +103,7 @@ PF_API PFSegmentsClientGetPlayerTagsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFSegmentsClientGetPlayerTagsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFSegmentsGetPlayerTagsResult*>(buffer);
@@ -173,6 +175,7 @@ PF_API PFSegmentsServerGetAllSegmentsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFSegmentsServerGetAllSegmentsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFSegmentsGetAllSegmentsResult*>(buffer);
@@ -225,61 +228,10 @@ PF_API PFSegmentsServerGetPlayerSegmentsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFSegmentsServerGetPlayerSegmentsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFSegmentsGetPlayerSegmentsResult*>(buffer);
-
-        return S_OK;
-    });
-}
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-PF_API PFSegmentsServerGetPlayersInSegmentAsync(
-    _In_ PFEntityHandle contextHandle,
-    _In_ const PFSegmentsGetPlayersInSegmentRequest* request,
-    _In_ XAsyncBlock* async
-) noexcept
-{
-    RETURN_HR_INVALIDARG_IF_NULL(request);
-
-    return AsyncApiImpl(async, XASYNC_IDENTITY(PFSegmentsServerGetPlayersInSegmentAsync), [&](SharedPtr<GlobalState> state)
-    {
-        auto provider = MakeProvider(
-            state->RunContext().DeriveOnQueue(async->queue),
-            async,
-            XASYNC_IDENTITY(PFSegmentsServerGetPlayersInSegmentAsync),
-            std::bind(&SegmentsAPI::ServerGetPlayersInSegment, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-        );
-        return XAsyncProviderBase::Run(std::move(provider));
-    });
-}
-
-PF_API PFSegmentsServerGetPlayersInSegmentGetResultSize(
-    _In_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept
-{
-    return ResultApiImpl(XASYNC_IDENTITY(PFSegmentsServerGetPlayersInSegmentGetResultSize), [&]()
-    {
-        return XAsyncGetResultSize(async, bufferSize);
-    });
-}
-
-PF_API PFSegmentsServerGetPlayersInSegmentGetResult(
-    _In_ XAsyncBlock* async,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_ PFSegmentsGetPlayersInSegmentResult** result,
-    _Out_opt_ size_t* bufferUsed
-) noexcept
-{
-    return ResultApiImpl(XASYNC_IDENTITY(PFSegmentsServerGetPlayersInSegmentGetResult), [&]()
-    {
-        RETURN_HR_INVALIDARG_IF_NULL(result);
-
-        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-        *result = static_cast<PFSegmentsGetPlayersInSegmentResult*>(buffer);
 
         return S_OK;
     });
@@ -329,6 +281,7 @@ PF_API PFSegmentsServerGetPlayerTagsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFSegmentsServerGetPlayerTagsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFSegmentsGetPlayerTagsResult*>(buffer);

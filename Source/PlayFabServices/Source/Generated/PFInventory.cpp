@@ -54,6 +54,7 @@ PF_API PFInventoryAddInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryAddInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryAddInventoryItemsResponse*>(buffer);
@@ -124,6 +125,7 @@ PF_API PFInventoryDeleteInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryDeleteInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryDeleteInventoryItemsResponse*>(buffer);
@@ -174,6 +176,7 @@ PF_API PFInventoryExecuteInventoryOperationsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryExecuteInventoryOperationsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryExecuteInventoryOperationsResponse*>(buffer);
@@ -225,6 +228,7 @@ PF_API PFInventoryExecuteTransferOperationsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryExecuteTransferOperationsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryExecuteTransferOperationsResponse*>(buffer);
@@ -276,6 +280,7 @@ PF_API PFInventoryGetInventoryCollectionIdsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetInventoryCollectionIdsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryGetInventoryCollectionIdsResponse*>(buffer);
@@ -326,6 +331,7 @@ PF_API PFInventoryGetInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryGetInventoryItemsResponse*>(buffer);
@@ -377,61 +383,10 @@ PF_API PFInventoryGetInventoryOperationStatusGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetInventoryOperationStatusGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryGetInventoryOperationStatusResponse*>(buffer);
-
-        return S_OK;
-    });
-}
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-PF_API PFInventoryGetMicrosoftStoreAccessTokensAsync(
-    _In_ PFEntityHandle contextHandle,
-    _In_ const PFInventoryGetMicrosoftStoreAccessTokensRequest* request,
-    _In_ XAsyncBlock* async
-) noexcept
-{
-    RETURN_HR_INVALIDARG_IF_NULL(request);
-
-    return AsyncApiImpl(async, XASYNC_IDENTITY(PFInventoryGetMicrosoftStoreAccessTokensAsync), [&](SharedPtr<GlobalState> state)
-    {
-        auto provider = MakeProvider(
-            state->RunContext().DeriveOnQueue(async->queue),
-            async,
-            XASYNC_IDENTITY(PFInventoryGetMicrosoftStoreAccessTokensAsync),
-            std::bind(&InventoryAPI::GetMicrosoftStoreAccessTokens, Entity::Duplicate(contextHandle), *request, std::placeholders::_1)
-        );
-        return XAsyncProviderBase::Run(std::move(provider));
-    });
-}
-
-PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResultSize(
-    _In_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept
-{
-    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetMicrosoftStoreAccessTokensGetResultSize), [&]()
-    {
-        return XAsyncGetResultSize(async, bufferSize);
-    });
-}
-
-PF_API PFInventoryGetMicrosoftStoreAccessTokensGetResult(
-    _In_ XAsyncBlock* async,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_ PFInventoryGetMicrosoftStoreAccessTokensResponse** result,
-    _Out_opt_ size_t* bufferUsed
-) noexcept
-{
-    return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetMicrosoftStoreAccessTokensGetResult), [&]()
-    {
-        RETURN_HR_INVALIDARG_IF_NULL(result);
-
-        RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
-        *result = static_cast<PFInventoryGetMicrosoftStoreAccessTokensResponse*>(buffer);
 
         return S_OK;
     });
@@ -481,6 +436,7 @@ PF_API PFInventoryGetTransactionHistoryGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryGetTransactionHistoryGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryGetTransactionHistoryResponse*>(buffer);
@@ -532,6 +488,7 @@ PF_API PFInventoryPurchaseInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryPurchaseInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryPurchaseInventoryItemsResponse*>(buffer);
@@ -583,6 +540,7 @@ PF_API PFInventoryRedeemAppleAppStoreInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemAppleAppStoreInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryRedeemAppleAppStoreInventoryItemsResponse*>(buffer);
@@ -635,6 +593,7 @@ PF_API PFInventoryRedeemGooglePlayInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemGooglePlayInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryRedeemGooglePlayInventoryItemsResponse*>(buffer);
@@ -687,6 +646,7 @@ PF_API PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemMicrosoftStoreInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryRedeemMicrosoftStoreInventoryItemsResponse*>(buffer);
@@ -739,6 +699,7 @@ PF_API PFInventoryRedeemNintendoEShopInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemNintendoEShopInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryRedeemNintendoEShopInventoryItemsResponse*>(buffer);
@@ -791,6 +752,7 @@ PF_API PFInventoryRedeemPlayStationStoreInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemPlayStationStoreInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryRedeemPlayStationStoreInventoryItemsResponse*>(buffer);
@@ -843,6 +805,7 @@ PF_API PFInventoryRedeemSteamInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryRedeemSteamInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryRedeemSteamInventoryItemsResponse*>(buffer);
@@ -894,6 +857,7 @@ PF_API PFInventorySubtractInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventorySubtractInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventorySubtractInventoryItemsResponse*>(buffer);
@@ -944,6 +908,7 @@ PF_API PFInventoryTransferInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryTransferInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryTransferInventoryItemsResponse*>(buffer);
@@ -994,6 +959,7 @@ PF_API PFInventoryUpdateInventoryItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFInventoryUpdateInventoryItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFInventoryUpdateInventoryItemsResponse*>(buffer);

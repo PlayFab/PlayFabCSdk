@@ -90,6 +90,7 @@ PF_API PFEventsGetDataConnectionGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFEventsGetDataConnectionGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFEventsGetDataConnectionResponse*>(buffer);
@@ -144,6 +145,7 @@ PF_API PFEventsListDataConnectionsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFEventsListDataConnectionsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFEventsListDataConnectionsResponse*>(buffer);
@@ -198,6 +200,7 @@ PF_API PFEventsSetDataConnectionGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFEventsSetDataConnectionGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFEventsSetDataConnectionResponse*>(buffer);
@@ -252,6 +255,7 @@ PF_API PFEventsSetDataConnectionActiveGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFEventsSetDataConnectionActiveGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFEventsSetDataConnectionActiveResponse*>(buffer);
@@ -305,6 +309,7 @@ PF_API PFEventsWriteEventsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFEventsWriteEventsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFEventsWriteEventsResponse*>(buffer);
@@ -357,6 +362,7 @@ PF_API PFEventsWriteTelemetryEventsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFEventsWriteTelemetryEventsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFEventsWriteEventsResponse*>(buffer);

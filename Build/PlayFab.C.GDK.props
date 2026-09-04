@@ -4,6 +4,12 @@
 
   <Import Condition="'$(PlayFabPathsImported)' != 'true'" Project="PlayFab.C.paths.props" />
 
+  <!-- Fall back to GameDKLatest if GameDKCoreLatest is not set (older GDK command prompts) -->
+  <PropertyGroup>
+    <GameDKCoreLatest Condition="'$(GameDKCoreLatest)'==''">$(GameDKLatest)</GameDKCoreLatest>
+    <LibHttpClientIncludeSuffix>false</LibHttpClientIncludeSuffix>
+  </PropertyGroup>
+
   <!--Use same build config as LHC-->
   <Import Project="$(HCBuildRoot)\libHttpClient.GDK.props" />
 
@@ -25,6 +31,24 @@
   <!-- Identify GDK builds for shared props conditions -->
   <PropertyGroup>
     <UseGDK>true</UseGDK>
+    <HCPlatform>GDK</HCPlatform>
   </PropertyGroup>
+
+  <!-- When using plain x64 platform, the GDK platform toolchain no longer sets _GAMING_DESKTOP automatically,
+       links standard DirectX libraries, or resolves GDKExtLibNames include paths -->
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <IncludePath>$(GDKIncludeRoot)\playfab\multiplayer;$(GDKIncludeRoot)\playfab\party;$(IncludePath)</IncludePath>
+    <!-- GDK 260400+ renamed the thunks lib; detect which name is available -->
+    <XsapiThunksLib Condition="Exists('$(GDKLibPath)\Microsoft.Xbox.Services.C.Thunks.lib')">Microsoft.Xbox.Services.C.Thunks</XsapiThunksLib>
+    <XsapiThunksLib Condition="'$(XsapiThunksLib)'==''">Microsoft.Xbox.Services.GDK.C.Thunks</XsapiThunksLib>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_GAMING_DESKTOP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
 
 </Project>

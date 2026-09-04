@@ -488,7 +488,6 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::InsightsManagementGetOperationStatusInvalidParameter: return E_PF_INSIGHTS_MANAGEMENT_GET_OPERATION_STATUS_INVALID_PARAMETER;
     case ServiceErrorCode::DuplicatePurchaseTransactionId: return E_PF_DUPLICATE_PURCHASE_TRANSACTION_ID;
     case ServiceErrorCode::EvaluationModePlayerCountExceeded: return E_PF_EVALUATION_MODE_PLAYER_COUNT_EXCEEDED;
-    case ServiceErrorCode::GetPlayersInSegmentRateLimitExceeded: return E_PF_GET_PLAYERS_IN_SEGMENT_RATE_LIMIT_EXCEEDED;
     case ServiceErrorCode::CloudScriptFunctionNameSizeExceeded: return E_PF_CLOUD_SCRIPT_FUNCTION_NAME_SIZE_EXCEEDED;
     case ServiceErrorCode::PaidInsightsFeaturesNotEnabled: return E_PF_PAID_INSIGHTS_FEATURES_NOT_ENABLED;
     case ServiceErrorCode::CloudScriptAzureFunctionsQueueRequestError: return E_PF_CLOUD_SCRIPT_AZURE_FUNCTIONS_QUEUE_REQUEST_ERROR;
@@ -610,6 +609,10 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::ParentCustomerAccountNotFound: return E_PF_PARENT_CUSTOMER_ACCOUNT_NOT_FOUND;
     case ServiceErrorCode::AccountLinkedToABannedPlayer: return E_PF_ACCOUNT_LINKED_TO_A_BANNED_PLAYER;
     case ServiceErrorCode::AzureSubscriptionNotEligibleForLinking: return E_PF_AZURE_SUBSCRIPTION_NOT_ELIGIBLE_FOR_LINKING;
+    case ServiceErrorCode::EntityIsNotAMember: return E_PF_ENTITY_IS_NOT_A_MEMBER;
+    case ServiceErrorCode::IPAddressNotFound: return E_PF_IP_ADDRESS_NOT_FOUND;
+    case ServiceErrorCode::PSNNextGenNotConfiguredForTitle: return E_PF_PSN_NEXT_GEN_NOT_CONFIGURED_FOR_TITLE;
+    case ServiceErrorCode::InvalidNintendoIssuer: return E_PF_INVALID_NINTENDO_ISSUER;
     case ServiceErrorCode::MatchmakingEntityInvalid: return E_PF_MATCHMAKING_ENTITY_INVALID;
     case ServiceErrorCode::MatchmakingPlayerAttributesInvalid: return E_PF_MATCHMAKING_PLAYER_ATTRIBUTES_INVALID;
     case ServiceErrorCode::MatchmakingQueueNotFound: return E_PF_MATCHMAKING_QUEUE_NOT_FOUND;
@@ -654,6 +657,7 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::CatalogBadRequest: return E_PF_CATALOG_BAD_REQUEST;
     case ServiceErrorCode::CatalogTooManyRequests: return E_PF_CATALOG_TOO_MANY_REQUESTS;
     case ServiceErrorCode::InvalidCatalogItemConfiguration: return E_PF_INVALID_CATALOG_ITEM_CONFIGURATION;
+    case ServiceErrorCode::LegacyEconomyDisabled: return E_PF_LEGACY_ECONOMY_DISABLED;
     case ServiceErrorCode::ExportInvalidStatusUpdate: return E_PF_EXPORT_INVALID_STATUS_UPDATE;
     case ServiceErrorCode::ExportInvalidPrefix: return E_PF_EXPORT_INVALID_PREFIX;
     case ServiceErrorCode::ExportBlobContainerDoesNotExist: return E_PF_EXPORT_BLOB_CONTAINER_DOES_NOT_EXIST;
@@ -726,6 +730,8 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::ExperimentationExclusionGroupInvalidName: return E_PF_EXPERIMENTATION_EXCLUSION_GROUP_INVALID_NAME;
     case ServiceErrorCode::ExperimentationLegacyExperimentInvalidOperation: return E_PF_EXPERIMENTATION_LEGACY_EXPERIMENT_INVALID_OPERATION;
     case ServiceErrorCode::ExperimentationExperimentStopFailed: return E_PF_EXPERIMENTATION_EXPERIMENT_STOP_FAILED;
+    case ServiceErrorCode::ExperimentationExperimentDeleteFailed: return E_PF_EXPERIMENTATION_EXPERIMENT_DELETE_FAILED;
+    case ServiceErrorCode::ExperimentationExperimentStartFailed: return E_PF_EXPERIMENTATION_EXPERIMENT_START_FAILED;
     case ServiceErrorCode::MaxActionDepthExceeded: return E_PF_MAX_ACTION_DEPTH_EXCEEDED;
     case ServiceErrorCode::TitleNotOnUpdatedPricingPlan: return E_PF_TITLE_NOT_ON_UPDATED_PRICING_PLAN;
     case ServiceErrorCode::SegmentManagementTitleNotInFlight: return E_PF_SEGMENT_MANAGEMENT_TITLE_NOT_IN_FLIGHT;
@@ -743,7 +749,8 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::AsyncExportNotFound: return E_PF_ASYNC_EXPORT_NOT_FOUND;
     case ServiceErrorCode::AsyncExportRateLimitExceeded: return E_PF_ASYNC_EXPORT_RATE_LIMIT_EXCEEDED;
     case ServiceErrorCode::AnalyticsSegmentCountOverLimit: return E_PF_ANALYTICS_SEGMENT_COUNT_OVER_LIMIT;
-    case ServiceErrorCode::GetPlayersInSegmentDeprecated: return E_PF_GET_PLAYERS_IN_SEGMENT_DEPRECATED;
+    case ServiceErrorCode::GetSegmentPlayerCountNotInFlight: return E_PF_GET_SEGMENT_PLAYER_COUNT_NOT_IN_FLIGHT;
+    case ServiceErrorCode::GetSegmentPlayerCountRateLimitExceeded: return E_PF_GET_SEGMENT_PLAYER_COUNT_RATE_LIMIT_EXCEEDED;
     case ServiceErrorCode::SnapshotNotFound: return E_PF_SNAPSHOT_NOT_FOUND;
     case ServiceErrorCode::InventoryApiNotImplemented: return E_PF_INVENTORY_API_NOT_IMPLEMENTED;
     case ServiceErrorCode::InventoryCollectionDeletionDisallowed: return E_PF_INVENTORY_COLLECTION_DELETION_DISALLOWED;
@@ -819,8 +826,6 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::PlayerCustomPropertiesPropertyDoesNotExist: return E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_DOES_NOT_EXIST;
     case ServiceErrorCode::AddonAlreadyExists: return E_PF_ADDON_ALREADY_EXISTS;
     case ServiceErrorCode::AddonDoesntExist: return E_PF_ADDON_DOESNT_EXIST;
-    case ServiceErrorCode::CopilotDisabled: return E_PF_COPILOT_DISABLED;
-    case ServiceErrorCode::CopilotInvalidRequest: return E_PF_COPILOT_INVALID_REQUEST;
     case ServiceErrorCode::TrueSkillUnauthorized: return E_PF_TRUE_SKILL_UNAUTHORIZED;
     case ServiceErrorCode::TrueSkillInvalidTitleId: return E_PF_TRUE_SKILL_INVALID_TITLE_ID;
     case ServiceErrorCode::TrueSkillInvalidScenarioId: return E_PF_TRUE_SKILL_INVALID_SCENARIO_ID;
@@ -923,6 +928,11 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::GameSaveConflict: return E_PF_GAME_SAVE_CONFLICT;
     case ServiceErrorCode::GameSaveManifestNotEligibleForRollback: return E_PF_GAME_SAVE_MANIFEST_NOT_ELIGIBLE_FOR_ROLLBACK;
     case ServiceErrorCode::GameSaveTitleClientAnonymousAccountCreationNotDisabled: return E_PF_GAME_SAVE_TITLE_CLIENT_ANONYMOUS_ACCOUNT_CREATION_NOT_DISABLED;
+    case ServiceErrorCode::GameSaveTitleConfigNoUpdatesRequested: return E_PF_GAME_SAVE_TITLE_CONFIG_NO_UPDATES_REQUESTED;
+    case ServiceErrorCode::GameSavePlayerNotEligibleForTransfer: return E_PF_GAME_SAVE_PLAYER_NOT_ELIGIBLE_FOR_TRANSFER;
+    case ServiceErrorCode::GameSaveAlreadyAutoRolledBack: return E_PF_GAME_SAVE_ALREADY_AUTO_ROLLED_BACK;
+    case ServiceErrorCode::GameSaveManifestNotEligibleForRestore: return E_PF_GAME_SAVE_MANIFEST_NOT_ELIGIBLE_FOR_RESTORE;
+    case ServiceErrorCode::GameSaveManifestArchived: return E_PF_GAME_SAVE_MANIFEST_ARCHIVED;
     case ServiceErrorCode::StateShareForbidden: return E_PF_STATE_SHARE_FORBIDDEN;
     case ServiceErrorCode::StateShareTitleNotInFlight: return E_PF_STATE_SHARE_TITLE_NOT_IN_FLIGHT;
     case ServiceErrorCode::StateShareStateNotFound: return E_PF_STATE_SHARE_STATE_NOT_FOUND;
@@ -948,6 +958,8 @@ HRESULT ServiceErrorToHR(ServiceErrorCode errorCode)
     case ServiceErrorCode::EntityTypeSpecifiedRequiresAggregationSource: return E_PF_ENTITY_TYPE_SPECIFIED_REQUIRES_AGGREGATION_SOURCE;
     case ServiceErrorCode::PlayFabErrorEventNotSupportedForEntityType: return E_PF_PLAY_FAB_ERROR_EVENT_NOT_SUPPORTED_FOR_ENTITY_TYPE;
     case ServiceErrorCode::MetadataLengthExceeded: return E_PF_METADATA_LENGTH_EXCEEDED;
+    case ServiceErrorCode::MaxQueryableVersionsExceeded: return E_PF_MAX_QUERYABLE_VERSIONS_EXCEEDED;
+    case ServiceErrorCode::StatisticVersionIncrementNotAllowedWhileLinked: return E_PF_STATISTIC_VERSION_INCREMENT_NOT_ALLOWED_WHILE_LINKED;
     case ServiceErrorCode::StoreMetricsRequestInvalidInput: return E_PF_STORE_METRICS_REQUEST_INVALID_INPUT;
     case ServiceErrorCode::StoreMetricsErrorRetrievingMetrics: return E_PF_STORE_METRICS_ERROR_RETRIEVING_METRICS;
     default: return E_PF_UNKNOWN_ERROR;

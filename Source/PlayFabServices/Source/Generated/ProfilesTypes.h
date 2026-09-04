@@ -107,6 +107,45 @@ public:
     static HRESULT Copy(const PFEntityStatisticValue& input, PFEntityStatisticValue& output, ModelBuffer& buffer);
 };
 
+class StatisticColumn : public Wrappers::PFStatisticColumnWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFStatisticColumn>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFStatisticColumnWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFStatisticColumn const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFStatisticColumn& model);
+    static HRESULT Copy(const PFStatisticColumn& input, PFStatisticColumn& output, ModelBuffer& buffer);
+};
+
+class StatisticColumnCollection : public Wrappers::PFStatisticColumnCollectionWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFStatisticColumnCollection>
+{
+public:
+    using ModelWrapperType = typename Wrappers::PFStatisticColumnCollectionWrapper<Allocator>;
+    using ModelWrapperType::ModelType;
+    using DictionaryEntryType = ModelWrapperType::DictionaryEntryType;
+
+    // Constructors
+    using ModelWrapperType::ModelWrapperType;
+
+    // ServiceOutputModel
+    HRESULT FromJson(const JsonValue& input) override;
+    // ClientOutputModel
+    size_t RequiredBufferSize() const override;
+    Result<PFStatisticColumnCollection const*> Copy(ModelBuffer& buffer) const override;
+
+    static size_t RequiredBufferSize(const PFStatisticColumnCollection& model);
+    static HRESULT Copy(const PFStatisticColumnCollection& input, PFStatisticColumnCollection& output, ModelBuffer& buffer);
+};
+
 class EntityProfileBody : public Wrappers::PFProfilesEntityProfileBodyWrapper<Allocator>, public ServiceOutputModel, public ClientOutputModel<PFProfilesEntityProfileBody>
 {
 public:
@@ -287,6 +326,11 @@ template<typename T> struct EnumRange;
 template<> struct EnumRange<PFProfilesEffectType>
 {
     static constexpr PFProfilesEffectType maxValue = PFProfilesEffectType::Deny;
+};
+
+template<> struct EnumRange<PFStatisticAggregationMethod>
+{
+    static constexpr PFStatisticAggregationMethod maxValue = PFStatisticAggregationMethod::Sum;
 };
 
 

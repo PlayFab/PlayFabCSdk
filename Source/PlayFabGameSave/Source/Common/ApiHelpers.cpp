@@ -9,7 +9,7 @@ namespace GameSave
 namespace Detail
 {
 
-HRESULT CALLBACK AsyncErrorProvider(XAsyncOp op, XAsyncProviderData const* data)
+HRESULT CALLBACK AsyncResultProvider(XAsyncOp op, XAsyncProviderData const* data)
 {
     assert(data);
     RETURN_HR_IF(E_UNEXPECTED, !data);
@@ -22,10 +22,10 @@ HRESULT CALLBACK AsyncErrorProvider(XAsyncOp op, XAsyncProviderData const* data)
     return S_OK;
 }
 
-HRESULT CompleteAsyncWithError(XAsyncBlock* async, const char* apiIdentity, HRESULT hr)
+HRESULT CompleteAsyncWithResult(XAsyncBlock* async, const char* apiIdentity, HRESULT hr)
 {
     auto resultPtr = MakeUnique<HRESULT>(hr);
-    RETURN_IF_FAILED(XAsyncBegin(async, resultPtr.get(), nullptr, apiIdentity, AsyncErrorProvider));
+    RETURN_IF_FAILED(XAsyncBegin(async, resultPtr.get(), nullptr, apiIdentity, AsyncResultProvider));
     resultPtr.release();
     return S_OK;
 }

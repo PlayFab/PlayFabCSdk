@@ -255,7 +255,7 @@ static std::string ExpandAndCanonicalize(const char* templ)
 // Titles may provide a custom root via PFGameSaveInitArgs::saveFolder. Reject obviously unsafe or
 // system protected locations to prevent accidental roaming of large / sensitive trees or conflicts
 // with OS managed storage. Logic inspired by partner code but adapted to existing coding patterns.
-bool IsDisallowedSaveRoot(const char* path)
+bool IsDisallowedSaveRoot(const char* path, std::string* canonicalizedOut = nullptr)
 {
     if (!path || !*path)
     {
@@ -332,17 +332,22 @@ bool IsDisallowedSaveRoot(const char* path)
             return true;
         }
     }
+    if (canonicalizedOut)
+    {
+        *canonicalizedOut = candidate;
+    }
     return false;
 }
 
 HRESULT GameSaveAPIProviderWin32::Initialize(_In_ PFGameSaveInitArgs* args) noexcept
 {
-    UNREFERENCED_PARAMETER(args);
+    RETURN_HR_INVALIDARG_IF_NULL(args);
 
     TRACE_INFORMATION("GameSaveAPIProviderWin32::Initialize");
     if( args->saveFolder != nullptr )
     {
-        if (IsDisallowedSaveRoot(args->saveFolder))
+        std::string canonicalizedPath;
+        if (IsDisallowedSaveRoot(args->saveFolder, &canonicalizedPath))
         {
             TRACE_ERROR("saveFolder '%s' is disallowed / invalid", args->saveFolder);
             return E_INVALIDARG;
@@ -351,7 +356,7 @@ HRESULT GameSaveAPIProviderWin32::Initialize(_In_ PFGameSaveInitArgs* args) noex
         HRESULT hr = GameSaveGlobalState::Get(globalState);
         if (SUCCEEDED(hr))
         {
-            globalState->SetInitArgsSaveRootFolder(args->saveFolder);
+            globalState->SetInitArgsSaveRootFolder(canonicalizedPath.empty() ? args->saveFolder : canonicalizedPath.c_str());
         }
     }
     else
@@ -379,9 +384,12 @@ HRESULT GameSaveAPIProviderWin32::UninitializeResult(
 
 HRESULT GameSaveAPIProviderWin32::SetActiveDeviceChangedCallback(
     _In_opt_ XTaskQueueHandle callbackQueue,
-    _In_opt_ PFGameSaveFilesActiveDeviceChangedCallback* callback, _In_opt_ void* context
+    _In_ PFGameSaveFilesActiveDeviceChangedCallback* callback, _In_opt_ void* context
 ) noexcept
 {
+    RETURN_HR_IF(E_INVALIDARG, callback == nullptr);
+
+    std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
     auto& uiInfo = GetGameSaveUiCallbackInfo();
     uiInfo.activeDeviceChangedCallbackQueue = callbackQueue;
     uiInfo.activeDeviceChangedCallback = callback;
@@ -394,6 +402,7 @@ HRESULT GameSaveAPIProviderWin32::SetUiCallbacks(
     _In_ PFGameSaveUICallbacks* callbacks
 ) noexcept
 {
+    std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
     auto& uiInfo = GetGameSaveUiCallbackInfo();
 
     uiInfo.progressCallback = callbacks->progressCallback;
@@ -498,28 +507,20 @@ HRESULT GameSaveAPIProviderWin32::AddUserWithUiAsync(
     return GameSaveEntityAsyncApiImpl(async, XASYNC_IDENTITY(AddUserWithUiAsync), true, localUserHandle, 
     [async, options](SharedPtr<FolderSyncManager> folderSync, RunContext&& rc)
     {
-        FolderSyncManagerProgress progress = folderSync->GetSyncProgress();
-        // Allow calling AddUserWithUiAsync if:
-        // 1. User has never been added (NotStarted state), OR
-        // 2. User is disconnected from cloud and wants to reconnect
-        //    (per documentation: "When disconnected from cloud, AddUserWithUiAsync() can be called again")
-        bool isReconnectAttempt = folderSync->IsForcedDisconnectFromCloud();
-        if (progress.syncState != PFGameSaveFilesSyncState::NotStarted)
+        // One atomic admission: the ResetCloud reservation test, the duplicate/reconnect state
+        // checks and the transition to PreparingForDownload. Doing these through separate lock
+        // acquisitions let a ResetCloud reserve itself in the gap and run concurrently with this
+        // download, so the new pending manifest survived a reset that reported success.
+        PFGameSaveFilesSyncState previousSyncState = PFGameSaveFilesSyncState::NotStarted;
+        bool previousForcedDisconnectFromCloud = false;
+        HRESULT reserveHr = folderSync->TryReserveDownload(options, previousSyncState, previousForcedDisconnectFromCloud);
+        if (FAILED(reserveHr))
         {
-            if (!isReconnectAttempt)
-            {
-                // User already added and not in offline mode - reject duplicate AddUser
-                return E_PF_GAMESAVE_USER_ALREADY_ADDED;
-            }
-            // User is disconnected from cloud - allow reconnection attempt
-            // Per documentation: "When disconnected from cloud, PFGameSaveFilesAddUserWithUiAsync() 
-            // can be called again if you want to try connect to the cloud."
-            folderSync->SetForcedDisconnectFromCloud(false);
-            folderSync->InitForDownload();
+            return reserveHr;
         }
 
-        folderSync->SetSyncStateProgress(PFGameSaveFilesSyncState::PreparingForDownload, 0, 0);
-        folderSync->SetAddUserOptions(options);
+        // Keep a reference so the reservation can be released if the provider never starts.
+        SharedPtr<FolderSyncManager> folderSyncForCleanup = folderSync;
 
         auto provider = MakeDownloadAsyncProvider(
             std::move(rc),
@@ -528,7 +529,33 @@ HRESULT GameSaveAPIProviderWin32::AddUserWithUiAsync(
             std::move(folderSync)
         );
 
-        return XAsyncProviderBase::Run(std::move(provider));
+        HRESULT hr = XAsyncProviderBase::Run(std::move(provider));
+        if (FAILED(hr))
+        {
+            // TryReserveDownload clears the forced-disconnect flag when admitting a reconnect
+            // attempt, and does so before the provider starts. Restoring only the sync state would
+            // leave the manager reporting connected when no reconnect ever ran, so
+            // IsConnectedToCloud would lie and nothing would prompt the title to retry.
+            //
+            // Restore only when it was actually set. If it was already false the reservation
+            // cleared nothing, and writing false here would instead erase a disconnect published
+            // in the meantime: the active-device poller is still running on this path (it is only
+            // stopped once a sync completes, which a failed Run never reaches), and it sets this
+            // flag from outside m_progressMutex when it sees the active device change.
+            //
+            // Done before the sync-state restore so the reservation is never visibly released
+            // while connectivity still reads stale.
+            if (previousForcedDisconnectFromCloud)
+            {
+                folderSyncForCleanup->SetForcedDisconnectFromCloud(true);
+            }
+
+            // The download never started, so drop the reservation - otherwise every later AddUser
+            // for this user is rejected with E_PF_GAMESAVE_USER_ALREADY_ADDED forever.
+            folderSyncForCleanup->SetSyncStateProgress(previousSyncState, 0, 0);
+        }
+
+        return hr;
     });
 }
 
@@ -592,27 +619,23 @@ HRESULT GameSaveAPIProviderWin32::UploadWithUiAsync(
     return GameSaveEntityAsyncApiImpl(async, XASYNC_IDENTITY(PFGameSaveFilesUploadWithUiAsync), false, localUserHandle,
     [option, async](SharedPtr<FolderSyncManager> folderSync, RunContext&& rc)
     {
+        bool reservedUploadState = false;
+        PFGameSaveFilesSyncState previousSyncState = PFGameSaveFilesSyncState::NotStarted;
+
         if (!folderSync->IsForcedDisconnectFromCloud())
         {
-            FolderSyncManagerProgress progress = folderSync->GetSyncProgress();
-            if (progress.syncState == PFGameSaveFilesSyncState::NotStarted)
+            // One atomic admission: state validation plus the transition to PreparingForUpload.
+            HRESULT reserveHr = folderSync->TryReserveUpload(previousSyncState);
+            if (FAILED(reserveHr))
             {
-                return E_PF_GAMESAVE_USER_NOT_ADDED;
+                return reserveHr;
             }
-
-            if (folderSync->IsDeviceReleasedAsActive())
-            {
-                return E_PF_GAMESAVE_DEVICE_NO_LONGER_ACTIVE;
-            }
-
-            if (progress.syncState == PFGameSaveFilesSyncState::PreparingForDownload ||
-                progress.syncState == PFGameSaveFilesSyncState::Downloading)
-            {
-                return E_PF_GAMESAVE_DOWNLOAD_IN_PROGRESS;
-            }
-
-            folderSync->SetSyncStateProgress(PFGameSaveFilesSyncState::PreparingForUpload, 0, 0);
+            reservedUploadState = true;
         }
+
+        // Keep a reference so the reservation can be released if the provider never starts. Only
+        // UploadAsyncProvider::DoWork restores the state, and it never runs if Run() fails.
+        SharedPtr<FolderSyncManager> folderSyncForCleanup = folderSync;
 
         auto provider = MakeStartFileSyncProvider(
             std::move(rc),
@@ -621,7 +644,15 @@ HRESULT GameSaveAPIProviderWin32::UploadWithUiAsync(
             XASYNC_IDENTITY(PFGameSaveFilesUploadWithUiAsync),
             std::move(folderSync));
 
-        return XAsyncProviderBase::Run(std::move(provider));
+        HRESULT hr = XAsyncProviderBase::Run(std::move(provider));
+        if (FAILED(hr) && reservedUploadState)
+        {
+            // The upload never started, so drop the reservation - otherwise every later upload for
+            // this user is rejected with E_PF_GAMESAVE_OPERATION_IN_PROGRESS forever.
+            folderSyncForCleanup->SetSyncStateProgress(previousSyncState, 0, 0);
+        }
+
+        return hr;
     });
 }
 
@@ -890,6 +921,23 @@ HRESULT GameSaveAPIProviderWin32::SetForceSyncFailedErrorForDebug(_In_ bool forc
     }
 }
 
+HRESULT GameSaveAPIProviderWin32::SetForceNullPendingManifestForDebug(_In_ bool force) noexcept
+{
+    TRACE_INFORMATION("[GAME SAVE] SetForceNullPendingManifestForDebug called with force=%d", force);
+    try
+    {
+        SharedPtr<GameSaveGlobalState> state;
+        HRESULT hr = GameSaveGlobalState::Get(state);
+        RETURN_IF_FAILED(hr);
+        state->SetForceNullPendingManifest(force);
+        return S_OK;
+    }
+    catch (...)
+    {
+        return E_FAIL;
+    }
+}
+
 HRESULT GameSaveAPIProviderWin32::SetWriteManifestsToDiskForDebug(_In_ bool writeManifests) noexcept
 {
     TRACE_INFORMATION("[GAME SAVE] SetWriteManifestsToDiskForDebug called with writeManifests=%d", writeManifests);
@@ -954,13 +1002,30 @@ HRESULT GameSaveAPIProviderWin32::ResetCloudAsync(_In_ PFLocalUserHandle localUs
     return GameSaveEntityAsyncApiImpl(async, XASYNC_IDENTITY(ResetCloudAsync), true, localUserHandle,
     [async](SharedPtr<FolderSyncManager> folderSync, RunContext&& rc)
     {
+        // Atomic admission: rejects an overlapping reset and resets the (shared, stateful) step
+        // in the same critical section, so two callers can't both reset and then race its stage,
+        // manifest list and delete index.
+        if (!folderSync->TryReserveResetCloud())
+        {
+            return E_PF_GAMESAVE_OPERATION_IN_PROGRESS;
+        }
+
+        SharedPtr<FolderSyncManager> folderSyncForCleanup = folderSync;
+
         auto provider = MakeStartFileResetCloudAsyncProvider(
             std::move(rc),
             async,
             XASYNC_IDENTITY(ResetCloudAsync),
             std::move(folderSync));
 
-        return XAsyncProviderBase::Run(std::move(provider));
+        HRESULT hr = XAsyncProviderBase::Run(std::move(provider));
+        if (FAILED(hr))
+        {
+            // Nothing will ever release the reservation otherwise.
+            folderSyncForCleanup->ReleaseResetCloudReservation();
+        }
+
+        return hr;
     });
 }
 
@@ -990,10 +1055,16 @@ HRESULT GameSaveAPIProviderWin32::SetSaveDescriptionAsync(
         {
             if (!folderSync->HasStartedFinalizeManifest())
             {
-                folderSync->SetLastShortSaveDescription(shortSaveDescriptionStr);
+                // Mark dirty: the value has not reached the service yet. If the in-flight upload
+                // turns out to have no file changes, the metadata-only flush in DoWorkFolderUpload
+                // is gated on the dirty flag, and a clean value would be dropped silently and
+                // never retried after a restart.
+                folderSync->SetLastShortSaveDescription(shortSaveDescriptionStr, true /*dirty*/);
                 TRACE_INFORMATION("Deferring SetSaveDescription (upload in progress pre-finalize). Will apply at FinalizeManifest");
-                XAsyncComplete(async, S_OK, 0);
-                return S_OK;
+                // Complete through a provider, not a bare XAsyncComplete: no provider was ever
+                // started on this block (GameSaveEntityAsyncApiImpl does not call XAsyncBegin), so
+                // XAsyncComplete had nothing to complete and the title's callback never fired.
+                return Detail::CompleteAsyncWithResult(async, XASYNC_IDENTITY(SetSaveDescriptionAsync), S_OK);
             }
             // Finalize already started; fall through to provider which will internally wait for finalize to complete before performing UpdateManifest
             TRACE_INFORMATION("SetSaveDescription called during in-flight FinalizeManifest; provider will wait until finalize completes");

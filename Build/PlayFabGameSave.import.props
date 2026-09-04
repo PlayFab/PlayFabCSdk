@@ -15,7 +15,10 @@
 
   <PropertyGroup>
     <PlayFabGameSaveProjectName>PlayFabGameSave.$(HCPlatform)</PlayFabGameSaveProjectName>
-    <PlayFabGameSaveOutDir>$(PlayFabOutRoot)\$(Platform)\$(Configuration)\$(PlayFabGameSaveProjectName)\</PlayFabGameSaveOutDir>
+    <PlayFabGameSaveTargetName>PlayFabGameSave</PlayFabGameSaveTargetName>
+    <_PFGSBuildPlatform Condition="'$(HCPlatform)' == 'GDK' AND $(Platform.StartsWith('Gaming.'))">x64</_PFGSBuildPlatform>
+    <_PFGSBuildPlatform Condition="'$(_PFGSBuildPlatform)' == ''">$(Platform)</_PFGSBuildPlatform>
+    <PlayFabGameSaveOutDir>$(PlayFabOutRoot)\$(_PFGSBuildPlatform)\$(Configuration)\$(PlayFabGameSaveProjectName)\</PlayFabGameSaveOutDir>
   </PropertyGroup>
 
   <!--Add reference to appropriate PlayFabGameSave project-->
@@ -28,8 +31,8 @@
 
   <!--Copy PlayFabCore and dependencies to OutDir-->
   <ItemGroup Label="CopyDependencies">
-    <ReferenceCopyLocalPaths Include="$(PlayFabGameSaveOutDir)\$(PlayFabGameSaveProjectName).dll" />
-    <ReferenceCopyLocalPaths Include="$(PlayFabGameSaveOutDir)\$(PlayFabGameSaveProjectName).pdb" />
+    <ReferenceCopyLocalPaths Include="$(PlayFabGameSaveOutDir)\$(PlayFabGameSaveTargetName).dll" />
+    <ReferenceCopyLocalPaths Include="$(PlayFabGameSaveOutDir)\$(PlayFabGameSaveTargetName).pdb" />
   </ItemGroup>
 
 </Project>

@@ -22,8 +22,7 @@ android {
     externalNativeBuild {
         cmake {
             // CXX20 Standard is only available in CMake 3.18.1 and above.
-            // Navigate to SDK Manager > SDK Tools > CMake for the correct version.
-            version "3.18.1"
+            version "3.18.1+"
             path "CMakeLists.txt"
             buildStagingDirectory "${project.buildDir.getParentFile().getAbsolutePath()}/.cxx/${project.name}"
         }

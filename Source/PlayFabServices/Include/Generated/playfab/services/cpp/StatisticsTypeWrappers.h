@@ -2282,6 +2282,7 @@ public:
 
     PFStatisticsStatisticUpdateWrapper(const PFStatisticsStatisticUpdate& model) :
         ModelWrapper<PFStatisticsStatisticUpdate, Alloc>{ model },
+        m_aggregationTargetEntityKeys{ model.aggregationTargetEntityKeys, model.aggregationTargetEntityKeys + model.aggregationTargetEntityKeysCount },
         m_metadata{ SafeString(model.metadata) },
         m_name{ SafeString(model.name) },
         m_scores{ model.scores, model.scores + model.scoresCount },
@@ -2313,12 +2314,25 @@ public:
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_aggregationTargetEntityKeys, rhs.m_aggregationTargetEntityKeys);
         swap(lhs.m_metadata, rhs.m_metadata);
         swap(lhs.m_name, rhs.m_name);
         swap(lhs.m_scores, rhs.m_scores);
         swap(lhs.m_version, rhs.m_version);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> const& GetAggregationTargetEntityKeys() const
+    {
+        return m_aggregationTargetEntityKeys;
+    }
+
+    void SetAggregationTargetEntityKeys(ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> value)
+    {
+        m_aggregationTargetEntityKeys = std::move(value);
+        this->m_model.aggregationTargetEntityKeys =  m_aggregationTargetEntityKeys.empty() ? nullptr : m_aggregationTargetEntityKeys.data();
+        this->m_model.aggregationTargetEntityKeysCount =  static_cast<uint32_t>(m_aggregationTargetEntityKeys.size());
     }
 
     String const& GetMetadata() const
@@ -2369,12 +2383,14 @@ public:
 private:
     void SetModelPointers()
     {
+        this->m_model.aggregationTargetEntityKeys = m_aggregationTargetEntityKeys.empty() ? nullptr : m_aggregationTargetEntityKeys.data();
         this->m_model.metadata = m_metadata.empty() ? nullptr : m_metadata.data();
         this->m_model.name = m_name.empty() ? nullptr : m_name.data();
         this->m_model.scores = m_scores.empty() ? nullptr : m_scores.data();
         this->m_model.version = m_version ? m_version.operator->() : nullptr;
     }
 
+    ModelVector<PFEntityKeyWrapper<Alloc>, Alloc> m_aggregationTargetEntityKeys;
     String m_metadata;
     String m_name;
     CStringVector<Alloc> m_scores;

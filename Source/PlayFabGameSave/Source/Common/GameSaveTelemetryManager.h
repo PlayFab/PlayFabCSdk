@@ -310,7 +310,9 @@ private:
     // required wstring userId: Platform UserId
     String m_platformId{ "Unknown" };
     // required wstring platformType: Platform Type / DeviceClass
-    PFPlatformType m_platformType{};
+    String m_platformType{ "Unknown" };
+    // required wstring sessionId: GUID per activation, ties all events to one gameplay session
+    String m_sessionId{};
 
     bool m_contextActivationEventEmitted{ false };
     bool m_contextSyncEventEmitted{ false };

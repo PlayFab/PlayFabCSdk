@@ -22,8 +22,7 @@ android {
     externalNativeBuild {
         cmake {
             // CXX20 Standard is only available in CMake 3.18.1 and above.
-            // Navigate to SDK Manager > SDK Tools > CMake for the correct version.
-            version "3.18.1"
+            version "3.18.1+"
             path "CMakeLists.txt"
             buildStagingDirectory "${project.buildDir.getParentFile().getAbsolutePath()}/.cxx/${project.name}"
         }
@@ -69,84 +68,86 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt")
         }
     }
+}
 
-    task archivePlayFabSDKReleasePackage(type: Copy) {
+task archivePlayFabSDKReleasePackage(type: Copy) {
+    // Include the libHttpClient `.so`
+    from('../../../libHttpClient/Binaries/Android/libHttpClient.Android/intermediates/cmake/release/obj') {
+        include 'arm64-v8a/libHttpClient.Android.so'
+        include 'x86_64/libHttpClient.Android.so'
+        into 'bin'
+    }
+
+    // Include the PlayFabServices `.so`
+    from('../../Out/Android/arm64-v8a/release/PlayFabServices.Android') {
+        include 'libPlayFabServices.Android.so'
+        into 'bin/arm64-v8a'
+    }
+    from('../../Out/Android/x86_64/release/PlayFabServices.Android') {
+        include 'libPlayFabServices.Android.so'
+        into 'bin/x86_64'
+    }
+
+    // Include the PlayFabCore `.so`
+    from('../../Out/Android/arm64-v8a/release/PlayFabCore.Android') {
+        include 'libPlayFabCore.Android.so'
+        into 'bin/arm64-v8a'
+    }
+    from('../../Out/Android/x86_64/release/PlayFabCore.Android') {
+        include 'libPlayFabCore.Android.so'
+        into 'bin/x86_64'
+    }
+
+    // Include the PlayFabServices `.aar`
+    from('../../Int/Android/PlayFabServices.Android/outputs/aar') {
+        include 'PlayFabServices.Android-full-release.aar'
+        into 'aar'
+    }
+
+    // Include the PlayFabCore `.aar`
+    from('../../Int/Android/PlayFabCore.Android/outputs/aar') {
+        include 'PlayFabCore.Android-full-release.aar'
+        into 'aar'
+    }
+
+    // Include the libHttpClient.Android `.aar`
+    from('../../../libHttpClient/Binaries/Android/libHttpClient.Android/outputs/aar') {
+        include 'libHttpClient.Android-release.aar'
+        into 'aar'
+    }
+
+    // Include the PlayFabServices header files
+    from('../../Source/PlayFabServices/Include/Generated/playfab/services') {
+        include '*.h'
+        into 'Include/playfab/services'
+    }
+
+    // Include the PlayFabCore header files
+    from('../../Source/PlayFabCore/Include/Generated/playfab/core') {
+        include '*.h'
+        into 'Include/playfab/core'
+    }
+    from('../../Source/PlayFabCore/Include/playfab/core') {
+        include '*.h'
+        into 'Include/playfab/core'
+    }
+    from('../../Source/PlayFabCore/Include/playfab/httpClient') {
+        include '*.h'
+        into 'Include/playfab/httpClient'
+    }
+
+    // Include the libHttpClient header files
+    from('../../../libHttpClient/Include') {
+        include '*.h'
+        include 'httpClient/**'
+        into 'Include'
+    }
+
+    // TODO: Update this archive name to standardize naming schemes
+    into '../../PlayFabServicesAndroidSDK'
+
+    doFirst {
         println("Generating PlayFab.C SDK archive...")
-
-        // Include the libHttpClient `.so`
-        from('../../../libHttpClient/Binaries/Android/libHttpClient.Android/intermediates/cmake/release/obj') {
-            include 'arm64-v8a/libHttpClient.Android.so'
-            include 'x86_64/libHttpClient.Android.so'
-            into 'bin'
-        }
-
-        // Include the PlayFabServices `.so`
-        from('../../Out/Android/arm64-v8a/release/PlayFabServices.Android') {
-            include 'libPlayFabServices.Android.so'
-            into 'bin/arm64-v8a'
-        }
-        from('../../Out/Android/x86_64/release/PlayFabServices.Android') {
-            include 'libPlayFabServices.Android.so'
-            into 'bin/x86_64'
-        }
-
-        // Include the PlayFabCore `.so`
-        from('../../Out/Android/arm64-v8a/release/PlayFabCore.Android') {
-            include 'libPlayFabCore.Android.so'
-            into 'bin/arm64-v8a'
-        }
-        from('../../Out/Android/x86_64/release/PlayFabCore.Android') {
-            include 'libPlayFabCore.Android.so'
-            into 'bin/x86_64'
-        }
-
-        // Include the PlayFabServices `.aar`
-        from('../../Int/Android/PlayFabServices.Android/outputs/aar') {
-            include 'PlayFabServices.Android-full-release.aar'
-            into 'aar'
-        }
-
-        // Include the PlayFabCore `.aar`
-        from('../../Int/Android/PlayFabCore.Android/outputs/aar') {
-            include 'PlayFabCore.Android-full-release.aar'
-            into 'aar'
-        }
-
-        // Include the libHttpClient.Android `.aar`
-        from('../../../libHttpClient/Binaries/Android/libHttpClient.Android/outputs/aar') {
-            include 'libHttpClient.Android-release.aar'
-            into 'aar'
-        }
-
-        // Include the PlayFabServices header files
-        from('../../Source/PlayFabServices/Include/Generated/playfab/services') {
-            include '*.h'
-            into 'Include/playfab/services'
-        }
-
-        // Include the PlayFabCore header files
-        from('../../Source/PlayFabCore/Include/Generated/playfab/core') {
-            include '*.h'
-            into 'Include/playfab/core'
-        }
-        from('../../Source/PlayFabCore/Include/playfab/core') {
-            include '*.h'
-            into 'Include/playfab/core'
-        }
-        from('../../Source/PlayFabCore/Include/playfab/httpClient') {
-            include '*.h'
-            into 'Include/playfab/httpClient'
-        }
-
-        // Include the libHttpClient header files
-        from('../../../libHttpClient/Include') {
-            include '*.h'
-            include 'httpClient/**'
-            into 'Include'
-        }
-
-        // TODO: Update this archive name to standardize naming schemes
-        into '../../PlayFabServicesAndroidSDK'
     }
 }
 

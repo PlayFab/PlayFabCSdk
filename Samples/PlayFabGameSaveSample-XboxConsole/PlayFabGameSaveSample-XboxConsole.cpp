@@ -225,6 +225,24 @@ void Sample::Update(DX::StepTimer const &timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
 
+    // Process a pending Game Saves re-sync (requested on resume, or by the player after an active
+    // device change). Re-initialize Game Saves and re-add the user so we pull the latest cloud data,
+    // handle any conflict/contention, and re-establish this device as active. Runs on the main thread,
+    // outside input handling, so it also proceeds while the pad is momentarily disconnected.
+    if (m_needsResync && !m_addUserToGSInProgress)
+    {
+        m_needsResync = false;
+        HRESULT resyncHr = ReinitializeGameSaves();
+        if (SUCCEEDED(resyncHr))
+        {
+            (void)AddUserToGameSaves();
+        }
+        else
+        {
+            PostLogf(L"Game Saves re-sync failed to re-initialize: 0x%08X", resyncHr);
+        }
+    }
+
     auto pad = m_gamePad->GetState(0);
     if (pad.IsConnected())
     {
@@ -253,10 +271,14 @@ void Sample::Update(DX::StepTimer const &timer)
             }
         }
 
-        // A = Add user to GameSaves (download)
-        if (m_gamePadButtons.a == GamePad::ButtonStateTracker::PRESSED && !m_addUserToGSInProgress && !m_userAddedToGS)
+        // A = Sync GameSaves (download). First sync uses AddUser; a later press re-syncs (re-init +
+        // AddUser), which is also how the player recovers after an active device change.
+        if (m_gamePadButtons.a == GamePad::ButtonStateTracker::PRESSED && !m_addUserToGSInProgress && !m_needsResync)
         {
-            (void)AddUserToGameSaves();
+            if (!m_userAddedToGS && !m_gsSessionConsumed)
+                (void)AddUserToGameSaves();
+            else
+                RequestGameSavesResync(L"user requested re-sync");
         }
         // X = Save 10MB file
         if (m_gamePadButtons.x == GamePad::ButtonStateTracker::PRESSED)
@@ -407,6 +429,15 @@ void Sample::OnResuming()
     m_gamePadButtons.Reset();
     m_keyboardButtons.Reset();
     m_liveResources->Refresh();
+
+    // Best practice (docs/game-saves/quickstart.md, "When to Call This"): after resuming from suspend,
+    // re-sync the user's save data from the cloud in case it changed on another device while suspended,
+    // and to refresh Game Saves state that may have been invalidated. AddUser only succeeds once per
+    // session, so the resync path re-initializes Game Saves first (see Update()/ReinitializeGameSaves()).
+    if (m_userAddedToGS || m_gsSessionConsumed)
+    {
+        RequestGameSavesResync(L"resumed from suspend");
+    }
 }
 void Sample::OnWindowMoved()
 {
@@ -441,9 +472,12 @@ void Sample::OnKeyDown(WPARAM vk)
         }
         break;
     case 'A':
-        if (!m_addUserToGSInProgress && !m_userAddedToGS)
+        if (!m_addUserToGSInProgress && !m_needsResync)
         {
-            (void)AddUserToGameSaves();
+            if (!m_userAddedToGS && !m_gsSessionConsumed)
+                (void)AddUserToGameSaves();
+            else
+                RequestGameSavesResync(L"user requested re-sync");
         }
         else if (m_userAddedToGS)
         {
@@ -508,11 +542,7 @@ void Sample::CreateDeviceDependentResources()
     wchar_t background[260];
 
     // Use a larger font on Desktop to make text 2x bigger
-#ifdef _GAMING_DESKTOP
-    DX::FindMediaFile(font, 260, L"SegoeUI_30.spritefont");
-#else
-    DX::FindMediaFile(font, 260, L"courier_16.spritefont");
-#endif
+    DX::FindMediaFile(font, 260, L"SegoeUI_18.spritefont");
     DX::FindMediaFile(background, 260, L"ATGSampleBackground.DDS");
 
     m_log->RestoreDevice(
@@ -616,8 +646,97 @@ HRESULT Sample::InitializeGameSaves()
     args.options = static_cast<uint64_t>(PFGameSaveInitOptions::None);
     args.saveFolder = nullptr; // GDK ignores saveFolder; path is provided by platform
     RETURN_IF_FAILED(PFGameSaveFilesInitialize(&args));
+
+    // Best practice (docs/game-saves/activedevicechanges.md): register the active device changed
+    // callback during initialization. If the player switches to another device that takes over as the
+    // active device, this fires so the title can stop writing and return to a safe state (see the
+    // callback below). It's registered on m_mainAsyncQueue, which is dispatched on the main thread each
+    // frame, so the callback runs on the main thread and can safely touch sample state.
+    HRESULT hr = PFGameSaveFilesSetActiveDeviceChangedCallback(
+        m_mainAsyncQueue, &Sample::OnActiveDeviceChangedCallback, this);
+    if (FAILED(hr))
+    {
+        // Don't leave the library half-initialized. m_gsInitialized is deliberately set only
+        // after this succeeds, otherwise a later InitializeGameSaves() would early-out with
+        // S_OK and the callback would never be registered.
+        XAsyncBlock async{};
+        async.queue = m_queue;
+        if (SUCCEEDED(PFGameSaveFilesUninitializeAsync(&async)))
+        {
+            (void)XAsyncGetStatus(&async, true);
+            (void)PFGameSaveFilesUninitializeResult(&async);
+        }
+        return hr;
+    }
+
     m_gsInitialized = true;
+    m_gsSessionConsumed = false; // a fresh session allows one successful AddUser
+
     return S_OK;
+}
+
+// Re-initialize the Game Saves system so the user can be re-synced from the cloud.
+// PFGameSaveFilesAddUserWithUiAsync only succeeds once per Game Saves session; to sync again — e.g.
+// after resuming from suspend, or after losing active-device status — the library must be
+// uninitialized and re-initialized first (see docs/game-saves/quickstart.md, "When to Call This").
+HRESULT Sample::ReinitializeGameSaves()
+{
+    if (m_gsInitialized)
+    {
+        XAsyncBlock async{};
+        async.queue = m_queue;
+        HRESULT hr = PFGameSaveFilesUninitializeAsync(&async);
+        if (FAILED(hr))
+        {
+            PostLogf(L"PFGameSaveFilesUninitializeAsync start failed: 0x%08X", hr);
+            return hr; // keep the existing session/state intact
+        }
+
+        // Resume isn't time-critical like suspend, so a brief blocking wait here is acceptable.
+        hr = XAsyncGetStatus(&async, true);
+        if (FAILED(hr))
+        {
+            // Uninitialization did not complete, so the old session is still live. Clearing
+            // m_gsInitialized here would let the re-initialize below run against that session.
+            PostLogf(L"PFGameSaveFilesUninitializeAsync wait failed: 0x%08X", hr);
+            return hr;
+        }
+
+        (void)PFGameSaveFilesUninitializeResult(&async);
+        m_gsInitialized = false;
+    }
+
+    // These are only meaningful for a live Game Saves session; clear until we re-sync.
+    m_userAddedToGS = false;
+    m_saveRoot.clear();
+
+    return InitializeGameSaves(); // re-registers the active device changed callback
+}
+
+void Sample::RequestGameSavesResync(const wchar_t *reason)
+{
+    if (m_needsResync || m_addUserToGSInProgress)
+        return;
+    m_needsResync = true;
+    PostLogf(L"Game Saves re-sync requested (%ls)", reason ? reason : L"");
+}
+
+// Best practice (docs/game-saves/activedevicechanges.md): the user became active on another device,
+// so THIS device must stop acting as active to avoid creating conflicting saves. Return to a safe
+// state — here we block further saves and require a re-sync. We deliberately do NOT grab active
+// status back automatically; a real game should pause gameplay and return to its main menu.
+void CALLBACK Sample::OnActiveDeviceChangedCallback(
+    PFLocalUserHandle /*localUserHandle*/, PFGameSaveDescriptor * /*activeDevice*/, void *context)
+{
+    auto self = static_cast<Sample *>(context);
+    if (!self)
+        return;
+
+    // Runs on m_mainAsyncQueue (main thread), so it is safe to touch sample state directly.
+    self->m_activeDeviceLost = true;
+    self->m_userAddedToGS = false; // no longer active on this device; DoSave/DoUpload are now gated off
+    self->m_saveRoot.clear();
+    self->PostLog(L"Active device changed: another device took over. Returned to safe state; press A to re-sync.");
 }
 
 HRESULT Sample::SignInAndCreateLocalUser()
@@ -686,6 +805,8 @@ HRESULT Sample::AddUserToGameSaves()
         if (SUCCEEDED(hr))
         {
             self->m_userAddedToGS = true;
+            self->m_gsSessionConsumed = true; // this session's one AddUser is now used
+            self->m_activeDeviceLost = false; // we are the active device again
             char folder[MAX_PATH] = {};
             if (SUCCEEDED(PFGameSaveFilesGetFolder(self->m_localUser, MAX_PATH, folder, nullptr)))
             {

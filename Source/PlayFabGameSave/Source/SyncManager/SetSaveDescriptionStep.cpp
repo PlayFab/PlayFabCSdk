@@ -63,6 +63,19 @@ HRESULT SetSaveDescriptionStep::SetSaveDescription(
                 TRACE_ERROR("[GAME SAVE] SetSaveDescriptionStep: latestPendingManifest is null");
                 return E_UNEXPECTED;
             }
+            if (!latestPendingManifest->HasVersion())
+            {
+                // UpdateManifest requires a Version identifying an existing pending manifest.
+                // Sending "" would be rejected by the service; let the caller fall back to
+                // caching the description locally instead.
+                //
+                // Deliberately NOT E_PF_GAMESAVE_USER_NOT_ADDED: the user IS added here, the
+                // pending manifest just has no version yet. That code tells a title to call
+                // AddUserWithUiAsync, which would not help and would send the developer down the
+                // wrong path. Matches the null-manifest case just above.
+                TRACE_WARNING("[GAME SAVE] SetSaveDescriptionStep: pending manifest has no version");
+                return E_UNEXPECTED;
+            }
 
             String encodedDescription = Base64Encode(shortSaveDescription);
 

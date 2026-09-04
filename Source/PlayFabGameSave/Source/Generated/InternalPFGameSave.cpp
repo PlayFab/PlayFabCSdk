@@ -69,6 +69,7 @@ HRESULT PFGameSaveFinalizeManifestGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveFinalizeManifestResponse*>(buffer);
@@ -113,6 +114,7 @@ HRESULT PFGameSaveGetConfigForTitleGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveGetConfigForTitleResponse*>(buffer);
@@ -157,6 +159,7 @@ HRESULT PFGameSaveGetManifestDownloadDetailsGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveGetManifestDownloadDetailsResponse*>(buffer);
@@ -202,6 +205,7 @@ HRESULT PFGameSaveGetQuotaForPlayerGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveGetQuotaForPlayerResponse*>(buffer);
@@ -247,6 +251,7 @@ HRESULT PFGameSaveInitializeManifestGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveInitializeManifestResponse*>(buffer);
@@ -291,6 +296,7 @@ HRESULT PFGameSaveInitiateUploadGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveInitiateUploadResponse*>(buffer);
@@ -335,6 +341,7 @@ HRESULT PFGameSaveListManifestsGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveListManifestsResponse*>(buffer);
@@ -401,6 +408,7 @@ HRESULT PFGameSaveRollbackToManifestGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveRollbackToManifestResponse*>(buffer);
@@ -446,6 +454,7 @@ HRESULT PFGameSaveUpdateConfigForTitleGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveUpdateConfigForTitleResponse*>(buffer);
@@ -491,6 +500,7 @@ HRESULT PFGameSaveUpdateManifestGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(result);
+    *result = nullptr;
 
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     *result = static_cast<PFGameSaveUpdateManifestResponse*>(buffer);

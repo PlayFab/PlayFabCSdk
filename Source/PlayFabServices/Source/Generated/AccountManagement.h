@@ -63,12 +63,12 @@ public:
     static AsyncOp<ReportPlayerClientResult> ClientReportPlayer(Entity const& entity, const ReportPlayerClientRequest& request, RunContext rc);
     static AsyncOp<void> ClientSendAccountRecoveryEmail(ServiceConfig const& serviceConfig, const SendAccountRecoveryEmailRequest& request, RunContext rc);
     static AsyncOp<void> ClientUnlinkAndroidDeviceID(Entity const& entity, const UnlinkAndroidDeviceIDRequest& request, RunContext rc);
-    static AsyncOp<void> ClientUnlinkApple(Entity const& entity, const UnlinkAppleRequest& request, RunContext rc);
+    static AsyncOp<void> ClientUnlinkApple(Entity const& entity, const ClientUnlinkAppleRequest& request, RunContext rc);
     static AsyncOp<void> ClientUnlinkBattleNetAccount(Entity const& entity, const ClientUnlinkBattleNetAccountRequest& request, RunContext rc);
     static AsyncOp<void> ClientUnlinkCustomID(Entity const& entity, const UnlinkCustomIDRequest& request, RunContext rc);
     static AsyncOp<void> ClientUnlinkFacebookAccount(Entity const& entity, const ClientUnlinkFacebookAccountRequest& request, RunContext rc);
     static AsyncOp<void> ClientUnlinkFacebookInstantGamesId(Entity const& entity, const ClientUnlinkFacebookInstantGamesIdRequest& request, RunContext rc);
-    static AsyncOp<void> ClientUnlinkGameCenterAccount(Entity const& entity, const UnlinkGameCenterAccountRequest& request, RunContext rc);
+    static AsyncOp<void> ClientUnlinkGameCenterAccount(Entity const& entity, const ClientUnlinkGameCenterAccountRequest& request, RunContext rc);
     static AsyncOp<void> ClientUnlinkGoogleAccount(Entity const& entity, const UnlinkGoogleAccountRequest& request, RunContext rc);
     static AsyncOp<void> ClientUnlinkGooglePlayGamesServicesAccount(Entity const& entity, const UnlinkGooglePlayGamesServicesAccountRequest& request, RunContext rc);
     static AsyncOp<void> ClientUnlinkIOSDeviceID(Entity const& entity, const UnlinkIOSDeviceIDRequest& request, RunContext rc);
@@ -82,6 +82,7 @@ public:
     static AsyncOp<void> ClientUnlinkXboxAccount(Entity const& entity, const ClientUnlinkXboxAccountRequest& request, RunContext rc);
     static AsyncOp<void> ClientUpdateAvatarUrl(Entity const& entity, const ClientUpdateAvatarUrlRequest& request, RunContext rc);
     static AsyncOp<UpdateUserTitleDisplayNameResult> ClientUpdateUserTitleDisplayName(Entity const& entity, const UpdateUserTitleDisplayNameRequest& request, RunContext rc);
+    static AsyncOp<void> ServerAddOrUpdateContactEmail(Entity const& entity, const ServerAddOrUpdateContactEmailRequest& request, RunContext rc);
     static AsyncOp<BanUsersResult> ServerBanUsers(Entity const& entity, const BanUsersRequest& request, RunContext rc);
     static AsyncOp<void> ServerDeletePlayer(Entity const& entity, const DeletePlayerRequest& request, RunContext rc);
     static AsyncOp<GetPlayerCombinedInfoResult> ServerGetPlayerCombinedInfo(Entity const& entity, const GetPlayerCombinedInfoRequest& request, RunContext rc);
@@ -94,6 +95,7 @@ public:
     static AsyncOp<GetPlayFabIDsFromOpenIdsResult> ServerGetPlayFabIDsFromOpenIdSubjectIdentifiers(Entity const& entity, const GetPlayFabIDsFromOpenIdsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromPSNAccountIDsResult> ServerGetPlayFabIDsFromPSNAccountIDs(Entity const& entity, const GetPlayFabIDsFromPSNAccountIDsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromPSNOnlineIDsResult> ServerGetPlayFabIDsFromPSNOnlineIDs(Entity const& entity, const GetPlayFabIDsFromPSNOnlineIDsRequest& request, RunContext rc);
+    static AsyncOp<GetPlayFabIDsFromServerCustomIDsResult> ServerGetPlayFabIDsFromServerCustomIDs(Entity const& entity, const GetPlayFabIDsFromServerCustomIDsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromSteamIDsResult> ServerGetPlayFabIDsFromSteamIDs(Entity const& entity, const GetPlayFabIDsFromSteamIDsRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromSteamNamesResult> ServerGetPlayFabIDsFromSteamNames(Entity const& entity, const GetPlayFabIDsFromSteamNamesRequest& request, RunContext rc);
     static AsyncOp<GetPlayFabIDsFromTwitchIDsResult> ServerGetPlayFabIDsFromTwitchIDs(Entity const& entity, const GetPlayFabIDsFromTwitchIDsRequest& request, RunContext rc);
@@ -116,9 +118,11 @@ public:
     static AsyncOp<RevokeBansResult> ServerRevokeBans(Entity const& entity, const RevokeBansRequest& request, RunContext rc);
     static AsyncOp<void> ServerSendCustomAccountRecoveryEmail(Entity const& entity, const SendCustomAccountRecoveryEmailRequest& request, RunContext rc);
     static AsyncOp<void> ServerSendEmailFromTemplate(Entity const& entity, const SendEmailFromTemplateRequest& request, RunContext rc);
+    static AsyncOp<void> ServerUnlinkApple(Entity const& entity, const ServerUnlinkAppleRequest& request, RunContext rc);
     static AsyncOp<void> ServerUnlinkBattleNetAccount(Entity const& entity, const ServerUnlinkBattleNetAccountRequest& request, RunContext rc);
     static AsyncOp<void> ServerUnlinkFacebookAccount(Entity const& entity, const ServerUnlinkFacebookAccountRequest& request, RunContext rc);
     static AsyncOp<void> ServerUnlinkFacebookInstantGamesId(Entity const& entity, const ServerUnlinkFacebookInstantGamesIdRequest& request, RunContext rc);
+    static AsyncOp<void> ServerUnlinkGameCenterAccount(Entity const& entity, const ServerUnlinkGameCenterAccountRequest& request, RunContext rc);
     static AsyncOp<void> ServerUnlinkNintendoServiceAccount(Entity const& entity, const ServerUnlinkNintendoServiceAccountRequest& request, RunContext rc);
     static AsyncOp<void> ServerUnlinkNintendoSwitchDeviceId(Entity const& entity, const ServerUnlinkNintendoSwitchDeviceIdRequest& request, RunContext rc);
     static AsyncOp<void> ServerUnlinkPSNAccount(Entity const& entity, const ServerUnlinkPSNAccountRequest& request, RunContext rc);

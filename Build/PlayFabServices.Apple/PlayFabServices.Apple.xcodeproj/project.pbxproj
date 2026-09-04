@@ -165,6 +165,22 @@
 		8791610EF039C7D0F7D7FB55 /* PFTitleDataManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 76F5438B94ED2EE70DC11739 /* PFTitleDataManagement.h */; };
 		18AA3066EE0DE9BAE7B49779 /* PFTitleDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6884BB7A21D633574ED48E75 /* PFTitleDataManagement.cpp */; };
 		7E581181126FF6B172FD7306 /* PFTitleDataManagement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6884BB7A21D633574ED48E75 /* PFTitleDataManagement.cpp */; };
+		B40C03E0D65905A88B4DA16A /* PFPlayStreamTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 81D2B2A7F30DFA8AE46EA362 /* PFPlayStreamTypes.h */; };
+		DF35DE8D7E601DF1C3BCBDAF /* PFPlayStreamTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 81D2B2A7F30DFA8AE46EA362 /* PFPlayStreamTypes.h */; };
+		6BA29757744BC6C624626A88 /* PlayStreamTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = F68EAA16A9839B31B58688A5 /* PlayStreamTypeWrappers.h */; };
+		C3886F0FE7DC06BAFB1020CE /* PlayStreamTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = F68EAA16A9839B31B58688A5 /* PlayStreamTypeWrappers.h */; };
+		1C3C9F5BC3963E810499EDBE /* PlayStreamTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D9492D36911C4C28F7EF3B53 /* PlayStreamTypes.h */; };
+		335BB1077289C21F5220BA3A /* PlayStreamTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D9492D36911C4C28F7EF3B53 /* PlayStreamTypes.h */; };
+		EE5C23C007E41104530CE8FE /* PlayStreamTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4B56DCE492CE3C264157046 /* PlayStreamTypes.cpp */; };
+		551097B7B4EDE90D1F855E99 /* PlayStreamTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4B56DCE492CE3C264157046 /* PlayStreamTypes.cpp */; };
+		AF136D539C6F73AA5E85616F /* PlayStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 566A9FA37F4AE47A7303DEB4 /* PlayStream.h */; };
+		15054222CD8334EB4377041D /* PlayStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 566A9FA37F4AE47A7303DEB4 /* PlayStream.h */; };
+		8B93A685459D210AC69B2AB7 /* PlayStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A88CDEE2D421B975E7DA74 /* PlayStream.cpp */; };
+		10E17038077856262989705A /* PlayStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A88CDEE2D421B975E7DA74 /* PlayStream.cpp */; };
+		2203D13F0BAF339F777ED39B /* PFPlayStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 99B0E9BC647058BFAAE08E1B /* PFPlayStream.h */; };
+		B9B27621EB07167AC9F95C8F /* PFPlayStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 99B0E9BC647058BFAAE08E1B /* PFPlayStream.h */; };
+		A706582B28805E24C4C521AF /* PFPlayStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 71725EBC1BE05998BE2D757B /* PFPlayStream.cpp */; };
+		4AA1F94DE68F7E7E1227ADB5 /* PFPlayStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 71725EBC1BE05998BE2D757B /* PFPlayStream.cpp */; };
 		CB3D51344576FB4D1B2822A5 /* PFPushNotificationsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = BAF2597424337928424C951B /* PFPushNotificationsTypes.h */; };
 		9348B9BC3B675745EA0F4DF5 /* PFPushNotificationsTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = BAF2597424337928424C951B /* PFPushNotificationsTypes.h */; };
 		4A8E422C9A26BF8C5BA2AD10 /* PushNotificationsTypeWrappers.h in Headers */ = {isa = PBXBuildFile; fileRef = E051B8C2D7FD55E6AEB54F73 /* PushNotificationsTypeWrappers.h */; };
@@ -523,6 +539,14 @@
 		AC0514AC995466B11907FEA6 /* TitleDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TitleDataManagement.cpp; sourceTree = "<group>"; };
 		76F5438B94ED2EE70DC11739 /* PFTitleDataManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFTitleDataManagement.h; sourceTree = "<group>"; };
 		6884BB7A21D633574ED48E75 /* PFTitleDataManagement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFTitleDataManagement.cpp; sourceTree = "<group>"; };
+		81D2B2A7F30DFA8AE46EA362 /* PFPlayStreamTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayStreamTypes.h; sourceTree = "<group>"; };
+		F68EAA16A9839B31B58688A5 /* PlayStreamTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayStreamTypeWrappers.h; sourceTree = "<group>"; };
+		D9492D36911C4C28F7EF3B53 /* PlayStreamTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayStreamTypes.h; sourceTree = "<group>"; };
+		B4B56DCE492CE3C264157046 /* PlayStreamTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayStreamTypes.cpp; sourceTree = "<group>"; };
+		566A9FA37F4AE47A7303DEB4 /* PlayStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayStream.h; sourceTree = "<group>"; };
+		E4A88CDEE2D421B975E7DA74 /* PlayStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayStream.cpp; sourceTree = "<group>"; };
+		99B0E9BC647058BFAAE08E1B /* PFPlayStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPlayStream.h; sourceTree = "<group>"; };
+		71725EBC1BE05998BE2D757B /* PFPlayStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFPlayStream.cpp; sourceTree = "<group>"; };
 		BAF2597424337928424C951B /* PFPushNotificationsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFPushNotificationsTypes.h; sourceTree = "<group>"; };
 		E051B8C2D7FD55E6AEB54F73 /* PushNotificationsTypeWrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationsTypeWrappers.h; sourceTree = "<group>"; };
 		39425A414120D3EAF0031E54 /* PushNotificationsTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationsTypes.h; sourceTree = "<group>"; };
@@ -810,6 +834,8 @@
 				1FC8185CE2C02A3A7580D753 /* PFSegments.h */,
 				023657556C849DFBD030AA93 /* PFTitleDataManagementTypes.h */,
 				76F5438B94ED2EE70DC11739 /* PFTitleDataManagement.h */,
+				81D2B2A7F30DFA8AE46EA362 /* PFPlayStreamTypes.h */,
+				99B0E9BC647058BFAAE08E1B /* PFPlayStream.h */,
 				BAF2597424337928424C951B /* PFPushNotificationsTypes.h */,
 				C3E476B3B15D356EA14EA34A /* PFPushNotifications.h */,
 				730DB2BC72EF4BADC439CEC5 /* PFDataTypes.h */,
@@ -847,6 +873,7 @@
 				AAEC03E16D33C9C3025262F2 /* CloudScriptTypeWrappers.h */,
 				129981A3830039A8FE1F4F11 /* SegmentsTypeWrappers.h */,
 				A6A6D7AD3F44042431BDAA42 /* TitleDataManagementTypeWrappers.h */,
+				F68EAA16A9839B31B58688A5 /* PlayStreamTypeWrappers.h */,
 				E051B8C2D7FD55E6AEB54F73 /* PushNotificationsTypeWrappers.h */,
 				B114148C755AE2568986934C /* DataTypeWrappers.h */,
 				968A846F33D3AB1FCCDDD480 /* InventoryTypeWrappers.h */,
@@ -937,6 +964,11 @@
 				DC2F552A7595A75B18D9AFC0 /* TitleDataManagement.h */,
 				AC0514AC995466B11907FEA6 /* TitleDataManagement.cpp */,
 				6884BB7A21D633574ED48E75 /* PFTitleDataManagement.cpp */,
+				D9492D36911C4C28F7EF3B53 /* PlayStreamTypes.h */,
+				B4B56DCE492CE3C264157046 /* PlayStreamTypes.cpp */,
+				566A9FA37F4AE47A7303DEB4 /* PlayStream.h */,
+				E4A88CDEE2D421B975E7DA74 /* PlayStream.cpp */,
+				71725EBC1BE05998BE2D757B /* PFPlayStream.cpp */,
 				39425A414120D3EAF0031E54 /* PushNotificationsTypes.h */,
 				2162F01F8A504F5A41485BF8 /* PushNotificationsTypes.cpp */,
 				A726E33E81E65C235DEAF9D6 /* PushNotifications.h */,
@@ -1066,6 +1098,11 @@
 				2B94B71E20734C2559721789 /* TitleDataManagementTypes.h in Headers */,
 				538C31B483D4A53BDA58C29D /* TitleDataManagement.h in Headers */,
 				8791610EF039C7D0F7D7FB55 /* PFTitleDataManagement.h in Headers */,
+				DF35DE8D7E601DF1C3BCBDAF /* PFPlayStreamTypes.h in Headers */,
+				C3886F0FE7DC06BAFB1020CE /* PlayStreamTypeWrappers.h in Headers */,
+				335BB1077289C21F5220BA3A /* PlayStreamTypes.h in Headers */,
+				15054222CD8334EB4377041D /* PlayStream.h in Headers */,
+				B9B27621EB07167AC9F95C8F /* PFPlayStream.h in Headers */,
 				9348B9BC3B675745EA0F4DF5 /* PFPushNotificationsTypes.h in Headers */,
 				08C797DE21C108C730F69B91 /* PushNotificationsTypeWrappers.h in Headers */,
 				ADE472B84C332305A1F6A02C /* PushNotificationsTypes.h in Headers */,
@@ -1174,6 +1211,11 @@
 				8C27CCD391FAFE580AA15214 /* TitleDataManagementTypes.h in Headers */,
 				E30057F633E7ECDE9C349DD9 /* TitleDataManagement.h in Headers */,
 				A77B14732A66F6874CE8B9B5 /* PFTitleDataManagement.h in Headers */,
+				B40C03E0D65905A88B4DA16A /* PFPlayStreamTypes.h in Headers */,
+				6BA29757744BC6C624626A88 /* PlayStreamTypeWrappers.h in Headers */,
+				1C3C9F5BC3963E810499EDBE /* PlayStreamTypes.h in Headers */,
+				AF136D539C6F73AA5E85616F /* PlayStream.h in Headers */,
+				2203D13F0BAF339F777ED39B /* PFPlayStream.h in Headers */,
 				CB3D51344576FB4D1B2822A5 /* PFPushNotificationsTypes.h in Headers */,
 				4A8E422C9A26BF8C5BA2AD10 /* PushNotificationsTypeWrappers.h in Headers */,
 				9269DA1203CBD82EC9D0C5FF /* PushNotificationsTypes.h in Headers */,
@@ -1436,6 +1478,9 @@
 				A898AE53EA08A888E3249F35 /* TitleDataManagementTypes.cpp in Sources */,
 				A38CE26D4EE854D61F5082CC /* TitleDataManagement.cpp in Sources */,
 				7E581181126FF6B172FD7306 /* PFTitleDataManagement.cpp in Sources */,
+				551097B7B4EDE90D1F855E99 /* PlayStreamTypes.cpp in Sources */,
+				10E17038077856262989705A /* PlayStream.cpp in Sources */,
+				4AA1F94DE68F7E7E1227ADB5 /* PFPlayStream.cpp in Sources */,
 				DFAB7B4C5F366A690EEA75ED /* PushNotificationsTypes.cpp in Sources */,
 				7EA0F54A61CE6C7E9E678A5E /* PushNotifications.cpp in Sources */,
 				EB45413B7E9731A092238961 /* PFPushNotifications.cpp in Sources */,
@@ -1505,6 +1550,9 @@
 				0C056141E6FF71F86A0D7717 /* TitleDataManagementTypes.cpp in Sources */,
 				0C1D0E024C5A1AB4C6148807 /* TitleDataManagement.cpp in Sources */,
 				18AA3066EE0DE9BAE7B49779 /* PFTitleDataManagement.cpp in Sources */,
+				EE5C23C007E41104530CE8FE /* PlayStreamTypes.cpp in Sources */,
+				8B93A685459D210AC69B2AB7 /* PlayStream.cpp in Sources */,
+				A706582B28805E24C4C521AF /* PFPlayStream.cpp in Sources */,
 				4C38E6E67608548AE93B0BB6 /* PushNotificationsTypes.cpp in Sources */,
 				CBD1BED9E1B9D94326B3A264 /* PushNotifications.cpp in Sources */,
 				BC45AA52400B5B95126AFD62 /* PFPushNotifications.cpp in Sources */,

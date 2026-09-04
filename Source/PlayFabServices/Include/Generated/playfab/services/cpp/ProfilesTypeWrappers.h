@@ -98,6 +98,16 @@ public:
         this->m_model.entity = m_entity ? &m_entity->Model() : nullptr;
     }
 
+    bool GetIncludeStatistics() const
+    {
+        return this->m_model.includeStatistics;
+    }
+
+    void SetIncludeStatistics(bool value)
+    {
+        this->m_model.includeStatistics = value;
+    }
+
 private:
     void SetModelPointers()
     {
@@ -551,6 +561,148 @@ private:
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
+class PFStatisticColumnWrapper : public ModelWrapper<PFStatisticColumn, Alloc>
+{
+public:
+    using ModelType = PFStatisticColumn;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFStatisticColumnWrapper() = default;
+
+    PFStatisticColumnWrapper(const PFStatisticColumn& model) :
+        ModelWrapper<PFStatisticColumn, Alloc>{ model },
+        m_name{ SafeString(model.name) }
+    {
+        SetModelPointers();
+    }
+
+    PFStatisticColumnWrapper(const PFStatisticColumnWrapper& src) :
+        PFStatisticColumnWrapper{ src.Model() }
+    {
+    }
+
+    PFStatisticColumnWrapper(PFStatisticColumnWrapper&& src) :
+        PFStatisticColumnWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFStatisticColumnWrapper& operator=(PFStatisticColumnWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFStatisticColumnWrapper() = default;
+
+    friend void swap(PFStatisticColumnWrapper& lhs, PFStatisticColumnWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_name, rhs.m_name);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    PFStatisticAggregationMethod GetAggregationMethod() const
+    {
+        return this->m_model.aggregationMethod;
+    }
+
+    void SetAggregationMethod(PFStatisticAggregationMethod value)
+    {
+        this->m_model.aggregationMethod = value;
+    }
+
+    String const& GetName() const
+    {
+        return m_name;
+    }
+
+    void SetName(String value)
+    {
+        m_name = std::move(value);
+        this->m_model.name =  m_name.empty() ? nullptr : m_name.data();
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.name = m_name.empty() ? nullptr : m_name.data();
+    }
+
+    String m_name;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
+class PFStatisticColumnCollectionWrapper : public ModelWrapper<PFStatisticColumnCollection, Alloc>
+{
+public:
+    using ModelType = PFStatisticColumnCollection;
+    using DictionaryEntryType = PFStatisticColumnCollectionDictionaryEntry;
+    using String = typename std::basic_string<char, std::char_traits<char>, Alloc<char>>;
+    template<typename T> using Vector = typename std::vector<T, Alloc<T>>;
+
+    PFStatisticColumnCollectionWrapper() = default;
+
+    PFStatisticColumnCollectionWrapper(const PFStatisticColumnCollection& model) :
+        ModelWrapper<PFStatisticColumnCollection, Alloc>{ model },
+        m_columns{ model.columns, model.columns + model.columnsCount }
+    {
+        SetModelPointers();
+    }
+
+    PFStatisticColumnCollectionWrapper(const PFStatisticColumnCollectionWrapper& src) :
+        PFStatisticColumnCollectionWrapper{ src.Model() }
+    {
+    }
+
+    PFStatisticColumnCollectionWrapper(PFStatisticColumnCollectionWrapper&& src) :
+        PFStatisticColumnCollectionWrapper{}
+    {
+        swap(*this, src);
+    }
+
+    PFStatisticColumnCollectionWrapper& operator=(PFStatisticColumnCollectionWrapper src) 
+    {
+        swap(*this, src);
+        return *this;
+    }
+
+    virtual ~PFStatisticColumnCollectionWrapper() = default;
+
+    friend void swap(PFStatisticColumnCollectionWrapper& lhs, PFStatisticColumnCollectionWrapper& rhs)
+    {
+        using std::swap;
+        swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_columns, rhs.m_columns);
+        lhs.SetModelPointers();
+        rhs.SetModelPointers();
+    }
+
+    ModelVector<PFStatisticColumnWrapper<Alloc>, Alloc> const& GetColumns() const
+    {
+        return m_columns;
+    }
+
+    void SetColumns(ModelVector<PFStatisticColumnWrapper<Alloc>, Alloc> value)
+    {
+        m_columns = std::move(value);
+        this->m_model.columns =  m_columns.empty() ? nullptr : m_columns.data();
+        this->m_model.columnsCount =  static_cast<uint32_t>(m_columns.size());
+    }
+
+private:
+    void SetModelPointers()
+    {
+        this->m_model.columns = m_columns.empty() ? nullptr : m_columns.data();
+    }
+
+    ModelVector<PFStatisticColumnWrapper<Alloc>, Alloc> m_columns;
+};
+
+template<template<typename AllocT> class Alloc = std::allocator>
 class PFProfilesEntityProfileBodyWrapper : public ModelWrapper<PFProfilesEntityProfileBody, Alloc>
 {
 public:
@@ -572,7 +724,8 @@ public:
         m_lineage{ model.lineage ? std::optional<PFEntityLineageWrapper<Alloc>>{ *model.lineage } : std::nullopt },
         m_objects{ model.objects, model.objects + model.objectsCount },
         m_permissions{ model.permissions, model.permissions + model.permissionsCount },
-        m_statistics{ model.statistics, model.statistics + model.statisticsCount }
+        m_statistics{ model.statistics, model.statistics + model.statisticsCount },
+        m_statisticsColumnDetails{ model.statisticsColumnDetails, model.statisticsColumnDetails + model.statisticsColumnDetailsCount }
     {
         SetModelPointers();
     }
@@ -611,6 +764,7 @@ public:
         swap(lhs.m_objects, rhs.m_objects);
         swap(lhs.m_permissions, rhs.m_permissions);
         swap(lhs.m_statistics, rhs.m_statistics);
+        swap(lhs.m_statisticsColumnDetails, rhs.m_statisticsColumnDetails);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
@@ -751,6 +905,18 @@ public:
         this->m_model.statisticsCount =  static_cast<uint32_t>(m_statistics.size());
     }
 
+    ModelDictionaryEntryVector<PFStatisticColumnCollectionWrapper<Alloc>, Alloc> const& GetStatisticsColumnDetails() const
+    {
+        return m_statisticsColumnDetails;
+    }
+
+    void SetStatisticsColumnDetails(ModelDictionaryEntryVector<PFStatisticColumnCollectionWrapper<Alloc>, Alloc> value)
+    {
+        m_statisticsColumnDetails = std::move(value);
+        this->m_model.statisticsColumnDetails =  m_statisticsColumnDetails.empty() ? nullptr : m_statisticsColumnDetails.data();
+        this->m_model.statisticsColumnDetailsCount =  static_cast<uint32_t>(m_statisticsColumnDetails.size());
+    }
+
     int32_t GetVersionNumber() const
     {
         return this->m_model.versionNumber;
@@ -775,6 +941,7 @@ private:
         this->m_model.objects = m_objects.empty() ? nullptr : m_objects.data();
         this->m_model.permissions = m_permissions.empty() ? nullptr : m_permissions.data();
         this->m_model.statistics = m_statistics.empty() ? nullptr : m_statistics.data();
+        this->m_model.statisticsColumnDetails = m_statisticsColumnDetails.empty() ? nullptr : m_statisticsColumnDetails.data();
     }
 
     String m_avatarUrl;
@@ -788,6 +955,7 @@ private:
     ModelDictionaryEntryVector<PFProfilesEntityDataObjectWrapper<Alloc>, Alloc> m_objects;
     ModelVector<PFProfilesEntityPermissionStatementWrapper<Alloc>, Alloc> m_permissions;
     ModelDictionaryEntryVector<PFEntityStatisticValueWrapper<Alloc>, Alloc> m_statistics;
+    ModelDictionaryEntryVector<PFStatisticColumnCollectionWrapper<Alloc>, Alloc> m_statisticsColumnDetails;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>
@@ -937,6 +1105,16 @@ public:
         m_entities = std::move(value);
         this->m_model.entities =  m_entities.empty() ? nullptr : m_entities.data();
         this->m_model.entitiesCount =  static_cast<uint32_t>(m_entities.size());
+    }
+
+    bool GetIncludeStatistics() const
+    {
+        return this->m_model.includeStatistics;
+    }
+
+    void SetIncludeStatistics(bool value)
+    {
+        this->m_model.includeStatistics = value;
     }
 
 private:

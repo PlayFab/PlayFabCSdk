@@ -171,6 +171,7 @@ public:
         ModelWrapper<PFFriendsClientGetFriendsListRequest, Alloc>{ model },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_externalPlatformFriends{ model.externalPlatformFriends ? std::optional<PFFriendsExternalFriendSources>{ *model.externalPlatformFriends } : std::nullopt },
+        m_namespaceWide{ model.namespaceWide ? std::optional<bool>{ *model.namespaceWide } : std::nullopt },
         m_profileConstraints{ model.profileConstraints ? std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>>{ *model.profileConstraints } : std::nullopt },
 #if HC_PLATFORM == HC_PLATFORM_GDK
         m_user{ XUser::Duplicate(model.user) }
@@ -210,6 +211,7 @@ public:
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_externalPlatformFriends, rhs.m_externalPlatformFriends);
+        swap(lhs.m_namespaceWide, rhs.m_namespaceWide);
         swap(lhs.m_profileConstraints, rhs.m_profileConstraints);
 #if HC_PLATFORM == HC_PLATFORM_GDK
         swap(lhs.m_user, rhs.m_user);
@@ -240,6 +242,17 @@ public:
     {
         m_externalPlatformFriends = std::move(value);
         this->m_model.externalPlatformFriends = m_externalPlatformFriends ? m_externalPlatformFriends.operator->() : nullptr;
+    }
+
+    std::optional<bool> const& GetNamespaceWide() const
+    {
+        return m_namespaceWide;
+    }
+
+    void SetNamespaceWide(std::optional<bool> value)
+    {
+        m_namespaceWide = std::move(value);
+        this->m_model.namespaceWide = m_namespaceWide ? m_namespaceWide.operator->() : nullptr;
     }
 
     std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> const& GetProfileConstraints() const
@@ -277,6 +290,7 @@ private:
     {
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.externalPlatformFriends = m_externalPlatformFriends ? m_externalPlatformFriends.operator->() : nullptr;
+        this->m_model.namespaceWide = m_namespaceWide ? m_namespaceWide.operator->() : nullptr;
         this->m_model.profileConstraints = m_profileConstraints ?  &m_profileConstraints->Model() : nullptr;
 #if HC_PLATFORM == HC_PLATFORM_GDK
         this->m_model.user = m_user.Handle();
@@ -287,6 +301,7 @@ private:
 
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFFriendsExternalFriendSources> m_externalPlatformFriends;
+    std::optional<bool> m_namespaceWide;
     std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> m_profileConstraints;
 #if HC_PLATFORM == HC_PLATFORM_GDK
     XUser m_user;
@@ -846,6 +861,7 @@ public:
         ModelWrapper<PFFriendsServerGetFriendsListRequest, Alloc>{ model },
         m_customTags{ model.customTags, model.customTags + model.customTagsCount },
         m_externalPlatformFriends{ model.externalPlatformFriends ? std::optional<PFFriendsExternalFriendSources>{ *model.externalPlatformFriends } : std::nullopt },
+        m_namespaceWide{ model.namespaceWide ? std::optional<bool>{ *model.namespaceWide } : std::nullopt },
         m_playFabId{ SafeString(model.playFabId) },
         m_profileConstraints{ model.profileConstraints ? std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>>{ *model.profileConstraints } : std::nullopt },
         m_xboxToken{ SafeString(model.xboxToken) }
@@ -878,6 +894,7 @@ public:
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_customTags, rhs.m_customTags);
         swap(lhs.m_externalPlatformFriends, rhs.m_externalPlatformFriends);
+        swap(lhs.m_namespaceWide, rhs.m_namespaceWide);
         swap(lhs.m_playFabId, rhs.m_playFabId);
         swap(lhs.m_profileConstraints, rhs.m_profileConstraints);
         swap(lhs.m_xboxToken, rhs.m_xboxToken);
@@ -906,6 +923,17 @@ public:
     {
         m_externalPlatformFriends = std::move(value);
         this->m_model.externalPlatformFriends = m_externalPlatformFriends ? m_externalPlatformFriends.operator->() : nullptr;
+    }
+
+    std::optional<bool> const& GetNamespaceWide() const
+    {
+        return m_namespaceWide;
+    }
+
+    void SetNamespaceWide(std::optional<bool> value)
+    {
+        m_namespaceWide = std::move(value);
+        this->m_model.namespaceWide = m_namespaceWide ? m_namespaceWide.operator->() : nullptr;
     }
 
     String const& GetPlayFabId() const
@@ -946,6 +974,7 @@ private:
     {
         this->m_model.customTags = m_customTags.empty() ? nullptr : m_customTags.data();
         this->m_model.externalPlatformFriends = m_externalPlatformFriends ? m_externalPlatformFriends.operator->() : nullptr;
+        this->m_model.namespaceWide = m_namespaceWide ? m_namespaceWide.operator->() : nullptr;
         this->m_model.playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
         this->m_model.profileConstraints = m_profileConstraints ?  &m_profileConstraints->Model() : nullptr;
         this->m_model.xboxToken = m_xboxToken.empty() ? nullptr : m_xboxToken.data();
@@ -953,6 +982,7 @@ private:
 
     StringDictionaryEntryVector<Alloc> m_customTags;
     std::optional<PFFriendsExternalFriendSources> m_externalPlatformFriends;
+    std::optional<bool> m_namespaceWide;
     String m_playFabId;
     std::optional<PFPlayerProfileViewConstraintsWrapper<Alloc>> m_profileConstraints;
     String m_xboxToken;

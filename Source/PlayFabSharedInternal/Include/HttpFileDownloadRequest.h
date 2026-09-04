@@ -50,6 +50,7 @@ private:
 
     String m_responseBodyFilePath;
     FileHandle m_responseBodyFileStream;
+    uint64_t m_totalBytesReceived{ 0 }; // Cumulative bytes received for per-chunk progress reporting
 };
 
 }

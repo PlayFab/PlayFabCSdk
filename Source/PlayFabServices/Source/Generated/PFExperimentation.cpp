@@ -54,6 +54,7 @@ PF_API PFExperimentationGetTreatmentAssignmentGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFExperimentationGetTreatmentAssignmentGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFExperimentationGetTreatmentAssignmentResult*>(buffer);

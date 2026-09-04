@@ -908,43 +908,6 @@ typedef struct PFInventoryGetInventoryOperationStatusResponse
 } PFInventoryGetInventoryOperationStatusResponse;
 
 /// <summary>
-/// PFInventoryGetMicrosoftStoreAccessTokensRequest data model. Gets the access tokens for Microsoft
-/// Store authentication.
-/// </summary>
-typedef struct PFInventoryGetMicrosoftStoreAccessTokensRequest
-{
-    /// <summary>
-    /// (Optional) The optional custom tags associated with the request (e.g. build number, external
-    /// trace identifiers, etc.).
-    /// </summary>
-    _Maybenull_ _Field_size_(customTagsCount) struct PFStringDictionaryEntry const* customTags;
-
-    /// <summary>
-    /// Count of customTags
-    /// </summary>
-    uint32_t customTagsCount;
-
-} PFInventoryGetMicrosoftStoreAccessTokensRequest;
-
-/// <summary>
-/// PFInventoryGetMicrosoftStoreAccessTokensResponse data model.
-/// </summary>
-typedef struct PFInventoryGetMicrosoftStoreAccessTokensResponse
-{
-    /// <summary>
-    /// (Optional) The collections access token for calling https://onestore.microsoft.com/b2b/keys/create/collections
-    /// to obtain a CollectionsIdKey for the user.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* collectionsAccessToken;
-
-    /// <summary>
-    /// The date the collections access token expires.
-    /// </summary>
-    time_t collectionsAccessTokenExpirationDate;
-
-} PFInventoryGetMicrosoftStoreAccessTokensResponse;
-
-/// <summary>
 /// PFInventoryGetTransactionHistoryRequest data model. Get transaction history for specified entity
 /// and collection.
 /// </summary>
@@ -962,7 +925,8 @@ typedef struct PFInventoryGetTransactionHistoryRequest
     _Maybenull_ _Null_terminated_ const char* continuationToken;
 
     /// <summary>
-    /// Number of items to retrieve. This value is optional. The default value is 10.
+    /// Number of items to retrieve. This value is optional. The default value is 10. The maximum value
+    /// is 50, or 250 if response compression is enabled.
     /// </summary>
     int32_t count;
 
@@ -1408,6 +1372,11 @@ typedef struct PFInventoryRedemptionFailure
 typedef struct PFInventoryRedemptionSuccess
 {
     /// <summary>
+    /// (Optional) The timestamp for when the redeem expired.
+    /// </summary>
+    _Maybenull_ time_t const* expirationTimestamp;
+
+    /// <summary>
     /// (Optional) The Marketplace Alternate ID being redeemed.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* marketplaceAlternateId;
@@ -1563,11 +1532,6 @@ typedef struct PFInventoryRedeemMicrosoftStoreInventoryItemsRequest
     /// (Optional) The id of the entity's collection to perform this action on. (Default="default").
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* collectionId;
-
-    /// <summary>
-    /// (Optional) The OneStore Collections Id Key used for AAD authentication.
-    /// </summary>
-    _Maybenull_ _Null_terminated_ const char* collectionsIdKey;
 
     /// <summary>
     /// (Optional) The optional custom tags associated with the request (e.g. build number, external

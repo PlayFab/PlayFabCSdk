@@ -53,18 +53,20 @@ String GetDeviceVersion()
 
 String GetDeviceFriendlyName()
 {
-    char name[MAX_COMPUTERNAME_LENGTH + 1] = {};
+    wchar_t wname[MAX_COMPUTERNAME_LENGTH + 1] = {};
     DWORD dwSize = MAX_COMPUTERNAME_LENGTH + 1;
-    BOOL success = GetComputerNameA(name, &dwSize);
+    BOOL success = GetComputerNameW(wname, &dwSize);
     if (success)
     {
-        return String(name);
+        int utf8Len = WideCharToMultiByte(CP_UTF8, 0, wname, -1, nullptr, 0, nullptr, nullptr);
+        if (utf8Len > 0)
+        {
+            String result(static_cast<size_t>(utf8Len - 1), '\0');
+            WideCharToMultiByte(CP_UTF8, 0, wname, -1, &result[0], utf8Len, nullptr, nullptr);
+            return result;
+        }
     }
-    else
-    {
-        // If we can't get the computer name, just return blank
-        return String("");
-    }
+    return String("");
 }
 #endif
 

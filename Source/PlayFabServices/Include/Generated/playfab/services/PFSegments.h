@@ -35,8 +35,9 @@ PF_API PFSegmentsClientGetPlayerSegmentsAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFSegmentsClientGetPlayerSegmentsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -52,8 +53,9 @@ PF_API PFSegmentsClientGetPlayerSegmentsGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -155,7 +157,7 @@ PF_API PFSegmentsServerAddPlayerTagAsync(
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves an array of player segment definitions. Results from this can be used in subsequent API
-/// calls such as GetPlayersInSegment which requires a Segment ID. While segment names can change the
+/// calls such as ExportPlayersInSegment which requires a Segment ID. While segment names can change the
 /// ID for that segment will not change.
 /// </summary>
 /// <param name="titleEntityHandle">PFEntityHandle for a title Entity obtained using PFAuthenticationGetEntityWithSecretKeyAsync.</param>
@@ -163,7 +165,7 @@ PF_API PFSegmentsServerAddPlayerTagAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// This API is available on Windows, Linux, and macOS.
-/// Request has no paramaters. See also ServerGetPlayersInSegmentAsync.
+/// Request has no paramaters. See also ServerExportPlayersInSegmentAsync, ServerGetSegmentExportAsync.
 ///
 /// When the asynchronous task is complete, call <see cref="PFSegmentsServerGetAllSegmentsGetResultSize"/>
 /// and <see cref="PFSegmentsServerGetAllSegmentsGetResult"/> to get the result.
@@ -179,8 +181,9 @@ PF_API PFSegmentsServerGetAllSegmentsAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFSegmentsServerGetAllSegmentsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -196,8 +199,9 @@ PF_API PFSegmentsServerGetAllSegmentsGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -238,8 +242,9 @@ PF_API PFSegmentsServerGetPlayerSegmentsAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFSegmentsServerGetPlayerSegmentsGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -255,8 +260,9 @@ PF_API PFSegmentsServerGetPlayerSegmentsGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -266,81 +272,6 @@ PF_API PFSegmentsServerGetPlayerSegmentsGetResult(
     _In_ size_t bufferSize,
     _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
     _Outptr_ PFSegmentsGetPlayerSegmentsResult** result,
-    _Out_opt_ size_t* bufferUsed
-) noexcept;
-#endif
-
-#if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-/// <summary>
-/// Allows for paging through all players in a given segment. This API creates a snapshot of all player
-/// profiles that match the segment definition at the time of its creation and lives through the Total
-/// Seconds to Live, refreshing its life span on each subsequent use of the Continuation Token. Profiles
-/// that change during the course of paging will not be reflected in the results. AB Test segments are
-/// currently not supported by this operation. NOTE: This API is limited to being called 30 times in one
-/// minute. You will be returned an error if you exceed this threshold.
-/// </summary>
-/// <param name="titleEntityHandle">PFEntityHandle for a title Entity obtained using PFAuthenticationGetEntityWithSecretKeyAsync.</param>
-/// <param name="request">Populated request object.</param>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <returns>Result code for this API operation.</returns>
-/// <remarks>
-/// This API is available on Windows, Linux, and macOS.
-/// Initial request must contain at least a Segment ID. Subsequent requests must contain the Segment
-/// ID as well as the Continuation Token. Failure to send the Continuation Token will result in a new
-/// player segment list being generated. Each time the Continuation Token is passed in the length of the
-/// Total Seconds to Live is refreshed. If too much time passes between requests to the point that a subsequent
-/// request is past the Total Seconds to Live an error will be returned and paging will be terminated.
-/// This API is resource intensive and should not be used in scenarios which might generate high request
-/// volumes. Only one request to this API at a time should be made per title. Concurrent requests to the
-/// API may be rejected with the APIConcurrentRequestLimitExceeded error. See also ServerGetAllSegmentsAsync.
-///
-/// When the asynchronous task is complete, call <see cref="PFSegmentsServerGetPlayersInSegmentGetResultSize"/>
-/// and <see cref="PFSegmentsServerGetPlayersInSegmentGetResult"/> to get the result.
-/// </remarks>
-PF_API PFSegmentsServerGetPlayersInSegmentAsync(
-    _In_ PFEntityHandle titleEntityHandle,
-    _In_ const PFSegmentsGetPlayersInSegmentRequest* request,
-    _Inout_ XAsyncBlock* async
-) noexcept;
-
-/// <summary>
-/// Get the size in bytes needed to store the result of a ServerGetPlayersInSegment call.
-/// </summary>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
-/// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_EXPIRED_CONTINUATION_TOKEN,
-/// E_PF_GET_PLAYERS_IN_SEGMENT_RATE_LIMIT_EXCEEDED, E_PF_INTERNAL_SERVER_ERROR, E_PF_INVALID_CONTINUATION_TOKEN,
-/// E_PF_INVALID_SEARCH_TERM, E_PF_INVALID_SEGMENT, E_PF_SEGMENT_NOT_FOUND or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
-/// </returns>
-PF_API PFSegmentsServerGetPlayersInSegmentGetResultSize(
-    _Inout_ XAsyncBlock* async,
-    _Out_ size_t* bufferSize
-) noexcept;
-
-/// <summary>
-/// Gets the result of a successful PFSegmentsServerGetPlayersInSegmentAsync call.
-/// </summary>
-/// <param name="async">XAsyncBlock for the async operation.</param>
-/// <param name="bufferSize">The size of the buffer for the result object.</param>
-/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
-/// <param name="result">Pointer to the result object.</param>
-/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
-/// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_EXPIRED_CONTINUATION_TOKEN,
-/// E_PF_GET_PLAYERS_IN_SEGMENT_RATE_LIMIT_EXCEEDED, E_PF_INTERNAL_SERVER_ERROR, E_PF_INVALID_CONTINUATION_TOKEN,
-/// E_PF_INVALID_SEARCH_TERM, E_PF_INVALID_SEGMENT, E_PF_SEGMENT_NOT_FOUND or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
-/// </returns>
-/// <remarks>
-/// result is a pointer within buffer and does not need to be freed separately.
-/// </remarks>
-PF_API PFSegmentsServerGetPlayersInSegmentGetResult(
-    _Inout_ XAsyncBlock* async,
-    _In_ size_t bufferSize,
-    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
-    _Outptr_ PFSegmentsGetPlayersInSegmentResult** result,
     _Out_opt_ size_t* bufferUsed
 ) noexcept;
 #endif

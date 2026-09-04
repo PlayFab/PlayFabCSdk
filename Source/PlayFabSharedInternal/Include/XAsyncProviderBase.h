@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <thread>
 #include <XAsyncProvider.h>
 #include "RunContext.h"
@@ -89,6 +90,7 @@ private:
     void* m_terminationListenerContext{ nullptr };
 
     String m_activeThreadId;
+    std::atomic<bool> m_completed{ false };
 };
 
 } // namespace PlayFab

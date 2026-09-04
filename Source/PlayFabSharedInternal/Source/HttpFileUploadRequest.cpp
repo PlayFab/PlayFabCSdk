@@ -35,24 +35,50 @@ HCHttpFileUploadCall::HCHttpFileUploadCall(
 
 HRESULT HCHttpFileUploadCall::OnStarted(XAsyncBlock* async) noexcept
 {
-    RETURN_IF_FAILED(SetupCall());
+    // Skip native LHC progress registration during SetupCall — this subclass
+    // provides per-chunk progress from HCRequestBodyReadFromFile which is more
+    // frequent and accurate. Registering both causes interleaved/oscillating values.
+    auto savedCallback = m_progressReportCallback;
+    m_progressReportCallback = nullptr;
+    HRESULT setupHr = SetupCall();
+    m_progressReportCallback = savedCallback;
+    RETURN_IF_FAILED(setupHr);
 
     // Override the request body read function to read from the file
     auto sizeResult = FilePAL::GetFileSize(m_requestBodyFilePath);
     RETURN_IF_FAILED(sizeResult.hr);
 
+    m_requestBodyFileSize = sizeResult.Payload(); // Store for per-chunk progress reporting
+
     auto result = FilePAL::OpenFile(m_requestBodyFilePath, FileOpenMode::Read);
     RETURN_IF_FAILED(result.hr);
     m_requestBodyFileStream = result.ExtractPayload();
 
-    RETURN_IF_FAILED(HCHttpCallRequestSetRequestBodyReadFunction(m_callHandle, HCHttpFileUploadCall::HCRequestBodyReadFromFile, sizeResult.Payload(), this));
+    HRESULT hr = HCHttpCallRequestSetRequestBodyReadFunction(m_callHandle, HCHttpFileUploadCall::HCRequestBodyReadFromFile, sizeResult.Payload(), this);
+    if (FAILED(hr))
+    {
+        FilePAL::CloseFile(m_requestBodyFileStream);
+        return hr;
+    }
 
     if (m_retryCacheId.has_value())
     {
-        RETURN_IF_FAILED(HCHttpCallRequestSetRetryCacheId(m_callHandle, *m_retryCacheId));
+        hr = HCHttpCallRequestSetRetryCacheId(m_callHandle, *m_retryCacheId);
+        if (FAILED(hr))
+        {
+            FilePAL::CloseFile(m_requestBodyFileStream);
+            return hr;
+        }
     }
 
-    return HCHttpCallPerformAsync(m_callHandle, async);
+    hr = HCHttpCallPerformAsync(m_callHandle, async);
+    if (FAILED(hr))
+    {
+        FilePAL::CloseFile(m_requestBodyFileStream);
+        return hr;
+    }
+
+    return S_OK;
 }
 
 HRESULT HCHttpFileUploadCall::HCRequestBodyReadFromFile(
@@ -65,7 +91,6 @@ HRESULT HCHttpFileUploadCall::HCRequestBodyReadFromFile(
 )
 {
     UNREFERENCED_PARAMETER(callHandle);
-    UNREFERENCED_PARAMETER(offset);
 
     assert(context);
     assert(destination);
@@ -81,6 +106,26 @@ HRESULT HCHttpFileUploadCall::HCRequestBodyReadFromFile(
         RETURN_IF_FAILED(HCHttpCallRequestAddDynamicBytesWritten(call->m_callHandle, *bytesWritten));
     }
 
+    // Fire per-chunk upload progress so callers get frequent updates.
+    // The platform HTTP stack's native progress reporting may be very infrequent
+    // (e.g., only a few callbacks for an entire multi-MB upload on PlayStation).
+    // Since this function is called for every chunk read from disk, we can provide
+    // much more granular progress by computing it from the file offset.
+    if (call->m_progressReportCallback)
+    {
+        uint64_t bytesReadSoFar = static_cast<uint64_t>(offset) + static_cast<uint64_t>(*bytesWritten);
+        uint64_t currentProgress = call->m_dynamicCurrentSize + bytesReadSoFar;
+        uint64_t totalProgress = (call->m_dynamicTotalSize > 0) ? call->m_dynamicTotalSize : call->m_requestBodyFileSize;
+
+        // Clamp to prevent reporting progress > 100% (e.g., if bytes accumulate across HTTP retries)
+        if (currentProgress > totalProgress)
+        {
+            currentProgress = totalProgress;
+        }
+
+        call->m_progressReportCallback(call->m_callHandle, currentProgress, totalProgress, call->m_progressReportContext);
+    }
+
     return S_OK;
 }
 
@@ -94,12 +139,15 @@ PlayFab::Result<PlayFab::ServiceResponse> HCHttpFileUploadCall::GetResult(XAsync
     // Successful response from service (doesn't always indicate the call was successful, just that the service responded successfully)
     ServiceResponse response{};
 
+    uint32_t callCount{ 1 };
     uint32_t httpCode{ 0 };
+    HCHttpCallGetPerformCount(m_callHandle, &callCount);
     RETURN_IF_FAILED(HCHttpCallResponseGetStatusCode(m_callHandle, &httpCode));
+    HttpResult httpResult{ callCount - 1, httpCode };
     response.HttpCode = httpCode;
     RETURN_IF_FAILED(HttpStatusToHR(httpCode));
 
-    return response;
+    return Result<ServiceResponse>{ std::move(response), std::move(httpResult) };
 }
 
 }

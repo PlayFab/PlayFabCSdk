@@ -4,6 +4,7 @@
 #include "Generated/GameSaveTypes.h"
 #include "Wrappers/Types.h"
 #include "Compression.h"
+#include <atomic>
 
 namespace PlayFab
 {
@@ -98,7 +99,7 @@ public:
     static AsyncOp<UpdateManifestResponse> UpdateManifest(Entity const& entity, const UpdateManifestRequest& request, RunContext rc);
     static AsyncOp<void> DeleteManifest(Entity const& entity, const DeleteManifestRequest& request, RunContext rc);
 
-    static bool useMocks;
+    static std::atomic<bool> useMocks;
 };
 
 

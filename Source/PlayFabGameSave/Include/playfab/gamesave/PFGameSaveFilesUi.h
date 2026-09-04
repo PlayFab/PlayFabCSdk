@@ -11,10 +11,19 @@ extern "C"
 {
 
 /// <summary>
-/// Progress of the current operation callback.
+/// Notification callback fired when the sync operation transitions to a new state.
+/// This callback fires once per state transition (e.g., once for PreparingForUpload, once for
+/// Uploading) -- it is NOT fired repeatedly as progress advances within a state.
+///
+/// To get granular progress within a state, call PFGameSaveFilesUiProgressGetProgress to poll
+/// the current and total byte counts.
+///
+/// Titles should treat this as a state-change notification (e.g., show or update a progress dialog)
+/// rather than expecting it to fire at a high frequency.
 /// </summary>
 /// <param name="localUserHandle">Local user handle.</param>
-/// <param name="syncState">Sync state of the operation.</param>
+/// <param name="syncState">The new sync state of the operation.</param>
+/// <param name="context">Context pointer passed during callback registration.</param>
 typedef void CALLBACK PFGameSaveFilesUiProgressCallback(
     _In_ PFLocalUserHandle localUserHandle,
     _In_ PFGameSaveFilesSyncState syncState,
@@ -143,13 +152,21 @@ typedef struct PFGameSaveUICallbacks
 PF_API PFGameSaveFilesSetUiCallbacks(_In_ PFGameSaveUICallbacks* callbacks) noexcept;
 
 /// <summary>
-/// For use inside PFGameSaveFilesUiProgressCallback.
-/// Get the progress of the current operation.
+/// Gets the current progress of the sync operation. Call this from within
+/// PFGameSaveFilesUiProgressCallback or poll it periodically while a sync is in progress
+/// to get up-to-date byte-level progress.
+///
+/// During PreparingForUpload, current/total reflect uncompressed bytes processed/expected.
+/// During Uploading, current/total reflect uncompressed bytes transferred/expected.
+/// During Downloading, current/total reflect bytes downloaded/expected.
+///
+/// If total is 0, the total size is not yet known -- titles should treat this as indeterminate
+/// progress (e.g., show a spinner) rather than dividing by zero or displaying 0%.
 /// </summary>
 /// <param name="localUserHandle">Local user handle.</param>
 /// <param name="syncState">Sync state of the operation.</param>
-/// <param name="current">Current progress.</param>
-/// <param name="total">Total progress.</param>
+/// <param name="current">Current bytes processed in the active state.</param>
+/// <param name="total">Total bytes expected in the active state.</param>
 PF_API PFGameSaveFilesUiProgressGetProgress(
     _In_ PFLocalUserHandle localUserHandle, 
     _Out_opt_ PFGameSaveFilesSyncState* syncState, 

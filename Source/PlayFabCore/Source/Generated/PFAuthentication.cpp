@@ -22,6 +22,7 @@ HRESULT PFAuthenticationLoginGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
+    *entityHandle = nullptr;
 
     Vector<char> tempBuffer;
     if (!bufferSize || !buffer)
@@ -58,6 +59,7 @@ HRESULT PFAuthenticationServerLoginGetResult(
 ) noexcept
 {
     RETURN_HR_INVALIDARG_IF_NULL(entityTokenResponse);
+    *entityTokenResponse = nullptr;
     
     RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
     PFServerCombinedLoginResult* combinedLoginResult = reinterpret_cast<PFServerCombinedLoginResult*>(buffer);
@@ -1770,6 +1772,7 @@ PF_API PFAuthenticationRegisterPlayFabUserGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationRegisterPlayFabUserGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAuthenticationRegisterPlayFabUserResult*>(buffer);
@@ -2321,6 +2324,11 @@ PF_API PFAuthenticationAuthenticateGameServerWithCustomIdGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationAuthenticateGameServerWithCustomIdGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
+        *entityHandle = nullptr;
+        if (newlyCreated)
+        {
+            *newlyCreated = false;
+        }
 
         PFAuthenticationAuthenticateGameServerResult result{};
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, sizeof(PFAuthenticationAuthenticateGameServerResult), &result, nullptr));
@@ -2390,6 +2398,9 @@ PF_API PFAuthenticationGetEntityGetResult(
 {
     return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationGetEntityGetResult), [&]()
     {
+        RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
+        *entityHandle = nullptr;
+
         return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), entityHandle, nullptr);
     });
 }
@@ -2427,6 +2438,9 @@ PF_API PFAuthenticationGetEntityWithSecretKeyGetResult(
 {
     return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationGetEntityWithSecretKeyGetResult), [&]()
     {
+        RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
+        *entityHandle = nullptr;
+
         return XAsyncGetResult(async, nullptr, sizeof(PFEntityHandle), entityHandle, nullptr);
     });
 }
@@ -2477,6 +2491,7 @@ PF_API PFAuthenticationValidateEntityTokenGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFAuthenticationValidateEntityTokenGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFAuthenticationValidateEntityTokenResponse*>(buffer);

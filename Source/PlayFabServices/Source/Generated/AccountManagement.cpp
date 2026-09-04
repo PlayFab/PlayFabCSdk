@@ -1473,7 +1473,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkAndroidDeviceID(
 
 AsyncOp<void> AccountManagementAPI::ClientUnlinkApple(
     Entity const& entity,
-    const UnlinkAppleRequest& request,
+    const ClientUnlinkAppleRequest& request,
     RunContext rc
 )
 {
@@ -1638,7 +1638,7 @@ AsyncOp<void> AccountManagementAPI::ClientUnlinkFacebookInstantGamesId(
 
 AsyncOp<void> AccountManagementAPI::ClientUnlinkGameCenterAccount(
     Entity const& entity,
-    const UnlinkGameCenterAccountRequest& request,
+    const ClientUnlinkGameCenterAccountRequest& request,
     RunContext rc
 )
 {
@@ -2100,6 +2100,39 @@ AsyncOp<UpdateUserTitleDisplayNameResult> AccountManagementAPI::ClientUpdateUser
     });
 }
 
+AsyncOp<void> AccountManagementAPI::ServerAddOrUpdateContactEmail(
+    Entity const& entity,
+    const ServerAddOrUpdateContactEmailRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/AddOrUpdateContactEmail" };
+    JsonValue requestBody = request.ToJson();
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerAddOrUpdateContactEmail,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<BanUsersResult> AccountManagementAPI::ServerBanUsers(
     Entity const& entity,
     const BanUsersRequest& request,
@@ -2514,6 +2547,41 @@ AsyncOp<GetPlayFabIDsFromPSNOnlineIDsResult> AccountManagementAPI::ServerGetPlay
         else
         {
             return Result<GetPlayFabIDsFromPSNOnlineIDsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<GetPlayFabIDsFromServerCustomIDsResult> AccountManagementAPI::ServerGetPlayFabIDsFromServerCustomIDs(
+    Entity const& entity,
+    const GetPlayFabIDsFromServerCustomIDsRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/GetPlayFabIDsFromServerCustomIDs" };
+    JsonValue requestBody = request.ToJson();
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerGetPlayFabIDsFromServerCustomIDs,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayFabIDsFromServerCustomIDsResult>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            GetPlayFabIDsFromServerCustomIDsResult resultModel;
+            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
+            return resultModel;
+        }
+        else
+        {
+            return Result<GetPlayFabIDsFromServerCustomIDsResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
         }
     });
 }
@@ -3262,6 +3330,39 @@ AsyncOp<void> AccountManagementAPI::ServerSendEmailFromTemplate(
     });
 }
 
+AsyncOp<void> AccountManagementAPI::ServerUnlinkApple(
+    Entity const& entity,
+    const ServerUnlinkAppleRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/UnlinkApple" };
+    JsonValue requestBody = request.ToJson();
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerUnlinkApple,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
 AsyncOp<void> AccountManagementAPI::ServerUnlinkBattleNetAccount(
     Entity const& entity,
     const ServerUnlinkBattleNetAccountRequest& request,
@@ -3339,6 +3440,39 @@ AsyncOp<void> AccountManagementAPI::ServerUnlinkFacebookInstantGamesId(
 
     auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
         ServicesCacheId::AccountManagementServerUnlinkFacebookInstantGamesId,
+        entity,
+        path,
+        requestBody,
+        std::move(rc)
+    );
+
+    return requestOp.Then([](Result<ServiceResponse> result) -> Result<void>
+    {
+        RETURN_IF_FAILED(result.hr);
+
+        auto serviceResponse = result.ExtractPayload();
+        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
+        {
+            return S_OK;
+        }
+        else
+        {
+            return Result<void>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
+        }
+    });
+}
+
+AsyncOp<void> AccountManagementAPI::ServerUnlinkGameCenterAccount(
+    Entity const& entity,
+    const ServerUnlinkGameCenterAccountRequest& request,
+    RunContext rc
+)
+{
+    const char* path{ "/Server/UnlinkGameCenterAccount" };
+    JsonValue requestBody = request.ToJson();
+
+    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
+        ServicesCacheId::AccountManagementServerUnlinkGameCenterAccount,
         entity,
         path,
         requestBody,

@@ -78,8 +78,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\debug\lib;$(ProjectDir)vcpkg_installed\x64-windows\debug\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Debug;$(DXSDK_DIR)Lib\x64;$(SteamworksSDKPath)\redistributable_bin\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\debug\lib;$(ProjectDir)vcpkg_installed\x64-windows\debug\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Debug;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies Condition="'$(EnableSteamSDK)'=='true'">SDL2d.lib;imguid.lib;opengl32.lib;Microsoft.Xbox.Services.142.C.lib;Appnotify.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;steam_api64.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(EnableSteamSDK)'!='true'">SDL2d.lib;imguid.lib;opengl32.lib;Microsoft.Xbox.Services.142.C.lib;Appnotify.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(EnableSteamSDK)'=='true'">SDL2d.lib;imguid.lib;opengl32.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;steam_api64.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(EnableSteamSDK)'!='true'">SDL2d.lib;imguid.lib;opengl32.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying debug DLLs...
@@ -97,7 +97,6 @@ xcopy /Y /D "$(GDKPath)\windows\bin\x64\PlayFabServices.pdb" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\libHttpClient.pdb" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\PlayFabGameSave.pdb" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\XCurl.pdb" "$(TargetDir)"
-xcopy /Y /D "$(GDKPath)\windows\bin\x64\Release\Microsoft.Xbox.Services.142.C.pdb" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\xgameruntime.dll" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\xgameruntime.pdb" "$(TargetDir)"
 if "$(EnableSteamSDK)"=="true" xcopy /Y /D "$(SteamworksSDKPath)\redistributable_bin\win64\steam_api64.dll" "$(TargetDir)"
@@ -134,8 +133,8 @@ echo DLLs copied successfully.</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\lib;$(ProjectDir)vcpkg_installed\x64-windows\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Release;$(DXSDK_DIR)Lib\x64;$(SteamworksSDKPath)\redistributable_bin\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\lib;$(ProjectDir)vcpkg_installed\x64-windows\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Release;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies Condition="'$(EnableSteamSDK)'=='true'">SDL2.lib;imgui.lib;opengl32.lib;Microsoft.Xbox.Services.142.C.lib;Appnotify.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;steam_api64.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(EnableSteamSDK)'!='true'">SDL2.lib;imgui.lib;opengl32.lib;Microsoft.Xbox.Services.142.C.lib;Appnotify.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(EnableSteamSDK)'=='true'">SDL2.lib;imgui.lib;opengl32.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;steam_api64.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(EnableSteamSDK)'!='true'">SDL2.lib;imgui.lib;opengl32.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying release DLLs...
@@ -150,7 +149,6 @@ xcopy /Y /D "$(GDKPath)\windows\bin\x64\PlayFabCore.pdb" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\PlayFabServices.pdb" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\libHttpClient.pdb" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\PlayFabGameSave.pdb" "$(TargetDir)"
-xcopy /Y /D "$(GDKPath)\windows\bin\x64\Release\Microsoft.Xbox.Services.142.C.pdb" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\xgameruntime.dll" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\xgameruntime.pdb" "$(TargetDir)"
 if "$(EnableSteamSDK)"=="true" xcopy /Y /D "$(SteamworksSDKPath)\redistributable_bin\win64\steam_api64.dll" "$(TargetDir)"

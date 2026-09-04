@@ -133,6 +133,7 @@ PF_API PFPlatformGetGameSaveContext(
     return ApiImpl(XASYNC_IDENTITY(PFPlatformGetGameSaveContext), [&](PFCoreGlobalState& state)
     {
         RETURN_HR_INVALIDARG_IF_NULL(gameSaveContext);
+        *gameSaveContext = nullptr;
         *gameSaveContext = state.GameSaveContext();
         return S_OK;
     });

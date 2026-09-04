@@ -14,5 +14,11 @@ GameSaveUiCallbackInfo& GetGameSaveUiCallbackInfo() noexcept
     return info;
 }
 
+std::mutex& GetGameSaveUiCallbackMutex() noexcept
+{
+    static std::mutex mtx;
+    return mtx;
+}
+
 } // namespace GameSave
 } // namespace PlayFab

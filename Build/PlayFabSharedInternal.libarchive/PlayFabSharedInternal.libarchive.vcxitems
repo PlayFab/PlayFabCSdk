@@ -635,7 +635,7 @@
     </ClCompile>
     <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_warc.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013;33010</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_xar.c">

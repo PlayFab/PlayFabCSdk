@@ -114,6 +114,7 @@ PF_API PFGroupsApplyToGroupGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsApplyToGroupGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsApplyToGroupResponse*>(buffer);
@@ -204,6 +205,7 @@ PF_API PFGroupsCreateGroupGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsCreateGroupGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsCreateGroupResponse*>(buffer);
@@ -254,6 +256,7 @@ PF_API PFGroupsCreateRoleGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsCreateRoleGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsCreateGroupRoleResponse*>(buffer);
@@ -344,6 +347,7 @@ PF_API PFGroupsGetGroupGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsGetGroupGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsGetGroupResponse*>(buffer);
@@ -394,6 +398,7 @@ PF_API PFGroupsInviteToGroupGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsInviteToGroupGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsInviteToGroupResponse*>(buffer);
@@ -475,6 +480,7 @@ PF_API PFGroupsListGroupApplicationsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsListGroupApplicationsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsListGroupApplicationsResponse*>(buffer);
@@ -525,6 +531,7 @@ PF_API PFGroupsListGroupBlocksGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsListGroupBlocksGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsListGroupBlocksResponse*>(buffer);
@@ -575,6 +582,7 @@ PF_API PFGroupsListGroupInvitationsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsListGroupInvitationsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsListGroupInvitationsResponse*>(buffer);
@@ -625,6 +633,7 @@ PF_API PFGroupsListGroupMembersGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsListGroupMembersGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsListGroupMembersResponse*>(buffer);
@@ -675,6 +684,7 @@ PF_API PFGroupsListMembershipGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsListMembershipGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsListMembershipResponse*>(buffer);
@@ -725,6 +735,7 @@ PF_API PFGroupsListMembershipOpportunitiesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsListMembershipOpportunitiesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsListMembershipOpportunitiesResponse*>(buffer);
@@ -855,6 +866,7 @@ PF_API PFGroupsUpdateGroupGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsUpdateGroupGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsUpdateGroupResponse*>(buffer);
@@ -905,6 +917,7 @@ PF_API PFGroupsUpdateRoleGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFGroupsUpdateRoleGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFGroupsUpdateGroupRoleResponse*>(buffer);

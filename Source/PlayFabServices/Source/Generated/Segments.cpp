@@ -179,41 +179,6 @@ AsyncOp<GetPlayerSegmentsResult> SegmentsAPI::ServerGetPlayerSegments(
     });
 }
 
-AsyncOp<GetPlayersInSegmentResult> SegmentsAPI::ServerGetPlayersInSegment(
-    Entity const& entity,
-    const GetPlayersInSegmentRequest& request,
-    RunContext rc
-)
-{
-    const char* path{ "/Server/GetPlayersInSegment" };
-    JsonValue requestBody = request.ToJson();
-
-    auto requestOp = ServicesHttpClient::MakeSecretKeyRequest(
-        ServicesCacheId::SegmentsServerGetPlayersInSegment,
-        entity,
-        path,
-        requestBody,
-        std::move(rc)
-    );
-
-    return requestOp.Then([](Result<ServiceResponse> result) -> Result<GetPlayersInSegmentResult>
-    {
-        RETURN_IF_FAILED(result.hr);
-
-        auto serviceResponse = result.ExtractPayload();
-        if (serviceResponse.HttpCode >= 200 && serviceResponse.HttpCode < 300)
-        {
-            GetPlayersInSegmentResult resultModel;
-            RETURN_IF_FAILED(resultModel.FromJson(serviceResponse.Data));
-            return resultModel;
-        }
-        else
-        {
-            return Result<GetPlayersInSegmentResult>{ ServiceErrorToHR(serviceResponse.ErrorCode), std::move(serviceResponse.ErrorMessage) };
-        }
-    });
-}
-
 AsyncOp<GetPlayerTagsResult> SegmentsAPI::ServerGetPlayerTags(
     Entity const& entity,
     const GetPlayerTagsRequest& request,

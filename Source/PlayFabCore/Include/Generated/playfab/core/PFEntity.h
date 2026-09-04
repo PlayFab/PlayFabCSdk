@@ -296,7 +296,7 @@ typedef void CALLBACK PFEntityTokenRefreshedEventHandler(
 /// <param name="token">The token for unregistering the callback.</param>
 /// <returns>Result code for this API operation.</returns>
 PF_API PFEntityRegisterTokenRefreshedEventHandler(
-    _In_ XTaskQueueHandle queue,
+    _In_opt_ XTaskQueueHandle queue,
     _In_opt_ void* context,
     _In_ PFEntityTokenRefreshedEventHandler* handler,
     _Out_ PFRegistrationToken* token

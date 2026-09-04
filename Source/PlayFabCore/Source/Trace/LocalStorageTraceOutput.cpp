@@ -9,7 +9,14 @@ LocalStorageTraceOutput::LocalStorageTraceOutput(RunContext rc, LocalStorage loc
     m_localStorage{ std::move(localStorage) }
 {
     Stringstream filepath;
-    filepath << traceFileDirectory << s_traceFilename;
+    if (!traceFileDirectory.empty() && traceFileDirectory.back() != '/' && traceFileDirectory.back() != '\\')
+    {
+        filepath << traceFileDirectory << "/" << s_traceFilename;
+    }
+    else
+    {
+        filepath << traceFileDirectory << s_traceFilename;
+    }
 
     m_traceFilePath = filepath.str();
 
@@ -25,7 +32,6 @@ void LocalStorageTraceOutput::TraceMessage(const char* message) noexcept
     m_localStorage.Write(m_traceFilePath, Vector<uint8_t>(message, message + std::strlen(message)), m_rc).Finally([](Result<void> writeResult)
     {
         UNREFERENCED_PARAMETER(writeResult);
-        // Local Storage write failed. Don't trace this as that would recursively call TraceMessage, just eat the error.
     });
 }
 

@@ -76,6 +76,7 @@ PF_API PFMultiplayerServerListBuildAliasesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListBuildAliasesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFMultiplayerServerListBuildAliasesResponse*>(buffer);
@@ -126,6 +127,7 @@ PF_API PFMultiplayerServerListBuildSummariesV2GetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListBuildSummariesV2GetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFMultiplayerServerListBuildSummariesResponse*>(buffer);
@@ -176,6 +178,7 @@ PF_API PFMultiplayerServerListQosServersForTitleGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListQosServersForTitleGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFMultiplayerServerListQosServersForTitleResponse*>(buffer);
@@ -227,6 +230,7 @@ PF_API PFMultiplayerServerListSecretSummariesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerListSecretSummariesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFMultiplayerServerListSecretSummariesResponse*>(buffer);
@@ -278,6 +282,7 @@ PF_API PFMultiplayerServerRequestMultiplayerServerGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerRequestMultiplayerServerGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFMultiplayerServerRequestMultiplayerServerResponse*>(buffer);
@@ -329,6 +334,7 @@ PF_API PFMultiplayerServerRequestPartyServiceGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFMultiplayerServerRequestPartyServiceGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFMultiplayerServerRequestPartyServiceResponse*>(buffer);

@@ -8,26 +8,27 @@ namespace GameSave
 
 struct GameSaveUiCallbackInfo
 {
-    PFGameSaveFilesUiProgressCallback* progressCallback;
-    void* progressContext;
+    PFGameSaveFilesUiProgressCallback* progressCallback{ nullptr };
+    void* progressContext{ nullptr };
 
-    PFGameSaveFilesUiSyncFailedCallback* syncFailedCallback;
-    void* syncFailedContext;
+    PFGameSaveFilesUiSyncFailedCallback* syncFailedCallback{ nullptr };
+    void* syncFailedContext{ nullptr };
 
-    PFGameSaveFilesUiActiveDeviceContentionCallback* activeDeviceContentionCallback;
-    void* activeDeviceContentionContext;
+    PFGameSaveFilesUiActiveDeviceContentionCallback* activeDeviceContentionCallback{ nullptr };
+    void* activeDeviceContentionContext{ nullptr };
 
-    PFGameSaveFilesUiConflictCallback* conflictCallback;
-    void* conflictContext;
+    PFGameSaveFilesUiConflictCallback* conflictCallback{ nullptr };
+    void* conflictContext{ nullptr };
 
-    PFGameSaveFilesUiOutOfStorageCallback* outOfStorageCallback;
-    void* outOfStorageContext;
+    PFGameSaveFilesUiOutOfStorageCallback* outOfStorageCallback{ nullptr };
+    void* outOfStorageContext{ nullptr };
 
-    XTaskQueueHandle activeDeviceChangedCallbackQueue;
-    PFGameSaveFilesActiveDeviceChangedCallback* activeDeviceChangedCallback;
-    void* activeDeviceChangedContext;
+    XTaskQueueHandle activeDeviceChangedCallbackQueue{ nullptr };
+    PFGameSaveFilesActiveDeviceChangedCallback* activeDeviceChangedCallback{ nullptr };
+    void* activeDeviceChangedContext{ nullptr };
 };
 GameSaveUiCallbackInfo& GetGameSaveUiCallbackInfo() noexcept;
+std::mutex& GetGameSaveUiCallbackMutex() noexcept;
 
 } // namespace GameSave
 } // namespace PlayFab

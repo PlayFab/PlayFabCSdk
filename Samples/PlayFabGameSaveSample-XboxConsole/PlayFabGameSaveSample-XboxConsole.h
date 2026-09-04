@@ -83,8 +83,14 @@ private:
     // Game Save helpers
     HRESULT InitializePlayFab();
     HRESULT InitializeGameSaves();
+    HRESULT ReinitializeGameSaves();
     HRESULT SignInAndCreateLocalUser();
     HRESULT AddUserToGameSaves();
+    void RequestGameSavesResync(const wchar_t *reason);
+    // Fires when another device becomes the active device for this user
+    // (see docs/game-saves/activedevicechanges.md).
+    static void CALLBACK OnActiveDeviceChangedCallback(
+        PFLocalUserHandle localUserHandle, PFGameSaveDescriptor *activeDevice, void *context);
     void DoSave();
     void DoLoad();
     void DoDelete();
@@ -132,6 +138,9 @@ private:
     bool m_signInInProgress{false};
     bool m_localUserCreateInProgress{false};
     bool m_addUserToGSInProgress{false};
+    bool m_gsSessionConsumed{false}; // AddUser has been used on the current session; must re-init to sync again
+    bool m_needsResync{false};       // a Game Saves re-sync has been requested (e.g., after resume)
+    bool m_activeDeviceLost{false};  // another device became active; this device returned to a safe state
     std::string m_saveRoot;
     int64_t m_remainingQuota{0};
 

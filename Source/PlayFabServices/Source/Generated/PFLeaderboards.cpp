@@ -120,6 +120,7 @@ PF_API PFLeaderboardsGetFriendLeaderboardForEntityGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetFriendLeaderboardForEntityGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
@@ -170,6 +171,7 @@ PF_API PFLeaderboardsGetLeaderboardGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
@@ -220,6 +222,7 @@ PF_API PFLeaderboardsGetLeaderboardAroundEntityGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardAroundEntityGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
@@ -271,6 +274,7 @@ PF_API PFLeaderboardsGetLeaderboardDefinitionGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardDefinitionGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFLeaderboardsGetLeaderboardDefinitionResponse*>(buffer);
@@ -323,6 +327,7 @@ PF_API PFLeaderboardsGetLeaderboardForEntitiesGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsGetLeaderboardForEntitiesGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFLeaderboardsGetEntityLeaderboardResponse*>(buffer);
@@ -408,6 +413,7 @@ PF_API PFLeaderboardsListLeaderboardDefinitionsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFLeaderboardsListLeaderboardDefinitionsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFLeaderboardsListLeaderboardDefinitionsResponse*>(buffer);

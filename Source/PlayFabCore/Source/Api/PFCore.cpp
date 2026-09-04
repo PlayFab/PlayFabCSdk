@@ -23,6 +23,8 @@ PF_API PFInitialize(
     _In_ jobject applicationContext
 ) noexcept
 {
+    RETURN_HR_INVALIDARG_IF_NULL(javaVm);
+    RETURN_HR_INVALIDARG_IF_NULL(applicationContext);
     HCInitArgs initArgs;
     initArgs.javaVM = javaVm;
     initArgs.applicationContext = applicationContext;
@@ -45,6 +47,7 @@ PF_API PFUninitializeAsync(
     _In_ XAsyncBlock* async
 ) noexcept
 {
+    RETURN_HR_INVALIDARG_IF_NULL(async);
     return PFCoreGlobalState::CleanupAsync(async);
 }
 

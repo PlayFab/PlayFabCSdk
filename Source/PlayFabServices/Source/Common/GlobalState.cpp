@@ -129,7 +129,12 @@ HRESULT GlobalState::CleanupAsync(XAsyncBlock* async) noexcept
         TRACE_VERBOSE("PlayFabServices::GlobalState::CleanupAsync");
 
         UniquePtr<CleanupContext> context = MakeUnique<CleanupContext>();
-        RETURN_IF_FAILED(XAsyncBegin(async, context.get(), __FUNCTION__, __FUNCTION__, CleanupAsyncProvider));
+        HRESULT hr = XAsyncBegin(async, context.get(), __FUNCTION__, __FUNCTION__, CleanupAsyncProvider);
+        if (FAILED(hr))
+        {
+            // context is still owned by the UniquePtr and will be cleaned up on scope exit
+            return hr;
+        }
         context.release();
         return S_OK;
     }

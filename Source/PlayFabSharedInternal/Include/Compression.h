@@ -2,6 +2,7 @@
 
 #include "Result.h"
 #include "FilePAL.h"
+#include <atomic>
 
 #if HC_PLATFORM != HC_PLATFORM_NINTENDO_SWITCH
 
@@ -49,9 +50,17 @@ public:
     ~ArchiveContext();
     HRESULT Initialize(ArchiveOpenMode mode, ArchiveSource source = ArchiveSource::Memory, String zipFilePath = "") noexcept;
     HRESULT AddFile(String& relativePath, ArchiveFileDetail&& file) noexcept;
+    /// <summary>
+    /// Drops every file previously added and resets the running uncompressed-size total. Callers
+    /// that rebuild their file selection (for example after conflict resolution re-runs the
+    /// comparison) must call this first, otherwise re-adding the same files double-counts their
+    /// size against the archive size limits.
+    /// </summary>
+    void ClearFiles() noexcept;
     UnorderedMap<String, ArchiveFileDetail>& GetFiles() noexcept;
     uint64_t GetTotalUncompressedSize() const noexcept;
     uint64_t GetTotalCompressedSize() const noexcept;
+    uint64_t GetUncompressedBytesProcessed() const noexcept;
     void AddCompressedBytesSize(uint64_t size) noexcept;
     HRESULT CompressBytes() noexcept;
     HRESULT CompressBytesGetData(size_t bytesAvailable, char* destination, size_t* bytesWritten, size_t* uncompressedBytesWritten, bool* finishedCompressing) noexcept;
@@ -80,10 +89,10 @@ private:
 
     ArchiveOpenMode m_mode{};
     ArchiveSource m_source{};
-    uint64_t m_uncompressedBytesWritten{};
+    std::atomic<uint64_t> m_uncompressedBytesWritten{};
     Vector<char> m_remainingBuffer{};
     uint64_t m_totalUncompressedSize{};
-    uint64_t m_totalCompressedSize{};
+    std::atomic<uint64_t> m_totalCompressedSize{};
     UnorderedMap<String, ArchiveFileDetail> m_fileMap{};
     int32_t m_nextFileIndex{};
     FileHandle m_entryFile{};
@@ -91,7 +100,7 @@ private:
     time_t m_entryFileTimeLastModified{};
     time_t m_entryFileTimeCreated{};
     bool m_skipEntry{};
-    uint64_t m_fileRemainingSize{};
+    std::atomic<uint64_t> m_fileRemainingSize{};
     bool m_open{};
 };
 

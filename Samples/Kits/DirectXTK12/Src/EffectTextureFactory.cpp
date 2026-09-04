@@ -50,6 +50,9 @@ public:
         , mForceSRGB(false)
         , mAutoGenMips(false)
     {
+        if (!device)
+            throw std::invalid_argument("Direct3D device is null");
+
         *mPath = 0;
     }
 
@@ -224,8 +227,7 @@ EffectTextureFactory::EffectTextureFactory(
     ResourceUploadBatch& resourceUploadBatch,
     ID3D12DescriptorHeap* descriptorHeap) noexcept(false) :
     pImpl(std::make_unique<Impl>(device, resourceUploadBatch, descriptorHeap))
-{
-}
+{}
 
 _Use_decl_annotations_
 EffectTextureFactory::EffectTextureFactory(
@@ -234,8 +236,7 @@ EffectTextureFactory::EffectTextureFactory(
     size_t numDescriptors,
     D3D12_DESCRIPTOR_HEAP_FLAGS descriptorHeapFlags) noexcept(false) :
     pImpl(std::make_unique<Impl>(device, resourceUploadBatch, numDescriptors, descriptorHeapFlags))
-{
-}
+{}
 
 
 EffectTextureFactory::EffectTextureFactory(EffectTextureFactory&&) noexcept = default;

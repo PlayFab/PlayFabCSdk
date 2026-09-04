@@ -8,13 +8,18 @@ namespace GameSave
 
 HRESULT UICallbackManager::SetAction(UIAction action)
 {
-    ISchedulableTask* activeTask = m_activeTask;
+    if (m_shutdown.load())
+    {
+        TRACE_WARNING("[GAME SAVE] UICallbackManager::SetAction called after shutdown — ignoring");
+        return E_UNEXPECTED;
+    }
+
+    ISchedulableTask* activeTask = m_activeTask.exchange(nullptr);
     if (activeTask)
     {
         TRACE_INFORMATION("[GAME SAVE] UICallbackManager::SetAction: user chose '%s'", EnumName<UIAction>(action));
         
-        m_activeTask = nullptr;
-        m_action = action;
+        m_action.store(action);
         activeTask->ScheduleNow();
         return S_OK;
     }            
@@ -27,7 +32,7 @@ HRESULT UICallbackManager::SetAction(UIAction action)
 
 UIAction UICallbackManager::GetAction() const
 {
-    return m_action;
+    return m_action.load();
 }
 
 bool UICallbackManager::ShowProgressUI(ISchedulableTask& task, const LocalUser& localUser, PFGameSaveFilesSyncState syncState)
@@ -37,10 +42,17 @@ bool UICallbackManager::ShowProgressUI(ISchedulableTask& task, const LocalUser& 
     // Cancel is handled via m_progressCancelRequested atomic flag which is checked during download/upload loops.
     UNREFERENCED_PARAMETER(task);
 
-    auto& uiInfo = GetGameSaveUiCallbackInfo();
-    if (uiInfo.progressCallback)
+    PFGameSaveFilesUiProgressCallback* callback = nullptr;
+    void* context = nullptr;
     {
-        uiInfo.progressCallback(localUser.Handle(), syncState, uiInfo.syncFailedContext);
+        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        auto& uiInfo = GetGameSaveUiCallbackInfo();
+        callback = uiInfo.progressCallback;
+        context = uiInfo.progressContext;
+    }
+    if (callback)
+    {
+        callback(localUser.Handle(), syncState, context);
         return true;
     }
     return false;
@@ -63,12 +75,19 @@ void UICallbackManager::ClearProgressCancel()
 
 bool UICallbackManager::ShowOutOfStorageUI(ISchedulableTask& task, const LocalUser& localUser, uint64_t requiredBytes)
 {
-    m_activeTask = &task;
-
-    auto& uiInfo = GetGameSaveUiCallbackInfo();
-    if (uiInfo.outOfStorageCallback)
+    PFGameSaveFilesUiOutOfStorageCallback* callback = nullptr;
+    void* context = nullptr;
     {
-        uiInfo.outOfStorageCallback(localUser.Handle(), requiredBytes, uiInfo.outOfStorageContext);
+        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        auto& uiInfo = GetGameSaveUiCallbackInfo();
+        callback = uiInfo.outOfStorageCallback;
+        context = uiInfo.outOfStorageContext;
+    }
+    if (callback)
+    {
+        m_action.store(UIAction::UINone); // Clear stale action from any previous UI interaction
+        m_activeTask.store(&task);
+        callback(localUser.Handle(), requiredBytes, context);
         return true;
     }
     return false;
@@ -90,12 +109,19 @@ bool UICallbackManager::ShowSyncFailedUI(ISchedulableTask& task, const LocalUser
     TRACE_WARNING("[GAME SAVE] ShowSyncFailedUI: sync failed with HR:0x%08X during '%s'. Waiting for user response (Retry/UseOffline/Cancel).", 
         syncFailedError, syncStateName);
 
-    m_activeTask = &task;
-
-    auto& uiInfo = GetGameSaveUiCallbackInfo();
-    if (uiInfo.syncFailedCallback)
+    PFGameSaveFilesUiSyncFailedCallback* callback = nullptr;
+    void* context = nullptr;
     {
-        uiInfo.syncFailedCallback(localUser.Handle(), syncState, syncFailedError, uiInfo.syncFailedContext);
+        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        auto& uiInfo = GetGameSaveUiCallbackInfo();
+        callback = uiInfo.syncFailedCallback;
+        context = uiInfo.syncFailedContext;
+    }
+    if (callback)
+    {
+        m_action.store(UIAction::UINone); // Clear stale action from any previous UI interaction
+        m_activeTask.store(&task);
+        callback(localUser.Handle(), syncState, syncFailedError, context);
         return true;
     }
     TRACE_WARNING("[GAME SAVE] ShowSyncFailedUI: no syncFailedCallback registered, sync will fail");
@@ -109,16 +135,23 @@ bool UICallbackManager::ShowConflictUI(
     PFGameSaveDescriptor& remoteGameSave
     )
 {
-    m_activeTask = &task;
-
-    auto& uiInfo = GetGameSaveUiCallbackInfo();
-    if (uiInfo.conflictCallback)
+    PFGameSaveFilesUiConflictCallback* callback = nullptr;
+    void* context = nullptr;
     {
-        uiInfo.conflictCallback(
+        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        auto& uiInfo = GetGameSaveUiCallbackInfo();
+        callback = uiInfo.conflictCallback;
+        context = uiInfo.conflictContext;
+    }
+    if (callback)
+    {
+        m_action.store(UIAction::UINone); // Clear stale action from any previous UI interaction
+        m_activeTask.store(&task);
+        callback(
             localUser.Handle(),
             &localGameSave,
             &remoteGameSave,
-            uiInfo.conflictContext);
+            context);
         return true;
     }
     return false;
@@ -126,15 +159,22 @@ bool UICallbackManager::ShowConflictUI(
 
 bool UICallbackManager::ShowActiveDeviceContentionUI(ISchedulableTask& task, const LocalUser& localUser, PFGameSaveDescriptor& localGameSave, PFGameSaveDescriptor& remoteGameSave)
 {
-    m_activeTask = &task;
-
-    auto& uiInfo = GetGameSaveUiCallbackInfo();
-    if (uiInfo.activeDeviceContentionCallback != nullptr)
+    PFGameSaveFilesUiActiveDeviceContentionCallback* callback = nullptr;
+    void* context = nullptr;
     {
-        uiInfo.activeDeviceContentionCallback(localUser.Handle(),
+        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        auto& uiInfo = GetGameSaveUiCallbackInfo();
+        callback = uiInfo.activeDeviceContentionCallback;
+        context = uiInfo.activeDeviceContentionContext;
+    }
+    if (callback)
+    {
+        m_action.store(UIAction::UINone); // Clear stale action from any previous UI interaction
+        m_activeTask.store(&task);
+        callback(localUser.Handle(),
             &localGameSave,
             &remoteGameSave,
-            uiInfo.activeDeviceContentionContext);
+            context);
         return true;
     }
     return false;
@@ -180,30 +220,39 @@ bool UICallbackManager::TriggerActiveDeviceChangedCallback(
     LocalUser& localUser, 
     PFGameSaveDescriptor& activeDevice)
 {
-    auto& uiInfo = GetGameSaveUiCallbackInfo();
-    if (uiInfo.activeDeviceChangedCallback != nullptr)
+    PFGameSaveFilesActiveDeviceChangedCallback* callbackSnapshot = nullptr;
+    void* contextSnapshot = nullptr;
+    XTaskQueueHandle queueSnapshot = nullptr;
     {
-        // call the callback on the correct thread using the queue passed into PFGameSaveFilesSetActiveDeviceChangedCallback()
-        RunContext rc = runContext.DeriveOnQueue(uiInfo.activeDeviceChangedCallbackQueue);
-        auto handle = localUser.Handle();
-        rc.TaskQueueSubmitCompletion([activeDevice, handle]() mutable
+        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        auto& uiInfo = GetGameSaveUiCallbackInfo();
+        if (uiInfo.activeDeviceChangedCallback == nullptr)
         {
-            auto& uiInfo = GetGameSaveUiCallbackInfo();
-            uiInfo.activeDeviceChangedCallback(handle, &activeDevice, uiInfo.activeDeviceChangedContext);
-        });
-        return true;
+            return false;
+        }
+        callbackSnapshot = uiInfo.activeDeviceChangedCallback;
+        contextSnapshot = uiInfo.activeDeviceChangedContext;
+        queueSnapshot = uiInfo.activeDeviceChangedCallbackQueue;
     }
-    return false;
+
+    // call the callback on the correct thread using the queue passed into PFGameSaveFilesSetActiveDeviceChangedCallback()
+    RunContext rc = runContext.DeriveOnQueue(queueSnapshot);
+    auto handle = localUser.Handle();
+    rc.TaskQueueSubmitCompletion([activeDevice, handle, callbackSnapshot, contextSnapshot]() mutable
+    {
+        callbackSnapshot(handle, &activeDevice, contextSnapshot);
+    });
+    return true;
 }
 
 void UICallbackManager::CancelPendingUIWait()
 {
-    ISchedulableTask* activeTask = m_activeTask;
+    m_shutdown.store(true);
+    ISchedulableTask* activeTask = m_activeTask.exchange(nullptr);
     if (activeTask)
     {
         TRACE_WARNING("[GAME SAVE] UICallbackManager::CancelPendingUIWait: Cancelling pending UI wait during shutdown");
-        m_activeTask = nullptr;
-        m_action = UIAction::UISyncFailedCancel;
+        m_action.store(UIAction::UISyncFailedCancel);
         activeTask->ScheduleNow();
     }
 }

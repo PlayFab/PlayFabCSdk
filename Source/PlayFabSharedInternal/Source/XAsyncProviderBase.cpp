@@ -58,6 +58,12 @@ HRESULT XAsyncProviderBase::Schedule(uint32_t delay) const
 
 void XAsyncProviderBase::Complete(size_t resultSize)
 {
+    bool expected = false;
+    if (!m_completed.compare_exchange_strong(expected, true))
+    {
+        return;
+    }
+
     Stringstream threadIdStream;
     threadIdStream << std::this_thread::get_id();
     TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase::Complete", threadIdStream.str().c_str());
@@ -66,6 +72,12 @@ void XAsyncProviderBase::Complete(size_t resultSize)
 
 void XAsyncProviderBase::Fail(HRESULT hr)
 {
+    bool expected = false;
+    if (!m_completed.compare_exchange_strong(expected, true))
+    {
+        return;
+    }
+
     Stringstream threadIdStream;
     threadIdStream << std::this_thread::get_id();
     TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase::Fail HR:0x%08x", threadIdStream.str().c_str(), static_cast<uint32_t>(hr));
@@ -76,7 +88,8 @@ void XAsyncProviderBase::Terminate(ITerminationListener& listener, void* context
 {
     Stringstream threadIdStream;
     threadIdStream << std::this_thread::get_id();
-    TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProvider terminated before completion. PFUninitialize may be blocked until result payload is retreived.", threadIdStream.str().c_str());
+    TRACE_WARNING("[XAsyncProviderBase] [ThreadID %s] Provider[ID=%s] Terminate called (completed=%s). PFUninitialize may be blocked until XAsyncOp::Cleanup fires.",
+        threadIdStream.str().c_str(), identityName, m_completed.load() ? "true" : "false");
 
     assert(!m_terminationListener);
     m_terminationListener = &listener;
@@ -136,6 +149,9 @@ HRESULT CALLBACK XAsyncProviderBase::XAsyncProvider(_In_ XAsyncOp op, _Inout_ co
     {
         // Cleanup should only fail in catastrophic cases. Can't pass result to client 
         // at this point so die with exception.
+
+        TRACE_WARNING("[XAsyncProviderBase] [ThreadID %s] Provider[ID=%s] XAsyncOp::Cleanup (terminated=%s)",
+            threadIdStream.str().c_str(), provider->identityName, provider->m_terminationListener ? "true" : "false");
 
         // Copy the ITerminationListener locally before destroying the provider, but unregister
         // beforehand to avoid race condition between termination and provider cleanup.

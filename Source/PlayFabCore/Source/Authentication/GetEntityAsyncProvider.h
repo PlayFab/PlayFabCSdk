@@ -27,6 +27,12 @@ protected:
     {
         m_call(std::move(runContext)).Finally([this](Result<SharedPtr<Entity>> result)
         {
+            bool expected = false;
+            if (!m_completed.compare_exchange_strong(expected, true))
+            {
+                return;
+            }
+
             if (Succeeded(result))
             {
                 TRACE_VERBOSE("AuthXAsyncProvider[ID=%s] Call suceeded (hr=0x%08x)", identityName, result.hr);
@@ -55,6 +61,7 @@ private:
     CallT m_call;
     SharedPtr<PFCoreGlobalState> m_state;
     SharedPtr<Entity> m_result;
+    std::atomic<bool> m_completed{ false };
 };
 
 template<typename CallT, size_t n>

@@ -137,12 +137,17 @@ SteamTicketResult::~SteamTicketResult() noexcept
     if (steamTicketHandle != k_HAuthTicketInvalid)
     {
         SharedPtr<PFCoreGlobalState> state;
-        PFCoreGlobalState::Get(state);
-        auto steamAPIs = GetSteamAPIs(state);
-        if (steamAPIs)
+        if (SUCCEEDED(PFCoreGlobalState::Get(state)))
         {
-            ISteamUser* steamUser = steamAPIs->SteamAPI_SteamUser();
-            steamAPIs->SteamAPI_ISteamUser_CancelAuthTicket(steamUser, steamTicketHandle);
+            auto steamAPIs = GetSteamAPIs(state);
+            if (steamAPIs)
+            {
+                auto* steamUser = steamAPIs->SteamAPI_SteamUser();
+                if (steamUser)
+                {
+                    steamAPIs->SteamAPI_ISteamUser_CancelAuthTicket(steamUser, steamTicketHandle);
+                }
+            }
         }
     }
 }
@@ -273,13 +278,13 @@ protected:
     {
         UNREFERENCED_PARAMETER(runContext);
 
-        if (m_ticketAcquired)
+        if (m_ticketAcquired.load(std::memory_order_acquire))
         {
             Complete(sizeof(SharedPtr<SteamTicketResult>));
             return E_PENDING;
         }
 
-        if (m_getSessionTicketError)
+        if (m_getSessionTicketError.load(std::memory_order_acquire))
         {
             TRACE_ERROR("Unable to get steam auth ticket");
             Fail(E_FAIL);
@@ -371,8 +376,8 @@ private:
     CSteamCallbacksDelayLoad<GetSteamTicketProvider, GetTicketForWebApiResponse_t> m_callbackOnGetSessionTicket;
 
     bool m_waiting{};
-    bool m_ticketAcquired{};
-    bool m_getSessionTicketError{};
+    std::atomic<bool> m_ticketAcquired{};
+    std::atomic<bool> m_getSessionTicketError{};
     int64_t m_startTime{};
     SharedPtr<SteamTicketResult> m_steamTicketResult{};
 };
@@ -387,7 +392,7 @@ void GetSteamTicketProvider::OnGetSessionTicket(GetTicketForWebApiResponse_t* pa
 
     if (param->m_eResult != EResult::k_EResultOK)
     {
-        m_getSessionTicketError = true;
+        m_getSessionTicketError.store(true, std::memory_order_release);
         return;
     }
 
@@ -397,7 +402,7 @@ void GetSteamTicketProvider::OnGetSessionTicket(GetTicketForWebApiResponse_t* pa
     }
 
     m_steamTicketResult->steamTicket = oss.str();
-    m_ticketAcquired = true;
+    m_ticketAcquired.store(true, std::memory_order_release);
 }
 
 class GetSteamTicketOperation : public XAsyncOperation<SharedPtr<SteamTicketResult>>
@@ -583,13 +588,11 @@ AsyncOp<Authentication::CombinedLoginResult> SteamLocalUserLoginHandler::Login(
         return E_FAIL;
     }
 
-    SharedPtr<SteamTicketResult> ticketHandle = MakeShared<SteamTicketResult>();
-    return localUser->GetSteamTicket(rc).Then([createAccount, serviceConfig, rc, ticketHandle](Result<SharedPtr<SteamTicketResult>> getSteamTicketResult) mutable -> AsyncOp<ServiceResponse>
+    return localUser->GetSteamTicket(rc).Then([createAccount, serviceConfig, rc](Result<SharedPtr<SteamTicketResult>> getSteamTicketResult) mutable -> AsyncOp<ServiceResponse>
     {
         RETURN_IF_FAILED(getSteamTicketResult.hr);
 
-        auto result = getSteamTicketResult.ExtractPayload();
-        std::swap(*ticketHandle, *result);
+        auto ticketHandle = getSteamTicketResult.ExtractPayload();
 
         Authentication::LoginWithSteamRequest request;
         request.SetCreateAccount(createAccount);
@@ -607,7 +610,7 @@ AsyncOp<Authentication::CombinedLoginResult> SteamLocalUserLoginHandler::Login(
             rc.Derive()
         );
 
-    }).Then([state{ std::move(state) }, serviceConfig, loginHandler{ localUser->LoginHandler() }, ticketHandle](Result<ServiceResponse> result)->Result<Authentication::CombinedLoginResult>
+    }).Then([state{ std::move(state) }, serviceConfig, loginHandler{ localUser->LoginHandler() }](Result<ServiceResponse> result)->Result<Authentication::CombinedLoginResult>
     {
         RETURN_IF_FAILED(result.hr);
 
@@ -635,13 +638,11 @@ AsyncOp<void> SteamLocalUserLoginHandler::ReLogin(
         return E_FAIL;
     }
 
-    SharedPtr<SteamTicketResult> ticketHandle = MakeShared<SteamTicketResult>();
-    return localUser->GetSteamTicket(rc).Then([entity, rc, ticketHandle](Result<SharedPtr<SteamTicketResult>> getSteamTicketResult) mutable -> AsyncOp<ServiceResponse>
+    return localUser->GetSteamTicket(rc).Then([entity, rc](Result<SharedPtr<SteamTicketResult>> getSteamTicketResult) mutable -> AsyncOp<ServiceResponse>
     {
         RETURN_IF_FAILED(getSteamTicketResult.hr);
 
-        auto result = getSteamTicketResult.ExtractPayload();
-        std::swap(*ticketHandle, *result);
+        auto ticketHandle = getSteamTicketResult.ExtractPayload();
 
         Authentication::LoginWithSteamRequest request;
         request.SetSteamTicket(ticketHandle->steamTicket);
@@ -658,7 +659,7 @@ AsyncOp<void> SteamLocalUserLoginHandler::ReLogin(
             rc.Derive()
         );
 
-    }).Then([entity, ticketHandle](Result<ServiceResponse> result)->Result<void>
+    }).Then([entity](Result<ServiceResponse> result)->Result<void>
     {
         RETURN_IF_FAILED(result.hr);
 

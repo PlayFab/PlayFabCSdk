@@ -69,6 +69,8 @@ private:
     LockStage m_stage{ LockStage::Login };
     HRESULT m_failureHR{ S_OK };
     uint64_t m_manifestVersionOffset{ 0 };
+    uint32_t m_versionExistsRetryCount{ 0 }; // Retry cap for MANIFEST_VERSION_ALREADY_EXISTS
+    uint32_t m_baseVersionRetryCount{ 0 }; // Retry cap for BASE_VERSION_NOT_AVAILABLE
     SharedPtr<GameSaveTelemetryManager> m_telemetryManager;
     PFGameSaveFilesAddUserOptions m_addUserOptions{ PFGameSaveFilesAddUserOptions::None };
 };

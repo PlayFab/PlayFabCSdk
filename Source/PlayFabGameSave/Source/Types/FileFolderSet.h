@@ -12,30 +12,30 @@ class FileFolderSet
 {
 public:
     // Init functions setup m_files, m_folders, m_compressedFiles and the related maps.
-    HRESULT InitWithLocalFilesAndFolders(const String& saveFolder, _Out_opt_ String* shortSaveDescription, _Out_opt_ bool* descriptionDirty);
+    HRESULT InitWithLocalFilesAndFolders(const String& saveFolder, _Out_opt_ String* shortSaveDescription, _Out_opt_ bool* descriptionDirty, _Out_opt_ bool* localStateFound = nullptr);
     HRESULT InitWithExtendedManifest(const Vector<char>& manifestBytes, const DownloadDetailsWrapVector& remoteFileDetails, const String& saveFolder);
     void UpdateFilesWithUploadData();
     void UpdateFilesWithDownloadData(const FileDetail& remoteFile, const String& relFilePath, const String& saveFolder);
 
     // Indices into m_compressedFiles
-    void SetCompressedFilesToDownload(Vector<size_t>&& compressedFileIndies);
+    void SetCompressedFilesToDownload(Vector<size_t>&& compressedFileIndices);
     const Vector<size_t>& GetCompressedFilesToDownload() const;
 
     void SetCompressedFilesToUpload(Vector<ExtendedManifestCompressedFileDetail>&& compressedFiles);
-    const Vector<ExtendedManifestCompressedFileDetail> GetCompressedFilesToUpload() const;
+    const Vector<ExtendedManifestCompressedFileDetail>& GetCompressedFilesToUpload() const;
 
     void SetChangedRemoteFolderIndexSet(Vector<size_t>&& changedRemoteFolderIndexes);
     const Vector<size_t>& GetChangedRemoteFolderIndexSet() const;
 
     // Indices into m_compressedFiles
-    void SetCompressedFilesToKeep(Vector<size_t>&& compressedFileIndies);
+    void SetCompressedFilesToKeep(Vector<size_t>&& compressedFileIndices);
     const Vector<size_t>& GetCompressedFilesToKeep() const;
 
     void AddSkippedFile(FileDetail fileDetail);
     const Vector<FileDetail>& GetSkippedFiles() const;
 
     // raw pointers into m_files
-#if _DEBUG
+#if defined(_DEBUG)
     void SetFilesToDownload(Vector<const FileDetail*>&& filesToDownload);
     const Vector<const FileDetail*>& GetFilesToDownload() const;
 #endif
@@ -71,16 +71,21 @@ public:
     // Helper functions
     const FileDetail* GetFileDetailFromRelFilePath(const String& relFilePath) const;
     const FolderDetail* GetFolderDetailFromRelFilePath(const String& relFolderPath) const;
-    const FolderDetail& GetFolderDetailFromFolderId(const String& folderId) const;
+    const FolderDetail* GetFolderDetailFromFolderId(const String& folderId) const;
     size_t GetFolderDetailIndexFromFolderId(const String& folderId) const;
-    const CompressedFile& GetCompressedFileFromFileId(const String& fileId) const;
+    const CompressedFile* GetCompressedFileFromFileId(const String& fileId) const;
     const FolderDetail& GetFileFolder(const FileDetail* file) const;
     String GetRelFilePath(const FileDetail* file) const;
     const FileDetail* GetThumbnail() const;
     const CompressedFile* GetThumbnailFromCompressedList(const String& version) const;
     uint64_t GetTotalUncompressedSize() const;
 
-    HRESULT ExtendedManifestParseFolderJson(const JsonValue& folderJson, const String& curPath, bool isRoot, const String& saveFolder);
+    // True once InitWithExtendedManifest has successfully parsed the cloud's file set into this
+    // object. While false, an empty set means "unknown", NOT "the cloud is empty" - deleting local
+    // content on that basis would wipe the player's save.
+    bool IsInitializedFromExtendedManifest() const { return m_initializedFromExtendedManifest; }
+
+    HRESULT ExtendedManifestParseFolderJson(const JsonValue& folderJson, const String& curPath, bool isRoot, const String& saveFolder, uint32_t depth = 0);
 
     void Clear(); // Clears all data, returning to initial empty state
 
@@ -108,13 +113,21 @@ private:
     Vector<ExtendedManifestCompressedFileDetail> m_compressedFilesToUpload;
     Vector<size_t> m_changedRemoteFolderIndexes; // index into m_folders
     Vector<size_t> m_compressedFilesToKeep; // index into m_compressedFiles
+    // IMPORTANT INVARIANT: The pointer vectors below (m_filesToUpload, m_filesToDownload, etc.)
+    // contain raw pointers into m_files and m_folders. These pointers are valid only as long as
+    // m_files/m_folders are not resized after the pointer vectors are populated.
+    // Current flow guarantees this: Init* functions complete all AddFileDetail/AddFolderDetail 
+    // calls before CompareStep::MarkFilesToSync populates the pointer vectors.
+    // DO NOT add elements to m_files/m_folders after pointer vectors have been populated.
     Vector<const FileDetail*> m_filesToUpload; // raw pointers into m_files
     Vector<const FileDetail*> m_filesToDownload; // raw pointers into m_files
     Vector<const FileDetail*> m_filesToDeleteUponUpload; // raw pointers into m_files
     Vector<const FileDetail*> m_filesToDeleteUponDownload; // raw pointers into m_files
     Vector<const FolderDetail*> m_foldersToCreateUponUpload; // raw pointers into m_folders
     Vector<const FolderDetail*> m_foldersToCreateUponDownload; // raw pointers into m_folders
+    Vector<const FolderDetail*> m_foldersToDeleteUponUpload; // raw pointers into m_folders
     Vector<const FolderDetail*> m_foldersToDeleteUponDownload; // raw pointers into m_folders
+    bool m_initializedFromExtendedManifest{ false }; // see IsInitializedFromExtendedManifest()
 };
 
 } // namespace GameSave

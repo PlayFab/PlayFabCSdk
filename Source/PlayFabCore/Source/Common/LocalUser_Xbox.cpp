@@ -95,7 +95,7 @@ AsyncOp<Authentication::CombinedLoginResult> XboxLocalUserLoginHandler::Login(
     SharedPtr<XboxLocalUser> localUser = m_localUser.lock();
     if (!localUser)
     {
-        TRACE_INFORMATION("Unable to relogin because the LocalUser was destroyed");
+        TRACE_INFORMATION("Unable to login because the LocalUser was destroyed");
         return E_FAIL;
     }
 

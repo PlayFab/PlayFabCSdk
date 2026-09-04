@@ -1570,10 +1570,10 @@ PF_API PFAccountManagementClientLinkOpenIdConnectAsync(
 /// See also ClientLoginWithPSNAsync, ClientUnlinkPSNAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_ACCOUNT_LINKED_TO_A_BANNED_PLAYER, E_PF_INVALID_PSN_AUTH_CODE,
-/// E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED, E_PF_PSN_INACCESSIBLE
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_ACCOUNT_LINKED_TO_A_BANNED_PLAYER, E_PF_INVALID_PARAMS,
+/// E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED,
+/// E_PF_PSN_INACCESSIBLE, E_PF_PSN_NEXT_GEN_NOT_CONFIGURED_FOR_TITLE or any of the global PlayFab Service
+/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementClientLinkPSNAccountAsync(
     _In_ PFEntityHandle entityHandle,
@@ -1785,7 +1785,7 @@ PF_API PFAccountManagementClientUnlinkAndroidDeviceIDAsync(
 /// </remarks>
 PF_API PFAccountManagementClientUnlinkAppleAsync(
     _In_ PFEntityHandle entityHandle,
-    _In_ const PFAccountManagementUnlinkAppleRequest* request,
+    _In_ const PFAccountManagementClientUnlinkAppleRequest* request,
     _Inout_ XAsyncBlock* async
 ) noexcept;
 #endif
@@ -1900,7 +1900,7 @@ PF_API PFAccountManagementClientUnlinkFacebookInstantGamesIdAsync(
 /// </remarks>
 PF_API PFAccountManagementClientUnlinkGameCenterAccountAsync(
     _In_ PFEntityHandle entityHandle,
-    _In_ const PFAccountManagementUnlinkGameCenterAccountRequest* request,
+    _In_ const PFAccountManagementClientUnlinkGameCenterAccountRequest* request,
     _Inout_ XAsyncBlock* async
 ) noexcept;
 #endif
@@ -2239,6 +2239,29 @@ PF_API PFAccountManagementClientUpdateUserTitleDisplayNameGetResult(
     _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
     _Outptr_ PFAccountManagementUpdateUserTitleDisplayNameResult** result,
     _Out_opt_ size_t* bufferUsed
+) noexcept;
+#endif
+
+#if 0
+/// <summary>
+/// Adds or updates a contact email to the specified player's profile.
+/// </summary>
+/// <param name="titleEntityHandle">PFEntityHandle for a title Entity obtained using PFAuthenticationGetEntityWithSecretKeyAsync.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// This API adds a contact email to the specified player's profile. If the player's profile already
+/// contains a contact email, it will update the contact email to the email address specified.
+///
+/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
+/// the async result will be one of global PlayFab Service errors. See doc page "Handling PlayFab Errors"
+/// for more details on error handling.
+/// </remarks>
+PF_API PFAccountManagementServerAddOrUpdateContactEmailAsync(
+    _In_ PFEntityHandle titleEntityHandle,
+    _In_ const PFAccountManagementServerAddOrUpdateContactEmailRequest* request,
+    _Inout_ XAsyncBlock* async
 ) noexcept;
 #endif
 
@@ -2921,6 +2944,62 @@ PF_API PFAccountManagementServerGetPlayFabIDsFromPSNOnlineIDsGetResult(
 ) noexcept;
 #endif
 
+#if 0
+/// <summary>
+/// Retrieves the associated PlayFab account identifiers for the given set of server custom player identifiers.
+/// </summary>
+/// <param name="titleEntityHandle">PFEntityHandle for a title Entity obtained using PFAuthenticationGetEntityWithSecretKeyAsync.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// When the asynchronous task is complete, call <see cref="PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResultSize"/>
+/// and <see cref="PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResult"/> to get the result.
+/// </remarks>
+PF_API PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsAsync(
+    _In_ PFEntityHandle titleEntityHandle,
+    _In_ const PFAccountManagementGetPlayFabIDsFromServerCustomIDsRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+
+/// <summary>
+/// Get the size in bytes needed to store the result of a ServerGetPlayFabIDsFromServerCustomIDs call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The buffer size in bytes required for the result.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
+/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+PF_API PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResultSize(
+    _Inout_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept;
+
+/// <summary>
+/// Gets the result of a successful PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsAsync call.
+/// </summary>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <param name="bufferSize">The size of the buffer for the result object.</param>
+/// <param name="buffer">Byte buffer used for the result value and its fields.</param>
+/// <param name="result">Pointer to the result object.</param>
+/// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
+/// <returns>
+/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
+/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </returns>
+/// <remarks>
+/// result is a pointer within buffer and does not need to be freed separately.
+/// </remarks>
+PF_API PFAccountManagementServerGetPlayFabIDsFromServerCustomIDsGetResult(
+    _Inout_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PFAccountManagementGetPlayFabIDsFromServerCustomIDsResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept;
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
 /// <summary>
 /// Retrieves the unique PlayFab identifiers for the given set of Steam identifiers. The Steam identifiers
@@ -3240,8 +3319,9 @@ PF_API PFAccountManagementServerGetUserAccountInfoAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_TITLE_NOT_ACTIVATED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFAccountManagementServerGetUserAccountInfoGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -3257,8 +3337,9 @@ PF_API PFAccountManagementServerGetUserAccountInfoGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_TITLE_NOT_ACTIVATED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -3444,8 +3525,9 @@ PF_API PFAccountManagementServerLinkNintendoSwitchDeviceIdAsync(
 /// See also ServerUnlinkPSNAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_ACCOUNT_NOT_FOUND, E_PF_INVALID_NAMESPACE_MISMATCH,
-/// E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED, E_PF_PSN_INACCESSIBLE,
+/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_ACCOUNT_NOT_FOUND, E_PF_DOWNSTREAM_SERVICE_UNAVAILABLE,
+/// E_PF_INVALID_NAMESPACE_MISMATCH, E_PF_INVALID_PARAMS, E_PF_INVALID_PSN_AUTH_CODE, E_PF_INVALID_PSN_ISSUER_ID,
+/// E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED, E_PF_PSN_INACCESSIBLE, E_PF_PSN_NEXT_GEN_NOT_CONFIGURED_FOR_TITLE,
 /// E_PF_REQUEST_VIEW_CONSTRAINT_PARAMS_NOT_ALLOWED or any of the global PlayFab Service errors. See doc
 /// page "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
@@ -3774,6 +3856,27 @@ PF_API PFAccountManagementServerSendEmailFromTemplateAsync(
 ) noexcept;
 #endif
 
+#if 0
+/// <summary>
+/// Unlinks the related Apple account from the specified user's PlayFab account.
+/// </summary>
+/// <param name="titleEntityHandle">PFEntityHandle for a title Entity obtained using PFAuthenticationGetEntityWithSecretKeyAsync.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_APPLE_NOT_ENABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
+/// </remarks>
+PF_API PFAccountManagementServerUnlinkAppleAsync(
+    _In_ PFEntityHandle titleEntityHandle,
+    _In_ const PFAccountManagementServerUnlinkAppleRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+#endif
+
 #if HC_PLATFORM == HC_PLATFORM_GDK
 /// <summary>
 /// Unlinks the related Battle.net account from the user's PlayFab account.
@@ -3835,6 +3938,26 @@ PF_API PFAccountManagementServerUnlinkFacebookAccountAsync(
 PF_API PFAccountManagementServerUnlinkFacebookInstantGamesIdAsync(
     _In_ PFEntityHandle titleEntityHandle,
     _In_ const PFAccountManagementServerUnlinkFacebookInstantGamesIdRequest* request,
+    _Inout_ XAsyncBlock* async
+) noexcept;
+#endif
+
+#if 0
+/// <summary>
+/// Unlinks the related Game Center account from the specified user's PlayFab account.
+/// </summary>
+/// <param name="titleEntityHandle">PFEntityHandle for a title Entity obtained using PFAuthenticationGetEntityWithSecretKeyAsync.</param>
+/// <param name="request">Populated request object.</param>
+/// <param name="async">XAsyncBlock for the async operation.</param>
+/// <returns>Result code for this API operation.</returns>
+/// <remarks>
+/// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED or any of the global PlayFab
+/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// </remarks>
+PF_API PFAccountManagementServerUnlinkGameCenterAccountAsync(
+    _In_ PFEntityHandle titleEntityHandle,
+    _In_ const PFAccountManagementServerUnlinkGameCenterAccountRequest* request,
     _Inout_ XAsyncBlock* async
 ) noexcept;
 #endif
@@ -4169,9 +4292,10 @@ PF_API PFAccountManagementSetDisplayNameAsync(
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
-/// E_PF_CONCURRENT_EDIT_ERROR, E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED, E_PF_ENTITY_PROFILE_VERSION_MISMATCH,
-/// E_PF_INVALID_PARTNER_RESPONSE, E_PF_NAME_NOT_AVAILABLE, E_PF_PROFANE_DISPLAY_NAME or any of the global
-/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_CHARACTER_NOT_FOUND, E_PF_CONCURRENT_EDIT_ERROR, E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED,
+/// E_PF_ENTITY_PROFILE_VERSION_MISMATCH, E_PF_INVALID_PARTNER_RESPONSE, E_PF_NAME_NOT_AVAILABLE, E_PF_PROFANE_DISPLAY_NAME
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFAccountManagementSetDisplayNameGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -4188,9 +4312,10 @@ PF_API PFAccountManagementSetDisplayNameGetResultSize(
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_ACCOUNT_NOT_FOUND,
-/// E_PF_CONCURRENT_EDIT_ERROR, E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED, E_PF_ENTITY_PROFILE_VERSION_MISMATCH,
-/// E_PF_INVALID_PARTNER_RESPONSE, E_PF_NAME_NOT_AVAILABLE, E_PF_PROFANE_DISPLAY_NAME or any of the global
-/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_CHARACTER_NOT_FOUND, E_PF_CONCURRENT_EDIT_ERROR, E_PF_ENTITY_PROFILE_CONSTRAINT_VALIDATION_FAILED,
+/// E_PF_ENTITY_PROFILE_VERSION_MISMATCH, E_PF_INVALID_PARTNER_RESPONSE, E_PF_NAME_NOT_AVAILABLE, E_PF_PROFANE_DISPLAY_NAME
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

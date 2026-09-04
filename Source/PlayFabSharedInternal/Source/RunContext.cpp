@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "RunContext.h"
+#if defined(__cpp_rtti) || defined(_CPPRTTI)
+#include <typeinfo>
+#endif
 
 namespace PlayFab
 {
@@ -86,6 +89,17 @@ private:
     // For debugging purposes only
     uint32_t m_id;
     uint32_t m_depth;
+
+    // Diagnostic tracking of pending callbacks (populated only after termination starts)
+    struct PendingCallbackInfo
+    {
+        uint32_t submitId;
+        const char* typeName;
+        XTaskQueuePort port;
+        uint32_t delayInMs;
+    };
+    std::atomic<uint32_t> m_nextSubmitId{ 0 };
+    Vector<PendingCallbackInfo> m_pendingCallbackTracker; // guarded by m_mutex
 };
 
 //------------------------------------------------------------------------------
@@ -188,6 +202,10 @@ SharedPtr<RunContextState> RunContextState::Root(XTaskQueueHandle queueHandle) n
 SharedPtr<RunContextState> RunContextState::Derive() noexcept
 {
     TRACE_VERBOSE("RunContextState[id=%u]::Derive", m_id);
+    if (m_terminated)
+    {
+        TRACE_WARNING("RunContextState[id=%u]::Derive called AFTER termination! (depth=%u)", m_id, m_depth);
+    }
     SharedPtr<RunContextState> derived = MakeShared<RunContextState>(m_queue.DeriveWorkQueue(), m_cancellationToken.Derive(), shared_from_this());
     AppendChild(derived);
     return derived;
@@ -196,6 +214,10 @@ SharedPtr<RunContextState> RunContextState::Derive() noexcept
 SharedPtr<RunContextState> RunContextState::DeriveOnQueue(XTaskQueueHandle queueHandle) noexcept
 {
     TRACE_VERBOSE("RunContextState[id=%u]::DeriveOnQueue", m_id);
+    if (m_terminated)
+    {
+        TRACE_WARNING("RunContextState[id=%u]::DeriveOnQueue called AFTER termination! (depth=%u)", m_id, m_depth);
+    }
     SharedPtr<RunContextState> derived = MakeShared<RunContextState>(TaskQueue::DeriveWorkQueue(queueHandle), m_cancellationToken.Derive(), shared_from_this());
     AppendChild(derived);
     return derived;
@@ -226,6 +248,8 @@ struct XTaskQueueCallbackContext
 {
     SharedPtr<RunContextState> runContext;
     SharedPtr<ITaskQueueWork> work;
+    uint32_t submitId{ 0 };
+    const char* typeName{ nullptr };
 };
 
 void RunContextState::TaskQueueSubmitCallback(XTaskQueuePort port, SharedPtr<ITaskQueueWork> work, uint32_t delayInMs) noexcept
@@ -233,20 +257,40 @@ void RunContextState::TaskQueueSubmitCallback(XTaskQueuePort port, SharedPtr<ITa
     assert(work);
     assert(m_queue.Handle());
 
+#if defined(__cpp_rtti) || defined(_CPPRTTI)
+    auto& workRef = *work;
+    const char* workTypeName = typeid(workRef).name();
+#else
+    const char* workTypeName = "ITaskQueueWork";
+#endif
+    uint32_t submitId = m_nextSubmitId++;
+
     Allocator<XTaskQueueCallbackContext> a;
-    XTaskQueueCallbackContext* context = new (a.allocate(1)) XTaskQueueCallbackContext{ shared_from_this(), std::move(work) }; // reclaimed in TaskQueueCallback
+    XTaskQueueCallbackContext* context = new (a.allocate(1)) XTaskQueueCallbackContext{ shared_from_this(), std::move(work), submitId, workTypeName }; // reclaimed in TaskQueueCallback
 
     std::unique_lock<std::mutex> lock{ m_mutex };
     ++m_pendingTaskQueueCallbacks;
+    bool isTerminated = m_terminated;
+    size_t currentCount = m_pendingTaskQueueCallbacks;
+
+    // Track pending callbacks for diagnostics
+    m_pendingCallbackTracker.push_back(PendingCallbackInfo{ submitId, workTypeName, port, delayInMs });
+
     lock.unlock();
 
-    if (delayInMs > 0)
+    if (isTerminated)
     {
-        TRACE_INFORMATION("RunContextState[id=%u] TaskQueue callback submitted with DELAY=%ums, port=%d", m_id, delayInMs, static_cast<int>(port));
+        TRACE_WARNING("RunContextState[id=%u] TaskQueue callback SUBMITTED AFTER TERMINATION: submitId=%u, type='%s', port=%d, delay=%ums, pending=%zu, depth=%u",
+            m_id, submitId, workTypeName, static_cast<int>(port), delayInMs, currentCount, m_depth);
+    }
+    else if (delayInMs > 0)
+    {
+        TRACE_INFORMATION("RunContextState[id=%u] TaskQueue submit: id=%u, type='%s', DELAY=%ums, port=%d, pending=%zu",
+            m_id, submitId, workTypeName, delayInMs, static_cast<int>(port), currentCount);
     }
     else
     {
-        TRACE_VERBOSE("RunContextState[id=%u] TaskQueue callback submitted", m_id);
+        TRACE_VERBOSE("RunContextState[id=%u] TaskQueue submit: id=%u, type='%s', pending=%zu", m_id, submitId, workTypeName, currentCount);
     }
 
     HRESULT hr = XTaskQueueSubmitDelayedCallback(m_queue.Handle(), port, delayInMs, context, TaskQueueCallback);
@@ -256,7 +300,14 @@ void RunContextState::TaskQueueSubmitCallback(XTaskQueuePort port, SharedPtr<ITa
         // m_pendingTaskQueueCallbacks is updated correctly
         TaskQueueCallback(context, true);
 
-        TRACE_WARNING_HR(hr, "XTaskQueueSubmitDelayedCallback failed");
+        if (hr == E_ABORT)
+        {
+            TRACE_WARNING_HR(hr, "XTaskQueueSubmitDelayedCallback failed (expected abort)");
+        }
+        else
+        {
+            TRACE_ERROR_HR(hr, "XTaskQueueSubmitDelayedCallback failed with unexpected error");
+        }
         assert(hr == E_ABORT); // The only error we expect to ever see here is E_ABORT
     }
 }
@@ -267,7 +318,20 @@ void CALLBACK RunContextState::TaskQueueCallback(void* c, bool cancelled) noexce
     UniquePtr<XTaskQueueCallbackContext> callbackContext{ static_cast<XTaskQueueCallbackContext*>(c) };
     assert(callbackContext->runContext && callbackContext->work);
 
-    TRACE_VERBOSE("RunContextState[id=%u] TaskQueueCallback", callbackContext->runContext->m_id);
+    uint32_t rcId = callbackContext->runContext->m_id;
+    uint32_t submitId = callbackContext->submitId;
+    const char* typeName = callbackContext->typeName;
+    bool isTerminated = callbackContext->runContext->m_terminated;
+
+    if (isTerminated)
+    {
+        TRACE_WARNING("RunContextState[id=%u] TaskQueueCallback firing during termination: submitId=%u, type='%s', cancelled=%s",
+            rcId, submitId, typeName, cancelled ? "true" : "false");
+    }
+    else
+    {
+        TRACE_VERBOSE("RunContextState[id=%u] TaskQueueCallback: submitId=%u, cancelled=%s", rcId, submitId, cancelled ? "true" : "false");
+    }
 
     if (cancelled)
     {
@@ -284,7 +348,23 @@ void CALLBACK RunContextState::TaskQueueCallback(void* c, bool cancelled) noexce
     std::unique_lock<std::mutex> lock{ runContext->m_mutex };
     --runContext->m_pendingTaskQueueCallbacks;
 
-    TRACE_VERBOSE("RunContextState[id=%u] TaskQueueCallback complete, %u remaining", runContext->m_id, runContext->m_pendingTaskQueueCallbacks);
+    // Remove from tracker
+    auto it = std::find_if(runContext->m_pendingCallbackTracker.begin(), runContext->m_pendingCallbackTracker.end(),
+        [submitId](const PendingCallbackInfo& info) { return info.submitId == submitId; });
+    if (it != runContext->m_pendingCallbackTracker.end())
+    {
+        runContext->m_pendingCallbackTracker.erase(it);
+    }
+
+    if (runContext->m_terminated)
+    {
+        TRACE_WARNING("RunContextState[id=%u] TaskQueueCallback complete (submitId=%u): %zu callbacks remaining, %zu terminables remaining (depth=%u)",
+            runContext->m_id, submitId, runContext->m_pendingTaskQueueCallbacks, runContext->m_pendingTerminations, runContext->m_depth);
+    }
+    else
+    {
+        TRACE_VERBOSE("RunContextState[id=%u] TaskQueueCallback complete (submitId=%u), %zu remaining", runContext->m_id, submitId, runContext->m_pendingTaskQueueCallbacks);
+    }
 
     CheckTerminationAndNotifyListener(std::move(runContext), std::move(lock));
 }
@@ -306,13 +386,18 @@ void RunContextState::TaskQueueTerminate() noexcept
     // all work has completed during RunContext termination
     ++m_pendingTaskQueueCallbacks;
     m_queueTerminated = true;
+
+    // Track the queue-terminate sentinel in the pending list
+    uint32_t terminateSubmitId = m_nextSubmitId++;
+    m_pendingCallbackTracker.push_back(PendingCallbackInfo{ terminateSubmitId, "XTaskQueueTerminate_sentinel", XTaskQueuePort::Work, 0 });
     lock.unlock();
 
-    TRACE_VERBOSE("RunContextState[id=%u] TaskQueue terminating, %u callbacks remaining", m_id, m_pendingTaskQueueCallbacks);
+    TRACE_WARNING("RunContextState[id=%u] TaskQueue terminating, %zu callbacks pending (including %zu pre-existing work items)",
+        m_id, m_pendingTaskQueueCallbacks, m_pendingCallbackTracker.size() - 1);
 
     assert(m_queue.Handle());
     Allocator<XTaskQueueCallbackContext> a;
-    XTaskQueueCallbackContext* context = new (a.allocate(1)) XTaskQueueCallbackContext{ shared_from_this() }; // reclaimed in TaskQueueTerminated
+    XTaskQueueCallbackContext* context = new (a.allocate(1)) XTaskQueueCallbackContext{ shared_from_this(), nullptr, terminateSubmitId, "XTaskQueueTerminate_sentinel" }; // reclaimed in TaskQueueTerminated
 
     HRESULT hr = XTaskQueueTerminate(m_queue.Handle(), false, context, TaskQueueTerminated);
     if (FAILED(hr))
@@ -331,13 +416,28 @@ void CALLBACK RunContextState::TaskQueueTerminated(void* c) noexcept
     UniquePtr<XTaskQueueCallbackContext> callbackContext{ static_cast<XTaskQueueCallbackContext*>(c) };
     assert(callbackContext->runContext && !callbackContext->work);
 
+    uint32_t submitId = callbackContext->submitId;
     SharedPtr<RunContextState> runContext{ std::move(callbackContext->runContext) };
     callbackContext.reset();
 
     std::unique_lock<std::mutex> lock{ runContext->m_mutex };
     --runContext->m_pendingTaskQueueCallbacks;
 
-    TRACE_VERBOSE("RunContextState[id=%u] TaskQueueTerminated, %zu callbacks remaining", runContext->m_id, runContext->m_pendingTaskQueueCallbacks);
+    // Remove sentinel from tracker
+    auto it = std::find_if(runContext->m_pendingCallbackTracker.begin(), runContext->m_pendingCallbackTracker.end(),
+        [submitId](const PendingCallbackInfo& info) { return info.submitId == submitId; });
+    if (it != runContext->m_pendingCallbackTracker.end())
+    {
+        runContext->m_pendingCallbackTracker.erase(it);
+    }
+
+    TRACE_WARNING("RunContextState[id=%u] TaskQueueTerminated callback fired: %zu pending callbacks remaining, %zu pending terminables (depth=%u)",
+        runContext->m_id, runContext->m_pendingTaskQueueCallbacks, runContext->m_pendingTerminations, runContext->m_depth);
+    for (auto const& info : runContext->m_pendingCallbackTracker)
+    {
+        TRACE_WARNING("RunContextState[id=%u]   STILL PENDING after queue terminated: submitId=%u, type='%s', port=%d, delay=%ums",
+            runContext->m_id, info.submitId, info.typeName, static_cast<int>(info.port), info.delayInMs);
+    }
 
     CheckTerminationAndNotifyListener(std::move(runContext), std::move(lock));
 }
@@ -410,12 +510,23 @@ void RunContextState::Terminate(ITerminationListener& listener, void* listenerCo
     m_pendingTerminations++;
     
     TRACE_VERBOSE("RunContextState[id=%u] terminating with %zu terminables", m_id, m_pendingTerminations);
+    TRACE_WARNING("RunContextState[id=%u] terminating: %zu registered terminables, %zu children, depth=%u",
+        m_id, m_terminables.size(), children.size(), m_depth);
+    for (auto& child : children)
+    {
+        TRACE_WARNING("RunContextState[id=%u]   child: RunContextState[id=%u] (depth=%u)", m_id, child->m_id, child->m_depth);
+    }
 
     // context will ensure our lifetime until Termination completes.
     TerminationContext* context = MakeUnique<TerminationContext>(shared_from_this()).release(); // reclaimed in OnTerminated;
 
     // Release state lock but intentionally hold terminationLock while notifying terminables to avoid races with unregister
     lock.unlock();
+
+    // Cancel the CancellationToken to signal all registered listeners (e.g. XAsyncOperationBase instances)
+    // to abort. This ensures in-flight internal operations (like token refresh HTTP calls) are force-cancelled
+    // and don't block termination indefinitely.
+    m_cancellationToken.Cancel();
 
     // Terminate Queue, registered terminables, and children
     TaskQueueTerminate();
@@ -427,6 +538,7 @@ void RunContextState::Terminate(ITerminationListener& listener, void* listenerCo
 
     for (auto& child : children)
     {
+        TRACE_WARNING("RunContextState[id=%u] terminating child RunContextState[id=%u]", m_id, child->m_id);
         child->Terminate(*this, context);
     }
 
@@ -444,7 +556,8 @@ void RunContextState::OnTerminated(void* c) noexcept
 
     assert(m_pendingTerminations);
     --m_pendingTerminations;
-    TRACE_VERBOSE("RunContextState[id=%u] terminable terminated, %zu remaining", m_id, m_pendingTerminations);
+    TRACE_WARNING("RunContextState[id=%u] terminable/child terminated, %zu terminables remaining, %zu callbacks remaining (depth=%u)",
+        m_id, m_pendingTerminations, m_pendingTaskQueueCallbacks, m_depth);
 
     if (!m_pendingTerminations)
     {
@@ -466,6 +579,23 @@ void RunContextState::CheckTerminationAndNotifyListener(SharedPtr<RunContextStat
 
     assert(lock.owns_lock());
 
+    if (runContext->m_terminationListener && runContext->m_pendingTaskQueueCallbacks)
+    {
+        TRACE_WARNING("RunContextState[id=%u] Termination BLOCKED: %zu pending TaskQueue callbacks (depth=%u, queueTerminated=%s)",
+            runContext->m_id, runContext->m_pendingTaskQueueCallbacks, runContext->m_depth,
+            runContext->m_queueTerminated ? "true" : "false");
+        for (auto const& info : runContext->m_pendingCallbackTracker)
+        {
+            TRACE_WARNING("RunContextState[id=%u]   STUCK callback: submitId=%u, type='%s', port=%d, delay=%ums",
+                runContext->m_id, info.submitId, info.typeName, static_cast<int>(info.port), info.delayInMs);
+        }
+    }
+    if (runContext->m_terminationListener && runContext->m_pendingTerminations)
+    {
+        TRACE_WARNING("RunContextState[id=%u] Termination BLOCKED: %zu pending terminables (depth=%u)",
+            runContext->m_id, runContext->m_pendingTerminations, runContext->m_depth);
+    }
+
     if (runContext->m_terminationListener && !runContext->m_pendingTaskQueueCallbacks && !runContext->m_pendingTerminations)
     {
         // Move listener and listenerContext to the stack before releasing runContext, it may be destroyed here
@@ -475,7 +605,7 @@ void RunContextState::CheckTerminationAndNotifyListener(SharedPtr<RunContextStat
         // reset m_terminationListener to avoid double notifying in some race scenarios
         runContext->m_terminationListener = nullptr; 
 
-        TRACE_VERBOSE("RunContextState[id=%u] Termination complete, notifying listener", runContext->m_id);
+        TRACE_WARNING("RunContextState[id=%u] Termination COMPLETE, notifying listener (depth=%u)", runContext->m_id, runContext->m_depth);
 
         lock.unlock();
         runContext.reset();

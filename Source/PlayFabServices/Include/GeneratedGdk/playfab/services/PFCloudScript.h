@@ -101,8 +101,9 @@ PF_API PFCloudScriptServerExecuteCloudScriptAsync(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_CLOUD_SCRIPT_API_REQUEST_COUNT_EXCEEDED,
 /// E_PF_CLOUD_SCRIPT_API_REQUEST_ERROR, E_PF_CLOUD_SCRIPT_FUNCTION_ARGUMENT_SIZE_EXCEEDED, E_PF_CLOUD_SCRIPT_HTTP_REQUEST_ERROR,
-/// E_PF_CLOUD_SCRIPT_NOT_FOUND, E_PF_JAVASCRIPT_EXCEPTION, E_PF_TITLE_DELETED or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_CLOUD_SCRIPT_NOT_FOUND, E_PF_JAVASCRIPT_EXCEPTION, E_PF_PRODUCT_DISABLED_FOR_TITLE, E_PF_TITLE_DELETED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFCloudScriptServerExecuteCloudScriptGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -120,8 +121,9 @@ PF_API PFCloudScriptServerExecuteCloudScriptGetResultSize(
 /// <returns>
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_CLOUD_SCRIPT_API_REQUEST_COUNT_EXCEEDED,
 /// E_PF_CLOUD_SCRIPT_API_REQUEST_ERROR, E_PF_CLOUD_SCRIPT_FUNCTION_ARGUMENT_SIZE_EXCEEDED, E_PF_CLOUD_SCRIPT_HTTP_REQUEST_ERROR,
-/// E_PF_CLOUD_SCRIPT_NOT_FOUND, E_PF_JAVASCRIPT_EXCEPTION, E_PF_TITLE_DELETED or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// E_PF_CLOUD_SCRIPT_NOT_FOUND, E_PF_JAVASCRIPT_EXCEPTION, E_PF_PRODUCT_DISABLED_FOR_TITLE, E_PF_TITLE_DELETED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

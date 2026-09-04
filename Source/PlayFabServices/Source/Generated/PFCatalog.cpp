@@ -54,6 +54,7 @@ PF_API PFCatalogCreateDraftItemGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogCreateDraftItemGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogCreateDraftItemResponse*>(buffer);
@@ -104,6 +105,7 @@ PF_API PFCatalogCreateUploadUrlsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogCreateUploadUrlsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogCreateUploadUrlsResponse*>(buffer);
@@ -197,6 +199,7 @@ PF_API PFCatalogGetCatalogConfigGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetCatalogConfigGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetCatalogConfigResponse*>(buffer);
@@ -248,6 +251,7 @@ PF_API PFCatalogGetDraftItemGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetDraftItemGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetDraftItemResponse*>(buffer);
@@ -298,6 +302,7 @@ PF_API PFCatalogGetDraftItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetDraftItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetDraftItemsResponse*>(buffer);
@@ -348,6 +353,7 @@ PF_API PFCatalogGetEntityDraftItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetEntityDraftItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetEntityDraftItemsResponse*>(buffer);
@@ -398,6 +404,7 @@ PF_API PFCatalogGetEntityItemReviewGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetEntityItemReviewGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetEntityItemReviewResponse*>(buffer);
@@ -448,6 +455,7 @@ PF_API PFCatalogGetItemGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetItemGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetItemResponse*>(buffer);
@@ -498,6 +506,7 @@ PF_API PFCatalogGetItemContainersGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetItemContainersGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetItemContainersResponse*>(buffer);
@@ -549,6 +558,7 @@ PF_API PFCatalogGetItemModerationStateGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetItemModerationStateGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetItemModerationStateResponse*>(buffer);
@@ -600,6 +610,7 @@ PF_API PFCatalogGetItemPublishStatusGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetItemPublishStatusGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetItemPublishStatusResponse*>(buffer);
@@ -650,6 +661,7 @@ PF_API PFCatalogGetItemReviewsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetItemReviewsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetItemReviewsResponse*>(buffer);
@@ -700,6 +712,7 @@ PF_API PFCatalogGetItemReviewSummaryGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetItemReviewSummaryGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetItemReviewSummaryResponse*>(buffer);
@@ -750,6 +763,7 @@ PF_API PFCatalogGetItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogGetItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogGetItemsResponse*>(buffer);
@@ -880,6 +894,7 @@ PF_API PFCatalogSearchItemsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogSearchItemsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogSearchItemsResponse*>(buffer);
@@ -1016,6 +1031,7 @@ PF_API PFCatalogUpdateDraftItemGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCatalogUpdateDraftItemGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCatalogUpdateDraftItemResponse*>(buffer);

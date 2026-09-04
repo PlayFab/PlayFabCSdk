@@ -4,9 +4,12 @@
 #include <playfab/core/PFLocalUser_Xbox.h>
 #include <playfab/core/PFEntity.h>
 #include <atomic>
+#include <mutex>
 #include <stdint.h>
 #include <PFXGameSave.h>
 #include <XGameRuntimeInit.h>
+// Shared with PlayFabCore, which owns the storage returned by PFPlatformGetGameSaveContext().
+#include "GameSaveGDKContext.h"
 
 namespace PlayFab
 {
@@ -18,29 +21,18 @@ namespace GameSave
 #endif
 
 static const HRESULT E_GS_USER_CANCELED = 0x80830004;
-constexpr auto PF_GDK_MAX_USERS = 16;
 
-struct PFXPALGameSaveUserState
+// Serializes user-slot lookup, reservation and commit in PFXPALCallGetFolderWithUiAsync. The slot
+// array lives in shared PFCore storage and the search/claim sequence is a read-modify-write, so
+// concurrent AddUser calls for different users could otherwise both pick the same empty slot and
+// the loser's commit would overwrite (and leak/free) state the winner's in-flight GRTS operation
+// still owns.
+static std::mutex& GameSaveUserSlotMutex()
 {
-    PFLocalUserHandle localUser;
-    XUserHandle xUser;
-    void* configHandle;
-    char saveFolder[1024];
-};
+    static std::mutex s_slotMutex;
+    return s_slotMutex;
+}
 
-struct PFXPALGameSaveContext
-{
-    PFGameSaveFilesUiProgressCallback* progressCallback;
-    PFGameSaveFilesUiSyncFailedCallback* syncFailedCallback;
-    PFGameSaveFilesUiActiveDeviceContentionCallback* activeDeviceContentionCallback;
-    PFGameSaveFilesUiConflictCallback* conflictCallback;
-    PFGameSaveFilesUiOutOfStorageCallback* outOfStorageCallback;
-    // Active device changed callback registration (atomic for thread-safety)
-    std::atomic<PFGameSaveFilesActiveDeviceChangedCallback*> activeDeviceChangedCallback{ nullptr };
-    std::atomic<void*> activeDeviceChangedContext{ nullptr };
-    std::atomic<XTaskQueueHandle> activeDeviceChangedCallbackQueue{ nullptr };
-    PFXPALGameSaveUserState users[PF_GDK_MAX_USERS];
-};
 
 // Fwd decl
 void CALLBACK PFXPALGetFolderComplete(XAsyncBlock* async);
@@ -56,6 +48,9 @@ PFLocalUserHandle PFXPALGetLocalUserFromXUser(_In_ XUserHandle requestingUser, P
             *pgsContext = gsContext;
         }
 
+        // Scanning the slots races UninitializeAsync and the add-user completion path, both of
+        // which close these handles, so the read has to be serialized with them.
+        std::lock_guard<std::mutex> slotLock{ GameSaveUserSlotMutex() };
         for (ULONG i = 0; i < PF_GDK_MAX_USERS; ++i)
         {
             if (XUserCompare(requestingUser, gsContext->users[i].xUser) == 0)
@@ -74,6 +69,7 @@ XUserHandle PFXPALGetXUserFromLocalUser(_In_ PFLocalUserHandle localUserHandle)
     if (SUCCEEDED(PFPlatformGetGameSaveContext(&gsContextPtr)))
     {
         PFXPALGameSaveContext* gsContext = static_cast<PFXPALGameSaveContext*>(gsContextPtr);
+        std::lock_guard<std::mutex> slotLock{ GameSaveUserSlotMutex() };
         for (ULONG i = 0; i < PF_GDK_MAX_USERS; ++i)
         {
             if (PFLocalUserHandleCompare(localUserHandle, gsContext->users[i].localUser) == 0)
@@ -86,7 +82,8 @@ XUserHandle PFXPALGetXUserFromLocalUser(_In_ PFLocalUserHandle localUserHandle)
     return nullptr;
 }
 
-PFXPALGameSaveUserState* PFXPALGetStateFromLocalUser(_In_ PFLocalUserHandle localUserHandle)
+// Assumes GameSaveUserSlotMutex() is already held by the caller.
+PFXPALGameSaveUserState* PFXPALGetStateFromLocalUserUnsafe(_In_ PFLocalUserHandle localUserHandle)
 {
     void* gsContextPtr = nullptr;
     HRESULT hr = PFPlatformGetGameSaveContext(&gsContextPtr);
@@ -103,6 +100,43 @@ PFXPALGameSaveUserState* PFXPALGetStateFromLocalUser(_In_ PFLocalUserHandle loca
     }
 
     return nullptr;
+}
+
+// Value snapshot of a user slot, taken under GameSaveUserSlotMutex().
+//
+// Returning a raw PFXPALGameSaveUserState* from a locked lookup was unsafe: the lock was released
+// on return, so callers read configHandle / saveFolder / isConnectedToCloud while the add-user
+// completion path was still StrCpy-ing into saveFolder and UninitializeAsync was clearing and
+// freeing the same fields under the mutex. Copying the fields out under the lock removes the torn
+// and mid-teardown reads.
+//
+// Limitation, deliberately not solved here: this does NOT extend the lifetime of configHandle.
+// UninitializeAsync can still call PFXGameSaveFreeConfig on it after the snapshot is taken and
+// before the caller hands it to GRTS. Closing that window needs per-slot in-flight ownership so
+// teardown cannot free a config with operations outstanding, which is a larger change than this
+// fix set covers.
+struct PFXPALGameSaveUserStateSnapshot
+{
+    void* configHandle{ nullptr };
+    bool isConnectedToCloud{ true };
+    char saveFolder[sizeof(PFXPALGameSaveUserState::saveFolder)]{};
+};
+
+bool PFXPALTryGetUserStateSnapshot(_In_ PFLocalUserHandle localUserHandle, _Out_ PFXPALGameSaveUserStateSnapshot& snapshot)
+{
+    std::lock_guard<std::mutex> slotLock{ GameSaveUserSlotMutex() };
+
+    PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUserUnsafe(localUserHandle);
+    if (state == nullptr)
+    {
+        snapshot = {};
+        return false;
+    }
+
+    snapshot.configHandle = state->configHandle;
+    snapshot.isConnectedToCloud = state->isConnectedToCloud;
+    StrCpy(snapshot.saveFolder, sizeof(snapshot.saveFolder), state->saveFolder);
+    return true;
 }
 
 void ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(const PFXGameSaveDescriptor* descIn, PFGameSaveDescriptor* descOut)
@@ -173,6 +207,24 @@ HRESULT GameSaveAPIProviderGRTS::Initialize(_In_ PFGameSaveInitArgs* args) noexc
     {
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::Initialize: saveFolder='%s'", args->saveFolder);
         this->m_initSaveFolder = String(args->saveFolder);
+
+        // Normalize forward slashes to backslashes. Some engines (e.g. Unreal Engine) hand us
+        // paths with forward slashes by default, but the in-proc XGameSave (GRTS) path requires
+        // Windows-style backslashes. A forward-slash path otherwise silently fails to resolve
+        // correctly (no init error is surfaced), so normalize it here at the single point where
+        // the title-provided save folder is captured.
+        for (auto& ch : this->m_initSaveFolder)
+        {
+            if (ch == '/')
+            {
+                ch = '\\';
+            }
+        }
+
+        if (this->m_initSaveFolder != args->saveFolder)
+        {
+            TRACE_INFORMATION("GameSaveAPIProviderGRTS::Initialize: normalized saveFolder='%s'", this->m_initSaveFolder.c_str());
+        }
     }
     else
     {
@@ -189,6 +241,13 @@ struct PFXPALGetFolderContext
         {
             XTaskQueueCloseHandle(compositeQueue);
         }
+        // xuser is an owned duplicate (see PFLocalUserTryGetXUser). It is nulled once ownership
+        // is transferred to the user slot, so anything still here belongs to a call that never
+        // committed it - close it rather than leak it on the early-return/failure paths.
+        if (xuser)
+        {
+            XUserCloseHandle(xuser);
+        }
     }
 
     PFLocalUserHandle localUserHandle{};
@@ -199,6 +258,15 @@ struct PFXPALGetFolderContext
     XAsyncBlock* clientAsyncBlock{};
 
     bool useEntityAuth{ false };
+    // True when AddUserWithUiAsync already set addUserInProgress on this user's slot (the
+    // reconnect path). Lets the slot-claim re-check distinguish "somebody else owns this slot"
+    // from "this call owns it".
+    bool claimedInFlightSlot{ false };
+    // True while this call still owns the slot's addUserInProgress claim. Exchanged to false by
+    // whoever releases it (the folder completion handler, or XAsyncOp::Cleanup when the operation
+    // failed before that handler could ever run), so the claim is released exactly once and never
+    // stolen from a later AddUser.
+    std::atomic<bool> inFlightClaimOwned{ false };
     XUserHandle xuser{ nullptr }; 
     XAsyncBlock entityTokenAsyncBlock{}; // async to fetch cached entity token
     char apiEndpoint[1024]{};
@@ -212,6 +280,10 @@ struct PFXPALGetFolderContext
     bool entityTokenAsyncStarted{ false };
     bool loginLocalUserAsyncStarted{ false }; // track login async to support cancellation
     bool cancelRequested{ false };
+    // True when this call reused an already-populated user slot (offline -> online reconnect)
+    // rather than claiming a fresh one. The completion handler uses this to avoid tearing down
+    // a pre-existing offline user when the reconnect attempt fails.
+    bool reusedExistingSlot{ false };
 };
 
 // Build config request based on context state & start folder retrieval
@@ -250,9 +322,12 @@ static HRESULT PFXPALCallGetFolderWithUiAsync(PFXPALGetFolderContext* context)
         configRequest.fileLocation = context->saveFolderOverride;
 
         // Ensure folder exists before calling GRTS
-        BOOL created = CreateDirectoryA(context->saveFolderOverride, nullptr);
+        int wideLen = MultiByteToWideChar(CP_UTF8, 0, context->saveFolderOverride, -1, nullptr, 0);
+        std::wstring widePath(static_cast<size_t>(wideLen - 1), L'\0');
+        MultiByteToWideChar(CP_UTF8, 0, context->saveFolderOverride, -1, &widePath[0], wideLen);
+        BOOL created = CreateDirectoryW(widePath.c_str(), nullptr);
         DWORD lastError = GetLastError();
-        TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: CreateDirectoryA('%s') result=%d, lastError=%u", 
+        TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: CreateDirectoryW('%s') result=%d, lastError=%u", 
             context->saveFolderOverride, created, lastError);
 
         if (!created && lastError != ERROR_ALREADY_EXISTS)
@@ -285,6 +360,12 @@ static HRESULT PFXPALCallGetFolderWithUiAsync(PFXPALGetFolderContext* context)
     RETURN_IF_FAILED(hr);
     PFXPALGameSaveContext* gsContext = static_cast<PFXPALGameSaveContext*>(gsContextPtr);
 
+    // Slot search, reservation and commit form one read-modify-write over shared state, so they
+    // have to be serialized end-to-end: two concurrent AddUser calls for different users would
+    // otherwise both observe the same empty slot and the second commit would overwrite the first
+    // call's live localUser/xUser/configHandle while GRTS still had work outstanding on them.
+    std::lock_guard<std::mutex> slotLock{ GameSaveUserSlotMutex() };
+
     // Find existing slot for this local user or claim an empty one; fail if all slots are occupied.
     ULONG indexFound = PF_GDK_MAX_USERS;       // sentinel meaning not found yet
     ULONG firstEmptySlot = PF_GDK_MAX_USERS;   // sentinel meaning no empty slot yet
@@ -301,32 +382,77 @@ static HRESULT PFXPALCallGetFolderWithUiAsync(PFXPALGetFolderContext* context)
         }
     }
 
-    if (indexFound == PF_GDK_MAX_USERS)
+    const bool reusingExistingSlot = (indexFound != PF_GDK_MAX_USERS);
+    context->reusedExistingSlot = reusingExistingSlot;
+    if (reusingExistingSlot && gsContext->users[indexFound].addUserInProgress && !context->claimedInFlightSlot)
+    {
+        // Another AddUser already owns this slot. Re-checked here (under the lock) because the
+        // initial-add case has no slot to claim at AddUserWithUiAsync time, so two concurrent adds
+        // for the same brand-new user can both reach this point; committing would free the
+        // winner's live config/xUser while GRTS still has work outstanding on them.
+        TRACE_WARNING("PFXPALCallGetFolderWithUiAsync: slot %u already has an add-user in flight, rejecting", indexFound);
+        PFXGameSaveFreeConfig(configHandle);
+        return E_PF_GAMESAVE_USER_ALREADY_ADDED;
+    }
+
+    if (!reusingExistingSlot)
     {
         if (firstEmptySlot == PF_GDK_MAX_USERS)
         {
             TRACE_WARNING("AddUserWithUiAsync GRTS: no free user slots (max %u). Failing initialization.", PF_GDK_MAX_USERS);
+            PFXGameSaveFreeConfig(configHandle);
             return E_FAIL; // All slots full
         }
         indexFound = firstEmptySlot;
         TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: using new slot index=%u", indexFound);
+
+        PFLocalUserHandle duplicatedHandle{};
+        hr = PFLocalUserDuplicateHandle(context->localUserHandle, &duplicatedHandle);
+        if (FAILED(hr))
+        {
+            PFXGameSaveFreeConfig(configHandle);
+            return hr;
+        }
+        gsContext->users[indexFound].localUser = duplicatedHandle;
+        gsContext->users[indexFound].xUser = nullptr;
+        gsContext->users[indexFound].configHandle = nullptr;
     }
     else
     {
-        TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: reusing existing slot index=%u", indexFound);
+        // Reconnect (offline -> online re-sync). Keep the existing slot - localUser, xUser and
+        // configHandle - intact until the replacement folder retrieval has actually started.
+        // Tearing it down here leaked the previous config (it was nulled without being freed)
+        // and, if the start then failed, destroyed a perfectly good offline user state.
+        TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: reusing existing slot index=%u (deferring state commit until inner async starts)", indexFound);
     }
 
-    PFLocalUserHandle duplicatedHandle{};
-    RETURN_IF_FAILED(PFLocalUserDuplicateHandle(context->localUserHandle, &duplicatedHandle));
-    gsContext->users[indexFound].localUser = duplicatedHandle;
-    gsContext->users[indexFound].xUser = context->xuser; // may be null if no XUser path
-    gsContext->users[indexFound].configHandle = configHandle;
+    // Clean up after a failed start. Only unwind the slot when this call created it; on a
+    // reconnect the pre-existing (offline) state must survive an unsuccessful start.
+    auto cleanupOnStartFailure = [&]()
+    {
+        PFXGameSaveFreeConfig(configHandle);
+        if (!reusingExistingSlot)
+        {
+            PFLocalUserCloseHandle(gsContext->users[indexFound].localUser);
+            gsContext->users[indexFound].localUser = nullptr;
+            gsContext->users[indexFound].xUser = nullptr;
+            gsContext->users[indexFound].configHandle = nullptr;
+        }
+    };
 
     if (context->clientAsyncBlock->queue != nullptr)
     {
         XTaskQueuePortHandle workPort{ nullptr };
-        RETURN_IF_FAILED(XTaskQueueGetPort(context->clientAsyncBlock->queue, XTaskQueuePort::Work, &workPort));
-        RETURN_IF_FAILED(XTaskQueueCreateComposite(workPort, workPort, &context->compositeQueue));
+        hr = XTaskQueueGetPort(context->clientAsyncBlock->queue, XTaskQueuePort::Work, &workPort);
+        if (SUCCEEDED(hr))
+        {
+            hr = XTaskQueueCreateComposite(workPort, workPort, &context->compositeQueue);
+        }
+        if (FAILED(hr))
+        {
+            cleanupOnStartFailure();
+            return hr;
+        }
     }
 
     context->getFolderAsyncBlock.callback = PFXPALGetFolderComplete;
@@ -336,6 +462,34 @@ static HRESULT PFXPALCallGetFolderWithUiAsync(PFXPALGetFolderContext* context)
     TRACE_INFORMATION("PFXPALCallGetFolderWithUiAsync: PFXGameSaveFilesGetFolderWithUiAsync hr=0x%08x", hr);
     if (SUCCEEDED(hr))
     {
+        // Inner async started: only now commit the replacement config into the slot, then free
+        // the superseded one. Ordering it this way means a failed start leaves the previous
+        // (offline) state usable, and the old config is never dropped without being freed.
+        void* supersededConfig = gsContext->users[indexFound].configHandle;
+        XUserHandle supersededXUser = gsContext->users[indexFound].xUser;
+        gsContext->users[indexFound].xUser = context->xuser; // may be null if no XUser path
+        gsContext->users[indexFound].configHandle = configHandle;
+        if (supersededConfig != nullptr && supersededConfig != configHandle)
+        {
+            PFXGameSaveFreeConfig(static_cast<PFXGameSaveConfigHandle>(supersededConfig));
+        }
+        // PFLocalUserTryGetXUser returns an XUserDuplicateHandle copy that this provider owns
+        // (UninitializeAsync closes the slot's copy), so the handle being replaced has to be
+        // closed here or every reconnect leaks an XUser handle.
+        if (supersededXUser != nullptr && supersededXUser != context->xuser)
+        {
+            XUserCloseHandle(supersededXUser);
+        }
+        // Ownership of the duplicate now belongs to the slot; clear it here so the context
+        // destructor doesn't also close it.
+        context->xuser = nullptr;
+
+        // The slot is now committed to this call. Mark it in-flight so a concurrent AddUser
+        // for the same user is rejected rather than racing this one to the deferred commit
+        // (covers the initial-add case, where no state existed at AddUserWithUiAsync time).
+        gsContext->users[indexFound].addUserInProgress = true;
+        context->inFlightClaimOwned = true;
+
         context->getFolderAsyncStarted = true;
         // If cancel already requested before the inner async was started, propagate immediately
         if (context->cancelRequested)
@@ -344,7 +498,11 @@ static HRESULT PFXPALCallGetFolderWithUiAsync(PFXPALGetFolderContext* context)
             XAsyncCancel(&context->getFolderAsyncBlock);
         }
     }
-    RETURN_IF_FAILED(hr);
+    else
+    {
+        cleanupOnStartFailure();
+        return hr;
+    }
 
     return S_OK;
 }
@@ -428,6 +586,17 @@ static void CALLBACK PFXPALLocalUserLoginComplete(XAsyncBlock* async)
     }
     else
     {
+        // Must retrieve the login result to complete XAsync provider cleanup.
+        // Without this, the provider is never finalized and PFUninitializeAsync
+        // will hang waiting for the unretrieved result payload.
+        PFEntityHandle loginEntityHandle{};
+        HRESULT getResultHr = PFLocalUserLoginGetResult(async, &loginEntityHandle, 0, nullptr, nullptr, nullptr);
+        TRACE_INFORMATION("PFXPALLocalUserLoginComplete: PFLocalUserLoginGetResult hr=0x%08x", getResultHr);
+        if (loginEntityHandle)
+        {
+            PFEntityCloseHandle(loginEntityHandle);
+        }
+
         PFEntityHandle localEntityHandle{};
         hr = PFLocalUserTryGetEntityHandle(context->localUserHandle, &localEntityHandle);
         TRACE_INFORMATION("PFXPALLocalUserLoginComplete: PFLocalUserTryGetEntityHandle hr=0x%08x", hr);
@@ -527,7 +696,10 @@ static HRESULT PFXPALAddUserBegin(PFXPALGetFolderContext* context)
     if (SUCCEEDED(hr))
     {
         TRACE_INFORMATION("PFXPALAddUserBegin: using XUser path");
-        context->xuser = xuser; // borrowed
+        // NOT borrowed: PFLocalUserTryGetXUser returns an XUserDuplicateHandle copy that the
+        // caller owns. Ownership is transferred to the user slot once the folder retrieval
+        // starts, and the slot's copy is closed by UninitializeAsync.
+        context->xuser = xuser;
         hr = PFXPALCallGetFolderWithUiAsync(context);
         TRACE_INFORMATION("PFXPALAddUserBegin: PFXPALCallGetFolderWithUiAsync hr=0x%08x", hr);
         RETURN_IF_FAILED(hr);
@@ -564,33 +736,191 @@ void CALLBACK PFXPALGetFolderComplete(XAsyncBlock* async)
     HRESULT hr = XAsyncGetStatus(async, false);
     TRACE_INFORMATION("PFXPALGetFolderComplete: XAsyncGetStatus hr=0x%08x, cancelRequested=%s", 
         hr, context->cancelRequested ? "true" : "false");
-    if (context->cancelRequested || hr == E_ABORT || hr == E_GS_USER_CANCELED)
+
+    // The slot is shared with concurrent AddUser calls and UninitializeAsync, which scan, commit and
+    // free slot state under this same mutex. Every read, write and handle close below therefore has
+    // to be serialized too - otherwise this teardown can close a PFLocalUserHandle another caller is
+    // comparing against. The lookup itself must happen INSIDE the lock: taking it afterwards leaves
+    // a window where UninitializeAsync clears the slot and another AddUser reuses it, so 'state'
+    // would point at the new user's slot and the rollback below would free the new user's handles.
+    // The lock is released before each XAsyncComplete so the title's completion callback can call
+    // back into the game save APIs without deadlocking.
+    std::unique_lock<std::mutex> slotLock{ GameSaveUserSlotMutex() };
+
+    // Looked up once up front so every exit below can release the add-user in-flight claim.
+    // Leaving it set would lock the user out of AddUserWithUiAsync permanently.
+    PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUserUnsafe(context->localUserHandle);
+
+    auto releaseInFlight = [state, context]() // must be called with slotLock held
     {
-        TRACE_INFORMATION("PFXPALGetFolderComplete: cancellation/abort detected, completing with E_ABORT");
+        if (state != nullptr && context->inFlightClaimOwned.exchange(false))
+        {
+            state->addUserInProgress = false;
+        }
+    };
+
+    // Undo the slot commit performed by PFXPALCallGetFolderWithUiAsync. Must be called with
+    // slotLock held. A committed-but-failed slot keeps a non-null configHandle, which makes every
+    // later AddUserWithUiAsync return E_PF_GAMESAVE_USER_ALREADY_ADDED for the rest of the
+    // process. On a reconnect the pre-existing offline state has to survive instead.
+    auto rollbackSlot = [state, context](const char* previousSaveFolder)
+    {
+        if (state == nullptr)
+        {
+            return;
+        }
+
+        if (context->reusedExistingSlot)
+        {
+            if (previousSaveFolder != nullptr)
+            {
+                StrCpy(state->saveFolder, sizeof(state->saveFolder), previousSaveFolder);
+            }
+            state->isConnectedToCloud = false;
+            return;
+        }
+
+        state->saveFolder[0] = '\0';
+        if (state->configHandle != nullptr)
+        {
+            PFXGameSaveFreeConfig(static_cast<PFXGameSaveConfigHandle>(state->configHandle));
+            state->configHandle = nullptr;
+        }
+        if (state->xUser != nullptr)
+        {
+            XUserCloseHandle(state->xUser);
+            state->xUser = nullptr;
+        }
+        if (state->localUser != nullptr)
+        {
+            PFLocalUserCloseHandle(state->localUser);
+            state->localUser = nullptr;
+        }
+        state->isConnectedToCloud = true; // reset to the struct default for a fresh attempt
+    };
+
+    // Only a GAME-initiated cancel is an unconditional hard abort. A bare E_ABORT is NOT
+    // (see the offline-abort race handling below).
+    if (context->cancelRequested)
+    {
+        // Game cancelled the XAsync task. Return E_ABORT with no save path. The slot may already
+        // have been committed by the start path, so roll it back - otherwise an initial AddUser
+        // leaves a zombie slot that rejects every retry, and a reconnect loses its offline folder.
+        TRACE_INFORMATION("PFXPALGetFolderComplete: game cancelled, completing with E_ABORT");
+        rollbackSlot(state != nullptr ? state->saveFolder : nullptr);
+        releaseInFlight();
+        slotLock.unlock();
         XAsyncComplete(asyncBlock, E_ABORT, 0);
         return;
     }
-    HANDLE_XASYNC_FAILURE(hr);
 
-    PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(context->localUserHandle);
+    bool isConnectedToCloud = true;
+    if (hr == E_GS_USER_CANCELED)
+    {
+        // GRTS returns E_GS_USER_CANCELED when user chose UseOffline or cancelled via stock UI.
+        // We still retrieve the folder and return S_OK, but note the user is offline.
+        TRACE_INFORMATION("PFXPALGetFolderComplete: E_GS_USER_CANCELED (user went offline via stock UI)");
+        isConnectedToCloud = false;
+        hr = S_OK;
+    }
+    else if (hr == E_ABORT)
+    {
+        // ADO 63266145 / 63185188. ConnectedStorage can deliver a LATE, no-op cancel AFTER the
+        // offline flow has already completed successfully. ETL for the "Play offline" path shows:
+        //   PFContextSyncRetry(RetrySync:false) -> PFContextOfflinePreserveVersionWithData
+        //   -> PFCopyFilesResult(OfflineCopy) -> PFContextCreated -> PFActivatorCanceled
+        //     (state already Complete => Cancel() is a no-op)
+        // Two UI callbacks are queued (progress + retry); once the retry resolves offline, the
+        // other can resolve late against an already-completed operation and drive E_ABORT, which
+        // previously overrode a perfectly good offline result. The user's choice WAS honored and
+        // the offline container IS ready, so do not blindly fail: probe for the save folder and
+        // only treat this as a real abort if no folder is available.
+        TRACE_INFORMATION("PFXPALGetFolderComplete: E_ABORT without game cancel - probing for offline save folder (late no-op cancel race)");
+        isConnectedToCloud = false;
+        hr = S_OK;
+    }
+    if (FAILED(hr))
+    {
+        // The status call reported a genuine failure (not the offline/cancel cases converted to
+        // S_OK above). The slot was already committed when the inner async started, so roll it
+        // back here too - the result-call failure path below does the same thing.
+        TRACE_INFORMATION("PFXPALGetFolderComplete: add-user failed (status hr=0x%08x), rolling back slot", hr);
+        rollbackSlot(state != nullptr ? state->saveFolder : nullptr);
+        releaseInFlight();
+        slotLock.unlock();
+        XAsyncComplete(asyncBlock, hr, 0);
+        return;
+    }
+
     if (state == nullptr)
     {
         hr = E_PF_GAMESAVE_USER_NOT_ADDED;
         TRACE_INFORMATION("PFXPALGetFolderComplete: user state not found, failing with E_PF_GAMESAVE_USER_NOT_ADDED");
+        slotLock.unlock();
         HANDLE_XASYNC_FAILURE(hr);
     }
 
+    // PFXGameSaveFilesGetFolderWithUiResult is documented to overwrite state->saveFolder, but
+    // clear it explicitly so the "did we get a usable folder" probe below can only ever be
+    // satisfied by a value THIS call produced - on a reconnect the buffer still holds the
+    // previous session's offline folder, which would otherwise pass the check.
+    char previousSaveFolder[sizeof(state->saveFolder)];
+    StrCpy(previousSaveFolder, sizeof(previousSaveFolder), state->saveFolder);
+    state->saveFolder[0] = '\0';
+
     hr = PFXGameSaveFilesGetFolderWithUiResult(async, sizeof(state->saveFolder), state->saveFolder);
-    if (hr == E_GS_USER_CANCELED)
+
+    // The "user went offline" signal can surface at EITHER stage: on the async status
+    // (XAsyncGetStatus, handled above) or here on the result call. Observed on desktop GRTS:
+    // the status is S_OK and the cancel is reported only by the result call.
+    const bool cancelLike = (hr == E_GS_USER_CANCELED || hr == E_ABORT);
+    if (cancelLike)
     {
-        TRACE_INFORMATION("PFXPALGetFolderComplete: user canceled, completing with E_ABORT");
-        XAsyncComplete(asyncBlock, E_ABORT, 0);
+        isConnectedToCloud = false;
+    }
+
+    if (!isConnectedToCloud && (SUCCEEDED(hr) || (cancelLike && state->saveFolder[0] != '\0')))
+    {
+        // Offline path (user chose "Play offline", or the late no-op cancel race). Accept the
+        // cancel-like HRESULT as success because GRTS handed back a usable offline save folder.
+        //
+        // Without this, the offline-success branch was unreachable: it set hr = S_OK and then this
+        // result call overwrote hr with E_GS_USER_CANCELED, so the failure handling below failed
+        // the whole add-user. That is why every offline AddUser surfaced as a hard failure
+        // (ADO 63266145) and isConnectedToCloud was never recorded as false (ADO 63185188 #3).
+        TRACE_INFORMATION("PFXPALGetFolderComplete: OFFLINE SUCCESS (result hr=0x%08x, folder='%s')",
+            hr, state->saveFolder);
+        hr = S_OK;
+    }
+
+    // Single failure path for EVERY failing result, not just the cancel-like ones. A generic
+    // failure (E_FAIL, E_OUTOFMEMORY, transport error) leaves isConnectedToCloud true and
+    // cancelLike false, and previously fell straight through to HANDLE_XASYNC_FAILURE without
+    // any cleanup - leaving a non-null configHandle with no user added (the exact state that
+    // makes the next AddUser return E_PF_GAMESAVE_USER_ALREADY_ADDED), and on a reconnect
+    // leaving a clobbered save folder behind.
+    if (FAILED(hr))
+    {
+        TRACE_INFORMATION("PFXPALGetFolderComplete: add-user failed (result hr=0x%08x), rolling back slot (reconnect=%d)",
+            hr, context->reusedExistingSlot);
+        // On a reconnect this restores the previous offline folder and marks the user offline; on
+        // an initial add it releases everything the start path registered.
+        rollbackSlot(previousSaveFolder);
+
+        releaseInFlight();
+        slotLock.unlock();
+        // Preserve the existing E_ABORT contract for user-cancel style failures; propagate the
+        // real HRESULT for genuine errors so callers can tell them apart.
+        XAsyncComplete(asyncBlock, cancelLike ? E_ABORT : hr, 0);
         return;
     }
-    HANDLE_XASYNC_FAILURE(hr);
 
-    TRACE_INFORMATION("PFXPALGetFolderComplete: folder obtained successfully, completing with S_OK");
-    XAsyncComplete(asyncBlock, hr, 0);
+    state->isConnectedToCloud = isConnectedToCloud;
+    releaseInFlight();
+    TRACE_INFORMATION("PFXPALGetFolderComplete: folder obtained, isConnectedToCloud=%s, completing with S_OK",
+        state->isConnectedToCloud ? "true" : "false");
+    slotLock.unlock();
+    XAsyncComplete(asyncBlock, S_OK, 0);
 }
 
 HRESULT GameSaveAPIProviderGRTS::AddUserWithUiAsync(
@@ -602,8 +932,60 @@ HRESULT GameSaveAPIProviderGRTS::AddUserWithUiAsync(
     TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: options=%d", static_cast<int>(options));
     RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
 
+    // Check if the user is already added by looking for existing state with an active config.
+    // Without this guard, calling GRTS a second time can hang indefinitely on Xbox
+    // waiting for a TCUI that never resolves. This matches the Win32 provider behavior
+    // which returns E_PF_GAMESAVE_USER_ALREADY_ADDED in the same situation.
+    //
+    // EXCEPTION - offline reconnect. PFGameSaveFiles.h documents:
+    //   "When disconnected from cloud, PFGameSaveFilesAddUserWithUiAsync() can be called again if
+    //    you want to try connect to the cloud. ... No need to re-init gamesave but you can if desired."
+    // So when the user is currently disconnected from cloud (they chose "Play offline"), a repeat
+    // AddUser is the documented way to re-sync once the network is back and must NOT be rejected.
+    // Rejecting it broke the entire offline->online re-sync path (ADO 63185673 / 63185188).
+    //
+    // The lookup, the addUserInProgress test and the claim must all happen under the slot mutex:
+    // they are one test-and-set over shared state, and splitting them lets two callers both decide
+    // they own the reconnect. The scope ends before any async work starts because
+    // PFXPALCallGetFolderWithUiAsync takes the same (non-recursive) lock.
+    bool claimedInFlightSlot = false;
+    {
+        std::lock_guard<std::mutex> slotLock{ GameSaveUserSlotMutex() };
+        PFXPALGameSaveUserState* existingState = PFXPALGetStateFromLocalUserUnsafe(localUserHandle);
+
+        // Reject overlapping AddUser calls for the same user. See PFXPALGameSaveUserState::
+        // addUserInProgress - without this, two reconnect attempts can both fall through the
+        // disconnected exception below, both take the reusingExistingSlot path, and the second
+        // will free the first call's still-live config/xUser (use-after-free inside GRTS).
+        if (existingState != nullptr && existingState->addUserInProgress)
+        {
+            TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: an add-user is already in flight for this user, rejecting re-entrant call");
+            return E_PF_GAMESAVE_USER_ALREADY_ADDED;
+        }
+
+        if (existingState != nullptr && existingState->configHandle != nullptr)
+        {
+            if (existingState->isConnectedToCloud)
+            {
+                TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: user already added (configHandle=%p, saveFolder='%s'), returning E_PF_GAMESAVE_USER_ALREADY_ADDED",
+                    existingState->configHandle, existingState->saveFolder);
+                return E_PF_GAMESAVE_USER_ALREADY_ADDED;
+            }
+
+            TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: user already added but DISCONNECTED FROM CLOUD - allowing documented reconnect re-sync (configHandle=%p, saveFolder='%s')",
+                existingState->configHandle, existingState->saveFolder);
+
+            // Claim the in-flight slot before any async work starts, so a second call racing this
+            // one is rejected above rather than racing us to the deferred commit.
+            existingState->addUserInProgress = true;
+            claimedInFlightSlot = true;
+        }
+    }
+
     std::unique_ptr<PFXPALGetFolderContext> context = std::make_unique<PFXPALGetFolderContext>();
     context->addUserOptions = options; // Store options for later use
+    context->claimedInFlightSlot = claimedInFlightSlot;
+    context->inFlightClaimOwned = claimedInFlightSlot;
     if (!m_initSaveFolder.empty())
     {
         StrCpy(context->saveFolderOverride, sizeof(context->saveFolderOverride), m_initSaveFolder.c_str());
@@ -668,6 +1050,21 @@ HRESULT GameSaveAPIProviderGRTS::AddUserWithUiAsync(
                 {
                     TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: XAsyncOp::Cleanup");
                     std::unique_ptr<PFXPALGetFolderContext> contextPtr{ static_cast<PFXPALGetFolderContext*>(data->context) };
+
+                    // Last chance to release the in-flight claim. PFXPALGetFolderComplete normally
+                    // does it, but it never runs when the operation failed before the GRTS folder
+                    // async started (config init, queue creation, entity-token failure, ...) - and
+                    // a stuck claim locks the user out of AddUser for the rest of the process.
+                    if (contextPtr->inFlightClaimOwned.exchange(false))
+                    {
+                        std::lock_guard<std::mutex> slotLock{ GameSaveUserSlotMutex() };
+                        PFXPALGameSaveUserState* claimedState = PFXPALGetStateFromLocalUserUnsafe(contextPtr->localUserHandle);
+                        if (claimedState != nullptr)
+                        {
+                            TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: releasing add-user claim during cleanup");
+                            claimedState->addUserInProgress = false;
+                        }
+                    }
                 }
             }
             catch (...)
@@ -686,6 +1083,16 @@ HRESULT GameSaveAPIProviderGRTS::AddUserWithUiAsync(
     else
     {
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::AddUserWithUiAsync: XAsyncBegin failed hr=0x%08x", hr);
+        // XAsyncBegin failing means Cleanup never ran, so release the claim here instead.
+        if (context != nullptr && context->inFlightClaimOwned.exchange(false))
+        {
+            std::lock_guard<std::mutex> slotLock{ GameSaveUserSlotMutex() };
+            PFXPALGameSaveUserState* claimedState = PFXPALGetStateFromLocalUserUnsafe(localUserHandle);
+            if (claimedState != nullptr)
+            {
+                claimedState->addUserInProgress = false;
+            }
+        }
     }
     return hr;
 }
@@ -709,14 +1116,14 @@ HRESULT GameSaveAPIProviderGRTS::GetFolderSize(
     UNREFERENCED_PARAMETER(localUserHandle);
     if (saveRootFolderSize != nullptr)
     {
-        PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
-        if (state == nullptr)
+        PFXPALGameSaveUserStateSnapshot state{};
+        if (!PFXPALTryGetUserStateSnapshot(localUserHandle, state))
         {
             TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolderSize: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
             return E_PF_GAMESAVE_USER_NOT_ADDED;
         }
 
-        *saveRootFolderSize = strlen(state->saveFolder) + 1;
+        *saveRootFolderSize = strlen(state.saveFolder) + 1;
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolderSize: returning size=%zu", *saveRootFolderSize);
     }
     else
@@ -737,27 +1144,27 @@ HRESULT GameSaveAPIProviderGRTS::GetFolder(
     RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
     RETURN_HR_INVALIDARG_IF_NULL(saveRootFolderBuffer);
 
-    PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
-    if (state == nullptr)
+    PFXPALGameSaveUserStateSnapshot state{};
+    if (!PFXPALTryGetUserStateSnapshot(localUserHandle, state))
     {
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolder: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
         return E_PF_GAMESAVE_USER_NOT_ADDED;
     }
 
-    size_t folderSize = strlen(state->saveFolder) + 1;
+    size_t folderSize = strlen(state.saveFolder) + 1;
     if (saveRootFolderSize < folderSize)
     {
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolder: buffer too small, need %zu but got %zu", folderSize, saveRootFolderSize);
         return E_INVALIDARG;
     }
 
-    memcpy(saveRootFolderBuffer, state->saveFolder, folderSize);
+    memcpy(saveRootFolderBuffer, state.saveFolder, folderSize);
     if (saveRootFolderUsed)
     {
         *saveRootFolderUsed = folderSize;
     }
 
-    TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolder: returning folder='%s', used=%zu", state->saveFolder, folderSize);
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetFolder: returning folder='%s', used=%zu", state.saveFolder, folderSize);
     return S_OK;
 }
 
@@ -768,11 +1175,24 @@ HRESULT GameSaveAPIProviderGRTS::UploadWithUiAsync(
 ) noexcept
 {
     TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: option=%d", static_cast<int>(option));
-    PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
-    if (state == nullptr)
+    PFXPALGameSaveUserStateSnapshot state{};
+    if (!PFXPALTryGetUserStateSnapshot(localUserHandle, state))
     {
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
         return E_PF_GAMESAVE_USER_NOT_ADDED;
+    }
+
+    // ADO 63185188 (#1/#2): while the user is disconnected from cloud (they chose "Play offline"),
+    // an upload must NOT re-enter the WithUi sync path - doing so re-raises the stock sync-failure
+    // dialog on EVERY save. The documented contract in PFGameSaveFiles.h is:
+    //   "While disconnected from cloud, PFGameSaveFilesUploadWithUiAsync() will not do anything
+    //    but return E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD"
+    // The Win32 provider already honors this; GRTS did not. Fail silently and leave the data on
+    // disk so it uploads on the next reconnect / launch.
+    if (!state.isConnectedToCloud)
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: disconnected from cloud - skipping upload+UI, returning E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD");
+        return E_PF_GAMESAVE_DISCONNECTED_FROM_CLOUD;
     }
 
     PFXGameSaveUploadOptions pfxoptions = PFXGameSaveUploadOptions::UploadKeepActive;
@@ -785,7 +1205,7 @@ HRESULT GameSaveAPIProviderGRTS::UploadWithUiAsync(
     {
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: using UploadKeepActive");
     }
-    PFXGameSaveConfigHandle configHandle = static_cast<PFXGameSaveConfigHandle>(state->configHandle);
+    PFXGameSaveConfigHandle configHandle = static_cast<PFXGameSaveConfigHandle>(state.configHandle);
     HRESULT hr = PFXGameSaveFilesUploadWithUiAsync(configHandle, pfxoptions, async);
     TRACE_INFORMATION("GameSaveAPIProviderGRTS::UploadWithUiAsync: hr=0x%08x", hr);
     return hr;
@@ -807,15 +1227,15 @@ HRESULT GameSaveAPIProviderGRTS::SetSaveDescriptionAsync(
 {
     TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetSaveDescriptionAsync: shortSaveDescription='%s'", 
         shortSaveDescription ? shortSaveDescription : "(null)");
-    PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
-    if (state == nullptr)
+    PFXPALGameSaveUserStateSnapshot state{};
+    if (!PFXPALTryGetUserStateSnapshot(localUserHandle, state))
     {
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetSaveDescriptionAsync: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
         return E_PF_GAMESAVE_USER_NOT_ADDED;
     }
 
     HRESULT hr = PFXGameSaveFilesSetSaveDescriptionAsync(
-        static_cast<PFXGameSaveConfigHandle>(state->configHandle),
+        static_cast<PFXGameSaveConfigHandle>(state.configHandle),
         shortSaveDescription,
         async);
     TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetSaveDescriptionAsync: hr=0x%08x", hr);
@@ -835,8 +1255,9 @@ HRESULT GameSaveAPIProviderGRTS::GetRemainingQuota(
 ) noexcept
 {
     TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetRemainingQuota called");
-    PFXPALGameSaveUserState* state = PFXPALGetStateFromLocalUser(localUserHandle);
-    PFXGameSaveConfigHandle configHandle = (state != nullptr) ? (PFXGameSaveConfigHandle)state->configHandle : nullptr;
+    PFXPALGameSaveUserStateSnapshot state{};
+    bool haveState = PFXPALTryGetUserStateSnapshot(localUserHandle, state);
+    PFXGameSaveConfigHandle configHandle = haveState ? static_cast<PFXGameSaveConfigHandle>(state.configHandle) : nullptr;
     if(configHandle == nullptr )
     {
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::GetRemainingQuota: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
@@ -857,10 +1278,18 @@ HRESULT GameSaveAPIProviderGRTS::IsConnectedToCloud(
     _Out_ bool* isConnectedToCloud
 ) noexcept
 {
-    UNREFERENCED_PARAMETER(localUserHandle);
-    UNREFERENCED_PARAMETER(isConnectedToCloud);
-    *isConnectedToCloud = true;
-    TRACE_INFORMATION("GameSaveAPIProviderGRTS::IsConnectedToCloud: connected=true");
+    RETURN_HR_INVALIDARG_IF_NULL(localUserHandle);
+    RETURN_HR_INVALIDARG_IF_NULL(isConnectedToCloud);
+
+    PFXPALGameSaveUserStateSnapshot state{};
+    if (!PFXPALTryGetUserStateSnapshot(localUserHandle, state))
+    {
+        TRACE_INFORMATION("GameSaveAPIProviderGRTS::IsConnectedToCloud: user not added, returning E_PF_GAMESAVE_USER_NOT_ADDED");
+        return E_PF_GAMESAVE_USER_NOT_ADDED;
+    }
+
+    *isConnectedToCloud = state.isConnectedToCloud;
+    TRACE_INFORMATION("GameSaveAPIProviderGRTS::IsConnectedToCloud: connected=%s", state.isConnectedToCloud ? "true" : "false");
     return S_OK;
 }
 
@@ -991,8 +1420,15 @@ HRESULT GameSaveAPIProviderGRTS::SetActiveDeviceChangedCallback(
     gsContext->activeDeviceChangedCallbackQueue.store(callbackQueue, std::memory_order_relaxed);
     gsContext->activeDeviceChangedCallback.store(callback, std::memory_order_release);
 
-    // Register global bridge with PFX layer
-    hr = PFXGameSaveSetActiveDeviceChangedCallback(callback ? PFXPALActiveDeviceChangedCallback : nullptr, gsContext);
+    // Register or unregister global bridge with PFX layer
+    if (callback)
+    {
+        hr = PFXGameSaveSetActiveDeviceChangedCallback(PFXPALActiveDeviceChangedCallback, gsContext);
+    }
+    else
+    {
+        hr = PFXGameSaveSetActiveDeviceChangedCallback(nullptr, gsContext);
+    }
     TRACE_INFORMATION("GameSaveAPIProviderGRTS::SetActiveDeviceChangedCallback: hr=0x%08x", hr);
     return hr;
 }
@@ -1008,26 +1444,34 @@ HRESULT GameSaveAPIProviderGRTS::UninitializeAsync(
     PFXPALGameSaveContext* gsContext = static_cast<PFXPALGameSaveContext*>(gsContextPtr);
 
     ULONG usersProcessed = 0;
-    for (ULONG i = 0; i < PF_GDK_MAX_USERS; ++i)
     {
-        if (gsContext->users[i].localUser != nullptr)
+        // Same invariant as the rest of the slot access: an in-flight AddUser completion runs the
+        // identical test-then-free sequence on these handles under this mutex, so tearing them
+        // down unlocked would double-free. Released before CleanupAsync.
+        std::lock_guard<std::mutex> slotLock{ GameSaveUserSlotMutex() };
+        for (ULONG i = 0; i < PF_GDK_MAX_USERS; ++i)
         {
-            PFLocalUserCloseHandle(gsContext->users[i].localUser);
-            gsContext->users[i].localUser = nullptr;
-            usersProcessed++;
-        }
+            if (gsContext->users[i].localUser != nullptr)
+            {
+                PFLocalUserCloseHandle(gsContext->users[i].localUser);
+                gsContext->users[i].localUser = nullptr;
+                usersProcessed++;
+            }
 
-        if (gsContext->users[i].xUser != nullptr)
-        {
-            XUserCloseHandle(gsContext->users[i].xUser);
-            gsContext->users[i].xUser = nullptr;
-        }
+            if (gsContext->users[i].xUser != nullptr)
+            {
+                XUserCloseHandle(gsContext->users[i].xUser);
+                gsContext->users[i].xUser = nullptr;
+            }
 
-        if (gsContext->users[i].configHandle != nullptr)
-        {
-            PFXGameSaveConfigHandle serviceConfigHandle = static_cast<PFXGameSaveConfigHandle>(gsContext->users[i].configHandle);
-            PFXGameSaveFreeConfig(serviceConfigHandle);
-            gsContext->users[i].configHandle = nullptr;
+            if (gsContext->users[i].configHandle != nullptr)
+            {
+                PFXGameSaveConfigHandle serviceConfigHandle = static_cast<PFXGameSaveConfigHandle>(gsContext->users[i].configHandle);
+                PFXGameSaveFreeConfig(serviceConfigHandle);
+                gsContext->users[i].configHandle = nullptr;
+            }
+
+            gsContext->users[i].addUserInProgress = false;
         }
     }
 
@@ -1056,8 +1500,11 @@ void CALLBACK MyPFXPALGameSaveProgressUiCallback(
     PFLocalUserHandle localUser = PFXPALGetLocalUserFromXUser(requestingUser, &gsContext);
     if (localUser != nullptr)
     {
-        PFGameSaveFilesSyncState pfSyncState = static_cast<PFGameSaveFilesSyncState>(syncState);
-        gsContext->progressCallback(localUser, pfSyncState, context);
+        if (gsContext->progressCallback)
+        {
+            PFGameSaveFilesSyncState pfSyncState = static_cast<PFGameSaveFilesSyncState>(syncState);
+            gsContext->progressCallback(localUser, pfSyncState, context);
+        }
     }
     else
     {
@@ -1077,8 +1524,11 @@ void CALLBACK MyPFXPALGameSaveSyncFailedUiCallback(
     PFLocalUserHandle localUser = PFXPALGetLocalUserFromXUser(requestingUser, &gsContext);
     if (localUser != nullptr)
     {
-        PFGameSaveFilesSyncState pfSyncState = static_cast<PFGameSaveFilesSyncState>(syncState);
-        gsContext->syncFailedCallback(localUser, pfSyncState, error, context);
+        if (gsContext->syncFailedCallback)
+        {
+            PFGameSaveFilesSyncState pfSyncState = static_cast<PFGameSaveFilesSyncState>(syncState);
+            gsContext->syncFailedCallback(localUser, pfSyncState, error, context);
+        }
     }
     else
     {
@@ -1109,9 +1559,12 @@ void CALLBACK MyPFXPALGameSaveActiveDeviceContentionUiCallback(
     {
         PFGameSaveDescriptor pfLocalGameSave = {};
         PFGameSaveDescriptor pfRemoteGameSave = {};
-        ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(localGameSave, &pfLocalGameSave);
-        ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(remoteGameSave, &pfRemoteGameSave);
-        gsContext->activeDeviceContentionCallback(localUser, &pfLocalGameSave, &pfRemoteGameSave, context);
+        if (gsContext->activeDeviceContentionCallback)
+        {
+            ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(localGameSave, &pfLocalGameSave);
+            ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(remoteGameSave, &pfRemoteGameSave);
+            gsContext->activeDeviceContentionCallback(localUser, &pfLocalGameSave, &pfRemoteGameSave, context);
+        }
     }
     else
     {
@@ -1164,9 +1617,12 @@ void CALLBACK MyPFXPALGameSaveConflictUiCallback(
     {
         PFGameSaveDescriptor pfLocalGameSave = {};
         PFGameSaveDescriptor pfRemoteGameSave = {};
-        ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(localGameSave, &pfLocalGameSave);
-        ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(remoteGameSave, &pfRemoteGameSave);
-        gsContext->conflictCallback(localUser, &pfLocalGameSave, &pfRemoteGameSave, context);
+        if (gsContext->conflictCallback)
+        {
+            ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(localGameSave, &pfLocalGameSave);
+            ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(remoteGameSave, &pfRemoteGameSave);
+            gsContext->conflictCallback(localUser, &pfLocalGameSave, &pfRemoteGameSave, context);
+        }
     }
     else
     {
@@ -1214,7 +1670,10 @@ void CALLBACK MyPFXPALGameSaveOutOfStorageUiCallback(
     PFLocalUserHandle localUser = PFXPALGetLocalUserFromXUser(requestingUser, &gsContext);
     if (localUser != nullptr)
     {
-        gsContext->outOfStorageCallback(localUser, requiredBytes, context);
+        if (gsContext->outOfStorageCallback)
+        {
+            gsContext->outOfStorageCallback(localUser, requiredBytes, context);
+        }
     }
     else
     {
@@ -1271,19 +1730,33 @@ HRESULT GameSaveAPIProviderGRTS::UiProgressGetProgress(
     _Out_opt_ uint64_t* current,
     _Out_opt_ uint64_t* total) noexcept
 {
-    PFXGameSaveSyncState pfxSyncState;
+    // Value-initialize and only publish to the caller's buffers on success: on failure GRTS leaves
+    // these untouched, so copying them out would hand the title indeterminate state alongside a
+    // failed HRESULT.
+    PFXGameSaveSyncState pfxSyncState{};
+    uint64_t localCurrent{ 0 };
+    uint64_t localTotal{ 0 };
     XUserHandle requestingUser = PFXPALGetXUserFromLocalUser(localUserHandle);
-    HRESULT hr = PFXGameSaveProgressUiGetProgress(requestingUser, &pfxSyncState, current, total);
+    HRESULT hr = PFXGameSaveProgressUiGetProgress(requestingUser, &pfxSyncState, &localCurrent, &localTotal);
     PFGameSaveFilesSyncState pfSyncState = static_cast<PFGameSaveFilesSyncState>(pfxSyncState);
-    if (syncState != nullptr)
-    {
-        *syncState = pfSyncState;
-    }
 
     if (SUCCEEDED(hr))
     {
+        if (syncState != nullptr)
+        {
+            *syncState = pfSyncState;
+        }
+        if (current != nullptr)
+        {
+            *current = localCurrent;
+        }
+        if (total != nullptr)
+        {
+            *total = localTotal;
+        }
+
         TRACE_INFORMATION("GameSaveAPIProviderGRTS::UiProgressGetProgress: syncState=%d, current=%llu, total=%llu", 
-            static_cast<int>(pfSyncState), current ? *current : 0, total ? *total : 0);
+            static_cast<int>(pfSyncState), localCurrent, localTotal);
     }
     else
     {
@@ -1424,6 +1897,13 @@ HRESULT GameSaveAPIProviderGRTS::SetForceSyncFailedErrorForDebug(_In_ bool force
 {
     TRACE_INFORMATION("[GAME SAVE] SetForceSyncFailedErrorForDebug called with forceError=%d", forceError);
     UNREFERENCED_PARAMETER(forceError);
+    return S_OK;
+}
+
+HRESULT GameSaveAPIProviderGRTS::SetForceNullPendingManifestForDebug(_In_ bool force) noexcept
+{
+    TRACE_INFORMATION("[GAME SAVE] SetForceNullPendingManifestForDebug called with force=%d", force);
+    UNREFERENCED_PARAMETER(force);
     return S_OK;
 }
 

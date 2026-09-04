@@ -40,9 +40,9 @@ PF_API PFPlayerDataManagementClientDeletePlayerCustomPropertiesAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH,
+/// E_PF_PRODUCT_DISABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -58,9 +58,9 @@ PF_API PFPlayerDataManagementClientDeletePlayerCustomPropertiesGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH,
+/// E_PF_PRODUCT_DISABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -400,8 +400,9 @@ PF_API PFPlayerDataManagementClientListPlayerCustomPropertiesAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFPlayerDataManagementClientListPlayerCustomPropertiesGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -417,8 +418,9 @@ PF_API PFPlayerDataManagementClientListPlayerCustomPropertiesGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -463,9 +465,9 @@ PF_API PFPlayerDataManagementClientUpdatePlayerCustomPropertiesAsync(
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_DUPLICATE_PROPERTY_NAME,
 /// E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_COUNT_TOO_HIGH, E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_IS_INVALID,
 /// E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_TOO_LONG, E_PF_PLAYER_CUSTOM_PROPERTIES_STRING_PROPERTY_VALUE_TOO_LONG,
-/// E_PF_PLAYER_CUSTOM_PROPERTIES_VALUE_IS_INVALID_TYPE, E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// E_PF_PLAYER_CUSTOM_PROPERTIES_VALUE_IS_INVALID_TYPE, E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH,
+/// E_PF_PRODUCT_DISABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFPlayerDataManagementClientUpdatePlayerCustomPropertiesGetResult(
     _Inout_ XAsyncBlock* async,
@@ -579,9 +581,9 @@ PF_API PFPlayerDataManagementServerDeletePlayerCustomPropertiesAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH,
+/// E_PF_PRODUCT_DISABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -597,9 +599,9 @@ PF_API PFPlayerDataManagementServerDeletePlayerCustomPropertiesGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH,
+/// E_PF_PRODUCT_DISABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -1079,8 +1081,9 @@ PF_API PFPlayerDataManagementServerListPlayerCustomPropertiesAsync(
 /// <param name="async">XAsyncBlock for the async operation.</param>
 /// <param name="bufferSize">The buffer size in bytes required for the result.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 PF_API PFPlayerDataManagementServerListPlayerCustomPropertiesGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -1096,8 +1099,9 @@ PF_API PFPlayerDataManagementServerListPlayerCustomPropertiesGetResultSize(
 /// <param name="result">Pointer to the result object.</param>
 /// <param name="bufferUsed">The number of bytes in the provided buffer that were used.</param>
 /// <returns>
-/// Result code for this API operation. If the service call is unsuccessful, the result will be one of
-/// global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PRODUCT_DISABLED_FOR_TITLE
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.
@@ -1144,9 +1148,9 @@ PF_API PFPlayerDataManagementServerUpdatePlayerCustomPropertiesAsync(
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_DUPLICATE_PROPERTY_NAME,
 /// E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_COUNT_TOO_HIGH, E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_IS_INVALID,
 /// E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_TOO_LONG, E_PF_PLAYER_CUSTOM_PROPERTIES_STRING_PROPERTY_VALUE_TOO_LONG,
-/// E_PF_PLAYER_CUSTOM_PROPERTIES_VALUE_IS_INVALID_TYPE, E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// E_PF_PLAYER_CUSTOM_PROPERTIES_VALUE_IS_INVALID_TYPE, E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH,
+/// E_PF_PRODUCT_DISABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 PF_API PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResultSize(
     _Inout_ XAsyncBlock* async,
@@ -1165,9 +1169,9 @@ PF_API PFPlayerDataManagementServerUpdatePlayerCustomPropertiesGetResultSize(
 /// Result code for this API operation. If the service call is unsuccessful, the result will be E_PF_PLAYER_CUSTOM_PROPERTIES_DUPLICATE_PROPERTY_NAME,
 /// E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_COUNT_TOO_HIGH, E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_IS_INVALID,
 /// E_PF_PLAYER_CUSTOM_PROPERTIES_PROPERTY_NAME_TOO_LONG, E_PF_PLAYER_CUSTOM_PROPERTIES_STRING_PROPERTY_VALUE_TOO_LONG,
-/// E_PF_PLAYER_CUSTOM_PROPERTIES_VALUE_IS_INVALID_TYPE, E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// E_PF_PLAYER_CUSTOM_PROPERTIES_VALUE_IS_INVALID_TYPE, E_PF_PLAYER_CUSTOM_PROPERTIES_VERSION_MISMATCH,
+/// E_PF_PRODUCT_DISABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </returns>
 /// <remarks>
 /// result is a pointer within buffer and does not need to be freed separately.

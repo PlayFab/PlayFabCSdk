@@ -16,6 +16,18 @@ namespace PlayFab
 namespace GameSave
 {
 
+static std::atomic<bool> s_preInitForceInproc{ false };
+
+bool GameSaveGlobalState::GetPreInitForceInproc() noexcept
+{
+    return s_preInitForceInproc.load();
+}
+
+void GameSaveGlobalState::SetPreInitForceInproc(bool forceInproc) noexcept
+{
+    s_preInitForceInproc.store(forceInproc);
+}
+
 enum class AccessMode
 {
     Initialize,
@@ -44,7 +56,7 @@ HRESULT GameSaveAccessGlobalState(AccessMode mode, SharedPtr<GameSaveGlobalState
             UniquePtr<GlobalStateHolder> stateHolder{ new (Allocator<GlobalStateHolder>{}.allocate(1)) GlobalStateHolder{ state } };
 
             GlobalStateHolder* expected{ nullptr };
-            if (!s_globalStateHolder.compare_exchange_strong(expected, stateHolder.get()))
+            if (!s_globalStateHolder.compare_exchange_strong(expected, stateHolder.get(), std::memory_order_acq_rel))
             {
                 return E_PF_GAMESAVE_ALREADY_INITIALIZED;
             }
@@ -55,7 +67,7 @@ HRESULT GameSaveAccessGlobalState(AccessMode mode, SharedPtr<GameSaveGlobalState
         }
         case AccessMode::Get:
         {
-            GlobalStateHolder* stateHolder = s_globalStateHolder.load();
+            GlobalStateHolder* stateHolder = s_globalStateHolder.load(std::memory_order_acquire);
 
             RETURN_HR_IF(E_PF_GAMESAVE_NOT_INITIALIZED, !stateHolder);
             assert(stateHolder->state);
@@ -65,7 +77,7 @@ HRESULT GameSaveAccessGlobalState(AccessMode mode, SharedPtr<GameSaveGlobalState
         }
         case AccessMode::Cleanup:
         {
-            UniquePtr<GlobalStateHolder> stateHolder{ s_globalStateHolder.exchange(nullptr) };
+            UniquePtr<GlobalStateHolder> stateHolder{ s_globalStateHolder.exchange(nullptr, std::memory_order_acq_rel) };
 
             RETURN_HR_IF(E_PF_GAMESAVE_NOT_INITIALIZED, !stateHolder);
             state = stateHolder->state;
@@ -111,10 +123,7 @@ HRESULT GameSaveGlobalState::Create(_In_opt_ HCInitArgs* args, _In_ uint64_t opt
     Allocator<GameSaveGlobalState> a{};
     auto state = SharedPtr<GameSaveGlobalState>{ new (a.allocate(1)) GameSaveGlobalState{ SUCCEEDED(hr), backgroundQueue }, Deleter<GameSaveGlobalState>(), a};
 
-    bool forceInproc = false;
-    // If we need to force inproc game saves via flag at some future point, this is the spot
-    // For now, its always false and controlled via regkey:
-    // HKLM\\SOFTWARE\\Microsoft\\GamingServices\\ForceUseInprocGameSaves == 1
+    bool forceInproc = s_preInitForceInproc.load();
     UNREFERENCED_PARAMETER(options);
     state->m_apiProvider = PlatformGetAPIProvider(forceInproc);
 
@@ -177,6 +186,7 @@ HRESULT CALLBACK GameSaveGlobalState::CleanupAsyncProvider(XAsyncOp op, XAsyncPr
     {
         return CurrentExceptionToHR();
     }
+    break; // not reachable, but satisfies fallthrough analysis
     default:
     {
         return S_OK;
@@ -203,6 +213,18 @@ void CALLBACK GameSavePFUninitializeComplete(XAsyncBlock* async)
 void GameSaveGlobalState::OnTerminated(void* c) noexcept
 {
     TRACE_VERBOSE(__FUNCTION__);
+
+    // Clear m_managers to break reference cycles with FolderSyncManager/ActiveDevicePollWorker
+    {
+        std::lock_guard<std::recursive_mutex> lock(m_managersMutex);
+        m_managers.clear();
+    }
+
+    // Reset process-global UI callback info to prevent stale pointers on re-initialization
+    {
+        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        GetGameSaveUiCallbackInfo() = GameSaveUiCallbackInfo{};
+    }
 
     UniquePtr<CleanupContext> context{ static_cast<CleanupContext*>(c) };
     XAsyncBlock* asyncBlock{ context->clientAsyncBlock }; // Keep copy of asyncBlock pointer to complete after cleaning up context
@@ -244,6 +266,7 @@ void GameSaveGlobalState::OnTerminated(void* c) noexcept
 
 SharedPtr<FolderSyncManager> GameSaveGlobalState::GetFolderSyncManagerFromLocalUser(PFLocalUserHandle handle, bool createOnDemand)
 {
+    std::lock_guard<std::recursive_mutex> lock(m_managersMutex);
     LocalUser user = LocalUser::Duplicate(handle);
     String localId = user.LocalId();
 
@@ -281,9 +304,7 @@ void GameSaveGlobalState::CancelAllPendingUIWaits() noexcept
 {
     TRACE_VERBOSE("PFGameSave::GameSaveGlobalState::CancelAllPendingUIWaits");
     
-    // Cancel any pending UI waits across all FolderSyncManagers to prevent hangs during termination.
-    // This is critical because UploadAsyncProvider may be waiting for a UI callback response
-    // (e.g., SyncFailed retry/cancel), and if the game never responds, the provider would block forever.
+    std::lock_guard<std::recursive_mutex> lock(m_managersMutex);
     for (auto& pair : m_managers)
     {
         if (pair.second)

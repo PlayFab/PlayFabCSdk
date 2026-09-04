@@ -23,7 +23,7 @@ class User : public std::enable_shared_from_this<User>
 {
 public:
     User(User const&) = delete;
-    User(User&&) noexcept;
+    User(User&&) noexcept = default;
     User& operator=(User const&) = delete;
     ~User() noexcept;
 
@@ -31,8 +31,6 @@ public:
 private:
     Result<String> GetUserIdentityToken() const noexcept;
 
-    String m_identityToken;
-    bool m_closeUser{ false };
 };
 
 }

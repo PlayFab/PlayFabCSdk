@@ -16,7 +16,7 @@ namespace PlayFab
 namespace GameSaveWrapper
 {
 
-bool GameSaveServiceSelector::useMocks{ false };
+std::atomic<bool> GameSaveServiceSelector::useMocks{ false };
 
 AsyncOp<FinalizeManifestResponse> GameSaveServiceSelector::FinalizeManifest(
     Entity const& entity,
@@ -201,8 +201,16 @@ AsyncOp<void> GameSaveServiceSelector::DownloadFileFromCloud(
     }
     else
     {
-        assert(!fileDetail.fullFilePath.empty());
-        assert(!downloadUrl.empty());
+        if (fileDetail.fullFilePath.empty())
+        {
+            TRACE_ERROR("[GAME SAVE] DownloadFileFromCloud: fullFilePath is empty");
+            return Result<void>{ E_INVALIDARG };
+        }
+        if (downloadUrl.empty())
+        {
+            TRACE_ERROR("[GAME SAVE] DownloadFileFromCloud: downloadUrl is empty");
+            return Result<void>{ E_INVALIDARG };
+        }
 
         UnorderedMap<String, String> headers;
         headers["x-ms-blob-type"] = "BlockBlob";

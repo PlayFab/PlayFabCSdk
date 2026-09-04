@@ -1,0 +1,51 @@
+# EditorConfig — PlayFab C SDK
+# https://editorconfig.org
+
+root = true
+
+# Default for all files
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# C/C++ source files
+[*.{c,cpp,h,hpp}]
+indent_style = space
+indent_size = 4
+
+# C# source files
+[*.cs]
+indent_style = space
+indent_size = 4
+
+# XML project files
+[*.{csproj,vcxproj,vcxitems,props,targets,sln}]
+indent_style = space
+indent_size = 2
+
+# YAML files (pipelines, test scenarios)
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_style = space
+indent_size = 2
+
+# PowerShell scripts
+[*.{ps1,psm1,psd1}]
+indent_style = space
+indent_size = 4
+
+# Markdown
+[*.md]
+trim_trailing_whitespace = false
+
+# Makefile
+[Makefile]
+indent_style = tab

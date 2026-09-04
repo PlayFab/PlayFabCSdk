@@ -48,6 +48,7 @@ private:
 
     String m_requestBodyFilePath;
     FileHandle m_requestBodyFileStream;
+    uint64_t m_requestBodyFileSize{ 0 }; // Total file size for per-chunk progress reporting
 };
 
 }

@@ -24,8 +24,11 @@
 
 #endif // !USING_XINPUT && !USING_GAMEINPUT && !USING_WINDOWS_GAMING_INPUT
 
-#if defined(USING_GAMEINPUT) && !defined(_GAMING_XBOX) && defined(_MSC_VER)
+#ifdef USING_GAMEINPUT
+#include <GameInput.h>
+#if defined(_MSC_VER) && (defined(_GAMING_XBOX) || defined(GAMEINPUT_API_VERSION))
 #pragma comment(lib,"gameinput.lib")
+#endif
 #endif
 
 #include <cstdint>
@@ -37,9 +40,17 @@ namespace ABI { namespace Windows { namespace UI { namespace Core { struct ICore
 
 #ifndef DIRECTX_TOOLKIT_API
 #ifdef DIRECTX_TOOLKIT_EXPORT
+#ifdef __GNUC__
+#define DIRECTX_TOOLKIT_API __attribute__ ((dllexport))
+#else
 #define DIRECTX_TOOLKIT_API __declspec(dllexport)
+#endif
 #elif defined(DIRECTX_TOOLKIT_IMPORT)
+#ifdef __GNUC__
+#define DIRECTX_TOOLKIT_API __attribute__ ((dllimport))
+#else
 #define DIRECTX_TOOLKIT_API __declspec(dllimport)
+#endif
 #else
 #define DIRECTX_TOOLKIT_API
 #endif

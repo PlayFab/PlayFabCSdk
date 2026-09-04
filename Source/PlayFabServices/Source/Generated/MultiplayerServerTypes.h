@@ -568,7 +568,7 @@ template<typename T> struct EnumRange;
 
 template<> struct EnumRange<PFMultiplayerServerAzureVmSize>
 {
-    static constexpr PFMultiplayerServerAzureVmSize maxValue = PFMultiplayerServerAzureVmSize::Standard_D32ds_v5;
+    static constexpr PFMultiplayerServerAzureVmSize maxValue = PFMultiplayerServerAzureVmSize::Standard_D16pds_v6;
 };
 
 template<> struct EnumRange<PFMultiplayerServerProtocolType>

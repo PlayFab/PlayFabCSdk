@@ -53,6 +53,13 @@ String ManifestInternal::GetDownloadUrlForFile(const String& fileName, const Dow
         }
     }
 
+    TRACE_ERROR("[GAME SAVE] GetDownloadUrlForFile: No download URL found for file '%s' in %zu remote file details",
+        fileName.c_str(), remoteFileDetails.size());
+    for (size_t i = 0; i < remoteFileDetails.size(); i++)
+    {
+        TRACE_ERROR("[GAME SAVE] GetDownloadUrlForFile:   detail[%zu] fileName='%s'",
+            i, remoteFileDetails[i].GetFileName().c_str());
+    }
     return "";
 }
 

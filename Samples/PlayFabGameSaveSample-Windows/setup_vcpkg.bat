@@ -41,6 +41,21 @@ if not defined VCPKG_EXE (
     )
 )
 
+REM Try Visual Studio 2022 Professional path
+if not defined VCPKG_EXE (
+    echo DEBUG: Checking Professional path...
+    set "VS_PROFESSIONAL_VCPKG_PATH=C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\vcpkg\vcpkg.exe"
+    echo DEBUG: Testing path: "!VS_PROFESSIONAL_VCPKG_PATH!"
+    if exist "!VS_PROFESSIONAL_VCPKG_PATH!" (
+        echo DEBUG: Professional path exists, setting variables...
+        set "VCPKG_EXE=!VS_PROFESSIONAL_VCPKG_PATH!"
+        set "VCPKG_ROOT=C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\vcpkg"
+        echo Found Visual Studio 2022 Professional vcpkg at: !VS_PROFESSIONAL_VCPKG_PATH!
+    ) else (
+        echo DEBUG: Professional path does not exist
+    )
+)
+
 REM Check VCPKG_ROOT environment variable as final fallback
 if not defined VCPKG_EXE (
     if defined VCPKG_ROOT (
@@ -63,6 +78,7 @@ if not defined VCPKG_EXE (
     echo   - Visual Studio ^(VSINSTALLDIR^): %VSINSTALLDIR%VC\vcpkg\vcpkg.exe
     echo   - Visual Studio 2022 Community: C:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg\vcpkg.exe
     echo   - Visual Studio 2022 Enterprise: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\vcpkg\vcpkg.exe
+    echo   - Visual Studio 2022 Professional: C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\vcpkg\vcpkg.exe
     echo   - VCPKG_ROOT environment variable: %VCPKG_ROOT%\vcpkg.exe
     echo.
     echo Please ensure Visual Studio 2022 with C++ workload is installed,

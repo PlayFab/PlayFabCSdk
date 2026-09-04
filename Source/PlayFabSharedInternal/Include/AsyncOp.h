@@ -361,8 +361,24 @@ void Continuation<Func, ArgT>::Run(ArgT&& result) noexcept
 template<typename Func, typename ArgT> template<typename T>
 typename std::enable_if_t<std::is_void_v<T>> Continuation<Func, ArgT>::RunHelper(ArgT&& result) noexcept
 {
-    // If func doesn't return a value, finalize the async operation chain.
-    m_function(std::move(result));
+    // Guarded like the two overloads below, which this previously was not. Run() is noexcept, so a
+    // throw escaping here calls std::terminate and takes down the process. The other overloads can
+    // report the failure through m_asyncContext->Complete(); a final continuation has nobody left
+    // to report to, so the exception is swallowed and the chain is finalized either way - a lost
+    // error is still better than aborting.
+    //
+    // This is reachable from ordinary code: Finally() requires a void-returning function, so every
+    // final continuation lands here, and continuations run on a task-queue thread where nothing up
+    // the stack is catching. Wrappers::Exception in particular is thrown by THROW_IF_FAILED in the
+    // C++ handle wrappers (e.g. Entity's copy constructor duplicating a closed handle).
+    try
+    {
+        m_function(std::move(result));
+    }
+    catch (...)
+    {
+    }
+
     m_asyncContext->Finalize();
 }
 

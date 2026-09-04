@@ -23,6 +23,7 @@
     <PlayFabSharedInternalToolset Condition="'$(PlatformToolset)'=='v141'">141</PlayFabSharedInternalToolset>
     <PlayFabSharedInternalToolset Condition="'$(PlatformToolset)'=='v142'">142</PlayFabSharedInternalToolset>
     <PlayFabSharedInternalToolset Condition="'$(PlatformToolset)'=='v143'">143</PlayFabSharedInternalToolset>
+    <PlayFabSharedInternalToolset Condition="'$(PlatformToolset)'=='v145'">143</PlayFabSharedInternalToolset>
     <PlayFabSharedInternalProjectName>PlayFabSharedInternal.$(HCPlatform).$(PlayFabSharedInternalToolset)</PlayFabSharedInternalProjectName>
   </PropertyGroup>
 

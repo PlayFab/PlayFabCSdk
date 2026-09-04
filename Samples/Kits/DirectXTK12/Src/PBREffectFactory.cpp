@@ -88,6 +88,9 @@ public:
         , mSamplerDescriptors(nullptr)
         , mDevice(device)
     {
+        if (!device)
+            throw std::invalid_argument("Direct3D device is null");
+
         if (textureDescriptors)
             mTextureDescriptors = std::make_unique<DescriptorHeap>(textureDescriptors);
         if (samplerDescriptors)
@@ -249,8 +252,7 @@ void PBREffectFactory::Impl::ReleaseCache()
 
 PBREffectFactory::PBREffectFactory(_In_ ID3D12Device* device) noexcept(false) :
     pImpl(std::make_shared<Impl>(device, nullptr, nullptr))
-{
-}
+{}
 
 PBREffectFactory::PBREffectFactory(_In_ ID3D12DescriptorHeap* textureDescriptors, _In_ ID3D12DescriptorHeap* samplerDescriptors) noexcept(false)
 {

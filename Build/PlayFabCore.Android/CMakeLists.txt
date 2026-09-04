@@ -89,7 +89,7 @@ add_library(
     SHARED
     "${SERVICE_WRAPPER_SOURCE_FILES}"
     "${COMMON_SOURCE_FILES}"
-    "${PATH_TO_SOURCE}/PlayFabCore/Include/PlayFab/core/PFPlatformAndroid.h"
+    "${PATH_TO_SOURCE}/PlayFabCore/Include/playfab/core/PFPlatformAndroid.h"
     "${PATH_TO_SOURCE}/PlayFabCore/Source/Platform/Android/LocalUser_Android.cpp"
     "${PATH_TO_SOURCE}/PlayFabCore/Source/Platform/Android/PlatformComponents_Android.cpp"
 )

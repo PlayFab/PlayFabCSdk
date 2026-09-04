@@ -13,6 +13,7 @@ PF_API PFEntityDuplicateHandle(
 {
     return ApiImpl(XASYNC_IDENTITY(PFEntityDuplicateHandle), [&](PFCoreGlobalState& state)
     {
+        RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
         RETURN_HR_INVALIDARG_IF_NULL(duplicatedEntityHandle);
 
         SharedPtr<Entity> entity;
@@ -84,6 +85,7 @@ PF_API PFEntityGetEntityTokenResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFEntityGetEntityTokenResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(entityToken);
+        *entityToken = nullptr;
 
         HRESULT hr = XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed);
         if (SUCCEEDED(hr))
@@ -125,7 +127,7 @@ PF_API PFEntityGetSecretKey(
         RETURN_IF_FAILED(result.hr);
 
         String const& secretKey{ result.Payload() };
-        RETURN_HR_IF(E_INVALIDARG, secretKeySize < secretKey.size() + 1);
+        RETURN_HR_IF(E_INVALIDARG, secretKey.size() >= secretKeySize);
 
         memcpy(secretKeyBuffer, secretKey.data(), secretKey.size() + 1);
 
@@ -164,6 +166,7 @@ PF_API PFEntityGetEntityKey(
     {
         RETURN_HR_INVALIDARG_IF_NULL(buffer);
         RETURN_HR_INVALIDARG_IF_NULL(entityKey);
+        *entityKey = nullptr;
 
         ModelBuffer b{ buffer, bufferSize };
         auto copyResult = entity->EntityKey().Copy(b);
@@ -216,7 +219,7 @@ PF_API PFEntityGetTitleId(
         RETURN_HR_INVALIDARG_IF_NULL(titleIdBuffer);
 
         String const& titleId = entity->ServiceConfig()->TitleId();
-        RETURN_HR_IF(E_INVALIDARG, titleIdSize < titleId.size() + 1);
+        RETURN_HR_IF(E_INVALIDARG, titleId.size() >= titleIdSize);
 
         memcpy(titleIdBuffer, titleId.data(), titleId.size() + 1);
 
@@ -254,7 +257,7 @@ PF_API PFEntityGetAPIEndpoint(
         RETURN_HR_INVALIDARG_IF_NULL(apiEndpointBuffer);
 
         String const& apiEndpoint = entity->ServiceConfig()->APIEndpoint();
-        RETURN_HR_IF(E_INVALIDARG, apiEndpointSize < apiEndpoint.size() + 1);
+        RETURN_HR_IF(E_INVALIDARG, apiEndpoint.size() >= apiEndpointSize);
 
         memcpy(apiEndpointBuffer, apiEndpoint.data(), apiEndpoint.size() + 1);
 
@@ -276,6 +279,7 @@ PF_API PFEntityRegisterTokenExpiredEventHandler(
 {
     return ApiImpl(XASYNC_IDENTITY(PFEntityRegisterTokenExpiredEventHandler), [&](PFCoreGlobalState& state)
     {
+        RETURN_HR_INVALIDARG_IF_NULL(token);
         return state.TokenExpiredHandler().RegisterClientHandler(state.RunContext().DeriveOnQueue(queue), context, handler, token);
     });
 }
@@ -292,7 +296,7 @@ PF_API_(void) PFEntityUnregisterTokenExpiredEventHandler(
 }
 
 PF_API PFEntityRegisterTokenRefreshedEventHandler(
-    _In_ XTaskQueueHandle queue,
+    _In_opt_ XTaskQueueHandle queue,
     _In_opt_ void* context,
     _In_ PFEntityTokenRefreshedEventHandler* handler,
     _Out_ PFRegistrationToken* token
@@ -300,6 +304,7 @@ PF_API PFEntityRegisterTokenRefreshedEventHandler(
 {
     return ApiImpl(XASYNC_IDENTITY(PFEntityRegisterTokenRefreshedEventHandler), [&](PFCoreGlobalState& state)
     {
+        RETURN_HR_INVALIDARG_IF_NULL(token);
         return state.TokenRefreshedHandler().RegisterClientHandler(
             state.RunContext().DeriveOnQueue(queue),
             context,

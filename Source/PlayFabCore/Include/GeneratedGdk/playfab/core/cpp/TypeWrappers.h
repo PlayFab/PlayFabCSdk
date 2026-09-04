@@ -1441,7 +1441,8 @@ public:
     PFUserPsnInfoWrapper(const PFUserPsnInfo& model) :
         ModelWrapper<PFUserPsnInfo, Alloc>{ model },
         m_psnAccountId{ SafeString(model.psnAccountId) },
-        m_psnOnlineId{ SafeString(model.psnOnlineId) }
+        m_psnOnlineId{ SafeString(model.psnOnlineId) },
+        m_psnSandboxId{ SafeString(model.psnSandboxId) }
     {
         SetModelPointers();
     }
@@ -1471,6 +1472,7 @@ public:
         swap(lhs.m_model, rhs.m_model);
         swap(lhs.m_psnAccountId, rhs.m_psnAccountId);
         swap(lhs.m_psnOnlineId, rhs.m_psnOnlineId);
+        swap(lhs.m_psnSandboxId, rhs.m_psnSandboxId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
     }
@@ -1497,15 +1499,28 @@ public:
         this->m_model.psnOnlineId =  m_psnOnlineId.empty() ? nullptr : m_psnOnlineId.data();
     }
 
+    String const& GetPsnSandboxId() const
+    {
+        return m_psnSandboxId;
+    }
+
+    void SetPsnSandboxId(String value)
+    {
+        m_psnSandboxId = std::move(value);
+        this->m_model.psnSandboxId =  m_psnSandboxId.empty() ? nullptr : m_psnSandboxId.data();
+    }
+
 private:
     void SetModelPointers()
     {
         this->m_model.psnAccountId = m_psnAccountId.empty() ? nullptr : m_psnAccountId.data();
         this->m_model.psnOnlineId = m_psnOnlineId.empty() ? nullptr : m_psnOnlineId.data();
+        this->m_model.psnSandboxId = m_psnSandboxId.empty() ? nullptr : m_psnSandboxId.data();
     }
 
     String m_psnAccountId;
     String m_psnOnlineId;
+    String m_psnSandboxId;
 };
 
 template<template<typename AllocT> class Alloc = std::allocator>

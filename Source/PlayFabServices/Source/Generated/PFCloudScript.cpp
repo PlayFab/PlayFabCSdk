@@ -54,6 +54,7 @@ PF_API PFCloudScriptClientExecuteCloudScriptGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCloudScriptClientExecuteCloudScriptGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCloudScriptExecuteCloudScriptResult*>(buffer);
@@ -105,6 +106,7 @@ PF_API PFCloudScriptServerExecuteCloudScriptGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCloudScriptServerExecuteCloudScriptGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCloudScriptExecuteCloudScriptResult*>(buffer);
@@ -156,6 +158,7 @@ PF_API PFCloudScriptExecuteEntityCloudScriptGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCloudScriptExecuteEntityCloudScriptGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCloudScriptExecuteCloudScriptResult*>(buffer);
@@ -206,6 +209,7 @@ PF_API PFCloudScriptExecuteFunctionGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCloudScriptExecuteFunctionGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCloudScriptExecuteFunctionResult*>(buffer);
@@ -257,6 +261,7 @@ PF_API PFCloudScriptListEventHubFunctionsGetResult(
     return ResultApiImpl(XASYNC_IDENTITY(PFCloudScriptListEventHubFunctionsGetResult), [&]()
     {
         RETURN_HR_INVALIDARG_IF_NULL(result);
+        *result = nullptr;
 
         RETURN_IF_FAILED(XAsyncGetResult(async, nullptr, bufferSize, buffer, bufferUsed));
         *result = static_cast<PFCloudScriptListEventHubFunctionsResult*>(buffer);

@@ -63,6 +63,7 @@ JsonValue ClientGetFriendsListRequest::ToJson(const PFFriendsClientGetFriendsLis
     JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExternalPlatformFriends", JsonUtils::ToJson(input.externalPlatformFriends));
+    JsonUtils::ObjectAddMember(output, "NamespaceWide", input.namespaceWide);
     JsonUtils::ObjectAddMember<PlayerProfileViewConstraints>(output, "ProfileConstraints", input.profileConstraints);
 #if HC_PLATFORM != HC_PLATFORM_GDK
     JsonUtils::ObjectAddMember(output, "XboxToken", input.xboxToken);
@@ -338,6 +339,7 @@ JsonValue ServerGetFriendsListRequest::ToJson(const PFFriendsServerGetFriendsLis
     JsonValue output = JsonValue::object();
     JsonUtils::ObjectAddMemberDictionary(output, "CustomTags", input.customTags, input.customTagsCount);
     JsonUtils::ObjectAddMember(output, "ExternalPlatformFriends", JsonUtils::ToJson(input.externalPlatformFriends));
+    JsonUtils::ObjectAddMember(output, "NamespaceWide", input.namespaceWide);
     JsonUtils::ObjectAddMember(output, "PlayFabId", input.playFabId);
     JsonUtils::ObjectAddMember<PlayerProfileViewConstraints>(output, "ProfileConstraints", input.profileConstraints);
     JsonUtils::ObjectAddMember(output, "XboxToken", input.xboxToken);
