@@ -32,7 +32,7 @@ Result<const char*> ModelBuffer::CopyTo(const char* input)
         return std::move(outputPtr);
 #else
         std::memcpy(outputPtr, input, bytesNeeded);
-        return outputPtr;
+        return static_cast<const char*>(outputPtr);
 #endif
     }
     else

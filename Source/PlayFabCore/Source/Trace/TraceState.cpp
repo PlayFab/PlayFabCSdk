@@ -84,9 +84,6 @@ TraceState::TraceState(RunContext&& /*initContext*/, RunContext&& traceContext, 
 {
     // Init LibHttpClient Tracing
     HCTraceInit();
-#ifdef _DEBUG
-    HCSettingsSetTraceLevel(HCTraceLevel::Verbose);
-#endif
 #if HC_PLATFORM_IS_MICROSOFT
     HCTraceSetEtwEnabled(true);
 #endif

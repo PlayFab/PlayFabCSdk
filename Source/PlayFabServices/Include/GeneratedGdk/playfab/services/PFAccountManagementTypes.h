@@ -815,8 +815,9 @@ typedef struct PFAccountManagementGetPlayFabIDsFromOpenIdsResult
 typedef struct PFAccountManagementGetPlayFabIDsFromPSNAccountIDsRequest
 {
     /// <summary>
-    /// (Optional) Id of the PlayStation :tm: Network issuer environment. If null, defaults to production
-    /// environment.
+    /// (Optional) Id of the PlayStation :tm: Network issuer environment. If null, defaults to the production
+    /// environment. This must match the issuer the account signed in under, otherwise the lookup returns
+    /// a null PlayFabId rather than an error.
     /// </summary>
     _Maybenull_ int32_t const* issuerId;
 
@@ -832,8 +833,11 @@ typedef struct PFAccountManagementGetPlayFabIDsFromPSNAccountIDsRequest
     uint32_t PSNAccountIDsCount;
 
     /// <summary>
-    /// (Optional) Optional sandbox id. When provided, resolves players that logged in from that PlayStation
-    /// :tm: Network sandbox.
+    /// (Optional) The PlayStation :tm: Network sandbox the account is keyed under. Sandbox membership
+    /// is per account, not per title: supply this only for accounts that sign in from a sandbox, and
+    /// omit it for accounts that do not, including all retail accounts. Supplying a sandbox id that an
+    /// account is not keyed under, or omitting one that it is, returns a null PlayFabId rather than an
+    /// error.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* sandboxId;
 
@@ -881,8 +885,9 @@ typedef struct PFAccountManagementGetPlayFabIDsFromPSNAccountIDsResult
 typedef struct PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest
 {
     /// <summary>
-    /// (Optional) Id of the PlayStation :tm: Network issuer environment. If null, defaults to production
-    /// environment.
+    /// (Optional) Id of the PlayStation :tm: Network issuer environment. If null, defaults to the production
+    /// environment. This must match the issuer the account signed in under, otherwise the lookup returns
+    /// a null PlayFabId rather than an error.
     /// </summary>
     _Maybenull_ int32_t const* issuerId;
 
@@ -898,8 +903,11 @@ typedef struct PFAccountManagementGetPlayFabIDsFromPSNOnlineIDsRequest
     uint32_t PSNOnlineIDsCount;
 
     /// <summary>
-    /// (Optional) Optional sandbox id. When provided, resolves players that logged in from that PlayStation
-    /// :tm: Network sandbox.
+    /// (Optional) The PlayStation :tm: Network sandbox the account is keyed under. Sandbox membership
+    /// is per account, not per title: supply this only for accounts that sign in from a sandbox, and
+    /// omit it for accounts that do not, including all retail accounts. Supplying a sandbox id that an
+    /// account is not keyed under, or omitting one that it is, returns a null PlayFabId rather than an
+    /// error.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* sandboxId;
 
@@ -2837,8 +2845,9 @@ typedef struct PFAccountManagementLinkPSNIdRequest
     _Maybenull_ bool const* forceLink;
 
     /// <summary>
-    /// (Optional) Id of the PlayStation :tm: Network issuer environment. If null, defaults to production
-    /// environment.
+    /// (Optional) Id of the PlayStation :tm: Network issuer environment. If null, defaults to the production
+    /// environment. This must match the issuer the account signs in under, otherwise the link will not
+    /// be resolved by that sign in.
     /// </summary>
     _Maybenull_ int32_t const* issuerId;
 
@@ -2853,8 +2862,10 @@ typedef struct PFAccountManagementLinkPSNIdRequest
     _Null_terminated_ const char* PSNUserId;
 
     /// <summary>
-    /// (Optional) Optional sandbox id. When provided, resolves and links the player on that PlayStation
-    /// :tm: Network sandbox.
+    /// (Optional) The PlayStation :tm: Network sandbox to key the link under. Sandbox membership is
+    /// per account, not per title: supply this only when the account signs in from a sandbox, and omit
+    /// it otherwise, including for all retail accounts. This must match the sandbox the account signs
+    /// in from, otherwise the link will not be resolved by that sign in.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* sandboxId;
 

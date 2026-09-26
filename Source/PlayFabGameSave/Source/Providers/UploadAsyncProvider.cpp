@@ -25,6 +25,11 @@ HRESULT UploadAsyncProvider::DoWork(RunContext runContext)
     {
         TRACE_TASK(FormatString("UploadAsyncProvider::DoWork HR:0x%0.8x", hr));
 
+        // This attempt is definitively over (success or failure), so its staging directory can be
+        // released. Doing it here rather than speculatively at the start of the next attempt is
+        // what keeps a still-live transfer from an abandoned attempt from losing its files.
+        m_folderSync->ReleaseUploadStaging();
+
         // Upload processing is complete (success or failure) since we're no longer pending.
         // Notify platform provider to perform cleanup (e.g., unmount Sony SaveData).
         // The GlobalState check ensures the state still exists before accessing the API provider.

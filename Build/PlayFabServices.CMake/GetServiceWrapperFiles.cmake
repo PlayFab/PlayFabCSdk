@@ -7,6 +7,12 @@ function(GET_SERVICE_WRAPPER_SOURCE_FILES
          )
 
 set(${OUT_SERVICE_WRAPPER_SOURCE_FILES}
+    "${PATH_TO_SOURCE}/PlayFabServices/Source/QoS/PFMultiplayerServerQoS.cpp"
+    "${PATH_TO_SOURCE}/PlayFabServices/Source/QoS/QoS.cpp"
+    "${PATH_TO_SOURCE}/PlayFabServices/Source/QoS/QoS.h"
+    "${PATH_TO_SOURCE}/PlayFabServices/Source/QoS/QoSWireFormat.h"
+    "${PATH_TO_SOURCE}/PlayFabServices/Source/QoS/UdpSocketPAL.h"
+    "${PATH_TO_SOURCE}/PlayFabServices/Include/playfab/services/QoS/PFMultiplayerServerQoS.h"
     "${PATH_TO_SOURCE}/PlayFabServices/Source/Generated/CoreTypes.h"
     "${PATH_TO_SOURCE}/PlayFabServices/Source/Generated/CoreTypes.cpp"
     "${PATH_TO_SOURCE}/PlayFabServices/Include/Generated/playfab/services/PFTypes.h"

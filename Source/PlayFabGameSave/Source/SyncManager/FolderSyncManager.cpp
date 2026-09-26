@@ -317,6 +317,15 @@ HRESULT FolderSyncManager::DoWorkFolderDownload(_In_ const RunContext& runContex
 
         // Persist device ID to info.json if it was generated before storage was writable
         EnsureDeviceIdPersisted(m_saveFolder);
+
+        // Reclaim upload staging directories orphaned by a crash, a suspend, or an upload whose
+        // provider was torn down mid-transfer. AddUser is the one point where this is safe: an
+        // upload cannot be in flight for this user here, because TryReserveUpload requires the
+        // user to be added and TryReserveDownload rejects once they are. Deferring cleanup to
+        // this point is what lets an upload attempt stop deleting other attempts' staged files.
+        //
+        // Done after AcquireGameStorage so m_saveFolder is the final, mounted path.
+        SweepUploadStagingFolders(m_saveFolder);
     }
 
     if (!m_downloadStep.IsLocalOperationsDone())
@@ -553,6 +562,12 @@ void FolderSyncManager::SetStatsForDebug()
 
     m_statsJsonForDebug = JsonUtils::WriteToString(rootJson);
 #endif
+}
+
+void FolderSyncManager::ReleaseUploadStaging()
+{
+    DeleteUploadStagingFolder(m_uploadStep.GetUploadStagingFolder());
+    m_uploadStep.ClearUploadStagingFolder();
 }
 
 HRESULT FolderSyncManager::DoWorkFolderUpload(_In_ RunContext& runContext, _In_ ISchedulableTask& task, _In_ std::recursive_mutex& folderSyncMutex, _In_ PFGameSaveFilesUploadOption option)

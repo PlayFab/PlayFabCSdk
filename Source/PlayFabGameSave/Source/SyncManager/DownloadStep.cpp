@@ -290,6 +290,10 @@ HRESULT DownloadStep::Download(
                     auto innerProgressContext = MakeShared<InnerProgressContext>(progressCallback, progressCallbackContext, task, m_localUser, PFGameSaveFilesSyncState::Downloading);
                     innerProgressContext->totalUncompressedBytes = m_totalUncompressedSizeBytes;
                     innerProgressContext->totalCompressedBytes = m_totalCompressedSizeBytes;
+                    innerProgressContext->completedUncompressedBytes = m_currentUncompressedSizeBytes;
+                    innerProgressContext->completedCompressedBytes = m_currentCompressedSizeBytes;
+                    innerProgressContext->fileUncompressedBytes = remoteCompressedFile.uncompressedSizeBytes;
+                    innerProgressContext->fileCompressedBytes = remoteCompressedFile.compressedSizeBytes;
 
                     // Pass compressed totals for HTTP dynamic size tracking (actual transfer units)
                     GameSaveServiceSelector::DownloadFileFromCloud(runContext, downloadDetail, remoteCompressedFile.downloadUrl, InnerProgressCallback, innerProgressContext.get(), m_totalCompressedSizeBytes, m_currentCompressedSizeBytes)

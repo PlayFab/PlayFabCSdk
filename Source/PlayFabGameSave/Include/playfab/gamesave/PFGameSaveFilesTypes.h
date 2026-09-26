@@ -109,6 +109,22 @@ extern "C"
 #define E_PF_GAMESAVE_OPERATION_IN_PROGRESS    MAKE_E_HC(0x7009L)   // 0x89237009
 
 /// <summary>
+/// A local save file could not be read while the operation was running.
+///
+/// This is returned by PFGameSaveFilesUploadWithUiAsync() when a file that was present when the
+/// save folder was enumerated is no longer readable by the time it is compressed or transferred --
+/// it was deleted, replaced, or is momentarily held open by another writer (the title's own save
+/// code, anti-virus, or a platform cloud-sync agent). It is most likely when something stretches
+/// the gap between enumeration and transfer, such as the title writing new save data or a
+/// thumbnail while an upload is in flight, or a suspend/resume that leaves an upload parked.
+///
+/// Nothing was committed to the cloud. The condition is transient: call
+/// PFGameSaveFilesUploadWithUiAsync() again once the title is no longer writing that file, and the
+/// upload re-enumerates the save folder and proceeds normally.
+/// </summary>
+#define E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE   MAKE_E_HC(0x700AL)   // 0x8923700A
+
+/// <summary>
 /// The maximum length, in characters, of the short save description passed to
 /// PFGameSaveFilesSetSaveDescriptionAsync(). The description is Base64 encoded before it is sent to
 /// the service, which caps the encoded value at 1024 characters, so the raw value is limited to the

@@ -2,6 +2,8 @@
 #include "FilePAL_Generic.h"
 #include <filesystem>
 #include <algorithm>
+#include <cerrno>
+#include <system_error>
 #include <sys/stat.h>
 #if !HC_PLATFORM_IS_MICROSOFT
 #include <utime.h>
@@ -40,6 +42,120 @@ std::filesystem::path ConvertStringToPath(const String& pathUtf8)
 }
 #endif
 
+namespace
+{
+
+// Win32 system error codes used by the mappings below. Spelled out numerically rather than taken
+// from platform headers so the same HRESULTs are produced on platforms whose PAL does not define
+// the ERROR_* constants.
+//
+// Note the mappings use __HRESULT_FROM_WIN32 (two leading underscores), NOT HRESULT_FROM_WIN32.
+// This file is compiled for Linux, Android, iOS and macOS as well as Windows, and only the
+// double-underscore form is portable: libHttpClient's pal.h defines it for non-Windows platforms,
+// while the single-underscore form exists solely in the Windows SDK's winerror.h. The rest of the
+// SDK already follows this convention (see Generated/Error.cpp).
+constexpr uint32_t kWin32FileNotFound = 2;        // ERROR_FILE_NOT_FOUND
+constexpr uint32_t kWin32PathNotFound = 3;        // ERROR_PATH_NOT_FOUND
+constexpr uint32_t kWin32TooManyOpenFiles = 4;    // ERROR_TOO_MANY_OPEN_FILES
+constexpr uint32_t kWin32AccessDenied = 5;        // ERROR_ACCESS_DENIED
+constexpr uint32_t kWin32WriteProtect = 19;       // ERROR_WRITE_PROTECT
+constexpr uint32_t kWin32SharingViolation = 32;   // ERROR_SHARING_VIOLATION
+constexpr uint32_t kWin32LockViolation = 33;      // ERROR_LOCK_VIOLATION
+constexpr uint32_t kWin32DiskFull = 112;          // ERROR_DISK_FULL
+constexpr uint32_t kWin32InvalidName = 123;       // ERROR_INVALID_NAME
+constexpr uint32_t kWin32FilenameExcedRange = 206;// ERROR_FILENAME_EXCED_RANGE
+
+// A local file operation failing is never an argument error. Reporting E_INVALIDARG for it is
+// actively harmful: the caller cannot tell "the path you passed is malformed" (permanent, the
+// caller's fault) from "the file was locked or gone for an instant" (transient, retryable), and
+// GameSave surfaces these codes verbatim out of the public upload API. Map to the underlying
+// platform error so both the SDK and the title can classify the failure.
+//
+// The converse still holds: an argument that cannot name a file at all IS an argument error, and
+// must keep reporting E_INVALIDARG rather than falling through to E_FAIL.
+HRESULT HResultFromErrno(int err) noexcept
+{
+    switch (err)
+    {
+    case ENOENT:        return __HRESULT_FROM_WIN32(kWin32FileNotFound);
+    case ENOTDIR:       return __HRESULT_FROM_WIN32(kWin32PathNotFound);
+    case EACCES:        return __HRESULT_FROM_WIN32(kWin32AccessDenied);
+    case EPERM:         return __HRESULT_FROM_WIN32(kWin32AccessDenied);
+    case EISDIR:        return __HRESULT_FROM_WIN32(kWin32AccessDenied);
+    case EBUSY:         return __HRESULT_FROM_WIN32(kWin32SharingViolation);
+    case EMFILE:        return __HRESULT_FROM_WIN32(kWin32TooManyOpenFiles);
+    case ENFILE:        return __HRESULT_FROM_WIN32(kWin32TooManyOpenFiles);
+    case ENOSPC:        return __HRESULT_FROM_WIN32(kWin32DiskFull);
+    case EROFS:         return __HRESULT_FROM_WIN32(kWin32WriteProtect);
+    case ENAMETOOLONG:  return __HRESULT_FROM_WIN32(kWin32FilenameExcedRange);
+    // An empty path reaches the CRT as EINVAL with no Win32 last error set. Without this it fell
+    // through to E_FAIL, which is the one case where OpenFile silently stopped honoring the
+    // "malformed input stays E_INVALIDARG" half of this contract.
+    case EINVAL:        return E_INVALIDARG;
+    default:            return E_FAIL;
+    }
+}
+
+// std::filesystem reports through std::error_code. On Microsoft platforms the values come from
+// system_category() and are already Win32 codes; elsewhere they are errno values.
+HRESULT HResultFromFileErrorCode(const std::error_code& ec) noexcept
+{
+    if (!ec)
+    {
+        return E_FAIL;
+    }
+
+#if HC_PLATFORM_IS_MICROSOFT
+    if (ec.category() == std::system_category())
+    {
+        return __HRESULT_FROM_WIN32(static_cast<uint32_t>(ec.value()));
+    }
+#endif
+
+    return HResultFromErrno(ec.value());
+}
+
+// Maps a just-failed std::fstream open. The CRT reports the coarse reason through errno, which
+// cannot distinguish a sharing violation from a permission denial - both arrive as EACCES. On
+// Microsoft platforms the underlying _wfsopen also sets the Win32 last error, which does make that
+// distinction, so prefer it when it names a failure we recognize. Callers clear the last error
+// immediately before the open so this cannot pick up a stale value.
+HRESULT HResultFromOpenFailure(int err) noexcept
+{
+#if HC_PLATFORM_IS_MICROSOFT
+    const uint32_t lastError = static_cast<uint32_t>(GetLastError());
+
+    // A name the filesystem cannot represent is a caller error, not an I/O condition, so it keeps
+    // reporting E_INVALIDARG. In practice the CRT usually reports such a name as EINVAL and it is
+    // classified by HResultFromErrno below; this case covers the paths where the OS reports
+    // ERROR_INVALID_NAME directly instead.
+    if (lastError == kWin32InvalidName)
+    {
+        return E_INVALIDARG;
+    }
+
+    switch (lastError)
+    {
+    case kWin32FileNotFound:
+    case kWin32PathNotFound:
+    case kWin32AccessDenied:
+    case kWin32SharingViolation:
+    case kWin32LockViolation:
+    case kWin32TooManyOpenFiles:
+    case kWin32DiskFull:
+    case kWin32WriteProtect:
+    case kWin32FilenameExcedRange:
+        return __HRESULT_FROM_WIN32(lastError);
+    default:
+        break;
+    }
+#endif
+
+    return HResultFromErrno(err);
+}
+
+} // anonymous namespace
+
 Result<FileHandle> FilePAL::OpenFile(const String& filePath, FileOpenMode openMode) noexcept
 {
     std::ios::openmode mode = std::ios::binary;
@@ -55,8 +171,18 @@ Result<FileHandle> FilePAL::OpenFile(const String& filePath, FileOpenMode openMo
 
     auto fileHandle = MakeUnique<FileStreamContainer>();
     auto path = ConvertStringToPath(filePath);
+
+    errno = 0;
+#if HC_PLATFORM_IS_MICROSOFT
+    SetLastError(ERROR_SUCCESS);
+#endif
     fileHandle->file.open(path.c_str(), mode);
-    RETURN_HR_IF_FALSE(E_INVALIDARG, fileHandle->file);
+    if (!fileHandle->file)
+    {
+        HRESULT hr = HResultFromOpenFailure(errno);
+        TRACE_ERROR("[FILEPAL] OpenFile failed %s hr=0x%08X", filePath.c_str(), hr);
+        return Result<FileHandle>{ hr };
+    }
 
     return UniquePtr<FileContainer>(static_cast<FileContainer*>(fileHandle.release()));;
 }
@@ -122,9 +248,32 @@ bool FilePAL::DoesDirectoryExist(const String& directoryPath) noexcept
 
 bool FilePAL::DoesFileExist(const String& filePath) noexcept
 {
-    auto path = ConvertStringToPath(filePath);
-    std::ifstream file(path);
-    return file.good();
+    // Deliberately does NOT open the file. Opening conflates "not there" with "there but not
+    // openable right now": a save file momentarily held by the game's own writer (or by AV, or by
+    // a cloud-sync agent) fails to open with a sharing violation, and reporting that as "does not
+    // exist" made callers such as GetFileSize reject a perfectly healthy file.
+    try
+    {
+        auto path = ConvertStringToPath(filePath);
+        std::error_code ec;
+        const std::filesystem::file_status status = std::filesystem::status(path, ec);
+        if (ec)
+        {
+            return false;
+        }
+
+        // Directories are not files. The previous ifstream-based implementation also rejected
+        // them (open fails with EACCES), so keep that behavior.
+        return std::filesystem::is_regular_file(status);
+    }
+    catch (const std::filesystem::filesystem_error&)
+    {
+        return false;
+    }
+    catch (const std::exception&)
+    {
+        return false;
+    }
 }
 
 HRESULT FilePAL::DeleteLocalFile(const String& filePath) noexcept
@@ -406,12 +555,19 @@ Result<Vector<String>> FilePAL::EnumFiles(const String& directoryPath) noexcept
 
 Result<uint64_t> FilePAL::GetAvailableStorageSize(const String& filePath) noexcept
 {
-    RETURN_HR_IF_FALSE(E_INVALIDARG, DoesFileExist(filePath) || DoesDirectoryExist(filePath));
-
     try
     {
         auto dirPath = ConvertStringToPath(filePath);
-        uint64_t space = static_cast<uint64_t>(std::filesystem::space(dirPath).available);
+        std::error_code ec;
+        const std::uintmax_t available = std::filesystem::space(dirPath, ec).available;
+        if (ec)
+        {
+            HRESULT hr = HResultFromFileErrorCode(ec);
+            TRACE_ERROR("[FILEPAL] GetAvailableStorageSize failed %s hr=0x%08X", filePath.c_str(), hr);
+            return Result<uint64_t>{ hr };
+        }
+
+        uint64_t space = static_cast<uint64_t>(available);
         TRACE_INFORMATION("[FILEPAL] GetAvailableStorageSize %llu", space);
         return space;
     }
@@ -427,13 +583,24 @@ Result<uint64_t> FilePAL::GetAvailableStorageSize(const String& filePath) noexce
 
 Result<uint64_t> FilePAL::GetFileSize(const String& filePath) noexcept
 {
-    RETURN_HR_IF_FALSE(E_INVALIDARG, DoesFileExist(filePath));
-
     try
     {
         auto path = ConvertStringToPath(filePath);
-        uint64_t fileSize = static_cast<uint64_t>( std::filesystem::file_size(path));
-        return fileSize;
+        std::error_code ec;
+        const std::uintmax_t fileSize = std::filesystem::file_size(path, ec);
+        if (ec)
+        {
+            // Reports the real reason (missing, bad path, denied) rather than E_INVALIDARG. Note
+            // that a file merely held open by another writer still succeeds here - its metadata is
+            // readable - so a transient lock now fails later at OpenFile with a sharing violation
+            // instead of being misreported as a bad argument.
+            HRESULT hr = HResultFromFileErrorCode(ec);
+            TRACE_ERROR("[FILEPAL] GetFileSize failed %s hr=0x%08X", filePath.c_str(), hr);
+            return Result<uint64_t>{ hr };
+        }
+
+        uint64_t fileSizeBytes = static_cast<uint64_t>(fileSize);
+        return fileSizeBytes;
     }
     catch (const std::filesystem::filesystem_error&)
     {
@@ -499,13 +666,21 @@ HRESULT FilePAL::SetFileLastModifiedTime(const String& filePath, time_t timeCrea
 
 HRESULT FilePAL::MoveLocalFile(const String& srcPath, const String& destPath) noexcept
 {
-    RETURN_HR_IF_FALSE(E_INVALIDARG, DoesFileExist(srcPath) && IsValidPath(destPath));
+    // A malformed destination is a real argument error; a missing source is an I/O condition.
+    RETURN_HR_IF_FALSE(E_INVALIDARG, IsValidPath(destPath));
 
     try
     {
         auto srcPath2 = ConvertStringToPath(srcPath);
         auto destPath2 = ConvertStringToPath(destPath);
-        std::filesystem::rename(srcPath2, destPath2);
+        std::error_code ec;
+        std::filesystem::rename(srcPath2, destPath2, ec);
+        if (ec)
+        {
+            HRESULT hr = HResultFromFileErrorCode(ec);
+            TRACE_ERROR("[FILEPAL] MoveLocalFile failed %s -> %s hr=0x%08X", srcPath.c_str(), destPath.c_str(), hr);
+            return hr;
+        }
         return S_OK;
     }
     catch (const std::filesystem::filesystem_error&)

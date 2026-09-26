@@ -136,32 +136,19 @@ Result<Vector<ExtendedManifestCompressedFileDetail>> UploadStep::CompressFiles(
     Vector<const FileDetail*> filesToUpload = localFileFolderSet->GetFilesToUpload();
     const FileDetail* thumbnail = PopThumbnail(filesToUpload);    
     
-    // Determine cloudsync folder path - use temp storage on platforms that support it
+    // Each attempt compresses into its own staging directory.
+    //
+    // This used to be one flat cloudsync folder that every attempt cleared on entry by deleting
+    // every *.zip it found. That deleted files it did not own: the SetToUploadFullSet retry
+    // re-enters here within the same upload, and a new upload can be admitted while a previous
+    // provider that was torn down mid-transfer (suspend, cancel, crash) still has live HTTP
+    // operations holding their own copies of the old zip paths. Those transfers then opened a file
+    // that had just been deleted, and the resulting local-IO error surfaced from
+    // PFGameSaveFilesUploadWithUiResult. Isolating per attempt removes the collision entirely;
+    // orphans are reclaimed by SweepUploadStagingFolders at the next AddUser.
     String cloudSyncFolder;
-    RETURN_IF_FAILED(GetCloudSyncFolder(saveFolder, cloudSyncFolder));
-    RETURN_IF_FAILED(FilePAL::CreatePath(cloudSyncFolder));
-    
-    // Clean up any existing zip files in the cloudsync folder
-    Result<Vector<String>> existingFilesResult = FilePAL::EnumFiles(cloudSyncFolder);
-    if (SUCCEEDED(existingFilesResult.hr))
-    {
-        Vector<String> existingFiles = existingFilesResult.ExtractPayload();
-        for (const String& fileName : existingFiles)
-        {
-            if (fileName.size() >= 4 && fileName.compare(fileName.size() - 4, 4, ".zip") == 0)
-            {
-                String fullFilePath;
-                RETURN_IF_FAILED(JoinPathHelper(cloudSyncFolder, fileName, fullFilePath));
-                TRACE_INFORMATION("[GAME SAVE] UploadStep: Cleaning up old zip file %s", fullFilePath.c_str());
-
-                HRESULT deleteResult = FilePAL::DeleteLocalFile(fullFilePath);
-                if (FAILED(deleteResult))
-                {
-                    TRACE_ERROR("[GAME SAVE] UploadStep: Failed to delete zip file %s, HR:0x%0.8x", fullFilePath.c_str(), deleteResult);
-                }
-            }
-        }
-    }
+    RETURN_IF_FAILED(CreateUploadStagingFolder(saveFolder, cloudSyncFolder));
+    m_uploadStagingFolder = cloudSyncFolder;
 
     // Calculate total uncompressed size across all files before compression begins.
     // This provides a meaningful denominator for PreparingForUpload progress. In the normal flow
@@ -279,6 +266,16 @@ Result<Vector<ExtendedManifestCompressedFileDetail>> UploadStep::CompressFiles(
         efd.timeLastModified = thumbnail->timeLastModified;
         efd.timeCreated = thumbnail->timeCreated;
         u.extractedFiles.push_back(std::move(efd));
+
+        // The thumbnail is its own upload entry, so it has to be in the same totals the zip
+        // batches above contribute to. UploadFileFinally adds every completed entry's size to
+        // m_currentUncompressedSizeBytes, so leaving the thumbnail out of the total made that
+        // counter pass the total and then jump back down when the final clamp ran. It also
+        // starved the transfer: InnerProgressCallback scales each file into
+        // (total - completed), which is zero for the thumbnail once the zips have filled the
+        // total, so its chunks reported no movement. Must be done before the move below.
+        m_totalUncompressedSizeBytes += u.uncompressedSizeBytes;
+        m_totalCompressedSizeBytes += u.compressedSizeBytes;
 
         uploads.push_back(std::move(u));
 
@@ -449,6 +446,21 @@ void UploadStep::UploadFileFinally(
 
     if (FAILED(hr))
     {
+        // A transfer that could not read its source file is a local-file condition, not a service
+        // one. Classify before it reaches the title so a transient lock is distinguishable from a
+        // real upload failure.
+        //
+        // Only for disk-backed transfers. This continuation is shared with the extended manifest,
+        // which is the last entry and is uploaded from an in-memory string by
+        // UploadFileFromStringToCloud - it never opens a local file, so any failure there is a
+        // service/network one and mapping it would mislabel it as retryable local-file trouble.
+        // The same "last entry is the manifest" test is what selects the two upload paths above.
+        const bool isExtendedManifest = (m_compressedFilesToUploadCurIndex == m_compressedFilesToUpload.size() - 1);
+        if (!isExtendedManifest)
+        {
+            hr = MapLocalFileFailure(hr);
+        }
+
         m_telemetryManager->SetContextSyncHResult(hr);
         m_telemetryManager->EmitContextSyncErrorEvent();
         m_stage = UploadStage::WaitForFailedUI_UploadFile;
@@ -561,7 +573,12 @@ HRESULT UploadStep::Upload(
             m_compressedFilesToUpload.clear();
             m_compressedFilesToUploadCurIndex = 0;
             auto compressResult = CompressFiles(localFileFolderSet, saveFolder, latestPendingManifest->VersionString(), progressCallback, progressCallbackContext);
-            RETURN_IF_FAILED(compressResult.hr);
+            if (FAILED(compressResult.hr))
+            {
+                // Reading the save files is the bulk of this stage, so a file that vanished or was
+                // locked between enumeration and compression lands here.
+                return MapLocalFileFailure(compressResult.hr);
+            }
             m_compressedFilesToUpload = compressResult.ExtractPayload();
             if (m_compressedFilesToUpload.size() == 0 &&
                 localFileFolderSet->GetFilesToDeleteUponUpload().size() == 0 &&
@@ -578,7 +595,14 @@ HRESULT UploadStep::Upload(
             
             // Determine where to write the extended manifest - use temp storage if available
             String metadataFolderPath, extendedManifestFullFilePath;
-            RETURN_IF_FAILED(GetCloudSyncFolder(saveFolder, metadataFolderPath));
+            // Same staging directory as this attempt's zips. The manifest is named after the
+            // manifest version, so two attempts at the same version would otherwise write and read
+            // the same path while one of them is still uploading it -- and their contents differ,
+            // because each attempt names its zips with fresh GUIDs.
+            // Note: efd.relFolderPath below is not serialized for this entry (see
+            // ExtendedManifest::WriteCompressedFileJson), so the staging location stays local-only
+            // and nothing about the uploaded manifest changes.
+            metadataFolderPath = m_uploadStagingFolder;
             RETURN_IF_FAILED(FilePAL::CreatePath(metadataFolderPath));
             String extendedManifestName = FormatString("extended-%llu-manifest.json", static_cast<uint64_t>(latestPendingManifest->Version()));
             RETURN_IF_FAILED(JoinPathHelper(metadataFolderPath, extendedManifestName, extendedManifestFullFilePath));
@@ -761,9 +785,29 @@ HRESULT UploadStep::Upload(
             }
             else
             {
+                // Re-check the file right before the transfer rather than trusting the enumeration
+                // this upload started from. Only these entries are streamed off disk -- the last
+                // entry above is the extended manifest, which is uploaded from a string and whose
+                // fullFilePath is not required to exist. Files that ARE read from disk (staged
+                // zips, and the thumbnail straight out of the save folder) can have been replaced
+                // or removed since enumeration, and a suspended title can leave minutes between
+                // the two. Failing here gives a precise, retryable answer instead of an opaque
+                // failure deep in the HTTP layer.
+                if (!FilePAL::DoesFileExist(fileDetail.fullFilePath))
+                {
+                    TRACE_ERROR("[GAME SAVE] UploadStep: file to upload is no longer present: %s", fileDetail.fullFilePath.c_str());
+                    m_telemetryManager->SetContextSyncHResult(E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE);
+                    m_telemetryManager->EmitContextSyncErrorEvent();
+                    return E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE;
+                }
+
                 auto innerProgressContext = MakeShared<InnerProgressContext>(progressCallback, progressCallbackContext, task, m_localUser, PFGameSaveFilesSyncState::Uploading);
                 innerProgressContext->totalUncompressedBytes = m_totalUncompressedSizeBytes;
                 innerProgressContext->totalCompressedBytes = m_totalCompressedSizeBytes;
+                innerProgressContext->completedUncompressedBytes = m_currentUncompressedSizeBytes;
+                innerProgressContext->completedCompressedBytes = m_currentCompressedSizeBytes;
+                innerProgressContext->fileUncompressedBytes = curUploadDetail.uncompressedSizeBytes;
+                innerProgressContext->fileCompressedBytes = curUploadDetail.compressedSizeBytes;
 
                 TRACE_TASK("UploadSingleFileToCloud");
                 TRACE_INFORMATION("[GAME SAVE] UploadStep: file %s path %s", fileDetail.fileName.c_str(), fileDetail.fullFilePath.c_str());
@@ -873,23 +917,11 @@ HRESULT UploadStep::Upload(
                         // To handle, re-upload entire local file set re-compressed
                         // This should cause there to be less than 100 64MB zips due to quota
 
-                        // Delete all prior compressed files. Only the temp zips: the vector also
-                        // carries the uncompressed thumbnail entry, whose fullFilePath is the
-                        // title's real <saveFolder>\pfthumbnail.png (the success path below guards
-                        // this too).
-                        for (const ExtendedManifestCompressedFileDetail& uploadDetail : m_compressedFilesToUpload)
-                        {
-                            if (uploadDetail.compression != CompressionType::Zip)
-                            {
-                                continue;
-                            }
-
-                            HRESULT deleteHr = FilePAL::DeleteLocalFile(uploadDetail.fullFilePath);
-                            if (FAILED(deleteHr))
-                            {
-                                TRACE_WARNING("[GAME SAVE] UploadStep: Failed to delete compressed file %s, HR:0x%0.8x", uploadDetail.fullFilePath.c_str(), deleteHr);
-                            }
-                        }
+                        // Drop this attempt's staging directory wholesale. Safe here because the
+                        // retry re-enters CompressFiles, which allocates a fresh directory: nothing
+                        // outside this attempt ever pointed into the old one.
+                        DeleteUploadStagingFolder(m_uploadStagingFolder);
+                        m_uploadStagingFolder.clear();
 
                         SetToUploadFullSet(localFileFolderSet, remoteFileFolderSet);
                         ConflictMetadata savedConflictMetadata = m_conflictMetadata; // Preserve conflict metadata across Reset
@@ -981,35 +1013,13 @@ HRESULT UploadStep::Upload(
         {
             ListManifestsRequest request{};
 
-            // Clean up all zip files in the cloudsync folder since upload is complete
-            // Check both temp storage (if available) and saveFolder/cloudsync
-
-            // Clean up temp storage files if available
+            // Upload is complete, so this attempt's staging directory can go. Only this attempt's
+            // directory is touched -- a concurrent attempt's staging (from a provider torn down
+            // mid-transfer) is left alone and is reclaimed by SweepUploadStagingFolders at the next
+            // AddUser.
             CleanupTempCloudSyncFiles();
-
-            // Also clean up saveFolder/cloudsync
-            String cloudSyncFolder;
-            RETURN_IF_FAILED(JoinPathHelper(saveFolder, "cloudsync", cloudSyncFolder));
-            
-            Result<Vector<String>> existingFilesResult = FilePAL::EnumFiles(cloudSyncFolder);
-            if (SUCCEEDED(existingFilesResult.hr))
-            {
-                Vector<String> existingFiles = existingFilesResult.ExtractPayload();
-                for (const String& fileName : existingFiles)
-                {
-                    if (fileName.size() >= 4 && fileName.compare(fileName.size() - 4, 4, ".zip") == 0)
-                    {
-                        String fullFilePath;
-                        RETURN_IF_FAILED(JoinPathHelper(cloudSyncFolder, fileName, fullFilePath));
-                        TRACE_INFORMATION("[GAME SAVE] UploadStep: Cleaning up zip file after upload: %s", fullFilePath.c_str());
-                        HRESULT deleteResult = FilePAL::DeleteLocalFile(fullFilePath);
-                        if (FAILED(deleteResult))
-                        {
-                            TRACE_WARNING("[GAME SAVE] UploadStep: Failed to delete zip file after upload %s, HR:0x%0.8x", fullFilePath.c_str(), deleteResult);
-                        }
-                    }
-                }
-            }
+            DeleteUploadStagingFolder(m_uploadStagingFolder);
+            m_uploadStagingFolder.clear();
                     
             GameSaveServiceSelector::ListManifests(m_entity.value(), request, runContext)
             .Finally([this, &task, &uiCallbackManager, &folderSyncMutex](Result<ListManifestsResponse> result)

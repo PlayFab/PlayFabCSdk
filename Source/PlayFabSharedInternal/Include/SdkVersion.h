@@ -2,7 +2,7 @@
 
 namespace PlayFab
 {
-constexpr char sdkVersion[] = "2604.0.1.260902"; // format: release YYMM.release qfe#.date in YYMMDD
+constexpr char sdkVersion[] = "2604.0.2.260923"; // format: release YYMM.release qfe#.date in YYMMDD
 constexpr char versionString[] = "PFCSdk-";
 constexpr char userAgent[] = "PFCSdk/";
 

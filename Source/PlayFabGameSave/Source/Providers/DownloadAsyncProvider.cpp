@@ -23,6 +23,20 @@ HRESULT DownloadAsyncProvider::DoWork(RunContext runContext)
     {
         TRACE_TASK(FormatString("DownloadAsyncProvider::DoWork HR:0x%0.8x", hr));
 
+        // AddUser can drive an upload itself: the conflict-resolution path calls
+        // UploadStep::Upload, which allocates a per-attempt staging directory. On the success path
+        // UploadStep releases it at ListManifestsAfterUpload, but a terminal failure returns
+        // straight out of DoWorkFolderDownload and would otherwise leave the directory behind
+        // until the next AddUser sweep. Released here rather than at that one failure site so
+        // every terminal exit from the download path is covered, mirroring what
+        // UploadAsyncProvider::DoWork does for the ordinary upload path.
+        //
+        // Safe at this point specifically because the operation is over: DoWorkFolderDownload
+        // returns E_PENDING for as long as the conflict upload is still pumping, and no
+        // UploadStep failure path schedules async work before returning. A no-op when the
+        // download never started an upload.
+        m_folderSync->ReleaseUploadStaging();
+
         // Upload processing is complete (success or failure) since we're no longer pending.
         // Notify platform provider to perform cleanup (e.g., unmount Sony SaveData).
         // The GlobalState check ensures the state still exists before accessing the API provider.

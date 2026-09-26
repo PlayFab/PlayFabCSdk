@@ -150,7 +150,7 @@ HRESULT CALLBACK XAsyncProviderBase::XAsyncProvider(_In_ XAsyncOp op, _Inout_ co
         // Cleanup should only fail in catastrophic cases. Can't pass result to client 
         // at this point so die with exception.
 
-        TRACE_WARNING("[XAsyncProviderBase] [ThreadID %s] Provider[ID=%s] XAsyncOp::Cleanup (terminated=%s)",
+        TRACE_VERBOSE("[XAsyncProviderBase] [ThreadID %s] Provider[ID=%s] XAsyncOp::Cleanup (terminated=%s)",
             threadIdStream.str().c_str(), provider->identityName, provider->m_terminationListener ? "true" : "false");
 
         // Copy the ITerminationListener locally before destroying the provider, but unregister

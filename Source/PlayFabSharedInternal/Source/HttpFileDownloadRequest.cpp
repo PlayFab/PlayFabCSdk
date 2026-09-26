@@ -95,17 +95,35 @@ HRESULT HCHttpFileDownloadCall::HCResponseBodyWriteToFile(
     // The platform HTTP stack's native progress reporting may be very infrequent.
     if (call->m_progressReportCallback)
     {
-        call->m_totalBytesReceived += bytesAvailable;
-        uint64_t currentProgress = call->m_dynamicCurrentSize + call->m_totalBytesReceived;
-        uint64_t totalProgress = (call->m_dynamicTotalSize > 0) ? call->m_dynamicTotalSize : call->m_totalBytesReceived;
-
-        // Clamp to prevent reporting progress > 100% (e.g., if bytes accumulate across HTTP retries)
-        if (currentProgress > totalProgress)
+        // libHttpClient retries a failed transfer on the same call handle, and the bytes from the
+        // abandoned attempt are not replayed to the caller. Accumulating across attempts and
+        // clamping the result made progress saturate at 100% and stop moving for the remainder of
+        // a retried transfer - the stall this per-chunk reporting exists to avoid. Reset the
+        // counter when the perform attempt changes so each attempt measures only its own bytes.
+        //
+        // Deliberately not RETURN_IF_FAILED: this is a progress-only query, and this function is
+        // the response body write callback, so returning a failure here aborts the download - for
+        // a chunk that has already been written to the file above. Skip this chunk's update
+        // instead, including the accumulation: without a trustworthy perform count there is no way
+        // to tell whether a reset was due, and counting anyway risks carrying an abandoned
+        // attempt's bytes forward. A later chunk re-reads the count.
+        uint32_t performCount{};
+        if (SUCCEEDED(HCHttpCallGetPerformCount(callHandle, &performCount)))
         {
-            currentProgress = totalProgress;
-        }
+            if (performCount != call->m_progressPerformCount)
+            {
+                call->m_progressPerformCount = performCount;
+                call->m_totalBytesReceived = 0;
+            }
 
-        call->m_progressReportCallback(call->m_callHandle, currentProgress, totalProgress, call->m_progressReportContext);
+            call->m_totalBytesReceived += bytesAvailable;
+
+            uint64_t totalProgress = (call->m_dynamicTotalSize > 0) ? call->m_dynamicTotalSize : call->m_totalBytesReceived;
+            uint64_t currentProgress = std::min(call->m_dynamicCurrentSize, totalProgress);
+            currentProgress += std::min(call->m_totalBytesReceived, totalProgress - currentProgress);
+
+            call->m_progressReportCallback(call->m_callHandle, currentProgress, totalProgress, call->m_progressReportContext);
+        }
     }
 
     return S_OK;

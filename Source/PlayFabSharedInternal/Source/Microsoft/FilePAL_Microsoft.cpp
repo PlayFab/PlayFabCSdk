@@ -50,15 +50,21 @@ HRESULT FilePAL::SetFileLastModifiedTime(const String& filePath, time_t timeCrea
         FILE_FLAG_BACKUP_SEMANTICS, 
         NULL);
 
-    RETURN_HR_IF(E_INVALIDARG, hFile == INVALID_HANDLE_VALUE);
+    // Not an argument error: the file can be missing, denied, or held by another writer. Report
+    // what actually happened so callers can tell a transient condition from a permanent one.
+    if (hFile == INVALID_HANDLE_VALUE)
+    {
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
 
     FILETIME ftNewCreationTime = TimeTToFileTime(timeCreated);
     FILETIME ftNewModifiedTime = TimeTToFileTime(timeModified);
 
     if (!SetFileTime(hFile, &ftNewCreationTime, &ftNewModifiedTime, &ftNewModifiedTime))
     {
+        HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
         CloseHandle(hFile);
-        return E_FAIL;
+        return hr;
     }
 
     CloseHandle(hFile);

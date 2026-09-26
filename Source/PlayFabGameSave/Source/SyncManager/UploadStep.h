@@ -71,6 +71,13 @@ public:
     void SetOriginalActivationBaselineVersion(uint64_t v) { m_originalActivationBaselineVersion = v; }
     uint64_t GetOriginalActivationBaselineVersion() const { return m_originalActivationBaselineVersion; }
 
+    // Staging directory holding this attempt's compressed zips and extended manifest, or empty if
+    // this attempt never got as far as compressing. Owned by the attempt: callers must only delete
+    // it once the attempt has definitively finished, never speculatively, or they recreate the
+    // cross-attempt deletion this per-attempt layout exists to prevent.
+    const String& GetUploadStagingFolder() const { return m_uploadStagingFolder; }
+    void ClearUploadStagingFolder() { m_uploadStagingFolder.clear(); }
+
     HRESULT Upload(
         _In_ const RunContext& runContext,
         _In_ ISchedulableTask& task,
@@ -165,6 +172,8 @@ private:
     uint64_t m_uploadFullSetRetryCount{ 0 };
     ManifestWrapVector m_manifests;
     String m_nextAvailableVersion; // From ListManifestsAfterUpload response
+    // Per-attempt staging directory under the cloudsync folder (see CreateUploadStagingFolder).
+    String m_uploadStagingFolder;
     ManifestWrap m_postUploadPendingPFManifest;
     ManifestWrap m_postUploadLatestFinalizedPFManifest;
     SharedPtr<GameSaveTelemetryManager> m_telemetryManager;

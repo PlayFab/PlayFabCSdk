@@ -5,6 +5,40 @@
 
 using namespace PlayFab;
 
+namespace
+{
+static_assert(static_cast<uint32_t>(PFTraceLevel::Off) == static_cast<uint32_t>(HCTraceLevel::Off));
+static_assert(static_cast<uint32_t>(PFTraceLevel::Error) == static_cast<uint32_t>(HCTraceLevel::Error));
+static_assert(static_cast<uint32_t>(PFTraceLevel::Warning) == static_cast<uint32_t>(HCTraceLevel::Warning));
+static_assert(static_cast<uint32_t>(PFTraceLevel::Important) == static_cast<uint32_t>(HCTraceLevel::Important));
+static_assert(static_cast<uint32_t>(PFTraceLevel::Information) == static_cast<uint32_t>(HCTraceLevel::Information));
+static_assert(static_cast<uint32_t>(PFTraceLevel::Verbose) == static_cast<uint32_t>(HCTraceLevel::Verbose));
+
+std::atomic<PFTraceLevel> s_traceLevel{ PFTraceLevel::Verbose };
+}
+
+PF_API PFSettingsSetTraceLevel(
+    _In_ PFTraceLevel traceLevel
+) noexcept
+{
+    if (traceLevel > PFTraceLevel::Verbose)
+    {
+        return E_INVALIDARG;
+    }
+
+    s_traceLevel.store(traceLevel);
+    return S_OK;
+}
+
+PF_API_(bool) PFTraceIsTraceLevelEnabled(
+    _In_ HCTraceLevel traceLevel
+) noexcept
+{
+    PFTraceLevel configuredLevel = s_traceLevel.load();
+    return configuredLevel != PFTraceLevel::Off &&
+        static_cast<uint32_t>(traceLevel) <= static_cast<uint32_t>(configuredLevel);
+}
+
 PF_API PFTraceEnableTraceToFile(
     _In_z_ const char* traceFileDirectory
 ) noexcept

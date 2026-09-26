@@ -50,7 +50,8 @@ private:
 
     String m_responseBodyFilePath;
     FileHandle m_responseBodyFileStream;
-    uint64_t m_totalBytesReceived{ 0 }; // Cumulative bytes received for per-chunk progress reporting
+    uint64_t m_totalBytesReceived{ 0 }; // Bytes received during the current perform attempt
+    uint32_t m_progressPerformCount{ 0 }; // Perform attempt m_totalBytesReceived belongs to
 };
 
 }

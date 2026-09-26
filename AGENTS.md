@@ -149,7 +149,8 @@ supply-chain control. See
 
 Enable verbose tracing to see full HTTP request/response details:
 ```c
-PFHCSettingsSetTraceLevel(PFHCTraceLevel::Verbose);
+PFSettingsSetTraceLevel(PFTraceLevel::Verbose);
+HCSettingsSetTraceLevel(HCTraceLevel::Verbose);
 ```
 
 ## Submodule Warning

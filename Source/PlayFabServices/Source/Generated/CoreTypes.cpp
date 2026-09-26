@@ -871,6 +871,10 @@ HRESULT UserPrivateAccountInfo::Copy(const PFUserPrivateAccountInfo& input, PFUs
 
 HRESULT UserPsnInfo::FromJson(const JsonValue& input)
 {
+    std::optional<int32_t> issuerId{};
+    RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "IssuerId", issuerId));
+    this->SetIssuerId(std::move(issuerId));
+
     String psnAccountId{};
     RETURN_IF_FAILED(JsonUtils::ObjectGetMember(input, "PsnAccountId", psnAccountId));
     this->SetPsnAccountId(std::move(psnAccountId));
@@ -899,6 +903,10 @@ Result<PFUserPsnInfo const*> UserPsnInfo::Copy(ModelBuffer& buffer) const
 size_t UserPsnInfo::RequiredBufferSize(const PFUserPsnInfo& model)
 {
     size_t requiredSize{ alignof(ModelType) + sizeof(ModelType) };
+    if (model.issuerId)
+    {
+        requiredSize += (alignof(int32_t) + sizeof(int32_t));
+    }
     if (model.psnAccountId)
     {
         requiredSize += (std::strlen(model.psnAccountId) + 1);
@@ -917,6 +925,11 @@ size_t UserPsnInfo::RequiredBufferSize(const PFUserPsnInfo& model)
 HRESULT UserPsnInfo::Copy(const PFUserPsnInfo& input, PFUserPsnInfo& output, ModelBuffer& buffer)
 {
     output = input;
+    {
+        auto propCopyResult = buffer.CopyTo(input.issuerId);
+        RETURN_IF_FAILED(propCopyResult.hr);
+        output.issuerId = propCopyResult.ExtractPayload();
+    }
     {
         auto propCopyResult = buffer.CopyTo(input.psnAccountId);
         RETURN_IF_FAILED(propCopyResult.hr);

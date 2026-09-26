@@ -45,6 +45,20 @@
 		8239FB702DFA0A4200563638 /* ApiHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8239FB6E2DFA0A4200563638 /* ApiHelpers.cpp */; };
 		8239FB712DFA0A4200563638 /* ApiHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8239FB6E2DFA0A4200563638 /* ApiHelpers.cpp */; };
 		8239FB722DFA0A4200563638 /* ApiHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 8239FB6D2DFA0A4200563638 /* ApiHelpers.h */; };
+		E48ABD99864890EE9D3F2B16 /* UdpSocketPAL.h in Headers */ = {isa = PBXBuildFile; fileRef = AD801B4C4B26A3A899144E6D /* UdpSocketPAL.h */; };
+		D6E6C421EC0888C468DD3F91 /* UdpSocketPAL.h in Headers */ = {isa = PBXBuildFile; fileRef = AD801B4C4B26A3A899144E6D /* UdpSocketPAL.h */; };
+		642A32CEDA40FE6F13125974 /* UdpSocketPAL_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC5BC3E6AB3D51640CCB8ECF /* UdpSocketPAL_Posix.cpp */; };
+		F6CB6C4757F4624B9D946629 /* UdpSocketPAL_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC5BC3E6AB3D51640CCB8ECF /* UdpSocketPAL_Posix.cpp */; };
+		625A7355AF47E23F42957A13 /* PFMultiplayerServerQoS.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AD397DC44982CBDFD11E04D /* PFMultiplayerServerQoS.h */; };
+		8F95A6452C2E1BA534E1A601 /* PFMultiplayerServerQoS.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AD397DC44982CBDFD11E04D /* PFMultiplayerServerQoS.h */; };
+		3A3F944974CC4A913EEBCD0C /* PFMultiplayerServerQoS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DDDBCDF7CC779B7A840CC3B /* PFMultiplayerServerQoS.cpp */; };
+		9DE0C3BC66BE7F371980DB82 /* PFMultiplayerServerQoS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DDDBCDF7CC779B7A840CC3B /* PFMultiplayerServerQoS.cpp */; };
+		12300591C0E4BFF41FCFA456 /* QoS.h in Headers */ = {isa = PBXBuildFile; fileRef = A0B3F65515DBE67DE280D098 /* QoS.h */; };
+		F76802F40F529AB8EDD29D04 /* QoS.h in Headers */ = {isa = PBXBuildFile; fileRef = A0B3F65515DBE67DE280D098 /* QoS.h */; };
+		B5434FC9F6DBDEC1D7D11568 /* QoS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9811C72A69BFE8562F37AB75 /* QoS.cpp */; };
+		A832670FCE1E0F8CFF6E33E9 /* QoS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9811C72A69BFE8562F37AB75 /* QoS.cpp */; };
+		45D666D3FCC9FAA6746AE3E2 /* QoSWireFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 37F2482AC4C20EB186002FAC /* QoSWireFormat.h */; };
+		CE886FA0AE22AE300F2714D0 /* QoSWireFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 37F2482AC4C20EB186002FAC /* QoSWireFormat.h */; };
 		645E37D6547B8165C6BE42C9 /* CoreTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 86EE2FD2352C8DFCB607537C /* CoreTypes.h */; };
 		926E207482B5E159E4AEF3C9 /* CoreTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 86EE2FD2352C8DFCB607537C /* CoreTypes.h */; };
 		50630CE0EA798DF1E56794EC /* CoreTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4865228F17B9EF7035E768C1 /* CoreTypes.cpp */; };
@@ -472,6 +486,13 @@
 		826AE6152AF1871C00DF9129 /* CacheId.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheId.h; sourceTree = "<group>"; };
 		8239FB6D2DFA0A4200563638 /* ApiHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApiHelpers.h; sourceTree = "<group>"; };
 		8239FB6E2DFA0A4200563638 /* ApiHelpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ApiHelpers.cpp; sourceTree = "<group>"; };
+		AD801B4C4B26A3A899144E6D /* UdpSocketPAL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UdpSocketPAL.h; sourceTree = "<group>"; };
+		DC5BC3E6AB3D51640CCB8ECF /* UdpSocketPAL_Posix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UdpSocketPAL_Posix.cpp; sourceTree = "<group>"; };
+		0AD397DC44982CBDFD11E04D /* PFMultiplayerServerQoS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMultiplayerServerQoS.h; sourceTree = "<group>"; };
+		2DDDBCDF7CC779B7A840CC3B /* PFMultiplayerServerQoS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PFMultiplayerServerQoS.cpp; sourceTree = "<group>"; };
+		A0B3F65515DBE67DE280D098 /* QoS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QoS.h; sourceTree = "<group>"; };
+		9811C72A69BFE8562F37AB75 /* QoS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QoS.cpp; sourceTree = "<group>"; };
+		37F2482AC4C20EB186002FAC /* QoSWireFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QoSWireFormat.h; sourceTree = "<group>"; };
 		8286B1F32B73FEFA009A4677 /* libHttpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libHttpClient.xcodeproj; path = ../../../libHttpClient/Build/libHttpClient.Apple.C/libHttpClient.xcodeproj; sourceTree = "<group>"; };
 		82B3CBE62B5B016B00337232 /* PlayFabServices_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlayFabServices_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82B3CBF12B5B023A00337232 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -794,6 +815,7 @@
 			children = (
 				826AE53E2AF186D500DF9129 /* Generated */,
 				826AE5782AF186D500DF9129 /* GeneratedGdk */,
+				18A9231AE427344EB6870311 /* QoS */,
 			);
 			name = Include;
 			path = ../../Source/PlayFabServices/Include;
@@ -917,9 +939,31 @@
 			isa = PBXGroup;
 			children = (
 				826AE5EA2AF1871C00DF9129 /* Generated */,
+				FE65E028AD7472A5F25F09C8 /* QoS */,
 			);
 			name = Source;
 			path = ../../Source/PlayFabServices/Source;
+			sourceTree = "<group>";
+		};
+		FE65E028AD7472A5F25F09C8 /* QoS */ = {
+			isa = PBXGroup;
+			children = (
+				AD801B4C4B26A3A899144E6D /* UdpSocketPAL.h */,
+				DC5BC3E6AB3D51640CCB8ECF /* UdpSocketPAL_Posix.cpp */,
+				2DDDBCDF7CC779B7A840CC3B /* PFMultiplayerServerQoS.cpp */,
+				9811C72A69BFE8562F37AB75 /* QoS.cpp */,
+				A0B3F65515DBE67DE280D098 /* QoS.h */,
+				37F2482AC4C20EB186002FAC /* QoSWireFormat.h */,
+			);
+			path = QoS;
+			sourceTree = "<group>";
+		};
+		18A9231AE427344EB6870311 /* QoS */ = {
+			isa = PBXGroup;
+			children = (
+				0AD397DC44982CBDFD11E04D /* PFMultiplayerServerQoS.h */,
+			);
+			path = playfab/services/QoS;
 			sourceTree = "<group>";
 		};
 		826AE5EA2AF1871C00DF9129 /* Generated */ = {
@@ -1060,6 +1104,10 @@
 				826AE5E42AF186D500DF9129 /* PFServices.h in Headers */,
 				826AE41B2AF1841900DF9129 /* GlobalState.h in Headers */,
 				8239FB6F2DFA0A4200563638 /* ApiHelpers.h in Headers */,
+				E48ABD99864890EE9D3F2B16 /* UdpSocketPAL.h in Headers */,
+				625A7355AF47E23F42957A13 /* PFMultiplayerServerQoS.h in Headers */,
+				12300591C0E4BFF41FCFA456 /* QoS.h in Headers */,
+				45D666D3FCC9FAA6746AE3E2 /* QoSWireFormat.h in Headers */,
 				926E207482B5E159E4AEF3C9 /* CoreTypes.h in Headers */,
 				1D46738B449BED007B25FB1B /* PFTypes.h in Headers */,
 				DCA598F2F5AE756F671DB01D /* TypeWrappers.h in Headers */,
@@ -1173,6 +1221,10 @@
 				82B3CB772B5B016B00337232 /* PFServices.h in Headers */,
 				82B3CB8E2B5B016B00337232 /* GlobalState.h in Headers */,
 				8239FB722DFA0A4200563638 /* ApiHelpers.h in Headers */,
+				D6E6C421EC0888C468DD3F91 /* UdpSocketPAL.h in Headers */,
+				8F95A6452C2E1BA534E1A601 /* PFMultiplayerServerQoS.h in Headers */,
+				F76802F40F529AB8EDD29D04 /* QoS.h in Headers */,
+				CE886FA0AE22AE300F2714D0 /* QoSWireFormat.h in Headers */,
 				645E37D6547B8165C6BE42C9 /* CoreTypes.h in Headers */,
 				A811FC0E5F5C30E0B358A099 /* PFTypes.h in Headers */,
 				EFBEDD29DD80B0B5A2E943B7 /* TypeWrappers.h in Headers */,
@@ -1456,6 +1508,9 @@
 				826AE41E2AF1841900DF9129 /* Platform.cpp in Sources */,
 				82658A202C6D44B300E9DEE0 /* Types.cpp in Sources */,
 				8239FB702DFA0A4200563638 /* ApiHelpers.cpp in Sources */,
+				642A32CEDA40FE6F13125974 /* UdpSocketPAL_Posix.cpp in Sources */,
+				3A3F944974CC4A913EEBCD0C /* PFMultiplayerServerQoS.cpp in Sources */,
+				B5434FC9F6DBDEC1D7D11568 /* QoS.cpp in Sources */,
 				8714259ADFF0592FD1C9EDFF /* CoreTypes.cpp in Sources */,
 				E19F140D0335FDA41C314B9D /* FriendsTypes.cpp in Sources */,
 				5ED9A3E4E69B0C8578EA7ED4 /* Friends.cpp in Sources */,
@@ -1528,6 +1583,9 @@
 				82B3CBDB2B5B016B00337232 /* Platform.cpp in Sources */,
 				82658A1F2C6D44B300E9DEE0 /* Types.cpp in Sources */,
 				8239FB712DFA0A4200563638 /* ApiHelpers.cpp in Sources */,
+				F6CB6C4757F4624B9D946629 /* UdpSocketPAL_Posix.cpp in Sources */,
+				9DE0C3BC66BE7F371980DB82 /* PFMultiplayerServerQoS.cpp in Sources */,
+				A832670FCE1E0F8CFF6E33E9 /* QoS.cpp in Sources */,
 				50630CE0EA798DF1E56794EC /* CoreTypes.cpp in Sources */,
 				96AF19897BF81C1BCBB34801 /* FriendsTypes.cpp in Sources */,
 				B95A2DD7E31A717118DC99FA /* Friends.cpp in Sources */,

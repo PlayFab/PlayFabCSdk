@@ -4,6 +4,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\FilePAL.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Microsoft\FilePAL_Microsoft.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Source\Microsoft\UdpSocketPAL_Windows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabSharedInternal\Include\FilePAL_Generic.h" />

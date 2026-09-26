@@ -2,6 +2,16 @@
 
 ## Changes from March 21, 2025 (f35a478) to November 7, 2025
 
+### November 2026
+
+#### Features & Improvements
+- **`PFMultiplayerServerPingQosServersAsync`** in `<playfab/services/QoS/PFMultiplayerServerQoS.h>`:
+  - Pings QoS beacons returned by `PFMultiplayerServerListQosServersForTitleAsync` over UDP/3075.
+  - Returns per-region mean round-trip latency, sorted ascending.
+  - Cross-platform: Win32, GDK, Linux, iOS, macOS, Android.
+  - Caller can opt in to telemetry upload and request beacons from all regions.
+  - Caller can select `RoutingPreference` to match the routing tier of their data plane.
+
 ### November 2025
 
 #### GitHub Release and Build Improvements (Nov 6, 2025)

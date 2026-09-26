@@ -57,6 +57,16 @@ The sample includes complete UI implementations for:
 
 Make sure you have Visual Studio 2022 with the **Desktop development with C++** workload installed. This includes vcpkg automatically.
 
+### 1b. Install the Microsoft GDK
+
+The sample links against the PlayFab and Xbox game runtime libraries shipped in the Microsoft GDK.
+The project resolves the GDK automatically from the `GameDKLatest` environment variable set by the
+GDK installer. To pin a specific version instead, override the `GDKPath` property:
+
+```powershell
+msbuild PlayFabGameSaveSample.sln /p:GDKPath="C:\Program Files (x86)\Microsoft GDK\261000" /p:Configuration=Debug /p:Platform=x64
+```
+
 ### 2. Install Dependencies (Required)
 
 This sample requires SDL2 and Dear ImGui which are installed via vcpkg. You **must** run this step before building.
@@ -280,7 +290,9 @@ Or manually:
 "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\vcpkg\vcpkg.exe" install --triplet x64-windows
 ```
 
-After installation, you should see a `vcpkg_installed\x64-windows\include\SDL2` folder containing the SDL2 headers.
+After installation, you should see an `include\SDL2` folder containing the SDL2 headers under either
+`vcpkg_installed\x64-windows\` (command-line install) or `vcpkg_installed\x64-windows\x64-windows\`
+(Visual Studio's MSBuild vcpkg integration). The project searches both locations.
 
 ### Error: Cannot open include file: 'steam/steam_api.h'
 
