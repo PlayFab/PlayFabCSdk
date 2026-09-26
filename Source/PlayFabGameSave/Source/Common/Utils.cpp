@@ -206,6 +206,133 @@ void CleanupTempCloudSyncFiles()
     }
 }
 
+HRESULT CreateUploadStagingFolder(_In_ const String& saveFolder, _Out_ String& stagingFolder)
+{
+    stagingFolder.clear();
+
+    String cloudSyncFolder;
+    RETURN_IF_FAILED(GetCloudSyncFolder(saveFolder, cloudSyncFolder));
+    RETURN_IF_FAILED(FilePAL::CreatePath(cloudSyncFolder));
+
+    // A fresh directory per attempt. Staging used to be a single flat folder that every upload
+    // attempt cleared on entry, so a retry (or an upload admitted after a previous provider was
+    // abandoned mid-transfer) deleted the zips an still-live transfer was about to open, which
+    // surfaced to the title as a bogus argument error from the upload API.
+    String folderName = FormatString("%s%s", kUploadStagingFolderPrefix, CreateGUID().c_str());
+    RETURN_IF_FAILED(JoinPathHelper(cloudSyncFolder, folderName, stagingFolder));
+    RETURN_IF_FAILED(FilePAL::CreatePath(stagingFolder));
+
+    TRACE_INFORMATION("[GAME SAVE] CreateUploadStagingFolder: %s", stagingFolder.c_str());
+    return S_OK;
+}
+
+void DeleteUploadStagingFolder(_In_ const String& stagingFolder)
+{
+    if (stagingFolder.empty())
+    {
+        return;
+    }
+
+    TRACE_INFORMATION("[GAME SAVE] DeleteUploadStagingFolder: %s", stagingFolder.c_str());
+    HRESULT hr = FilePAL::DeletePath(stagingFolder);
+    if (FAILED(hr))
+    {
+        // Non-fatal. Anything left behind is reclaimed by SweepUploadStagingFolders on the next
+        // AddUser, and a staging folder never contains data that is not also either uploaded or
+        // reproducible from the local save.
+        TRACE_WARNING("[GAME SAVE] DeleteUploadStagingFolder: failed to delete %s, HR:0x%0.8x", stagingFolder.c_str(), hr);
+    }
+}
+
+void SweepUploadStagingFolders(_In_ const String& saveFolder)
+{
+    // Reclaims staging folders orphaned by a crash, a suspend, or an upload whose provider was
+    // torn down mid-transfer. Only safe to call when no upload can be in flight for this user --
+    // AddUser is such a point, because TryReserveDownload rejects while a user is added.
+    String cloudSyncFolder;
+    if (FAILED(GetCloudSyncFolder(saveFolder, cloudSyncFolder)))
+    {
+        return;
+    }
+
+    if (!FilePAL::DoesDirectoryExist(cloudSyncFolder))
+    {
+        return;
+    }
+
+    Result<Vector<String>> foldersResult = FilePAL::EnumDirectories(cloudSyncFolder);
+    if (FAILED(foldersResult.hr))
+    {
+        return;
+    }
+
+    const size_t prefixLength = strlen(kUploadStagingFolderPrefix);
+    for (const String& folderName : foldersResult.Payload())
+    {
+        if (folderName.size() <= prefixLength ||
+            folderName.compare(0, prefixLength, kUploadStagingFolderPrefix) != 0)
+        {
+            continue;
+        }
+
+        String fullPath;
+        if (FAILED(JoinPathHelper(cloudSyncFolder, folderName, fullPath)))
+        {
+            continue;
+        }
+
+        TRACE_INFORMATION("[GAME SAVE] SweepUploadStagingFolders: removing orphaned %s", fullPath.c_str());
+        DeleteUploadStagingFolder(fullPath);
+    }
+}
+
+// Classifies a failure that came out of local file access during a sync and, when it is one,
+// re-reports it as E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE.
+//
+// The save folder is enumerated once at the start of an upload, but compression and transfer read
+// those files later -- potentially much later if the title is suspended in between. A file can
+// legitimately disappear or become momentarily unopenable in that window (the title rewriting a
+// save or its thumbnail, anti-virus, a platform cloud-sync agent). That is a transient, retryable
+// condition, but it used to surface to the title as whatever raw code the file layer produced,
+// which said nothing actionable. Anything that is not a local-file condition is passed through
+// untouched so genuine service and network errors keep their own codes.
+//
+// CALLER CONTRACT: only pass HRESULTs that originated in the local file layer (FilePAL, libarchive
+// writing through it, or a step whose only failure mode is local I/O). This function cannot verify
+// provenance, and one of the codes below aliases a common general-purpose HRESULT:
+//
+//     __HRESULT_FROM_WIN32(5) == E_ACCESSDENIED == 0x80070005
+//
+// so an E_ACCESSDENIED arriving from a platform layer (GRTS/XUser/GDK all return it freely) would
+// be reported to the title as "transient local file problem, nothing was committed, retry" when it
+// may be none of those things. No such path exists today - there is no E_ACCESSDENIED literal in
+// Source, and HTTP 403 maps to HTTP_E_STATUS_FORBIDDEN rather than E_ACCESSDENIED - but the
+// aliasing is invisible at the call site, so keep the call sites narrow rather than mapping
+// whatever a broad continuation happens to hand back.
+HRESULT MapLocalFileFailure(HRESULT hr)
+{
+    if (SUCCEEDED(hr))
+    {
+        return hr;
+    }
+
+    switch (hr)
+    {
+    // Win32 codes spelled out numerically to match FilePAL's mapping and to stay valid on
+    // platforms whose PAL does not define the ERROR_* constants.
+    case __HRESULT_FROM_WIN32(2):   // ERROR_FILE_NOT_FOUND
+    case __HRESULT_FROM_WIN32(3):   // ERROR_PATH_NOT_FOUND
+    case __HRESULT_FROM_WIN32(4):   // ERROR_TOO_MANY_OPEN_FILES
+    case __HRESULT_FROM_WIN32(5):   // ERROR_ACCESS_DENIED - NB: identical to E_ACCESSDENIED, see above
+    case __HRESULT_FROM_WIN32(32):  // ERROR_SHARING_VIOLATION
+    case __HRESULT_FROM_WIN32(33):  // ERROR_LOCK_VIOLATION
+        TRACE_WARNING("[GAME SAVE] Local save file unavailable during sync (HR:0x%0.8x), reporting E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE", hr);
+        return E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE;
+    default:
+        return hr;
+    }
+}
+
 HRESULT EnsureGameStorageMarker(_In_ const String& saveFolder)
 {
     // On platforms with separate metadata storage, write a sentinel marker into

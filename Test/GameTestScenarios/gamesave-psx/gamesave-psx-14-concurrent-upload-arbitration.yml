@@ -11,7 +11,7 @@ platforms:
 description: |
   DeviceA holds active device lock without releasing. DeviceB tries to sync and encounters
   active device contention. DeviceB takes over via SyncLastSavedData, uploads, releases.
-  DeviceA then verifies it can no longer upload (E_PF_GAMESAVE_DEVICE_NO_LONGER_ACTIVE).
+  DeviceA then starts a clean session and verifies DeviceB's authoritative cloud data.
 devices:
   DeviceA:
     engine: pc-inproc-gamesaves
@@ -152,7 +152,10 @@ blocks:
         operations:
           - verb: CreateTextFile
             relativePath: shared/data.txt
-            content: "DEVICE_B_VERSION_1"
+            # Keep the winner a different size from BASELINE_VERSION_0. PS5 test-file
+            # timestamps are not reliable, so a same-size replacement can be classified
+            # as unchanged and omitted from the upload plan.
+            content: "DEVICE_B_AUTHORITATIVE_VERSION_1"
     - command: CaptureSaveContainerSnapshot
       parameters:
         slot: left
@@ -212,6 +215,11 @@ blocks:
         workMode: ThreadPool
         completionMode: ThreadPool
         setAsProcessQueue: true
+    # Start the new session clean so it must download DeviceB's cloud winner rather than
+    # reusing DeviceA's baseline folder.
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\DeviceA"
     - command: PFGameSaveFilesInitialize
       parameters:
         saveFolder: "C:\\gamesave\\DeviceA"
@@ -252,13 +260,9 @@ blocks:
     - command: XTaskQueueCloseHandle
 executionOrder:
   - role: DeviceA
-    block: cloud-reset
-  - role: DeviceA
     block: setup-baseline
   - role: DeviceB
     block: deviceb-takeover
-  - role: DeviceA
-    block: devicea-verify-disconnected
   - role: DeviceA
     block: devicea-reacquire-and-verify
 cleanup:

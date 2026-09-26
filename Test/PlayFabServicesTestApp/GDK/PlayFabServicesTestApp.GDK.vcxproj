@@ -62,8 +62,28 @@
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="MainPC.cpp" />
     <ClCompile Include="MainXbox.cpp" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\UdpSocketPAL_Windows.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
-  <ItemGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(PlayFabSourceDir)\PlayFabServices\Source;</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <!-- For x64 platform, use CustomBuild instead of MGCCompile since MGCCompile requires a Gaming.* toolchain.
+       Without MicrosoftGame.config in $(OutDir) the app has no GDK title identity and XUserAddAsync fails.
+       PC uses its own config: the Xbox devkit identity's MSAAppId is not provisioned for desktop auth. -->
+  <ItemGroup Condition="'$(Platform)'=='x64'">
+    <CustomBuild Include="MicrosoftGame.PC.Config">
+      <Command>copy /y "%(Identity)" "$(OutDir)MicrosoftGame.config"
+makepkg.exe localize /d "$(OutDir)." /pd "$(OutDir)." /gc "%(Identity)" || ver >nul</Command>
+      <Message>MGC Compile (x64)</Message>
+      <Outputs>$(OutDir)MicrosoftGame.config</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <!-- For Gaming.Xbox.* and other GDK platforms, use MGCCompile with the devkit config -->
+  <ItemGroup Condition="'$(Platform)'!='x64'">
     <MGCCompile Include="MicrosoftGame.Config" />
   </ItemGroup>
   <ItemGroup>

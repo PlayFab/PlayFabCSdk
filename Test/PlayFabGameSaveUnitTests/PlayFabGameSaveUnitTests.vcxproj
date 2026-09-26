@@ -87,9 +87,11 @@
     </ClCompile>
     <ClCompile Include="TestSuiteAPIs.cpp" />
     <ClCompile Include="TestSuiteCloudWipe.cpp" />
+    <ClCompile Include="TestSuiteFilePAL.cpp" />
     <ClCompile Include="TestSuiteFileSync.cpp" />
     <ClCompile Include="TestSuiteHttpStatusBlindness.cpp" />
     <ClCompile Include="TestSuiteMisc.cpp" />
+    <ClCompile Include="TestSuiteTrace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

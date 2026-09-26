@@ -73,6 +73,9 @@
     <ClInclude Include="..\GameTestAppShared\TestHarness\DeleteLocalFolder.h">
       <Filter>Common\TestHarness</Filter>
     </ClInclude>
+    <ClInclude Include="..\GameTestAppShared\TestHarness\HoldFileOpen.h">
+      <Filter>Common\TestHarness</Filter>
+    </ClInclude>
     <ClInclude Include="..\GameTestAppShared\TestHarness\DeleteSaveRoot.h">
       <Filter>Common\TestHarness</Filter>
     </ClInclude>
@@ -381,6 +384,9 @@
       <Filter>Common\TestHarness</Filter>
     </ClCompile>
     <ClCompile Include="..\GameTestAppShared\TestHarness\DeleteLocalFolder.cpp">
+      <Filter>Common\TestHarness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameTestAppShared\TestHarness\HoldFileOpen.cpp">
       <Filter>Common\TestHarness</Filter>
     </ClCompile>
     <ClCompile Include="..\GameTestAppShared\TestHarness\DeleteSaveRoot.cpp">

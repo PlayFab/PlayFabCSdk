@@ -21,7 +21,7 @@ Detailed reference for all third-party and sibling library dependencies consumed
 - PlayFabCore's `HttpClient` wraps `HCCallHandle` for REST requests.
 - Global init/cleanup: `HCInitialize()` / `HCCleanupAsync()`, called from `PFCoreGlobalState`.
 - Task queue: `XTaskQueue` from libHttpClient drives all async operations.
-- Tracing: `PFHCSettingsSetTraceLevel()` controls HTTP-level debug output.
+- Tracing: `HCSettingsSetTraceLevel()` controls HTTP-level debug output.
 
 **Key APIs consumed:**
 - `httpClient/httpClient.h` — HTTP call lifecycle

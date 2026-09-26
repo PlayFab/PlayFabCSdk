@@ -76,6 +76,11 @@ Entity ServicesTestClass::DefaultTitlePlayer() noexcept
     return m_defaultTitlePlayer->entity;
 }
 
+bool ServicesTestClass::HasDefaultTitlePlayer() const noexcept
+{
+    return m_defaultTitlePlayer.has_value();
+}
+
 String ServicesTestClass::DefaultTitlePlayerId() noexcept
 {
     assert(m_defaultTitlePlayer.has_value());
@@ -87,6 +92,11 @@ Entity ServicesTestClass::TitleEntity() noexcept
 {
     assert(m_titleEntity.has_value());
     return *m_titleEntity;
+}
+
+bool ServicesTestClass::HasTitleEntity() const noexcept
+{
+    return m_titleEntity.has_value();
 }
 #endif
 

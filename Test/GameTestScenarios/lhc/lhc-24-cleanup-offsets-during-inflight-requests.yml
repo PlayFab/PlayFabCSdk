@@ -1,0 +1,134 @@
+id: LHC-24-Cleanup-Offsets-During-Inflight-Requests
+name: LHC 24 - Cleanup At Varying Offsets From Request Start
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  Stress variant of LHC 23. The libHttpClient issues 1018 and 1019 reports
+  describe crashes that appear when cleanup starts at specific timing offsets
+  from request kickoff, and that become more likely with frequent
+  init/cleanup cycles. This scenario sweeps several offsets - immediate, very
+  short, and mid-flight - repeating an init / burst / cleanup cycle at each one.
+
+  As in LHC 23, the device app holds its own HCInitialize reference, so each
+  HCCleanupAsync consumes only this scenario's reference and reports
+  E_HC_INTERNAL_STILLINUSE (0x89235008).
+
+  Each cycle must resolve every request it started. This is deliberately a
+  probabilistic soak rather than a proof; the deterministic reproductions live
+  in libHttpClient's CleanupRaceTests unit tests.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 240
+blocks:
+  setup:
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/offset"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "offset-response"
+        delayMs: 10000
+
+  offset-0ms:
+    - command: HCInitialize
+    - command: TestHCHttpCallPerformBurstStart
+      parameters:
+        url: "{{httpTestUrl}}/offset"
+        requestCount: 16
+    - command: HCCleanupAsync
+      parameters:
+        expectedHr: "0x89235008"
+    - command: TestHCHttpCallPerformBurstWait
+      parameters:
+        timeoutMs: 120000
+
+  offset-5ms:
+    # Lands around the point where NetworkState has tracked the requests but the
+    # per-call perform is still starting up.
+    - command: HCInitialize
+    - command: TestHCHttpCallPerformBurstStart
+      parameters:
+        url: "{{httpTestUrl}}/offset"
+        requestCount: 16
+    - command: SmokeDelay
+      parameters:
+        durationMs: 5
+    - command: HCCleanupAsync
+      parameters:
+        expectedHr: "0x89235008"
+    - command: TestHCHttpCallPerformBurstWait
+      parameters:
+        timeoutMs: 120000
+
+  offset-50ms:
+    - command: HCInitialize
+    - command: TestHCHttpCallPerformBurstStart
+      parameters:
+        url: "{{httpTestUrl}}/offset"
+        requestCount: 16
+    - command: SmokeDelay
+      parameters:
+        durationMs: 50
+    - command: HCCleanupAsync
+      parameters:
+        expectedHr: "0x89235008"
+    - command: TestHCHttpCallPerformBurstWait
+      parameters:
+        timeoutMs: 120000
+
+  offset-500ms:
+    # Fully in flight by now, so cleanup cancels live requests rather than
+    # racing their startup.
+    - command: HCInitialize
+    - command: TestHCHttpCallPerformBurstStart
+      parameters:
+        url: "{{httpTestUrl}}/offset"
+        requestCount: 16
+    - command: SmokeDelay
+      parameters:
+        durationMs: 500
+    - command: HCCleanupAsync
+      parameters:
+        expectedHr: "0x89235008"
+    - command: TestHCHttpCallPerformBurstWait
+      parameters:
+        timeoutMs: 120000
+
+  verify-still-usable:
+    - command: HCIsInitialized
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/offset"
+    - command: HCHttpCallCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: setup
+  - role: DeviceA
+    block: offset-0ms
+  - role: DeviceA
+    block: offset-5ms
+  - role: DeviceA
+    block: offset-50ms
+  - role: DeviceA
+    block: offset-500ms
+  - role: DeviceA
+    block: verify-still-usable
+cleanup:
+  DeviceA:
+    - command: StopHttpTestServer
+    - command: XTaskQueueCloseHandle

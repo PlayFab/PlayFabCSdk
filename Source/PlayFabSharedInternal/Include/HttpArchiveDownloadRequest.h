@@ -50,7 +50,9 @@ private:
     );
 
     SharedPtr<ArchiveContext> m_archiveHandle;
-    uint64_t m_totalBytesReceived{ 0 }; // Cumulative compressed bytes received for per-chunk progress reporting
+    uint64_t m_totalBytesReceived{ 0 }; // Compressed bytes received during the current perform attempt
+    uint64_t m_totalUncompressedBytesWritten{ 0 }; // Archive output bytes written during the current perform attempt
+    uint32_t m_progressPerformCount{ 0 }; // Perform attempt the two counters above belong to
 };
 
 }

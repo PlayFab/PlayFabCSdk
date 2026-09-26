@@ -214,7 +214,7 @@ Different components have different diagnostic data available:
 
 | Source | What It Shows | How to Get It |
 |--------|--------------|---------------|
-| **PlayFab debug logs** | API call lifecycle, serialization, token management | Enable via `PFDebugSetTraceLevel` |
+| **PlayFab debug logs** | API call lifecycle, serialization, token management | Set the level via `PFSettingsSetTraceLevel` |
 | **PlayFab Admin API** | Server-side view of entity state, title config | PlayFab Game Manager or Admin API calls |
 | **Kusto (PlayFabInternal)** | Server-side telemetry for API calls | Query `playfabinternalreader.westus2.kusto.windows.net` |
 
@@ -274,7 +274,7 @@ Different components have different diagnostic data available:
    - If timeout: Check network quality, server health, SDK timeout configuration
 
 4. If root cause not obvious from error code or HTTP status:
-   - Enable verbose logging (`HCTraceSetTraceToDebugger`, `PFDebugSetTraceLevel`)
+   - Enable verbose logging (`HCTraceSetTraceToDebugger`, `HCSettingsSetTraceLevel`, `PFSettingsSetTraceLevel`)
    - Capture full HTTP request/response with Fiddler or equivalent
    - Check Kusto for server-side errors matching the timestamp
    - Escalate to service team with error code + timestamp + repro steps

@@ -45,7 +45,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <GDKPath>C:\Program Files (x86)\Microsoft GDK\251001</GDKPath>
+    <!-- Resolve the installed GDK. GameDKLatest is set by the GDK installer and has a trailing backslash. -->
+    <GDKPath Condition="'$(GDKPath)'=='' and '$(GameDKLatest)'!=''">$(GameDKLatest.TrimEnd('\'))</GDKPath>
+    <GDKPath Condition="'$(GDKPath)'==''">C:\Program Files (x86)\Microsoft GDK\261000</GDKPath>
     <!-- Steam SDK is optional. Set EnableSteamSDK to true and provide SteamworksSDKPath to enable Steam integration -->
     <EnableSteamSDK Condition="'$(EnableSteamSDK)'==''">false</EnableSteamSDK>
     <SteamworksSDKPath Condition="'$(SteamworksSDKPath)'==''">C:\steamworks_sdk</SteamworksSDKPath>
@@ -68,23 +70,25 @@
       <PreprocessorDefinitions Condition="'$(EnableSteamSDK)'!='true'">_GAMING_DESKTOP;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\include;$(VCInstallDir)vcpkg\installed\x64-windows\include;$(VcpkgRoot)installed\x64-windows\include;$(DXSDK_DIR)Include;$(SteamworksSDKPath)\public;$(GDKPath)\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\include;$(VCInstallDir)vcpkg\installed\x64-windows\include;$(VcpkgRoot)installed\x64-windows\include;$(DXSDK_DIR)Include;$(GDKPath)\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\include;$(ProjectDir)vcpkg_installed\x64-windows\include;$(VCInstallDir)vcpkg\installed\x64-windows\include;$(VcpkgRoot)installed\x64-windows\include;$(DXSDK_DIR)Include;$(SteamworksSDKPath)\public;$(GDKPath)\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\include;$(ProjectDir)vcpkg_installed\x64-windows\include;$(VCInstallDir)vcpkg\installed\x64-windows\include;$(VcpkgRoot)installed\x64-windows\include;$(DXSDK_DIR)Include;$(GDKPath)\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\debug\lib;$(ProjectDir)vcpkg_installed\x64-windows\debug\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Debug;$(DXSDK_DIR)Lib\x64;$(SteamworksSDKPath)\redistributable_bin\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\debug\lib;$(ProjectDir)vcpkg_installed\x64-windows\debug\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Debug;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\debug\lib;$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\debug\lib\manual-link;$(ProjectDir)vcpkg_installed\x64-windows\debug\lib;$(ProjectDir)vcpkg_installed\x64-windows\debug\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Debug;$(DXSDK_DIR)Lib\x64;$(SteamworksSDKPath)\redistributable_bin\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\debug\lib;$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\debug\lib\manual-link;$(ProjectDir)vcpkg_installed\x64-windows\debug\lib;$(ProjectDir)vcpkg_installed\x64-windows\debug\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Debug;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies Condition="'$(EnableSteamSDK)'=='true'">SDL2d.lib;imguid.lib;opengl32.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;steam_api64.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(EnableSteamSDK)'!='true'">SDL2d.lib;imguid.lib;opengl32.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying debug DLLs...
-copy "$(ProjectDir)vcpkg_installed\x64-windows\debug\bin\SDL2d.dll" "$(TargetDir)" &gt;nul 2&gt;&amp;1
-if exist "$(ProjectDir)vcpkg_installed\x64-windows\debug\bin\SDL2d.pdb" copy "$(ProjectDir)vcpkg_installed\x64-windows\debug\bin\SDL2d.pdb" "$(TargetDir)" &gt;nul 2&gt;&amp;1
+for %%D in ("$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\debug\bin" "$(ProjectDir)vcpkg_installed\x64-windows\debug\bin") do (
+  if exist "%%~D\SDL2d.dll" copy /Y "%%~D\SDL2d.dll" "$(TargetDir)" &gt;nul 2&gt;&amp;1
+  if exist "%%~D\SDL2d.pdb" copy /Y "%%~D\SDL2d.pdb" "$(TargetDir)" &gt;nul 2&gt;&amp;1
+)
 echo Copying PlayFab and GDK DLLs...
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\PlayFabCore.dll" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\PlayFabServices.dll" "$(TargetDir)"
@@ -121,8 +125,8 @@ echo DLLs copied successfully.</Command>
       <PreprocessorDefinitions Condition="'$(EnableSteamSDK)'!='true'">_GAMING_DESKTOP;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\include;$(VCInstallDir)vcpkg\installed\x64-windows\include;$(VcpkgRoot)installed\x64-windows\include;$(DXSDK_DIR)Include;$(SteamworksSDKPath)\public;$(GDKPath)\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\include;$(VCInstallDir)vcpkg\installed\x64-windows\include;$(VcpkgRoot)installed\x64-windows\include;$(DXSDK_DIR)Include;$(GDKPath)\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\include;$(ProjectDir)vcpkg_installed\x64-windows\include;$(VCInstallDir)vcpkg\installed\x64-windows\include;$(VcpkgRoot)installed\x64-windows\include;$(DXSDK_DIR)Include;$(SteamworksSDKPath)\public;$(GDKPath)\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\include;$(ProjectDir)vcpkg_installed\x64-windows\include;$(VCInstallDir)vcpkg\installed\x64-windows\include;$(VcpkgRoot)installed\x64-windows\include;$(DXSDK_DIR)Include;$(GDKPath)\windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -131,15 +135,17 @@ echo DLLs copied successfully.</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\lib;$(ProjectDir)vcpkg_installed\x64-windows\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Release;$(DXSDK_DIR)Lib\x64;$(SteamworksSDKPath)\redistributable_bin\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\lib;$(ProjectDir)vcpkg_installed\x64-windows\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Release;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'=='true'">$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\lib;$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\lib\manual-link;$(ProjectDir)vcpkg_installed\x64-windows\lib;$(ProjectDir)vcpkg_installed\x64-windows\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Release;$(DXSDK_DIR)Lib\x64;$(SteamworksSDKPath)\redistributable_bin\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(EnableSteamSDK)'!='true'">$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\lib;$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\lib\manual-link;$(ProjectDir)vcpkg_installed\x64-windows\lib;$(ProjectDir)vcpkg_installed\x64-windows\lib\manual-link;$(GDKPath)\windows\lib\x64;$(GDKPath)\windows\lib\x64\Release;$(DXSDK_DIR)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies Condition="'$(EnableSteamSDK)'=='true'">SDL2.lib;imgui.lib;opengl32.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;steam_api64.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(EnableSteamSDK)'!='true'">SDL2.lib;imgui.lib;opengl32.lib;PlayFabGameSave.lib;PlayFabServices.lib;PlayFabCore.lib;libHttpClient.lib;xgameruntime.lib;legacy_stdio_definitions.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying release DLLs...
-copy "$(ProjectDir)vcpkg_installed\x64-windows\bin\SDL2.dll" "$(TargetDir)" &gt;nul 2&gt;&amp;1
-if exist "$(ProjectDir)vcpkg_installed\x64-windows\bin\SDL2.pdb" copy "$(ProjectDir)vcpkg_installed\x64-windows\bin\SDL2.pdb" "$(TargetDir)" &gt;nul 2&gt;&amp;1
+for %%D in ("$(ProjectDir)vcpkg_installed\x64-windows\x64-windows\bin" "$(ProjectDir)vcpkg_installed\x64-windows\bin") do (
+  if exist "%%~D\SDL2.dll" copy /Y "%%~D\SDL2.dll" "$(TargetDir)" &gt;nul 2&gt;&amp;1
+  if exist "%%~D\SDL2.pdb" copy /Y "%%~D\SDL2.pdb" "$(TargetDir)" &gt;nul 2&gt;&amp;1
+)
 echo Copying PlayFab and GDK DLLs...
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\PlayFabCore.dll" "$(TargetDir)"
 xcopy /Y /D "$(GDKPath)\windows\bin\x64\PlayFabServices.dll" "$(TargetDir)"

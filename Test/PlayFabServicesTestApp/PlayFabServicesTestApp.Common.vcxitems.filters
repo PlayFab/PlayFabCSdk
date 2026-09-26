@@ -75,6 +75,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\MultiplayerServerTestsImpl.cpp">
       <Filter>Source\Tests\Services</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\MultiplayerServerQoSTests.cpp">
+      <Filter>Source\Tests\Services</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Tests\Services\PlatformSpecificTestsImpl.cpp">
       <Filter>Source\Tests\Services</Filter>
     </ClCompile>
@@ -196,5 +199,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Platform\TitleLocalUser.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Platform\SDKUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Tests\Services\MultiplayerServerQoSTests.h" />
   </ItemGroup>
 </Project>

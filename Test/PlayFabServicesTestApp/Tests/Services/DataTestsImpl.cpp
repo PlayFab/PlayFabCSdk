@@ -178,7 +178,7 @@ void DataTests::TestGetFiles(TestContext& tc)
 
         return UploadFileOperation::Run(model.uploadDetails[0]->uploadUrl, rc);
     })
-    .Then([&tc, titlePlayer, rc](Result<void> result) -> AsyncOp<FinalizeFileUploadsOperation::ResultType>
+    .Then([titlePlayer, rc](Result<void> result) -> AsyncOp<FinalizeFileUploadsOperation::ResultType>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 

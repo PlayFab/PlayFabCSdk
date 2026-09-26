@@ -68,6 +68,13 @@ static la_ssize_t ArchiveWriteToFileCallback(struct archive* archive, void* clie
     UNREFERENCED_PARAMETER(archive);
     auto context = static_cast<ArchiveContext*>(clientData);
 
+    // libarchive can flush during teardown, so the destination may already be gone. Report a write
+    // failure rather than handing a released handle to FilePAL, which asserts on one.
+    if (!context->libArchiveContext.zipFileHandle)
+    {
+        return -1;
+    }
+
     auto hr = FilePAL::WriteFileBytes(context->libArchiveContext.zipFileHandle, static_cast<const char*>(buffer), length);
     if (FAILED(hr))
     {
@@ -883,11 +890,12 @@ void ArchiveContext::Close() noexcept
 {
     TRACE_INFORMATION("ArchiveContext::Close");
 
-    if (libArchiveContext.zipFileHandle)
-    {
-        FilePAL::CloseFile(libArchiveContext.zipFileHandle);
-        libArchiveContext.zipFileHandle.reset();
-    }
+    // NOTE: the destination file handle is deliberately NOT closed here. archive_write_free below
+    // finishes the archive, and finishing flushes any buffered data through the write callback --
+    // which, in ArchiveSource::File mode, writes to that very handle. Closing first meant every
+    // abandoned compression (an entry whose source file could not be opened, a cancel, an error
+    // mid-archive) flushed into a released handle, which asserts inside FilePAL on debug builds and
+    // stalls the upload with no further progress. The handle is closed after the free instead.
 
     // m_open only becomes true on the first Compress/DecompressBytes call, but Initialize()
     // allocates the archive (and, in compress mode, the entry) before that. Skipping the whole
@@ -936,6 +944,22 @@ void ArchiveContext::Close() noexcept
     {
         archive_entry_free(internalEntry);
         m_archiveEntry = nullptr;
+    }
+
+    // Last: libarchive has finished with the destination by now, so any flush it needed to do has
+    // already gone through the write callback while this handle was still valid.
+    if (libArchiveContext.zipFileHandle)
+    {
+        FilePAL::CloseFile(libArchiveContext.zipFileHandle);
+        libArchiveContext.zipFileHandle.reset();
+    }
+
+    // The source file for a partially-written entry (compress mode) is also released here rather
+    // than being left open until the context is destroyed.
+    if (m_entryFile)
+    {
+        FilePAL::CloseFile(m_entryFile);
+        m_entryFile.reset();
     }
 }
 

@@ -1,5 +1,5 @@
 ﻿id: Scenario-PSX-29-Set-Description-Offline-Before-AddUser
-name: GameSave PSX 29 - SetSaveDescription Offline Before AddUser (Connected=False) (DeviceA=PC inproc, DeviceB=PS5)
+name: GameSave PSX 29 - SetSaveDescription Offline Before AddUser (Connected=False) (DeviceA=PS5, DeviceB=PC peer)
 tags:
   - psx
   - gamesaves
@@ -16,9 +16,9 @@ description: |
   Another device should then see the description after syncing.
 devices:
   DeviceA:
-    engine: pc-inproc-gamesaves
-  DeviceB:
     engine: psx
+  DeviceB:
+    engine: pc-inproc-gamesaves
 defaults:
   stepTimeoutSeconds: 240
 blocks:
@@ -71,11 +71,6 @@ blocks:
       parameters:
         method: POST
         url: "https://E18D7.playfabapi.com/GameSave/GetManifestDownloadDetails"
-        statusCode: 503
-    - command: ConfigureHttpMock
-      parameters:
-        method: POST
-        url: "https://E18D7.playfabapi.com/Client/LoginWithCustomID"
         statusCode: 503
     - command: ConfigureHttpMock
       parameters:

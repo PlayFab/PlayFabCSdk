@@ -30,6 +30,41 @@ inline HRESULT GSApiImpl(const char* apiIdentity, TWork&& work) noexcept
     }
 }
 
+// Result-retrieval entry points must not be gated on global state still being alive.
+//
+// The completion status of a finished operation lives in the caller's own XAsyncBlock, not in
+// GameSaveGlobalState. Requiring live global state to read it meant that once a title called
+// PFGameSaveFilesUninitializeAsync - which clears the global state pointer at the START of
+// cleanup, not the end - every *Result call returned E_PF_GAMESAVE_NOT_INITIALIZED, overwriting
+// and permanently masking the real error an already-completed operation had recorded. Titles that
+// uninitialize on suspend hit this for any upload still in flight, and the error they reported
+// told them nothing about why the upload actually failed.
+//
+// The provider is still preferred when it is available, because some platforms (GRTS) forward the
+// result across a process boundary rather than reading the block directly. Only when global state
+// is gone do we fall back to reading the block, which is exactly the case that used to fail.
+template<typename TWork>
+inline HRESULT GSResultApiImpl(const char* apiIdentity, XAsyncBlock* async, TWork&& work) noexcept
+{
+    try
+    {
+        RETURN_HR_INVALIDARG_IF_NULL(async);
+
+        SharedPtr<GameSaveGlobalState> state;
+        if (FAILED(GameSaveGlobalState::Get(state)))
+        {
+            return XAsyncGetStatus(async, false);
+        }
+
+        return work(*state);
+    }
+    catch (...)
+    {
+        TRACE_WARNING("[0x%08X] Exception reached api boundary %s\n    %s:%u", E_FAIL, apiIdentity, __FILE__, __LINE__);
+        return CurrentExceptionToHR();
+    }
+}
+
 PF_API PFGameSaveFilesInitialize(_In_ PFGameSaveInitArgs* args) noexcept
 {
     try
@@ -161,7 +196,7 @@ PF_API PFGameSaveFilesAddUserWithUiResult(
     _Inout_ XAsyncBlock* async
     ) noexcept
 {
-    return GSApiImpl("PFGameSaveFilesAddUserWithUiResult", [&](GameSaveGlobalState& state) {
+    return GSResultApiImpl("PFGameSaveFilesAddUserWithUiResult", async, [&](GameSaveGlobalState& state) {
         return state.ApiProvider().AddUserWithUiResult(async);
     });
 }
@@ -203,7 +238,7 @@ PF_API PFGameSaveFilesUploadWithUiResult(
     _Inout_ XAsyncBlock* async
     ) noexcept
 {
-    return GSApiImpl("PFGameSaveFilesUploadWithUiResult", [&](GameSaveGlobalState& state) {
+    return GSResultApiImpl("PFGameSaveFilesUploadWithUiResult", async, [&](GameSaveGlobalState& state) {
         return state.ApiProvider().UploadWithUiResult(async);
     });
 }
@@ -233,7 +268,7 @@ PF_API PFGameSaveFilesSetSaveDescriptionResult(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
-    return GSApiImpl("PFGameSaveFilesSetSaveDescriptionResult", [&](GameSaveGlobalState& state) {
+    return GSResultApiImpl("PFGameSaveFilesSetSaveDescriptionResult", async, [&](GameSaveGlobalState& state) {
         return state.ApiProvider().SetSaveDescriptionResult(async);
     });
 }
@@ -404,7 +439,7 @@ PF_API PFGameSaveFilesResetCloudResult(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
-    return GSApiImpl("PFGameSaveFilesResetCloudResult", [&](GameSaveGlobalState& state) {
+    return GSResultApiImpl("PFGameSaveFilesResetCloudResult", async, [&](GameSaveGlobalState& state) {
         return state.ApiProvider().ResetCloudResult(async);
     });
 }

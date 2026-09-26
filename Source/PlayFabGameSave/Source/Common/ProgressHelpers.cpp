@@ -20,24 +20,31 @@ HRESULT InnerProgressCallback(
 
     auto innerContext{ static_cast<InnerProgressContext*>(context) };
 
-    uint64_t reportedCurrent = current;
-    uint64_t reportedTotal = total;
+    // Anchor at the uncompressed bytes already completed by earlier files, then scale this file's
+    // compressed transfer into this file's own uncompressed range.
+    //
+    // A single global ratio (current / totalCompressed * totalUncompressed) is NOT monotonic here,
+    // because these chunk callbacks are interleaved with completion callbacks that report the true
+    // cumulative uncompressed count (UploadStep::UploadFileFinally, DownloadStep). A file that
+    // compresses worse than the operation average over-reports while it transfers, and completion
+    // then snaps the value back down. With two 8 MB archives at 1:1 and 8:1, the reported value
+    // falls from 14,222,222 to 8,000,000 - a visible ~39% backward jump on the title's progress UI.
+    // Scaling per file keeps every report bounded by the completion value that follows it.
+    uint64_t reportedTotal = innerContext->totalUncompressedBytes;
+    uint64_t reportedCurrent = std::min(innerContext->completedUncompressedBytes, reportedTotal);
+    uint64_t compressedCurrent = std::min(current, innerContext->totalCompressedBytes);
+    uint64_t fileCurrent = (compressedCurrent > innerContext->completedCompressedBytes)
+        ? compressedCurrent - innerContext->completedCompressedBytes : 0;
 
-    // Convert from compressed transfer bytes to uncompressed units using global ratio.
-    // Progress is monotonically increasing and proportional to wall-clock transfer time.
-    // Uses double intermediate to avoid uint64_t overflow in the multiplication for large files.
-    if (innerContext->totalCompressedBytes > 0 && innerContext->totalUncompressedBytes > 0)
+    if (innerContext->fileCompressedBytes > 0)
     {
-        reportedCurrent = static_cast<uint64_t>(
-            static_cast<double>(current) / static_cast<double>(innerContext->totalCompressedBytes)
-            * static_cast<double>(innerContext->totalUncompressedBytes));
-        reportedTotal = innerContext->totalUncompressedBytes;
+        uint64_t fileTotal = std::min(innerContext->fileUncompressedBytes, reportedTotal - reportedCurrent);
+        double fileProgress = static_cast<double>(std::min(fileCurrent, innerContext->fileCompressedBytes))
+            / static_cast<double>(innerContext->fileCompressedBytes) * static_cast<double>(fileTotal);
 
-        // Clamp to prevent reporting progress > 100% due to size mismatches
-        if (reportedCurrent > reportedTotal)
-        {
-            reportedCurrent = reportedTotal;
-        }
+        // Bound the floating-point value before conversion, including rounding at the endpoint.
+        reportedCurrent += (fileProgress >= static_cast<double>(fileTotal))
+            ? fileTotal : static_cast<uint64_t>(fileProgress);
     }
 
     innerContext->callback(innerContext->syncState, reportedCurrent, reportedTotal, innerContext->callbackContext);

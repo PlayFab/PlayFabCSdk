@@ -72,16 +72,18 @@ set(COMMON_INCLUDE_DIRS
 set(PlayFabSharedInternal.Android ${PATH_TO_ROOT}/Out/Android/${ANDROID_ABI}/${CMAKE_BUILD_TYPE}/PlayFabSharedInternal.Android/PlayFabSharedInternal.Android.a)
 
 # libHttpClient Shared Lib
-# AGP 7.4.2+ uses cxx/<hash> instead of cmake directory for intermediates
+# AGP 7.4.2+ writes to intermediates/cxx/<PascalCase-config>/<hash>/obj/<abi>/
+# Legacy AGP 3.x/4.x writes to intermediates/cmake/<lowercase-config>/obj/<abi>/
+string(TOLOWER "${CMAKE_BUILD_TYPE}" PATH_FLAVOR)
 file(GLOB_RECURSE libHttpClient_FOUND 
     "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cxx/${CMAKE_BUILD_TYPE}/*/obj/${ANDROID_ABI}/libHttpClient.Android.so"
-    "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI}/libHttpClient.Android.so"
+    "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${PATH_FLAVOR}/obj/${ANDROID_ABI}/libHttpClient.Android.so"
 )
 if(libHttpClient_FOUND)
     list(GET libHttpClient_FOUND 0 libHttpClient)
 else()
     message(WARNING "Could not find libHttpClient.Android.so, it will need to be built first")
-    set(libHttpClient "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${CMAKE_BUILD_TYPE}/obj/${ANDROID_ABI}/libHttpClient.Android.so")
+    set(libHttpClient "${PATH_TO_LHC}/Binaries/Android/libHttpClient.Android/intermediates/cmake/${PATH_FLAVOR}/obj/${ANDROID_ABI}/libHttpClient.Android.so")
 endif()
 
 add_library(

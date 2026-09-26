@@ -11,6 +11,7 @@ struct StatisticsTestsState
 {
     String statisticName;
     String existingStatisticName;
+    bool statisticDefinitionCreated{ false };
 };
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
@@ -60,9 +61,10 @@ AsyncOp<void> StatisticsTests::Initialize()
         RETURN_IF_FAILED_PLAYFAB(result);
         return CreateStatisticDefinition(TitleEntity(), RunContext(), m_state->statisticName);
     })
-    .Then([](Result<void> result) -> Result<void>
+    .Then([&](Result<void> result) -> Result<void>
     {
         RETURN_IF_FAILED_PLAYFAB(result);
+        m_state->statisticDefinitionCreated = true;
         return S_OK;
     });
 #else
@@ -73,16 +75,21 @@ AsyncOp<void> StatisticsTests::Initialize()
 AsyncOp<void> StatisticsTests::Uninitialize()
 {
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    return DeleteStatisticDefinition(TitleEntity(), RunContext(), m_state->statisticName).Then([&](Result<void> result) -> AsyncOp<void>
+    // Uninitialize() runs even when Initialize() failed, in which case there is no title entity and no
+    // statistic definition to delete. statisticDefinitionCreated is only set once
+    // CreateStatisticDefinition succeeded, so a failed create does not trigger a delete here.
+    if (m_state && m_state->statisticDefinitionCreated && HasTitleEntity())
     {
-        UNREFERENCED_PARAMETER(result);// Continue with uninitialize regardless of success deleting statistic
-        m_state.reset();
-        return ServicesTestClass::Uninitialize();
-    });
-#else
+        return DeleteStatisticDefinition(TitleEntity(), RunContext(), m_state->statisticName).Then([&](Result<void> result) -> AsyncOp<void>
+        {
+            UNREFERENCED_PARAMETER(result);// Continue with uninitialize regardless of success deleting statistic
+            m_state.reset();
+            return ServicesTestClass::Uninitialize();
+        });
+    }
+#endif
     m_state.reset();
     return ServicesTestClass::Uninitialize();
-#endif
 }
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC

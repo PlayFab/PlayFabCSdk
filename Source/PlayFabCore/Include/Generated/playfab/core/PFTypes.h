@@ -939,6 +939,12 @@ typedef struct PFUserPrivateAccountInfo
 typedef struct PFUserPsnInfo
 {
     /// <summary>
+    /// (Optional) Id of the PlayStation :tm: Network issuer environment this account is keyed under.
+    /// Supply this value as IssuerId when looking the account up.
+    /// </summary>
+    _Maybenull_ int32_t const* issuerId;
+
+    /// <summary>
     /// (Optional) PlayStation :tm: Network account ID.
     /// </summary>
     _Maybenull_ _Null_terminated_ const char* psnAccountId;

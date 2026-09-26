@@ -2508,15 +2508,21 @@ CommandResultPayload HandleVerifyFileExists(
     }
 
     auto mountGuard = DeviceFileSystemMount(folder);
+    const std::string mountedFolder = DeviceFileSystemGetMountedPath();
+    if (mountedFolder.empty())
+    {
+        CommandHandlerShared::MarkFailure(payload.result, E_FAIL, "Mounted save folder is empty");
+        return payload;
+    }
 
     const auto start = std::chrono::steady_clock::now();
-    fs::path fullPath = fs::path(folder) / relativePath;
+    fs::path fullPath = fs::path(mountedFolder) / relativePath;
 
     std::error_code ec;
     bool exists = fs::exists(fullPath, ec);
     payload.elapsedMs = CommandHandlerShared::ComputeElapsedMs(start);
 
-    payload.result["saveFolder"] = folder;
+    payload.result["saveFolder"] = mountedFolder;
     payload.result["relativePath"] = relativePath;
     payload.result["fullPath"] = GetStringFromU8String(fullPath.u8string());
     payload.result["exists"] = exists;
@@ -2582,11 +2588,17 @@ CommandResultPayload HandleVerifyFileContent(
     }
 
     auto mountGuard = DeviceFileSystemMount(folder);
+    const std::string mountedFolder = DeviceFileSystemGetMountedPath();
+    if (mountedFolder.empty())
+    {
+        CommandHandlerShared::MarkFailure(payload.result, E_FAIL, "Mounted save folder is empty");
+        return payload;
+    }
 
     const auto start = std::chrono::steady_clock::now();
-    fs::path fullPath = fs::path(folder) / relativePath;
+    fs::path fullPath = fs::path(mountedFolder) / relativePath;
 
-    payload.result["saveFolder"] = folder;
+    payload.result["saveFolder"] = mountedFolder;
     payload.result["relativePath"] = relativePath;
     payload.result["fullPath"] = GetStringFromU8String(fullPath.u8string());
 

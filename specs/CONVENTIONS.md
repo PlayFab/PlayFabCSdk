@@ -217,10 +217,11 @@ Platform differences are primarily in:
 Enable debug tracing for development:
 
 ```c
-PFHCSettingsSetTraceLevel(PFHCTraceLevel::Verbose);
+PFSettingsSetTraceLevel(PFTraceLevel::Verbose);
+HCSettingsSetTraceLevel(HCTraceLevel::Verbose);
 ```
 
-This outputs full HTTP request/response details to the debugger output window. See the [tracing documentation](https://learn.microsoft.com/gaming/playfab/sdks/c/tracing) for hooking into custom log sinks.
+PFSettingsSetTraceLevel enables verbose events from PlayFabCore, PlayFabServices, and PlayFabGameSave. HCSettingsSetTraceLevel enables verbose libHttpClient events. See the [tracing documentation](https://learn.microsoft.com/gaming/playfab/sdks/c/tracing) for hooking into custom log sinks.
 
 ## Build Configuration
 

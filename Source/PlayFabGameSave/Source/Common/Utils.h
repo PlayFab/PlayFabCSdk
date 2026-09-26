@@ -10,6 +10,11 @@ namespace GameSave
 // Also excluded during local-state folder scanning to avoid mixing mock data with real saves.
 constexpr const char* kMockSaveFolderName = "MockPFGameSave";
 
+// Prefix of the per-attempt upload staging directories created inside the cloudsync folder.
+// One directory per upload attempt, so a retry can never delete the zips of an attempt whose
+// transfers are still alive.
+constexpr const char* kUploadStagingFolderPrefix = "up-";
+
 String CreateGUID();
 String RemoveRootPath(String folder, const String& rootFolder);
 HRESULT JoinPathHelper(_In_ const String& pathA, _In_ const String& pathB, _Out_ String& pathResult);
@@ -17,6 +22,13 @@ HRESULT ReadEntireFile(_In_ const String& filePath, _Out_ Vector<char>& fileBuff
 HRESULT WriteEntireFile(_In_ const String& filePath, _In_ const Vector<char>& fileBuffer);
 HRESULT GetCloudSyncFolder(_In_ const String& saveFolder, _Out_ String& cloudSyncFolder);
 void CleanupTempCloudSyncFiles();
+HRESULT CreateUploadStagingFolder(_In_ const String& saveFolder, _Out_ String& stagingFolder);
+void DeleteUploadStagingFolder(_In_ const String& stagingFolder);
+void SweepUploadStagingFolders(_In_ const String& saveFolder);
+
+// Re-reports a local-file access failure as E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE. Non-file
+// failures are returned unchanged.
+HRESULT MapLocalFileFailure(HRESULT hr);
 HRESULT EnsureGameStorageMarker(_In_ const String& saveFolder);
 
 String GetLocalDeviceID(const String& saveFolder);

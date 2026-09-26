@@ -110,12 +110,13 @@ blocks:
       parameters:
         enable: true
         action: Cancel
-    # Try upload - should fail with network error but not crash
+    # Try upload - after the failed description update, the provider can either surface
+    # the auto-response cancellation or report S_OK when there is no runnable upload
+    # transition. Both are valid; the contract here is that it does not crash or hang.
     - command: PFGameSaveFilesUploadWithUiAsync
       parameters:
         mode: KeepDeviceActive
-        # Expecting user cancelled since we auto-respond with Cancel to sync failed
-        expectedHr: "0x800704c7"
+        expectedHr: "0x800704c7, 0x00000000"
       timeoutSeconds: 120
     # Verify we're still connected (AddUser succeeded earlier, so should remain true)
     - command: PFGameSaveFilesIsConnectedToCloud

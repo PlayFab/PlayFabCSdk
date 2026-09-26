@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Error.h"
 #include <playfab/core/PFErrors.h>
+#include <playfab/core/cpp/PlayFabException.h>
 
 namespace PlayFab
 { 
@@ -1097,6 +1098,10 @@ HRESULT CurrentExceptionToHR()
     catch (const std::runtime_error&) // is an exception
     {
         return E_FAIL;
+    }
+    catch (const PlayFab::Wrappers::Exception& ex) // PlayFab C++ wrapper exception carrying an HRESULT (e.g. thrown by THROW_IF_FAILED)
+    {
+        return ex.hr;
     }
     catch (const std::exception&) // base class for standard C++ exceptions
     {

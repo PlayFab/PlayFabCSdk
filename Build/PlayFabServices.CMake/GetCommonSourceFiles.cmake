@@ -13,6 +13,7 @@ set(${OUT_COMMON_SOURCE_FILES}
     "${PATH_TO_SOURCE}/PlayFabServices/Source/Common/Platform.cpp"
     "${PATH_TO_SOURCE}/PlayFabServices/Source/stdafx.cpp"
     "${PATH_TO_SOURCE}/PlayFabServices/Source/Common/ApiHelpers.cpp"
+    "${PATH_TO_SOURCE}/PlayFabServices/Source/QoS/UdpSocketPAL_Posix.cpp"
     "${PATH_TO_SOURCE}/PlayFabServices/Include/Generated/playfab/services/PFServices.h"
     "${PATH_TO_SOURCE}/PlayFabServices/Source/Common/GlobalState.h"
     "${PATH_TO_SOURCE}/PlayFabServices/Source/Common/HttpClient.h"

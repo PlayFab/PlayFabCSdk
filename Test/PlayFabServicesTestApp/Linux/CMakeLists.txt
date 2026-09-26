@@ -71,6 +71,7 @@ set(COMMON_INCLUDE_DIRS
     "${PATH_TO_SOURCE}/PlayFabCore/Include/Generated"
     "${PATH_TO_SOURCE}/PlayFabServices/Include"
     "${PATH_TO_SOURCE}/PlayFabServices/Include/Generated"
+    "${PATH_TO_SOURCE}/PlayFabServices/Source"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Generated"
     "${PATH_TO_LHC}/Include"
@@ -131,10 +132,15 @@ target_sources(
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Linux/PlayFabLinux.cpp"
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Linux/PlatformUtilsLinux.cpp"
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Generic/TitleLocalUser_Generic.cpp"
+    "${PATH_TO_SOURCE}/PlayFabServices/Source/QoS/UdpSocketPAL_Posix.cpp"
     "${TEST_APP_COMMON_SOURCE_FILES}"
     "${GENERATED_TESTS_SOURCE_FILES}"
     "${GENERATED_API_WRAPPER_FILES}"
 )
+
+# PlayFabServices.Linux is built with hidden visibility, so PlayFab::UdpSocket isn't
+# link-time visible to this exe. Compile the PAL source a second time, directly into
+# the test app, so TestUdpSocketLoopback can call it.
 
 target_include_directories(
     "${PROJECT_NAME}"

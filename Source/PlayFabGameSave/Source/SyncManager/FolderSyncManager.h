@@ -43,6 +43,12 @@ public:
     HRESULT InitForDownload();
     HRESULT InitForUpload();
 
+    // Releases the staging directory the finished upload attempt was compressing into. Call only
+    // once the attempt has definitively ended (its DoWork returned something other than E_PENDING);
+    // deleting it while transfers may still be live is precisely the cross-attempt deletion that
+    // the per-attempt staging layout exists to prevent.
+    void ReleaseUploadStaging();
+
     // The one lock that serializes all workflow state for this user. It has to live on the manager
     // rather than on each async provider: a per-provider lock only orders one provider's DoWork
     // against its own continuations, so two providers driving the same manager (e.g.

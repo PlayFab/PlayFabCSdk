@@ -13,6 +13,7 @@ struct LeaderboardsTestsState
 {
     String leaderboardName;
     String existingLeaderboardName;
+    bool leaderboardDefinitionCreated{ false };
 };
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
@@ -114,6 +115,8 @@ AsyncOp<void> LeaderboardsTests::Initialize()
     {
         RETURN_IF_FAILED_PLAYFAB(result);
 
+        m_state->leaderboardDefinitionCreated = true;
+
         UpdateLeaderboardEntriesOperation::RequestType request;
         request.SetLeaderboardName(m_state->leaderboardName);
 
@@ -145,16 +148,21 @@ AsyncOp<void> LeaderboardsTests::Initialize()
 AsyncOp<void> LeaderboardsTests::Uninitialize()
 {
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
-    return DeleteLeaderboardDefinition(TitleEntity(), RunContext(), m_state->leaderboardName).Then([&](Result<void> result) -> AsyncOp<void>
+    // Uninitialize() runs even when Initialize() failed, in which case there is no title entity and no
+    // leaderboard definition to delete. leaderboardDefinitionCreated is only set once
+    // CreateLeaderboardDefinition succeeded, so a failed create does not trigger a delete here.
+    if (m_state && m_state->leaderboardDefinitionCreated && HasTitleEntity())
     {
-        UNREFERENCED_PARAMETER(result);// Continue with uninitialize regardless of success deleting leaderboard
-        m_state.reset();
-        return ServicesTestClass::Uninitialize();
-    });
-#else
+        return DeleteLeaderboardDefinition(TitleEntity(), RunContext(), m_state->leaderboardName).Then([&](Result<void> result) -> AsyncOp<void>
+        {
+            UNREFERENCED_PARAMETER(result);// Continue with uninitialize regardless of success deleting leaderboard
+            m_state.reset();
+            return ServicesTestClass::Uninitialize();
+        });
+    }
+#endif
     m_state.reset();
     return ServicesTestClass::Uninitialize();
-#endif
 }
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC

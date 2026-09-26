@@ -339,6 +339,7 @@
     <ClInclude Include="..\GameTestAppShared\TestHarness\GetDebugStats.h" />
     <ClInclude Include="..\GameTestAppShared\TestHarness\CopyTargetFolderToSaveFolder.h" />
     <ClInclude Include="..\GameTestAppShared\TestHarness\DeleteLocalFolder.h" />
+    <ClInclude Include="..\GameTestAppShared\TestHarness\HoldFileOpen.h" />
     <ClInclude Include="..\GameTestAppShared\TestHarness\DeleteSaveRoot.h" />
     <ClInclude Include="..\GameTestAppShared\TestHarness\ReadDeviceId.h" />
     <ClInclude Include="..\GameTestAppShared\TestHarness\ConsumeDiskSpace.h" />
@@ -447,6 +448,7 @@
     <ClCompile Include="..\GameTestAppShared\TestHarness\GetDebugStats.cpp" />
     <ClCompile Include="..\GameTestAppShared\TestHarness\CopyTargetFolderToSaveFolder.cpp" />
     <ClCompile Include="..\GameTestAppShared\TestHarness\DeleteLocalFolder.cpp" />
+    <ClCompile Include="..\GameTestAppShared\TestHarness\HoldFileOpen.cpp" />
     <ClCompile Include="..\GameTestAppShared\TestHarness\DeleteSaveRoot.cpp" />
     <ClCompile Include="..\GameTestAppShared\TestHarness\ReadDeviceId.cpp" />
     <ClCompile Include="..\GameTestAppShared\TestHarness\ConsumeDiskSpace.cpp" />

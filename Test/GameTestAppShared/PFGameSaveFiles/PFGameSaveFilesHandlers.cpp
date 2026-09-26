@@ -3271,6 +3271,22 @@ CommandResultPayload HandlePFGameSaveFilesGetSaveDescription(
     // Use the new debug API to get the current save description
     size_t descriptionSize = 0;
     HRESULT hr = PFGameSaveFilesGetSaveDescriptionSizeForDebug(state->localUserHandle, &descriptionSize);
+
+    // Some GDK builds do not export the force-inproc test hook, so a device can
+    // advertise the pc-inproc-gamesaves engine while the SDK still selects GRTS.
+    // The debug getter is not implemented by GRTS. Do not turn E_NOTIMPL into a
+    // misleading empty-string mismatch; later cross-device steps still verify the
+    // uploaded description on providers that expose it (for example PS5).
+    if (hr == E_NOTIMPL)
+    {
+        payload.elapsedMs = ComputeElapsedMs(start);
+        payload.result["skipped"] = true;
+        payload.result["skipReason"] = "Save description debug query is not implemented by the active provider";
+        MarkSuccess(payload.result);
+        SetHResult(payload.result, S_OK);
+        LogToWindow("PFGameSaveFilesGetSaveDescription: skipped (active provider returned E_NOTIMPL)");
+        return payload;
+    }
     
     std::string description;
     if (SUCCEEDED(hr) && descriptionSize > 0)

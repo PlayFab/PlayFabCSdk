@@ -27,6 +27,9 @@
     <ClCompile Include="Tests\GlobalStateTests.cpp">
       <Filter>Source\Tests</Filter>
     </ClCompile>
+    <ClCompile Include="Tests\QoSWireFormatTests.cpp">
+      <Filter>Source\Tests</Filter>
+    </ClCompile>
     <ClCompile Include="Tests\RunContextTests.cpp">
       <Filter>Source\Tests</Filter>
     </ClCompile>

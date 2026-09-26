@@ -1,0 +1,88 @@
+id: LHC-23-Cleanup-During-Request-Kickoff
+name: LHC 23 - Cleanup During Request Kickoff
+tags:
+  - lhc
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc: passing
+  psx: ignore
+description: >
+  End-to-end coverage for the cleanup / request-kickoff races reported in
+  libHttpClient issues 1018 and 1019. Fires a burst of requests against a slow
+  route so they are still starting up, then immediately requests cleanup. This
+  is the interleaving that crashed in the field: cleanup cancelling requests
+  that NetworkState has already tracked but whose HC_CALL perform has not
+  finished starting, and refused requests whose deferred async cleanup runs
+  after cleanup has torn state down.
+
+  The device app holds its own HCInitialize reference for the controller
+  WebSocket, so HCCleanupAsync consumes this scenario's reference and reports
+  E_HC_INTERNAL_STILLINUSE (0x89235008) rather than fully tearing the library
+  down. That is expected, and the kickoff-versus-cleanup interleaving under
+  test still runs. Deterministic coverage of the full teardown path lives in
+  libHttpClient's own CleanupRaceTests unit tests.
+
+  Every request must resolve. A request left permanently outstanding, or a
+  crash during cancellation, fails this scenario.
+devices:
+  DeviceA: {}
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  cleanup-during-kickoff:
+    - command: HCInitialize
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+
+    # A slow route keeps the burst in flight long enough for cleanup to land
+    # while requests are still starting up, instead of completing first.
+    - command: StartHttpTestServer
+    - command: ConfigureHttpRoute
+      parameters:
+        method: "GET"
+        path: "/kickoff"
+        statusCode: 200
+        contentType: "text/plain"
+        body: "kickoff-response"
+        delayMs: 15000
+
+    # Non-blocking: returns with all 24 requests still outstanding.
+    - command: TestHCHttpCallPerformBurstStart
+      parameters:
+        url: "{{httpTestUrl}}/kickoff"
+        requestCount: 24
+
+    # No delay here on purpose. Cleanup is requested while the burst is still
+    # being kicked off, which is the narrow window both issues describe.
+    - command: HCCleanupAsync
+      parameters:
+        expectedHr: "0x89235008"
+
+    # The assertion: every request resolves. Pre-fix, cancelling a request whose
+    # perform work queue did not exist yet crashed inside XTaskQueueTerminate.
+    # expectedSuccesses is deliberately omitted because the split between
+    # completed and cancelled requests is timing dependent.
+    - command: TestHCHttpCallPerformBurstWait
+      parameters:
+        timeoutMs: 150000
+
+    # The library must still be usable afterwards: the app's own reference keeps
+    # it initialized, so a fresh call has to work.
+    - command: HCIsInitialized
+    - command: HCHttpCallCreate
+    - command: HCHttpCallRequestSetUrl
+      parameters:
+        method: "GET"
+        url: "{{httpTestUrl}}/fast"
+    - command: HCHttpCallCloseHandle
+executionOrder:
+  - role: DeviceA
+    block: cleanup-during-kickoff
+cleanup:
+  DeviceA:
+    - command: StopHttpTestServer
+    - command: XTaskQueueCloseHandle

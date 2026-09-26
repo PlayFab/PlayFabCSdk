@@ -55,6 +55,7 @@ set(COMMON_INCLUDE_DIRS
     "${PATH_TO_SOURCE}/PlayFabCore/Include/Generated"
     "${PATH_TO_SOURCE}/PlayFabServices/Include"
     "${PATH_TO_SOURCE}/PlayFabServices/Include/Generated"
+    "${PATH_TO_SOURCE}/PlayFabServices/Source"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Generated"
     "${PATH_TO_LHC}/Include"
@@ -84,7 +85,12 @@ add_library(
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Android/PlayFabAndroid.cpp"
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Android/TitleLocalUser_Android.cpp"
     "${PATH_TO_TEST}/PlayFabServicesTestApp/Platform/Android/TitleLocalUser_Android.h"
+    "${PATH_TO_SOURCE}/PlayFabServices/Source/QoS/UdpSocketPAL_Posix.cpp"
 )
+
+# PlayFabServices.Android is a shared lib and doesn't export PlayFab::UdpSocket, so
+# compile the PAL source a second time, directly into the test app, so
+# TestUdpSocketLoopback can call it.
 
 if (${ANDROID_ABI} STREQUAL "x86_64")
     set(ANDROID_ABI_DIRECTORY "x86_64")

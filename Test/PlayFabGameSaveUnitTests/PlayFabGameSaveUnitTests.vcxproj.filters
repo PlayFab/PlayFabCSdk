@@ -14,8 +14,10 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="TestSuiteMisc.cpp" />
+    <ClCompile Include="TestSuiteTrace.cpp" />
     <ClCompile Include="actions.cpp" />
     <ClCompile Include="TestSuiteFileSync.cpp" />
+    <ClCompile Include="TestSuiteFilePAL.cpp" />
     <ClCompile Include="TestSuiteAPIs.cpp" />
     <ClCompile Include="TestSuiteCloudWipe.cpp" />
     <ClCompile Include="MemoryManager.cpp">

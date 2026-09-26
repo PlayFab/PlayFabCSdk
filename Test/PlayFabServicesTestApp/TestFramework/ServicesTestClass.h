@@ -23,12 +23,19 @@ protected:
     // On GDK this will be a TitlePlayer associated with the default XUser.
     Entity DefaultTitlePlayer() noexcept;
 
+    // True once Initialize() has successfully logged in the default TitlePlayer. Uninitialize() runs even when
+    // Initialize() failed, so cleanup code must check this before calling DefaultTitlePlayer().
+    bool HasDefaultTitlePlayer() const noexcept;
+
     // PlayFabId for DefaultTitlePlayer
     String DefaultTitlePlayerId() noexcept;
 
 #if HC_PLATFORM == HC_PLATFORM_GDK || HC_PLATFORM == HC_PLATFORM_LINUX || HC_PLATFORM == HC_PLATFORM_MAC
     // Title Entity, need to call certain APIs
     Entity TitleEntity() noexcept;
+
+    // True once Initialize() has successfully acquired the title Entity. See HasDefaultTitlePlayer().
+    bool HasTitleEntity() const noexcept;
 #endif
 
     // Get TitlePlayer by customId, performing a login if needed

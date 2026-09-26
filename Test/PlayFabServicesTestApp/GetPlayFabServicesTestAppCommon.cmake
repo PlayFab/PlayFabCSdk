@@ -51,6 +51,8 @@ function(GET_PLAYFAB_SERVICES_TEST_APP_COMMMON_FILES
         "${PATH_TO_SOURCE}/Tests/Services/LeaderboardsTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/LocalizationTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/MultiplayerServerTestsImpl.cpp"
+        "${PATH_TO_SOURCE}/Tests/Services/MultiplayerServerQoSTests.cpp"
+        "${PATH_TO_SOURCE}/Tests/Services/MultiplayerServerQoSTests.h"
         "${PATH_TO_SOURCE}/Tests/Services/PlatformSpecificTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/PlayerDataManagementTestsImpl.cpp"
         "${PATH_TO_SOURCE}/Tests/Services/ProfilesTestsImpl.cpp"

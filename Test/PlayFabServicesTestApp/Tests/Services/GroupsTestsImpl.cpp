@@ -43,6 +43,7 @@ struct GroupsTestsState
 {
     String groupName;
     EntityKey group;
+    bool groupCreated{ false };
     std::optional<Entity> groupJoiner;
 
     // Helper to remove groupJoiner from the group
@@ -77,6 +78,7 @@ AsyncOp<void> GroupsTests::Initialize()
     {
         RETURN_IF_FAILED_PLAYFAB(result);
         m_state->group = *result.Payload().Model().group;
+        m_state->groupCreated = true;
         return GetTitlePlayer(joinerCustomId);
     })
     .Then([&](Result<Entity> result) -> Result<void>
@@ -89,6 +91,15 @@ AsyncOp<void> GroupsTests::Initialize()
 
 AsyncOp<void> GroupsTests::Uninitialize()
 {
+    // Uninitialize() runs even when Initialize() failed, in which case there is no logged in title player
+    // and no group to delete. groupCreated is only set once CreateGroupOperation succeeded, so a failure
+    // after base initialization does not leave m_state->group default-constructed here.
+    if (!m_state || !m_state->groupCreated || !HasDefaultTitlePlayer())
+    {
+        m_state.reset();
+        return ServicesTestClass::Uninitialize();
+    }
+
     DeleteGroupOperation::RequestType request;
     request.SetGroup(m_state->group);
     return DeleteGroupOperation::Run(DefaultTitlePlayer(), request, RunContext()).Then([&](Result<void> result)

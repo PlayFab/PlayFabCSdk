@@ -5,11 +5,31 @@
     <Filter Include="Include\Generated" />
     <Filter Include="Include\Generated\playfab" />
     <Filter Include="Source" />
+    <Filter Include="Source\QoS" />
+    <Filter Include="Include\playfab\services\QoS" />
     <Filter Include="Source\Generated" />
     <Filter Include="Include\Generated\playfab\services" />
     <Filter Include="Include\Generated\playfab\services\cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\PFMultiplayerServerQoS.cpp" >
+      <Filter>Source\QoS</Filter>
+    </ClCompile>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\QoS.cpp" >
+      <Filter>Source\QoS</Filter>
+    </ClCompile>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\QoS.h" >
+      <Filter>Source\QoS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\QoSWireFormat.h" >
+      <Filter>Source\QoS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\UdpSocketPAL.h" >
+      <Filter>Source\QoS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\playfab\services\QoS\PFMultiplayerServerQoS.h" >
+      <Filter>Include\playfab\services\QoS</Filter>
+    </ClInclude>
     <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CoreTypes.h" >
       <Filter>Source\Generated</Filter>
     </ClInclude>

@@ -15,6 +15,12 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\PFMultiplayerServerQoS.cpp" />
+    <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\QoS.cpp" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\QoS.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\QoSWireFormat.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\QoS\UdpSocketPAL.h" />
+    <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\playfab\services\QoS\PFMultiplayerServerQoS.h" />
     <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CoreTypes.h" />
     <ClCompile Include="$(PlayFabSourceDir)\PlayFabServices\Source\Generated\CoreTypes.cpp" />
     <ClInclude Include="$(PlayFabSourceDir)\PlayFabServices\Include\Generated\playfab\services\PFTypes.h" />

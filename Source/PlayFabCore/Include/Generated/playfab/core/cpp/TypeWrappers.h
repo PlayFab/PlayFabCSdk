@@ -1440,6 +1440,7 @@ public:
 
     PFUserPsnInfoWrapper(const PFUserPsnInfo& model) :
         ModelWrapper<PFUserPsnInfo, Alloc>{ model },
+        m_issuerId{ model.issuerId ? std::optional<int32_t>{ *model.issuerId } : std::nullopt },
         m_psnAccountId{ SafeString(model.psnAccountId) },
         m_psnOnlineId{ SafeString(model.psnOnlineId) },
         m_psnSandboxId{ SafeString(model.psnSandboxId) }
@@ -1470,11 +1471,23 @@ public:
     {
         using std::swap;
         swap(lhs.m_model, rhs.m_model);
+        swap(lhs.m_issuerId, rhs.m_issuerId);
         swap(lhs.m_psnAccountId, rhs.m_psnAccountId);
         swap(lhs.m_psnOnlineId, rhs.m_psnOnlineId);
         swap(lhs.m_psnSandboxId, rhs.m_psnSandboxId);
         lhs.SetModelPointers();
         rhs.SetModelPointers();
+    }
+
+    std::optional<int32_t> const& GetIssuerId() const
+    {
+        return m_issuerId;
+    }
+
+    void SetIssuerId(std::optional<int32_t> value)
+    {
+        m_issuerId = std::move(value);
+        this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
     }
 
     String const& GetPsnAccountId() const
@@ -1513,11 +1526,13 @@ public:
 private:
     void SetModelPointers()
     {
+        this->m_model.issuerId = m_issuerId ? m_issuerId.operator->() : nullptr;
         this->m_model.psnAccountId = m_psnAccountId.empty() ? nullptr : m_psnAccountId.data();
         this->m_model.psnOnlineId = m_psnOnlineId.empty() ? nullptr : m_psnOnlineId.data();
         this->m_model.psnSandboxId = m_psnSandboxId.empty() ? nullptr : m_psnSandboxId.data();
     }
 
+    std::optional<int32_t> m_issuerId;
     String m_psnAccountId;
     String m_psnOnlineId;
     String m_psnSandboxId;

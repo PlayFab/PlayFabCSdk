@@ -20,10 +20,18 @@ struct InnerProgressContext
     void* callbackContext;
     PFGameSaveFilesSyncState syncState;
 
-    // When both are non-zero, InnerProgressCallback converts compressed transfer
-    // progress to uncompressed units using the global ratio (totalUncompressed / totalCompressed).
+    // Operation totals, plus the offsets and sizes InnerProgressCallback needs to place this
+    // file's transfer inside them. The completed offsets are the bytes already finished by
+    // earlier files, in each unit; the file sizes are the current file's own.
+    //
+    // These exist because a single global compressed:uncompressed ratio is not monotonic across
+    // files that compress differently - see InnerProgressCallback for the arithmetic.
     uint64_t totalUncompressedBytes{ 0 };
     uint64_t totalCompressedBytes{ 0 };
+    uint64_t completedUncompressedBytes{ 0 };
+    uint64_t completedCompressedBytes{ 0 };
+    uint64_t fileUncompressedBytes{ 0 };
+    uint64_t fileCompressedBytes{ 0 };
 
     InnerProgressContext(
         ProgressCallback* callback,

@@ -1,0 +1,231 @@
+# Scenario 54: A locked local save file must fail the upload with a specific, retryable error
+#
+# REGRESSION TEST for Bug 4544470 ("PLAYFAB SAVES - PFGameSaveFilesUploadWithUiResult returned
+# FAILURE code 0x80070057 : E_INVALIDARG"), SteamDeck half.
+#
+# The defect:
+#   FilePAL reported every local file failure as E_INVALIDARG:
+#
+#     FilePAL::OpenFile     - RETURN_HR_IF_FALSE(E_INVALIDARG, fileHandle->file)
+#     FilePAL::GetFileSize  - RETURN_HR_IF_FALSE(E_INVALIDARG, DoesFileExist(filePath))
+#
+#   ...and DoesFileExist decided existence by OPENING the file (std::ifstream + good()), so a file
+#   that existed but was momentarily held by another writer read as "missing".
+#
+#   GameSave surfaces the upload's completion HRESULT verbatim through
+#   PFGameSaveFilesUploadWithUiResult, so the title was told "you passed a bad argument" for what
+#   was really "a save file was locked for a moment". Nothing at the title's call site was wrong,
+#   and E_INVALIDARG gave it no way to know the condition was transient and retryable.
+#
+# Why a lock is the right stand-in for the reported repro:
+#   The save folder is enumerated once at the start of an upload, but the files are read later,
+#   during compression and transfer. On SteamDeck the reported sequence stretched that window --
+#   sleep parked an in-flight upload while the title was running its "Save & Exit" flow, so the
+#   title was writing save data and its thumbnail into the very files the upload was about to read.
+#   HoldFileOpen reproduces that overlap deterministically: it holds a save file with no sharing,
+#   exactly as a writer does, instead of depending on sleep timing.
+#
+# Expected behavior:
+#   With the fix   : compression cannot open the held file, the sharing failure is classified by
+#                    MapLocalFileFailure, and the upload returns 0x8923700A
+#                    (E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE). Releasing the handle and retrying
+#                    succeeds, proving the condition is genuinely transient and that the failed
+#                    attempt left the sync state machine recoverable.
+#   Without the fix: the upload returns 0x80070057 (E_INVALIDARG) and the first assertion below
+#                    fails.
+
+id: Scenario-Inproc-54-Upload-Locked-Local-File
+name: GameSave Inproc 54 - Locked Local File Fails Upload With A Retryable Error (bug 4544470)
+tags:
+  - gamesaves
+platforms:
+  xbox: ignore
+  pc-grts: ignore
+  pc-inproc-gamesaves: passing
+  psx: ignore
+description: >
+  Holds a save file open with no sharing while an upload runs, verifying the upload reports
+  E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE rather than E_INVALIDARG, and that retrying after the
+  handle is released succeeds.
+brief: A locked save file must fail the upload with a retryable error, never E_INVALIDARG
+group: J. Service error handling
+devices:
+  DeviceA:
+    engine: pc-inproc-gamesaves
+defaults:
+  stepTimeoutSeconds: 180
+blocks:
+  establish-baseline:
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario54"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario54"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: true
+        action: UseLocal
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: DeleteSaveRoot
+
+    # A first clean upload, so the failing upload below is an incremental one rather than the
+    # initial population of an empty save. That matches the reported flow, where the failure hit a
+    # save that had already synced successfully many times.
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/baseline.bin
+            bytes: 4096
+            pattern: [0xBA, 0x5E]
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+
+  upload-while-file-is-held:
+    # New content, so CompareStep marks this file for upload and compression has to read it.
+    - command: WriteGameSaveData
+      parameters:
+        operations:
+          - verb: CreateBinaryFile
+            relativePath: progress/held.bin
+            bytes: 8192
+            pattern: [0x10, 0xCC]
+
+    # Hold it with no sharing, the way the title's own save writer would.
+    - command: HoldFileOpen
+      parameters:
+        relativePath: progress/held.bin
+
+    # THE ASSERTION.
+    # 0x8923700A is E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE. Before the fix this step returned
+    # 0x80070057 (E_INVALIDARG), which is the exact code the bug reported from SteamDeck.
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+        expectedHr: "0x8923700A"
+
+    # The condition is transient, so the retry must go through. This also proves the failed attempt
+    # did not wedge the sync state machine and did not destroy its own staged data.
+    - command: ReleaseHeldFiles
+    - command: PFGameSaveFilesUploadWithUiAsync
+      parameters:
+        mode: KeepDeviceActive
+    - command: PFGameSaveFilesIsConnectedToCloud
+      parameters:
+        expectedConnected: true
+
+    # Snapshot what the device holds once both files have made it up.
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: left
+
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+  verify-content-round-trips:
+    # Both files must be in the cloud: the one uploaded before the lock and the one whose upload
+    # only succeeded on the retry. A silent "skip the unreadable file and carry on" would lose the
+    # second one, so this is what pins the fix to failing loudly rather than dropping data. The
+    # local folder is wiped first, so everything compared below came back down from the service.
+    - command: XGameRuntimeInitialize
+    - command: PFInitialize
+    - command: PFServicesInitialize
+    - command: PFServiceConfigCreateHandle
+      parameters:
+        endpoint: "https://E18D7.playfabapi.com"
+        titleId: "E18D7"
+    - command: XTaskQueueCreate
+      parameters:
+        workMode: ThreadPool
+        completionMode: ThreadPool
+        setAsProcessQueue: true
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario54"
+    - command: PFGameSaveFilesInitialize
+      parameters:
+        saveFolder: "C:\\gamesave\\Scenario54"
+    - command: PFGameSaveFilesSetUiCallbacks
+      parameters:
+        enable: true
+    - command: PFGameSaveFilesSetActiveDeviceChangedCallback
+    - command: PFGameSaveFilesSetUiActiveDeviceContentionAutoResponse
+      parameters:
+        enable: true
+        action: SyncLastSavedData
+    - command: PFLocalUserCreateHandleWithPersistedLocalId
+      parameters:
+        persistedLocalId: "GameTestHarness"
+        customId: "GameTestHarness"
+        createAccount: true
+    - command: PFGameSaveFilesAddUserWithUiAsync
+    - command: PFGameSaveFilesGetFolder
+    - command: CaptureSaveContainerSnapshot
+      parameters:
+        slot: right
+    - command: CompareSaveContainerSnapshots
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+
+executionOrder:
+  - role: DeviceA
+    block: establish-baseline
+  - role: DeviceA
+    block: upload-while-file-is-held
+  - role: DeviceA
+    block: verify-content-round-trips
+cleanup:
+  DeviceA:
+    # Unconditional: a scenario that fails mid-block must not leave a save file locked for
+    # whatever runs next.
+    - command: ReleaseHeldFiles
+    - command: PFGameSaveFilesSetUiSyncFailedAutoResponse
+      parameters:
+        enable: false
+    - command: PFGameSaveFilesSetUiConflictAutoResponse
+      parameters:
+        enable: false
+    - command: PFLocalUserCloseHandle
+    - command: PFGameSaveFilesUninitializeAsync
+    - command: PFServicesUninitializeAsync
+    - command: PFUninitializeAsync
+    - command: PFServiceConfigCloseHandle
+    - command: XTaskQueueCloseHandle
+    - command: DeleteLocalFolder
+      parameters:
+        folderPath: "C:\\gamesave\\Scenario54"

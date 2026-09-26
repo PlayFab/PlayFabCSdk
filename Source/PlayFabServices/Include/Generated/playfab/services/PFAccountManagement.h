@@ -3428,9 +3428,9 @@ PF_API PFAccountManagementServerGetUserBansGetResult(
 /// See also ServerUnlinkBattleNetAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_BATTLE_NET_NOT_ENABLED_FOR_TITLE, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_BATTLE_NET_NOT_ENABLED_FOR_TITLE, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerLinkBattleNetAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3452,9 +3452,9 @@ PF_API PFAccountManagementServerLinkBattleNetAccountAsync(
 /// See also ServerLinkNintendoServiceAccountSubjectAsync, ServerUnlinkNintendoServiceAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED,
-/// E_PF_NINTENDO_SWITCH_NOT_ENABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page
-/// "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED, E_PF_NINTENDO_SWITCH_NOT_ENABLED_FOR_TITLE or any of the global
+/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerLinkNintendoServiceAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3477,9 +3477,9 @@ PF_API PFAccountManagementServerLinkNintendoServiceAccountAsync(
 /// See also ServerLinkNintendoServiceAccountAsync, ServerUnlinkNintendoServiceAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED,
-/// E_PF_NINTENDO_SWITCH_NOT_ENABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page
-/// "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_INVALID_IDENTITY_PROVIDER_ID, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED, E_PF_NINTENDO_SWITCH_NOT_ENABLED_FOR_TITLE or any of the global
+/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerLinkNintendoServiceAccountSubjectAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3501,8 +3501,9 @@ PF_API PFAccountManagementServerLinkNintendoServiceAccountSubjectAsync(
 /// See also ServerUnlinkNintendoSwitchDeviceIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED or any of the global PlayFab Service
-/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_INVALID_NAMESPACE_MISMATCH, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerLinkNintendoSwitchDeviceIdAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3573,9 +3574,9 @@ PF_API PFAccountManagementServerLinkPSNIdAsync(
 /// <remarks>
 /// This API is available on Windows, Linux, and macOS.
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED or any of
-/// the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
-/// handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_INVALID_NAMESPACE_MISMATCH, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerLinkServerCustomIdAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3597,9 +3598,10 @@ PF_API PFAccountManagementServerLinkServerCustomIdAsync(
 /// See also ServerLoginWithSteamIdAsync, ServerUnlinkSteamIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_INVALID_STEAM_TICKET, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED,
-/// E_PF_STEAM_NOT_ENABLED_FOR_TITLE, E_PF_STEAM_USER_NOT_FOUND or any of the global PlayFab Service errors.
-/// See doc page "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_ACCOUNT_NOT_FOUND, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_INVALID_STEAM_TICKET, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED, E_PF_STEAM_NOT_ENABLED_FOR_TITLE,
+/// E_PF_STEAM_USER_NOT_FOUND or any of the global PlayFab Service errors. See doc page "Handling PlayFab
+/// Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerLinkSteamIdAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3620,7 +3622,8 @@ PF_API PFAccountManagementServerLinkSteamIdAsync(
 /// See also ServerUnlinkTwitchAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_TWITCH_TOKEN, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED,
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_INVALID_TWITCH_TOKEN, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED, E_PF_LINKED_IDENTIFIER_ALREADY_CLAIMED,
 /// E_PF_TWITCH_RESPONSE_ERROR or any of the global PlayFab Service errors. See doc page "Handling PlayFab
 /// Errors" for more details on error handling.
 /// </remarks>
@@ -3644,9 +3647,9 @@ PF_API PFAccountManagementServerLinkTwitchAccountAsync(
 /// See also ServerLoginWithXboxAsync, ServerUnlinkXboxAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_ACCOUNT_NOT_FOUND, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_INVALID_XBOX_LIVE_TOKEN, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED or any of the global PlayFab Service
+/// errors. See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerLinkXboxAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3668,9 +3671,9 @@ PF_API PFAccountManagementServerLinkXboxAccountAsync(
 /// See also ServerLinkXboxAccountAsync, ServerLoginWithXboxIdAsync, ServerUnlinkXboxAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED or any of
-/// the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
-/// handling.
+/// the async result will be E_PF_ACCOUNT_ALREADY_LINKED, E_PF_ACCOUNT_NOT_FOUND, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_LINKED_ACCOUNT_ALREADY_CLAIMED or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerLinkXboxIdAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3866,9 +3869,9 @@ PF_API PFAccountManagementServerSendEmailFromTemplateAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_APPLE_NOT_ENABLED_FOR_TITLE
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_APPLE_NOT_ENABLED_FOR_TITLE,
+/// E_PF_INVALID_NAMESPACE_MISMATCH or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkAppleAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3890,9 +3893,9 @@ PF_API PFAccountManagementServerUnlinkAppleAsync(
 /// See also ServerLinkBattleNetAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_BATTLE_NET_NOT_ENABLED_FOR_TITLE or any of
-/// the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
-/// handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_BATTLE_NET_NOT_ENABLED_FOR_TITLE,
+/// E_PF_INVALID_NAMESPACE_MISMATCH or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkBattleNetAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3911,8 +3914,9 @@ PF_API PFAccountManagementServerUnlinkBattleNetAccountAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED or any of the global PlayFab Service errors. See
-/// doc page "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_NAMESPACE_MISMATCH
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkFacebookAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3931,9 +3935,9 @@ PF_API PFAccountManagementServerUnlinkFacebookAccountAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_FACEBOOK_INSTANT_GAMES_ID_NOT_LINKED or any
-/// of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
-/// handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_FACEBOOK_INSTANT_GAMES_ID_NOT_LINKED,
+/// E_PF_INVALID_NAMESPACE_MISMATCH or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkFacebookInstantGamesIdAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3952,8 +3956,9 @@ PF_API PFAccountManagementServerUnlinkFacebookInstantGamesIdAsync(
 /// <returns>Result code for this API operation.</returns>
 /// <remarks>
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED or any of the global PlayFab
-/// Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_NAMESPACE_MISMATCH
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkGameCenterAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3975,9 +3980,9 @@ PF_API PFAccountManagementServerUnlinkGameCenterAccountAsync(
 /// See also ServerLinkNintendoServiceAccountAsync, ServerLinkNintendoServiceAccountSubjectAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_NINTENDO_SWITCH_NOT_ENABLED_FOR_TITLE or any
-/// of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
-/// handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_NINTENDO_SWITCH_NOT_ENABLED_FOR_TITLE or any of the global PlayFab Service errors. See doc page
+/// "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkNintendoServiceAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -3999,9 +4004,9 @@ PF_API PFAccountManagementServerUnlinkNintendoServiceAccountAsync(
 /// See also ServerLinkNintendoSwitchDeviceIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_NINTENDO_SWITCH_DEVICE_ID_NOT_LINKED or any
-/// of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error
-/// handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_NINTENDO_SWITCH_DEVICE_ID_NOT_LINKED or any of the global PlayFab Service errors. See doc page
+/// "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkNintendoSwitchDeviceIdAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -4023,8 +4028,9 @@ PF_API PFAccountManagementServerUnlinkNintendoSwitchDeviceIdAsync(
 /// See also ServerLinkPSNAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED or any of the global PlayFab Service errors. See
-/// doc page "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_NAMESPACE_MISMATCH
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkPSNAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -4046,8 +4052,9 @@ PF_API PFAccountManagementServerUnlinkPSNAccountAsync(
 /// See also ServerLinkServerCustomIdAsync, ServerLoginWithServerCustomIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_IDENTIFIER_NOT_LINKED or any of the global
-/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_IDENTIFIER_NOT_LINKED,
+/// E_PF_INVALID_NAMESPACE_MISMATCH or any of the global PlayFab Service errors. See doc page "Handling
+/// PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkServerCustomIdAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -4069,8 +4076,9 @@ PF_API PFAccountManagementServerUnlinkServerCustomIdAsync(
 /// See also ServerLinkSteamIdAsync, ServerLoginWithSteamIdAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED or any of the global PlayFab Service errors. See
-/// doc page "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_NAMESPACE_MISMATCH
+/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
+/// on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkSteamIdAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -4091,9 +4099,9 @@ PF_API PFAccountManagementServerUnlinkSteamIdAsync(
 /// See also ServerLinkTwitchAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE, E_PF_INVALID_TWITCH_TOKEN
-/// or any of the global PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details
-/// on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_FEATURE_NOT_CONFIGURED_FOR_TITLE,
+/// E_PF_INVALID_NAMESPACE_MISMATCH, E_PF_INVALID_TWITCH_TOKEN or any of the global PlayFab Service errors.
+/// See doc page "Handling PlayFab Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkTwitchAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,
@@ -4115,8 +4123,9 @@ PF_API PFAccountManagementServerUnlinkTwitchAccountAsync(
 /// See also ServerLinkXboxAccountAsync.
 ///
 /// Call <see cref="XAsyncGetStatus"/> to get the status of the operation. If the service call is unsuccessful,
-/// the async result will be E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_XBOX_LIVE_TOKEN or any of the global
-/// PlayFab Service errors. See doc page "Handling PlayFab Errors" for more details on error handling.
+/// the async result will be E_PF_ACCOUNT_NOT_FOUND, E_PF_ACCOUNT_NOT_LINKED, E_PF_INVALID_NAMESPACE_MISMATCH,
+/// E_PF_INVALID_XBOX_LIVE_TOKEN or any of the global PlayFab Service errors. See doc page "Handling PlayFab
+/// Errors" for more details on error handling.
 /// </remarks>
 PF_API PFAccountManagementServerUnlinkXboxAccountAsync(
     _In_ PFEntityHandle titleEntityHandle,

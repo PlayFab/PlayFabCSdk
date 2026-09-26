@@ -47,6 +47,8 @@
 		82B3CC6C2B5B04F000337232 /* EventPipelineTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB3F2B153920007BD4F5 /* EventPipelineTests.cpp */; };
 		82B3CC6D2B5B04F000337232 /* SegmentsTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB452B153920007BD4F5 /* SegmentsTestsImpl.cpp */; };
 		82B3CC6E2B5B04F000337232 /* MultiplayerServerTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB522B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp */; };
+		76088B9DB9874D7293C73B0E /* MultiplayerServerQoSTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CFA1F5A5D9D04842B5649BDE /* MultiplayerServerQoSTests.cpp */; };
+		4C1A2E1D8B7B4F2C9E5D3A6F /* UdpSocketPAL_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B3F5C2E1A4D4E6F9C0B2D7A /* UdpSocketPAL_Posix.cpp */; };
 		82B3CC6F2B5B04F000337232 /* InventoryTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADB2B1537FB007BD4F5 /* InventoryTests.cpp */; };
 		82B3CC702B5B04F000337232 /* ProfilesTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEADC2B1537FB007BD4F5 /* ProfilesTests.cpp */; };
 		82B3CC712B5B04F000337232 /* InventoryTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB4E2B153920007BD4F5 /* InventoryTestsImpl.cpp */; };
@@ -209,6 +211,8 @@
 		82CEEB7A2B153920007BD4F5 /* ExperimentationTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB502B153920007BD4F5 /* ExperimentationTestsImpl.cpp */; };
 		82CEEB7B2B153920007BD4F5 /* DataTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB512B153920007BD4F5 /* DataTestsImpl.cpp */; };
 		82CEEB7C2B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB522B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp */; };
+		2415301F5CB04B58B25762D2 /* MultiplayerServerQoSTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CFA1F5A5D9D04842B5649BDE /* MultiplayerServerQoSTests.cpp */; };
+		9F2D6E4C7A1B4839B0D5E8F3 /* UdpSocketPAL_Posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B3F5C2E1A4D4E6F9C0B2D7A /* UdpSocketPAL_Posix.cpp */; };
 		82CEEB7D2B153920007BD4F5 /* AuthenticationOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB572B153920007BD4F5 /* AuthenticationOperations.cpp */; };
 		82CEEB7E2B153920007BD4F5 /* CoreOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB582B153920007BD4F5 /* CoreOperations.cpp */; };
 		82CEEB7F2B153920007BD4F5 /* ServicesOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEEB5A2B153920007BD4F5 /* ServicesOperations.cpp */; };
@@ -501,6 +505,9 @@
 		82CEEB502B153920007BD4F5 /* ExperimentationTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExperimentationTestsImpl.cpp; sourceTree = "<group>"; };
 		82CEEB512B153920007BD4F5 /* DataTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataTestsImpl.cpp; sourceTree = "<group>"; };
 		82CEEB522B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultiplayerServerTestsImpl.cpp; sourceTree = "<group>"; };
+		CFA1F5A5D9D04842B5649BDE /* MultiplayerServerQoSTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultiplayerServerQoSTests.cpp; sourceTree = "<group>"; };
+		8B3F5C2E1A4D4E6F9C0B2D7A /* UdpSocketPAL_Posix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UdpSocketPAL_Posix.cpp; path = "../../../../Source/PlayFabServices/Source/QoS/UdpSocketPAL_Posix.cpp"; sourceTree = "<group>"; };
+		236FE93A7B114F00970ED5CB /* MultiplayerServerQoSTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerServerQoSTests.h; sourceTree = "<group>"; };
 		82CEEB552B153920007BD4F5 /* CoreOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreOperations.h; sourceTree = "<group>"; };
 		82CEEB562B153920007BD4F5 /* AuthenticationOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationOperations.h; sourceTree = "<group>"; };
 		82CEEB572B153920007BD4F5 /* AuthenticationOperations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AuthenticationOperations.cpp; sourceTree = "<group>"; };
@@ -858,6 +865,9 @@
 				82CEEB502B153920007BD4F5 /* ExperimentationTestsImpl.cpp */,
 				82CEEB512B153920007BD4F5 /* DataTestsImpl.cpp */,
 				82CEEB522B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp */,
+				CFA1F5A5D9D04842B5649BDE /* MultiplayerServerQoSTests.cpp */,
+				236FE93A7B114F00970ED5CB /* MultiplayerServerQoSTests.h */,
+				8B3F5C2E1A4D4E6F9C0B2D7A /* UdpSocketPAL_Posix.cpp */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1148,6 +1158,8 @@
 				82B3CC6C2B5B04F000337232 /* EventPipelineTests.cpp in Sources */,
 				82B3CC6D2B5B04F000337232 /* SegmentsTestsImpl.cpp in Sources */,
 				82B3CC6E2B5B04F000337232 /* MultiplayerServerTestsImpl.cpp in Sources */,
+				76088B9DB9874D7293C73B0E /* MultiplayerServerQoSTests.cpp in Sources */,
+				4C1A2E1D8B7B4F2C9E5D3A6F /* UdpSocketPAL_Posix.cpp in Sources */,
 				82B3CC6F2B5B04F000337232 /* InventoryTests.cpp in Sources */,
 				82B3CC702B5B04F000337232 /* ProfilesTests.cpp in Sources */,
 				82B3CC712B5B04F000337232 /* InventoryTestsImpl.cpp in Sources */,
@@ -1233,8 +1245,10 @@
 				82CEEB6B2B153920007BD4F5 /* EventPipelineTests.cpp in Sources */,
 				82CEEB6F2B153920007BD4F5 /* SegmentsTestsImpl.cpp in Sources */,
 				82CEEB7C2B153920007BD4F5 /* MultiplayerServerTestsImpl.cpp in Sources */,
-				82CEEAEB2B1537FB007BD4F5 /* InventoryTests.cpp in Sources */,
+				2415301F5CB04B58B25762D2 /* MultiplayerServerQoSTests.cpp in Sources */,
+				9F2D6E4C7A1B4839B0D5E8F3 /* UdpSocketPAL_Posix.cpp in Sources */,
 				82CEEAEC2B1537FB007BD4F5 /* ProfilesTests.cpp in Sources */,
+				82CEEAEB2B1537FB007BD4F5 /* InventoryTests.cpp in Sources */,
 				82CEEB782B153920007BD4F5 /* InventoryTestsImpl.cpp in Sources */,
 				82CEEB722B153920007BD4F5 /* AccountManagementTestsImpl.cpp in Sources */,
 				82CEEAED2B1537FB007BD4F5 /* ExperimentationTests.cpp in Sources */,
