@@ -49,6 +49,17 @@ bool IsUnsafeManifestName(const String& name)
         name.find(':') != String::npos;
 }
 
+// Deepest JSON nesting an extended manifest may have (see InitWithExtendedManifest).
+constexpr int kMaxManifestJsonDepth = 256;
+struct ManifestTooDeep {};
+
+// True when `key` is present with a value that is neither null (read as absent) nor an array.
+bool IsPresentButNotArray(const JsonValue& object, const char* key)
+{
+    auto it = object.find(key);
+    return it != object.end() && !it->is_null() && !it->is_array();
+}
+
 } // anonymous namespace
 
 HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestBytes, const DownloadDetailsWrapVector& remoteFileDetails, const String& saveFolder)
@@ -75,7 +86,22 @@ HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestByte
             return E_INVALIDARG;
         }
         
-        jsonBase = JsonValue::parse(manifestString);
+        jsonBase = JsonValue::parse(manifestString, [](int depth, JsonValue::parse_event_t event, JsonValue&)
+        {
+            // The manifest is untrusted cross-device input, and both walking it (the folder tree) and
+            // copying parts of it are recursive: bound its nesting before anything touches it. A
+            // manifest at the folder walk's own limit (64 levels) nests about 131 deep.
+            if (depth > kMaxManifestJsonDepth && (event == JsonValue::parse_event_t::object_start || event == JsonValue::parse_event_t::array_start))
+            {
+                throw ManifestTooDeep{};
+            }
+            return true;
+        });
+    }
+    catch (const ManifestTooDeep&)
+    {
+        TRACE_ERROR("[GAME SAVE] InitWithExtendedManifest: JSON nests deeper than %d levels, rejecting manifest", kMaxManifestJsonDepth);
+        return E_INVALIDARG;
     }
     catch (const JsonValue::parse_error& e)
     {
@@ -89,15 +115,24 @@ HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestByte
         return E_FAIL;
     }
 
-    if (!jsonBase.contains("v1"))
+    // Anything but an object with a "v1" object is no file set at all. Reading it as an empty one would
+    // make every synced local file look deleted in the cloud.
+    if (!jsonBase.is_object() || !jsonBase.contains("v1") || !jsonBase["v1"].is_object())
     {
-        TRACE_ERROR("[GAME SAVE] InitWithExtendedManifest: JSON does not contain 'v1' key");
+        TRACE_ERROR("[GAME SAVE] InitWithExtendedManifest: JSON does not contain a 'v1' object");
         return E_FAIL;
     }
 
-    if (jsonBase.contains("v1"))
     {
         auto& json = jsonBase["v1"];
+
+        // A section of the wrong type (null reads as absent) would silently drop every file or
+        // folder it holds: a partial set reads as cloud deletes, so reject the whole manifest.
+        if (IsPresentButNotArray(json, "Folders") || IsPresentButNotArray(json, "Files"))
+        {
+            TRACE_ERROR("[GAME SAVE] InitWithExtendedManifest: 'Files' or 'Folders' is not an array, rejecting manifest");
+            return E_INVALIDARG;
+        }
 
         if (json.contains("Folders"))
         {
@@ -160,6 +195,12 @@ HRESULT FileFolderSet::InitWithExtendedManifest(const Vector<char>& manifestByte
 
                     JsonValue extractedFilesJson;
                     JsonUtils::ObjectGetMember(fileJson, "Extract", extractedFilesJson);
+                    if (!extractedFilesJson.is_null() && !extractedFilesJson.is_array())
+                    {
+                        // Same reasoning as "Files": the bundle's files would silently vanish.
+                        TRACE_ERROR("[GAME SAVE] ExtendedManifest: Rejecting manifest - 'Extract' of '%s' is not an array", m_compressedFiles[compressionFileIndex].fileName.c_str());
+                        return E_INVALIDARG;
+                    }
 
                     if (extractedFilesJson.is_array() && extractedFilesJson.size() > 0)
                     {
@@ -612,6 +653,14 @@ HRESULT FileFolderSet::ExtendedManifestParseFolderJson(const JsonValue& folderJs
     }
     else
     {
+        // Same reasoning as "Files": a folder entry that isn't an object would otherwise become a
+        // folder with no name and no ID (aliasing its parent), and its subtree would vanish.
+        if (!folderJson.is_object() || IsPresentButNotArray(folderJson, "Folders"))
+        {
+            TRACE_ERROR("[GAME SAVE] ExtendedManifestParseFolderJson: Rejecting manifest - malformed folder entry under '%s'", curPath.c_str());
+            return E_INVALIDARG;
+        }
+
         JsonUtils::ObjectGetMember(folderJson, "Name", f.folderName);
         JsonUtils::ObjectGetMember(folderJson, "Id", f.folderId);
         f.existsOnRemote = true;

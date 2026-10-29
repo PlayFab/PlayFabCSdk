@@ -25,6 +25,8 @@ applyTo: "Pipelines/**/*.yml,Pipelines/**/*.yaml"
 - Component governance via `Tasks/component-governance.yml`
 - NuGet central versioning → `Directory.Packages.props`
 - Build properties imported from `Build/*.props` files
+- vcpkg dependencies (nlohmann, libarchive) must be restored before any build step: use `Tasks/vcpkg-restore.yml` (Windows/GDK), `Tasks/android/vcpkg-restore.yml`, `Tasks/linux/vcpkg-restore.yml` or `Tasks/apple/vcpkg-restore.yml`. In OneBranch tasks include them with `@self`; they run in the restore phase.
+- Reference scripts under `Build/` with that exact casing (`Build/vcpkg/...`); Linux agents are case-sensitive
 - TSA configuration in `.config/tsaOptions.json`
 
 ## When Adding Pipeline Tasks

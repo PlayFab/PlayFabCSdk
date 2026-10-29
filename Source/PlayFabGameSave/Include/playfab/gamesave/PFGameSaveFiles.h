@@ -118,6 +118,12 @@ PF_API PFGameSaveFilesGetFolder(
 /// <returns>
 /// To retrieve the result of a call to PFGameSaveFilesUploadWithUiAsync, call PFGameSaveFilesUploadWithUiResult.
 /// </returns>
+/// <remarks>
+/// XAsyncCancel requests cancellation; it does not synchronously end the upload or its file access.
+/// Keep the original XAsyncBlock alive until its completion callback runs, and retrieve the result
+/// before reusing the save folder. A storage-cleanup failure is reported instead of the cancellation
+/// result when the in-process provider cannot complete its storage handoff.
+/// </remarks>
 PF_API PFGameSaveFilesUploadWithUiAsync(
     _In_ PFLocalUserHandle localUserHandle,
     _In_ PFGameSaveFilesUploadOption option,

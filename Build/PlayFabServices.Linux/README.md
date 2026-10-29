@@ -6,6 +6,8 @@ Running the `./PlayFabServices_Linux.bash` script will be used to build the Play
 
 To run the build script you will need Linux either as installed on physical machine, or a Linux virtual machine, or by using the Windows Subsystem for Linux (WSL).
 
+nlohmann JSON is restored with vcpkg. Before the first build, run `./Build/vcpkg/restore-vcpkg.sh --triplet x64-linux` from the repository root (see the main README for details). The build scripts pass `-D VCPKG_TARGET_TRIPLET=x64-linux` to CMake.
+
 ## PlayFabServices_Linux.bash
 
 Running `./PlayFabServices_Linux.bash` will generate a variety of build configurations and binaries for PlayFab and its dependencies. These binaries will be placed at `/Out/x64/{Configuration}/{Library}`. After the PlayFab Services shared library is built by default it will be found at `/Out/x64/Release/PlayFabServices.Linux/PlayFabServicesLinux.so`

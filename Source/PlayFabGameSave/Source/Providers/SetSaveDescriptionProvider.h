@@ -38,7 +38,7 @@ protected:
     SharedPtr<FolderSyncManager> m_folderSync;
     String m_shortSaveDescription;
     // Owned by the FolderSyncManager, not by this provider: see FolderSyncManager::GetSyncMutex().
-    std::recursive_mutex& m_folderSyncMutex{ m_folderSync->GetSyncMutex() };
+    RecursiveMutex& m_folderSyncMutex{ m_folderSync->GetSyncMutex() };
     bool m_waitingForFinalize{ false };
     uint32_t m_waitElapsedMs{ 0 };
     static constexpr uint32_t c_waitSliceMs = 50;

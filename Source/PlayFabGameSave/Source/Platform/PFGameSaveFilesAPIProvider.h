@@ -92,7 +92,7 @@ public:
     ) noexcept = 0;
     virtual HRESULT SetMockDeviceIdForDebug(_In_ const char* deviceId) noexcept = 0;
     virtual HRESULT SetMockManifestOffsetForDebug(_In_ size_t offset) noexcept = 0;
-    virtual HRESULT SetMockDataFolderForDebug(_In_ const char* mockDataFolder) noexcept = 0;
+    virtual HRESULT SetMockDataFolderForDebug(_In_opt_ const char* mockDataFolder) noexcept = 0;
     virtual HRESULT GetStatsJsonSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* jsonSize) noexcept = 0;
     virtual HRESULT GetStatsJsonForDebug(
         _In_ PFLocalUserHandle localUserHandle,

@@ -34,6 +34,7 @@ void UploadStep::Reset()
     m_compressedFilesToUpload = {};
     m_initiateResult = {};
     m_stage = UploadStage::UploadStart;
+    m_forceCommit = false;
     m_deleteManifestStage = DeleteManifestStage::DeleteManifestStart;
     m_deleteManifestFailureHR = S_OK;
     m_hasStartedFinalizeManifest = false; // reset finalize tracking
@@ -352,85 +353,6 @@ HRESULT UploadStep::AddUncompressedFile(
     return S_OK;
 }
 
-
-const FileDetail* UploadStep::PopFileDetailBelowSize(
-    _In_ Vector<const FileDetail*>& filesToUpload, 
-    _In_ uint64_t sizeLimit)
-{
-    for (auto it = filesToUpload.begin(); it != filesToUpload.end(); it++)
-    {
-        const FileDetail* curFileDetail = *it;
-        if (curFileDetail->fileSizeBytes <= sizeLimit)
-        {
-            // Remove element from vector, and return element
-            if (filesToUpload.size() > 1)
-            {
-                std::iter_swap(it, filesToUpload.end() - 1);
-                filesToUpload.pop_back();
-            }
-            else
-            {
-                filesToUpload.clear();
-            }
-            return curFileDetail;
-        }
-    }
-
-    return nullptr;
-}
-
-
-
-Vector<Vector<const FileDetail*>> UploadStep::SplitUploadsIntoZipBatches(
-    _In_ Vector<const FileDetail*> filesToUpload // copy of vector on purpose
-    )
-{
-    Vector<Vector<const FileDetail*>> fileZipBatchSets;
-    const uint64_t maxUncompressedSize = 1048576ull * 64; // 64 MB
-
-    uint64_t uncompressedSizeInCurrentBatch{ 0 };
-
-    Vector<const FileDetail*> fileZipBatchSet;
-    while (filesToUpload.size() > 0)
-    {
-        uint64_t fileSizeLimit = maxUncompressedSize - uncompressedSizeInCurrentBatch;
-        const FileDetail* fileDetailToAdd = PopFileDetailBelowSize(filesToUpload, fileSizeLimit);
-        if (fileDetailToAdd)
-        {
-            uncompressedSizeInCurrentBatch += fileDetailToAdd->fileSizeBytes;
-            fileZipBatchSet.push_back(fileDetailToAdd);
-        }
-        else
-        {
-            if (fileZipBatchSet.size() == 0 && filesToUpload.size() > 0)
-            {
-                // If there was nothing yet in set but files remain, meaning the remaining file(s) 
-                // are bigger than size limit so just push it to a new batch all by itself
-                TRACE_WARNING("[GAME SAVE] UploadStep: File size (%llu bytes) exceeds max batch size (%llu bytes), creating oversized single-file batch",
-                    filesToUpload.back()->fileSizeBytes, maxUncompressedSize);
-                fileZipBatchSet.push_back(filesToUpload.back());
-                filesToUpload.pop_back();
-            }
-
-            if (fileZipBatchSet.size() > 0)
-            {
-                // No more files will fit in this batch, so start a new batch
-                fileZipBatchSets.push_back(std::move(fileZipBatchSet));
-                fileZipBatchSet.clear();
-                uncompressedSizeInCurrentBatch = 0;
-            }
-        }
-    }
-
-    if (fileZipBatchSet.size() > 0)
-    {
-        // Add the remaining the final zip if needed
-        fileZipBatchSets.push_back(std::move(fileZipBatchSet));
-    }
-
-    return fileZipBatchSets;
-}
-
 void UploadStep::UploadFileFinally(
     _In_ ISchedulableTask& task,
     _In_ UICallbackManager& uiCallbackManager,
@@ -535,6 +457,7 @@ HRESULT UploadStep::Upload(
 {
     UNREFERENCED_PARAMETER(syncProgress);
     ScopeTracer scopeTracer(FormatString("UploadStep - %s", EnumName(m_stage)));
+    HRESULT faultResult = S_OK; // debug fault points (core unit test plan H-5)
 
     switch (m_stage)
     {
@@ -570,6 +493,11 @@ HRESULT UploadStep::Upload(
                 return E_PF_GAMESAVE_USER_CANCELLED;
             }
 
+            if (StopAtUploadFaultPoint("Upload.BeforeCompress", task, faultResult))
+            {
+                return faultResult;
+            }
+
             m_compressedFilesToUpload.clear();
             m_compressedFilesToUploadCurIndex = 0;
             auto compressResult = CompressFiles(localFileFolderSet, saveFolder, latestPendingManifest->VersionString(), progressCallback, progressCallbackContext);
@@ -583,7 +511,8 @@ HRESULT UploadStep::Upload(
             if (m_compressedFilesToUpload.size() == 0 &&
                 localFileFolderSet->GetFilesToDeleteUponUpload().size() == 0 &&
                 localFileFolderSet->GetFoldersToCreateUponUpload().size() == 0 &&
-                localFileFolderSet->GetFoldersToDeleteUponUpload().size() == 0)
+                localFileFolderSet->GetFoldersToDeleteUponUpload().size() == 0 &&
+                !m_forceCommit)
             {
                 // Nothing to do, so just complete
                 m_stage = UploadStage::UploadDone;
@@ -646,7 +575,8 @@ HRESULT UploadStep::Upload(
                 HRESULT releaseHr = globalState->ApiProvider().ReleaseGameStorage();
                 if (FAILED(releaseHr))
                 {
-                    TRACE_WARNING("[GAME SAVE] UploadStep: ReleaseGameStorage failed hr=0x%08X (non-fatal)", releaseHr);
+                    TRACE_ERROR("[GAME SAVE] UploadStep: ReleaseGameStorage failed hr=0x%08X", releaseHr);
+                    return releaseHr;
                 }
                 else
                 {
@@ -702,9 +632,10 @@ HRESULT UploadStep::Upload(
                     m_stage = UploadStage::WaitForFailedUI_InitiateUpload;
                     if( false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Uploading) )
                     {
-                        // No fail callback set, so just fail API
+                        // No fail callback set, so just fail API (never with S_OK: the forced-failure
+                        // debug hook fails a call that succeeded).
                         m_stage = UploadStage::UploadStepFailure;
-                        m_failureHR = result.hr;
+                        m_failureHR = FAILED(result.hr) ? result.hr : E_FAIL;
                         task.ScheduleNow();
                     }
                 }
@@ -729,6 +660,11 @@ HRESULT UploadStep::Upload(
                 return E_PF_GAMESAVE_USER_CANCELLED;
             }
 
+            if (StopAtUploadFaultPoint("Upload.BeforeTransfer", task, faultResult))
+            {
+                return faultResult;
+            }
+
             UploadFileDetail fileDetail{};
             ExtendedManifestCompressedFileDetail& curUploadDetail = m_compressedFilesToUpload[m_compressedFilesToUploadCurIndex];
             fileDetail.fileName = curUploadDetail.fileName;
@@ -751,7 +687,9 @@ HRESULT UploadStep::Upload(
                     uint64_t totalSize{};
                     for (auto file : localFileFolderSet->GetFilesToDeleteUponUpload())
                     {
-                        totalSize += file->fileSizeBytes;
+                        // A deleted file isn't on disk any more (its local size is 0): what the cloud
+                        // discards is the size it had when it was last synced.
+                        totalSize += file->existsLocally ? file->fileSizeBytes : file->lastSyncFileSize;
                     }
                     m_telemetryManager->SetContextDeleteTotalSize(totalSize);
                 }
@@ -826,6 +764,10 @@ HRESULT UploadStep::Upload(
 
         case UploadStage::FinalizeManifest:
         {
+            if (StopAtUploadFaultPoint("Upload.BeforeFinalize", task, faultResult))
+            {
+                return faultResult;
+            }
             if (!m_hasStartedFinalizeManifest)
             {
                 m_hasStartedFinalizeManifest = true; // mark that finalize has begun
@@ -980,9 +922,41 @@ HRESULT UploadStep::Upload(
                         }
                     }
 
+                    // FinalizeManifest succeeded, so this manifest is now the cloud's latest finalized
+                    // save. Record it before anything local can fail: if WriteLocalManifest,
+                    // ListManifestsAfterUpload or TakeLock fails and the user cancels,
+                    // FolderSyncManager needs the correct finalized version for RelockStep and to know
+                    // a pending rollback was committed. PromoteIfNeeded overwrites this with the
+                    // authoritative server data.
+                    m_postUploadLatestFinalizedPFManifest = latestPendingManifest->GetManifest();
+
                     localFileFolderSet->UpdateFilesWithUploadData();
-                    HRESULT writeHr = LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, shortSaveDescription);
-                    if (FAILED(writeHr))
+                    // Every folder this version carries from this device (on disk) is in the cloud
+                    // now: recorded as synced (localstate.json keeps a folder's "never synced" state
+                    // otherwise).
+                    for (const FolderDetail& folder : localFileFolderSet->GetFolders())
+                    {
+                        if (folder.existsLocally)
+                        {
+                            folder.hasLastSync = true;
+                        }
+                    }
+                    HRESULT writeHr = S_OK;
+                    // Debug fault point (core unit test plan H-5): the version is committed, this
+                    // device's baselines aren't. Fail fails like the write below; Abandon is a crash.
+                    switch (CheckFaultPointForDebug("Upload.AfterFinalize", writeHr))
+                    {
+                        case PFGameSaveFaultAction::Fail:
+                            writeHr = FAILED(writeHr) ? writeHr : E_FAIL;
+                            break;
+                        case PFGameSaveFaultAction::Abandon:
+                            m_uploadStagingFolder.clear(); // left for the next AddUser's sweep, like a crash
+                            writeHr = E_ABORT;
+                            break;
+                        default:
+                            writeHr = LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, shortSaveDescription);
+                            break;
+                    }                    if (FAILED(writeHr))
                     {
                         TRACE_ERROR("[GAME SAVE] UploadStep: WriteLocalManifest FAILED hr=0x%08X", writeHr);
                         m_stage = UploadStage::UploadStepFailure;
@@ -990,11 +964,6 @@ HRESULT UploadStep::Upload(
                         task.ScheduleNow();
                         return;
                     }
-                    // Save the pending manifest as the preliminary post-finalize manifest.
-                    // If ListManifestsAfterUpload fails and the user cancels, this ensures
-                    // FolderSyncManager has the correct finalized version for RelockStep.
-                    // PromoteIfNeeded will overwrite this with the authoritative server data.
-                    m_postUploadLatestFinalizedPFManifest = latestPendingManifest->GetManifest();
 
                     m_stage = UploadStage::ListManifestsAfterUpload;
                     task.ScheduleNow();
@@ -1133,6 +1102,10 @@ HRESULT UploadStep::Upload(
 
         case UploadStage::TakeLock:
         {
+            if (StopAtUploadFaultPoint("Upload.TakeLock", task, faultResult))
+            {
+                return faultResult;
+            }
             TRACE_INFORMATION("[GAME SAVE] UploadStep: TakeLock %s. FinalizedManifest v%s", 
                 (option == PFGameSaveFilesUploadOption::KeepDeviceActive) ? "KeepDeviceActive" : "ReleaseDeviceAsActive", 
                 m_postUploadLatestFinalizedPFManifest.GetVersion().c_str());
@@ -1376,6 +1349,20 @@ HRESULT UploadStep::Upload(
     }
 
     return S_OK;
+}
+
+bool UploadStep::StopAtUploadFaultPoint(_In_z_ const char* point, _In_ ISchedulableTask& task, _Out_ HRESULT& result)
+{
+    bool abandoned = false;
+    if (!StopAtStageFaultPointForDebug(point, task, S_OK, result, &abandoned))
+    {
+        return false;
+    }
+    if (abandoned)
+    {
+        m_uploadStagingFolder.clear(); // left for the next AddUser's sweep, like a crash
+    }
+    return true;
 }
 
 UploadStep::KnownGoodPromotionResult UploadStep::EvaluateKnownGoodPromotionEligibility()

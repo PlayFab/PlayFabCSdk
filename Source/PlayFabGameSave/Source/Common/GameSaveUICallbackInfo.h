@@ -28,7 +28,7 @@ struct GameSaveUiCallbackInfo
     void* activeDeviceChangedContext{ nullptr };
 };
 GameSaveUiCallbackInfo& GetGameSaveUiCallbackInfo() noexcept;
-std::mutex& GetGameSaveUiCallbackMutex() noexcept;
+Mutex& GetGameSaveUiCallbackMutex() noexcept;
 
 } // namespace GameSave
 } // namespace PlayFab

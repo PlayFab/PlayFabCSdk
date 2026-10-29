@@ -1,0 +1,7 @@
+{
+  "name": "playfab-c",
+  "dependencies": [
+    "libarchive",
+    "nlohmann-json"
+  ]
+}

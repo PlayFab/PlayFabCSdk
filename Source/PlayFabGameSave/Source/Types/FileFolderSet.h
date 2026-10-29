@@ -67,6 +67,9 @@ public:
     const Vector<FileDetail>& GetFiles() const;
     const Vector<FolderDetail>& GetFolders() const;
     const Vector<CompressedFile>& GetCompressedFiles() const;
+    // Replaces each compressed file's download link with urlForFile(fileName) when that is non-empty
+    // (fresh links after the old ones expired, OQ-15).
+    void RefreshDownloadUrls(const std::function<String(const String& fileName)>& urlForFile);
 
     // Helper functions
     const FileDetail* GetFileDetailFromRelFilePath(const String& relFilePath) const;
@@ -93,6 +96,9 @@ private:
     // Internal private functions used by Init* functions
     HRESULT MergeLocalFolders(const String& rootPath, const String& folderName, const String& fullFolderPath);
     HRESULT MergeLocalFiles(const String& rootPath, const String& fullFolderPath, size_t folderIndex);
+    // The scan met a link at linkFullPath and didn't follow it: the recorded folders and synced files
+    // at or beneath it stand as present and unchanged (FileDetail::behindLink).
+    void MarkRecordsBehindLink(const String& rootPath, const String& linkFullPath);
     size_t AddFileDetail(FileDetail&& fileDetail); // returns index of FileDetail in m_files
     size_t AddFolderDetail(FolderDetail&& folderDetail); // returns index of FolderDetail in m_folders
     size_t AddCompressedFile(CompressedFile&& compressedFile); // returns index of CompressedFile in m_compressedFiles

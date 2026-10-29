@@ -23,7 +23,7 @@ public:
     void CloseHandle(HandleT handle);
 
 private:
-    mutable std::mutex m_mutex;
+    mutable Mutex m_mutex;
     Map<HandleT, SharedPtr<ObjectT>> m_handles;
     uintptr_t m_nextHandle;
 };

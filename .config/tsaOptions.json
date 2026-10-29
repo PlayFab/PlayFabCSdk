@@ -1,9 +1,0 @@
-{
-    "instanceUrl": "https://microsoft.visualstudio.com",
-    "projectName": "xbox",
-    "areaPath": "Xbox\\GDX\\SDKs\\PlayFab\\PF Core",
-    "iterationPath": "Xbox\\Backlog",
-    "notificationAliases": [ "gdxcoresdkteam@microsoft.com" ],
-    "ignoreBranchName": true,
-    "template": "TFSOSG"
-  }

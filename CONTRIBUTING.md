@@ -2,10 +2,11 @@
 
 ## Getting Started
 
-1. Clone with submodules: `git clone --recurse-submodules <url>`
-2. Open `PlayFabGameSave.C.GDK.vs2022.sln` in Visual Studio 2022
-3. Read `AGENTS.md` for repository overview and conventions
-4. Read `specs/ARCHITECTURE.md` for system architecture
+1. Clone with submodules: `git clone --recurse-submodules <url>` (only SDKGenerator is a submodule)
+2. Restore the vcpkg dependencies for your platform, e.g. `Build\vcpkg\Restore-Vcpkg.ps1 -Triplet x64-windows` (see `specs/DEPENDENCIES.md` for other platforms)
+3. Open `PlayFabGameSave.C.GDK.vs2022.sln` in Visual Studio 2022
+4. Read `AGENTS.md` for repository overview and conventions
+5. Read `specs/ARCHITECTURE.md` for system architecture
 
 ## Prerequisites
 
@@ -130,4 +131,4 @@ When you submit a pull request, a CLA bot will automatically determine whether y
 | `specs/ARCHITECTURE.md` | System design, directory map, data flow |
 | `specs/CONVENTIONS.md` | Naming, async patterns, memory management |
 | `specs/BUILD_AND_TEST.md` | Complete build/test/debug guide |
-| `specs/DEPENDENCIES.md` | External library details |
+| `specs/DEPENDENCIES.md` | External library details, vcpkg triplets per platform |

@@ -79,7 +79,7 @@ public:
     ) noexcept override;
     HRESULT SetMockDeviceIdForDebug(_In_ const char* deviceId) noexcept override;
     HRESULT SetMockManifestOffsetForDebug(_In_ size_t offset) noexcept override;
-    HRESULT SetMockDataFolderForDebug(_In_ const char* mockDataFolder) noexcept override;
+    HRESULT SetMockDataFolderForDebug(_In_opt_ const char* mockDataFolder) noexcept override;
     HRESULT GetStatsJsonSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* jsonSize) noexcept override;
     HRESULT GetStatsJsonForDebug(
         _In_ PFLocalUserHandle localUserHandle,
@@ -112,6 +112,11 @@ public:
         _In_ XAsyncBlock* async
     ) noexcept override;
     HRESULT SetSaveDescriptionResult(_Inout_ XAsyncBlock* async) noexcept override;
+
+    // Debug only (PFGameSaveFilesSetSimulatedSeparateMetadataStorageForDebug): behave like a platform
+    // whose localstate.json is stored apart from game storage (marker-based wipe detection).
+    bool HasSeparateMetadataStorage() noexcept override;
+    bool IsGameStorageWiped(const String& saveFolder) noexcept override;
 };
 
 } // namespace GameSave

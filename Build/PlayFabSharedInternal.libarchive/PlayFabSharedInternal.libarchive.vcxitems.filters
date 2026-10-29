@@ -6,397 +6,397 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_acl.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_acl.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_blake2s_ref.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_blake2s_ref.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_blake2sp_ref.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_blake2sp_ref.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_check_magic.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_check_magic.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_cmdline.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_cmdline.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_cryptor.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_cryptor.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_digest.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_digest.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_disk_acl_darwin.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_disk_acl_darwin.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_disk_acl_freebsd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_disk_acl_freebsd.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_disk_acl_linux.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_disk_acl_linux.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_disk_acl_sunos.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_disk_acl_sunos.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_copy_bhfi.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_copy_bhfi.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_copy_stat.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_copy_stat.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_link_resolver.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_link_resolver.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_sparse.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_sparse.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_stat.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_stat.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_strmode.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_strmode.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_xattr.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_xattr.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_getdate.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_getdate.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_hmac.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_hmac.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_match.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_match.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_options.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_options.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_pack_dev.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_pack_dev.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_pathmatch.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_pathmatch.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_ppmd7.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_ppmd7.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_ppmd8.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_ppmd8.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_random.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_random.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_rb.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_rb.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_add_passphrase.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_add_passphrase.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_append_filter.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_append_filter.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_data_into_fd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_data_into_fd.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_disk_entry_from_file.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_disk_entry_from_file.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_disk_posix.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_disk_posix.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_disk_set_standard_lookup.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_disk_set_standard_lookup.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_disk_windows.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_disk_windows.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_extract.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_extract.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_extract2.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_extract2.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_open_fd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_open_fd.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_open_file.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_open_file.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_open_filename.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_open_filename.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_open_memory.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_open_memory.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_set_format.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_set_format.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_set_options.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_set_options.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_all.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_all.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_by_code.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_by_code.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_bzip2.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_bzip2.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_compress.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_compress.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_grzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_grzip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_gzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_gzip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_lrzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_lrzip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_lz4.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_lz4.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_lzop.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_lzop.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_none.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_none.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_program.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_program.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_rpm.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_rpm.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_uu.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_uu.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_xz.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_xz.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_zstd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_zstd.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_7zip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_7zip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_all.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_all.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_ar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_ar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_by_code.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_by_code.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_cab.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_cab.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_cpio.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_cpio.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_empty.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_empty.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_iso9660.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_iso9660.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_lha.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_lha.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_mtree.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_mtree.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_rar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_rar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_rar5.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_rar5.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_raw.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_raw.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_tar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_tar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_warc.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_warc.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_xar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_xar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_zip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_zip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_string.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_string.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_string_sprintf.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_string_sprintf.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_util.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_util.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_version_details.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_version_details.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_virtual.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_virtual.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_windows.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_windows.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_b64encode.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_b64encode.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_by_name.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_by_name.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_bzip2.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_bzip2.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_compress.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_compress.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_grzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_grzip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_gzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_gzip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_lrzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_lrzip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_lz4.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_lz4.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_lzop.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_lzop.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_none.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_none.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_program.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_program.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_uuencode.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_uuencode.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_xz.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_xz.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_zstd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_zstd.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_disk_posix.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_disk_posix.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_disk_set_standard_lookup.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_disk_set_standard_lookup.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_disk_windows.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_disk_windows.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_open_fd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_open_fd.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_open_file.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_open_file.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_open_filename.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_open_filename.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_open_memory.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_open_memory.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_7zip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_7zip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_ar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_ar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_by_name.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_by_name.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_cpio.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_cpio.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_cpio_binary.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_cpio_binary.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_cpio_newc.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_cpio_newc.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_cpio_odc.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_cpio_odc.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_filter_by_ext.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_filter_by_ext.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_gnutar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_gnutar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_iso9660.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_iso9660.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_mtree.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_mtree.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_pax.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_pax.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_raw.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_raw.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_shar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_shar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_ustar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_ustar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_v7tar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_v7tar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_warc.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_warc.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_xar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_xar.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_zip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_zip.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_options.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_options.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_passphrase.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_passphrase.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\filter_fork_posix.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\filter_fork_posix.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\filter_fork_windows.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\filter_fork_windows.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\xxhash.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\xxhash.c">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

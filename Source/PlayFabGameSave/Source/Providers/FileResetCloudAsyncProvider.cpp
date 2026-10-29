@@ -17,7 +17,30 @@ HRESULT FileResetCloudAsyncProvider::DoWork(RunContext runContext)
     SingleThreadProviderValidationScope threadScope(m_singleThreadProvider);
 #endif
 
-    HRESULT hr = m_folderSync->DoWorkResetCloud(runContext, *this, m_folderSyncMutex);
+    // Debug fault injection: holds (Pause), fails or abandons a reset at its start.
+    HRESULT hr = S_OK;
+    HRESULT faultHr = S_OK;
+    switch (CheckFaultPointForDebug("ResetCloud.Start", faultHr))
+    {
+        case PFGameSaveFaultAction::Pause:
+            if (runContext.CancellationToken().IsCancelled())
+            {
+                hr = E_ABORT; // a held reset ends when cancelled (XAsyncCancel, uninitialize)
+                break;
+            }
+            Schedule(20);
+            return E_PENDING;
+        case PFGameSaveFaultAction::Fail:
+            hr = faultHr;
+            break;
+        case PFGameSaveFaultAction::Abandon:
+            hr = E_ABORT;
+            break;
+        default:
+            hr = m_folderSync->DoWorkResetCloud(runContext, *this, m_folderSyncMutex);
+            break;
+    }
+
     if (hr != E_PENDING)
     {
         TRACE_TASK(FormatString("FileResetCloudAsyncProvider::DoWork HR:0x%0.8x", hr));

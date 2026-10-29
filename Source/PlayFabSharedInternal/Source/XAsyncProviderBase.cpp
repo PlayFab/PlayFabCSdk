@@ -27,7 +27,14 @@ HRESULT XAsyncProviderBase::Run(_In_ UniquePtr<XAsyncProviderBase> provider) noe
     TRACE_INFORMATION("[XAsyncProviderBase] [ThreadID %s] XAsyncProviderBase::Run", threadIdStream.str().c_str());
 
     RETURN_HR_IF(E_ABORT, provider->m_runContext.RegisterTerminableAndCheck(*provider));
-    RETURN_IF_FAILED(XAsyncBegin(provider->m_async, provider.get(), nullptr, provider->identityName, XAsyncProvider));
+    HRESULT hr = XAsyncBegin(provider->m_async, provider.get(), nullptr, provider->identityName, XAsyncProvider);
+    if (FAILED(hr))
+    {
+        // XAsync never took ownership, so it will not send Cleanup. Unregister before
+        // destroying the provider, including notification of a concurrent termination.
+        Cleanup(provider.release());
+        return hr;
+    }
     provider.release();
     return S_OK;
 }
@@ -153,24 +160,7 @@ HRESULT CALLBACK XAsyncProviderBase::XAsyncProvider(_In_ XAsyncOp op, _Inout_ co
         TRACE_VERBOSE("[XAsyncProviderBase] [ThreadID %s] Provider[ID=%s] XAsyncOp::Cleanup (terminated=%s)",
             threadIdStream.str().c_str(), provider->identityName, provider->m_terminationListener ? "true" : "false");
 
-        // Copy the ITerminationListener locally before destroying the provider, but unregister
-        // beforehand to avoid race condition between termination and provider cleanup.
-        bool terminated = provider->m_runContext.UnregisterTerminableAndCheck(*provider);
-        ITerminationListener* terminationListener = provider->m_terminationListener;
-        void* terminationListenerContext = provider->m_terminationListenerContext;
-
-        // Sanity check - if the runContext was terminated, we should have a terminationListener
-        assert(!terminated || terminationListener);
-        UNREFERENCED_PARAMETER(terminated);
-
-        // Cleanup provider
-        UniquePtr<XAsyncProviderBase>{ provider }.reset();
-
-        // Notify listener if needed
-        if (terminationListener)
-        {
-            terminationListener->OnTerminated(terminationListenerContext);
-        }
+        Cleanup(provider);
 
         return S_OK;
     }
@@ -179,6 +169,21 @@ HRESULT CALLBACK XAsyncProviderBase::XAsyncProvider(_In_ XAsyncOp op, _Inout_ co
         assert(false);
         return S_OK;
     }
+    }
+}
+
+void XAsyncProviderBase::Cleanup(XAsyncProviderBase* provider) noexcept
+{
+    bool terminated = provider->m_runContext.UnregisterTerminableAndCheck(*provider);
+    ITerminationListener* terminationListener = provider->m_terminationListener;
+    void* terminationListenerContext = provider->m_terminationListenerContext;
+    assert(!terminated || terminationListener);
+    UNREFERENCED_PARAMETER(terminated);
+
+    UniquePtr<XAsyncProviderBase>{ provider }.reset();
+    if (terminationListener)
+    {
+        terminationListener->OnTerminated(terminationListenerContext);
     }
 }
 

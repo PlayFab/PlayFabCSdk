@@ -70,6 +70,8 @@ public:
     const FileDetail* PopThumbnail(_In_ Vector<const FileDetail*>& filesToUpload);
     void SetOriginalActivationBaselineVersion(uint64_t v) { m_originalActivationBaselineVersion = v; }
     uint64_t GetOriginalActivationBaselineVersion() const { return m_originalActivationBaselineVersion; }
+    // Finalize a new manifest even when no file changed (e.g. to commit a rollback as the latest save).
+    void SetForceCommit(bool forceCommit) { m_forceCommit = forceCommit; }
 
     // Staging directory holding this attempt's compressed zips and extended manifest, or empty if
     // this attempt never got as far as compressing. Owned by the attempt: callers must only delete
@@ -109,6 +111,14 @@ public:
     );
 
 private:
+    // Unit tests only (core unit test plan H-1): calls the private static batching rules below
+    // (UploadStepRules.cpp). Defined in the test executable; nothing in the SDK defines or uses it.
+    friend class UploadStepTestAccess;
+
+    // Debug fault point at an upload stage (core unit test plan H-5, StopAtStageFaultPointForDebug).
+    // Abandon leaves this attempt's staging folder for the next AddUser's sweep, like a crash.
+    bool StopAtUploadFaultPoint(_In_z_ const char* point, _In_ ISchedulableTask& task, _Out_ HRESULT& result);
+
     Result<Vector<ExtendedManifestCompressedFileDetail>> CompressFiles(
         _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
         _In_ const String& saveFolder,
@@ -178,6 +188,7 @@ private:
     ManifestWrap m_postUploadLatestFinalizedPFManifest;
     SharedPtr<GameSaveTelemetryManager> m_telemetryManager;
     uint64_t m_originalActivationBaselineVersion{ 0 }; // Tracks the finalized manifest version that was chosen as the baseline when AddUser/activation began.
+    bool m_forceCommit{ false };
     bool m_originalBaselinePromoted{ false };
     ConflictMetadata m_conflictMetadata; // Conflict metadata for FinalizeManifest
 

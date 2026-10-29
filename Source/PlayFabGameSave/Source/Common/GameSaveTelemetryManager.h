@@ -288,16 +288,22 @@ public:
     void SetContextSyncBlockName(const String& blockName) noexcept { m_contextSyncErrorEvent.blockName = blockName; }
     void SetContextSyncSyncErrorSource(SyncErrorSource errorSource) noexcept { m_contextSyncErrorEvent.errorSource = errorSource; }
 
+    // Debug: the events this manager emitted (name, payload JSON without the common fields), oldest
+    // first, the last kMaxDebugEvents of them. Recorded with mocks too, so unit tests can assert them.
+    Vector<std::pair<String, String>> GetEmittedEventsForDebug() const;
+    static constexpr size_t kMaxDebugEvents = 64;
     HRESULT EmitContextActivationEvent() noexcept;
     HRESULT EmitContextActivationFailureEvent() const noexcept;
     HRESULT EmitContextDeleteEvent() const noexcept;
     HRESULT EmitContextSyncEvent() noexcept;
-    HRESULT EmitContextSyncErrorEvent() const noexcept;
+    HRESULT EmitContextSyncErrorEvent() noexcept;
 
     void ResetContextActivation() noexcept;
     void ResetContextDelete() noexcept;
     void ResetContextSync() noexcept;
-
+    // A SyncFailed Retry starts a new attempt within the operation: its failure (if any) is sent as
+    // a context_sync_error of its own. The event's fields are kept; the failing step sets its own.
+    void RearmContextSyncError() noexcept { m_contextSyncErrorEventEmitted = false; }
     static bool useMocks;
 
 private:
@@ -316,12 +322,16 @@ private:
 
     bool m_contextActivationEventEmitted{ false };
     bool m_contextSyncEventEmitted{ false };
+    bool m_contextSyncErrorEventEmitted{ false };
 
     ContextActivationEvent m_contextActivationEvent{};
     ContextActivationFailureEvent m_contextActivationFailureEvent{};
     ContextDeleteEvent m_contextDeleteEvent{};
     ContextSyncEvent m_contextSyncEvent{};
     ContextSyncErrorEvent m_contextSyncErrorEvent{};
+
+    mutable Mutex m_debugEventsMutex;
+    mutable Vector<std::pair<String, String>> m_debugEvents; // guarded by m_debugEventsMutex
 };
 
 } // namespace GameSave

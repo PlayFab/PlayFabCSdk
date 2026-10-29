@@ -82,6 +82,7 @@ private:
     void Terminate(ITerminationListener& listener, void* context) noexcept override;
 
     static HRESULT CALLBACK XAsyncProvider(_In_ XAsyncOp op, _Inout_ const XAsyncProviderData* data) noexcept;
+    static void Cleanup(XAsyncProviderBase* provider) noexcept;
 
     RunContext m_runContext;
     XAsyncBlock* m_async{ nullptr };

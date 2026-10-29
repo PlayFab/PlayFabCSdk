@@ -72,8 +72,8 @@ private:
 
     static void CheckTerminationAndNotifyListener(SharedPtr<RunContextState> runContext, std::unique_lock<std::mutex> lock) noexcept;
 
-    std::mutex m_mutex;
-    std::recursive_mutex m_terminationMutex;
+    Mutex m_mutex;
+    RecursiveMutex m_terminationMutex;
     TaskQueue const m_queue;
     PlayFab::CancellationToken m_cancellationToken;
     SharedPtr<RunContextState> m_parent;

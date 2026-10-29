@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include <playfab/core/cpp/LocalUser.h>
 #include "Platform/Platform.h"
+#include "ActiveDevicePollWorker.h"
 
 /// <summary>
 /// Internal PFCore function to enable PFGameSave's init to also initialized PFCore with HCInitArgs on demand as needed
@@ -179,6 +180,14 @@ HRESULT CALLBACK GameSaveGlobalState::CleanupAsyncProvider(XAsyncOp op, XAsyncPr
         // Without this, the provider blocks forever in WaitForScheduleNow() and termination hangs.
         context->state->CancelAllPendingUIWaits();
 
+#if defined(_DEBUG)
+        // A forced active-device change armed by PFGameSaveFilesSetActiveDevicePollForceChangeForDebug is
+        // consumed by the next poll that runs. If none ran (the user was offline, or no
+        // active-device-changed callback was set), don't let it outlive this instance and fire on
+        // the first poll after the next initialize.
+        ActiveDevicePollWorker::SetActiveDevicePollForceChange(false);
+#endif
+
         context->state->m_runContext.Terminate(*context->state, context);
         return S_OK;
     }
@@ -222,7 +231,7 @@ void GameSaveGlobalState::OnTerminated(void* c) noexcept
 
     // Reset process-global UI callback info to prevent stale pointers on re-initialization
     {
-        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        std::lock_guard<Mutex> lock(GetGameSaveUiCallbackMutex());
         GetGameSaveUiCallbackInfo() = GameSaveUiCallbackInfo{};
     }
 

@@ -54,6 +54,8 @@ get_service_wrapper_source_files(
     "${PATH_TO_SOURCE}"
 )
 
+include("${PATH_TO_ROOT}/Build/vcpkg/Vcpkg.cmake")
+
 set(COMMON_INCLUDE_DIRS
     "${PATH_TO_SOURCE}/PlayFabCore/Source"
     "${PATH_TO_SOURCE}/PlayFabCore/Source/Common"
@@ -61,7 +63,7 @@ set(COMMON_INCLUDE_DIRS
     "${PATH_TO_SOURCE}/PlayFabCore/Include/Generated"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include"
     "${PATH_TO_SOURCE}/PlayFabSharedInternal/Include/Generated"
-    "${PATH_TO_ROOT}/External/nlohmann/include"
+    "${VCPKG_INSTALLED_INCLUDE_DIR}"
     "${PATH_TO_LHC}/Include"
 )
 

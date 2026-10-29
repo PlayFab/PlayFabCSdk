@@ -96,5 +96,5 @@ log "BUILD_PF_SHARED_INTERNAL = ${BUILD_PF_SHARED_INTERNAL}"
 log "BUILD_PF_CORE = ${BUILD_PF_CORE}"
 
 # make PlayFabServices
-sudo cmake -S "$SCRIPT_DIR" -B "$SCRIPT_DIR"/../../Int/CMake/PlayFabServices.Linux -D CMAKE_BUILD_TYPE=$CONFIGURATION -D LHC_PATH=$LHC_PATH
+sudo cmake -S "$SCRIPT_DIR" -B "$SCRIPT_DIR"/../../Int/CMake/PlayFabServices.Linux -D CMAKE_BUILD_TYPE=$CONFIGURATION -D LHC_PATH=$LHC_PATH -D VCPKG_TARGET_TRIPLET=x64-linux
 sudo make VERBOSE=1 -C "$SCRIPT_DIR"/../../Int/CMake/PlayFabServices.Linux

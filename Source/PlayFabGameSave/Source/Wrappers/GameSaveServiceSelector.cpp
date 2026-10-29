@@ -8,8 +8,48 @@
 #include "HttpArchiveDownloadRequest.h"
 #include "Generated/GameSaveTypes.h"
 #include "Generated/GameSave.h"
+#include "GameSaveGlobalState.h"
 
 using namespace PlayFab::GameSave;
+
+namespace
+{
+
+// Debug (PFGameSaveFilesSetDownloadUrlExpiryForDebug): a download through an expired link fails like
+// an expired SAS (HTTP 403). Release builds have no URL-expiry hook: no state lookup per download.
+bool IsDownloadUrlExpiredForDebug()
+{
+#if defined(_DEBUG)
+    PlayFab::SharedPtr<GameSaveGlobalState> state;
+    return SUCCEEDED(GameSaveGlobalState::Get(state)) && state->IsDebugDownloadUrlExpired();
+#else
+    return false;
+#endif
+}
+
+// Debug: counts the download links issued (PFGameSaveUrlExpiryMode::ExpireIssued). Release builds
+// return the operation unchanged (no continuation).
+PlayFab::AsyncOp<PlayFab::GameSaveWrapper::GetManifestDownloadDetailsResponse> NoteLinksIssued(PlayFab::AsyncOp<PlayFab::GameSaveWrapper::GetManifestDownloadDetailsResponse>&& op)
+{
+#if defined(_DEBUG)
+    return op.Then([](PlayFab::Result<PlayFab::GameSaveWrapper::GetManifestDownloadDetailsResponse> result) -> PlayFab::Result<PlayFab::GameSaveWrapper::GetManifestDownloadDetailsResponse>
+    {
+        if (SUCCEEDED(result.hr))
+        {
+            PlayFab::SharedPtr<GameSaveGlobalState> state;
+            if (SUCCEEDED(GameSaveGlobalState::Get(state)))
+            {
+                state->OnDebugDownloadLinksIssued();
+            }
+        }
+        return result;
+    });
+#else
+    return std::move(op);
+#endif
+}
+
+} // anonymous namespace
 
 namespace PlayFab
 {
@@ -43,12 +83,12 @@ AsyncOp<GetManifestDownloadDetailsResponse> GameSaveServiceSelector::GetManifest
 {
     if (useMocks)
     {
-        return GameSaveServiceMock::GetManifestDownloadDetails(entity, request, rc);
+        return NoteLinksIssued(GameSaveServiceMock::GetManifestDownloadDetails(entity, request, rc));
     }
     else
     {
         // Call auto-gen service wrapper
-        return GameSaveAPI::GetManifestDownloadDetails(entity, request, rc);
+        return NoteLinksIssued(GameSaveAPI::GetManifestDownloadDetails(entity, request, rc));
     }
 }
 
@@ -145,6 +185,10 @@ AsyncOp<Vector<char>> GameSaveServiceSelector::DownloadFileFromCloudToBytes(
     const String& mockFilePath
 )
 {
+    if (IsDownloadUrlExpiredForDebug())
+    {
+        return Result<Vector<char>>{ HttpStatusToHR(403) };
+    }
     if (useMocks)
     {
         return GameSaveServiceMock::DownloadFileFromCloud(runContext, mockFilePath, downloadUrl, nullptr)
@@ -195,6 +239,10 @@ AsyncOp<void> GameSaveServiceSelector::DownloadFileFromCloud(
     const uint64_t customCurrentSizeBytes
 )
 {
+    if (IsDownloadUrlExpiredForDebug())
+    {
+        return Result<void>{ HttpStatusToHR(403) };
+    }
     if (useMocks)
     {
         return GameSaveServiceMock::DownloadFileFromCloud(runContext, fileDetail.fullFilePath, downloadUrl, fileDetail.archiveContext);
@@ -346,7 +394,7 @@ PlayFab::AsyncOp<void> GameSaveServiceSelector::UploadSingleFileToCloud(
     if (useMocks)
     {
         TRACE_INFORMATION("[GAME SAVE] UploadStep: UploadSingleFileToCloud using mocks");
-        return GameSaveServiceMock::UploadFileToCloud(runContext, fileDetail.fileName, fileDetail.fullFilePath);
+        return GameSaveServiceMock::UploadBlobToCloud(runContext, fileDetail.fileName, fileDetail.fullFilePath);
     }
 
     String url;
@@ -403,11 +451,7 @@ AsyncOp<void> GameSaveServiceSelector::DeleteManifest(
 {
     if (useMocks)
     {
-        // TOOD: needed?
-        UNREFERENCED_PARAMETER(rc);
-        UNREFERENCED_PARAMETER(entity);
-        UNREFERENCED_PARAMETER(request);
-        return Result<void>{ S_OK };
+        return GameSaveServiceMock::DeleteManifest(entity, request, rc);
     }
     else
     {

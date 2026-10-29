@@ -144,7 +144,7 @@ private:
 
     std::optional<ResultT> m_result;
     SharedPtr<IContinuation<ResultT>> m_continuation;
-    mutable std::mutex m_mutex;
+    mutable Mutex m_mutex;
 };
 
 // Implementation of a Continuation to an AsyncOp. Func is a Functor that returns either Result<T> or AsyncOp<T>
@@ -229,8 +229,8 @@ void AsyncOp<T>::Finally(Func&& continuationFunc) noexcept
 template<typename T>
 typename AsyncOp<T>::ResultT AsyncOp<T>::Wait() noexcept
 {
-    std::mutex mutex;
-    std::condition_variable waitCondition;
+    Mutex mutex;
+    ConditionVariable waitCondition;
     bool operationComplete{ false };
     std::optional<ResultT> asyncResult;
 

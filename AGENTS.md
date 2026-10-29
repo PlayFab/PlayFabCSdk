@@ -14,7 +14,7 @@ This is **not** a web service or a standalone application. It is a set of static
 |------|---------------|
 | `specs/ARCHITECTURE.md` | System overview, directory map, data flow, component diagram |
 | `specs/CONVENTIONS.md` | Naming rules, async patterns, memory management, error handling, code generation rules |
-| `specs/DEPENDENCIES.md` | External libraries (nlohmann JSON, libarchive, libHttpClient, Steamworks, SDKGenerator) |
+| `specs/DEPENDENCIES.md` | External libraries (nlohmann JSON, libarchive via vcpkg; libHttpClient, Steamworks, SDKGenerator) |
 | `specs/BUILD_AND_TEST.md` | Build commands, test execution, AI build-test-fix loop guide |
 | `specs/PUBLIC_DOCS.md` | Pointers to authoritative PlayFab documentation on learn.microsoft.com |
 | `specs/admin-config-apis.md` | How to read/write title config (API access policy, title data, etc.) via `POST /Admin/*` REST endpoints — for agentic investigation/repair of a title behind failing SDK calls |
@@ -61,6 +61,7 @@ Public resources use create/close handle pattern with internal ref-counting. Han
 - Shared source files live in `Build/<Library>.Common/*.vcxitems`.
 - Platform-specific build projects import shared items.
 - Include paths controlled by `.props` files — don't hardcode in `.vcxproj`.
+- nlohmann JSON and libarchive come from vcpkg (`Build/vcpkg.json`), restored into `Build/vcpkg_installed/<triplet>/`. Each platform must read the include dir of its own triplet: CMake (Linux/Android) via `Build/vcpkg/Vcpkg.cmake` (`VCPKG_INSTALLED_INCLUDE_DIR`), Xcode via `$(PF_VCPKG_TRIPLET)`, MSBuild via `PlayFabVCPKGInstalledDir`. Never reintroduce `External/nlohmann` or `External/libarchive`.
 - Use `PlayFabGameSave.C.GDK.vs2022.sln` for builds that include test apps.
 
 ## Architecture at a Glance
@@ -99,12 +100,12 @@ Source/
   PlayFabGameSave/       # Game save / connected storage
   PlayFabSharedInternal/ # Shared internal utilities
   *GeneratorTemplate/    # Code generation templates (do not edit generated output directly)
-External/                # Third-party: nlohmann JSON, libarchive, SDKGenerator, Steamworks
+External/                # Third-party: SDKGenerator (submodule), Steamworks, libarchive config
 Test/                    # Test framework (see Test/AGENTS.md)
 Utilities/Scripts/       # Build and test runner scripts
 specs/                   # Architecture specs, design docs, test docs
 Samples/                 # Sample apps
-Build/                   # Build configuration and props files
+Build/                   # Build configuration, props files, vcpkg manifest and restore scripts (Build/vcpkg/)
 Pipelines/               # CI/CD pipeline definitions
 ```
 
@@ -155,7 +156,7 @@ HCSettingsSetTraceLevel(HCTraceLevel::Verbose);
 
 ## Submodule Warning
 
-This repo uses git submodules. Always clone with `--recurse-submodules`:
+This repo uses a git submodule for SDKGenerator. Always clone with `--recurse-submodules`:
 
 ```bash
 git clone --recurse-submodules <url>
@@ -163,3 +164,18 @@ git submodule update --init --recursive
 ```
 
 GitHub's "Download ZIP" **will not work**.
+
+## vcpkg Dependencies
+
+nlohmann JSON and libarchive are restored by vcpkg before the first build. A missing-include error for `nlohmann/json.hpp` usually means the triplet was not restored:
+
+```powershell
+Build\vcpkg\Restore-Vcpkg.ps1 -Triplet x64-windows    # Windows / GDK
+```
+```bash
+./Build/vcpkg/restore-vcpkg.sh --triplet x64-linux              # Linux
+./Build/vcpkg/restore-vcpkg.sh --triplet arm64-android          # Android; repeat for arm-android, x64-android, x86-android
+./Build/PlayFabCore.Apple/Restore-VcpkgApple.sh                 # iOS and macOS (all Apple triplets)
+```
+
+See `specs/DEPENDENCIES.md` for the platform-to-triplet mapping.

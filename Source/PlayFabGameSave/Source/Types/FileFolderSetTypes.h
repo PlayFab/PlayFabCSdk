@@ -24,6 +24,9 @@ struct FileDetail
     // size can't stand in for this: a legitimate zero-byte save file would otherwise be reported
     // as deleted and removed from the cloud on the next upload.
     mutable bool existsLocally{ false }; // changeable by const types
+    // Set when timeCreated/timeLastModified were just read from disk by the local scan, so later
+    // steps in the same pass can use them instead of statting the file again.
+    mutable bool timesReadFromDisk{ false }; // changeable by const types
     mutable uint64_t lastSyncFileSize{ 0 }; // changeable by const types
     mutable time_t lastSyncTimeLastModified{ 0 }; // changeable by const types
 
@@ -39,6 +42,12 @@ struct FileDetail
     // that was never synced at all.
     mutable bool hasLastSync{ false }; // changeable by const types
 
+    // local file: a synced file whose recorded path now runs through a link (a symbolic link or a
+    // junction) the scan doesn't follow, typically synced through that link by an older SDK. It
+    // stands as present and unchanged (its baseline mirrored, like a file that couldn't be read), so
+    // it is neither uploaded nor deleted from the cloud, and the SDK never writes or deletes it
+    // through the link.
+    mutable bool behindLink{ false }; // changeable by const types
     // remote file
     size_t compressedFileIndex{ 0 };  // index into m_compressedFiles
     mutable bool skipFile{ false }; // changeable by const types

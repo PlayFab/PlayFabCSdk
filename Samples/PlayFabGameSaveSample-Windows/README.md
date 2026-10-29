@@ -123,11 +123,11 @@ The sample automatically loads PlayFab configuration from `testTitleData.json` i
 
 **If using the existing testTitleData.json:**
 
-The repository includes a `Test\testTitleData.json` file that will be automatically loaded.
+Internal enlistments include a `Test\testTitleData.json` file that is loaded automatically from the first three locations. It is not part of the public SDK release, so otherwise create your own as described below.
 
 **If creating your own configuration:**
 
-Create a `testTitleData.json` file with the following format:
+Create a `testTitleData.json` file in the same directory as the executable, with the following format:
 
 ```json
 {

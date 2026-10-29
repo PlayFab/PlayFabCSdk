@@ -35,17 +35,28 @@ public:
     static AsyncOp<FinalizeManifestResponse> FinalizeManifest(Entity const& entity, const FinalizeManifestRequest& request, RunContext rc);
     static AsyncOp<UpdateManifestResponse> UpdateManifest(Entity const& entity, const UpdateManifestRequest& request, RunContext rc);
 
+    // Blob uploads (bundles, thumbnail) behind the "Service.UploadFile" fault point; UploadFileToCloud
+    // is also the mock's own manifests.json write.
+    static AsyncOp<void> UploadBlobToCloud(RunContext runContext, const String& fileName, const String& filePath);
+    static AsyncOp<void> DeleteManifest(Entity const& entity, const DeleteManifestRequest& request, RunContext rc);
+
     static void PauseUpload();
     static void ResumeUpload();
     static void SetForcedOffline(GameSaveServiceMockForcedOffline forcedOffline);
 
 private:
-    static String GetMockGlobalPath(const Entity& entity, const String& file);
-    static ListManifestsResponse ReadManifestsFile(const String& manifestsPath);
-    static void WriteManifestsFile(const String& manifestsPath, const Vector<ManifestWrap>& manifests);
+    // The endpoint bodies; the public functions run them behind their "Service.<Name>" fault points (H-3).
+    static AsyncOp<ListManifestsResponse> ListManifestsUnfaulted(Entity const& entity, const ListManifestsRequest& request, RunContext rc);
+    static AsyncOp<InitializeManifestResponse> InitializeManifestUnfaulted(Entity const& entity, const InitializeManifestRequest& request, RunContext rc);
+    static AsyncOp<InitiateUploadResponse> InitiateUploadUnfaulted(Entity const& entity, const InitiateUploadRequest& request, RunContext rc, const Vector<UploadFileDetail>& mockFilesRequest);
+    static AsyncOp<FinalizeManifestResponse> FinalizeManifestUnfaulted(Entity const& entity, const FinalizeManifestRequest& request, RunContext rc);
+    static AsyncOp<UpdateManifestResponse> UpdateManifestUnfaulted(Entity const& entity, const UpdateManifestRequest& request, RunContext rc);
+    static AsyncOp<void> UploadFileFromStringToCloudUnfaulted(RunContext runContext, const String& fileName, const String& fileContent);
 
-    static inline std::mutex m_pauseMutex;
-    static inline std::condition_variable m_pauseCondition;
+    static String GetMockGlobalPath(const Entity& entity, const String& file);
+
+    static inline Mutex m_pauseMutex;
+    static inline ConditionVariable m_pauseCondition;
     static inline std::atomic<bool> m_paused{ false };
     static inline GameSaveServiceMockForcedOffline m_forcedOffline{ GameSaveServiceMockForcedOffline::None };
 };

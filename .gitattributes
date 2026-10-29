@@ -7,3 +7,4 @@
 # Don't add crlf to Linux bash files or they get Bash: /bin/bash^M: bad interpreter errors
 ###############################################################################
 *.bash text eol=lf
+*.sh text eol=lf

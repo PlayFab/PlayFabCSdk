@@ -8,7 +8,7 @@ Cross-platform native C/C++ SDK for PlayFab backend services. Game titles link a
 - C# .NET 8 (test controller only)
 - NuGet packages → see `Directory.Packages.props`
 - Platform SDKs → see `Build/*.props`
-- External deps → vendored in `External/` (nlohmann JSON, libarchive, libHttpClient, Steamworks)
+- External deps → nlohmann JSON and libarchive come from vcpkg (`Build/vcpkg.json`, restored into `Build/vcpkg_installed/<triplet>/`); libHttpClient, Steamworks and SDKGenerator live under `External/` or are checked out alongside
 
 ## Build & Test
 
@@ -29,7 +29,7 @@ Source/PlayFabCore/           - Auth, entity, HTTP, events, tracing
 Source/PlayFabServices/       - Generated service wrappers (catalog, inventory, etc.)
 Source/PlayFabGameSave/       - Cross-platform game save / connected storage
 Source/PlayFabSharedInternal/ - Shared internal utilities (JSON, HTTP, async)
-External/                     - Third-party libraries (vendored/submodules)
+External/                     - Third-party libraries (SDKGenerator submodule, Steamworks, libarchive config); nlohmann/libarchive come from vcpkg
 Test/                         - Test framework, scenarios, harness → see Test/AGENTS.md
 Build/                        - MSBuild .props and platform-specific configs
 Pipelines/                    - Azure Pipelines CI/CD (40+ task definitions)
@@ -71,7 +71,7 @@ This repo follows the PlayFab `Party Service and Core SDKs` team's shared conven
 
 - [`partycore-cpp-source-conventions.md`](https://dev.azure.com/PlayFabInternal/Main/_git/copilot-instructions-partycore?path=/.github/instructions/partycore-cpp-source-conventions.md) — `PF` prefix and flat-C public-API surface, XAsync I/O pattern, shared base + platform overlay architecture, generated-code discipline, naming. Heavily relevant: this repo is the canonical non-NDA core of the PlayFab C SDK.
 - [`partycore-props-pattern.md`](https://dev.azure.com/PlayFabInternal/Main/_git/copilot-instructions-partycore?path=/.github/instructions/partycore-props-pattern.md) — external/import pair pattern for `.props` files, path discipline, and CMake mirror discipline. Relevant: `Build/` contains the canonical `PlayFab*.import.props` and `*.external.props` files that NDA overlay repos (PlayFab.C.PS, PlayFab.C.Switch) consume.
-- [`partycore-submodule-conventions.md`](https://dev.azure.com/PlayFabInternal/Main/_git/copilot-instructions-partycore?path=/.github/instructions/partycore-submodule-conventions.md) — SHA-bump PR discipline, refresh helpers, Windows long-paths. Relevant: this repo pins multiple external libraries (`libHttpClient`, `nlohmann-json`, `libarchive`, `Steamworks`) under `External/`.
+- [`partycore-submodule-conventions.md`](https://dev.azure.com/PlayFabInternal/Main/_git/copilot-instructions-partycore?path=/.github/instructions/partycore-submodule-conventions.md) — SHA-bump PR discipline, refresh helpers, Windows long-paths. Relevant: this repo pins external libraries (`libHttpClient`, `SDKGenerator`, `Steamworks`) under `External/` or alongside the checkout; `nlohmann-json` and `libarchive` are pinned through the vcpkg baseline in `Build/vcpkg-configuration.json` instead.
 - [`partycore-nda-boundary.md`](https://dev.azure.com/PlayFabInternal/Main/_git/copilot-instructions-partycore?path=/.github/instructions/partycore-nda-boundary.md) — NDA-vs-non-NDA placement policy. Relevant: this repo is the non-NDA core that pairs with NDA overlay siblings (`PlayFab.C.PS`, `PlayFab.C.Switch`) and contains Sony/Switch pipeline task scaffolding in `Pipelines/Tasks/` whose substantive build steps must remain NDA-tented.
 
 - [`partycore-pipelines-base.md`](https://dev.azure.com/PlayFabInternal/Main/_git/copilot-instructions-partycore?path=/.github/instructions/partycore-pipelines-base.md) — ADO pipeline conventions: 3-layer template pattern, parameter forwarding, queue-time parameter rules, secrets/variable groups, dry-run protocol, security/compliance tasks, script conventions. Relevant: this repo has ADO pipeline YAML that follows these team-wide patterns.

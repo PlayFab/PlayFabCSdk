@@ -84,7 +84,45 @@ HRESULT HCHttpFileDownloadCall::HCResponseBodyWriteToFile(
     assert(bytesAvailable > 0);
 
     auto call{ static_cast<HCHttpFileDownloadCall*>(context) }; // non-owning
-    RETURN_IF_FAILED(FilePAL::WriteFileBytes(call->m_responseBodyFileStream, reinterpret_cast<const char*>(source), bytesAvailable));
+
+    // libHttpClient retries a failed transfer on the same call handle - including a transfer whose
+    // body write failed here - and the new attempt restarts the body from byte 0. Start the file over
+    // for every attempt after the first: appending would corrupt it, and a stream left bad by the
+    // previous attempt's failed write would refuse every byte of this one.
+    uint32_t filePerformCount{};
+    if (SUCCEEDED(HCHttpCallGetPerformCount(callHandle, &filePerformCount)) && filePerformCount != call->m_filePerformCount)
+    {
+        if (call->m_filePerformCount != 0 || !call->m_responseBodyFileStream)
+        {
+            if (call->m_responseBodyFileStream)
+            {
+                FilePAL::CloseFile(call->m_responseBodyFileStream);
+            }
+            auto fileResult = FilePAL::OpenFile(call->m_responseBodyFilePath, FileOpenMode::Write);
+            if (FAILED(fileResult.hr))
+            {
+                call->m_bodyWriteHr = fileResult.hr;
+                return fileResult.hr;
+            }
+            call->m_responseBodyFileStream = fileResult.ExtractPayload();
+        }
+        call->m_filePerformCount = filePerformCount;
+        call->m_bodyWriteHr = S_OK;
+    }
+
+    if (!call->m_responseBodyFileStream)
+    {
+        return FAILED(call->m_bodyWriteHr) ? call->m_bodyWriteHr : E_UNEXPECTED;
+    }
+
+    HRESULT writeHr = FilePAL::WriteFileBytes(call->m_responseBodyFileStream, reinterpret_cast<const char*>(source), bytesAvailable);
+    if (FAILED(writeHr))
+    {
+        // Remembered because the platform HTTP stack reports a failed body write only as the call's
+        // network error, and may retry past it; GetResult must surface the real local cause.
+        call->m_bodyWriteHr = writeHr;
+        return writeHr;
+    }
 
     if (call->m_dynamicTotalSize > 0)
     {
@@ -131,7 +169,10 @@ HRESULT HCHttpFileDownloadCall::HCResponseBodyWriteToFile(
 
 PlayFab::Result<PlayFab::ServiceResponse> HCHttpFileDownloadCall::GetResult(XAsyncBlock* async) noexcept
 {
-    FilePAL::CloseFile(m_responseBodyFileStream);
+    if (m_responseBodyFileStream)
+    {
+        FilePAL::CloseFile(m_responseBodyFileStream);
+    }
     
     // By design XAsyncBlock should succeed for HttpCall Perform
     RETURN_IF_FAILED(XAsyncGetStatus(async, false));
@@ -145,6 +186,25 @@ PlayFab::Result<PlayFab::ServiceResponse> HCHttpFileDownloadCall::GetResult(XAsy
     RETURN_IF_FAILED(HCHttpCallResponseGetStatusCode(m_callHandle, &httpCode));
     HttpResult httpResult{ callCount - 1, httpCode };
     response.HttpCode = httpCode;
+
+    // The status line arrives before the body, so a transfer that failed part-way through the body
+    // still reports 200. The platform stack records that failure only as the network error, and
+    // the file on disk is truncated. A failed local write is the more specific cause (a full disk,
+    // for instance), so it takes precedence.
+    if (FAILED(m_bodyWriteHr))
+    {
+        TRACE_ERROR("HCHttpFileDownloadCall: writing the response body to '%s' failed hr=0x%08X", m_responseBodyFilePath.c_str(), m_bodyWriteHr);
+        return Result<ServiceResponse>{ m_bodyWriteHr, std::move(httpResult) };
+    }
+
+    HRESULT networkErrorCode{ S_OK };
+    uint32_t platformNetworkErrorCode{ 0 };
+    if (SUCCEEDED(HCHttpCallResponseGetNetworkErrorCode(m_callHandle, &networkErrorCode, &platformNetworkErrorCode)) && FAILED(networkErrorCode))
+    {
+        TRACE_ERROR("HCHttpFileDownloadCall: transfer failed hr=0x%08X (platform error %u), http status %u", networkErrorCode, platformNetworkErrorCode, httpCode);
+        return Result<ServiceResponse>{ networkErrorCode, std::move(httpResult) };
+    }
+
     RETURN_IF_FAILED(HttpStatusToHR(httpCode));
 
     return Result<ServiceResponse>{ std::move(response), std::move(httpResult) };

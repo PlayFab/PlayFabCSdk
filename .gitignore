@@ -358,6 +358,11 @@ local.properties
 Gaming.Xbox.Scarlett.x64/
 Gaming.Xbox.XboxOne.x64/
 
+# vcpkg: bootstrapped tool and restored dependencies
+/.tools/
+/Build/vcpkg_installed/
+/Build/vcpkg_staged/
+
 #XCode 
 .DS_Store
 *.swp

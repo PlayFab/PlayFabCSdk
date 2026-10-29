@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cerrno>
 #include <system_error>
+#include <atomic>
 #include <sys/stat.h>
 #if !HC_PLATFORM_IS_MICROSOFT
 #include <utime.h>
@@ -61,6 +62,7 @@ constexpr uint32_t kWin32AccessDenied = 5;        // ERROR_ACCESS_DENIED
 constexpr uint32_t kWin32WriteProtect = 19;       // ERROR_WRITE_PROTECT
 constexpr uint32_t kWin32SharingViolation = 32;   // ERROR_SHARING_VIOLATION
 constexpr uint32_t kWin32LockViolation = 33;      // ERROR_LOCK_VIOLATION
+constexpr uint32_t kWin32HandleDiskFull = 39;     // ERROR_HANDLE_DISK_FULL
 constexpr uint32_t kWin32DiskFull = 112;          // ERROR_DISK_FULL
 constexpr uint32_t kWin32InvalidName = 123;       // ERROR_INVALID_NAME
 constexpr uint32_t kWin32FilenameExcedRange = 206;// ERROR_FILENAME_EXCED_RANGE
@@ -115,12 +117,12 @@ HRESULT HResultFromFileErrorCode(const std::error_code& ec) noexcept
     return HResultFromErrno(ec.value());
 }
 
-// Maps a just-failed std::fstream open. The CRT reports the coarse reason through errno, which
-// cannot distinguish a sharing violation from a permission denial - both arrive as EACCES. On
-// Microsoft platforms the underlying _wfsopen also sets the Win32 last error, which does make that
+// Maps a just-failed std::fstream open or write. The CRT reports the coarse reason through errno,
+// which cannot distinguish a sharing violation from a permission denial - both arrive as EACCES. On
+// Microsoft platforms the underlying Win32 call also sets the last error, which does make that
 // distinction, so prefer it when it names a failure we recognize. Callers clear the last error
-// immediately before the open so this cannot pick up a stale value.
-HRESULT HResultFromOpenFailure(int err) noexcept
+// immediately before the operation so this cannot pick up a stale value.
+HRESULT HResultFromStreamFailure(int err) noexcept
 {
 #if HC_PLATFORM_IS_MICROSOFT
     const uint32_t lastError = static_cast<uint32_t>(GetLastError());
@@ -142,6 +144,7 @@ HRESULT HResultFromOpenFailure(int err) noexcept
     case kWin32SharingViolation:
     case kWin32LockViolation:
     case kWin32TooManyOpenFiles:
+    case kWin32HandleDiskFull:
     case kWin32DiskFull:
     case kWin32WriteProtect:
     case kWin32FilenameExcedRange:
@@ -154,7 +157,61 @@ HRESULT HResultFromOpenFailure(int err) noexcept
     return HResultFromErrno(err);
 }
 
+// Test-only disk-full simulation state; see FilePAL::SetSimulatedDiskFullForDebug.
+std::atomic<bool> g_simulatedDiskFullEnabled{ false };
+std::atomic<uint64_t> g_simulatedDiskBytesRemaining{ 0 };
+std::atomic<bool> g_simulatedDiskFullHit{ false };
+// Set by SetSimulatedDiskFreeSpaceForDebug: the volume is already nearly full, so free space reads as
+// the remaining budget from the start, not only once a write has been refused.
+std::atomic<bool> g_simulatedDiskReportsBudget{ false };
+
+// Free space reads as 0 only once a write has actually been refused. That models another process
+// filling the volume after the SDK's pre-flight space check, which is the reported scenario, and
+// lets a budget of 0 fail the very first byte of a transfer instead of tripping the pre-flight.
+bool IsSimulatedDiskFull() noexcept
+{
+    return g_simulatedDiskFullEnabled.load() && g_simulatedDiskFullHit.load();
+}
+
+// Consumes up to bytesRequested of the simulated budget and returns how many bytes may actually be
+// written. A return smaller than bytesRequested means the write must fail as a full disk would,
+// after writing the returned prefix -- a real full volume accepts a partial write before failing.
+size_t ConsumeSimulatedDiskBytes(size_t bytesRequested) noexcept
+{
+    if (!g_simulatedDiskFullEnabled.load())
+    {
+        return bytesRequested;
+    }
+
+    uint64_t remaining = g_simulatedDiskBytesRemaining.load();
+    uint64_t granted{};
+    do
+    {
+        granted = std::min<uint64_t>(remaining, bytesRequested);
+    } while (!g_simulatedDiskBytesRemaining.compare_exchange_weak(remaining, remaining - granted));
+
+    return static_cast<size_t>(granted);
+}
+
 } // anonymous namespace
+
+void FilePAL::SetSimulatedDiskFullForDebug(bool enable, uint64_t bytesBeforeFull) noexcept
+{
+    TRACE_INFORMATION("[FILEPAL] SetSimulatedDiskFullForDebug enable=%d bytesBeforeFull=%llu", enable ? 1 : 0, bytesBeforeFull);
+    g_simulatedDiskBytesRemaining.store(bytesBeforeFull);
+    g_simulatedDiskFullHit.store(false);
+    g_simulatedDiskReportsBudget.store(false);
+    g_simulatedDiskFullEnabled.store(enable);
+}
+
+void FilePAL::SetSimulatedDiskFreeSpaceForDebug(bool enable, uint64_t freeBytes) noexcept
+{
+    TRACE_INFORMATION("[FILEPAL] SetSimulatedDiskFreeSpaceForDebug enable=%d freeBytes=%llu", enable ? 1 : 0, freeBytes);
+    g_simulatedDiskBytesRemaining.store(freeBytes);
+    g_simulatedDiskFullHit.store(false);
+    g_simulatedDiskReportsBudget.store(enable);
+    g_simulatedDiskFullEnabled.store(enable);
+}
 
 Result<FileHandle> FilePAL::OpenFile(const String& filePath, FileOpenMode openMode) noexcept
 {
@@ -179,8 +236,15 @@ Result<FileHandle> FilePAL::OpenFile(const String& filePath, FileOpenMode openMo
     fileHandle->file.open(path.c_str(), mode);
     if (!fileHandle->file)
     {
-        HRESULT hr = HResultFromOpenFailure(errno);
-        TRACE_ERROR("[FILEPAL] OpenFile failed %s hr=0x%08X", filePath.c_str(), hr);
+        const int openError = errno;
+        HRESULT hr = HResultFromStreamFailure(openError);
+        TRACE_ERROR(
+            "[FILEPAL] OpenFile failed path='%s' mode=%u errno=%d streamState=0x%X hr=0x%08X",
+            filePath.c_str(),
+            static_cast<unsigned>(openMode),
+            openError,
+            static_cast<unsigned>(fileHandle->file.rdstate()),
+            static_cast<unsigned>(hr));
         return Result<FileHandle>{ hr };
     }
 
@@ -209,15 +273,53 @@ HRESULT FilePAL::ReadFileBytes(FileHandle& fileHandle, size_t bytesAvailable, ch
 
 HRESULT FilePAL::WriteFileBytes(FileHandle& fileHandle, const char* source, size_t bytesAvailable) noexcept
 {
+    RETURN_HR_IF(E_INVALIDARG, !fileHandle || (!source && bytesAvailable > 0));
+    RETURN_HR_IF(S_OK, bytesAvailable == 0);
+
     assert(fileHandle);
     assert(source);
     assert(bytesAvailable > 0);
 
     FileStreamContainer* pfFile = static_cast<FileStreamContainer*>(fileHandle.get());
 
-    pfFile->file.write(source, bytesAvailable);
+    errno = 0;
+#if HC_PLATFORM_IS_MICROSOFT
+    SetLastError(ERROR_SUCCESS);
+#endif
+    // A stream that has already failed does no I/O at all, so a real full disk would not report
+    // again here; only simulate the failure for a healthy stream to keep the simulation faithful.
+    const bool streamAlreadyBad = pfFile->file.bad();
+    if (streamAlreadyBad && FAILED(pfFile->lastFailure))
+    {
+        TRACE_ERROR("[FILEPAL] WriteFileBytes on a stream that already failed hr=0x%08X", pfFile->lastFailure);
+        return pfFile->lastFailure;
+    }
+    const size_t bytesAllowed = streamAlreadyBad ? bytesAvailable : ConsumeSimulatedDiskBytes(bytesAvailable);
+    if (bytesAllowed > 0)
+    {
+        pfFile->file.write(source, bytesAllowed);
+    }
     pfFile->file.flush();
-    RETURN_HR_IF(E_FAIL, pfFile->file.bad());
+    if (bytesAllowed < bytesAvailable)
+    {
+        // Simulated full volume: fail exactly as the CRT does when WriteFile reports ERROR_DISK_FULL.
+        g_simulatedDiskFullHit.store(true);
+        errno = ENOSPC;
+#if HC_PLATFORM_IS_MICROSOFT
+        SetLastError(kWin32DiskFull);
+#endif
+        pfFile->file.setstate(std::ios::badbit);
+    }
+
+    if (pfFile->file.bad())
+    {
+        // Report the real reason. A full disk in particular must stay recognizable all the way up:
+        // GameSave turns it into the out-of-storage UI, which a generic E_FAIL can never reach.
+        HRESULT hr = HResultFromStreamFailure(errno);
+        pfFile->lastFailure = hr;
+        TRACE_ERROR("[FILEPAL] WriteFileBytes failed hr=0x%08X", hr);
+        return hr;
+    }
 
     return S_OK;
 }
@@ -273,6 +375,21 @@ bool FilePAL::DoesFileExist(const String& filePath) noexcept
     catch (const std::exception&)
     {
         return false;
+    }
+}
+
+bool FilePAL::DoesEntryExist(const String& path) noexcept
+{
+    try
+    {
+        std::error_code ec;
+        const std::filesystem::file_status status = std::filesystem::symlink_status(ConvertStringToPath(path), ec);
+        // A missing path (or parent) reads as not_found; any other error can't prove the path is free.
+        return status.type() != std::filesystem::file_type::not_found;
+    }
+    catch (const std::exception&)
+    {
+        return true;
     }
 }
 
@@ -372,12 +489,42 @@ HRESULT FilePAL::DeletePath(const String& directoryPath) noexcept
 namespace
 {
 
+// True for a file status that is a link: a symbolic link, or (Windows) an NTFS junction, which
+// std::filesystem reports as its own file type rather than as a symlink. A save tree never follows
+// a link: its target can be anywhere on the device.
+bool IsLinkStatus(const std::filesystem::file_status& status) noexcept
+{
+    if (std::filesystem::is_symlink(status))
+    {
+        return true;
+    }
+#if defined(_MSC_VER)
+    if (status.type() == std::filesystem::file_type::junction)
+    {
+        return true;
+    }
+#endif
+    return false;
+}
+
+// See IsLinkStatus. An entry whose status can't be read isn't reported as a link.
+bool IsLinkEntry(const std::filesystem::directory_entry& entry) noexcept
+{
+    std::error_code ec;
+    const std::filesystem::file_status status = entry.symlink_status(ec);
+    if (ec)
+    {
+        return false;
+    }
+    return IsLinkStatus(status);
+}
+
 // Removes dir only if neither it nor any descendant contains a file. Empty subdirectories
 // are removed bottom-up. Returns true when dir itself was removed.
 //
 // Entries are collected before recursing so the directory_iterator is never invalidated by
-// removals performed during traversal. Descendant symlinks are treated as survivors and are
-// never followed. Note this says nothing about `dir` itself: directory_iterator follows a
+// removals performed during traversal. Descendant links (symlinks, junctions) are treated as
+// survivors and are never followed. Note this says nothing about `dir` itself: directory_iterator follows a
 // symlinked root and would enumerate its target, so callers must reject a symlinked root
 // before calling in (DeletePathIfEmpty does). Any enumeration or removal error is treated as
 // "keep", because this runs on the game-save delete path where preserving unexpected content
@@ -396,7 +543,7 @@ bool RemoveDirectoryIfEmptyRecursive(const std::filesystem::path& dir)
         }
 
         std::error_code entryEc;
-        if (it->is_symlink(entryEc) || entryEc)
+        if (IsLinkEntry(*it) || it->is_symlink(entryEc) || entryEc)
         {
             survivorFound = true;
             continue;
@@ -439,6 +586,11 @@ bool RemoveDirectoryIfEmptyRecursive(const std::filesystem::path& dir)
 
 HRESULT FilePAL::DeletePathIfEmpty(const String& directoryPath, bool& fullyDeleted) noexcept
 {
+    return DeletePathIfEmpty(directoryPath, fullyDeleted, String{});
+}
+
+HRESULT FilePAL::DeletePathIfEmpty(const String& directoryPath, bool& fullyDeleted, const String& containingRoot) noexcept
+{
     fullyDeleted = false;
 
     TRACE_INFORMATION("[FILEPAL] DeletePathIfEmpty %s", directoryPath.c_str());
@@ -467,10 +619,50 @@ HRESULT FilePAL::DeletePathIfEmpty(const String& directoryPath, bool& fullyDelet
             return E_FAIL;
         }
 
-        if (std::filesystem::is_symlink(linkStatus))
+        if (IsLinkStatus(linkStatus))
         {
-            TRACE_WARNING("[FILEPAL] DeletePathIfEmpty: refusing to prune %s because it is a symlink", directoryPath.c_str());
+            TRACE_WARNING("[FILEPAL] DeletePathIfEmpty: refusing to prune %s because it is a link", directoryPath.c_str());
             return E_INVALIDARG;
+        }
+
+        if (!containingRoot.empty())
+        {
+            // A link in any component between the root and the target leads the prune into the
+            // link's target as surely as a link at the target itself: refuse those too. The root
+            // itself isn't checked (a platform may mount the save folder through one).
+            String rootString = containingRoot;
+            while (rootString.size() > 1 && (rootString.back() == '/' || rootString.back() == '\\'))
+            {
+                rootString.pop_back();
+            }
+            const std::filesystem::path root = ConvertStringToPath(rootString).lexically_normal();
+            const std::filesystem::path relative = path.lexically_normal().lexically_relative(root);
+            if (relative.empty() || *relative.begin() == std::filesystem::path(".."))
+            {
+                TRACE_WARNING("[FILEPAL] DeletePathIfEmpty: refusing to prune %s because it isn't beneath %s", directoryPath.c_str(), containingRoot.c_str());
+                return E_INVALIDARG;
+            }
+            std::filesystem::path current = root;
+            for (const std::filesystem::path& component : relative)
+            {
+                if (component == std::filesystem::path("."))
+                {
+                    continue;
+                }
+                current /= component;
+                std::error_code componentEc;
+                const std::filesystem::file_status componentStatus = std::filesystem::symlink_status(current, componentEc);
+                if (componentEc)
+                {
+                    TRACE_WARNING("[FILEPAL] DeletePathIfEmpty: symlink_status failed for a component of %s: %s", directoryPath.c_str(), componentEc.message().c_str());
+                    return E_FAIL;
+                }
+                if (IsLinkStatus(componentStatus))
+                {
+                    TRACE_WARNING("[FILEPAL] DeletePathIfEmpty: refusing to prune %s because a folder on its path is a link", directoryPath.c_str());
+                    return E_INVALIDARG;
+                }
+            }
         }
 
         fullyDeleted = RemoveDirectoryIfEmptyRecursive(path);
@@ -489,6 +681,15 @@ HRESULT FilePAL::DeletePathIfEmpty(const String& directoryPath, bool& fullyDelet
 
 Result<Vector<String>> FilePAL::EnumDirectories(const String& directoryPath) noexcept
 {
+    return EnumDirectories(directoryPath, nullptr);
+}
+
+Result<Vector<String>> FilePAL::EnumDirectories(const String& directoryPath, Vector<String>* skippedLinks) noexcept
+{
+    if (skippedLinks != nullptr)
+    {
+        skippedLinks->clear();
+    }
     if (!DoesDirectoryExist(directoryPath))
     {
         RETURN_IF_FAILED(CreatePath(directoryPath));
@@ -500,7 +701,21 @@ Result<Vector<String>> FilePAL::EnumDirectories(const String& directoryPath) noe
         auto dirPath = ConvertStringToPath(directoryPath);
         for (const auto& entry : std::filesystem::directory_iterator(dirPath.c_str()))
         {
-            if (std::filesystem::is_directory(entry.path()))
+            // Links (symlinks, junctions) aren't part of the tree: following one would read, and
+            // on a later delete prune, content outside the folder being enumerated.
+            if (IsLinkEntry(entry))
+            {
+                if (skippedLinks != nullptr)
+                {
+                    auto linkNameUtf = entry.path().filename().u8string();
+                    skippedLinks->push_back(String(linkNameUtf.begin(), linkNameUtf.end()));
+                }
+                continue;
+            }
+            // The member form uses the attributes the iterator already fetched (no extra stat
+            // per entry on Windows); it still follows symlinks and throws on error like the free
+            // function did.
+            if (entry.is_directory())
             {
                 auto folderNameUtf = entry.path().filename().u8string();
                 String folder(folderNameUtf.begin(), folderNameUtf.end());
@@ -533,7 +748,13 @@ Result<Vector<String>> FilePAL::EnumFiles(const String& directoryPath) noexcept
         auto dirPath = ConvertStringToPath(directoryPath);
         for (const auto& entry : std::filesystem::directory_iterator(dirPath.c_str()))
         {
-            if (std::filesystem::is_regular_file(entry.path()))
+            // See EnumDirectories: links aren't followed.
+            if (IsLinkEntry(entry))
+            {
+                continue;
+            }
+            // See EnumDirectories: uses the iterator's cached attributes instead of a stat per file.
+            if (entry.is_regular_file())
             {
                 auto fileNameUtf = entry.path().filename().u8string();
                 String fileName(fileNameUtf.begin(), fileNameUtf.end());
@@ -568,6 +789,17 @@ Result<uint64_t> FilePAL::GetAvailableStorageSize(const String& filePath) noexce
         }
 
         uint64_t space = static_cast<uint64_t>(available);
+        if (IsSimulatedDiskFull())
+        {
+            TRACE_WARNING("[FILEPAL] GetAvailableStorageSize: simulated disk full, reporting 0 (actual %llu)", space);
+            space = 0;
+        }
+        else if (g_simulatedDiskFullEnabled.load() && g_simulatedDiskReportsBudget.load())
+        {
+            const uint64_t budget = g_simulatedDiskBytesRemaining.load();
+            TRACE_WARNING("[FILEPAL] GetAvailableStorageSize: simulated nearly-full disk, reporting %llu (actual %llu)", std::min(space, budget), space);
+            space = std::min(space, budget);
+        }
         TRACE_INFORMATION("[FILEPAL] GetAvailableStorageSize %llu", space);
         return space;
     }
@@ -614,17 +846,12 @@ Result<uint64_t> FilePAL::GetFileSize(const String& filePath) noexcept
 
 HRESULT FilePAL::GetFileTimes(const String& filePath, time_t& timeCreated, time_t& timeModified) noexcept
 {
-    if (!DoesFileExist(filePath))
-    {
-        timeCreated = 0;
-        timeModified = 0;
-        return E_FAIL;
-    }
-
+    // One stat instead of a DoesFileExist pre-check plus a stat. A missing path fails the stat;
+    // a directory is rejected by the S_IFREG check, as DoesFileExist did before.
 #if HC_PLATFORM_IS_MICROSOFT
     auto path = ConvertStringToPath(filePath);
     struct _stat64 fileInfo64;
-    if (_wstat64(path.c_str(), &fileInfo64) != 0)
+    if (_wstat64(path.c_str(), &fileInfo64) != 0 || (fileInfo64.st_mode & _S_IFREG) == 0)
     {
         timeCreated = 0;
         timeModified = 0;
@@ -636,7 +863,7 @@ HRESULT FilePAL::GetFileTimes(const String& filePath, time_t& timeCreated, time_
     return S_OK;
 #else
     struct stat fileInfo;
-    if (stat(filePath.c_str(), &fileInfo) != 0)
+    if (stat(filePath.c_str(), &fileInfo) != 0 || !S_ISREG(fileInfo.st_mode))
     {
         timeCreated = 0;
         timeModified = 0;

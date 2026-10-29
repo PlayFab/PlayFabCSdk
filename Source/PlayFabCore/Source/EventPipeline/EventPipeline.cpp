@@ -91,8 +91,8 @@ public:
     void SetConfiguration(PFEventPipelineConfig eventPipelineConfig);
 
 private:
-    std::mutex m_mutex;
-    std::mutex m_configMutex;
+    Mutex m_mutex;
+    Mutex m_configMutex;
     Deque<Event> m_deque;
     std::atomic<size_t> m_bufferSize;
 
@@ -164,8 +164,8 @@ private:
     time_t m_oldestEventTimeStamp{ 0 };
     std::atomic<bool> m_telemetryKeyInvalid{ false };
     std::atomic<bool> m_telemetryKeyDeactivated{ false };
-    std::mutex m_mutex;
-    std::mutex m_configMutex;
+    Mutex m_mutex;
+    Mutex m_configMutex;
 };
 
 void EventPipeline::Initialize(

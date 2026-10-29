@@ -12,6 +12,15 @@ HRESULT GameSaveTelemetryManager::CreateEntityTelemetryPipeline(const LocalUser&
 {
     ScopeTracer scopeTracer{ "GameSaveTelemetryManager::CreateEntityTelemetryPipeline" };
 
+    // Debug fault point (core unit test plan H-8): pipeline creation fails with hr. No pipeline is
+    // created, so every event is skipped (EmitEvent), as after an offline sign-in.
+    HRESULT faultHr = S_OK;
+    if (CheckFaultPointForDebug("Telemetry.CreatePipeline", faultHr) == PFGameSaveFaultAction::Fail)
+    {
+        TRACE_ERROR("[GAME SAVE] GameSaveTelemetryManager::CreateEntityTelemetryPipeline failed (fault injection) hr:0x%0.8x", static_cast<uint32_t>(faultHr));
+        return faultHr;
+    }
+
     if (useMocks)
     {
         TRACE_INFORMATION("[GAME SAVE] GameSaveTelemetryManager::CreateEntityTelemetryPipeline mock");
@@ -187,6 +196,32 @@ JsonValue ContextSyncErrorEvent::ToJson() const
 
 HRESULT GameSaveTelemetryManager::EmitEvent(const char* eventName, JsonValue& payload) const noexcept
 {
+#if defined(_DEBUG)
+    try
+    {
+        // Debug record (GetStatsJsonForDebug "Telemetry"): before the common fields (no user ID).
+        String payloadJson = JsonUtils::WriteToString(payload);
+        std::lock_guard<std::mutex> lock{ m_debugEventsMutex };
+        if (m_debugEvents.size() >= kMaxDebugEvents)
+        {
+            m_debugEvents.erase(m_debugEvents.begin());
+        }
+        m_debugEvents.emplace_back(String{ eventName }, std::move(payloadJson));
+    }
+    catch (...)
+    {
+        // debug bookkeeping only
+    }
+#endif
+
+    // Debug fault point (core unit test plan H-8): the pipeline refuses the event with hr.
+    HRESULT faultHr = S_OK;
+    if (CheckFaultPointForDebug("Telemetry.Emit", faultHr) == PFGameSaveFaultAction::Fail)
+    {
+        TRACE_ERROR("[GAME SAVE] GameSaveTelemetryManager::EmitEvent %s failed (fault injection) hr:0x%0.8x", eventName, static_cast<uint32_t>(faultHr));
+        return faultHr;
+    }
+
     if (useMocks)
     {
         TRACE_INFORMATION("[GAME SAVE] GameSaveTelemetryManager::EmitEvent %s mock", eventName);
@@ -337,15 +372,25 @@ HRESULT GameSaveTelemetryManager::EmitContextSyncEvent() noexcept
 /// required SyncErrorSource errorSource : operation that caused the failure
 /// </summary>
 /// <returns></returns>
-HRESULT GameSaveTelemetryManager::EmitContextSyncErrorEvent() const noexcept
+HRESULT GameSaveTelemetryManager::EmitContextSyncErrorEvent() noexcept
 {
-    if (m_contextSyncEventEmitted)
+    // Once per attempt, like context_sync per operation: the step that failed reports it (with its
+    // errorSource and blockName); the operation's own failure path must not report the same failure
+    // again. A SyncFailed Retry re-arms it (RearmContextSyncError) for the next attempt's failure.
+    if (m_contextSyncEventEmitted || m_contextSyncErrorEventEmitted)
     {
         return S_OK;
     }
 
+    m_contextSyncErrorEventEmitted = true;
     auto payload = m_contextSyncErrorEvent.ToJson();
     return EmitEvent("context_sync_error", payload);
+}
+
+Vector<std::pair<String, String>> GameSaveTelemetryManager::GetEmittedEventsForDebug() const
+{
+    std::lock_guard<std::mutex> lock{ m_debugEventsMutex };
+    return m_debugEvents;
 }
 
 void GameSaveTelemetryManager::ResetContextActivation() noexcept
@@ -366,6 +411,7 @@ void GameSaveTelemetryManager::ResetContextSync() noexcept
     m_contextSyncEvent = {};
     m_contextSyncErrorEvent = {};
     m_contextSyncEventEmitted = false;
+    m_contextSyncErrorEventEmitted = false;
 }
 
 } // namespace GameSave

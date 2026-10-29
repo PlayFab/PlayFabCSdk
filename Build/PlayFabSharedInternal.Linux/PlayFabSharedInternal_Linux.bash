@@ -43,5 +43,5 @@ log "CONFIGURATION = ${CONFIGURATION}"
 log "LHC_PATH = ${LHC_PATH}"
 
 # make PlayFabSharedInternal
-sudo cmake -S "$SCRIPT_DIR" -B "$SCRIPT_DIR"/../../Int/CMake/PlayFabSharedInternal.Linux -D CMAKE_BUILD_TYPE=$CONFIGURATION -D LHC_PATH=$LHC_PATH
+sudo cmake -S "$SCRIPT_DIR" -B "$SCRIPT_DIR"/../../Int/CMake/PlayFabSharedInternal.Linux -D CMAKE_BUILD_TYPE=$CONFIGURATION -D LHC_PATH=$LHC_PATH -D VCPKG_TARGET_TRIPLET=x64-linux
 sudo make VERBOSE=1 -C "$SCRIPT_DIR"/../../Int/CMake/PlayFabSharedInternal.Linux

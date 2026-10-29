@@ -7,7 +7,7 @@
     <HasSharedItems>true</HasSharedItems>
     <ItemsProjectGuid>{65a242d6-b053-4a5d-bc41-bbbfc81a27c1}</ItemsProjectGuid>
     <libarchiveConfigInclude>$(PlayFabExternalDir)\libarchive.config</libarchiveConfigInclude>
-    <libarchiveInclude>$(PlayFabExternalDir)\libarchive\libarchive</libarchiveInclude>
+    <libarchiveInclude>$(PlayFabVCPKGInstalledDir)\libarchive</libarchiveInclude>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -18,657 +18,657 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_acl.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_acl.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_blake2sp_ref.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_blake2sp_ref.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_blake2s_ref.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_blake2s_ref.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_check_magic.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_check_magic.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_cmdline.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_cmdline.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_cryptor.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_cryptor.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_digest.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_digest.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_disk_acl_darwin.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_disk_acl_darwin.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_disk_acl_freebsd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_disk_acl_freebsd.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_disk_acl_linux.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_disk_acl_linux.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_disk_acl_sunos.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_disk_acl_sunos.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_copy_bhfi.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_copy_bhfi.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_copy_stat.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_copy_stat.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_link_resolver.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_link_resolver.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_sparse.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_sparse.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_stat.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_stat.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_strmode.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_strmode.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_entry_xattr.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_entry_xattr.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_getdate.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_getdate.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_hmac.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_hmac.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_match.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_match.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_options.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_options.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_pack_dev.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_pack_dev.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_pathmatch.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_pathmatch.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_ppmd7.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_ppmd7.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_ppmd8.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_ppmd8.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_random.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_random.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_rb.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_rb.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_add_passphrase.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_add_passphrase.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_append_filter.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_append_filter.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_data_into_fd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_data_into_fd.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_disk_entry_from_file.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_disk_entry_from_file.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_disk_posix.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_disk_posix.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_disk_set_standard_lookup.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_disk_set_standard_lookup.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_disk_windows.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_disk_windows.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_extract.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_extract.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_extract2.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_extract2.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_open_fd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_open_fd.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_open_file.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_open_file.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_open_filename.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_open_filename.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_open_memory.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_open_memory.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_set_format.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_set_format.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_set_options.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_set_options.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_all.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_all.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_by_code.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_by_code.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_bzip2.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_bzip2.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_compress.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_compress.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_grzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_grzip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_gzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_gzip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_lrzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_lrzip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_lz4.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_lz4.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_lzop.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_lzop.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_none.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_none.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_program.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_program.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_rpm.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_rpm.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_uu.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_uu.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_xz.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_xz.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_filter_zstd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_filter_zstd.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_7zip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_7zip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_all.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_all.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_ar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_ar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_by_code.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_by_code.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_cab.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_cab.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_cpio.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_cpio.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_empty.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_empty.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_iso9660.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_iso9660.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_lha.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_lha.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_mtree.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_mtree.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_rar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_rar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_rar5.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_rar5.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_raw.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_raw.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_tar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_tar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_warc.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_warc.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_xar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_xar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_read_support_format_zip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_read_support_format_zip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_string.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_string.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_string_sprintf.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_string_sprintf.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_util.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_util.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_version_details.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_version_details.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_virtual.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_virtual.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_windows.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_windows.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_b64encode.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_b64encode.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_by_name.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_by_name.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_bzip2.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_bzip2.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_compress.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_compress.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_grzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_grzip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_gzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_gzip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_lrzip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_lrzip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_lz4.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_lz4.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_lzop.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_lzop.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_none.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_none.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_program.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_program.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_uuencode.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_uuencode.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_xz.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_xz.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_add_filter_zstd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_add_filter_zstd.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_disk_posix.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_disk_posix.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_disk_set_standard_lookup.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_disk_set_standard_lookup.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_disk_windows.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_disk_windows.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_open_fd.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_open_fd.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_open_file.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_open_file.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_open_filename.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_open_filename.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_open_memory.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_open_memory.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_7zip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_7zip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_ar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_ar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_by_name.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_by_name.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_cpio.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_cpio.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_cpio_binary.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_cpio_binary.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_cpio_newc.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_cpio_newc.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_cpio_odc.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_cpio_odc.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_filter_by_ext.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_filter_by_ext.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_gnutar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_gnutar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_iso9660.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_iso9660.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_mtree.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_mtree.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_pax.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_pax.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_raw.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_raw.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_shar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_shar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_ustar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_ustar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_v7tar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_v7tar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_warc.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_warc.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013;33010</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_xar.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_xar.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_format_zip.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_format_zip.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_options.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_options.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\archive_write_set_passphrase.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\archive_write_set_passphrase.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\filter_fork_posix.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\filter_fork_posix.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\filter_fork_windows.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\filter_fork_windows.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="$(PlayFabExternalDir)\libarchive\libarchive\xxhash.c">
+    <ClCompile Include="$(PlayFabVCPKGInstalledDir)\libarchive\xxhash.c">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4131;4100;4189;4456;4127;4244;4206;4201;4245;4130;4152;4701;4013</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_CONFIG_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>

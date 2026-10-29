@@ -15,3 +15,6 @@ paths-ignore:
   - "libHttpClient/External/**"
   # Any other vendored external dependencies
   - "External/**"
+  # Third-party dependencies (nlohmann, libarchive) restored by vcpkg
+  - "Build/vcpkg_installed/**"
+  - "Build/vcpkg_staged/**"

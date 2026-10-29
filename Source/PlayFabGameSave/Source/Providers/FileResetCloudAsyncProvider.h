@@ -65,7 +65,7 @@ protected:
     // True while this provider owns the reset-cloud reservation. See ReleaseReservationOnce().
     std::atomic<bool> m_reservationHeld{ true };
     // Owned by the FolderSyncManager, not by this provider: see FolderSyncManager::GetSyncMutex().
-    std::recursive_mutex& m_folderSyncMutex{ m_folderSync->GetSyncMutex() };
+    RecursiveMutex& m_folderSyncMutex{ m_folderSync->GetSyncMutex() };
 #if defined(_DEBUG)
     SingleThreadProviderValidation m_singleThreadProvider;
 #endif

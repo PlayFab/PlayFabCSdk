@@ -44,15 +44,41 @@ typedef void CALLBACK PFGameSaveFilesUiSyncFailedCallback(
 
 /// <summary>
 /// Active device contention callback.
+///
+/// Fires during PFGameSaveFilesAddUserWithUiAsync when another device holds the active-device lock.
+/// The two descriptors are NOT a local-versus-cloud choice (contrast with
+/// PFGameSaveFilesUiConflictCallback). They describe the two devices involved in the contention:
+///
+/// currentLockHolderGameSave - the device that currently holds the lock: its manifest is still
+/// Initialized or Uploading and it has not finished uploading. This is usually another device, and
+/// is never assumed to be this one.
+///     deviceType, deviceId, deviceFriendlyName: identify the lock-holding device.
+///     time: last activity on its pending manifest (creation, or the latest update).
+///     totalBytes, uploadedBytes: progress of its pending upload, if any; 0 if none has started.
+///         They are not the size of a save and must not be compared with previousLockHolderGameSave.
+///     shortSaveDescription: optional; set only if that device supplied a description.
+///     thumbnailUri: normally empty, since an unfinished manifest has no downloadable thumbnail.
+///
+/// previousLockHolderGameSave - the device associated with the finalized save this activation will
+/// sync: normally the latest finalized save, or the rollback target when a rollback option
+/// (PFGameSaveFilesAddUserOptions::RollbackToLastKnownGood / RollbackToLastConflict) was passed to
+/// PFGameSaveFilesAddUserWithUiAsync. That device completed its upload and released the lock. This
+/// is the data PFGameSaveFilesUiActiveDeviceContentionUserAction::SyncLastSavedData syncs.
+///     deviceType, deviceId, deviceFriendlyName: identify the device that finalized that save.
+///     time: when that manifest was finalized.
+///     totalBytes: size of the finalized save where the platform can report it, otherwise 0.
+///     uploadedBytes: 0; nothing is pending on a finalized save.
+///     shortSaveDescription: optional; the finalized save's description, if one was supplied.
+///     thumbnailUri: optional; empty when no thumbnail URI is available.
 /// </summary>
 /// <param name="localUserHandle">Local user handle.</param>
-/// <param name="localGameSave">Descriptor of local save game.</param>
-/// <param name="remoteGameSave">Descriptor of remote save game.</param>
+/// <param name="currentLockHolderGameSave">Descriptor of the device currently holding the active-device lock.</param>
+/// <param name="previousLockHolderGameSave">Descriptor of the device of the finalized save this activation will sync (normally the latest; the rollback target when a rollback option was passed).</param>
 /// <param name="context">Context to pass to the callback.</param>
 typedef void CALLBACK PFGameSaveFilesUiActiveDeviceContentionCallback(
     _In_ PFLocalUserHandle localUserHandle,
-    _In_ PFGameSaveDescriptor* localGameSave,
-    _In_ PFGameSaveDescriptor* remoteGameSave,
+    _In_ PFGameSaveDescriptor* currentLockHolderGameSave,
+    _In_ PFGameSaveDescriptor* previousLockHolderGameSave,
     _In_opt_ void* context);
 
 /// <summary>
@@ -229,6 +255,9 @@ enum class PFGameSaveFilesUiSyncFailedUserAction : uint32_t
 /// </summary>
 /// <param name="localUserHandle">Local user handle.</param>
 /// <param name="action">The user action.</param>
+/// <returns>Result code for this API operation. E_NOT_VALID_STATE if the prompt waiting for an
+/// answer belongs to another callback: the response is ignored and that prompt keeps waiting for its
+/// own response. E_UNEXPECTED if no prompt is waiting.</returns>
 PF_API PFGameSaveFilesSetUiSyncFailedResponse(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesUiSyncFailedUserAction action);
 
 /// <summary>The user action of the PFGameSaveFilesUiActiveDeviceContentionCallback.</summary>
@@ -260,6 +289,9 @@ enum class PFGameSaveFilesUiActiveDeviceContentionUserAction : uint32_t
 /// </summary>
 /// <param name="localUserHandle">Local user handle.</param>
 /// <param name="action">The user action.</param>
+/// <returns>Result code for this API operation. E_NOT_VALID_STATE if the prompt waiting for an
+/// answer belongs to another callback: the response is ignored and that prompt keeps waiting for its
+/// own response. E_UNEXPECTED if no prompt is waiting.</returns>
 PF_API PFGameSaveFilesSetUiActiveDeviceContentionResponse(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesUiActiveDeviceContentionUserAction action);
 
 /// <summary>The user action of the PFGameSaveFilesUiConflictCallback.</summary>
@@ -288,6 +320,9 @@ enum class PFGameSaveFilesUiConflictUserAction : uint32_t
 /// </summary>
 /// <param name="localUserHandle">Local user handle.</param>
 /// <param name="action">The user action.</param>
+/// <returns>Result code for this API operation. E_NOT_VALID_STATE if the prompt waiting for an
+/// answer belongs to another callback: the response is ignored and that prompt keeps waiting for its
+/// own response. E_UNEXPECTED if no prompt is waiting.</returns>
 PF_API PFGameSaveFilesSetUiConflictResponse(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesUiConflictUserAction action);
 
 /// <summary>The user action of the PFGameSaveFilesUiOutOfStorageCallback.</summary>
@@ -311,6 +346,9 @@ enum class PFGameSaveFilesUiOutOfStorageUserAction : uint32_t
 /// </summary>
 /// <param name="localUserHandle">Local user handle.</param>
 /// <param name="action">The user action.</param>
+/// <returns>Result code for this API operation. E_NOT_VALID_STATE if the prompt waiting for an
+/// answer belongs to another callback: the response is ignored and that prompt keeps waiting for its
+/// own response. E_UNEXPECTED if no prompt is waiting.</returns>
 PF_API PFGameSaveFilesSetUiOutOfStorageResponse(_In_ PFLocalUserHandle localUserHandle, _In_ PFGameSaveFilesUiOutOfStorageUserAction action);
 
 }

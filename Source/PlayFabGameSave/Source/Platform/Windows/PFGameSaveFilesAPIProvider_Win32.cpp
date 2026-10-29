@@ -4,6 +4,7 @@
 #include "SetSaveDescriptionProvider.h"
 #include <shlobj.h>
 #include <knownfolders.h>
+#include <thread>
 
 namespace PlayFab
 {
@@ -389,7 +390,7 @@ HRESULT GameSaveAPIProviderWin32::SetActiveDeviceChangedCallback(
 {
     RETURN_HR_IF(E_INVALIDARG, callback == nullptr);
 
-    std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+    std::lock_guard<Mutex> lock(GetGameSaveUiCallbackMutex());
     auto& uiInfo = GetGameSaveUiCallbackInfo();
     uiInfo.activeDeviceChangedCallbackQueue = callbackQueue;
     uiInfo.activeDeviceChangedCallback = callback;
@@ -402,7 +403,7 @@ HRESULT GameSaveAPIProviderWin32::SetUiCallbacks(
     _In_ PFGameSaveUICallbacks* callbacks
 ) noexcept
 {
-    std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+    std::lock_guard<Mutex> lock(GetGameSaveUiCallbackMutex());
     auto& uiInfo = GetGameSaveUiCallbackInfo();
 
     uiInfo.progressCallback = callbacks->progressCallback;
@@ -464,6 +465,10 @@ HRESULT GameSaveAPIProviderWin32::GetFolderSize(
 
     return GameSaveEntityApiImpl(localUserHandle, [&saveRootFolderSize](SharedPtr<FolderSyncManager> folderSync)
     {
+        if (!folderSync->IsUserAddedForStateApis())
+        {
+            return E_PF_GAMESAVE_USER_NOT_ADDED; // the only AddUser failed or was cancelled
+        }
         const String& folder = folderSync->GetFolder();
         *saveRootFolderSize = folder.size() + 1;
         return S_OK;
@@ -482,6 +487,10 @@ HRESULT GameSaveAPIProviderWin32::GetFolder(
 
     return GameSaveEntityApiImpl(localUserHandle, [saveRootFolderSize, &saveRootFolderBuffer, &saveRootFolderUsed](SharedPtr<FolderSyncManager> folderSync)
     {
+        if (!folderSync->IsUserAddedForStateApis())
+        {
+            return E_PF_GAMESAVE_USER_NOT_ADDED; // the only AddUser failed or was cancelled
+        }
         const String& folder = folderSync->GetFolder();
         RETURN_HR_IF(E_INVALIDARG, saveRootFolderSize < folder.size() + 1);
         memcpy(saveRootFolderBuffer, folder.data(), folder.size() + 1);
@@ -494,6 +503,40 @@ HRESULT GameSaveAPIProviderWin32::GetFolder(
         return S_OK;
     });
 }
+
+namespace
+{
+
+// XAsyncProviderBase::Run for AddUserWithUiAsync and UploadWithUiAsync, with debug fault points
+// (core unit test plan GS-U-046): "Api.RunProvider" Fail fails the start the way Run does (the
+// provider is destroyed - its destructor releases what it owns - and the failure returned);
+// "Api.AfterRunFailed" Pause then holds the API call (bounded) until resumed, so a test can admit
+// another operation in that window. Unarmed, this is XAsyncProviderBase::Run.
+template<typename TProvider>
+HRESULT RunProviderWithFaultPoints(UniquePtr<TProvider>&& provider) noexcept
+{
+    HRESULT faultHr = S_OK;
+    HRESULT hr = S_OK;
+    if (CheckFaultPointForDebug("Api.RunProvider", faultHr) == PFGameSaveFaultAction::Fail)
+    {
+        provider.reset();
+        hr = FAILED(faultHr) ? faultHr : E_FAIL;
+    }
+    else
+    {
+        hr = XAsyncProviderBase::Run(std::move(provider));
+    }
+    if (FAILED(hr))
+    {
+        for (uint32_t waitedMs = 0; waitedMs < 30000 && CheckFaultPointForDebug("Api.AfterRunFailed", faultHr) == PFGameSaveFaultAction::Pause; waitedMs += 20)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        }
+    }
+    return hr;
+}
+
+} // anonymous namespace
 
 HRESULT GameSaveAPIProviderWin32::AddUserWithUiAsync(
     _In_ PFLocalUserHandle localUserHandle,
@@ -519,43 +562,19 @@ HRESULT GameSaveAPIProviderWin32::AddUserWithUiAsync(
             return reserveHr;
         }
 
-        // Keep a reference so the reservation can be released if the provider never starts.
-        SharedPtr<FolderSyncManager> folderSyncForCleanup = folderSync;
-
+        // The provider takes ownership of the reservation and releases it on every exit path:
+        // terminal DoWork, or its destructor when it never gets that far (Begin or Run failing,
+        // termination). See DownloadAsyncProvider::ReleaseReservationOnce.
         auto provider = MakeDownloadAsyncProvider(
             std::move(rc),
             async,
             XASYNC_IDENTITY(AddUserWithUiAsync),
-            std::move(folderSync)
+            std::move(folderSync),
+            previousSyncState,
+            previousForcedDisconnectFromCloud
         );
 
-        HRESULT hr = XAsyncProviderBase::Run(std::move(provider));
-        if (FAILED(hr))
-        {
-            // TryReserveDownload clears the forced-disconnect flag when admitting a reconnect
-            // attempt, and does so before the provider starts. Restoring only the sync state would
-            // leave the manager reporting connected when no reconnect ever ran, so
-            // IsConnectedToCloud would lie and nothing would prompt the title to retry.
-            //
-            // Restore only when it was actually set. If it was already false the reservation
-            // cleared nothing, and writing false here would instead erase a disconnect published
-            // in the meantime: the active-device poller is still running on this path (it is only
-            // stopped once a sync completes, which a failed Run never reaches), and it sets this
-            // flag from outside m_progressMutex when it sees the active device change.
-            //
-            // Done before the sync-state restore so the reservation is never visibly released
-            // while connectivity still reads stale.
-            if (previousForcedDisconnectFromCloud)
-            {
-                folderSyncForCleanup->SetForcedDisconnectFromCloud(true);
-            }
-
-            // The download never started, so drop the reservation - otherwise every later AddUser
-            // for this user is rejected with E_PF_GAMESAVE_USER_ALREADY_ADDED forever.
-            folderSyncForCleanup->SetSyncStateProgress(previousSyncState, 0, 0);
-        }
-
-        return hr;
+        return RunProviderWithFaultPoints(std::move(provider));
     });
 }
 
@@ -576,6 +595,10 @@ HRESULT GameSaveAPIProviderWin32::GetRemainingQuota(
     *remainingQuota = 0;
     return GameSaveEntityApiImpl(localUserHandle, [&remainingQuota](SharedPtr<FolderSyncManager> folderSync)
     {
+        if (!folderSync->IsUserAddedForStateApis())
+        {
+            return E_PF_GAMESAVE_USER_NOT_ADDED; // the only AddUser failed or was cancelled
+        }
         if (folderSync->IsForcedDisconnectFromCloud())
         {
             // This error is returned regardless if the network is restored as the user is still considered offline.
@@ -597,6 +620,10 @@ HRESULT GameSaveAPIProviderWin32::IsConnectedToCloud(
     *isConnectedToCloud = false;
     HRESULT hr = GameSaveEntityApiImpl(localUserHandle, [&isConnectedToCloud](SharedPtr<FolderSyncManager> folderSync)
     {
+        if (!folderSync->IsUserAddedForStateApis())
+        {
+            return E_PF_GAMESAVE_USER_NOT_ADDED; // the only AddUser failed or was cancelled
+        }
         *isConnectedToCloud = (folderSync->IsForcedDisconnectFromCloud() == false);
         return S_OK;
     });
@@ -633,26 +660,18 @@ HRESULT GameSaveAPIProviderWin32::UploadWithUiAsync(
             reservedUploadState = true;
         }
 
-        // Keep a reference so the reservation can be released if the provider never starts. Only
-        // UploadAsyncProvider::DoWork restores the state, and it never runs if Run() fails.
-        SharedPtr<FolderSyncManager> folderSyncForCleanup = folderSync;
-
+        // The provider takes ownership of the reservation (if one was taken) and releases it on
+        // every exit path. See UploadAsyncProvider::ReleaseReservationOnce.
         auto provider = MakeStartFileSyncProvider(
             std::move(rc),
             option,
             async,
             XASYNC_IDENTITY(PFGameSaveFilesUploadWithUiAsync),
-            std::move(folderSync));
+            std::move(folderSync),
+            reservedUploadState,
+            previousSyncState);
 
-        HRESULT hr = XAsyncProviderBase::Run(std::move(provider));
-        if (FAILED(hr) && reservedUploadState)
-        {
-            // The upload never started, so drop the reservation - otherwise every later upload for
-            // this user is rejected with E_PF_GAMESAVE_OPERATION_IN_PROGRESS forever.
-            folderSyncForCleanup->SetSyncStateProgress(previousSyncState, 0, 0);
-        }
-
-        return hr;
+        return RunProviderWithFaultPoints(std::move(provider));
     });
 }
 
@@ -796,7 +815,7 @@ HRESULT GameSaveAPIProviderWin32::SetMockManifestOffsetForDebug(_In_ size_t offs
     }
 }
 
-HRESULT GameSaveAPIProviderWin32::SetMockDataFolderForDebug(_In_ const char* mockDataFolder) noexcept
+HRESULT GameSaveAPIProviderWin32::SetMockDataFolderForDebug(_In_opt_ const char* mockDataFolder) noexcept
 {
     TRACE_INFORMATION("[GAME SAVE] SetMockDataFolderForDebug called with mockDataFolder=%s", mockDataFolder ? mockDataFolder : "(null)");
     try
@@ -804,15 +823,46 @@ HRESULT GameSaveAPIProviderWin32::SetMockDataFolderForDebug(_In_ const char* moc
         SharedPtr<GameSaveGlobalState> state;
         HRESULT hr = GameSaveGlobalState::Get(state);
         RETURN_IF_FAILED(hr);
-        state->SetDebugMockDataOverride(mockDataFolder);
-        PlayFab::GameSaveWrapper::GameSaveServiceSelector::useMocks = true;
-        PlayFab::GameSave::GameSaveTelemetryManager::useMocks = true;
-        return S_OK;
+        // Null or empty (core unit test plan H-6): back to the real service path (the generated
+        // GameSave API and the real telemetry pipeline), e.g. behind libHttpClient mocks.
+        const bool useMocks = mockDataFolder != nullptr && mockDataFolder[0] != '\0';
+        state->SetDebugMockDataOverride(useMocks ? String{ mockDataFolder } : String{});
+        PlayFab::GameSaveWrapper::GameSaveServiceSelector::useMocks = useMocks;
+        PlayFab::GameSave::GameSaveTelemetryManager::useMocks = useMocks;        return S_OK;
     }
     catch (...)
     {
         return E_FAIL;
     }
+}
+
+bool GameSaveAPIProviderWin32::HasSeparateMetadataStorage() noexcept
+{
+    // Debug only (PFGameSaveFilesSetSimulatedSeparateMetadataStorageForDebug): false otherwise, the
+    // base class default.
+#if defined(_DEBUG)
+    SharedPtr<GameSaveGlobalState> state;
+    return SUCCEEDED(GameSaveGlobalState::Get(state)) && state->GetDebugSimulateSeparateMetadataStorage();
+#else
+    return false;
+#endif
+}
+
+bool GameSaveAPIProviderWin32::IsGameStorageWiped(const String& saveFolder) noexcept
+{
+    if (!HasSeparateMetadataStorage())
+    {
+        return false;
+    }
+    // Same contract as a platform with separate metadata storage: the marker written after every
+    // successful sync is gone while localstate.json (the metadata) survived.
+    String markerFolder, markerPath;
+    if (FAILED(JoinPathHelper(saveFolder, PFGS_GAME_STORAGE_MARKER_FOLDER, markerFolder)) ||
+        FAILED(JoinPathHelper(markerFolder, PFGS_GAME_STORAGE_MARKER_FILENAME, markerPath)))
+    {
+        return false;
+    }
+    return !FilePAL::DoesFileExist(markerPath);
 }
 
 HRESULT GameSaveAPIProviderWin32::GetStatsJsonSizeForDebug(_In_ PFLocalUserHandle localUserHandle, _Out_ size_t* jsonSize) noexcept

@@ -69,10 +69,19 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\CompareStep.cpp">
       <Filter>Source\SyncManager</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\CompareStepRules.cpp">
+      <Filter>Source\SyncManager</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\DownloadStep.cpp">
       <Filter>Source\SyncManager</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\UploadStep.cpp">
+      <Filter>Source\SyncManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\UploadStepRules.cpp">
+      <Filter>Source\SyncManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\SyncManager\LockStepRules.cpp">
       <Filter>Source\SyncManager</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabGameSave\Source\Providers\DownloadAsyncProvider.cpp">

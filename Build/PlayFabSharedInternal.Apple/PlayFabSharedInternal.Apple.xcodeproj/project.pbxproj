@@ -658,7 +658,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
 					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
-					"$(SRCROOT)/../../External/nlohmann/include",
+					"$(SRCROOT)/../../Build/vcpkg_installed/$(PF_VCPKG_TRIPLET)/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 				);
 				OTHER_LDFLAGS = "";
@@ -682,7 +682,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
 					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
-					"$(SRCROOT)/../../External/nlohmann/include",
+					"$(SRCROOT)/../../Build/vcpkg_installed/$(PF_VCPKG_TRIPLET)/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 				);
 				OTHER_LDFLAGS = "";
@@ -762,6 +762,11 @@
 					"-Wformat-security",
 					"-Werror=format-security",
 				);
+				"PF_VCPKG_TRIPLET[sdk=iphoneos*]" = "arm64-ios";
+				"PF_VCPKG_TRIPLET[sdk=iphonesimulator*][arch=arm64]" = "arm64-ios-simulator";
+				"PF_VCPKG_TRIPLET[sdk=iphonesimulator*][arch=x86_64]" = "x64-ios";
+				"PF_VCPKG_TRIPLET[sdk=macosx*][arch=arm64]" = "arm64-osx";
+				"PF_VCPKG_TRIPLET[sdk=macosx*][arch=x86_64]" = "x64-osx";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -826,6 +831,11 @@
 					"-Wformat-security",
 					"-Werror=format-security",
 				);
+				"PF_VCPKG_TRIPLET[sdk=iphoneos*]" = "arm64-ios";
+				"PF_VCPKG_TRIPLET[sdk=iphonesimulator*][arch=arm64]" = "arm64-ios-simulator";
+				"PF_VCPKG_TRIPLET[sdk=iphonesimulator*][arch=x86_64]" = "x64-ios";
+				"PF_VCPKG_TRIPLET[sdk=macosx*][arch=arm64]" = "arm64-osx";
+				"PF_VCPKG_TRIPLET[sdk=macosx*][arch=x86_64]" = "x64-osx";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -841,7 +851,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
 					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
-					"$(SRCROOT)/../../External/nlohmann/include",
+					"$(SRCROOT)/../../Build/vcpkg_installed/$(PF_VCPKG_TRIPLET)/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 				);
 				OTHER_LDFLAGS = "";
@@ -863,7 +873,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../libHttpClient/Include",
 					"$(SRCROOT)/../../Source/PlayFabCore/Include/**",
-					"$(SRCROOT)/../../External/nlohmann/include",
+					"$(SRCROOT)/../../Build/vcpkg_installed/$(PF_VCPKG_TRIPLET)/include",
 					"$(SRCROOT)/../../Source/PlayFabSharedInternal/Include/Generated",
 				);
 				OTHER_LDFLAGS = "";

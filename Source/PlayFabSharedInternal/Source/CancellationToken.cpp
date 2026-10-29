@@ -24,8 +24,8 @@ public:
     bool UnregisterForNotificationAndCheck(ICancellationListener& listener) noexcept;
 
 private:
-    mutable std::mutex m_mutex;
-    std::recursive_mutex m_cancellationMutex; // intentionally recursive
+    mutable Mutex m_mutex;
+    RecursiveMutex m_cancellationMutex; // intentionally recursive
     std::atomic<bool> m_cancelled{ false };
     Vector<ICancellationListener*> m_listeners; // non-owning
     Vector<WeakPtr<SharedState>> m_children;

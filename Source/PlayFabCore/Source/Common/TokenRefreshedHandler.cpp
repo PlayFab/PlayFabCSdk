@@ -40,7 +40,7 @@ public:
     void Invoke(EntityKey const& entityKey, EntityToken const& newToken) const noexcept;
 
 private:
-    mutable std::recursive_mutex m_mutex; // recursive for unregister
+    mutable RecursiveMutex m_mutex; // recursive for unregister
 
     Map<PFRegistrationToken, SharedPtr<TokenRefreshedClientHandler>> m_clientHandlers;
     PFRegistrationToken m_nextToken;

@@ -10,6 +10,11 @@
 #include <httpClient/config.h>
 #include <httpClient/pal.h>
 
+// The portable libHttpClient PAL does not define this Windows HRESULT on every platform.
+#ifndef E_NOT_VALID_STATE
+#define E_NOT_VALID_STATE _HRESULT_TYPEDEF_(0x8007139FL)
+#endif
+
 #if !HC_PLATFORM_IS_MICROSOFT
 #ifndef _Null_terminated_
 #define _Null_terminated_

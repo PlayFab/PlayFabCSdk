@@ -332,7 +332,7 @@ PF_API PFGameSaveFilesSetMockManifestOffsetForDebug(_In_ size_t offset)
     });
 }
 
-PF_API PFGameSaveFilesSetMockDataFolderForDebug(_In_ const char* mockDataFolder)
+PF_API PFGameSaveFilesSetMockDataFolderForDebug(_In_opt_ const char* mockDataFolder)
 {
     return GSApiImpl("PFGameSaveFilesSetMockDataFolderForDebug", [&](GameSaveGlobalState& state) {
         return state.ApiProvider().SetMockDataFolderForDebug(mockDataFolder);
@@ -426,6 +426,123 @@ PF_API PFGameSaveFilesResumeUploadForDebug()
     });
 }
 
+PF_API PFGameSaveFilesSetTitleConfigOverrideForDebug(_In_opt_z_ const char* titleConfigJson) noexcept
+{
+#if defined(_DEBUG)
+    return GSApiImpl("PFGameSaveFilesSetTitleConfigOverrideForDebug", [&](GameSaveGlobalState& state) {
+        int64_t perPlayerQuotaBytes = 0;
+        if (titleConfigJson != nullptr && titleConfigJson[0] != '\0')
+        {
+            JsonValue json;
+            try
+            {
+                json = JsonValue::parse(String{ titleConfigJson });
+            }
+            catch (...)
+            {
+                return E_INVALIDARG;
+            }
+            RETURN_HR_IF(E_INVALIDARG, !json.is_object());
+            if (json.contains("PerPlayerQuotaBytes"))
+            {
+                const JsonValue& quota = json["PerPlayerQuotaBytes"];
+                RETURN_HR_IF(E_INVALIDARG, !quota.is_number_integer() || quota.get<int64_t>() <= 0);
+                perPlayerQuotaBytes = quota.get<int64_t>();
+            }
+        }
+        TRACE_WARNING("PFGameSaveFilesSetTitleConfigOverrideForDebug: PerPlayerQuotaBytes override %lld", static_cast<long long>(perPlayerQuotaBytes));
+        state.SetDebugPerPlayerQuotaOverride(perPlayerQuotaBytes);
+        return S_OK;
+    });
+#else
+    UNREFERENCED_PARAMETER(titleConfigJson);
+    return E_NOTIMPL;
+#endif
+}
+
+PF_API PFGameSaveFilesSetSimulatedSeparateMetadataStorageForDebug(_In_ bool enable) noexcept
+{
+#if defined(_DEBUG)
+    return GSApiImpl("PFGameSaveFilesSetSimulatedSeparateMetadataStorageForDebug", [&](GameSaveGlobalState& state) {
+        state.SetDebugSimulateSeparateMetadataStorage(enable);
+        TRACE_WARNING("PFGameSaveFilesSetSimulatedSeparateMetadataStorageForDebug: %s", enable ? "on" : "off");
+        return S_OK;
+    });
+#else
+    UNREFERENCED_PARAMETER(enable);
+    return E_NOTIMPL;
+#endif
+}
+
+PF_API PFGameSaveFilesSetFaultInjectionForDebug(_In_z_ const char* point, _In_ PFGameSaveFaultAction action, _In_ HRESULT hr) noexcept
+{
+#if defined(_DEBUG)
+    return GSApiImpl("PFGameSaveFilesSetFaultInjectionForDebug", [&](GameSaveGlobalState& state) {
+        RETURN_HR_INVALIDARG_IF_NULL(point);
+        RETURN_HR_IF(E_INVALIDARG, point[0] == '\0');
+        RETURN_HR_IF(E_INVALIDARG, action != PFGameSaveFaultAction::None && action != PFGameSaveFaultAction::Fail &&
+            action != PFGameSaveFaultAction::Abandon && action != PFGameSaveFaultAction::Pause &&
+            action != PFGameSaveFaultAction::Count && action != PFGameSaveFaultAction::FailAlways &&
+            action != PFGameSaveFaultAction::PauseOnce);
+        RETURN_HR_IF(E_INVALIDARG, (action == PFGameSaveFaultAction::Fail || action == PFGameSaveFaultAction::FailAlways) && SUCCEEDED(hr));
+        state.SetDebugFault(String{ point }, action, hr);
+        TRACE_WARNING("PFGameSaveFilesSetFaultInjectionForDebug: point '%s' action %u hr 0x%08X", point, static_cast<uint32_t>(action), static_cast<uint32_t>(hr));
+        return S_OK;
+    });
+#else
+    UNREFERENCED_PARAMETER(point);
+    UNREFERENCED_PARAMETER(action);
+    UNREFERENCED_PARAMETER(hr);
+    return E_NOTIMPL;
+#endif
+}
+
+PF_API PFGameSaveFilesResumeFaultPointForDebug(_In_z_ const char* point) noexcept
+{
+#if defined(_DEBUG)
+    return GSApiImpl("PFGameSaveFilesResumeFaultPointForDebug", [&](GameSaveGlobalState& state) {
+        RETURN_HR_INVALIDARG_IF_NULL(point);
+        state.ResumeDebugFault(String{ point });
+        TRACE_WARNING("PFGameSaveFilesResumeFaultPointForDebug: point '%s'", point);
+        return S_OK;
+    });
+#else
+    UNREFERENCED_PARAMETER(point);
+    return E_NOTIMPL;
+#endif
+}
+
+PF_API PFGameSaveFilesGetFaultPointHitCountForDebug(_In_z_ const char* point, _Out_ uint32_t* hitCount) noexcept
+{
+#if defined(_DEBUG)
+    return GSApiImpl("PFGameSaveFilesGetFaultPointHitCountForDebug", [&](GameSaveGlobalState& state) {
+        RETURN_HR_INVALIDARG_IF_NULL(point);
+        RETURN_HR_INVALIDARG_IF_NULL(hitCount);
+        *hitCount = state.GetDebugFaultHitCount(String{ point });
+        return S_OK;
+    });
+#else
+    UNREFERENCED_PARAMETER(point);
+    UNREFERENCED_PARAMETER(hitCount);
+    return E_NOTIMPL;
+#endif
+}
+
+PF_API PFGameSaveFilesSetDownloadUrlExpiryForDebug(_In_ PFGameSaveUrlExpiryMode mode, _In_ uint32_t seconds) noexcept
+{
+#if defined(_DEBUG)
+    return GSApiImpl("PFGameSaveFilesSetDownloadUrlExpiryForDebug", [&](GameSaveGlobalState& state) {
+        RETURN_HR_IF(E_INVALIDARG, static_cast<uint32_t>(mode) > static_cast<uint32_t>(PFGameSaveUrlExpiryMode::ExpireIssued));
+        state.SetDebugDownloadUrlExpiry(mode, seconds);
+        TRACE_WARNING("PFGameSaveFilesSetDownloadUrlExpiryForDebug: mode %u seconds %u", static_cast<uint32_t>(mode), seconds);
+        return S_OK;
+    });
+#else
+    UNREFERENCED_PARAMETER(mode);
+    UNREFERENCED_PARAMETER(seconds);
+    return E_NOTIMPL;
+#endif
+}
 PF_API PFGameSaveFilesResetCloudAsync(_In_ PFLocalUserHandle localUserHandle, _In_ XAsyncBlock* async) noexcept
 {
     return GSApiImpl("PFGameSaveFilesResetCloudAsync", [&](GameSaveGlobalState& state) {
@@ -451,3 +568,28 @@ PF_API PFGameSaveFilesSetForceInprocForDebug(_In_ bool forceInproc)
     return S_OK;
 }
 
+PF_API PFGameSaveFilesSetSimulatedDiskFullForDebug(_In_ bool enable, _In_ uint64_t bytesBeforeFull)
+{
+#if PF_FILEPAL_HAS_DISK_SPACE_SIMULATION
+    FilePAL::SetSimulatedDiskFullForDebug(enable, bytesBeforeFull);
+    return S_OK;
+#else
+    UNREFERENCED_PARAMETER(enable);
+    UNREFERENCED_PARAMETER(bytesBeforeFull);
+    TRACE_WARNING("PFGameSaveFilesSetSimulatedDiskFullForDebug: disk-space simulation is not supported by the file PAL");
+    return E_NOTIMPL;
+#endif
+}
+
+PF_API PFGameSaveFilesSetSimulatedDiskFreeSpaceForDebug(_In_ bool enable, _In_ uint64_t freeBytes)
+{
+#if PF_FILEPAL_HAS_DISK_SPACE_SIMULATION
+    FilePAL::SetSimulatedDiskFreeSpaceForDebug(enable, freeBytes);
+    return S_OK;
+#else
+    UNREFERENCED_PARAMETER(enable);
+    UNREFERENCED_PARAMETER(freeBytes);
+    TRACE_WARNING("PFGameSaveFilesSetSimulatedDiskFreeSpaceForDebug: disk-space simulation is not supported by the file PAL");
+    return E_NOTIMPL;
+#endif
+}

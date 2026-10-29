@@ -50,8 +50,8 @@ private:
     HRESULT OnStarted(XAsyncBlock* async) noexcept override;
 
     Vector<AsyncOp<void>> m_operations;
-    std::mutex m_resultMutex;
-    std::condition_variable m_resultCondition;
+    Mutex m_resultMutex;
+    ConditionVariable m_resultCondition;
     bool m_allComplete{};
     HRESULT m_result{};
     SharedPtr<std::optional<HttpResult>> m_httpResult{ MakeShared<std::optional<HttpResult>>() };

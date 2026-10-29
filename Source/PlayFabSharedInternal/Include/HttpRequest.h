@@ -123,6 +123,7 @@ protected:
     UnorderedMap<String, String> m_headers;
     String const m_requestBody;
     Vector<char> m_responseBody;
+    uint32_t m_responsePerformCount{ 0 }; // Perform attempt whose bytes m_responseBody holds
     std::optional<uint32_t> m_retryCacheId;
     bool m_retryAllowed{ kDefaultHttpRetryAllowed };
     bool m_isPlayfabCall{ true };

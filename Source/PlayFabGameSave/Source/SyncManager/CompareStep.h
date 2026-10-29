@@ -12,6 +12,10 @@ namespace GameSave
 // Forward declare
 class FolderSyncManager;
 
+// The atomic sync unit of a folder: its top-level folder (CompareStepRules.cpp). The root files' unit
+// is "".
+String GetTopLevelFolder(const String& relFolderPath);
+
 enum class CompareStage
 {
     GetManifestDownloadDetails,
@@ -58,6 +62,10 @@ public:
     );
 
 private:
+    // Unit tests only (core unit test plan H-1): calls the private static rules below (CompareStepRules.cpp).
+    // Defined in the test executable; nothing in the SDK defines or uses it.
+    friend class CompareStepTestAccess;
+
     HRESULT HandleConflict(
         _In_ UICallbackManager& uiCallbackManager,
         _In_ ISchedulableTask& task,
@@ -67,6 +75,24 @@ private:
         _In_ const String& saveFolder,
         _In_ const String& shortSaveDescription
         );
+
+    // OQ-1 (Take Remote): every conflicting unit becomes the cloud's copy. Its files that differ from
+    // the cloud (edited or deleted locally) download again, and what the cloud doesn't have (files and
+    // folders, synced or not) is removed locally. Other units are untouched.
+    void MirrorConflictingUnitsFromCloud(
+        _In_ const Set<String>& conflictingUnits,
+        _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
+        _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet,
+        _In_ const String& saveFolder);
+
+    // OQ-1 (Take Local): every conflicting unit's local copy is made authoritative for the next upload.
+    // Each synced file of the unit gets a baseline time no file has, so the next upload sends the whole
+    // unit (and drops the cloud-only files of it); persisted, so a session that ends before that upload
+    // prompts again rather than reading the unit as in sync.
+    HRESULT PersistTakeLocalAuthority(
+        _In_ const Set<String>& conflictingUnits,
+        _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
+        _In_ const String& saveFolder);
 
     void ReconcileMetadataLoss(
         _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
@@ -84,7 +110,9 @@ private:
     static void MarkFilesToTransferUponUpload(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet);
     static void MarkFilesToTransferUponDownload(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet, _In_ const String& saveFolder);
     static void ScanForConflicts(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet, _Out_ bool& conflictFound);
-    static void ScanForConflictHelper(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const FileDetail* localFileToUpload, _In_ const Set<String>& topLevelFoldersNeedingDownload, _Inout_ bool& conflictFound);
+    // The atomic units (GetTopLevelFolder) in conflict: ScanForConflicts' rule, unit by unit. OQ-1: the
+    // conflict choice applies to these units whole.
+    static Set<String> CollectConflictingUnitKeys(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet);
 
     static void MarkFilesToDeleteUponUpload(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet);
     static void MarkFilesToDeleteUponDownload(_In_ const SharedPtr<FileFolderSet>& localFileFolderSet, _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet);

@@ -30,6 +30,15 @@ enum class DeleteAllStage
     DeleteAllStageDone
 };
 
+// H17: the kind of sync operation that currently owns admission for this user (derived from the
+// admitted sync state).
+enum class SyncOperationKind
+{
+    None,
+    AddUser,
+    Upload,
+};
+
 class FolderSyncManager
 {
 public:
@@ -54,7 +63,7 @@ public:
     // against its own continuations, so two providers driving the same manager (e.g.
     // SetSaveDescription while an AddUser download is still in flight) held different locks and
     // mutated the same steps, manifests and file/folder sets concurrently.
-    std::recursive_mutex& GetSyncMutex() { return m_syncMutex; }
+    RecursiveMutex& GetSyncMutex() { return m_syncMutex; }
 
     FolderSyncManagerProgress GetSyncProgress();
     void SetSyncStateProgress(_In_ PFGameSaveFilesSyncState state, _In_ uint64_t cur, _In_ uint64_t total);
@@ -62,9 +71,20 @@ public:
     const String& GetFolder() const;
     UICallbackManager& GetUIManager();
     void SetStatsForDebug();
+    // A full-sync AddUser's remote deletes: drops their sync baselines (localstate.json).
+    void DropBaselinesOfAppliedRemoteDeletes();
     const String& GetStatsJsonForDebug() const;
     void SetForcedDisconnectFromCloud(bool isForcedDisconnectFromCloud) { m_isForcedDisconnectFromCloud.store(isForcedDisconnectFromCloud); }
     bool IsForcedDisconnectFromCloud() const { return m_isForcedDisconnectFromCloud.load(); }
+    // The user-state APIs (GetFolder, GetFolderSize, GetRemainingQuota, IsConnectedToCloud): false
+    // while no AddUser has ever completed for this manager and none is running, so a user whose only
+    // AddUser failed or was cancelled reads as never added (CDS §Offline Support b; the manager
+    // itself is created on demand by AddUser, SetSaveDescription and ResetCloud). An AddUser in flight
+    // (the download states) and every completed activation keep today's answers.
+    bool IsUserAddedForStateApis()
+    {
+        return m_hasActivated.load() || GetSyncProgress().syncState != PFGameSaveFilesSyncState::NotStarted;
+    }
     bool IsDeviceReleasedAsActive() const { return m_deviceReleasedAsActive; }
     bool IsSetSaveDescriptionStepDone() const { return m_setSaveDescriptionStep.IsSetDone(); }
     void ResetSetSaveDescriptionStep();
@@ -77,6 +97,19 @@ public:
     // state and, on success, transitions to PreparingForDownload. Returns the state it replaced so
     // a failed provider start can restore it.
     HRESULT TryReserveDownload(_In_ PFGameSaveFilesAddUserOptions options, _Out_ PFGameSaveFilesSyncState& previousSyncState, _Out_ bool& previousForcedDisconnectFromCloud);
+    // H17: the operation that owns admission right now (derived from the admitted sync state).
+    SyncOperationKind GetActiveOperationKind();
+    // H17: compare-and-set for an operation's terminal state reset. Moves the sync state to
+    // `newState` only while it is still an in-flight state owned by one of `owners`, in one
+    // m_progressMutex critical section, and returns whether it did. An unconditional reset could
+    // clobber an operation that was admitted after this one released admission (e.g. a reconnect
+    // AddUser started from the active-device-changed callback).
+    bool TrySetSyncStateIfOwnedBy(std::initializer_list<SyncOperationKind> owners, PFGameSaveFilesSyncState newState);
+    // Fires the active-device-changed callback that DoWorkFolderUpload deferred when the upload
+    // ended DISCONNECTED_FROM_CLOUD. The upload provider calls this only after it has released
+    // admission, so a title that re-adds the user from the callback isn't rejected by H17. Call
+    // under the sync mutex. No-op if nothing is pending.
+    void FirePendingActiveDeviceChangedCallback(_In_ const RunContext& runContext);
     // Atomically admits one ResetCloud and resets its step. Returns false if one is already active.
     bool TryReserveResetCloud();
     bool IsResetCloudReserved();
@@ -100,7 +133,13 @@ public:
     static HRESULT ConvertToPFGameSaveDescriptor(const ManifestWrap& manifest, PFGameSaveDescriptor& gameSave);
 
 private:
+    static SyncOperationKind OperationKindFromState(PFGameSaveFilesSyncState state);
+    // The kind owning the current state. Call under m_progressMutex.
+    SyncOperationKind OperationKindLocked() const;
     void FireActivationFailedTelemetry(HRESULT hr, bool offline);
+    // An AddUser completed (online or offline): see IsUserAddedForStateApis.
+    void CompleteActivation() { m_hasActivated.store(true); }
+    void RecoverFailedUpload(HRESULT hr);
 
     LocalUser m_localUser;
     String m_saveFolder;
@@ -123,13 +162,21 @@ private:
     SharedPtr<FileFolderSet> m_remoteFileFolderSet;
     String m_lastShortSaveDescription;
     bool m_descriptionDirty{ false };          // True if description was set offline and not yet uploaded
+    // True after an AddUser that rolled back to an older manifest, until an upload finalizes that
+    // state. Without it an upload with no local edits was skipped, so the cloud's latest stayed the
+    // bad save the player rolled back from and every later normal sync brought it back.
+    bool m_rollbackCommitPending{ false };
 
-    std::mutex m_progressMutex;
-    std::recursive_mutex m_syncMutex; // see GetSyncMutex()
+    Mutex m_progressMutex;
+    RecursiveMutex m_syncMutex; // see GetSyncMutex()
     bool m_resetCloudReserved{ false }; // guarded by m_progressMutex
     bool m_deviceReleasedAsActive{ false };
     std::atomic<bool> m_isForcedDisconnectFromCloud{ false };
+    std::atomic<bool> m_hasActivated{ false }; // set once an AddUser completes (CompleteActivation)
     bool m_pollingForActiveDeviceChange{ false };
+    // The active-device-changed callback of an upload that ended DISCONNECTED_FROM_CLOUD, fired by
+    // FirePendingActiveDeviceChangedCallback. Guarded by m_syncMutex; cleared by InitForUpload.
+    UniquePtr<PFGameSaveDescriptor> m_pendingActiveDeviceChanged;
     FolderSyncManagerProgress m_syncProgress{ PFGameSaveFilesSyncState::NotStarted, 0, 0 };
     PFGameSaveFilesAddUserOptions m_addUserOptions{ PFGameSaveFilesAddUserOptions::None };
     SharedPtr<ActiveDevicePollWorker> m_tokenRefreshWorker;

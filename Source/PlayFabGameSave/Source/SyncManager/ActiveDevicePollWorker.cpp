@@ -14,6 +14,44 @@ namespace GameSave
 uint32_t ActiveDevicePollWorker::s_interval = 1000 * 60 * 10; // 10 Minutes
 bool ActiveDevicePollWorker::s_debugForceChange = false;
 
+namespace
+{
+
+// Returns the manifest that currently holds the active-device lock: the highest-version manifest
+// above the latest finalized one that is still open, i.e. Initialized OR Uploading. The service lets
+// only the newest open manifest finalize, so its owner is the active device.
+//
+// LockStep::TryGetLatestPendingManifest counts Initialized only, which is not enough here:
+// InitiateUpload moves this device's own pending manifest to Uploading, and during that window the
+// poll would pick another device's superseded Initialized manifest - or, with none, blame whichever
+// device finalized last - and force this device offline mid-upload (Bug 61888800).
+const ManifestWrap* TryGetCurrentLockHolderManifest(
+    _In_ const ManifestWrapVector& manifests,
+    _In_ const ManifestWrap& latestFinalizedManifest)
+{
+    const uint64_t latestFinalizedVersion = StringToUint64(latestFinalizedManifest.GetVersion());
+    const ManifestWrap* lockHolder = nullptr;
+    uint64_t lockHolderVersion = 0;
+    for (const ManifestWrap& manifest : manifests)
+    {
+        ManifestStatus status = ConvertToManifestStatusEnum(manifest.GetStatus());
+        if (status != ManifestStatus::Initialized && status != ManifestStatus::Uploading)
+        {
+            continue;
+        }
+
+        uint64_t version = StringToUint64(manifest.GetVersion());
+        if (version > latestFinalizedVersion && version > lockHolderVersion)
+        {
+            lockHolderVersion = version;
+            lockHolder = &manifest;
+        }
+    }
+    return lockHolder;
+}
+
+} // namespace
+
 #if defined(_DEBUG) 
 extern "C" PF_API_ATTRIBUTES HRESULT PFGameSaveFilesSetActiveDevicePollForceChangeForDebug()
 {
@@ -98,7 +136,7 @@ HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
 
     bool hasCallback = false;
     {
-        std::lock_guard<std::mutex> lock(GetGameSaveUiCallbackMutex());
+        std::lock_guard<Mutex> lock(GetGameSaveUiCallbackMutex());
         auto& uiInfo = GetGameSaveUiCallbackInfo();
         hasCallback = (uiInfo.activeDeviceChangedCallback != nullptr);
     }
@@ -137,12 +175,19 @@ HRESULT ActiveDevicePollWorker::CheckActiveDevice() noexcept
             ManifestWrapVector manifests = result.Payload().GetManifests();
             
             String saveFolder = folderSync->GetFolder();
-            String localDeviceId = GetLocalDeviceID(saveFolder);
+            String localDeviceId;
+            if (FAILED(TryGetLocalDeviceID(saveFolder, localDeviceId)))
+            {
+                // Uninitialized while this call was in flight: without the local device ID every
+                // lock holder would look like another device.
+                TRACE_VERBOSE("[GAME SAVE] ActiveDevicePollWorker: SDK uninitialized, ignoring in-flight result and not rescheduling");
+                return;
+            }
 
             ManifestWrap latestFinalizedPFManifest;
             latestFinalizedPFManifest = ManifestWrap();
             LockStep::TryGetLatestFinalizedManifest(manifests, latestFinalizedPFManifest);
-            const ManifestWrap* latestPendingManifest = LockStep::TryGetLatestPendingManifest(manifests, latestFinalizedPFManifest);
+            const ManifestWrap* latestPendingManifest = TryGetCurrentLockHolderManifest(manifests, latestFinalizedPFManifest);
             bool deviceIdChanged = false;
             if (latestPendingManifest != nullptr && latestPendingManifest->GetMetadata().has_value())
             {

@@ -2,6 +2,3 @@
 [submodule "External/libHttpClient"]
 	path = External/libHttpClient
 	url = https://github.com/microsoft/libHttpClient.git
-[submodule "External/nlohmann"]
-	path = External/nlohmann
-	url = https://github.com/nlohmann/json.git

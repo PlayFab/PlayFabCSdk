@@ -21,6 +21,40 @@ enum class ArchiveSource
     Memory
 };
 
+// An extracted entry is written to an SDK-owned temporary file, "~pfgs" + 8 hex digits + ".tmp"
+// (IsArchiveExtractTempFileName), in the extraction root (the folder the selection's relative paths
+// are relative to, so the temporary path is no longer than the entries' own) or, when that can't be
+// derived, next to the destination. Its name is random and never already taken (a file, folder or
+// link found there is left alone and another name is drawn), and it moves over the destination in
+// one rename only once the entry is proven complete (size and the archive's own checks), so a
+// damaged or interrupted extraction never touches the file it would replace. A save-tree scan skips
+// an unrecorded file with this exact name pattern, and AddUser deletes one left in the save root by
+// a crash.
+constexpr const char* kArchiveExtractTempPrefix = "~pfgs";
+constexpr const char* kArchiveExtractTempExtension = ".tmp";
+constexpr size_t kArchiveExtractTempHexDigits = 8;
+
+inline bool IsArchiveExtractTempFileName(const String& fileName) noexcept
+{
+    const size_t prefixLength = 5; // "~pfgs"
+    const size_t extensionLength = 4; // ".tmp"
+    if (fileName.size() != prefixLength + kArchiveExtractTempHexDigits + extensionLength ||
+        fileName.compare(0, prefixLength, kArchiveExtractTempPrefix) != 0 ||
+        fileName.compare(prefixLength + kArchiveExtractTempHexDigits, extensionLength, kArchiveExtractTempExtension) != 0)
+    {
+        return false;
+    }
+    for (size_t i = prefixLength; i < prefixLength + kArchiveExtractTempHexDigits; i++)
+    {
+        const char c = fileName[i];
+        if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 class ArchiveFileDetail
 {
 public:
@@ -34,14 +68,15 @@ class LibArchiveContext
 {
 public:
     bool dataAvailable{};
-    std::condition_variable dataAvailableCondition{};
-    std::condition_variable dataRequestedCondition{};
-    std::mutex dataMutex{};
+    ConditionVariable dataAvailableCondition{};
+    ConditionVariable dataRequestedCondition{};
+    Mutex dataMutex{};
     
     bool reachedZipEof{};
     size_t dataBufferLength{};
     Vector<char> dataBuffer{};
     FileHandle zipFileHandle{};
+    HRESULT callbackResult{ S_OK };
 };
 
 class ArchiveContext
@@ -82,6 +117,9 @@ public:
 private:
     HRESULT ConvertLibarchiveResult(int ar, const char* message) noexcept;
     HRESULT CheckNotifyResult(HRESULT hr, const char* message = nullptr) noexcept;
+    // Decompress mode: closes the entry being extracted and deletes its temporary file (the
+    // destination is untouched).
+    void AbandonExtractedEntry() noexcept;
 
     struct pfarchive* m_archive{};
     struct pfarchive_entry* m_archiveEntry{};
@@ -95,8 +133,20 @@ private:
     std::atomic<uint64_t> m_totalCompressedSize{};
     UnorderedMap<String, ArchiveFileDetail> m_fileMap{};
     int32_t m_nextFileIndex{};
+    // Cursor for m_nextFileIndex. std::next(begin, index) on an unordered map is O(index), which
+    // made compressing N files O(N^2). Valid because m_fileMap is not modified while compressing.
+    UnorderedMap<String, ArchiveFileDetail>::iterator m_nextFileIt{};
+    // One read/write chunk buffer reused across calls instead of allocating per 64 KB chunk.
+    Vector<char> m_ioBuffer{};
+    // Bytes of the current entry already read into m_ioBuffer (the sample used to choose the
+    // entry's compression method) and not yet written to the archive.
+    size_t m_pendingEntryBytes{};
+    // Parent directory of the last extracted entry; consecutive entries usually share it, so
+    // CreatePath (a directory stat) only runs when it changes.
+    String m_lastCreatedDirectory{};
     FileHandle m_entryFile{};
     String m_entryFilePath;
+    String m_entryTempPath; // decompress mode: where the current entry is written until it is proven (empty: in place)
     time_t m_entryFileTimeLastModified{};
     time_t m_entryFileTimeCreated{};
     bool m_skipEntry{};

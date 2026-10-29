@@ -2,7 +2,14 @@
 
 namespace PlayFab
 {
-constexpr char sdkVersion[] = "2604.0.2.260923"; // format: release YYMM.release qfe#.date in YYMMDD
+// DO NOT EDIT sdkVersion BY HAND. It is set automatically by the official build pipelines
+// (Pipelines/Scripts/Set-SdkVersion.ps1 via Pipelines/Tasks/set-sdk-version.yml) before compiling:
+//   format   YYMM.QFE.R.YYMMDD  (GDK release . QFE number . standalone release revision . build date)
+//   YYMM/QFE ADO pipeline variables PFSdkRelease / PFSdkQfe, or the YYMM.QFE.R release tag
+//   R        the R of the YYMM.QFE.R release tag being built, otherwise 0
+//   YYMMDD   the pipeline run's start date
+// "0000.0.0.000000" is the placeholder for local / from-source builds that were not stamped by CI.
+constexpr char sdkVersion[] = "2610.0.2.261029";
 constexpr char versionString[] = "PFCSdk-";
 constexpr char userAgent[] = "PFCSdk/";
 

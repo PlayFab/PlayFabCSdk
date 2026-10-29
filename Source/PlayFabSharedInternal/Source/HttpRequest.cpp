@@ -222,6 +222,17 @@ Result<ServiceResponse> HCHttpCall::GetResult(XAsyncBlock* async) noexcept
     // By design XAsyncBlock should succeed for HttpCall Perform
     RETURN_IF_FAILED(XAsyncGetStatus(async, false));
 
+    // HCResponseBodyWrite drops an earlier attempt's bytes when the next attempt writes its first
+    // byte; a final attempt without a body writes none (an empty 200 or 404 after a 503 with a body).
+    // m_responseBody then still holds the earlier attempt's body, which belongs to no answer the
+    // call returns: drop it here.
+    uint32_t finalPerformCount{};
+    if (SUCCEEDED(HCHttpCallGetPerformCount(m_callHandle, &finalPerformCount)) && finalPerformCount != m_responsePerformCount)
+    {
+        m_responseBody.clear();
+        m_responsePerformCount = finalPerformCount;
+    }
+
     if (m_isPlayfabCall)
     {
         return GetResultOfPlayfabCall();
@@ -412,6 +423,18 @@ HRESULT HCHttpCall::HCResponseBodyWrite(
     assert(bytesAvailable > 0);
 
     auto call{ static_cast<HCHttpCall*>(context) }; // non-owning
+
+    // libHttpClient retries a failed request (e.g. HTTP 503, or a dropped connection) on the same
+    // call handle, and the new attempt's body starts from byte 0. Drop the bytes of an earlier attempt:
+    // appended to them, the retried response could never be parsed (the first attempt's error body
+    // would be read instead). Same rule as HCHttpFileDownloadCall's file.
+    uint32_t performCount{};
+    if (SUCCEEDED(HCHttpCallGetPerformCount(callHandle, &performCount)) && performCount != call->m_responsePerformCount)
+    {
+        call->m_responseBody.clear();
+        call->m_responsePerformCount = performCount;
+    }
+
     call->m_responseBody.insert(call->m_responseBody.end(), source, source + bytesAvailable);
 
     if (call->m_dynamicTotalSize > 0 && !call->m_isUploadFunction)

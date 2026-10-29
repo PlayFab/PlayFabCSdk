@@ -54,12 +54,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\ApiHelpers.cpp">
       <Filter>Source\Common</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\QoS\PFMultiplayerServerQoS.cpp">
-      <Filter>Source\QoS</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\QoS\QoS.cpp">
-      <Filter>Source\QoS</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\QoS\UdpSocketPAL_Windows.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -81,15 +75,5 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\Common\ApiHelpers.h">
       <Filter>Source\Common</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\QoS\QoS.h">
-      <Filter>Source\QoS</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\QoS\QoSWireFormat.h">
-      <Filter>Source\QoS</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Include\playfab\services\QoS\PFMultiplayerServerQoS.h">
-      <Filter>Include\playfab\services\QoS</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Source\PlayFabServices\Source\QoS\UdpSocketPAL.h" />
   </ItemGroup>
 </Project>

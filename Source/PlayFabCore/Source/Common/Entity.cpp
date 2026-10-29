@@ -44,7 +44,7 @@ private:
 
     static bool CheckRefreshRequired(EntityToken const& token) noexcept;
 
-    std::mutex m_mutex;
+    Mutex m_mutex;
     WeakPtr<Entity> m_weakEntity;
     SharedPtr<Authentication::ILoginHandler> m_loginHandler;
     TokenExpiredHandler m_tokenExpiredHandler;

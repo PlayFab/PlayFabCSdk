@@ -38,7 +38,7 @@ private:
     // Check validity of token and refresh if needed. Handles all errors and invokes TokenExpiredHandler as needed
     HRESULT CheckActiveDevice() noexcept;
 
-    std::mutex m_mutex;
+    Mutex m_mutex;
     std::atomic<bool> m_stopped{ false };
     Entity m_entity;
     LocalUser m_localUser;

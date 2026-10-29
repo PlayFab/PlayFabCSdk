@@ -25,6 +25,8 @@ PF_API PFMultiplayerServerPingQosServersAsync(
     _Inout_ XAsyncBlock* async
 ) noexcept
 {
+    RETURN_HR_INVALIDARG_IF_NULL(entityHandle);
+
     return AsyncApiImpl(async, XASYNC_IDENTITY(PFMultiplayerServerPingQosServersAsync), [&](SharedPtr<GlobalState> state)
     {
         PingQosServersOptions cppOpts = PingQosServersOptions::FromC(options);

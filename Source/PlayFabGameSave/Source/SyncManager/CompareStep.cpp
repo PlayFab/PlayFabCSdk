@@ -256,6 +256,15 @@ HRESULT CompareStep::CompareWithCloud(
                 initHr, localFileFolderSet->GetFiles().size(), localFileFolderSet->GetFolders().size(), localStateFound);
             if (FAILED(initHr))
             {
+                if (!downloading)
+                {
+                    // OQ-31: an upload must never act on a scan that failed. Read as an empty tree,
+                    // the upload compared nothing and reported success while the player's edits
+                    // stayed local (and a forced commit would have finalized a version without the
+                    // cloud's files). Nothing is committed; the next upload rescans.
+                    TRACE_ERROR("[GAME SAVE] CompareStep: the local scan failed hr=0x%08X - failing the upload", initHr);
+                    return E_PF_GAMESAVE_LOCAL_FILE_UNAVAILABLE;
+                }
                 TRACE_WARNING("[GAME SAVE] CompareStep: InitWithLocalFilesAndFolders failed hr=0x%08X (may be expected for new saves)", initHr);
                 // Don't fail here - continue with empty manifest (this is expected for new saves)
                 localFileFolderSet->Clear(); // Ensure localFileFolderSet is in a valid empty state
@@ -311,6 +320,46 @@ HRESULT CompareStep::CompareWithCloud(
             if (!hasValidLastSyncData && !m_conflictOccurred)
             {
                 ReconcileMetadataLoss(localFileFolderSet, remoteFileFolderSet, saveFolder, shortSaveDescription, descriptionDirty);
+            }
+
+            if (hasValidLastSyncData && !latestFinalizedManifest->HasVersion())
+            {
+                // OQ-24: the cloud holds no finalized version (ResetCloud, an administrative wipe,
+                // every version quarantined) while localstate.json still has sync baselines. They
+                // describe a cloud copy that no longer exists. Kept, an unchanged file was never sent
+                // again: the next upload committed a version without it and the following
+                // activation read it as deleted in the cloud and deleted the local copy. Dropped,
+                // every local file and folder is new to this cloud: nothing is deleted (no cloud
+                // file, no baseline) and the next upload sends the whole save.
+                size_t dropped = 0;
+                for (const FileDetail& file : localFileFolderSet->GetFiles())
+                {
+                    if (file.hasLastSync)
+                    {
+                        file.hasLastSync = false;
+                        file.lastSyncFileSize = 0;
+                        file.lastSyncTimeLastModified = 0;
+                        file.lastSyncRemoteTimeLastModified = 0;
+                        dropped++;
+                    }
+                }
+                for (const FolderDetail& folder : localFileFolderSet->GetFolders())
+                {
+                    folder.hasLastSync = false;
+                }
+                TRACE_WARNING("[GAME SAVE] CompareStep: the cloud has no finalized version but localstate.json has sync baselines (cloud reset or wiped); dropped %zu stale file baseline(s)", dropped);
+                // Persisted now: an AddUser on an empty cloud writes localstate.json only when it
+                // downloads something, so without this the stale baselines would survive on disk
+                // until this device uploads, and an AddUser after another device committed a version
+                // would read every file missing from that version as deleted in the cloud. A failed
+                // write fails the operation: going on would leave this device working from baselines
+                // that exist only in memory while the stale ones stay on disk.
+                HRESULT writeHr = LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, shortSaveDescription, descriptionDirty);
+                if (FAILED(writeHr))
+                {
+                    TRACE_ERROR("[GAME SAVE] CompareStep: failed to persist the dropped baselines hr=0x%08X - failing the operation", static_cast<uint32_t>(writeHr));
+                    return writeHr;
+                }
             }
 
             TRACE_INFORMATION("[GAME SAVE] CompareStep::ReadLocalManifest - begin MarkFilesToSync remoteFiles=%zu remoteFolders=%zu",
@@ -377,6 +426,16 @@ HRESULT CompareStep::CompareWithCloud(
                 m_telemetryManager->SetContextActivationConflictResolution(ConflictResolution::CR_NoResolutionChosen);
                 TRACE_WARNING("[GAME SAVE] CompareStep - WaitForConflictUI: user CANCELLED conflict resolution");
                 return E_PF_GAMESAVE_USER_CANCELLED;
+            }
+            else if (uiAction == UIAction::UISyncFailedCancel)
+            {
+                // The wait was woken by uninitialize or XAsyncCancel (UICallbackManager::CancelPendingUIWait
+                // / CancelUIWaitForTask), not answered. Waiting on (E_PENDING) left the AddUser parked
+                // with nobody to wake it when this pump ran before the run context was cancelled:
+                // neither the AddUser nor uninitialize ever completed.
+                m_telemetryManager->SetContextActivationConflictResolution(ConflictResolution::CR_NoResolutionChosen);
+                TRACE_WARNING("[GAME SAVE] CompareStep - WaitForConflictUI: prompt ended by cancellation or shutdown");
+                return E_ABORT;
             }
             else
             {
@@ -630,9 +689,9 @@ HRESULT CompareStep::HandleConflict(
             String deviceId = GetLocalDeviceID(saveFolder);
             String deviceType = GetDeviceType();
             String deviceFriendlyName = GetDeviceFriendlyName();
-            StrCpy(localGameSave.deviceType, sizeof(localGameSave.deviceType), deviceType.c_str());
-            StrCpy(localGameSave.deviceId, sizeof(localGameSave.deviceId), deviceId.c_str());
-            StrCpy(localGameSave.deviceFriendlyName, sizeof(localGameSave.deviceFriendlyName), deviceFriendlyName.c_str());
+            StrCpyUtf8(localGameSave.deviceType, sizeof(localGameSave.deviceType), deviceType.c_str());
+            StrCpyUtf8(localGameSave.deviceId, sizeof(localGameSave.deviceId), deviceId.c_str());
+            StrCpyUtf8(localGameSave.deviceFriendlyName, sizeof(localGameSave.deviceFriendlyName), deviceFriendlyName.c_str());
             String thumbnailPath;
             const FileDetail* thumbnailFile = localFileFolderSet->GetThumbnail();
             if (thumbnailFile)
@@ -643,7 +702,7 @@ HRESULT CompareStep::HandleConflict(
                 RETURN_IF_FAILED(JoinPathHelper(saveFolder, relFilePath, thumbnailPath));
             }
             StrCpy(localGameSave.thumbnailUri, sizeof(localGameSave.thumbnailUri), thumbnailPath.c_str());
-            StrCpy(localGameSave.shortSaveDescription, sizeof(localGameSave.shortSaveDescription), shortSaveDescription.c_str());
+            StrCpyUtf8(localGameSave.shortSaveDescription, sizeof(localGameSave.shortSaveDescription), shortSaveDescription.c_str());
 
             PFGameSaveDescriptor remoteGameSave{};
             FolderSyncManager::ConvertToPFGameSaveDescriptor(latestFinalizedManifest->GetManifest(), remoteGameSave);
@@ -682,6 +741,9 @@ HRESULT CompareStep::HandleConflict(
 
         case TakeUIChoice::TakeLocal:
         {
+            // OQ-1: the units the choice resolves, from this pass's lists (before they're trimmed below).
+            const Set<String> conflictingUnits = CollectConflictingUnitKeys(localFileFolderSet, remoteFileFolderSet);
+
             // Take local means the local tree is authoritative: skip all downloads AND drop every
             // pending local mutation the comparison derived from the cloud state. The re-entry
             // into ReadLocalManifest repopulates those lists, and DoWorkFolderDownload applies
@@ -699,6 +761,11 @@ HRESULT CompareStep::HandleConflict(
             Vector<const FolderDetail*> noFolderCreates{};
             remoteFileFolderSet->SetFoldersToCreateUponDownload(std::move(noFolderCreates));
 
+            if (!conflictingUnits.empty())
+            {
+                RETURN_IF_FAILED(PersistTakeLocalAuthority(conflictingUnits, localFileFolderSet, saveFolder));
+            }
+
             m_stage = CompareStage::CompareDone;
             task.ScheduleNow();
             break;
@@ -706,7 +773,13 @@ HRESULT CompareStep::HandleConflict(
 
         case TakeUIChoice::TakeRemote:
         {
-            // Take remote mean just download what's needed and overwrite as usual. No special action needed
+            // Take remote downloads what changed in the cloud, as usual; OQ-1: the conflicting units
+            // also become an exact copy of the cloud's.
+            const Set<String> conflictingUnits = CollectConflictingUnitKeys(localFileFolderSet, remoteFileFolderSet);
+            if (!conflictingUnits.empty())
+            {
+                MirrorConflictingUnitsFromCloud(conflictingUnits, localFileFolderSet, remoteFileFolderSet, saveFolder);
+            }
             m_stage = CompareStage::CompareDone;
             task.ScheduleNow();
             break;
@@ -714,6 +787,133 @@ HRESULT CompareStep::HandleConflict(
     }
 
     return S_OK;
+}
+
+void CompareStep::MirrorConflictingUnitsFromCloud(
+    _In_ const Set<String>& conflictingUnits,
+    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
+    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet,
+    _In_ const String& saveFolder)
+{
+    // Unit keys as ScanForConflicts computes them (the root files' unit is "").
+    auto inConflict = [&conflictingUnits](const String& relFolderPath)
+    {
+        return conflictingUnits.find(GetTopLevelFolder(relFolderPath)) != conflictingUnits.end();
+    };
+
+    // 1. A file of the unit whose local copy differs from the cloud's (edited or deleted locally,
+    //    whatever its own cloud copy did) loses its baseline, so the selection below downloads it.
+    //    Without this, a file changed only locally kept the edit, which the next upload then sent
+    //    over the cloud copy: a unit mixing both devices' files.
+    size_t restored = 0;
+    for (const FileDetail& localFile : localFileFolderSet->GetFiles())
+    {
+        if (!inConflict(localFileFolderSet->GetFileFolder(&localFile).relFolderPath))
+        {
+            continue;
+        }
+        const FileDetail* remoteFile = remoteFileFolderSet->GetFileDetailFromRelFilePath(localFileFolderSet->GetRelFilePath(&localFile));
+        if (remoteFile == nullptr)
+        {
+            continue;
+        }
+        if (localFile.existsLocally && localFile.fileSizeBytes == remoteFile->fileSizeBytes && localFile.timeLastModified == remoteFile->timeLastModified)
+        {
+            continue; // already the cloud's copy
+        }
+        localFile.hasLastSync = false;
+        localFile.lastSyncFileSize = 0;
+        localFile.lastSyncTimeLastModified = 0;
+        localFile.lastSyncRemoteTimeLastModified = 0;
+        restored++;
+    }
+
+    // 2. Rebuild the transfer selection with those baselines. Every other unit keeps today's selection.
+    MarkFilesToTransferUponDownload(localFileFolderSet, remoteFileFolderSet, saveFolder);
+
+    // 3. What the cloud's copy of the unit doesn't have goes: local-only files (synced or never
+    //    synced) and folders. Folder deletes prune, so anything that can't be deleted keeps its folder.
+    Vector<const FileDetail*> fileDeletes = localFileFolderSet->GetFilesToDeleteUponDownload();
+    for (const FileDetail& localFile : localFileFolderSet->GetFiles())
+    {
+        if (!localFile.existsLocally || !inConflict(localFileFolderSet->GetFileFolder(&localFile).relFolderPath) ||
+            remoteFileFolderSet->GetFileDetailFromRelFilePath(localFileFolderSet->GetRelFilePath(&localFile)) != nullptr ||
+            std::find(fileDeletes.begin(), fileDeletes.end(), &localFile) != fileDeletes.end())
+        {
+            continue;
+        }
+        fileDeletes.push_back(&localFile);
+    }
+    Vector<const FolderDetail*> folderDeletes = localFileFolderSet->GetFoldersToDeleteUponDownload();
+    for (const FolderDetail& localFolder : localFileFolderSet->GetFolders())
+    {
+        if (localFolder.relFolderPath.empty() || !localFolder.existsLocally || !inConflict(localFolder.relFolderPath) ||
+            remoteFileFolderSet->GetFolderDetailFromRelFilePath(localFolder.relFolderPath) != nullptr ||
+            std::find(folderDeletes.begin(), folderDeletes.end(), &localFolder) != folderDeletes.end())
+        {
+            continue;
+        }
+        folderDeletes.push_back(&localFolder);
+    }
+    const size_t fileDeleteCount = fileDeletes.size();
+    const size_t folderDeleteCount = folderDeletes.size();
+    localFileFolderSet->SetFilesToDeleteUponDownload(std::move(fileDeletes));
+    localFileFolderSet->SetFoldersToDeleteUponDownload(std::move(folderDeletes));
+
+    // 4. The cloud's folders of the unit that were deleted locally come back (the folder-create pass
+    //    only creates folders this device has no record of).
+    Vector<const FolderDetail*> creates = remoteFileFolderSet->GetFoldersToCreateUponDownload();
+    for (const FolderDetail& remoteFolder : remoteFileFolderSet->GetFolders())
+    {
+        if (remoteFolder.relFolderPath.empty() || !inConflict(remoteFolder.relFolderPath))
+        {
+            continue;
+        }
+        const FolderDetail* localFolder = localFileFolderSet->GetFolderDetailFromRelFilePath(remoteFolder.relFolderPath);
+        if (localFolder != nullptr && !localFolder->existsLocally &&
+            std::find(creates.begin(), creates.end(), &remoteFolder) == creates.end())
+        {
+            creates.push_back(&remoteFolder);
+        }
+    }
+    remoteFileFolderSet->SetFoldersToCreateUponDownload(std::move(creates));
+
+    TRACE_INFORMATION("[GAME SAVE] CompareStep: Take Remote mirrors %zu conflicting unit(s): %zu file(s) restored, downloads=%zu fileDeletes=%zu folderDeletes=%zu folderCreates=%zu",
+        conflictingUnits.size(), restored, remoteFileFolderSet->GetCompressedFilesToDownload().size(), fileDeleteCount, folderDeleteCount,
+        remoteFileFolderSet->GetFoldersToCreateUponDownload().size());
+}
+
+HRESULT CompareStep::PersistTakeLocalAuthority(
+    _In_ const Set<String>& conflictingUnits,
+    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
+    _In_ const String& saveFolder)
+{
+    // Without this, a file of the unit that only the cloud changed kept its old baseline: the next
+    // upload carried the cloud's copy forward next to this device's edits (a unit mixing both
+    // devices' files), and this device downloaded the cloud copy at its next AddUser.
+    size_t rebased = 0;
+    for (const FileDetail& localFile : localFileFolderSet->GetFiles())
+    {
+        if (!localFile.existsLocally || !localFile.hasLastSync ||
+            conflictingUnits.find(GetTopLevelFolder(localFileFolderSet->GetFileFolder(&localFile).relFolderPath)) == conflictingUnits.end())
+        {
+            continue;
+        }
+        localFile.lastSyncTimeLastModified = 0;
+        localFile.lastSyncRemoteTimeLastModified = 0;
+        rebased++;
+    }
+    TRACE_INFORMATION("[GAME SAVE] CompareStep: Take Local makes %zu conflicting unit(s) authoritative (%zu file baseline(s))", conflictingUnits.size(), rebased);
+    if (rebased == 0)
+    {
+        return S_OK;
+    }
+    HRESULT hr = LocalStateManifest::WriteLocalManifest(saveFolder, localFileFolderSet, m_loadedShortSaveDescription, m_loadedDescriptionDirty);
+    if (FAILED(hr))
+    {
+        TRACE_ERROR("[GAME SAVE] CompareStep: failed to record Take Local hr=0x%08X", hr);
+    }
+    return hr;
 }
 
 void CompareStep::Reset()
@@ -725,528 +925,6 @@ void CompareStep::Reset()
     m_conflictRequiresUpload = false;
     m_extendedManifestFailureHR = S_OK;
 }
-
-bool IsFileQueuedForUpload(const FileDetail* localFile, const SharedPtr<FileFolderSet>& localFileFolderSet)
-{
-    const Vector<const FileDetail*>& localFilesToUpload = localFileFolderSet->GetFilesToUpload();
-    for (const FileDetail* localFileToUpload : localFilesToUpload)
-    {
-        if (localFileToUpload == localFile)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void CompareStep::MarkFilesToSync(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
-    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet,
-    _In_ const String& saveFolder,
-    _Out_ bool& conflictFound)
-{    
-    MarkFilesToTransferUponUpload(localFileFolderSet); 
-    MarkFilesToTransferUponDownload(localFileFolderSet, remoteFileFolderSet, saveFolder);
-    MarkFilesToDeleteUponUpload(localFileFolderSet);
-    MarkFilesToDeleteUponDownload(localFileFolderSet, remoteFileFolderSet);
-    MarkFoldersToCreateUponUpload(localFileFolderSet, remoteFileFolderSet);
-    MarkFoldersToCreateUponDownload(localFileFolderSet, remoteFileFolderSet);
-    MarkFoldersToDeleteUponUpload(localFileFolderSet, remoteFileFolderSet);
-    MarkFoldersToDeleteUponDownload(localFileFolderSet, remoteFileFolderSet);
-    // TODO: ScanForConflicts currently only checks file uploads/deletions against
-    // topLevelFoldersNeedingDownload. Folder-only changes (empty folder create/delete)
-    // in an atomic unit that also has remote changes will not trigger conflict UI.
-    // To fully enforce the all-or-nothing conflict model, the scan should also check
-    // local folder creates/deletes against topLevelFoldersNeedingDownload.
-    //
-    // Note: a remotely-deleted folder is also invisible here, because it has no incoming
-    // downloads and so never lands in changedRemoteFolderIndexes. That used to cause silent
-    // data loss when the folder still held never-synced local files. DownloadStep::DeleteFolders
-    // now prunes instead of recursively deleting, so those files survive (Bug 63588283); the
-    // conflict-detection gap described above is still open.
-    ScanForConflicts(localFileFolderSet, remoteFileFolderSet, conflictFound);
-}
-
-void CompareStep::MarkFilesToTransferUponUpload(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet)
-{
-    const Vector<FileDetail>& localFiles = localFileFolderSet->GetFiles();
-    Vector<const FileDetail*> filesToUpload;
-    for (const FileDetail& localFile : localFiles)
-    {
-        // for each local file, see if the size or last write time changed since last time we 
-        // uploaded/downloaded the file. if any did, that means it changed locally and that change 
-        // needs to be uploaded to cloud
-        bool localFileChanged = false;
-        bool localFileDeleted = false;
-        HasLocalFileChanged(localFile, localFileChanged, localFileDeleted);
-        if (localFileChanged)
-        {
-            filesToUpload.push_back(&localFile);
-        }
-    }
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: FilesToUpload: %zd", filesToUpload.size());
-    localFileFolderSet->SetFilesToUpload(std::move(filesToUpload));
-}
-
-void CompareStep::MarkFilesToTransferUponDownload(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet, 
-    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet,
-    _In_ const String& saveFolder)
-{
-    const Vector<FileDetail>& remoteFiles = remoteFileFolderSet->GetFiles();
-    const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
-    Set<size_t> compressedFileIndexSet;
-    Set<size_t> changedRemoteFolderIndexSet;
-
-    // Conflict resolution re-enters ReadLocalManifest, which runs this selection again against the
-    // same remote set (and therefore the same ArchiveContext objects). Start from a clean slate so
-    // re-adding the same files doesn't accumulate against the archive size limits.
-    for (const CompressedFile& compressedFile : compressedFiles)
-    {
-        if (compressedFile.archiveContext != nullptr)
-        {
-            compressedFile.archiveContext->ClearFiles();
-        }
-    }
-
-#if defined(_DEBUG)
-    Vector<const FileDetail*> filesToDownload;
-#endif
-    for (const FileDetail& remoteFile : remoteFiles)
-    {
-        // for each remote file, see if remote file's ID or size or last write time changed since 
-        // last time we uploaded/downloaded the file.  if any did, that means it changed remotely 
-        // and that change needs to be downloaded from cloud
-
-        String relFilePath = remoteFileFolderSet->GetRelFilePath(&remoteFile);
-        const FileDetail* localFile = localFileFolderSet->GetFileDetailFromRelFilePath(relFilePath);
-        if (localFile)
-        {
-            if (HasRemoteFileChanged(*localFile, remoteFile))
-            {
-                ArchiveFileDetail afd{};
-                if (FAILED(JoinPathHelper(saveFolder, relFilePath, afd.fullPath)))
-                {
-                    TRACE_WARNING("[GAME SAVE] CompareStep: JoinPathHelper failed for download file '%s'", relFilePath.c_str());
-                    continue;
-                }
-                afd.uncompressedSize = remoteFile.fileSizeBytes;
-                afd.timeLastModified = remoteFile.timeLastModified;
-                afd.timeCreated = remoteFile.timeCreated;
-                HRESULT addHr = compressedFiles[remoteFile.compressedFileIndex].archiveContext->AddFile(relFilePath, std::move(afd));
-                if (FAILED(addHr))
-                {
-                    // Rejected by the archive's path/size validation - don't schedule an
-                    // extraction the archive layer will never perform.
-                    TRACE_WARNING("[GAME SAVE] CompareStep: AddFile rejected download file '%s' (hr=0x%08X)", relFilePath.c_str(), addHr);
-                    continue;
-                }
-
-                // Only schedule the bundle once the file is actually queued for extraction,
-                // otherwise a rejected file still causes its bundle to be downloaded and the file
-                // to be recorded as synced without ever having been written.
-                compressedFileIndexSet.insert(remoteFile.compressedFileIndex); // Set<> doesn't allow duplicates
-                changedRemoteFolderIndexSet.insert(remoteFile.folderIndex); // Set<> doesn't allow duplicates.
-#if defined(_DEBUG)
-                filesToDownload.push_back(&remoteFile);
-#endif
-            }
-        }
-        else
-        {
-            // no local file, so need to download it
-            ArchiveFileDetail afd{};
-            if (FAILED(JoinPathHelper(saveFolder, relFilePath, afd.fullPath)))
-            {
-                TRACE_WARNING("[GAME SAVE] CompareStep: JoinPathHelper failed for new download file '%s'", relFilePath.c_str());
-                continue;
-            }
-            afd.uncompressedSize = remoteFile.fileSizeBytes;
-            afd.timeLastModified = remoteFile.timeLastModified;
-            afd.timeCreated = remoteFile.timeCreated;
-            HRESULT addHr = compressedFiles[remoteFile.compressedFileIndex].archiveContext->AddFile(relFilePath, std::move(afd));
-            if (FAILED(addHr))
-            {
-                // Rejected by the archive's path/size validation - don't schedule an extraction
-                // the archive layer will never perform.
-                TRACE_WARNING("[GAME SAVE] CompareStep: AddFile rejected new download file '%s' (hr=0x%08X)", relFilePath.c_str(), addHr);
-                continue;
-            }
-
-            compressedFileIndexSet.insert(remoteFile.compressedFileIndex); // Set<> doesn't allow duplicates
-            changedRemoteFolderIndexSet.insert(remoteFile.folderIndex); // Set<> doesn't allow duplicates.
-#if defined(_DEBUG)
-            filesToDownload.push_back(&remoteFile);
-#endif
-        }
-    }
-
-    Vector<size_t> compressedFilesToDownload;
-    for (auto it = compressedFileIndexSet.begin(); it != compressedFileIndexSet.end(); it++)
-    {
-        compressedFilesToDownload.push_back(*it);
-    }
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: CompressedFilesToDownload: %zd", compressedFilesToDownload.size());
-    remoteFileFolderSet->SetCompressedFilesToDownload(std::move(compressedFilesToDownload));
-
-    Vector<size_t> changedRemoteFolderIndexes;
-    for (auto it = changedRemoteFolderIndexSet.begin(); it != changedRemoteFolderIndexSet.end(); it++)
-    {
-        changedRemoteFolderIndexes.push_back(*it);
-    }
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: ChangedRemoteFolderIndexSet %zd", changedRemoteFolderIndexes.size());
-    remoteFileFolderSet->SetChangedRemoteFolderIndexSet(std::move(changedRemoteFolderIndexes));
-
-#if defined(_DEBUG)
-    remoteFileFolderSet->SetFilesToDownload(std::move(filesToDownload));  // used only for debug stats
-#endif
-}
-
-
-String GetTopLevelFolder(const String& relFolderPath)
-{
-    if (relFolderPath.empty())
-    {
-        return relFolderPath;
-    }
-
-    // Find the first path separator, skipping a leading one if present
-    size_t startPos = (relFolderPath[0] == FilePAL::GetPathSeparatorChar()) ? 1 : 0;
-    const char* searchStart = relFolderPath.c_str() + startPos;
-    const char* firstSep = strchr(searchStart, FilePAL::GetPathSeparatorChar());
-
-    if (firstSep)
-    {
-        // Found a separator, return everything up to it (including leading sep if present)
-        size_t firstSepIndex = firstSep - relFolderPath.c_str();
-        return relFolderPath.substr(0, firstSepIndex);
-    }
-
-    return relFolderPath;
-}
-
-void CompareStep::ScanForConflicts(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
-    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet,
-    _Out_ bool& conflictFound)
-{
-    conflictFound = false;
-
-    Set<String> topLevelFoldersNeedingDownload;
-
-    // For each remote folder that has changes, get the top level folder and mark it as needs download
-    const PlayFab::Vector<size_t>& changedRemoteFolderIndexes = remoteFileFolderSet->GetChangedRemoteFolderIndexSet();
-    const PlayFab::Vector<PlayFab::GameSave::FolderDetail>& remoteFolders = remoteFileFolderSet->GetFolders();
-    for (size_t changedRemoteFolderIndex : changedRemoteFolderIndexes)
-    {
-        const FolderDetail& folder = remoteFolders[changedRemoteFolderIndex];
-        String topLevelFolder = GetTopLevelFolder(folder.relFolderPath);
-
-        topLevelFoldersNeedingDownload.insert(topLevelFolder.c_str());
-    }
-
-    // For each local file that needs upload, check if its top level folder needs download.  If so, conflict found
-    const PlayFab::Vector<const FileDetail*>& localFilesToUpload = localFileFolderSet->GetFilesToUpload();
-    for (const FileDetail* localFile : localFilesToUpload)
-    {
-        ScanForConflictHelper(localFileFolderSet, localFile, topLevelFoldersNeedingDownload, conflictFound);
-    }
-    const PlayFab::Vector<const FileDetail*>& localFilesToDeleteUponUpload = localFileFolderSet->GetFilesToDeleteUponUpload();
-    for (const FileDetail* localFile : localFilesToDeleteUponUpload)
-    {
-        ScanForConflictHelper(localFileFolderSet, localFile, topLevelFoldersNeedingDownload, conflictFound);
-    }
-}
-
-void CompareStep::ScanForConflictHelper(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
-    _In_ const FileDetail* localFileToUpload,
-    _In_ const Set<String>& topLevelFoldersNeedingDownload, 
-    _Inout_ bool& conflictFound
-    )
-{
-    const FolderDetail& folder = localFileFolderSet->GetFileFolder(localFileToUpload);
-    String topLevelFolder = GetTopLevelFolder(folder.relFolderPath);
-
-    auto iter = std::find_if(
-        topLevelFoldersNeedingDownload.begin(),
-        topLevelFoldersNeedingDownload.end(),
-        [&topLevelFolder](const String& str)
-        {
-            return (str.compare(topLevelFolder.c_str()) == 0);
-        });
-    conflictFound = conflictFound || (iter != topLevelFoldersNeedingDownload.end());
-}
-
-void CompareStep::MarkFilesToDeleteUponUpload(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet)
-{
-    const Vector<FileDetail>& localFiles = localFileFolderSet->GetFiles();
-    Vector<const FileDetail*> filesToDeleteUponUpload;
-    for (const FileDetail& localFile : localFiles)
-    {
-        // If the file has been synced before but is no longer on disk, it was deleted locally.
-        // hasLastSync (not lastSyncFileSize) is the existence record: a synced zero-byte file has
-        // a last-sync size of 0 and would otherwise never be deletable.
-        if (localFile.hasLastSync && !localFile.existsLocally)
-        {
-            TRACE_INFORMATION("[GAME SAVE] CompareStep: FilesToDeleteUponUpload file:%s lastSyncFileSize:%llu existsLocally:%d", localFile.fileName.c_str(), localFile.lastSyncFileSize, localFile.existsLocally);
-            filesToDeleteUponUpload.push_back(&localFile);
-        }
-    }
-
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: FilesToDeleteUponUpload: %zd", filesToDeleteUponUpload.size());
-    localFileFolderSet->SetFilesToDeleteUponUpload(std::move(filesToDeleteUponUpload));
-}
-
-void CompareStep::MarkFilesToDeleteUponDownload(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
-    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet)
-{
-    // If we never parsed the cloud's extended manifest, this set is "unknown", not "empty". Every
-    // previously-synced local file would look absent from the cloud and be queued for deletion,
-    // wiping the player's save. Preserve instead - a later sync that can read the manifest will
-    // reconcile properly.
-    if (!remoteFileFolderSet->IsInitializedFromExtendedManifest())
-    {
-        TRACE_ERROR("[GAME SAVE] CompareStep: remote file set was never populated from an extended manifest; skipping FilesToDeleteUponDownload so local files are not treated as cloud deletions");
-        localFileFolderSet->SetFilesToDeleteUponDownload({});
-        return;
-    }
-
-    // If there's last sync data but no remote file, then remote file was deleted
-    Vector<const FileDetail*> filesToDeleteUponDownload;
-    const Vector<FileDetail>& localFiles = localFileFolderSet->GetFiles();
-    for (const FileDetail& localFile : localFiles)
-    {
-        String relFilePath = localFileFolderSet->GetRelFilePath(&localFile);
-        const FileDetail* remoteFile = remoteFileFolderSet->GetFileDetailFromRelFilePath(relFilePath);
-
-        TRACE_INFORMATION("[GAME SAVE] CompareStep: FilesToDeleteUponDownload: file:%s hasLastSync:%d", localFile.fileName.c_str(), localFile.hasLastSync);
-        if (localFile.hasLastSync &&
-            remoteFile == nullptr)
-        {
-            filesToDeleteUponDownload.push_back(&localFile);
-        }
-    }
-
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: FilesToDeleteUponDownload: %zd", filesToDeleteUponDownload.size());
-    localFileFolderSet->SetFilesToDeleteUponDownload(std::move(filesToDeleteUponDownload));
-}
-
-void CompareStep::MarkFoldersToCreateUponUpload(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
-    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet
-)
-{
-    Vector<const FolderDetail*> foldersToCreateUponUpload;
-    const Vector<FolderDetail>& localFolders = localFileFolderSet->GetFolders();
-    for (const FolderDetail& localFolder : localFolders)
-    {
-        if (localFolder.relFolderPath.length() == 0)
-        {
-            continue; // skip the root folder
-        }
-
-        // Skip folders that don't exist locally - they were deleted and should not be
-        // re-created on the remote side. Without this check, a folder that was deleted
-        // locally (and already removed from cloud) would be perpetually re-marked for
-        // creation because it remains in localstate.json but is absent from the remote
-        // manifest, causing every subsequent upload to perform a full upload cycle.
-        if (!localFolder.existsLocally)
-        {
-            continue;
-        }
-
-        const FolderDetail* remoteFolder = remoteFileFolderSet->GetFolderDetailFromRelFilePath(localFolder.relFolderPath);
-        if (remoteFolder == nullptr)
-        {
-            foldersToCreateUponUpload.push_back(&localFolder);
-        }
-    }
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: FoldersToCreateUponUpload: %zd", foldersToCreateUponUpload.size());
-    localFileFolderSet->SetFoldersToCreateUponUpload(std::move(foldersToCreateUponUpload));
-}
-
-void CompareStep::MarkFoldersToCreateUponDownload(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
-    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet
-)
-{
-    Vector<const FolderDetail*> foldersToCreateUponDownload;
-    const Vector<FolderDetail>& remoteFolders = remoteFileFolderSet->GetFolders();
-    for (const FolderDetail& remoteFolder : remoteFolders)
-    {
-        if (remoteFolder.relFolderPath.length() == 0)
-        {
-            continue; // skip the root folder
-        }
-
-        const FolderDetail* localFolder = localFileFolderSet->GetFolderDetailFromRelFilePath(remoteFolder.relFolderPath);
-        if (localFolder == nullptr)
-        {
-            foldersToCreateUponDownload.push_back(&remoteFolder);
-        }
-    }
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: FoldersToCreateUponDownload: %zd", foldersToCreateUponDownload.size());
-    remoteFileFolderSet->SetFoldersToCreateUponDownload(std::move(foldersToCreateUponDownload));
-}
-
-void CompareStep::MarkFoldersToDeleteUponUpload(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
-    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet)
-{
-    Vector<const FolderDetail*> foldersToDeleteUponUpload;
-    const Vector<FolderDetail>& remoteFolders = remoteFileFolderSet->GetFolders();
-    for (const FolderDetail& remoteFolder : remoteFolders)
-    {
-        if (remoteFolder.relFolderPath.length() == 0)
-        {
-            continue; // skip the root folder
-        }
-
-        const FolderDetail* localFolder = localFileFolderSet->GetFolderDetailFromRelFilePath(remoteFolder.relFolderPath);
-        if (localFolder == nullptr)
-        {
-            TRACE_INFORMATION("[GAME SAVE] CompareStep: MarkFoldersToDeleteUponUpload %s: added. no localFolder", remoteFolder.relFolderPath.c_str());
-            foldersToDeleteUponUpload.push_back(&remoteFolder);
-        }
-        else
-        {
-            TRACE_INFORMATION("[GAME SAVE] CompareStep: MarkFoldersToDeleteUponUpload %s: existsLocally: %d", remoteFolder.relFolderPath.c_str(), localFolder->existsLocally);
-            if (!localFolder->existsLocally)
-            {
-                foldersToDeleteUponUpload.push_back(&remoteFolder);
-            }
-        }
-
-    }
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: FoldersToDeleteUponUpload: %zd", foldersToDeleteUponUpload.size());
-    remoteFileFolderSet->SetFoldersToDeleteUponUpload(std::move(foldersToDeleteUponUpload));
-}
-
-void CompareStep::MarkFoldersToDeleteUponDownload(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
-    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet)
-{
-    // Same reasoning as MarkFilesToDeleteUponDownload: an unpopulated remote set is "unknown", not
-    // "empty", and would otherwise queue every synced folder for recursive deletion.
-    if (!remoteFileFolderSet->IsInitializedFromExtendedManifest())
-    {
-        TRACE_ERROR("[GAME SAVE] CompareStep: remote file set was never populated from an extended manifest; skipping FoldersToDeleteUponDownload so local folders are not treated as cloud deletions");
-        localFileFolderSet->SetFoldersToDeleteUponDownload({});
-        return;
-    }
-
-    Vector<const FolderDetail*> foldersToDeleteUponDownload;
-    const Vector<FolderDetail>& localFolders = localFileFolderSet->GetFolders();
-    for (const FolderDetail& localFolder : localFolders)
-    {
-        if (localFolder.relFolderPath.length() == 0)
-        {
-            continue; // skip the root folder
-        }
-
-        const FolderDetail* remoteFolder = remoteFileFolderSet->GetFolderDetailFromRelFilePath(localFolder.relFolderPath);
-        
-        TRACE_INFORMATION("[GAME SAVE] CompareStep: MarkFoldersToDeleteUponDownload %s: remoteFolder:%d localFolder.hasLastSync:%d", localFolder.relFolderPath.c_str(), remoteFolder != nullptr, localFolder.hasLastSync);
-        if (remoteFolder == nullptr && localFolder.hasLastSync)
-        {
-            foldersToDeleteUponDownload.push_back(&localFolder);
-        }
-    }
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: FoldersToDeleteUponDownload: %zd", foldersToDeleteUponDownload.size());
-    localFileFolderSet->SetFoldersToDeleteUponDownload(std::move(foldersToDeleteUponDownload));
-}
-
-void CompareStep::HasLocalFileChanged(
-    _In_ const FileDetail& localFile, 
-    _Out_ bool& localFileChanged, 
-    _Out_ bool& localFileDeleted)
-{
-    // existsLocally is set by the disk scan in MergeLocalFiles. File size can't be used as an
-    // existence proxy: a legitimate zero-byte save file would be reported as deleted here and
-    // then dropped from the cloud manifest on the next upload (and deleted on other devices).
-    if (localFile.existsLocally)
-    {
-        localFileChanged =
-            (localFile.lastSyncFileSize != localFile.fileSizeBytes ||
-             localFile.lastSyncTimeLastModified != localFile.timeLastModified);
-        localFileDeleted = false;
-    }
-    else
-    {
-        localFileDeleted = true;
-        localFileChanged = false; // don't count deleted files as changed
-    }
-}
-
-bool CompareStep::HasRemoteFileChanged(_In_ const FileDetail& localFile, _In_ const FileDetail& remoteFile)
-{
-    // On platforms where SetFileLastModifiedTime is a no-op, lastSyncTimeLastModified contains
-    // the local disk timestamp which won't match the cloud's timestamp. Use the dedicated
-    // lastSyncRemoteTimeLastModified field which stores the cloud timestamp at last sync.
-    time_t lastSyncTimestampForRemoteComparison = localFile.lastSyncTimeLastModified;
-
-    SharedPtr<GameSaveGlobalState> globalState;
-    if (SUCCEEDED(GameSaveGlobalState::Get(globalState)))
-    {
-        if (globalState->ApiProvider().PlatformNeedsRemoteTimestamp() && localFile.lastSyncRemoteTimeLastModified != 0)
-        {
-            lastSyncTimestampForRemoteComparison = localFile.lastSyncRemoteTimeLastModified;
-        }
-    }
-
-    bool hasRemoteFileChanged =
-        (localFile.lastSyncFileSize != remoteFile.fileSizeBytes ||
-         lastSyncTimestampForRemoteComparison != remoteFile.timeLastModified);
-
-    return hasRemoteFileChanged;
-}
-
-void CompareStep::MarkCompressedFilesToKeep(
-    _In_ const SharedPtr<FileFolderSet>& localFileFolderSet,
-    _In_ const SharedPtr<FileFolderSet>& remoteFileFolderSet)
-{
-    const Vector<FileDetail>& remoteFiles = remoteFileFolderSet->GetFiles();
-
-    Set<size_t> compressedFileIndexSet;
-    for (const FileDetail& remoteFile : remoteFiles)
-    {
-        String relFilePath = remoteFileFolderSet->GetRelFilePath(&remoteFile);
-
-        bool hasExtractedFileChangedLocally = false;
-        bool hasExtractedFileDeletedLocally = false;
-        const FileDetail* localFile = localFileFolderSet->GetFileDetailFromRelFilePath(relFilePath);
-        if (localFile)
-        {
-            HasLocalFileChanged(*localFile, hasExtractedFileChangedLocally, hasExtractedFileDeletedLocally);
-        }
-
-        if (hasExtractedFileChangedLocally || hasExtractedFileDeletedLocally || localFile == nullptr)
-        {
-            // Mark old extracted files that will be uploaded as "skip" since they won't be needed in upcoming manifest
-            remoteFile.skipFile = true;
-            localFileFolderSet->AddSkippedFile(remoteFile); // recording just for logging purposes
-        }
-        else
-        {
-            // Otherwise, mark that we need found an extracted file needed in this compressed file so we need to keep it
-            compressedFileIndexSet.insert(remoteFile.compressedFileIndex); // Set<> doesn't allow duplicates
-        }
-    }
-
-    Vector<size_t> compressedFilesToKeep;
-    for (auto it = compressedFileIndexSet.begin(); it != compressedFileIndexSet.end(); it++)
-    {
-        compressedFilesToKeep.push_back(*it);
-    }
-    TRACE_INFORMATION("[GAME SAVE] CompareStep: CompressedFilesToKeep: %zd", compressedFilesToKeep.size());
-    remoteFileFolderSet->SetCompressedFilesToKeep(std::move(compressedFilesToKeep));
-}
-
 
 } // namespace GameSave
 } // namespace PlayFab

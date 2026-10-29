@@ -52,6 +52,8 @@ private:
     FileHandle m_responseBodyFileStream;
     uint64_t m_totalBytesReceived{ 0 }; // Bytes received during the current perform attempt
     uint32_t m_progressPerformCount{ 0 }; // Perform attempt m_totalBytesReceived belongs to
+    uint32_t m_filePerformCount{ 0 }; // Perform attempt whose bytes the file currently holds
+    HRESULT m_bodyWriteHr{ S_OK }; // Failure writing the current attempt's body to the file
 };
 
 }

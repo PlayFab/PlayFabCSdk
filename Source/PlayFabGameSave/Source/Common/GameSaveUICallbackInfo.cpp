@@ -14,9 +14,9 @@ GameSaveUiCallbackInfo& GetGameSaveUiCallbackInfo() noexcept
     return info;
 }
 
-std::mutex& GetGameSaveUiCallbackMutex() noexcept
+Mutex& GetGameSaveUiCallbackMutex() noexcept
 {
-    static std::mutex mtx;
+    static Mutex mtx;
     return mtx;
 }
 

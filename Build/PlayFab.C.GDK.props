@@ -51,4 +51,20 @@
     </Link>
   </ItemDefinitionGroup>
 
+  <!-- Console platforms on the unified GDK layout (2510+, GDKCrossPlatform=true) no longer resolve
+       GDKExtLibNames through GRDK\ExtensionLibraries, so the Party/Multiplayer headers under
+       xbox\include\playfab\ are not on the include path. Their libs are already in xbox\lib\x64.
+       These headers use the same config-struct API as PC, unlike the legacy console ExtensionLibrary
+       headers; PF_GDK_UNIFIED_EXTLIB_LAYOUT lets callers pick the matching signatures, and
+       PFGdkUnifiedExtLibLayout lets console projects add the link inputs ExtLibs used to supply. -->
+  <PropertyGroup Condition="'$(Platform)'!='x64' AND '$(Platform)'!='ARM64' AND '$(GDKCrossPlatform)'=='true' AND Exists('$(DurangoXdkInstallPath)xbox\include\playfab\party')">
+    <PFGdkUnifiedExtLibLayout>true</PFGdkUnifiedExtLibLayout>
+    <IncludePath>$(DurangoXdkInstallPath)xbox\include\playfab\multiplayer;$(DurangoXdkInstallPath)xbox\include\playfab\party;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(PFGdkUnifiedExtLibLayout)'=='true'">
+    <ClCompile>
+      <PreprocessorDefinitions>PF_GDK_UNIFIED_EXTLIB_LAYOUT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
 </Project>

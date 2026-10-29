@@ -37,8 +37,8 @@
 
   <!--NLohmann dependency-->
   <PropertyGroup Label="NLohmann">
-    <NLohmannSdkRoot>$(PlayFabExternalDir)\nlohmann\</NLohmannSdkRoot>
-    <NLohmannSdkInclude>$(NLohmannSdkRoot)include</NLohmannSdkInclude>
+    <NLohmannSdkRoot>$(PlayFabVCPKGInstalledDir)</NLohmannSdkRoot>
+    <NLohmannSdkInclude>$(NLohmannSdkRoot)</NLohmannSdkInclude>
   </PropertyGroup>
 
   <ItemDefinitionGroup>

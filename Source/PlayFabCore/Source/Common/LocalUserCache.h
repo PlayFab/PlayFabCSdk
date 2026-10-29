@@ -53,7 +53,7 @@ private:
     void StoreLocalUser(const String& localId, SharedPtr<LocalUser> localUser);
 
     // Cache mutex for thread-safe access
-    mutable std::mutex m_cacheMutex;
+    mutable Mutex m_cacheMutex;
 };
 
 } // namespace Core

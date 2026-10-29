@@ -22,113 +22,6 @@ bool LockStep::IsLockAcquired() const
     return m_stage == LockStage::LockDone;
 }
 
-HRESULT LockStep::TryGetLatestFinalizedManifest(_In_ const ManifestWrapVector& manifests, _In_ ManifestWrap& latestFinalizedManifest)
-{
-    // Pass 1: Find highest finalized manifest that is either non-conflict or the winner of a conflict.
-    uint64_t latestEligibleVersion = 0;
-    for (uint64_t i = 0; i < manifests.size(); ++i)
-    {
-        const ManifestWrap& manifest = manifests[i];
-        if (ConvertToManifestStatusEnum(manifest.GetStatus()) != ManifestStatus::Finalized)
-        {
-            continue;
-        }
-
-        bool isLoser = false;
-        if (auto const& conflictOpt = manifest.GetConflict(); conflictOpt.has_value())
-        {
-            if (!conflictOpt->GetIsWinner())
-            {
-                isLoser = true;
-            }
-        }
-        if (isLoser)
-        {
-            continue;
-        }
-
-        uint64_t ver = StringToUint64(manifest.GetVersion());
-        if (ver > latestEligibleVersion)
-        {
-            latestEligibleVersion = ver;
-            latestFinalizedManifest = manifest;
-        }
-    }
-
-    if (latestEligibleVersion != 0)
-    {
-        TRACE_INFORMATION("[GAME SAVE] LockStep: Latest Finalized Manifest v:%llu", latestEligibleVersion);
-        return S_OK;
-    }
-
-    // Pass 2: Pathological fallback - no eligible winner/non-conflict found. Use highest loser.
-    uint64_t highestLoserVersion = 0;
-    ManifestWrap highestLoserManifest;
-    for (uint64_t i = 0; i < manifests.size(); ++i)
-    {
-        const ManifestWrap& manifest = manifests[i];
-        if (ConvertToManifestStatusEnum(manifest.GetStatus()) != ManifestStatus::Finalized)
-        {
-            continue;
-        }
-        bool loser = false;
-        if (auto const& conflictOpt = manifest.GetConflict(); conflictOpt.has_value() && !conflictOpt->GetIsWinner())
-        {
-            loser = true;
-        }
-        if (loser)
-        {
-            uint64_t ver = StringToUint64(manifest.GetVersion());
-            if (ver > highestLoserVersion)
-            {
-                highestLoserVersion = ver;
-                highestLoserManifest = manifest;
-            }
-        }
-    }
-
-    if (highestLoserVersion != 0)
-    {
-        latestFinalizedManifest = highestLoserManifest;
-        TRACE_WARNING("[GAME SAVE] Pathological manifest state: only conflict losers present. Using highest loser as latest finalized fallback v:%llu", highestLoserVersion);
-    }
-    else
-    {
-        // No finalized manifests at all.
-        TRACE_INFORMATION("[GAME SAVE] No finalized manifests present when computing Latest Finalized (L)");
-        latestFinalizedManifest = ManifestWrap(); // Ensure the output manifest is reset to a default state
-    }
-    return S_OK;
-}
-
-const ManifestWrap* LockStep::TryGetLatestPendingManifest(_In_ const ManifestWrapVector& manifests, _In_ ManifestWrap& latestFinalizedManifest)
-{
-    const ManifestWrap* latestPendingManifest = nullptr;
-    uint64_t latestPendingVersion = 0;
-    for (uint64_t i = 0; i < manifests.size(); i++)
-    {
-        const ManifestWrap& manifest = manifests[i];
-        ManifestStatus manifestStatus = ConvertToManifestStatusEnum(manifest.GetStatus());
-        if (manifestStatus == ManifestStatus::Initialized)
-        {
-            uint64_t manifestVer = StringToUint64(manifest.GetVersion());
-            uint64_t latestFinalizedManifestVer = StringToUint64(latestFinalizedManifest.GetVersion());
-            if (manifestVer <= latestFinalizedManifestVer)
-            {
-                continue; // ignore any old pending manifests
-            }
-
-            if (manifestVer > latestPendingVersion)
-            {
-                latestPendingVersion = manifestVer;
-                latestPendingManifest = &manifest;
-            }
-        }
-    }
-
-    return latestPendingManifest;
-}
-
 HRESULT LockStep::AcquireActiveDevice(
     _In_ UICallbackManager& uiCallbackManager, 
     _In_ const RunContext& runContext, 
@@ -143,6 +36,30 @@ HRESULT LockStep::AcquireActiveDevice(
     {
         case LockStage::Login:
         {
+            {
+                // Debug fault point (core unit test plan H-5). Fail is reported like a sign-in failure.
+                HRESULT faultHr = S_OK;
+                switch (CheckFaultPointForDebug("Login", faultHr))
+                {
+                    case PFGameSaveFaultAction::Pause:
+                        task.ScheduleAfter(20);
+                        return S_OK;
+                    case PFGameSaveFaultAction::Abandon:
+                        return E_ABORT;
+                    case PFGameSaveFaultAction::Fail:
+                        faultHr = FAILED(faultHr) ? faultHr : E_FAIL;
+                        m_stage = LockStage::WaitForFailedUI_Login;
+                        if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, faultHr, PFGameSaveFilesSyncState::PreparingForDownload))
+                        {
+                            m_stage = LockStage::LockStepFailure;
+                            m_failureHR = faultHr;
+                            task.ScheduleNow();
+                        }
+                        return S_OK;
+                    default:
+                        break;
+                }
+            }
             PFEntityHandle entityHandle = nullptr;
             HRESULT hr = PFLocalUserTryGetEntityHandle(
                 m_localUser.Handle(),
@@ -190,6 +107,9 @@ HRESULT LockStep::AcquireActiveDevice(
         {
             m_telemetryManager->CreateEntityTelemetryPipeline(m_localUser, runContext.TaskQueueHandle());
             m_telemetryManager->ResetContextActivation();
+            // The reset cleared the failure event's calling location (set on entry above): a
+            // ListManifests failure must not be reported as StateMachineLocation::Unknown.
+            m_telemetryManager->SetContextActivationCallingLocation(StateMachineLocation::ListManifests);
             m_telemetryManager->SetContextSyncSyncErrorSource(SyncErrorSource::SER_ListManifests);
 
             ListManifestsRequest request{};
@@ -306,6 +226,9 @@ HRESULT LockStep::AcquireActiveDevice(
 
             bool rollbackBaselineSelected = false;
             m_baselineFinalizedManifest = SelectBaselineManifest(latestFinalizedL, rollbackBaselineSelected);
+            // A rollback that resolves to the latest manifest anyway changes nothing and needs no commit.
+            m_rollbackBaselineSelected = rollbackBaselineSelected &&
+                m_baselineFinalizedManifest.GetVersion() != latestFinalizedL.GetVersion();
             if (rollbackBaselineSelected)
             {
                 TRACE_INFORMATION("[GAME SAVE] Using rollback baseline manifest v:%s instead of latest v:%s", m_baselineFinalizedManifest.GetVersion().c_str(), latestFinalizedL.GetVersion().c_str());
@@ -365,13 +288,37 @@ HRESULT LockStep::AcquireActiveDevice(
             {
                 m_stage = LockStage::WaitForActiveDeviceContentionUI;
 
-                PFGameSaveDescriptor localGameSave{};
-                FolderSyncManager::ConvertToPFGameSaveDescriptor(*latestPendingManifest, localGameSave);
+                // These are NOT a local-vs-cloud choice. The first descriptor is the CURRENT lock
+                // holder - the device whose Initialized/Uploading manifest blocks this one - and the
+                // second is the PREVIOUS lock holder - the device of the finalized manifest this
+                // activation will sync (the latest, or the rollback target when a rollback option
+                // was passed), which completed its upload.
+                PFGameSaveDescriptor currentLockHolderGameSave{};
+                FolderSyncManager::ConvertToPFGameSaveDescriptor(*latestPendingManifest, currentLockHolderGameSave);
+                // Last activity on the pending manifest (a description update, upload progress), not
+                // merely when the lock was first taken.
+                if (latestPendingManifest->GetLastUpdateTimestamp() != 0)
+                {
+                    currentLockHolderGameSave.time = latestPendingManifest->GetLastUpdateTimestamp();
+                }
 
-                PFGameSaveDescriptor remoteGameSave{};
-                FolderSyncManager::ConvertToPFGameSaveDescriptor(m_baselineFinalizedManifest, remoteGameSave);
+                PFGameSaveDescriptor previousLockHolderGameSave{};
+                FolderSyncManager::ConvertToPFGameSaveDescriptor(m_baselineFinalizedManifest, previousLockHolderGameSave);
+                // A finalized manifest's relevant time is when its upload completed; the creation
+                // time is when that device took the lock, possibly long before it saved anything.
+                const std::optional<time_t>& finalizationTimestamp = m_baselineFinalizedManifest.GetFinalizationTimestamp();
+                if (finalizationTimestamp.has_value() && finalizationTimestamp.value() != 0)
+                {
+                    previousLockHolderGameSave.time = finalizationTimestamp.value();
+                }
+                // Nothing is pending on a finalized manifest.
+                previousLockHolderGameSave.uploadedBytes = 0;
 
-                if (false == uiCallbackManager.ShowActiveDeviceContentionUI(task, m_localUser, localGameSave, remoteGameSave))
+                TRACE_INFORMATION("[GAME SAVE] LockStep: contention current holder v:%s device:%s time=%lld, previous holder v:%s device:%s time=%lld",
+                    latestPendingManifest->GetVersion().c_str(), currentLockHolderGameSave.deviceId, static_cast<long long>(currentLockHolderGameSave.time),
+                    m_baselineFinalizedManifest.GetVersion().c_str(), previousLockHolderGameSave.deviceId, static_cast<long long>(previousLockHolderGameSave.time));
+
+                if (false == uiCallbackManager.ShowActiveDeviceContentionUI(task, m_localUser, currentLockHolderGameSave, previousLockHolderGameSave))
                 {
                     // No callback set, so just assume cancel
                     return E_PF_GAMESAVE_USER_CANCELLED;
@@ -606,6 +553,14 @@ HRESULT LockStep::AcquireActiveDevice(
                 TRACE_WARNING("[GAME SAVE] LockStep - WaitForActiveDeviceContentionUI: user CANCELLED");
                 return E_PF_GAMESAVE_USER_CANCELLED;
             }
+            else if (uiAction == UIAction::UISyncFailedCancel)
+            {
+                // Woken by uninitialize or XAsyncCancel (UICallbackManager::CancelPendingUIWait /
+                // CancelUIWaitForTask), not answered: end the AddUser instead of waiting on with
+                // nobody left to wake it (see CompareStep's WaitForConflictUI).
+                TRACE_WARNING("[GAME SAVE] LockStep - WaitForActiveDeviceContentionUI: prompt ended by cancellation or shutdown");
+                return E_ABORT;
+            }
             else
             {
                 TRACE_VERBOSE("[GAME SAVE] LockStep - WaitForActiveDeviceContentionUI: waiting for user response (UIAction=%d)", static_cast<int>(uiAction));
@@ -685,136 +640,19 @@ HRESULT LockStep::AcquireActiveDevice(
     return S_OK;
 }
 
-// Given the latest finalized manifest (L), apply any surviving rollback intent
-// (LastKnownGood or LastConflict) to choose an alternate baseline. Returns the chosen
-// baseline manifest. Sets baselineFromRollback=true if a rollback-specific manifest
-// was selected instead of L.
-// Selects the baseline manifest given L (latest finalized) and current rollback intent.
-// Returns either L or an alternate rollback baseline; sets rollbackBaselineSelected=true if alternate chosen.
 ManifestWrap LockStep::SelectBaselineManifest(const ManifestWrap& latestFinalizedL, bool& rollbackBaselineSelected)
 {
-    rollbackBaselineSelected = false;
-    ManifestWrap selectedBaseline = latestFinalizedL; // default L
-
-    // LastKnownGood intent
-    if ((m_addUserOptions & PFGameSaveFilesAddUserOptions::RollbackToLastKnownGood) == PFGameSaveFilesAddUserOptions::RollbackToLastKnownGood)
-    {
-        uint64_t bestKGVersion = 0;
-        ManifestWrap bestKGManifest;
-        for (size_t i = 0; i < m_manifests.size(); ++i)
-        {
-            const auto& manifest = m_manifests[i];
-            if (ConvertToManifestStatusEnum(manifest.GetStatus()) != ManifestStatus::Finalized)
-            {
-                continue;
-            }
-            auto isKnownGood = manifest.GetIsKnownGood();
-            if (!isKnownGood.has_value() || !isKnownGood.value())
-            {
-                continue;
-            }
-            uint64_t ver = StringToUint64(manifest.GetVersion());
-            if (ver > bestKGVersion)
-            {
-                bestKGVersion = ver;
-                bestKGManifest = manifest;
-            }
-        }
-        if (bestKGVersion != 0)
-        {
-            rollbackBaselineSelected = true;
-            TRACE_INFORMATION("[GAME SAVE] Selected rollback baseline (LastKnownGood) v:%llu", bestKGVersion);
-            return bestKGManifest;
-        }
-        TRACE_INFORMATION("[GAME SAVE] RollbackToLastKnownGood requested but no IsKnownGood manifest present. Falling back to latest v:%s", latestFinalizedL.GetVersion().c_str());
-        return selectedBaseline; // fallback
-    }
-
-    // LastConflict intent
-    if ((m_addUserOptions & PFGameSaveFilesAddUserOptions::RollbackToLastConflict) == PFGameSaveFilesAddUserOptions::RollbackToLastConflict)
-    {
-        uint64_t bestLoserVersion = 0; // highest own version among conflict losers
-        ManifestWrap bestLoser;
-        bool foundLoser = false;
-        for (size_t i = 0; i < m_manifests.size(); ++i)
-        {
-            const auto& manifest = m_manifests[i];
-            if (ConvertToManifestStatusEnum(manifest.GetStatus()) != ManifestStatus::Finalized)
-            {
-                continue;
-            }
-
-            // Conflict metadata lives in the optional Conflict wrapper, not directly on the manifest.
-            String conflictingVersion; // empty means no conflict metadata
-            bool isWinner = false;
-            auto const& conflictOpt = manifest.GetConflict();
-            if (conflictOpt.has_value())
-            {
-                conflictingVersion = conflictOpt->GetConflictingVersion();
-                isWinner = conflictOpt->GetIsWinner();
-            }
-
-            if (conflictingVersion.empty() || isWinner)
-            {
-                continue; // need a loser side with conflicting version
-            }
-
-            uint64_t thisVer = StringToUint64(manifest.GetVersion());
-            // Service defines "last conflict loser" as the loser with the highest own version.
-            // Use the loser's own version as the ranking key (not max of pair versions).
-            if (thisVer > bestLoserVersion)
-            {
-                bestLoserVersion = thisVer;
-                bestLoser = manifest;
-                foundLoser = true;
-            }
-        }
-        if (foundLoser)
-        {
-            rollbackBaselineSelected = true;
-            uint64_t chosenVer = StringToUint64(bestLoser.GetVersion());
-            TRACE_INFORMATION("[GAME SAVE] Selected rollback baseline (LastConflict loser) v:%llu", chosenVer);
-            return bestLoser;
-        }
-        TRACE_INFORMATION("[GAME SAVE] RollbackToLastConflict requested but no conflict loser manifest present. Falling back to latest v:%s", latestFinalizedL.GetVersion().c_str());
-        return selectedBaseline; // fallback
-    }
-
-    // No rollback intent
-    return selectedBaseline;
-}
-
-void LockStep::CreateInitManifestRequest(
-    _In_ const Entity& entity, 
-    _In_ InitializeManifestRequest& request, 
-    _In_ uint64_t baseManifestVersion,
-    _In_ uint64_t newManifestVersion,
-    _In_ uint64_t manifestVersionOffset,
-    _In_ const String& saveFolder)
-{
-    UNREFERENCED_PARAMETER(entity);
-    //request.SetEntity(entity.EntityKey());
-    request.SetVersion(Uint64ToString(newManifestVersion + manifestVersionOffset));
-    if (newManifestVersion == baseManifestVersion)
-    {
-        // keep base version in sync with the manifest version as we increment it
-        request.SetBaseVersion(Uint64ToString(baseManifestVersion + manifestVersionOffset));
-    }
-    else
-    {
-        request.SetBaseVersion(Uint64ToString(baseManifestVersion));
-    }
-
-    PlayFab::Wrappers::PFGameSaveManifestMetadataWrapper<Allocator> metadata;
-    metadata.SetDeviceId(GetLocalDeviceID(saveFolder));
-    metadata.SetDeviceName(GetDeviceFriendlyName());
-    metadata.SetDeviceType(GetDeviceType());
-    metadata.SetDeviceVersion(GetDeviceVersion());
-    request.SetMetadata(std::move(metadata));
+    return SelectBaselineManifest(m_manifests, m_addUserOptions, latestFinalizedL, rollbackBaselineSelected);
 }
 
 int64_t LockStep::GetPerPlayerQuotaBytes() const
 {
+    // Debug: PFGameSaveFilesSetTitleConfigOverrideForDebug simulates a quota the test service can't set.
+    int64_t debugOverride = GetDebugPerPlayerQuotaOverride();
+    if (debugOverride > 0)
+    {
+        return debugOverride;
+    }
     return m_parsedPerPlayerQuotaBytes;
 }
 
@@ -842,6 +680,7 @@ void LockStep::Reset()
     m_entity.reset();
     m_latestPendingPFManifest = ManifestWrap();
     m_baselineFinalizedManifest = ManifestWrap();
+    m_rollbackBaselineSelected = false;
     m_manifestVersionOffset = 0;
     m_baseVersionRetryCount = 0;
     m_versionExistsRetryCount = 0;

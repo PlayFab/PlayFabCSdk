@@ -179,7 +179,7 @@ public:
     void InvokeBatchFailed(HRESULT translatedError, String&& errorMessage, FailedBatch&& batch);
 
 private:
-    mutable std::recursive_mutex m_mutex; // recursive to allow unregistering within callbacks
+    mutable RecursiveMutex m_mutex; // recursive to allow unregistering within callbacks
 
     Map<PFRegistrationToken, SharedPtr<BatchUploadSucceededHandler>> m_batchUploadedSucceededHandlers;
     Map<PFRegistrationToken, SharedPtr<BatchUploadFailedHandler>> m_batchUploadFailedHandlers;

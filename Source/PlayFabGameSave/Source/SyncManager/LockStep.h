@@ -40,7 +40,16 @@ public:
     std::optional<Entity> GetEntity() const;
     const ManifestWrap& GetLatestPendingPFManifest() const;  
     const ManifestWrap& GetBaselineFinalizedManifest() const; // Returns the finalized manifest chosen as the baseline for this activation (may be latest or a rollback-selected alternate)
+    // True when the baseline is an older manifest chosen by a rollback option rather than the latest.
+    bool IsRollbackBaselineSelected() const { return m_rollbackBaselineSelected; }
     ManifestWrap SelectBaselineManifest(const ManifestWrap& latestFinalizedL, bool& rollbackBaselineSelected);
+    // The rule behind the member above, on an explicit manifest list and AddUser options.
+    // LockStepRules.cpp, with the other static rules below.
+    static ManifestWrap SelectBaselineManifest(
+        _In_ const ManifestWrapVector& manifests,
+        _In_ PFGameSaveFilesAddUserOptions addUserOptions,
+        _In_ const ManifestWrap& latestFinalizedL,
+        _Out_ bool& rollbackBaselineSelected);
     void Reset();
 
     static void CreateInitManifestRequest(
@@ -54,7 +63,17 @@ public:
     static HRESULT TryGetLatestFinalizedManifest(_In_ const ManifestWrapVector& manifests, _In_ ManifestWrap& latestFinalizedManifest);
     static const ManifestWrap* TryGetLatestPendingManifest(_In_ const ManifestWrapVector& manifests, _In_ ManifestWrap& latestFinalizedManifest);
 
-    void SetAddUserOptions(PFGameSaveFilesAddUserOptions o) { m_addUserOptions = o; }
+    // The AddUser options of this activation. Taken only while the step is at its start: the
+    // ListManifests stage removes the rollback options TitleConfiguration disables
+    // (DisableClientRollbackToLastKnownGood / ...LastConflictLoser), and FolderSyncManager passes the
+    // requested options again on every pump until the lock is acquired, which put them back.
+    void SetAddUserOptions(PFGameSaveFilesAddUserOptions o)
+    {
+        if (m_stage == LockStage::Login)
+        {
+            m_addUserOptions = o;
+        }
+    }
     PFGameSaveFilesAddUserOptions GetAddUserOptions() const { return m_addUserOptions; }
 	
 private:
@@ -65,6 +84,7 @@ private:
     String m_nextAvailableVersion;
     ManifestWrap m_latestPendingPFManifest;
     ManifestWrap m_baselineFinalizedManifest;
+    bool m_rollbackBaselineSelected{ false };
     bool m_forceDisconnectFromCloud{ false };
     LockStage m_stage{ LockStage::Login };
     HRESULT m_failureHR{ S_OK };

@@ -23,6 +23,10 @@ HRESULT DownloadAsyncProvider::DoWork(RunContext runContext)
     {
         TRACE_TASK(FormatString("DownloadAsyncProvider::DoWork HR:0x%0.8x", hr));
 
+        // The workflow has reached a terminal state and set the sync state itself (below on
+        // failure), so the reservation is consumed rather than restored.
+        ReleaseReservationOnce(false);
+
         // AddUser can drive an upload itself: the conflict-resolution path calls
         // UploadStep::Upload, which allocates a per-attempt staging directory. On the success path
         // UploadStep releases it at ListManifestsAfterUpload, but a terminal failure returns
@@ -56,8 +60,18 @@ HRESULT DownloadAsyncProvider::DoWork(RunContext runContext)
         }
         else
         {
-            // Reset syncState so the SDK doesn't remain in a stale Downloading state.
-            m_folderSync->SetSyncStateProgress(PFGameSaveFilesSyncState::NotStarted, 0, 0);
+            // A failed or cancelled reconnect leaves the user as it found them: added and offline
+            // (CDS §Offline Support: Cancel acts as if AddUser was never called). TryReserveDownload
+            // cleared the forced-disconnect flag to admit the reconnect; left cleared, the user read
+            // as connected to the cloud while every upload was refused as not added.
+            if (m_previousForcedDisconnectFromCloud)
+            {
+                m_folderSync->SetForcedDisconnectFromCloud(true);
+            }
+            // Reset syncState so the SDK doesn't remain in a stale Downloading state. Compare-and-set
+            // (H17): only while this AddUser still owns the state. Its conflict upload reports the
+            // upload states, which it owns too: no upload can be admitted while an AddUser runs.
+            m_folderSync->TrySetSyncStateIfOwnedBy({ SyncOperationKind::AddUser, SyncOperationKind::Upload }, PFGameSaveFilesSyncState::NotStarted);
             this->Fail(hr);
         }
     }

@@ -1,0 +1,17 @@
+{
+  "default-registry": {
+    "kind": "builtin",
+    "baseline": "cd61e1e26a038e82d6550a3ebbe0fbbfe7da78e3"
+  },
+  "registries": [
+    {
+      "kind": "git",
+      "repository": "https://microsoft.visualstudio.com/Xbox/_git/PlayFab.vcpkg",
+      "baseline": "22b99e6b240f52fc84105d152ca355a60684ad1d",
+      "packages": [
+        "libarchive",
+        "nlohmann-json"
+      ]
+    }
+  ]
+}

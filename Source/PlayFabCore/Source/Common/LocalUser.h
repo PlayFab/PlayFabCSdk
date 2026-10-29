@@ -27,7 +27,7 @@ public:
     virtual SharedPtr<Authentication::ILoginHandler> LoginHandler() const noexcept = 0;
 
 private:
-    mutable std::mutex m_mutex;
+    mutable Mutex m_mutex;
     SharedPtr<ServiceConfig> m_serviceConfig;
     void* const m_customContext;
     std::optional<Authentication::CombinedLoginResult> m_loginResult;

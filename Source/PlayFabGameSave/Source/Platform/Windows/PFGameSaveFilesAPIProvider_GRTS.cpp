@@ -21,6 +21,9 @@ namespace GameSave
 #endif
 
 static const HRESULT E_GS_USER_CANCELED = 0x80830004;
+// "QUIT GAME" on the stock active-device-contention dialog. Unlike E_GS_USER_CANCELED this is
+// never an offline choice: GRTS fails the operation and then terminates the title.
+static const HRESULT E_GS_USER_QUIT = 0x80830010;
 
 // Serializes user-slot lookup, reservation and commit in PFXPALCallGetFolderWithUiAsync. The slot
 // array lives in shared PFCore storage and the search/claim sequence is a read-modify-write, so
@@ -848,7 +851,7 @@ void CALLBACK PFXPALGetFolderComplete(XAsyncBlock* async)
         rollbackSlot(state != nullptr ? state->saveFolder : nullptr);
         releaseInFlight();
         slotLock.unlock();
-        XAsyncComplete(asyncBlock, hr, 0);
+        XAsyncComplete(asyncBlock, (hr == E_GS_USER_QUIT) ? E_PF_GAMESAVE_USER_CANCELLED : hr, 0);
         return;
     }
 
@@ -878,6 +881,10 @@ void CALLBACK PFXPALGetFolderComplete(XAsyncBlock* async)
     {
         isConnectedToCloud = false;
     }
+
+    // ADO 62523034: "QUIT GAME" is a hard cancel even if GRTS left a folder path behind, so it
+    // must never take the offline-success path below.
+    const bool userQuit = (hr == E_GS_USER_QUIT);
 
     if (!isConnectedToCloud && (SUCCEEDED(hr) || (cancelLike && state->saveFolder[0] != '\0')))
     {
@@ -909,9 +916,11 @@ void CALLBACK PFXPALGetFolderComplete(XAsyncBlock* async)
 
         releaseInFlight();
         slotLock.unlock();
-        // Preserve the existing E_ABORT contract for user-cancel style failures; propagate the
-        // real HRESULT for genuine errors so callers can tell them apart.
-        XAsyncComplete(asyncBlock, cancelLike ? E_ABORT : hr, 0);
+        // ADO 62523034: a user cancel or quit with no usable offline folder means the user backed
+        // out of AddUser, so report E_PF_GAMESAVE_USER_CANCELLED (as the inproc provider does)
+        // rather than E_ABORT, which is reserved for a game-initiated XAsyncCancel above.
+        // Genuine errors propagate their real HRESULT so callers can tell them apart.
+        XAsyncComplete(asyncBlock, (cancelLike || userQuit) ? E_PF_GAMESAVE_USER_CANCELLED : hr, 0);
         return;
     }
 
@@ -1538,32 +1547,32 @@ void CALLBACK MyPFXPALGameSaveSyncFailedUiCallback(
 
 void CALLBACK MyPFXPALGameSaveActiveDeviceContentionUiCallback(
     _In_ XUserHandle requestingUser,
-    _In_ PFXGameSaveDescriptor* localGameSave, 
-    _In_ PFXGameSaveDescriptor* remoteGameSave,
+    _In_ PFXGameSaveDescriptor* currentLockHolderGameSave,
+    _In_ PFXGameSaveDescriptor* previousLockHolderGameSave,
     _In_opt_ void* context)
 {
     TRACE_INFORMATION("MyPFXPALGameSaveActiveDeviceContentionUiCallback");
-    if (localGameSave)
+    if (currentLockHolderGameSave)
     {
-        TRACE_INFORMATION("MyPFXPALGameSaveActiveDeviceContentionUiCallback: local time=%lld, totalBytes=%llu", 
-            static_cast<long long>(localGameSave->time), localGameSave->totalBytes);
+        TRACE_INFORMATION("MyPFXPALGameSaveActiveDeviceContentionUiCallback: current lock holder time=%lld, totalBytes=%llu", 
+            static_cast<long long>(currentLockHolderGameSave->time), currentLockHolderGameSave->totalBytes);
     }
-    if (remoteGameSave)
+    if (previousLockHolderGameSave)
     {
-        TRACE_INFORMATION("MyPFXPALGameSaveActiveDeviceContentionUiCallback: remote time=%lld, totalBytes=%llu", 
-            remoteGameSave->time, remoteGameSave->totalBytes);
+        TRACE_INFORMATION("MyPFXPALGameSaveActiveDeviceContentionUiCallback: previous lock holder time=%lld, totalBytes=%llu", 
+            static_cast<long long>(previousLockHolderGameSave->time), previousLockHolderGameSave->totalBytes);
     }
     PFXPALGameSaveContext* gsContext;
     PFLocalUserHandle localUser = PFXPALGetLocalUserFromXUser(requestingUser, &gsContext);
     if (localUser != nullptr)
     {
-        PFGameSaveDescriptor pfLocalGameSave = {};
-        PFGameSaveDescriptor pfRemoteGameSave = {};
+        PFGameSaveDescriptor pfCurrentLockHolderGameSave = {};
+        PFGameSaveDescriptor pfPreviousLockHolderGameSave = {};
         if (gsContext->activeDeviceContentionCallback)
         {
-            ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(localGameSave, &pfLocalGameSave);
-            ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(remoteGameSave, &pfRemoteGameSave);
-            gsContext->activeDeviceContentionCallback(localUser, &pfLocalGameSave, &pfRemoteGameSave, context);
+            ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(currentLockHolderGameSave, &pfCurrentLockHolderGameSave);
+            ConvertPFXGameSaveDescriptorToPFGameSaveDescriptor(previousLockHolderGameSave, &pfPreviousLockHolderGameSave);
+            gsContext->activeDeviceContentionCallback(localUser, &pfCurrentLockHolderGameSave, &pfPreviousLockHolderGameSave, context);
         }
     }
     else
@@ -1574,22 +1583,22 @@ void CALLBACK MyPFXPALGameSaveActiveDeviceContentionUiCallback(
 
 void CALLBACK MyPFXGameSaveActiveDeviceContentionUiCallback(
     _In_ XUserHandle requestingUser,
-    _In_ time_t localTime,
-    _In_ time_t remoteTime,
+    _In_ time_t currentLockHolderTime,
+    _In_ time_t previousLockHolderTime,
     _In_opt_ void* context)
 {
-    TRACE_INFORMATION("MyPFXGameSaveActiveDeviceContentionUiCallback: localTime=%lld, remoteTime=%lld", 
-        static_cast<long long>(localTime), static_cast<long long>(remoteTime));
-    PFXGameSaveDescriptor localGameSave{};
-    localGameSave.time = localTime;
+    TRACE_INFORMATION("MyPFXGameSaveActiveDeviceContentionUiCallback: currentLockHolderTime=%lld, previousLockHolderTime=%lld", 
+        static_cast<long long>(currentLockHolderTime), static_cast<long long>(previousLockHolderTime));
+    PFXGameSaveDescriptor currentLockHolderGameSave{};
+    currentLockHolderGameSave.time = currentLockHolderTime;
 
-    PFXGameSaveDescriptor remoteGameSave{};
-    remoteGameSave.time = remoteTime;
+    PFXGameSaveDescriptor previousLockHolderGameSave{};
+    previousLockHolderGameSave.time = previousLockHolderTime;
 
     return MyPFXPALGameSaveActiveDeviceContentionUiCallback(
         requestingUser,
-        &localGameSave,
-        &remoteGameSave,
+        &currentLockHolderGameSave,
+        &previousLockHolderGameSave,
         context);
 }
 

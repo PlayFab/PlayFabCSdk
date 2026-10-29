@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <queue>
 #include <chrono>
+#include <httpClient/pal.h>
 #include "Memory.h"
 #include "Nlohmann.h"
 
@@ -57,6 +58,11 @@ using Queue = std::queue<T, Deque<T>>;
 
 template<class T>
 using List = std::list<T, Allocator<T>>;
+
+using Mutex = DefaultUnnamedMutex;
+using RecursiveMutex = DefaultUnnamedRecursiveMutex;
+using ConditionVariable = DefaultUnnamedConditionVariable;
+using ConditionVariableAny = DefaultUnnamedConditionVariableAny;
 
 using JsonDocument = nlohmann::basic_json<
     std::map, std::vector, PlayFab::String, bool, std::int64_t, std::uint64_t, double,

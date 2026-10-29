@@ -137,6 +137,14 @@ void FileFolderSet::UpdateFilesWithDownloadData(const FileDetail& remoteFile, co
 
         // Get actual file times from disk in case they differ from what was expected.  This is required on some 
         // platform(s) that do not support setting the modified time on files differently than the actual modified time.
+        // The only caller re-scans this set from disk right after extraction, so a successful scan
+        // read already holds those times; only stat again when that read failed.
+        if (localFile->timesReadFromDisk)
+        {
+            localFile->lastSyncTimeLastModified = localFile->timeLastModified; // Store ACTUAL modified time
+            return;
+        }
+
         String fullFilePath;
         if (SUCCEEDED(JoinPathHelper(saveFolder, relFilePath, fullFilePath)))
         {
@@ -304,6 +312,18 @@ const PlayFab::Vector<PlayFab::GameSave::FolderDetail>& FileFolderSet::GetFolder
 const PlayFab::Vector<PlayFab::GameSave::CompressedFile>& FileFolderSet::GetCompressedFiles() const
 {
     return m_compressedFiles;
+}
+
+void FileFolderSet::RefreshDownloadUrls(const std::function<String(const String& fileName)>& urlForFile)
+{
+    for (CompressedFile& compressedFile : m_compressedFiles)
+    {
+        String url = urlForFile(compressedFile.fileName);
+        if (!url.empty())
+        {
+            compressedFile.downloadUrl = std::move(url);
+        }
+    }
 }
 
 const FileDetail* FileFolderSet::GetFileDetailFromRelFilePath(const String& relFilePath) const

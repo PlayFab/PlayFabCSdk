@@ -30,6 +30,33 @@ To gain access to platforms supported through private repos, [Request Access](ht
 - A [PlayFab developer account](https://developer.playfab.com).
 - [Android Studio](https://developer.android.com/studio) IDE installed (to build from source).
 
+### Third-party dependencies (to build from source)
+- [nlohmann JSON](https://github.com/nlohmann/json) (all platforms) and [libarchive](https://github.com/libarchive/libarchive) (Windows / GDK, used by game save). They are not included in this repository, so you must provide them before building. Either:
+  - **Add them as git submodules** in your clone and copy them into the layout the builds expect, once for every triplet you build (the triplets are listed in [Restoring dependencies (vcpkg)](#restoring-dependencies-vcpkg)). The PlayFab registry provides nlohmann/json 3.11.3 and libarchive 3.7.5:
+
+    ```
+    git submodule add https://github.com/nlohmann/json.git External/nlohmann
+    git -C External/nlohmann checkout v3.11.3
+    git submodule add https://github.com/libarchive/libarchive.git External/libarchive
+    git -C External/libarchive checkout v3.7.5
+    ```
+
+    Windows (PowerShell), for `x64-windows`:
+
+    ```
+    robocopy External\nlohmann\include\nlohmann Build\vcpkg_installed\x64-windows\include\nlohmann /E
+    robocopy External\libarchive\libarchive Build\vcpkg_installed\x64-windows\include\libarchive /E
+    ```
+
+    Linux, Android, iOS and macOS (bash), for `x64-linux` (nlohmann only, libarchive is not used on these platforms):
+
+    ```
+    mkdir -p Build/vcpkg_installed/x64-linux/include
+    cp -R External/nlohmann/include/nlohmann Build/vcpkg_installed/x64-linux/include/nlohmann
+    ```
+
+  - **Use the vcpkg restore scripts** in `Build/vcpkg` (see [Restoring dependencies (vcpkg)](#restoring-dependencies-vcpkg)). The default registry in `Build/vcpkg-configuration.json` is internal to Microsoft; outside Microsoft, either use the submodule option above or point the configuration at a registry that provides `nlohmann-json` and `libarchive` ports with the same layout.
+
 ## Project setup
 
 ### Building with binary release package
@@ -128,7 +155,7 @@ implementation 'com.squareup.okhttp3:okhttp:4.9.1'
 
 ### Cloning source
 
-This SDK depends on some external third-party open source libraries referenced as git submodules in directory `/External`. Please make sure to use `--recurse-submodules` command line parameter when cloning this git repo:
+This SDK references external source code as git submodules in directory `/External` (for example libHttpClient in published source releases, or SDKGenerator in the internal repository). Please make sure to use `--recurse-submodules` command line parameter when cloning this git repo:
 ```
 git clone --recurse-submodules https://github.com/PlayFab/PlayFabCSdk
 ```
@@ -138,9 +165,22 @@ or run the following commands to sync the content of submodules if the repo was 
 git submodule update --init --recursive
 ```
 
+### Restoring dependencies (vcpkg)
+
+nlohmann JSON and libarchive are restored with [vcpkg](https://vcpkg.io) instead of being git submodules of this repository (see [Third-party dependencies](#third-party-dependencies-to-build-from-source) if you cannot use the PlayFab registry). The manifest is `Build/vcpkg.json` and the registry configuration is `Build/vcpkg-configuration.json`; the PlayFab registry requires Azure DevOps access. Restored files land in `Build/vcpkg_installed/<triplet>/`, and each platform's build reads headers from the triplet that matches its target. Restore the triplet(s) for the platform you are building before the first build:
+
+| Platform | Triplet(s) | Restore command |
+|----------|-----------|-----------------|
+| Windows / GDK | `x64-windows` | `Build\vcpkg\Restore-Vcpkg.ps1 -Triplet x64-windows` |
+| Linux | `x64-linux` | `./Build/vcpkg/restore-vcpkg.sh --triplet x64-linux` |
+| Android | `arm64-android` (arm64-v8a), `x64-android` (x86_64), `arm-android` (armeabi-v7a), `x86-android` (x86) | `./Build/vcpkg/restore-vcpkg.sh --triplet <triplet>` for each ABI you build |
+| iOS / macOS | `arm64-ios`, `arm64-ios-simulator`, `x64-ios`, `arm64-osx`, `x64-osx` | `./Build/PlayFabCore.Apple/Restore-VcpkgApple.sh` (restores all five) |
+
+CMake builds (Linux, Android) pick the triplet through `Build/vcpkg/Vcpkg.cmake`: Linux uses `x64-linux`, Android derives it from `ANDROID_ABI`, and `-D VCPKG_TARGET_TRIPLET=<triplet>` overrides it. The Xcode projects select the triplet from the SDK and architecture through the `PF_VCPKG_TRIPLET` build setting.
+
 ### Building from source for Windows and GDK
 
-After cloning this repository and its submodules, you can build the libraries by opening the solution file PlayFab.C.vs2022.sln. That solution contains the PlayFabServices project, its dependencies, and a test app. After building, the binaries will be in a subdirectory within \Out.
+After cloning this repository and its submodules and [restoring the vcpkg dependencies](#restoring-dependencies-vcpkg) for `x64-windows`, you can build the libraries by opening the solution file PlayFab.C.vs2022.sln. That solution contains the PlayFabServices project, its dependencies, and a test app. After building, the binaries will be in a subdirectory within \Out.
 
 #### Import Property Sheet (Windows and GDK)
 
@@ -150,15 +190,9 @@ To add a reference to the PlayFabServices projects to your own title, import the
 
 Open __PlayFab.C.vs2022.sln__ in Visual Studio 2022, select the desired platform configuration (e.g., __Gaming.Desktop.x64__), and build. After building, the binaries will be placed in a subdirectory within __\Out__.
 
-#### PlayFabServicesTestApp
-
-The included test app __PlayFabServicesTestApp__ project will build as is, but some additional setup is required before it will run. The __\Test\testTitleData.json__ file needs to be populated with a valid titleId, developer secret key, and connection string. Additionally, some APIs that are disabled by default need to be enabled via the PlayFab developer portal.
-
-Even without making those changes, the __PlayFabServicesTestApp__ source code serves as a good example of basic PlayFabServices SDK usage.
-
 ### Building from source for Linux
 
-After cloning this repository and its submodules, you can build the libraries by running
+After cloning this repository and its submodules and [restoring the vcpkg dependencies](#restoring-dependencies-vcpkg) for `x64-linux`, you can build the libraries by running
 
 ```
 ./Build/PlayFabServices.Linux/PlayFabServices_Linux.bash
@@ -178,19 +212,15 @@ when running cmake, add this option and adjust the path as needed to tell it whe
 -D PlayFabServicesLinux_DIR=./Int/CMake/PlayFabServicesLinux
 ```
 
-See `.\Test\PlayFabServicesTestApp\Linux` for example CMake usage.
-
 ### Building from source for iOS
 
-After cloning this repository and its submodules, you can build the libraries by opening the workspace [PlayFab.C.Apple.xcworkspace](Build/PlayFab.C.Apple/PlayFab.C.Apple.xcworkspace) with XCode, then follow these steps:
+After cloning this repository and its submodules and [restoring the vcpkg dependencies](#restoring-dependencies-vcpkg) for the Apple triplets, you can build the libraries by opening the workspace [PlayFab.C.Apple.xcworkspace](Build/PlayFab.C.Apple/PlayFab.C.Apple.xcworkspace) with XCode, then follow these steps:
 
 1. Select the scheme you want to build.
 - If you want to build PlayFabServices and PlayFabCore frameworks, select **PlayFabServices_iOS**/**PlayFabServices_._macOS** scheme and build. This scheme will generate the frameworks required to use PlayFab SDK:
     - PlayFabCore_[iOS/macOS].framework
     - PlayFabServices_[iOS/macOS].framework
     - HttpClient_[iOS/macOS].framework
-
-- If you want to run the Test App, select the **PlayFabServicesTestApp_._iOS**/**PlayFabServicesTestApp_macOS** scheme, build and run the app.
 
 2. Select the run destination. 
 
@@ -211,7 +241,7 @@ After cloning this repository and its submodules, you can build the libraries by
 
 ### Building from source for Android
 
-After cloning this repository and its submodules, you can build the libraries from the `PlayFab.C/Build/PlayFabServices.Android.Workspace` directory by running:
+After cloning this repository and its submodules and [restoring the vcpkg dependencies](#restoring-dependencies-vcpkg) for the Android triplets of the ABIs you build, you can build the libraries from the `PlayFab.C/Build/PlayFabServices.Android.Workspace` directory by running:
 ```
 ./gradlew assembleFull
 ```

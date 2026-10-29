@@ -3,64 +3,109 @@
 #include "InfoManifest.h"
 #include "GameSaveGlobalState.h"
 #include "Platform/PFGameSaveFilesAPIProvider.h"
+#include <random>
+#include <thread>
 
 namespace PlayFab
 {
 namespace GameSave
 {
 
-// Linear Congruential Generator (LCG) constants from Numerical Recipes
-// These are the traditional parameters for the MINSTD generator variant
-constexpr uint64_t LCG_MULTIPLIER = 1103515245;
-constexpr uint64_t LCG_INCREMENT = 12345;
-constexpr uint32_t LCG_MODULUS_DIVISOR = 65536;
-constexpr uint32_t LCG_MODULUS_RANGE = 32768;
-
-static uint64_t internal_seed = 0;
-uint32_t internal_rand(void)
+namespace
 {
-    if (internal_seed == 0)
+
+// The GUID generator (device IDs, file IDs, folder IDs, zip and staging names). It used to be a
+// process-static LCG seeded with time(nullptr) and no lock: two devices that started in the same
+// second produced the same device ID and the same zip names, and concurrent callers raced on the
+// state (bug-guid-time-seeded-collisions.md). It is now a 64-bit Mersenne Twister seeded once per
+// process from the OS entropy source (std::random_device) mixed with the clocks, the thread and an
+// address, and every draw holds a lock.
+struct GuidGenerator
+{
+    Mutex mutex;
+    std::mt19937_64 engine;
+    bool seeded{ false };
+};
+
+GuidGenerator& GetGuidGenerator()
+{
+    static GuidGenerator generator;
+    return generator;
+}
+
+void SeedGuidGenerator(GuidGenerator& generator)
+{
+    uint32_t entropy[8]{};
+    size_t entropyCount = 0;
+    try
     {
-        internal_seed = static_cast<uint64_t>(std::time(nullptr));
+        std::random_device device;
+        for (; entropyCount < 4; entropyCount++)
+        {
+            entropy[entropyCount] = device();
+        }
     }
-    internal_seed = internal_seed * LCG_MULTIPLIER + LCG_INCREMENT;
-    return (uint32_t)(internal_seed / LCG_MODULUS_DIVISOR) % LCG_MODULUS_RANGE;
+    catch (...)
+    {
+        // No entropy source on this platform: the clocks, thread and address below still differ
+        // between two processes started in the same second.
+    }
+    const uint64_t wallClock = static_cast<uint64_t>(std::chrono::system_clock::now().time_since_epoch().count());
+    const uint64_t steadyClock = static_cast<uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count());
+    const uint64_t threadHash = static_cast<uint64_t>(std::hash<std::thread::id>{}(std::this_thread::get_id()));
+    const uint64_t address = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(&generator)) ^ static_cast<uint64_t>(reinterpret_cast<uintptr_t>(&entropyCount));
+    for (uint64_t value : { wallClock, steadyClock ^ threadHash, address })
+    {
+        if (entropyCount + 1 < sizeof(entropy) / sizeof(entropy[0]))
+        {
+            entropy[entropyCount++] = static_cast<uint32_t>(value);
+            entropy[entropyCount++] = static_cast<uint32_t>(value >> 32);
+        }
+    }
+    std::seed_seq seed(entropy, entropy + entropyCount);
+    generator.engine.seed(seed);
+    generator.seeded = true;
 }
 
-char RandomHexDigit()
-{
-    // Generate a random number between 0 and 15 (inclusive)
-    int randomNum = internal_rand() % 16;
+} // anonymous namespace
 
-    // Convert the random number to a hexadecimal digit
-    char hexDigit;
-    if (randomNum < 10) {
-        hexDigit = static_cast<char>('0' + randomNum);
-    }
-    else {
-        hexDigit = static_cast<char>('A' + (randomNum - 10));
-    }
-
-    return hexDigit;
-}
-
-// Function to generate a GUID and return it as a string
+// Function to generate a GUID and return it as a string: 8-4-4-4-12 uppercase hex digits, no braces.
 String CreateGUID()
 {
-    std::ostringstream guidStream;
+    uint64_t bits[2]{};
+    {
+        GuidGenerator& generator = GetGuidGenerator();
+        std::lock_guard<std::mutex> lock(generator.mutex);
+        if (!generator.seeded)
+        {
+            SeedGuidGenerator(generator);
+        }
+        bits[0] = generator.engine();
+        bits[1] = generator.engine();
+    }
 
+    static const char kHexDigits[] = "0123456789ABCDEF";
+    char guid[37]{};
+    size_t pos = 0;
     for (int i = 0; i < 32; ++i)
     {
         // Insert dashes at the appropriate positions
         if (i == 8 || i == 12 || i == 16 || i == 20)
         {
-            guidStream << '-';
+            guid[pos++] = '-';
         }
-        // Generate a random hexadecimal digit
-        guidStream << RandomHexDigit();
+        const uint64_t word = bits[i / 16];
+        guid[pos++] = kHexDigits[(word >> ((15 - (i % 16)) * 4)) & 0xF];
     }
 
-    return String(guidStream.str().c_str());
+    return String(guid, pos);
+}
+
+void ResetGuidGeneratorForTest()
+{
+    GuidGenerator& generator = GetGuidGenerator();
+    std::lock_guard<std::mutex> lock(generator.mutex);
+    generator.seeded = false;
 }
 
 String RemoveRootPath(String folder, const String& rootFolder)
@@ -373,6 +418,39 @@ HRESULT EnsureGameStorageMarker(_In_ const String& saveFolder)
     return S_OK;
 }
 
+bool StopAtStageFaultPointForDebug(_In_z_ const char* point, _In_ ISchedulableTask& task, _In_ HRESULT pauseResult, _Out_ HRESULT& result, _Out_opt_ bool* abandoned)
+{
+    constexpr uint32_t kStageFaultPausePollMs = 20;
+    result = S_OK;
+    if (abandoned != nullptr)
+    {
+        *abandoned = false;
+    }
+
+    HRESULT faultHr = S_OK;
+    switch (CheckFaultPointForDebug(point, faultHr))
+    {
+        case PFGameSaveFaultAction::Fail:
+            TRACE_WARNING("[GAME SAVE] fault point '%s': Fail hr=0x%08X (debug)", point, static_cast<uint32_t>(faultHr));
+            result = FAILED(faultHr) ? faultHr : E_FAIL;
+            return true;
+        case PFGameSaveFaultAction::Abandon:
+            TRACE_WARNING("[GAME SAVE] fault point '%s': Abandon (debug)", point);
+            if (abandoned != nullptr)
+            {
+                *abandoned = true;
+            }
+            result = E_ABORT;
+            return true;
+        case PFGameSaveFaultAction::Pause:
+            task.ScheduleAfter(kStageFaultPausePollMs);
+            result = pauseResult;
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool GetForceOutOfStorageError()
 {
     SharedPtr<GameSaveGlobalState> globalState;
@@ -381,6 +459,80 @@ bool GetForceOutOfStorageError()
         return globalState->GetForceOutOfStorageError();
     }
     return false;
+}
+
+namespace
+{
+// Set (never cleared) by the first PFGameSaveFilesSetFaultInjectionForDebug in the process. A title
+// never sets one, so its fault checks stop at this load.
+std::atomic<bool> s_faultInjectionSet{ false };
+}
+
+void NoteFaultInjectionSetForDebug() noexcept
+{
+    s_faultInjectionSet.store(true, std::memory_order_release);
+}
+
+bool IsAnyFaultInjectionSetForDebug() noexcept
+{
+    return s_faultInjectionSet.load(std::memory_order_acquire);
+}
+
+PFGameSaveFaultAction CheckFaultPointForDebug(_In_z_ const char* point, _Out_ HRESULT& hr)
+{
+    hr = S_OK;
+#if defined(_DEBUG)
+    if (!IsAnyFaultInjectionSetForDebug())
+    {
+        return PFGameSaveFaultAction::None;
+    }
+    SharedPtr<GameSaveGlobalState> globalState;
+    if (FAILED(GameSaveGlobalState::Get(globalState)))
+    {
+        return PFGameSaveFaultAction::None;
+    }
+    PFGameSaveFaultAction action = globalState->CheckDebugFault(String{ point }, hr);
+    if (action != PFGameSaveFaultAction::None)
+    {
+        TRACE_WARNING("[GAME SAVE] Fault injection at '%s': action %u hr 0x%08X", point, static_cast<uint32_t>(action), static_cast<uint32_t>(hr));
+    }
+    return action;
+#else
+    // Release builds have no fault injection (PFGameSaveFilesSetFaultInjectionForDebug is E_NOTIMPL).
+    UNREFERENCED_PARAMETER(point);
+    return PFGameSaveFaultAction::None;
+#endif
+}
+
+bool IsFaultPointHoldingForDebug(_In_z_ const char* point)
+{
+#if defined(_DEBUG)
+    if (!IsAnyFaultInjectionSetForDebug())
+    {
+        return false;
+    }
+    SharedPtr<GameSaveGlobalState> globalState;
+    if (FAILED(GameSaveGlobalState::Get(globalState)))
+    {
+        return false;
+    }
+    return globalState->IsDebugFaultHolding(String{ point });
+#else
+    UNREFERENCED_PARAMETER(point);
+    return false;
+#endif
+}
+
+int64_t GetDebugPerPlayerQuotaOverride()
+{
+#if defined(_DEBUG)
+    SharedPtr<GameSaveGlobalState> globalState;
+    if (SUCCEEDED(GameSaveGlobalState::Get(globalState)))
+    {
+        return globalState->GetDebugPerPlayerQuotaOverride();
+    }
+#endif
+    return 0;
 }
 
 int64_t GetDebugManifestOffset()
@@ -433,59 +585,77 @@ bool GetWriteManifestsToDisk()
     return false;
 }
 
-String GetLocalDeviceID(const String& saveFolder)
+static String GetLocalDeviceIDFromState(GameSaveGlobalState& globalState, const String& saveFolder)
+{
+    String deviceIdOverride = globalState.GetDebugDeviceIdOverride();
+    if (!deviceIdOverride.empty())
+    {
+        return deviceIdOverride;
+    }
+
+    // Check if there's a mem cache of the device ID yet
+    String deviceId = globalState.GetLocalDeviceID();
+    if (!deviceId.empty())
+    {
+        return deviceId;
+    }
+
+    // If no mem cache, try to read info.json from disk
+    String folderPath, filePath;
+    if (SUCCEEDED(JoinPathHelper(saveFolder, "cloudsync", folderPath)) &&
+        SUCCEEDED(JoinPathHelper(folderPath, "info.json", filePath)))
+    {
+        InfoManifestData data;
+        if (SUCCEEDED(InfoManifestData::ReadInfoManifest(filePath, data)))
+        {
+            // Store in mem cache to avoid needing to read the file again
+            globalState.SetLocalDeviceID(data.deviceId);
+            return data.deviceId;
+        }
+
+        // Reading info.json failed - try to create directory and write
+        if (SUCCEEDED(FilePAL::CreatePath(folderPath)))
+        {
+            data.deviceId = CreateGUID();
+            HRESULT writeHr = InfoManifestData::WriteInfoManifest(filePath, data);
+            if (FAILED(writeHr))
+            {
+                TRACE_WARNING("[GAME SAVE] GetLocalDeviceID: WriteInfoManifest failed hr=0x%08X", writeHr);
+            }
+
+            globalState.SetLocalDeviceID(data.deviceId);
+            return data.deviceId;
+        }
+    }
+
+    // If we couldn't read or write info.json (e.g., game storage not yet prepared
+    // for writes on this platform), generate a device ID and cache it in memory.
+    // It will be persisted to info.json when storage becomes writable.
+    String fallbackId = CreateGUID();
+    TRACE_WARNING("[GAME SAVE] GetLocalDeviceID: Unable to read/write info.json, caching device ID in memory");
+    globalState.SetLocalDeviceID(fallbackId);
+    return fallbackId;
+}
+
+HRESULT TryGetLocalDeviceID(const String& saveFolder, String& deviceId)
 {
     SharedPtr<GameSaveGlobalState> globalState;
-    if (SUCCEEDED(GameSaveGlobalState::Get(globalState)))
+    HRESULT hr = GameSaveGlobalState::Get(globalState);
+    if (FAILED(hr))
     {
-        String deviceIdOverride = globalState->GetDebugDeviceIdOverride();
-        if (!deviceIdOverride.empty())
-        {
-            return deviceIdOverride;
-        }
+        return hr;
+    }
 
-        // Check if there's a mem cache of the device ID yet
-        String deviceId = globalState->GetLocalDeviceID();
-        if (!deviceId.empty())
-        {
-            return deviceId;
-        }
+    deviceId = GetLocalDeviceIDFromState(*globalState, saveFolder);
+    return S_OK;
+}
 
-        // If no mem cache, try to read info.json from disk
-        String folderPath, filePath;
-        if (SUCCEEDED(JoinPathHelper(saveFolder, "cloudsync", folderPath)) &&
-            SUCCEEDED(JoinPathHelper(folderPath, "info.json", filePath)))
-        {
-            InfoManifestData data;
-            if (SUCCEEDED(InfoManifestData::ReadInfoManifest(filePath, data)))
-            {
-                // Store in mem cache to avoid needing to read the file again
-                globalState->SetLocalDeviceID(data.deviceId);
-                return data.deviceId;
-            }
-
-            // Reading info.json failed - try to create directory and write
-            if (SUCCEEDED(FilePAL::CreatePath(folderPath)))
-            {
-                data.deviceId = CreateGUID();
-                HRESULT writeHr = InfoManifestData::WriteInfoManifest(filePath, data);
-                if (FAILED(writeHr))
-                {
-                    TRACE_WARNING("[GAME SAVE] GetLocalDeviceID: WriteInfoManifest failed hr=0x%08X", writeHr);
-                }
-
-                globalState->SetLocalDeviceID(data.deviceId);
-                return data.deviceId;
-            }
-        }
-
-        // If we couldn't read or write info.json (e.g., game storage not yet prepared
-        // for writes on this platform), generate a device ID and cache it in memory.
-        // It will be persisted to info.json when storage becomes writable.
-        String fallbackId = CreateGUID();
-        TRACE_WARNING("[GAME SAVE] GetLocalDeviceID: Unable to read/write info.json, caching device ID in memory");
-        globalState->SetLocalDeviceID(fallbackId);
-        return fallbackId;
+String GetLocalDeviceID(const String& saveFolder)
+{
+    String deviceId;
+    if (SUCCEEDED(TryGetLocalDeviceID(saveFolder, deviceId)))
+    {
+        return deviceId;
     }
 
     assert(false);
@@ -604,6 +774,19 @@ ScopeTracer::~ScopeTracer()
 }
 
 #if defined(_DEBUG)
+// Set while UICallbackManager wakes a parked task (ScopedUiWakeForDebug).
+static thread_local bool t_uiWakeInProgress = false;
+
+ScopedUiWakeForDebug::ScopedUiWakeForDebug() noexcept
+{
+    t_uiWakeInProgress = true;
+}
+
+ScopedUiWakeForDebug::~ScopedUiWakeForDebug() noexcept
+{
+    t_uiWakeInProgress = false;
+}
+
 void SingleThreadProviderValidation::Set()
 {
     Stringstream threadIdStream;
@@ -619,6 +802,13 @@ void SingleThreadProviderValidation::Clear()
 
 void SingleThreadProviderValidation::AssertUponSchedule()
 {
+    if (t_uiWakeInProgress)
+    {
+        // A prompt's answer or cancellation waking the parked task from another thread, possibly while
+        // the DoWork that raised the prompt is still returning: expected (see ScopedUiWakeForDebug).
+        // Not recorded either: this thread doesn't own the provider's validation state.
+        return;
+    }
     Stringstream threadIdStream;
     threadIdStream << std::this_thread::get_id();
     assert(m_pendingScheduleThreadId == "");

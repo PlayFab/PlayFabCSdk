@@ -21,6 +21,7 @@
   <PropertyGroup>
     <PlayFabRoot>$(MSBuildThisFileDirectory)..</PlayFabRoot>
     <PlayFabBuildRoot>$(PlayFabRoot)\Build</PlayFabBuildRoot>
+    <PlayFabVCPKGInstalledDir>$(PlayFabRoot)\Build\vcpkg_installed\x64-windows\include</PlayFabVCPKGInstalledDir>
     <PlayFabExternalDir>$(PlayFabRoot)\External</PlayFabExternalDir>
     <PlayFabSourceDir>$(PlayFabRoot)\Source</PlayFabSourceDir>
     <PlayFabOutRoot>$(PlayFabRoot)\Out</PlayFabOutRoot>
@@ -41,7 +42,7 @@
 
   <!--NLohmann paths-->
   <PropertyGroup Label="NLohmann">
-    <NLohmannRoot>$(PlayFabExternalDir)\nlohmann</NLohmannRoot>
-    <NLohmannIncludeDir>$(NLohmannRoot)\include</NLohmannIncludeDir>
+    <NLohmannRoot>$(PlayFabVCPKGInstalledDir)</NLohmannRoot>
+    <NLohmannIncludeDir>$(NLohmannRoot)</NLohmannIncludeDir>
   </PropertyGroup>
 </Project>

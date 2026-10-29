@@ -7,8 +7,10 @@ namespace PlayFab
 
 FILETIME TimeTToFileTime(time_t t) noexcept
 {
+    // 64-bit arithmetic: Int32x32To64 truncated t to 32 bits, so every time after 2038-01-19
+    // (and a sign-extended one before 1901) was written to the file as a different date.
     ULARGE_INTEGER ull{};
-    ull.QuadPart = Int32x32To64(t, 10000000) + 116444736000000000;
+    ull.QuadPart = static_cast<ULONGLONG>(static_cast<LONGLONG>(t) * 10000000LL + 116444736000000000LL);
     FILETIME fileTime{};
     fileTime.dwLowDateTime = ull.LowPart;
     fileTime.dwHighDateTime = ull.HighPart;

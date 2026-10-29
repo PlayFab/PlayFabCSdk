@@ -33,6 +33,9 @@ void DownloadStep::Reset()
     m_currentUncompressedSizeBytes = 0;
     m_totalCompressedSizeBytes = 0;
     m_currentCompressedSizeBytes = 0;
+    m_linkRefreshVersion = 0;
+    m_lastFailureExpiredLink = false;
+    m_linkRefreshInFlight = false;
 }
 
 bool DownloadStep::IsDownloadDone() const
@@ -145,6 +148,41 @@ void ComputeDownloadTotals(
 
 } // anonymous namespace
 
+namespace
+{
+
+// A write that ran out of disk space, however it was reported. FilePAL reports the Win32 codes (on
+// every platform); E_PF_GAMESAVE_DISK_FULL covers an error that has already been classified.
+bool IsDiskFullError(HRESULT hr) noexcept
+{
+    constexpr HRESULT kDiskFull = static_cast<HRESULT>(0x80070070);       // HRESULT_FROM_WIN32(ERROR_DISK_FULL)
+    constexpr HRESULT kHandleDiskFull = static_cast<HRESULT>(0x80070027); // HRESULT_FROM_WIN32(ERROR_HANDLE_DISK_FULL)
+    return hr == kDiskFull || hr == kHandleDiskFull || hr == E_PF_GAMESAVE_DISK_FULL;
+}
+
+// Every zip is staged in the cloudsync folder before any of them is extracted, and each is deleted
+// only after its own extraction, so at the peak the disk holds all the compressed bytes alongside
+// the extracted ones. Checking the uncompressed size alone let the pre-flight pass on a disk that
+// was guaranteed to fill during extraction.
+uint64_t ComputeRequiredDownloadBytes(uint64_t totalUncompressedSizeBytes, uint64_t totalCompressedSizeBytes) noexcept
+{
+    return totalUncompressedSizeBytes + totalCompressedSizeBytes;
+}
+
+} // anonymous namespace
+
+void DownloadStep::EnterOutOfStorage(_In_ ISchedulableTask& task, _In_ UICallbackManager& uiCallbackManager, _In_ uint64_t requiredBytes)
+{
+    m_stage = DownloadStage::WaitForOutOfStorageUI;
+    if (false == uiCallbackManager.ShowOutOfStorageUI(task, m_localUser, requiredBytes))
+    {
+        // No out-of-storage callback set, so just fail the API
+        m_stage = DownloadStage::DownloadStepFailure;
+        m_failureHR = E_PF_GAMESAVE_DISK_FULL;
+        task.ScheduleNow();
+    }
+}
+
 HRESULT DownloadStep::Download(
     _In_ const RunContext& runContext,
     _In_ ISchedulableTask& task,
@@ -218,6 +256,21 @@ HRESULT DownloadStep::Download(
             
             m_totalUncompressedSizeBytes = 0;
             m_totalCompressedSizeBytes = 0;
+            m_currentUncompressedSizeBytes = 0;
+            m_currentCompressedSizeBytes = 0;
+
+            // Every staged zip was just deleted above. On a retry after a mid-download failure some
+            // of them were already marked as downloaded; left that way, the Download stage would
+            // skip them and UncompressFiles would try to open zips that no longer exist.
+            {
+                const Vector<size_t>& remoteFileIndexToDownload = remoteFileFolderSet->GetCompressedFilesToDownload();
+                const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
+                for (size_t index : remoteFileIndexToDownload)
+                {
+                    compressedFiles[index].hasDownloadedLocally = false;
+                }
+            }
+
             // Recomputed here because the set may have changed since DownloadStart.
             ComputeDownloadTotals(remoteFileFolderSet, m_totalUncompressedSizeBytes, m_totalCompressedSizeBytes);
 
@@ -226,17 +279,12 @@ HRESULT DownloadStep::Download(
             Result<uint64_t> availableStorageResult = FilePAL::GetAvailableStorageSize(saveFolder);
             RETURN_IF_FAILED(availableStorageResult.hr);
 
+            const uint64_t requiredBytes = ComputeRequiredDownloadBytes(m_totalUncompressedSizeBytes, m_totalCompressedSizeBytes);
             if (GetForceOutOfStorageError() ||
-                availableStorageResult.Payload() < m_totalUncompressedSizeBytes)
+                availableStorageResult.Payload() < requiredBytes)
             {
-                this->m_stage = DownloadStage::WaitForOutOfStorageUI;
-                if (false == uiCallbackManager.ShowOutOfStorageUI(task, m_localUser, m_totalUncompressedSizeBytes))
-                {
-                    // No fail callback set, so just fail API
-                    m_stage = DownloadStage::DownloadStepFailure;
-                    m_failureHR = E_PF_GAMESAVE_DISK_FULL;
-                    task.ScheduleNow();
-                }
+                TRACE_WARNING("[GAME SAVE] DownloadStep - QueryStorage: %llu bytes available, %llu required", availableStorageResult.Payload(), requiredBytes);
+                EnterOutOfStorage(task, uiCallbackManager, requiredBytes);
             }
             else
             {
@@ -307,12 +355,24 @@ HRESULT DownloadStep::Download(
                         {
                             m_telemetryManager->SetContextSyncHResult(result.hr);
                             m_telemetryManager->EmitContextSyncErrorEvent();
+                            if (!GetForceSyncFailedError() && IsDiskFullError(result.hr))
+                            {
+                                // The disk filled up under the transfer. That is an out-of-storage
+                                // condition, not a sync failure: SyncFailed offers Retry/UseOffline,
+                                // neither of which helps a player who needs to free space.
+                                TRACE_WARNING("[GAME SAVE] DownloadStep: disk full while downloading %s (hr=0x%08X)", remoteCompressedFile.fileName.c_str(), result.hr);
+                                EnterOutOfStorage(task, uiCallbackManager, ComputeRequiredDownloadBytes(m_totalUncompressedSizeBytes, m_totalCompressedSizeBytes));
+                                return;
+                            }
+                            m_lastFailureExpiredLink = result.hr == HttpStatusToHR(403);
                             this->m_stage = DownloadStage::WaitForFailedUI_Download;
                             if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Downloading))
                             {
-                                // No fail callback set, so just fail API
+                                // No fail callback set, so just fail API. The forced-failure debug
+                                // hook fails a call that succeeded: never "fail" with S_OK, which
+                                // would leave the operation pending forever.
                                 m_stage = DownloadStage::DownloadStepFailure;
-                                m_failureHR = result.hr;
+                                m_failureHR = FAILED(result.hr) ? result.hr : E_FAIL;
                                 task.ScheduleNow();
                             }
                         }
@@ -348,8 +408,67 @@ HRESULT DownloadStep::Download(
             return S_OK;
         }        
         
+        case DownloadStage::RefreshLinks:
+        {
+            // OQ-15: Retry after an expired link (HTTP 403). Fresh links for the version being
+            // downloaded, then the transfers again (already downloaded bundles are skipped).
+            if (m_linkRefreshInFlight)
+            {
+                return S_OK; // the response pumps the task
+            }
+            m_linkRefreshInFlight = true;
+            m_lastFailureExpiredLink = false;
+            GetManifestDownloadDetailsRequest request;
+            request.SetVersion(Uint64ToString(m_linkRefreshVersion));
+            SharedPtr<FileFolderSet> remoteSet = remoteFileFolderSet;
+            TRACE_TASK("DownloadStep.RefreshLinks GetManifestDownloadDetails");
+            GameSaveServiceSelector::GetManifestDownloadDetails(m_entity.value(), request, runContext)
+            .Finally([this, &task, &uiCallbackManager, &folderSyncMutex, remoteSet, cancellation = runContext.CancellationToken()](Result<GetManifestDownloadDetailsResponse> result)
+            {
+                std::lock_guard<std::recursive_mutex> lock(folderSyncMutex);
+                m_linkRefreshInFlight = false;
+                TRACE_TASK(FormatString("DownloadStep.RefreshLinksFinally HR:0x%0.8x", result.hr));
+                if (FAILED(result.hr))
+                {
+                    if (result.hr == E_ABORT || cancellation.IsCancelled())
+                    {
+                        m_stage = DownloadStage::DownloadStepFailure;
+                        m_failureHR = E_ABORT;
+                        task.ScheduleNow();
+                        return;
+                    }
+                    // Still no usable links: the prompt again (Retry tries the refresh again).
+                    m_lastFailureExpiredLink = true;
+                    m_stage = DownloadStage::WaitForFailedUI_Download;
+                    if (false == uiCallbackManager.ShowSyncFailedUI(task, m_localUser, result.hr, PFGameSaveFilesSyncState::Downloading))
+                    {
+                        m_stage = DownloadStage::DownloadStepFailure;
+                        m_failureHR = result.hr;
+                        task.ScheduleNow();
+                    }
+                    else if (cancellation.IsCancelled())
+                    {
+                        uiCallbackManager.CancelUIWaitForTask(task);
+                    }
+                    return;
+                }
+                DownloadDetailsWrapVector files = result.Payload().GetFiles();
+                remoteSet->RefreshDownloadUrls([&files](const String& fileName) { return ManifestInternal::GetDownloadUrlForFile(fileName, files); });
+                m_stage = DownloadStage::Download;
+                task.ScheduleNow();
+            });
+            return S_OK;
+        }
+
         case DownloadStage::UncompressFiles:
         {
+            {
+                HRESULT faultResult = S_OK; // debug fault point (core unit test plan H-5)
+                if (StopAtStageFaultPointForDebug("Download.BeforeExtract", task, S_OK, faultResult))
+                {
+                    return faultResult;
+                }
+            }
             const Vector<size_t>& remoteFileIndexToDownload = remoteFileFolderSet->GetCompressedFilesToDownload();
             const Vector<CompressedFile>& compressedFiles = remoteFileFolderSet->GetCompressedFiles();
             TRACE_INFORMATION("[GAME SAVE] DownloadStep: Uncompressing %llu downloaded files", remoteFileIndexToDownload.size());
@@ -375,6 +494,14 @@ HRESULT DownloadStep::Download(
                     {
                         m_telemetryManager->SetContextSyncHResult(hr);
                         m_telemetryManager->EmitContextSyncErrorEvent();
+                        if (IsDiskFullError(hr))
+                        {
+                            // Retry re-enters QueryStorage, which re-checks space and re-downloads
+                            // (this zip was already deleted by UncompressFile).
+                            TRACE_WARNING("[GAME SAVE] DownloadStep: disk full while extracting %s (hr=0x%08X)", remoteCompressedFile.fileName.c_str(), hr);
+                            EnterOutOfStorage(task, uiCallbackManager, ComputeRequiredDownloadBytes(m_totalUncompressedSizeBytes, m_totalCompressedSizeBytes));
+                            return S_OK;
+                        }
                         this->m_failureHR = hr;
                         this->m_stage = DownloadStage::DownloadStepFailure;
                         task.ScheduleNow();
@@ -390,6 +517,13 @@ HRESULT DownloadStep::Download(
         
         case DownloadStage::UpdateLocalManifest:
         {
+            {
+                HRESULT faultResult = S_OK; // debug fault point (core unit test plan H-5)
+                if (StopAtStageFaultPointForDebug("Download.BeforeLocalManifest", task, S_OK, faultResult))
+                {
+                    return faultResult;
+                }
+            }
             HRESULT initHr = localFileFolderSet->InitWithLocalFilesAndFolders(saveFolder, nullptr, nullptr);
             if (FAILED(initHr))
             {
@@ -419,6 +553,16 @@ HRESULT DownloadStep::Download(
                     }
                 }
             }
+            // A folder on disk that the downloaded version has too is synced (a folder only this
+            // device has stays a local create until it is uploaded).
+            for (const FolderDetail& localFolder : localFileFolderSet->GetFolders())
+            {
+                if (localFolder.hasLastSync || !localFolder.existsLocally)
+                {
+                    continue;
+                }
+                localFolder.hasLastSync = remoteFileFolderSet->GetFolderDetailFromRelFilePath(localFolder.relFolderPath) != nullptr;
+            }
             // Carry the dirty flag through: a description set while offline is not yet on the
             // service, and persisting it as clean here would make the next launch adopt the cloud
             // description and silently drop the local edit.
@@ -446,6 +590,14 @@ HRESULT DownloadStep::Download(
             TRACE_INFORMATION("[GAME SAVE] DownloadStep - WaitForFailedUI_Download: waiting for user response to download failure");
             return uiCallbackManager.HandleFailedUI(task,
                 [this]() { 
+                    if (m_lastFailureExpiredLink && m_linkRefreshVersion != 0 && m_entity.has_value())
+                    {
+                        // OQ-15: the links in hand expired; downloading through them again can
+                        // only fail again. Fetch fresh ones first.
+                        TRACE_INFORMATION("[GAME SAVE] DownloadStep - WaitForFailedUI_Download: user chose RETRY after an expired link; refreshing the links");
+                        m_stage = DownloadStage::RefreshLinks;
+                        return;
+                    }
                     TRACE_INFORMATION("[GAME SAVE] DownloadStep - WaitForFailedUI_Download: user chose RETRY");
                     m_stage = DownloadStage::Download; 
                 },
@@ -472,6 +624,14 @@ HRESULT DownloadStep::Download(
             {
                 TRACE_WARNING("[GAME SAVE] DownloadStep - WaitForOutOfStorageUI: user CANCELLED due to insufficient storage");
                 return E_PF_GAMESAVE_USER_CANCELLED;
+            }
+            else if (uiAction == UIAction::UISyncFailedCancel)
+            {
+                // Woken by uninitialize or XAsyncCancel (UICallbackManager::CancelPendingUIWait /
+                // CancelUIWaitForTask), not answered: end the AddUser instead of waiting on with
+                // nobody left to wake it (see CompareStep's WaitForConflictUI).
+                TRACE_WARNING("[GAME SAVE] DownloadStep - WaitForOutOfStorageUI: prompt ended by cancellation or shutdown");
+                return E_ABORT;
             }
             else
             {
@@ -513,6 +673,13 @@ HRESULT DownloadStep::DeleteFiles(
     for (const FileDetail* fileToDeleteUponDownload : filesToDeleteUponDownload)
     {
         String relPath = localFileFolderSet->GetRelFilePath(fileToDeleteUponDownload);
+        if (!fileToDeleteUponDownload->existsLocally || fileToDeleteUponDownload->behindLink)
+        {
+            // The scan didn't see it, so there's nothing of ours to delete. This also covers a
+            // recorded path that now runs through a link the scan doesn't follow: deleting it would
+            // reach outside the save folder.
+            continue;
+        }
         String fullFilePath;
         RETURN_IF_FAILED(JoinPathHelper(saveFolder, relPath, fullFilePath));
         TRACE_INFORMATION("[GAME SAVE] Delete file %s", fullFilePath.c_str());
@@ -545,7 +712,7 @@ HRESULT DownloadStep::DeleteFolders(
         // deleted folder has no incoming downloads and so never lands in
         // changedRemoteFolderIndexes. See Bug 63588283.
         bool fullyDeleted = false;
-        HRESULT deleteHr = FilePAL::DeletePathIfEmpty(fullFolderPath, fullyDeleted);
+        HRESULT deleteHr = FilePAL::DeletePathIfEmpty(fullFolderPath, fullyDeleted, saveFolder);
         if (FAILED(deleteHr))
         {
             TRACE_WARNING("[GAME SAVE] DownloadStep: Failed to delete folder %s, HR:0x%0.8x", fullFolderPath.c_str(), deleteHr);

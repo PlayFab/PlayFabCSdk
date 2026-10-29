@@ -82,13 +82,6 @@ HRESULT AccessTraceState(AccessMode mode, SharedPtr<TraceState>& traceState)
 TraceState::TraceState(RunContext&& /*initContext*/, RunContext&& traceContext, LocalStorage localStorage) noexcept :
     m_runContext{ std::move(traceContext) }
 {
-    // Init LibHttpClient Tracing
-    HCTraceInit();
-#if HC_PLATFORM_IS_MICROSOFT
-    HCTraceSetEtwEnabled(true);
-#endif
-    HCTraceSetClientCallback(TraceCallback);
-
     // Synchronously load trace settings. TraceSettings loaded from file override those configured via API
     // document location, name, and format of TraceSettings file. It should just be a Json serialized
     // version of the TraceSettings struct:
@@ -175,15 +168,17 @@ HRESULT TraceState::Create(RunContext&& runContext, LocalStorage localStorage) n
     Allocator<TraceState> a{};
     SharedPtr<TraceState> traceState{ new (a.allocate(1)) TraceState{ RunContext::Root(immediateQueue.handle), std::move(runContext), std::move(localStorage) }, Deleter<TraceState>{}, a };
 
-    auto hr = AccessTraceState(AccessMode::Initialize, traceState);
+    RETURN_IF_FAILED(AccessTraceState(AccessMode::Initialize, traceState));
 
-    if (FAILED(hr))
-    {
-        HCTraceSetClientCallback(nullptr);
-        HCTraceCleanup();
-    }
+    // Acquire libHttpClient trace ownership only after publishing this TraceState. A duplicate
+    // PFInitialize attempt must not clear callbacks owned by the already initialized PFCore instance.
+    HCTraceInit();
+#if HC_PLATFORM_IS_MICROSOFT
+    HCTraceSetEtwEnabled(true);
+#endif
+    HCTraceSetClientCallback(TraceCallback);
 
-    return hr;
+    return S_OK;
 }
 
 HRESULT TraceState::Get(SharedPtr<TraceState>& state) noexcept

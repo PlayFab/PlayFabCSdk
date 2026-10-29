@@ -76,7 +76,7 @@ private:
         TokenRefreshedHandler tokenRefreshedHandler
     ) noexcept;
 
-    mutable std::mutex m_mutex;
+    mutable Mutex m_mutex;
     PlayFab::EntityKey const m_key;
     PlayFab::EntityToken m_entityToken;
     std::optional<String> const m_secretKey;
